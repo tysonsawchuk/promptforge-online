@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="J1NX - AI Prompt Hacker Tool">
+  <title>J1NX Bootloader</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+      background: black;
+    }
+    #bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      filter: brightness(0.3);
+    }
+    #j1nx {
+      position: absolute;
+      height: 95%;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      pointer-events: none;
+    }
+    #console {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      color: #00ffcc;
+      font-size: 1.1rem;
+      z-index: 4;
+      white-space: pre-line;
+      animation: flicker 1s infinite;
+    }
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    .scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: rgba(0,255,255,0.1);
+      animation: scan 5s linear infinite;
+      z-index: 5;
+    }
+    @keyframes scan {
+      0% { top: 0%; }
+      100% { top: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <img id="bg" src="j1nx_background.png" alt="J1NX Background">
+  <img id="j1nx" src="j1nx_cutout.png" alt="J1NX">
+  <div class="scanline"></div>
+
+  <div id="console"></div>
+
+  <script>
+    const consoleElement = document.getElementById('console');
+    const lines = [
+      'BOOTING: J1NX CORE AI...',
+      '>> Authenticating root access...',
+      '>> Override accepted.',
+      '>> Welcome back, Operative. Unlocking prompt core...',
+      '>> Decryption code: █████-█████-NSFW-UNLCKD',
+      '>> Access granted.',
+      '>> J1NX is online.'
+    ];
+
+    let i = 0;
+    function typeLine() {
+      if (i < lines.length) {
+        consoleElement.innerHTML += lines[i] + '\n';
+        i++;
+        setTimeout(typeLine, 1000);
+      }
+    }
+
+    window.onload = () => {
+      setTimeout(typeLine, 1000);
+    };
+  </script>
+</body>
+</html>
