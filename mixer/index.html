@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PromptForge // Prompt Mixer</title>
+  <link rel="stylesheet" href="/assets/css/core.css">
+  <style>
+    body {
+      background: #000;
+      color: #0ff;
+      font-family: 'Share Tech Mono', monospace;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    select, textarea, button {
+      background: #111;
+      color: #0ff;
+      border: 1px solid #0ff;
+      padding: 0.5rem;
+      width: 100%;
+      margin-top: 0.5rem;
+      font-family: inherit;
+    }
+
+    button {
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+
+    .output {
+      background: #111;
+      border: 1px solid #0ff;
+      padding: 1rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎛️ Prompt Mixer</h1>
+
+  <div class="section">
+    <label for="theme">Choose Base Theme</label>
+    <select id="theme">
+      <option value="dark-fantasy">Dark Fantasy</option>
+      <option value="cyberpunk">Cyberpunk</option>
+      <option value="surrealism">Surrealism</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <label for="modifier">Mood Modifier</label>
+    <select id="modifier">
+      <option value="romantic">Romantic</option>
+      <option value="violent">Violent</option>
+      <option value="mysterious">Mysterious</option>
+    </select>
+  </div>
+
+  <div class="section">
+    <label for="custom">Custom Add-On (optional)</label>
+    <textarea id="custom" rows="3" placeholder="Type any extra elements here..."></textarea>
+  </div>
+
+  <button onclick="generatePrompt()">Generate Prompt</button>
+
+  <div id="output" class="output" style="display:none;"></div>
+
+  <script>
+    function generatePrompt() {
+      const theme = document.getElementById('theme').value;
+      const modifier = document.getElementById('modifier').value;
+      const custom = document.getElementById('custom').value;
+      const output = document.getElementById('output');
+
+      let prompt = `Style: ${theme}\nMood: ${modifier}`;
+      if (custom.trim() !== '') {
+        prompt += `\nCustom: ${custom}`;
+      }
+
+      output.style.display = 'block';
+      output.innerText = prompt;
+    }
+  </script>
+
+</body>
+</html>
