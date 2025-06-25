@@ -1,82 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Watermark Maker</title>
+  <title>Watermark Tool</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
-      margin: 0;
-      background-color: #000;
+      background: #000;
       color: #0ff;
       font-family: 'Share Tech Mono', monospace;
-      padding: 40px 20px;
+      padding: 40px;
     }
 
     h1 {
-      text-align: center;
-      font-size: 2.2em;
-      text-shadow: 0 0 10px #0ff;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px #0ff;
     }
 
-    .section {
-      max-width: 700px;
-      margin: auto;
-      background: rgba(0,255,255,0.05);
-      padding: 20px;
-      border: 2px solid #0ff;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.2);
-    }
-
-    label {
+    label, input {
       display: block;
-      margin-top: 20px;
+      margin-top: 15px;
+      font-size: 1rem;
     }
 
-    input[type="text"], input[type="file"], select {
-      width: 100%;
-      padding: 10px;
-      background: #111;
+    input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      background-color: #111;
       color: #0ff;
       border: 1px solid #0ff;
       font-family: 'Share Tech Mono', monospace;
-      margin-bottom: 15px;
     }
 
     #preview {
       margin-top: 20px;
+      padding: 10px;
+      background-color: #111;
       border: 1px dashed #0ff;
-      background: #111;
-      padding: 20px;
-      text-align: center;
-    }
-
-    button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      font-size: 1rem;
-      background-color: #0ff;
-      color: #000;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 5px;
-    }
-
-    .note {
-      font-size: 0.9em;
-      opacity: 0.7;
-      margin-top: -10px;
+      display: inline-block;
+      font-size: 1.2rem;
+      opacity: 0.8;
     }
 
     .j1nx {
       position: fixed;
       bottom: 10px;
       left: 10px;
-      font-size: 0.9rem;
-      opacity: 0.6;
+      font-size: 0.85rem;
+      opacity: 0.7;
     }
 
     .j1nx::before {
@@ -84,60 +57,28 @@
       display: block;
       font-size: 0.8rem;
       margin-bottom: 2px;
-      color: #0ff;
     }
   </style>
 </head>
 <body>
-  <h1>🖋️ Watermark Forge</h1>
-  <div class="section">
-    <label for="text">Text Watermark:</label>
-    <input type="text" id="text" placeholder="e.g., Created by J1NX">
 
-    <div class="note">💡 TIP: Use your handle or brand to protect your work.</div>
+  <h1>🔐 Create Your Watermark</h1>
 
-    <label for="upload">Or Upload Image:</label>
-    <input type="file" id="upload" accept="image/*"/>
+  <label for="mark">Watermark Label:</label>
+  <input type="text" id="mark" placeholder="e.g., @PromptForgeUser" oninput="updatePreview()"/>
 
-    <div class="note">💡 TIP: Transparent PNGs work best.</div>
-
-    <label for="position">Position:</label>
-    <select id="position">
-      <option value="bottom-right">Bottom Right</option>
-      <option value="bottom-left">Bottom Left</option>
-      <option value="top-right">Top Right</option>
-      <option value="top-left">Top Left</option>
-      <option value="center">Center</option>
-    </select>
-
-    <button onclick="previewWatermark()">Preview</button>
-
-    <div id="preview">Watermark preview will appear here.</div>
-  </div>
-
-  <div class="j1nx">
-    j1nx: "Make it yours. Stamp it. Own it. Then share it."
-  </div>
+  <div id="preview">Watermark Preview</div>
 
   <script>
-    function previewWatermark() {
-      const text = document.getElementById("text").value;
-      const file = document.getElementById("upload").files[0];
-      const position = document.getElementById("position").value;
-      const preview = document.getElementById("preview");
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          preview.innerHTML = `<img src="${e.target.result}" style="max-width:300px;"><br><br>📍Position: ${position}`;
-        };
-        reader.readAsDataURL(file);
-      } else if (text.trim() !== "") {
-        preview.innerHTML = `"${text}"<br><br>📍Position: ${position}`;
-      } else {
-        preview.innerHTML = "⚠️ Please enter text or upload a watermark image.";
-      }
+    function updatePreview() {
+      const input = document.getElementById("mark").value;
+      document.getElementById("preview").textContent = input || "Watermark Preview";
     }
   </script>
+
+  <div class="j1nx">
+    j1nx: “Mark your work before someone else does.”
+  </div>
+
 </body>
 </html>
