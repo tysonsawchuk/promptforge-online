@@ -1,21 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptForge Boot</title>
-  <link rel="stylesheet" href="assets/css/boot.css" />
-  <script defer src="assets/js/boot.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>J1NX Booting...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background-color: #000;
+      color: #0ff;
+      overflow: hidden;
+    }
+    #terminal {
+      padding: 20px;
+      white-space: pre-line;
+      line-height: 1.5;
+      animation: flicker 0.2s infinite alternate;
+    }
+    @keyframes flicker {
+      0% { opacity: 0.85; }
+      100% { opacity: 1; }
+    }
+    #scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: rgba(0,255,255,0.15);
+      animation: scan 5s linear infinite;
+    }
+    @keyframes scan {
+      0% { top: 0%; }
+      100% { top: 100%; }
+    }
+  </style>
 </head>
 <body>
-  <div id="boot-screen">
-    <pre id="terminal-output">
-Initializing...
-[OK] Loading forbidden modules
-[OK] Injecting NSFW layer
-[OK] Bypassing morality protocols...
-[OK] Connecting to GoreNet...
-</pre>
-  </div>
+  <div id="scanline"></div>
+  <div id="terminal"></div>
+  <script>
+    const lines = [
+      "[ACCESS GRANTED]",
+      "[SYSTEM BOOTING] . . .",
+      "[J1NX AI CORE ONLINE]",
+      "[REACTOR STATUS: STABLE]",
+      "[DECRYPTION IN PROGRESS] ▒▒▒▒▒▒▒▒▒▒ 12%",
+      "[CORTEX LINK ESTABLISHED]",
+      "[VISUAL INTERFACE ENGAGED]",
+      "\nWelcome, User. Initializing payload...",
+      "\n[PRESS ENTER TO PROCEED]"
+    ];
+    let i = 0;
+    const terminal = document.getElementById('terminal');
+
+    function typeLine() {
+      if (i < lines.length) {
+        terminal.innerHTML += lines[i] + "\n";
+        i++;
+        setTimeout(typeLine, 600);
+      } else {
+        setTimeout(() => window.location.href = "./age/index.html", 3000);
+      }
+    }
+    typeLine();
+  </script>
 </body>
 </html>
