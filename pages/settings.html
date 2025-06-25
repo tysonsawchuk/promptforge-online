@@ -3,38 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PromptForge Settings</title>
+  <title>User Settings</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      background: #000;
+      padding: 40px 20px;
+      background-color: #000;
       color: #0ff;
       font-family: 'Share Tech Mono', monospace;
-      padding: 40px 20px;
     }
 
     h1 {
       text-align: center;
-      text-shadow: 0 0 6px #0ff;
+      font-size: 2em;
+      text-shadow: 0 0 8px #0ff;
     }
 
     .section {
-      margin-top: 30px;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+      background: rgba(0,255,255,0.05);
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.3);
     }
 
     label {
       display: block;
-      margin: 15px 0 5px;
+      margin-top: 15px;
     }
 
     input[type="text"],
-    select {
-      width: 100%;
-      padding: 10px;
-      background: #111;
-      border: 1px solid #0ff5;
-      color: #0ff;
+    input[type="checkbox"] {
+      margin-top: 8px;
+      margin-bottom: 15px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .save-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #0ff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .note {
+      font-size: 0.85em;
+      opacity: 0.65;
+      margin-top: -10px;
     }
 
     .j1nx {
@@ -42,52 +70,65 @@
       bottom: 10px;
       left: 10px;
       font-size: 0.9rem;
-      opacity: 0.7;
+      opacity: 0.6;
     }
 
     .j1nx::before {
-      content: "[J1NX READY]";
+      content: "[J1NX AI]";
       display: block;
       font-size: 0.8rem;
       margin-bottom: 2px;
       color: #0ff;
     }
-
-    .footer-note {
-      text-align: center;
-      margin-top: 40px;
-      font-size: 0.85rem;
-      color: #0ff9;
-    }
   </style>
 </head>
 <body>
-  <h1>⚙️ PromptForge Settings</h1>
-
+  <h1>🛠️ User Settings</h1>
   <div class="section">
-    <label for="username">User Display Name:</label>
-    <input type="text" id="username" placeholder="Enter your codename"/>
+    <label for="username">Display Name (Optional)</label>
+    <input type="text" id="username" placeholder="e.g., j1nxKilla88" />
 
-    <label for="theme">Theme:</label>
-    <select id="theme">
-      <option value="default">🧠 Default</option>
-      <option value="hacker">💻 Hacker Green</option>
-      <option value="dark">🌑 Dark Mode</option>
-    </select>
+    <label for="watermark">Default Watermark Text</label>
+    <input type="text" id="watermark" placeholder="e.g., Made by J1NX" />
 
-    <label for="autosave">Auto-Save Prompts:</label>
-    <select id="autosave">
-      <option value="on">✅ Enabled</option>
-      <option value="off">❌ Disabled</option>
-    </select>
-  </div>
+    <label for="bmcid">Buy Me a Coffee Username</label>
+    <input type="text" id="bmcid" placeholder="e.g., goreandgiggles" />
+    <div class="note">💡 Optional — will auto-link donation buttons.</div>
 
-  <div class="footer-note">
-    Settings are currently stored locally.<br/> Cloud features coming soon.
+    <div class="checkbox-label">
+      <input type="checkbox" id="enableTyping"/>
+      <label for="enableTyping">Enable Typing Animation</label>
+    </div>
+
+    <div class="checkbox-label">
+      <input type="checkbox" id="enableWatermark"/>
+      <label for="enableWatermark">Watermark Enabled by Default</label>
+    </div>
+
+    <div class="checkbox-label">
+      <input type="checkbox" id="darkMode" checked disabled/>
+      <label for="darkMode">Dark Mode (Always On)</label>
+    </div>
+
+    <button class="save-btn" onclick="saveSettings()">💾 Save Settings</button>
   </div>
 
   <div class="j1nx">
-    j1nx: "Modify with care. Preferences affect system behavior."
+    j1nx: "Settings are stored locally. Privacy is respected. You’re welcome."
   </div>
+
+  <script>
+    function saveSettings() {
+      const settings = {
+        username: document.getElementById('username').value,
+        watermark: document.getElementById('watermark').value,
+        bmcid: document.getElementById('bmcid').value,
+        enableTyping: document.getElementById('enableTyping').checked,
+        enableWatermark: document.getElementById('enableWatermark').checked
+      };
+      localStorage.setItem('j1nxUserSettings', JSON.stringify(settings));
+      alert("✅ Settings saved locally.");
+    }
+  </script>
 </body>
 </html>
