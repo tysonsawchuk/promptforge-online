@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watermark Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #0ff;
+      font-family: 'Share Tech Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 1.5em;
+    }
+
+    input[type="file"] {
+      margin: 20px 0;
+      background-color: #033;
+      color: #0ff;
+      border: none;
+      padding: 8px;
+      font-family: inherit;
+    }
+
+    .preview {
+      margin-top: 20px;
+      max-width: 80%;
+      max-height: 40vh;
+      border: 1px dashed #0ff;
+    }
+
+    .back-button {
+      margin-top: 30px;
+      padding: 8px 16px;
+      background-color: #033;
+      color: #0ff;
+      border: none;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background-color: #055;
+    }
+
+    .footer {
+      margin-top: auto;
+      color: #066;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Upload Your Watermark</h1>
+  <input type="file" accept="image/*" onchange="previewFile(event)">
+  <img class="preview" id="watermarkPreview" src="" alt="Watermark Preview"/>
+  <button class="back-button" onclick="history.back()">← Back</button>
+  <div class="footer">J1NX™ Tools</div>
+
+  <script>
+    function previewFile(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('watermarkPreview').src = e.target.result;
+      };
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
