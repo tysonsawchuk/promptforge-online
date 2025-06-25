@@ -3,38 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Movie Gallery</title>
+  <title>Movie Prompt Builder</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Share Tech Mono', monospace;
-      background: #000;
+      background-color: #000;
       color: #0ff;
+      font-family: 'Share Tech Mono', monospace;
       padding: 40px 20px;
     }
 
     h1 {
       text-align: center;
-      font-size: 2rem;
-      text-shadow: 0 0 5px #0ff;
+      font-size: 2.2em;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #0ff;
     }
 
-    .gallery {
-      margin-top: 40px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 30px;
+    .section {
+      max-width: 800px;
+      margin: auto;
+      background: rgba(0,255,255,0.05);
+      padding: 20px;
+      border: 2px solid #0ff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
     }
 
-    .placeholder {
-      border: 2px dashed #0ff;
-      height: 150px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    label {
+      display: block;
+      margin-top: 20px;
+    }
+
+    select, textarea {
+      width: 100%;
+      padding: 10px;
+      background: #111;
+      color: #0ff;
+      border: 1px solid #0ff;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 12px 20px;
       font-size: 1rem;
-      opacity: 0.5;
+      background-color: #0ff;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    #output {
+      white-space: pre-wrap;
+      background: #111;
+      padding: 20px;
+      margin-top: 30px;
+      border: 1px dashed #0ff;
+      min-height: 120px;
     }
 
     .j1nx {
@@ -42,11 +71,11 @@
       bottom: 10px;
       left: 10px;
       font-size: 0.9rem;
-      opacity: 0.7;
+      opacity: 0.6;
     }
 
     .j1nx::before {
-      content: "[J1NX ACTIVE]";
+      content: "[J1NX AI]";
       display: block;
       font-size: 0.8rem;
       margin-bottom: 2px;
@@ -55,14 +84,46 @@
   </style>
 </head>
 <body>
-  <h1>🎬 MOVIE GALLERY</h1>
-  <div class="gallery">
-    <div class="placeholder">No videos added yet</div>
-    <div class="placeholder">Future video slot</div>
-    <div class="placeholder">Future video slot</div>
+  <h1>🎬 Scene Generator</h1>
+  <div class="section">
+    <label for="genre">Choose Genre:</label>
+    <select id="genre">
+      <option>Cyberpunk</option>
+      <option>Post-Apocalyptic</option>
+      <option>Erotic Thriller</option>
+      <option>Fantasy Battle</option>
+      <option>Dream Sequence</option>
+    </select>
+
+    <label for="setting">Scene Setting:</label>
+    <textarea id="setting" rows="3" placeholder="e.g., In a neon-lit alley with blood-soaked pavement..."></textarea>
+
+    <label for="characters">Main Characters:</label>
+    <textarea id="characters" rows="3" placeholder="e.g., A rogue AI, a blind hacker, a mute assassin..."></textarea>
+
+    <label for="action">Core Action:</label>
+    <textarea id="action" rows="3" placeholder="e.g., They clash violently in slow-motion while drones swarm above..."></textarea>
+
+    <button onclick="generatePrompt()">GENERATE</button>
+
+    <div id="output"></div>
   </div>
+
   <div class="j1nx">
-    j1nx says: "Movie gallery coming online soon..."
+    j1nx: "Cut! Let's do another take, this one's got promise..."
   </div>
+
+  <script>
+    function generatePrompt() {
+      const genre = document.getElementById("genre").value;
+      const setting = document.getElementById("setting").value.trim();
+      const characters = document.getElementById("characters").value.trim();
+      const action = document.getElementById("action").value.trim();
+
+      const output = `[${genre.toUpperCase()} SCENE PROMPT]\n\nSetting: ${setting}\nCharacters: ${characters}\nAction: ${action}`;
+
+      document.getElementById("output").innerText = output;
+    }
+  </script>
 </body>
 </html>
