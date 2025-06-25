@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prompt Mixer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      background-color: #000;
+      color: #0ff;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .mixer-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    select, button, textarea {
+      background-color: #111;
+      color: #0ff;
+      border: 1px solid #0ff;
+      font-family: inherit;
+      padding: 8px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #033;
+      cursor: pointer;
+    }
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+    .footer {
+      position: fixed;
+      bottom: 5px;
+      right: 10px;
+      font-size: 0.8rem;
+      color: #066;
+    }
+  </style>
+</head>
+<body>
+  <h1>Prompt Mixer</h1>
+  <div class="mixer-container">
+    <select id="setting">
+      <option value="">Choose a scene setting</option>
+      <option value="Abandoned warehouse">Abandoned warehouse</option>
+      <option value="Cyberpunk city street">Cyberpunk city street</option>
+      <option value="Soft lit bedroom">Soft lit bedroom</option>
+    </select>
+
+    <select id="tone">
+      <option value="">Choose emotional tone</option>
+      <option value="moody">moody</option>
+      <option value="seductive">seductive</option>
+      <option value="dreamy">dreamy</option>
+    </select>
+
+    <select id="character">
+      <option value="">Choose main subject</option>
+      <option value="18-year-old woman in lingerie">18-year-old woman in lingerie</option>
+      <option value="tattooed nurse">tattooed nurse</option>
+      <option value="masked android">masked android</option>
+    </select>
+
+    <button onclick="generatePrompt()">🔀 Mix Prompt</button>
+    <textarea id="output" readonly placeholder="Your monster prompt will appear here..."></textarea>
+  </div>
+
+  <div class="footer">J1NX™ UI</div>
+
+  <script>
+    function generatePrompt() {
+      const setting = document.getElementById('setting').value;
+      const tone = document.getElementById('tone').value;
+      const character = document.getElementById('character').value;
+      const output = document.getElementById('output');
+
+      if (!setting || !tone || !character) {
+        output.value = "Please select something in every dropdown.";
+        return;
+      }
+
+      const prompt = `A ${tone} scene in a ${setting}, featuring a ${character}. Ultra-realistic, cinematic lighting, bokeh background.`;
+      output.value = prompt;
+    }
+  </script>
+</body>
+</html>
