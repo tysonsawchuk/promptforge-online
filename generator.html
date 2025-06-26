@@ -16,7 +16,6 @@
 
   <main>
     <section id="dropdowns">
-      <!-- 🔻 Dropdowns will be injected or hardcoded here -->
       <label for="themeSelect">Theme:</label>
       <select id="themeSelect">
         <option value="">-- Select Theme --</option>
@@ -27,9 +26,10 @@
     </section>
 
     <section id="output">
-      <textarea id="monsterPrompt" rows="8" cols="80" readonly placeholder="🧠 Your MONSTER prompt will appear here..."></textarea>
-      <button id="rerollBtn">REROLL</button>
-      <button id="copyBtn">COPY</button>
+      <textarea id="monsterPrompt" rows="8" cols="80" readonly placeholder="🧠 Your MONSTER prompt will appear here..."></textarea><br>
+      <button id="rerollBtn">🌀 REROLL</button>
+      <button id="copyBtn">📋 COPY</button>
+      <span id="copiedMsg" style="display:none; color:#0f0; margin-left: 1rem;">✔ Copied!</span>
     </section>
   </main>
 
@@ -42,15 +42,48 @@
   </footer>
 
   <script>
-    // Future logic goes here
-    document.getElementById('rerollBtn').addEventListener('click', () => {
-      document.getElementById('monsterPrompt').value = "🔁 [Generated prompt goes here...]";
-    });
+    const themes = {
+      erotic: [
+        "💋 (Whispers of silk, candlelight, and bare skin)",
+        "🔥 (Hands pressed against glass in the rain)",
+        "🍑 (Latex, lips, and unspoken tension)"
+      ],
+      grotesque: [
+        "🧠 (Dripping fangs, soft moaning, stitched skin)",
+        "🩸 (Wires in flesh, smiling too wide)",
+        "🪓 (Flesh merged with metal, moaning circuits)"
+      ],
+      cinematic: [
+        "🎬 (Close-up: trembling breath in amber haze)",
+        "🌌 (Slow zoom as bodies collapse in neon ruins)",
+        "📽 (Backlit silhouette framed in fire)"
+      ]
+    };
 
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      const prompt = document.getElementById('monsterPrompt');
-      prompt.select();
-      document.execCommand('copy');
+    const promptBox = document.getElementById("monsterPrompt");
+    const themeSelect = document.getElementById("themeSelect");
+    const rerollBtn = document.getElementById("rerollBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const copiedMsg = document.getElementById("copiedMsg");
+
+    function generatePrompt() {
+      const theme = themeSelect.value;
+      if (!theme || !themes[theme]) {
+        promptBox.value = "⚠️ Please select a theme first.";
+        return;
+      }
+      const choices = themes[theme];
+      const output = choices[Math.floor(Math.random() * choices.length)];
+      promptBox.value = output;
+    }
+
+    rerollBtn.addEventListener("click", generatePrompt);
+
+    copyBtn.addEventListener("click", () => {
+      promptBox.select();
+      document.execCommand("copy");
+      copiedMsg.style.display = "inline";
+      setTimeout(() => copiedMsg.style.display = "none", 2000);
     });
   </script>
 </body>
