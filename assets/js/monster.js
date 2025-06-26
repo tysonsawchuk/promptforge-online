@@ -6,7 +6,7 @@ const copyBtn = document.getElementById("copyBtn");
 const copiedMsg = document.getElementById("copiedMsg");
 
 // Load JSON data from external file
-fetch("/assets/data/themes.json")
+fetch("assets/data/themes.json")
   .then(res => res.json())
   .then(data => {
     themes = data;
