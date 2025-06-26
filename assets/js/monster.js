@@ -1,26 +1,20 @@
-const themes = {
-  erotic: [
-    "💋 (Whispers of silk, candlelight, and bare skin)",
-    "🔥 (Hands pressed against glass in the rain)",
-    "🍑 (Latex, lips, and unspoken tension)"
-  ],
-  grotesque: [
-    "🧠 (Dripping fangs, soft moaning, stitched skin)",
-    "🩸 (Wires in flesh, smiling too wide)",
-    "🪓 (Flesh merged with metal, moaning circuits)"
-  ],
-  cinematic: [
-    "🎬 (Close-up: trembling breath in amber haze)",
-    "🌌 (Slow zoom as bodies collapse in neon ruins)",
-    "📽 (Backlit silhouette framed in fire)"
-  ]
-};
-
+let themes = {};
 const promptBox = document.getElementById("monsterPrompt");
 const themeSelect = document.getElementById("themeSelect");
 const rerollBtn = document.getElementById("rerollBtn");
 const copyBtn = document.getElementById("copyBtn");
 const copiedMsg = document.getElementById("copiedMsg");
+
+// Load JSON data from external file
+fetch("/assets/data/themes.json")
+  .then(res => res.json())
+  .then(data => {
+    themes = data;
+  })
+  .catch(err => {
+    console.error("Failed to load prompt data:", err);
+    promptBox.value = "⚠️ Error loading prompt data.";
+  });
 
 function generatePrompt() {
   const theme = themeSelect.value;
