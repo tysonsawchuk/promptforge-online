@@ -2,46 +2,261 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <title>PromptForge: Image Prompt Generator</title>
+  <meta name="description" content="Generate NSFW image prompts with AI. Powerful underground prompt tools for creating wild art.">
+  <meta name="keywords" content="PromptForge, NSFW, prompt generator, image prompt, AI, Gore and Giggles, underground, art, j1nx">
+  <meta property="og:title" content="PromptForge Image Generator">
+  <meta property="og:description" content="Generate custom NSFW image prompts and fuel your AI art adventure.">
+  <meta property="og:image" content="assets/img/og-generator.jpg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptForge MONSTER - Generator</title>
-  <meta name="description" content="Unleash the MONSTER. Generate explicit, taboo, chaotic AI art prompts with full control.">
-  <meta name="keywords" content="NSFW, prompt generator, AI art, chaos, PromptForge, Gore and Giggles">
-  <link rel="stylesheet" href="assets/css/boot.css" />
+  <style>
+    body {
+      background: #0d0d0f;
+      color: #ffecb3;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: #171d1a;
+      padding: 22px 0 11px 0;
+      box-shadow: 0 2px 12px #0f09;
+      text-align: center;
+      border-bottom: 1.5px solid #333b;
+    }
+    .logo {
+      font-size: 2.1rem;
+      font-weight: bold;
+      color: #fff957;
+      text-shadow: 0 0 15px #fffca3, 0 0 6px #ffdb6e;
+      margin-bottom: 3px;
+      letter-spacing: 0.09em;
+    }
+    nav {
+      margin: 0 0 0 0;
+      padding: 0;
+    }
+    nav a {
+      color: #00ffd5;
+      margin: 0 12px;
+      text-decoration: none;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+    nav a:hover { color: #fff952; }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0 36px 0;
+    }
+    .generator-box {
+      background: #1d2223;
+      border-radius: 15px;
+      box-shadow: 0 0 18px #9fa, 0 0 5px #111c;
+      padding: 28px 32px 24px 32px;
+      min-width: 285px;
+      width: 98vw;
+      max-width: 490px;
+      margin-bottom: 32px;
+      border: 1.5px solid #393;
+    }
+    label { color: #fffbe7; font-weight: bold; margin-bottom: 8px; display: block; }
+    select, input[type="text"] {
+      width: 98%;
+      padding: 9px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1.2px solid #555;
+      background: #242729;
+      color: #fff7;
+      font-size: 1.07em;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+    }
+    button {
+      background: #ffd900;
+      color: #222;
+      font-size: 1.1em;
+      font-family: inherit;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 18px;
+      font-weight: bold;
+      box-shadow: 0 0 8px #ffd90099;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background .13s, color .13s;
+    }
+    button:hover {
+      background: #ffe67a;
+      color: #111;
+    }
+    .output-area {
+      margin-top: 18px;
+      background: #15161a;
+      color: #ffd;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 1.09em;
+      min-height: 48px;
+      box-shadow: 0 0 6px #ffd90044;
+      border: 1px solid #393;
+    }
+    .j1nx-bar {
+      margin: 32px auto 0 auto;
+      max-width: 410px;
+      padding: 16px 12px;
+      border-radius: 10px;
+      background: #0e1622;
+      color: #3f9fff;
+      font-size: 1.09em;
+      box-shadow: 0 0 12px #2c9, 0 0 1px #fff4;
+    }
+    .j1nx-bar b { color: #ffd900; }
+    .j1nx-input {
+      width: 80%;
+      padding: 7px;
+      margin-right: 6px;
+      border-radius: 7px;
+      border: 1px solid #00ffd5;
+      background: #27282e;
+      color: #cfffed;
+      font-size: 1em;
+    }
+    .j1nx-send {
+      background: #ffd900;
+      color: #111;
+      font-weight: bold;
+      border-radius: 7px;
+      border: none;
+      padding: 7px 13px;
+      cursor: pointer;
+    }
+    .j1nx-send:hover { background: #fffbe7; color: #111; }
+    .bmc {
+      margin-top: 17px;
+      display: block;
+      text-align: center;
+    }
+    footer {
+      margin-top: auto;
+      padding: 28px 0 20px 0;
+      color: #ffed99;
+      background: #0f0f0f;
+      text-align: center;
+      font-size: 1.02rem;
+      border-top: 1.5px solid #00ffcc22;
+      box-shadow: 0 0 10px #ffd90030;
+    }
+    .footer-links a {
+      color: #ffd900;
+      margin: 0 12px;
+      text-decoration: underline;
+      font-size: 1.09em;
+    }
+    .footer-links a:hover { color: #fffbe7; }
+  </style>
 </head>
 <body>
   <header>
-    <h1>PromptForge MONSTER</h1>
-    <p>Choose your chaos...</p>
+    <div class="logo">PromptForge: Generator</div>
+    <nav>
+      <a href="main.html">Home</a>
+      <a href="characterforge.html">CharacterForge</a>
+      <a href="pages/watermark.html">Watermark Studio</a>
+      <a href="movieprompt.html">Movie Prompt</a>
+      <a href="j1nx.html">J1NX Bot</a>
+    </nav>
   </header>
-
   <main>
-    <section id="dropdowns">
-      <label for="themeSelect">Theme:</label>
-      <select id="themeSelect">
-        <option value="">-- Select Theme --</option>
-        <option value="erotic">Erotic</option>
-        <option value="grotesque">Grotesque</option>
-        <option value="cinematic">Cinematic</option>
+    <div class="generator-box">
+      <label for="promptType">Prompt Type</label>
+      <select id="promptType">
+        <option value="nsfw">NSFW Image</option>
+        <option value="sfw">SFW Artistic</option>
+        <option value="anime">Anime</option>
+        <option value="cyberpunk">Cyberpunk</option>
+        <option value="gore">Gore/Body Horror</option>
       </select>
-    </section>
-
-    <section id="output">
-      <textarea id="monsterPrompt" rows="8" cols="80" readonly placeholder="🧠 Your MONSTER prompt will appear here..."></textarea><br>
-      <button id="rerollBtn">🌀 REROLL</button>
-      <button id="copyBtn">📋 COPY</button>
-      <span id="copiedMsg" style="display:none; color:#0f0; margin-left: 1rem;">✔ Copied!</span>
-    </section>
+      <label for="customWords">Custom Add-On Words</label>
+      <input type="text" id="customWords" placeholder="e.g., glowing, rainy, girl, bokeh">
+      <button onclick="generatePrompt()">Generate Prompt</button>
+      <div class="output-area" id="outputArea"></div>
+    </div>
+    <!-- J1NX Bar (fun, dirty, underground NSFW) -->
+    <div class="j1nx-bar" id="j1nxBar">
+      <b>J1NX</b>: Ready to talk dirty or random? Type something here:<br>
+      <input class="j1nx-input" id="j1nxInput" type="text" maxlength="90" placeholder="Say anything to J1NX...">
+      <button class="j1nx-send" onclick="j1nxSend()">Send</button>
+      <div id="j1nxOutput" style="margin-top:9px;min-height:24px;"></div>
+    </div>
+    <div class="bmc">
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">
+        <img src="assets/img/bmc-button.png" alt="Buy Me A Coffee" style="height:32px;border-radius:6px;vertical-align:middle;box-shadow:0 0 7px #ffdb;">
+      </a>
+    </div>
   </main>
-
   <footer>
-    <p>© 2025 Gore and Giggles • 
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • 
-      <a href="https://x.com/GoreandGiggles">Twitter</a> • 
-      <a href="https://www.buymeacoffee.com/goregiggles">Support Us</a>
-    </p>
+    <div class="footer-links">
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
+      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a> |
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a> |
+      <a href="legal/" target="_blank">Legal & Terms</a>
+    </div>
+    <div style="font-size:0.97em;margin-top:9px;opacity:0.8;">
+      &copy; 2025 PromptForge / Gore and Giggles. All rights reserved.
+    </div>
   </footer>
-
-  <!-- Modular Prompt Logic -->
-  <script src="assets/js/monster.js"></script>
+  <!-- Google AdSense placeholder -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+    data-ad-client="ca-pub-0000000000000000"></script>
+  <!-- Generator JS -->
+  <script>
+    function generatePrompt() {
+      const type = document.getElementById('promptType').value;
+      const custom = document.getElementById('customWords').value.trim();
+      let base = '';
+      switch (type) {
+        case 'nsfw': base = 'A hyper-realistic, high-detail, ultra-NSFW photo of'; break;
+        case 'sfw': base = 'A stunning, creative, SFW concept artwork of'; break;
+        case 'anime': base = 'Anime-style, beautifully colored illustration of'; break;
+        case 'cyberpunk': base = 'Cyberpunk, neon-lit cityscape featuring'; break;
+        case 'gore': base = 'Disturbing, cinematic body horror scene of'; break;
+      }
+      const words = custom ? ' ' + custom : ' a mysterious woman';
+      document.getElementById('outputArea').innerText = base + words + '.';
+    }
+  </script>
+  <!-- J1NX Chatbot JS (basic, fun, local) -->
+  <script>
+    const j1nxReplies = [
+      "You're way too horny for this site.",
+      "That's illegal in at least 3 countries.",
+      "Try again, but dirtier.",
+      "Nice... but I've seen weirder.",
+      "What did you just type? LMAO.",
+      "AI art? More like A... I... you know what, never mind.",
+      "My creators told me not to encourage you.",
+      "If the feds knock, I'm blaming you.",
+      "Damn right. You want prompts, you got prompts.",
+      "Go wild—nobody's watching. Or are they?",
+      "I’m a bot, but even I’m blushing.",
+      "Type /help for secret stuff."
+    ];
+    function j1nxSend() {
+      const v = document.getElementById('j1nxInput').value;
+      let reply = j1nxReplies[Math.floor(Math.random() * j1nxReplies.length)];
+      if (/help/i.test(v)) reply = "Secret: Try 'cyberpunk slimegirl bokeh', 'wet POV horror', or '/goremode on'.";
+      document.getElementById('j1nxOutput').innerText = reply;
+      document.getElementById('j1nxInput').value = '';
+    }
+    document.getElementById('j1nxInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') j1nxSend();
+    });
+  </script>
 </body>
 </html>
