@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PromptForge: AI Brain Terminal</title>
+  <style>
+    body {
+      background: black;
+      color: #00FF7F;
+      font-family: "Courier New", monospace;
+      padding: 20px;
+      margin: 0;
+    }
+    .console {
+      white-space: pre-wrap;
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .input-line {
+      color: #0f0;
+    }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      background-color: #0f0;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 50% { background-color: #0f0; }
+      51%, 100% { background-color: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <div class="console" id="console">
+    PromptForge AI Terminal v1.0 (prototype)
+    Type a scene keyword to generate a full description.
+    Type "help" for options or "exit" to return.
+    
+    > <span class="input-line" id="input-line"></span><span class="cursor" id="cursor"></span>
+  </div>
+
+  <script>
+    const inputLine = document.getElementById('input-line');
+    const consoleDiv = document.getElementById('console');
+    const cursor = document.getElementById('cursor');
+    let currentInput = '';
+
+    const responses = {
+      "help": `COMMANDS:
+  - help → Show this screen
+  - exit → Return to main.html
+  - [any prompt] → AI prompt description`,
+      "exit": "Returning to mainframe...\n\n<a href='main.html'>Click here if not redirected.</a>",
+      "default": `Generating prompt...
+Scene: ✨ {scene}
+Mood: 🔥 Moody, dreamlike, emotionally charged
+Style: 🎨 Cinematic hyperrealism, lens flare, ambient shadows
+Tags: #cinematic #photo #vibe
+
+Prompt: A detailed, high-impact composition featuring vivid emotion and scene cohesion. Every word is selected to produce maximum visual output. Use this inside any image generator to create powerful visuals that go beyond simple keywords.`
+    };
+
+    function appendOutput(text) {
+      const lines = text.split("\n");
+      for (const line of lines) {
+        const p = document.createElement("div");
+        p.textContent = "> " + line;
+        consoleDiv.appendChild(p);
+      }
+    }
+
+    function fakeType(text, cb) {
+      let i = 0;
+      const line = document.createElement("div");
+      line.textContent = "> ";
+      consoleDiv.appendChild(line);
+      const typer = setInterval(() => {
+        if (i < text.length) {
+          line.textContent += text[i];
+          i++;
+        } else {
+          clearInterval(typer);
+          cb();
+        }
+      }, 25);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === "Backspace") {
+        currentInput = currentInput.slice(0, -1);
+      } else if (e.key.length === 1) {
+        currentInput += e.key;
+      } else if (e.key === "Enter") {
+        const command = currentInput.trim().toLowerCase();
+        appendOutput(currentInput);
+        currentInput = '';
+        inputLine.textContent = '';
+
+        if (command === "exit") {
+          fakeType(responses.exit, () => {
+            window.location.href = "main.html";
+          });
+        } else if (command === "help") {
+          fakeType(responses.help, () => {});
+        } else {
+          const response = responses.default.replace("{scene}", command);
+          fakeType(response, () => {});
+        }
+
+        return;
+      }
+      inputLine.textContent = currentInput;
+      setTimeout(() => consoleDiv.scrollTop = consoleDiv.scrollHeight, 50);
+    });
+  </script>
+</body>
+</html>
