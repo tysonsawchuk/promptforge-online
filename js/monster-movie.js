@@ -51,6 +51,14 @@ function generatePrompt() {
     consoleMsg(">> Standard reel compiled. Keep it classy.");
   }
 
+  const applyWatermark = document.getElementById("apply-watermark").checked;
+  const watermarkText = document.getElementById("watermark").value.trim();
+
+  if (applyWatermark && watermarkText) {
+    prompt += `\n\n🔒 Watermark: ${watermarkText}`;
+    consoleMsg(">> Watermark applied.");
+  }
+
   document.getElementById("movie-prompt-output").value = prompt;
 }
 
