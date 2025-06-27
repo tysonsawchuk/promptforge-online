@@ -3,87 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PromptForge Dev Interface - AI Prompt Creation Lab</title>
-  <meta name="description" content="Enter the hidden interface of PromptForge – an AI-powered prompt generator for creating, experimenting, and developing image-generation magic.">
-  <meta name="keywords" content="AI prompt generator, stable diffusion, dev tools, image prompt creator, character prompts, prompt builder, forbidden AI lab">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="PromptForge – AI Prompt Builder">
-  <meta property="og:description" content="Explore a hidden dev terminal for experimental prompt generation. Create, expand, evolve.">
-  <meta property="og:image" content="https://promptforge.online/assets/preview.jpg">
-  <meta property="og:url" content="https://promptforge.online">
-  <link rel="canonical" href="https://promptforge.online" />
-  <link rel="stylesheet" href="style.css">
-  <script defer src="boot.js"></script>
+  <title>PromptForge Boot Terminal</title>
+  <link rel="stylesheet" href="css/monster.css">
+  <style>
+    body {
+      background-color: black;
+      color: #33ff33;
+      font-family: 'Courier New', monospace;
+      padding: 20px;
+    }
+    #boot-sequence {
+      white-space: pre-wrap;
+    }
+    #fake-terminal {
+      display: none;
+      margin-top: 30px;
+    }
+    .cmd-line {
+      margin-bottom: 10px;
+    }
+    input[type=text] {
+      background: black;
+      color: #33ff33;
+      border: none;
+      border-bottom: 1px solid #33ff33;
+      width: 90%;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    #age-gate {
+      display: none;
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid lime;
+    }
+    button {
+      background: lime;
+      color: black;
+      padding: 10px 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <noscript>
-    <p>Welcome to PromptForge – a creative AI prompt studio for making beautiful, imaginative images using open-source tools. For full access, enable JavaScript.</p>
-  </noscript>
-  <div id="terminal">
-    <pre id="boot-sequence"></pre>
+  <pre id="boot-sequence"></pre>
+
+  <div id="fake-terminal">
+    <div class="cmd-line">> _</div>
+    <div class="cmd-line">hint: try <code>run promptforge</code>, <code>open gate</code>, or <code>unlock</code></div>
+    <input type="text" id="terminal-input" placeholder="type a command...">
   </div>
-  <div id="age-gate" style="display:none;">
-    <h1>⚠️ Dev Access Verification</h1>
-    <p>This interface is restricted. You may be accessing development utilities not intended for public use.</p>
-    <button onclick="enterSite()">I Understand, Proceed</button>
+
+  <div id="age-gate">
+    <h1>⚠️ Restricted Dev Access</h1>
+    <p>This tool is dangerous and experimental. Proceed with caution.</p>
+    <button onclick="proceed()">Enter the Lab</button>
   </div>
+
+  <script>
+    const bootLines = [
+      '[Booting PromptForge AI Console...]',
+      '[Initializing dev hooks...]',
+      '[Spoofing node environment...]',
+      '[Injecting unauthorized models...]',
+      '[Linking sandbox core...]',
+      '[Tunnel open → ██▒▒▒▒▒▒▒▒]',
+      '[Mapping prompt zones...]',
+      '[Installing dream filters...]',
+      '[Dev session loaded]',
+      '[Ready for input...]'
+    ];
+
+    let i = 0;
+    const bootDisplay = document.getElementById('boot-sequence');
+    function typeNext() {
+      if (i < bootLines.length) {
+        bootDisplay.innerHTML += bootLines[i] + "\\n";
+        i++;
+        setTimeout(typeNext, 400);
+      } else {
+        document.getElementById('fake-terminal').style.display = 'block';
+        document.getElementById('terminal-input').focus();
+      }
+    }
+    typeNext();
+
+    const accepted = ["run promptforge", "open gate", "unlock", "execute", "i understand"];
+    document.getElementById('terminal-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const cmd = e.target.value.trim().toLowerCase();
+        if (accepted.includes(cmd)) {
+          document.getElementById('age-gate').style.display = 'block';
+          document.getElementById('fake-terminal').style.display = 'none';
+        } else {
+          bootDisplay.innerHTML += `> ${cmd}\\n[ERROR] Unrecognized input\\n`;
+          e.target.value = '';
+        }
+      }
+    });
+
+    function proceed() {
+      window.location.href = "main.html";
+    }
+  </script>
 </body>
 </html>
-
-<script>
-const bootLines = [
-  '[Booting PromptForge AI Console...]',
-  '[Analyzing user connection...]',
-  '[Spoofing local node ID...]',
-  '[Triangulating signal → ██▒▒▒▒▒▒▒▒]',
-  '[Installing dev suite → promptforge.online]',
-  '[Mapping synthetic render environment...]',
-  '[Building NSFW_sandbox_override]',
-  '[Erecting character wall → emotion layers loaded]',
-  '[Enabling visual model tunneler]',
-  '[System console unlocked] > press to continue'
-];
-
-let i = 0;
-const bootDisplay = document.getElementById('boot-sequence');
-
-function typeNext() {
-  if (i < bootLines.length) {
-    bootDisplay.innerHTML += bootLines[i] + "\n";
-    i++;
-    setTimeout(typeNext, 800);
-  } else {
-    document.getElementById('age-gate').style.display = 'block';
-  }
-}
-typeNext();
-
-function enterSite() {
-  window.location.href = "main.html";
-}
-</script>
-
-<style>
-body {
-  background-color: black;
-  color: #33ff33;
-  font-family: 'Courier New', Courier, monospace;
-  padding: 20px;
-}
-#boot-sequence {
-  white-space: pre-wrap;
-}
-#age-gate {
-  background: rgba(0,0,0,0.85);
-  border: 1px solid lime;
-  padding: 20px;
-  margin-top: 30px;
-}
-button {
-  background: lime;
-  color: black;
-  padding: 10px 20px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-</style>
