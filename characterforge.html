@@ -2,105 +2,257 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CharacterForge: AI Persona Generator</title>
+  <title>PromptForge CharacterForge</title>
+  <meta name="description" content="Create unique NSFW AI characters, build personas, and prompt with style.">
+  <meta name="keywords" content="PromptForge, character generator, NSFW, persona, AI, characterforge, Gore and Giggles">
+  <meta property="og:title" content="PromptForge CharacterForge">
+  <meta property="og:description" content="Build custom characters and generate wild AI prompts with CharacterForge.">
+  <meta property="og:image" content="assets/img/og-characterforge.jpg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
-      background: linear-gradient(135deg, #000, #111);
-      color: #fff;
-      font-family: 'Courier New', monospace;
-      padding: 30px;
+      background: #120f1a;
+      color: #ffd0ec;
+      font-family: 'Fira Mono', 'Consolas', monospace;
       margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    h1 {
+    header {
+      background: #18131b;
+      padding: 22px 0 11px 0;
+      box-shadow: 0 2px 12px #e3a6e0a2;
       text-align: center;
-      font-size: 26px;
-      color: #00ffaa;
+      border-bottom: 1.5px solid #693a5a;
     }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      background: #222;
-      color: #0f0;
-      border: 1px solid #0f0;
-    }
-    #generate {
-      background: #00ffaa;
-      color: #000;
-      margin-top: 20px;
-      padding: 10px;
+    .logo {
+      font-size: 2.1rem;
       font-weight: bold;
+      color: #ffa7e9;
+      text-shadow: 0 0 15px #ffa7e9cc, 0 0 8px #fff6;
+      margin-bottom: 3px;
+      letter-spacing: 0.09em;
+    }
+    nav {
+      margin: 0 0 0 0;
+      padding: 0;
+    }
+    nav a {
+      color: #ff9edd;
+      margin: 0 12px;
+      text-decoration: none;
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+    }
+    nav a:hover { color: #fff952; }
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 0 36px 0;
+    }
+    .cf-box {
+      background: #1d1822;
+      border-radius: 15px;
+      box-shadow: 0 0 24px #e3a6e066, 0 0 5px #111c;
+      padding: 28px 32px 24px 32px;
+      min-width: 295px;
+      width: 98vw;
+      max-width: 500px;
+      margin-bottom: 32px;
+      border: 1.5px solid #a33e77;
+    }
+    label { color: #ffd6fa; font-weight: bold; margin-bottom: 8px; display: block; }
+    input[type="text"], textarea, select {
+      width: 98%;
+      padding: 9px;
+      margin-bottom: 12px;
+      border-radius: 6px;
+      border: 1.2px solid #715073;
+      background: #271f2e;
+      color: #ffd0ec;
+      font-size: 1.07em;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+    }
+    textarea {
+      min-height: 54px;
+      resize: vertical;
+    }
+    button {
+      background: #ffa7e9;
+      color: #111;
+      font-size: 1.1em;
+      font-family: inherit;
       border: none;
+      border-radius: 8px;
+      padding: 11px 18px;
+      font-weight: bold;
+      box-shadow: 0 0 8px #ffa7e988;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background .13s, color .13s;
+    }
+    button:hover {
+      background: #fffbe7;
+      color: #a33e77;
+    }
+    .output-area {
+      margin-top: 18px;
+      background: #1a1622;
+      color: #fff4fd;
+      border-radius: 8px;
+      padding: 15px;
+      font-size: 1.09em;
+      min-height: 48px;
+      box-shadow: 0 0 6px #ffa7e955;
+      border: 1px solid #a33e77;
+    }
+    .j1nx-bar {
+      margin: 32px auto 0 auto;
+      max-width: 410px;
+      padding: 16px 12px;
+      border-radius: 10px;
+      background: #20152a;
+      color: #e3a6e0;
+      font-size: 1.09em;
+      box-shadow: 0 0 16px #a33e77, 0 0 2px #fff4;
+    }
+    .j1nx-bar b { color: #ffa7e9; }
+    .j1nx-input {
+      width: 80%;
+      padding: 7px;
+      margin-right: 6px;
+      border-radius: 7px;
+      border: 1px solid #ffa7e9;
+      background: #2a1c2d;
+      color: #ffd0ec;
+      font-size: 1em;
+    }
+    .j1nx-send {
+      background: #ffa7e9;
+      color: #111;
+      font-weight: bold;
+      border-radius: 7px;
+      border: none;
+      padding: 7px 13px;
       cursor: pointer;
     }
-    #output {
-      background: #111;
-      padding: 20px;
-      margin-top: 30px;
-      white-space: pre-wrap;
-      color: #00ff88;
-      font-size: 15px;
-      border: 1px solid #00ffaa;
+    .j1nx-send:hover { background: #fffbe7; color: #a33e77; }
+    .bmc {
+      margin-top: 17px;
+      display: block;
+      text-align: center;
     }
+    footer {
+      margin-top: auto;
+      padding: 28px 0 20px 0;
+      color: #ffd0ec;
+      background: #191119;
+      text-align: center;
+      font-size: 1.02rem;
+      border-top: 1.5px solid #ffa7e955;
+      box-shadow: 0 0 10px #ffa7e950;
+    }
+    .footer-links a {
+      color: #ffa7e9;
+      margin: 0 12px;
+      text-decoration: underline;
+      font-size: 1.09em;
+    }
+    .footer-links a:hover { color: #fffbe7; }
   </style>
 </head>
 <body>
-  <h1>🧬 CharacterForge</h1>
-
-  <label>Name</label>
-  <input type="text" id="charName" placeholder="e.g. Ember, Luna, Kai">
-
-  <label>Age</label>
-  <input type="text" id="charAge" placeholder="e.g. 22">
-
-  <label>Vibe</label>
-  <input type="text" id="charVibe" placeholder="e.g. mysterious, playful, dominant">
-
-  <label>Appearance / Hair / Style</label>
-  <input type="text" id="charLook" placeholder="e.g. short silver hair, futuristic bodysuit, glowing eyes">
-
-  <label>Personality</label>
-  <input type="text" id="charPersonality" placeholder="e.g. emotionally distant, sarcastic, secretly kind">
-
-  <label>Special Traits / Abilities</label>
-  <input type="text" id="charAbilities" placeholder="e.g. manipulates shadows, hyper-intelligence, illusions">
-
-  <button id="generate">🎨 Generate Prompt</button>
-
-  <div id="output"></div>
-
+  <header>
+    <div class="logo">PromptForge: CharacterForge</div>
+    <nav>
+      <a href="main.html">Home</a>
+      <a href="generator.html">Prompt Generator</a>
+      <a href="pages/watermark.html">Watermark Studio</a>
+      <a href="movieprompt.html">Movie Prompt</a>
+      <a href="j1nx.html">J1NX Bot</a>
+    </nav>
+  </header>
+  <main>
+    <div class="cf-box">
+      <label for="charName">Character Name</label>
+      <input type="text" id="charName" maxlength="40" placeholder="e.g., Nyx the Outlawed Witch">
+      <label for="charTraits">Traits/Descriptors</label>
+      <input type="text" id="charTraits" maxlength="90" placeholder="e.g., shy, punk, pink hair, glowing eyes, corrupted">
+      <label for="charSetting">Setting/World</label>
+      <input type="text" id="charSetting" maxlength="60" placeholder="e.g., post-apocalypse, magic, sci-fi, club">
+      <label for="charTwist">Dark/NSFW Twist</label>
+      <textarea id="charTwist" maxlength="240" placeholder="e.g., forbidden magic, cult survivor, body horror, or type your own fantasy..."></textarea>
+      <button onclick="genCharPrompt()">Generate Character Prompt</button>
+      <div class="output-area" id="charOutput"></div>
+    </div>
+    <!-- J1NX Bar (character builder) -->
+    <div class="j1nx-bar" id="j1nxBar">
+      <b>J1NX</b>: Want help with your NSFW OC? Ask here:<br>
+      <input class="j1nx-input" id="j1nxInput" type="text" maxlength="90" placeholder="Ask J1NX about your character...">
+      <button class="j1nx-send" onclick="j1nxSend()">Send</button>
+      <div id="j1nxOutput" style="margin-top:9px;min-height:24px;"></div>
+    </div>
+    <div class="bmc">
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">
+        <img src="assets/img/bmc-button.png" alt="Buy Me A Coffee" style="height:32px;border-radius:6px;vertical-align:middle;box-shadow:0 0 7px #ffdb;">
+      </a>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
+      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a> |
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a> |
+      <a href="legal/" target="_blank">Legal & Terms</a>
+    </div>
+    <div style="font-size:0.97em;margin-top:9px;opacity:0.8;">
+      &copy; 2025 PromptForge / Gore and Giggles. All rights reserved.
+    </div>
+  </footer>
+  <!-- Google AdSense placeholder -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+    data-ad-client="ca-pub-0000000000000000"></script>
+  <!-- CharacterForge JS -->
   <script>
-    const generate = document.getElementById("generate");
-    const output = document.getElementById("output");
-
-    generate.onclick = () => {
-      const name = document.getElementById("charName").value || "Unnamed";
-      const age = document.getElementById("charAge").value || "unknown";
-      const vibe = document.getElementById("charVibe").value || "neutral";
-      const look = document.getElementById("charLook").value || "undefined appearance";
-      const personality = document.getElementById("charPersonality").value || "unknown personality";
-      const abilities = document.getElementById("charAbilities").value || "no special abilities";
-
-      const prompt = `🧠 Character Profile: ${name}
-Age: ${age}
-Vibe: ${vibe}
-Visuals: ${look}
-Personality: ${personality}
-Abilities: ${abilities}
-
-📷 Image Prompt:
-An ultra-detailed cinematic portrait of ${name}, a ${age}-year-old character who radiates ${vibe} energy. Their appearance is defined by ${look}, and their personality hints at someone who is ${personality}. In the scene, subtle hints of their ability to ${abilities} are visible. The shot uses dramatic lighting, emotional tension, and dreamlike background tones. Think expressive color grading, sharp close-up focus, soft shadows, and powerful mood.
-
-#portrait #character #cinematic #storytelling #vibes`
-
-      output.textContent = prompt;
-    };
+    function genCharPrompt() {
+      const name = document.getElementById('charName').value.trim() || 'An unnamed rebel';
+      const traits = document.getElementById('charTraits').value.trim() || 'mysterious, wild';
+      const setting = document.getElementById('charSetting').value.trim() || 'a forbidden future';
+      const twist = document.getElementById('charTwist').value.trim() || 'secret NSFW power';
+      const prompt = `${name} — ${traits}, set in ${setting}. NSFW twist: ${twist}.`;
+      document.getElementById('charOutput').innerText = prompt;
+    }
+  </script>
+  <!-- J1NX Chatbot JS (character advice, fun, local) -->
+  <script>
+    const j1nxReplies = [
+      "Make her even weirder.",
+      "Try adding a forbidden curse.",
+      "She needs more corruption.",
+      "I bet she bites.",
+      "Give her a dark secret.",
+      "Who hurt this OC?",
+      "You sure that's allowed on the internet?",
+      "Damn, that's hot. But can she fight?",
+      "Add glowing eyes. Trust me.",
+      "All my OCs are banned from Tumblr.",
+      "That's illegal in three dimensions.",
+      "You should write a whole book."
+    ];
+    function j1nxSend() {
+      const v = document.getElementById('j1nxInput').value;
+      let reply = j1nxReplies[Math.floor(Math.random() * j1nxReplies.length)];
+      if (/help/i.test(v)) reply = "Tip: Mix genres. 'NSFW punk witch, forbidden magic, cult survivor.'";
+      document.getElementById('j1nxOutput').innerText = reply;
+      document.getElementById('j1nxInput').value = '';
+    }
+    document.getElementById('j1nxInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') j1nxSend();
+    });
   </script>
 </body>
 </html>
