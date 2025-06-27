@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CharacterForge: AI Persona Generator</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #000, #111);
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      padding: 30px;
+      margin: 0;
+    }
+    h1 {
+      text-align: center;
+      font-size: 26px;
+      color: #00ffaa;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      background: #222;
+      color: #0f0;
+      border: 1px solid #0f0;
+    }
+    #generate {
+      background: #00ffaa;
+      color: #000;
+      margin-top: 20px;
+      padding: 10px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    #output {
+      background: #111;
+      padding: 20px;
+      margin-top: 30px;
+      white-space: pre-wrap;
+      color: #00ff88;
+      font-size: 15px;
+      border: 1px solid #00ffaa;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧬 CharacterForge</h1>
+
+  <label>Name</label>
+  <input type="text" id="charName" placeholder="e.g. Ember, Luna, Kai">
+
+  <label>Age</label>
+  <input type="text" id="charAge" placeholder="e.g. 22">
+
+  <label>Vibe</label>
+  <input type="text" id="charVibe" placeholder="e.g. mysterious, playful, dominant">
+
+  <label>Appearance / Hair / Style</label>
+  <input type="text" id="charLook" placeholder="e.g. short silver hair, futuristic bodysuit, glowing eyes">
+
+  <label>Personality</label>
+  <input type="text" id="charPersonality" placeholder="e.g. emotionally distant, sarcastic, secretly kind">
+
+  <label>Special Traits / Abilities</label>
+  <input type="text" id="charAbilities" placeholder="e.g. manipulates shadows, hyper-intelligence, illusions">
+
+  <button id="generate">🎨 Generate Prompt</button>
+
+  <div id="output"></div>
+
+  <script>
+    const generate = document.getElementById("generate");
+    const output = document.getElementById("output");
+
+    generate.onclick = () => {
+      const name = document.getElementById("charName").value || "Unnamed";
+      const age = document.getElementById("charAge").value || "unknown";
+      const vibe = document.getElementById("charVibe").value || "neutral";
+      const look = document.getElementById("charLook").value || "undefined appearance";
+      const personality = document.getElementById("charPersonality").value || "unknown personality";
+      const abilities = document.getElementById("charAbilities").value || "no special abilities";
+
+      const prompt = `🧠 Character Profile: ${name}
+Age: ${age}
+Vibe: ${vibe}
+Visuals: ${look}
+Personality: ${personality}
+Abilities: ${abilities}
+
+📷 Image Prompt:
+An ultra-detailed cinematic portrait of ${name}, a ${age}-year-old character who radiates ${vibe} energy. Their appearance is defined by ${look}, and their personality hints at someone who is ${personality}. In the scene, subtle hints of their ability to ${abilities} are visible. The shot uses dramatic lighting, emotional tension, and dreamlike background tones. Think expressive color grading, sharp close-up focus, soft shadows, and powerful mood.
+
+#portrait #character #cinematic #storytelling #vibes`
+
+      output.textContent = prompt;
+    };
+  </script>
+</body>
+</html>
