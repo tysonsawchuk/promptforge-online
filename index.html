@@ -1,73 +1,92 @@
+<!-- index.html (Entry + Fake Boot + Age Gate) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PromptForge MONSTER - Booting</title>
-  <meta name="description" content="Initializing PromptForge MONSTER... NSFW prompt generator loading.">
-  <meta name="keywords" content="NSFW, prompt generator, AI art, taboo, boot screen, terminal">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Share Tech Mono', monospace;
-      background-color: #000;
-      color: #0ff;
-      overflow: hidden;
-    }
-    #terminal {
-      padding: 20px;
-      white-space: pre-line;
-      line-height: 1.5;
-      animation: flicker 0.2s infinite alternate;
-    }
-    @keyframes flicker {
-      0% { opacity: 0.85; }
-      100% { opacity: 1; }
-    }
-    #scanline {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: rgba(0,255,255,0.15);
-      animation: scan 5s linear infinite;
-    }
-    @keyframes scan {
-      0% { top: 0%; }
-      100% { top: 100%; }
-    }
-  </style>
+  <title>PromptForge Dev Interface - AI Prompt Creation Lab</title>
+  <meta name="description" content="Enter the hidden interface of PromptForge – an AI-powered prompt generator for creating, experimenting, and developing image-generation magic.">
+  <meta name="keywords" content="AI prompt generator, stable diffusion, dev tools, image prompt creator, character prompts, prompt builder, forbidden AI lab">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="PromptForge – AI Prompt Builder">
+  <meta property="og:description" content="Explore a hidden dev terminal for experimental prompt generation. Create, expand, evolve.">
+  <meta property="og:image" content="https://promptforge.online/assets/preview.jpg">
+  <meta property="og:url" content="https://promptforge.online">
+  <link rel="canonical" href="https://promptforge.online" />
+  <link rel="stylesheet" href="style.css">
+  <script defer src="boot.js"></script>
 </head>
 <body>
-  <div id="scanline"></div>
-  <div id="terminal"></div>
-
-  <script>
-    const lines = [
-      "[ACCESS GRANTED]",
-      "[SYSTEM BOOTING] . . .",
-      "[MONSTER CORE ONLINE]",
-      "[VAULT LINK: ACTIVE]",
-      "[PAYLOAD READY]",
-      "\\nWelcome, Operative. Initializing engine...",
-      "\\n[PRESS ENTER TO PROCEED]"
-    ];
-    let i = 0;
-    const terminal = document.getElementById('terminal');
-
-    function typeLine() {
-      if (i < lines.length) {
-        terminal.innerHTML += lines[i] + "\n";
-        i++;
-        setTimeout(typeLine, 600);
-      } else {
-        setTimeout(() => window.location.href = "./generator.html", 3000);
-      }
-    }
-    typeLine();
-  </script>
+  <noscript>
+    <p>Welcome to PromptForge – a creative AI prompt studio for making beautiful, imaginative images using open-source tools. For full access, enable JavaScript.</p>
+  </noscript>
+  <div id="terminal">
+    <pre id="boot-sequence"></pre>
+  </div>
+  <div id="age-gate" style="display:none;">
+    <h1>⚠️ Dev Access Verification</h1>
+    <p>This interface is restricted. You may be accessing development utilities not intended for public use.</p>
+    <button onclick="enterSite()">I Understand, Proceed</button>
+  </div>
 </body>
 </html>
+
+<!-- boot.js -->
+<script>
+const bootLines = [
+  '[Booting PromptForge AI Console...]',
+  '[Analyzing user connection...]',
+  '[Spoofing local node ID...]',
+  '[Triangulating signal → ██▒▒▒▒▒▒▒▒]',
+  '[Installing dev suite → promptforge.online]',
+  '[Mapping synthetic render environment...]',
+  '[Building NSFW_sandbox_override]',
+  '[Erecting character wall → emotion layers loaded]',
+  '[Enabling visual model tunneler]',
+  '[System console unlocked] > press to continue'
+];
+
+let i = 0;
+const bootDisplay = document.getElementById('boot-sequence');
+
+function typeNext() {
+  if (i < bootLines.length) {
+    bootDisplay.innerHTML += bootLines[i] + "\n";
+    i++;
+    setTimeout(typeNext, 800);
+  } else {
+    document.getElementById('age-gate').style.display = 'block';
+  }
+}
+typeNext();
+
+function enterSite() {
+  window.location.href = "main.html";
+}
+</script>
+
+<!-- style.css -->
+<style>
+body {
+  background-color: black;
+  color: #33ff33;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 20px;
+}
+#boot-sequence {
+  white-space: pre-wrap;
+}
+#age-gate {
+  background: rgba(0,0,0,0.85);
+  border: 1px solid lime;
+  padding: 20px;
+  margin-top: 30px;
+}
+button {
+  background: lime;
+  color: black;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+</style>
