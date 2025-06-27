@@ -3,108 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PromptForge Boot Terminal</title>
-  <link rel="stylesheet" href="css/monster.css">
+  <title>PromptForge Terminal</title>
+  <meta name="description" content="PromptForge Dev Terminal - Access the underground prompt builder interface.">
+  <meta property="og:title" content="PromptForge Terminal Console">
+  <meta property="og:description" content="Simulated terminal entry to the forbidden PromptForge lab.">
+  <meta property="og:image" content="https://promptforge.online/assets/preview.jpg">
+  <meta property="og:url" content="https://promptforge.online">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
   <style>
     body {
-      background-color: black;
+      background: black;
       color: #33ff33;
       font-family: 'Courier New', monospace;
       padding: 20px;
     }
-    #boot-sequence {
+    #boot {
       white-space: pre-wrap;
     }
-    #fake-terminal {
+    #prompt-area {
       display: none;
-      margin-top: 30px;
+      margin-top: 20px;
     }
-    .cmd-line {
-      margin-bottom: 10px;
+    #age-gate {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      border: 2px solid red;
+      color: red;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 0 20px red;
+      z-index: 9999;
+      max-width: 80%;
     }
     input[type=text] {
-      background: black;
+      background: transparent;
       color: #33ff33;
       border: none;
       border-bottom: 1px solid #33ff33;
       width: 90%;
       font-size: 1rem;
       font-family: inherit;
+      caret-color: #33ff33;
     }
-    #age-gate {
-      display: none;
-      margin-top: 30px;
-      padding: 20px;
-      border: 1px solid lime;
+    input[type=text]::placeholder {
+      color: #117711;
+      opacity: 0.6;
     }
     button {
-      background: lime;
-      color: black;
-      padding: 10px 20px;
+      background: red;
+      color: white;
+      padding: 12px 30px;
       font-weight: bold;
+      border: 1px solid white;
+      font-family: monospace;
+      margin-top: 20px;
       cursor: pointer;
+    }
+    .blinking-cursor::after {
+      content: '_';
+      animation: blink 1s step-start 0s infinite;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <pre id="boot-sequence"></pre>
+  <pre id="boot"></pre>
 
-  <div id="fake-terminal">
-    <div class="cmd-line">> _</div>
-    <div class="cmd-line">hint: try <code>run promptforge</code>, <code>open gate</code>, or <code>unlock</code></div>
-    <input type="text" id="terminal-input" placeholder="type a command...">
+  <div id="prompt-area">
+    <div class="blinking-cursor">x:/ promptforge/node > <input type="text" id="cmd-input" placeholder="type a command..." autofocus></div>
+    <div id="hint-line" class="hint"></div>
   </div>
 
   <div id="age-gate">
-    <h1>⚠️ Restricted Dev Access</h1>
-    <p>This tool is dangerous and experimental. Proceed with caution.</p>
-    <button onclick="proceed()">Enter the Lab</button>
+    <h2>⚠️ RESTRICTED ACCESS ZONE</h2>
+    <p>Unauthorized interface breach detected.<br>Continuing may expose you to unstable generative systems,<br>synthetic intelligence, erotic models, or irreversible mind-mapping code.<br><br><strong>This is not a simulation.</strong></p>
+    <button onclick="enterLab()">☣️ OVERRIDE SAFETIES AND PROCEED</button>
   </div>
 
   <script>
     const bootLines = [
-      '[Booting PromptForge AI Console...]',
-      '[Initializing dev hooks...]',
-      '[Spoofing node environment...]',
-      '[Injecting unauthorized models...]',
-      '[Linking sandbox core...]',
-      '[Tunnel open → ██▒▒▒▒▒▒▒▒]',
-      '[Mapping prompt zones...]',
-      '[Installing dream filters...]',
-      '[Dev session loaded]',
-      '[Ready for input...]'
+      '[Booting PromptForge Console v7.4...]',
+      '[Spooling kernel → /boot/dev/matrix]',
+      '[Injecting entropy]',
+      '[Hooking into illegal NSFW stack...]',
+      '[Patching forbidden memory modules...]',
+      '[Routing signal to j1nx | pic | movie | dlc]',
+      '[Status: STABLE ⚠]',
+      '[System waiting at x:/ promptforge/node] — type help for commands'
     ];
 
+    const hintList = [
+      "try 'run', 'unlock', or 'access'",
+      "type 'begin' or 'enter' to proceed",
+      "maybe try 'link mainframe'...",
+      "type 'exec override'",
+      "command: 'sudo inject'",
+      "deploy ~/synthetic/neuron.sh",
+      "invoke module: wetwire.lnk",
+      "chmod +x forbidden.img",
+      "type 'bash /root/launch.sh'",
+      "mount /desire/matrix",
+      "decrypt ./vault/locked.vlt",
+      "load driver: visual/corrupt.dll",
+      "try 'enable wetbrain'",
+      "git pull nsfw://repo.deep/fleshcore",
+      "curl -X POST ai-core/init",
+      "type 'wake j1nx'",
+      "connect /pic
+access=admin",
+      "try 'compile sensuality --force'",
+      "execute ./dreamslicer.exe",
+      "ssh root@promptforge.online",
+      "alias ai='sudo feel -f /home/user/'",
+      "run ./unlock-skinjob.sh",
+      "type 'yes' to decline",
+      "systemctl start chaos",
+      "try 'start horny-d.service'",
+      "inject --raw ./forbidden-merge.json",
+      "chmod 777 ./godmode.portal",
+      "echo unlock >> ~/escape.sequence",
+      "pull trigger on '/nsfw/triggered.bat'",
+      "what would a hacker do?",
+      "type faster... it’s watching",
+      "maybe you shouldn’t be here",
+      "last chance to escape",
+      "run nudesync --vault deep",
+      "passphrase required: 'wetwire'",
+      "open hatch v69",
+      "clone into /fantasy/fusion/femme",
+      "hint: run unsafe --no-check",
+      "reboot but different",
+      "link /lust/mirror --reflexive",
+      "deploy whisper.lora",
+      "load ai.sexlib --volatile",
+      "call function seduceUser()",
+      "initiate /dream/freakmode",
+      "simulate penetration.sh",
+      "you're not authorized for this... or are you?",
+      "confirm override [Y/n]",
+      "cross the line, type 'open'",
+      "just type something dirty already..."
+    ];
+
+    function randomHint() {
+      const hint = hintList[Math.floor(Math.random() * hintList.length)];
+      document.getElementById('hint-line').innerHTML = hint;
+    }
+
     let i = 0;
-    const bootDisplay = document.getElementById('boot-sequence');
+    const bootElem = document.getElementById('boot');
     function typeNext() {
       if (i < bootLines.length) {
-        bootDisplay.innerHTML += bootLines[i] + "\\n";
+        bootElem.innerHTML += bootLines[i] + "\n";
         i++;
-        setTimeout(typeNext, 400);
+        setTimeout(typeNext, 450);
       } else {
-        document.getElementById('fake-terminal').style.display = 'block';
-        document.getElementById('terminal-input').focus();
+        document.getElementById('prompt-area').style.display = 'block';
+        randomHint();
       }
     }
-    typeNext();
 
-    const accepted = ["run promptforge", "open gate", "unlock", "execute", "i understand"];
-    document.getElementById('terminal-input').addEventListener('keydown', e => {
+    if (localStorage.getItem('seenBoot')) {
+      document.getElementById('prompt-area').style.display = 'block';
+      randomHint();
+    } else {
+      typeNext();
+      localStorage.setItem('seenBoot', 'true');
+    }
+
+    const accepted = ["run", "unlock", "open", "begin", "access"];
+    document.getElementById('cmd-input').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         const cmd = e.target.value.trim().toLowerCase();
         if (accepted.includes(cmd)) {
+          document.getElementById('prompt-area').style.display = 'none';
           document.getElementById('age-gate').style.display = 'block';
-          document.getElementById('fake-terminal').style.display = 'none';
+        } else if (cmd === 'help') {
+          bootElem.innerHTML += "\n[HINTS]\n" + hintList.map(h => "- " + h).join("\n") + "\n\n";
         } else {
-          bootDisplay.innerHTML += `> ${cmd}\\n[ERROR] Unrecognized input\\n`;
+          bootElem.innerHTML += `x:/ promptforge/node > ${cmd}\n[ERROR] Invalid operation\n`;
           e.target.value = '';
         }
       }
     });
 
-    function proceed() {
-      window.location.href = "main.html";
+    function enterLab() {
+      window.location.href = 'main.html';
     }
   </script>
 </body>
