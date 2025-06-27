@@ -32,6 +32,7 @@
       border: 1.5px solid #191;
       font-size: 1.07rem;
       letter-spacing: 0.03em;
+      position: relative;
     }
     .bootline {
       display: block;
@@ -55,6 +56,52 @@
     .sneaky-seo {
       display: none;
     }
+    /* Warning styles */
+    .final-warning {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffe4e1;
+      background: linear-gradient(90deg,#600,#222 60%,#600 100%);
+      border: 2.5px solid #f55;
+      border-radius: 13px;
+      box-shadow: 0 0 40px #f004, 0 0 4px #c44;
+      padding: 28px 18px 24px 18px;
+      position: absolute;
+      left: 50%;
+      top: 49%;
+      transform: translate(-50%,-50%) scale(1.09);
+      font-size: 1.22rem;
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 2;
+      text-align: center;
+      transition: opacity .9s cubic-bezier(.4,2,.2,1);
+      text-shadow: 0 0 9px #f66a, 0 0 2px #fff4, 0 0 14px #f004;
+    }
+    .final-warning.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .final-warning .fakelogo {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: #ffd900;
+      letter-spacing: 0.13em;
+      font-weight: 900;
+      text-shadow: 0 0 5px #000, 0 0 18px #fff7;
+    }
+    .final-warning .govline {
+      font-size: 1.1rem;
+      color: #faa;
+      font-weight: bold;
+      margin-top: 6px;
+      text-shadow: 0 0 4px #fbb7;
+    }
   </style>
 </head>
 <body>
@@ -63,6 +110,17 @@
     <span class="fake-cursor"></span>
     <div class="sneaky-seo">
       PromptForge: secret terminal, console AI, forbidden NSFW tools, Gore and Giggles, dark web prompt generator, hidden site, underground AI, secret image generator, not for normies, access restricted, PromptForge.online
+    </div>
+    <div class="final-warning" id="finalWarning" tabindex="-1">
+      <div class="fakelogo">★ CYBEROPS GOVERNMENT NODE ★</div>
+      <div>*** UNAUTHORIZED ACCESS DETECTED ***<br>
+        <span class="govline">RESTRICTED DEVELOPER CONSOLE</span>
+        Property of <b>Dominion of Cascadia</b> Cyber Operations<br>
+        <b>Act 313, Section 9: Unauthorized entry is a federal offense.</b><br>
+        <span style="color:#faa">YOUR IP HAS BEEN LOGGED</span><br>
+        This system is monitored and violations will be prosecuted.<br>
+        <span style="color:#ffd900; font-size:1.06em; margin-top:7px; display:block;">Proceed at your own risk.</span>
+      </div>
     </div>
   </div>
   <script>
@@ -137,6 +195,12 @@
         line.textContent = bootLines[i++];
         boot.appendChild(line);
         setTimeout(showNextLine, 65 + Math.random()*100);
+      } else {
+        // After all lines, fade in the warning
+        setTimeout(() => {
+          document.getElementById('finalWarning').classList.add('show');
+          document.getElementById('finalWarning').focus();
+        }, 800);
       }
     }
     showNextLine();
