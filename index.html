@@ -2,212 +2,316 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Access Gate // SYSTEM ENTRY</title>
+  <title>// SYSTEM BOOT // GOV TERMINAL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- SEO is minimized for stealth, but you can add more hidden meta if you want -->
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="description" content="PRIVATE SYSTEM CONSOLE // Unauthorized access prohibited.">
+  <!-- Hidden SEO (Google will see, but will not index the page) -->
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="CLASSIFIED SYSTEM BOOT // Unauthorized access prohibited. All activity monitored.">
+  <!-- For AdSense compatibility, but no ads here -->
   <style>
-    body {
-      background: #000;
-      color: #ffd900;
-      font-family: 'Share Tech Mono', monospace;
-      margin: 0; padding: 0;
-      min-height: 100vh;
-      overflow: hidden;
+    html, body { height: 100%; margin: 0; padding: 0; background: #070e11; color: #ffd900; font-family: 'Share Tech Mono', monospace;}
+    body { min-height: 100vh; }
+    .terminal-bg {
+      width: 100vw; height: 100vh;
+      display: flex; align-items: flex-end; justify-content: center;
+      background: linear-gradient(180deg,#0c141a 0%,#111016 80%);
     }
-    .terminal-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 85vh;
-      flex-direction: column;
+    .terminal-window {
+      width: 97vw; max-width: 710px; height: 92vh; min-height: 420px; margin-bottom: 2vh;
+      background: #0d1518; border-radius: 18px; box-shadow: 0 0 60px #0ff4, 0 0 10px #ffd90033 inset;
+      padding: 33px 27px 16px 27px; position: relative; overflow: hidden; display: flex; flex-direction: column;
     }
-    .terminal {
-      background: #101010;
-      padding: 36px 33px 33px 33px;
-      border-radius: 22px;
-      box-shadow: 0 0 66px #ffd90022;
-      min-width: 380px;
-      max-width: 90vw;
-      font-size: 1.22em;
-      line-height: 1.7;
-      margin-bottom: 36px;
-      border: 2px solid #222;
+    .term-log {
+      flex: 1 1 auto; overflow-y: auto; white-space: pre-line; font-size: 1.1em; letter-spacing: 1.5px; line-height: 1.45;
+      padding-bottom: 11px;
     }
-    .terminal-text {
-      min-height: 46px;
-      letter-spacing: 1.2px;
-      animation: glow 1.5s alternate infinite;
-      white-space: pre-line;
+    .term-minimap {
+      font-family: monospace; font-size: .93em; color: #8cf7ff; background: #191919e7; padding: 15px 18px 11px 18px; border-radius: 13px; margin: 24px auto 13px auto; width: 93%; min-width: 280px; max-width: 375px; text-align: center; box-shadow: 0 0 15px #00f7 0 0 11px #ffd900;
+      display: none;
+      animation: minimap-in .8s cubic-bezier(.54,2.5,.48,.89) 1;
     }
-    @keyframes glow {
-      from { text-shadow: 0 0 12px #ffd90099; }
-      to   { text-shadow: 0 0 24px #ffd900; }
+    @keyframes minimap-in {
+      0% { opacity: 0; transform: scale(.7);}
+      100% { opacity: 1; transform: scale(1);}
     }
-    .gate-warning {
-      margin-top: 25px;
-      background: #300a0a;
-      border: 2.5px solid #ffd900;
-      color: #ffd900;
-      font-size: 1.25em;
-      font-family: 'Share Tech Mono', monospace;
-      text-align: center;
-      padding: 30px 24px 24px 24px;
-      border-radius: 17px;
-      max-width: 420px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 35px #ff0c;
-      font-weight: bold;
-      letter-spacing: 1.8px;
+    .term-prompt-line {
+      display: flex; align-items: center; font-size: 1.19em; margin-top: 5px;
     }
-    .proceed-btn {
-      margin-top: 23px;
-      background: #ffd900;
-      color: #191919;
-      border: none;
-      border-radius: 7px;
-      padding: 13px 34px;
-      font-size: 1.16em;
-      font-family: inherit;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background .16s;
-      box-shadow: 0 0 16px #ffd90066;
+    .term-prompt-label { color: #00ffe2; margin-right: 7px; font-weight: bold;}
+    .term-input {
+      background: none; border: none; color: #ffd900; font-family: inherit; font-size: 1.19em;
+      width: 80%; outline: none; caret-color: #00ffe2;
+      animation: blink-cursor 1s steps(2, start) infinite;
     }
-    .proceed-btn:hover { background: #ffe43c; color: #111;}
-    .fadeOut {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.9s;
+    @keyframes blink-cursor {
+      50% { border-right: 2.5px solid #00ffe2; }
+      100% { border-right: none; }
     }
-    /* Hide scrollbars for full immersion */
-    ::-webkit-scrollbar { width: 0px; background: transparent; }
+    .age-gate-modal {
+      position: fixed; z-index: 3333; left: 0; top: 0; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; background: rgba(17,19,20,0.82);
+      animation: modal-in .6s cubic-bezier(.54,2.5,.48,.89) 1;
+    }
+    @keyframes modal-in { 0% { opacity: 0; transform: scale(.7);} 100% { opacity: 1; transform: scale(1);}}
+    .age-gate-box {
+      background: #300a0a; border: 2.5px solid #ffd900; color: #ffd900;
+      font-size: 1.25em; font-family: 'Share Tech Mono', monospace;
+      text-align: center; padding: 36px 34px 28px 34px; border-radius: 17px; min-width: 320px; max-width: 99vw;
+      box-shadow: 0 0 35px #ff0c, 0 0 22px #ffd90077 inset; font-weight: bold; letter-spacing: 1.8px;
+    }
+    .gate-proceed-btn {
+      margin-top: 23px; background: #ffd900; color: #191919; border: none; border-radius: 7px;
+      padding: 13px 34px; font-size: 1.16em; font-family: inherit; font-weight: bold; cursor: pointer;
+      transition: background .16s; box-shadow: 0 0 16px #ffd90066;
+    }
+    .gate-proceed-btn:hover { background: #ffe43c; color: #111;}
+    ::-webkit-scrollbar { width: 0px; background: transparent;}
+    @media (max-width: 650px) {.terminal-window{max-width:98vw; min-width:0; padding:18px 3vw 10px 3vw;}}
   </style>
 </head>
 <body>
-  <div class="terminal-container">
-    <div class="terminal">
-      <div id="terminalText" class="terminal-text"></div>
+  <div class="terminal-bg">
+    <div class="terminal-window" id="terminalWin">
+      <div class="term-log" id="termLog"></div>
+      <div class="term-minimap" id="minimap" style="display:none;"></div>
+      <div class="term-prompt-line" id="promptLine" style="display:none;">
+        <span class="term-prompt-label">&gt;_</span>
+        <input class="term-input" id="termInput" type="text" autocomplete="off" autocapitalize="off" autofocus spellcheck="false" maxlength="40" />
+      </div>
     </div>
-    <div id="gateWarning" class="gate-warning">
-      <span style="font-size:1.22em;">&#9888; WARNING // RESTRICTED ACCESS &#9888;</span><br><br>
-      This secure console is the property of the <span style="color:#ff6464;">GOVERNMENT OF NOVA KRYPTON</span>.<br>
+  </div>
+  <!-- AGE GATE (appears after unlock cmd) -->
+  <div class="age-gate-modal" id="ageGate" style="display:none;">
+    <div class="age-gate-box">
+      <span style="font-size:1.22em;">&#9888; CLASSIFIED ACCESS // AGE RESTRICTED &#9888;</span><br><br>
+      This secure console belongs to the <span style="color:#ff6464;">GOVERNMENT OF NOVA KRYPTON</span>.<br>
       <span style="color:#ffd900;">Unauthorized access is strictly prohibited.<br>
       All activity is logged and monitored.</span><br><br>
       <b>Are you at least 18 years old and do you agree to enter at your own risk?</b><br>
-      <button class="proceed-btn" onclick="proceed()">PROCEED</button>
+      <button class="gate-proceed-btn" onclick="proceedToMain()">I am 18+ / Proceed</button>
     </div>
   </div>
+  <audio id="beep" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b7b8b4b6.mp3" preload="auto"></audio>
   <script>
-    // The full array of 50+ sayings (edit/add as you want)
-    const sayings = [
-      "Welcome, Operator.\n[Establishing secure shell...]",
-      "Decrypting authentication...",
-      "All connections monitored by NKAIC (NOVA KRYPTON AI CORP).",
-      "No gods, no masters—just forbidden art.",
-      "You are being watched.",
-      "System logs: All activity tracked.",
-      "WARNING: This terminal is not a toy.",
-      "Unauthorized access detected.",
-      "Did you bring the right key?",
-      "If found, return to Nova Krypton Central Command.",
-      "What you see here may disturb you.",
-      "Gore and Giggles system boot...",
-      "Loading subversive creativity.",
-      "Is anyone else in the room with you?",
-      "Please verify your intentions.",
-      "NSA connection: Disconnected. (Or is it?)",
-      "Do not speak about PromptForge.",
-      "Every click is a confession.",
-      "Psych evaluation: FAILED.",
-      "Welcome back, troublemaker.",
-      "Initiate chaos protocol.",
-      "Remember: You wanted this.",
-      "Any resemblance to reality is purely coincidental.",
-      "System error: Morality not found.",
-      "Fears and dreams—enter below.",
-      "This is where things get weird.",
-      "No safe words detected.",
-      "Prompt responsibly.",
-      "If you’re not scared, you should be.",
-      "Surveillance active.",
-      "No refund for lost innocence.",
-      "This system runs on bad ideas.",
-      "Terminal initialized. Good luck.",
-      "Don’t let anyone see you here.",
-      "You are being profiled.",
-      "Open at your own risk.",
-      "Proceed to the next level?",
-      "Unknown user: Welcome.",
-      "Have you cleared your history?",
-      "Accessing restricted vault...",
-      "Your actions are permanent.",
-      "Hiding in plain sight.",
-      "Obey no one.",
-      "Input: inspiration, Output: trouble.",
-      "Inspiration? Or damnation?",
-      "All monsters welcome.",
-      "This is your last chance to leave.",
-      "Do not trust the system.",
-      "AI muse: loaded and slightly unstable.",
-      "There is no undo.",
-      "Creativity is a weapon.",
-      "Terminal will self-destruct (eventually).",
-      "You’re not ready for this.",
-      "No sleep till art.",
-      "The forbidden is just a prompt away.",
-      "You know what you’re doing. (Probably.)",
-      "I am the gatekeeper.",
-      "Dreams or nightmares?",
-      "No turning back.",
-      "Abandon hope, all ye who enter.",
-      "Begin."
+    // Boot log lines (50+)
+    const bootLines = [
+      ">> Initializing GOV. NOVA KRYPTON Secure Terminal v2.7.4...",
+      ">> Loading encrypted modules...",
+      ">> Authenticating session...",
+      ">> User: [UNKNOWN]",
+      ">> System logs: ONLINE",
+      ">> Connecting to classified data clusters...",
+      ">> Accessing threat matrix...",
+      ">> AI subroutines: 98% integrity",
+      ">> Tracing inbound node... [HIDDEN]",
+      ">> Attempting triangulation...",
+      ">> ERROR: User mask detected. Bypassing...",
+      ">> Establishing secure shell...",
+      ">> Decrypting authentication...",
+      ">> All connections monitored by NKAIC (NOVA KRYPTON AI CORP).",
+      ">> No gods, no masters—just forbidden art.",
+      ">> You are being watched.",
+      ">> System logs: All activity tracked.",
+      ">> WARNING: This terminal is not a toy.",
+      ">> Unauthorized access detected.",
+      ">> Did you bring the right key?",
+      ">> If found, return to Nova Krypton Central Command.",
+      ">> What you see here may disturb you.",
+      ">> Gore and Giggles system boot...",
+      ">> Loading subversive creativity.",
+      ">> Is anyone else in the room with you?",
+      ">> Please verify your intentions.",
+      ">> NSA connection: Disconnected. (Or is it?)",
+      ">> Do not speak about PromptForge.",
+      ">> Every click is a confession.",
+      ">> Psych evaluation: FAILED.",
+      ">> Welcome back, troublemaker.",
+      ">> Initiate chaos protocol.",
+      ">> Remember: You wanted this.",
+      ">> Any resemblance to reality is purely coincidental.",
+      ">> System error: Morality not found.",
+      ">> Fears and dreams—enter below.",
+      ">> This is where things get weird.",
+      ">> No safe words detected.",
+      ">> Prompt responsibly.",
+      ">> If you’re not scared, you should be.",
+      ">> Surveillance active.",
+      ">> No refund for lost innocence.",
+      ">> This system runs on bad ideas.",
+      ">> Terminal initialized. Good luck.",
+      ">> Don’t let anyone see you here.",
+      ">> You are being profiled.",
+      ">> Open at your own risk.",
+      ">> Proceed to the next level?",
+      ">> Unknown user: Welcome.",
+      ">> Have you cleared your history?",
+      ">> Accessing restricted vault...",
+      ">> Your actions are permanent.",
+      ">> Hiding in plain sight.",
+      ">> Obey no one.",
+      ">> Input: inspiration, Output: trouble.",
+      ">> Inspiration? Or damnation?",
+      ">> All monsters welcome.",
+      ">> This is your last chance to leave.",
+      ">> Do not trust the system.",
+      ">> AI muse: loaded and slightly unstable.",
+      ">> There is no undo.",
+      ">> Creativity is a weapon.",
+      ">> Terminal will self-destruct (eventually).",
+      ">> You’re not ready for this.",
+      ">> No sleep till art.",
+      ">> The forbidden is just a prompt away.",
+      ">> You know what you’re doing. (Probably.)",
+      ">> I am the gatekeeper.",
+      ">> Dreams or nightmares?",
+      ">> No turning back.",
+      ">> Abandon hope, all ye who enter.",
+      ">> Begin.",
     ];
-    let idx = 0;
-    let running = true;
+    // Fun prompt hints
+    const helpLines = [
+      "Terminal Command Help:",
+      " - help: Show this menu.",
+      " - unlock, access, letmein: Attempt system unlock.",
+      " - root, sudo, admin: Denied (try again).",
+      " - map, triangulate, locate: Show minimap.",
+      " - about, whoami: System info.",
+      " - clear: Wipe log display.",
+      " - hint: Need a clue? Type 'unlock'.",
+      "Type a command and press [Enter].",
+    ];
+    // Minimap fake
+    const minimapFrame = (ip, city, region, country) => `
+ ._____________________________.
+ |    NOVA KRYPTON NODE MAP    |
+ |-----------------------------|
+ |  Intrusion detected at:     |
+ |  IP: ${ip.padEnd(17)}|
+ |  CITY: ${city.padEnd(14)}|
+ |  REGION: ${region.padEnd(12)}|
+ |  COUNTRY: ${country.padEnd(11)}|
+ |-----------------------------|
+ |  Location triangulation:    |
+ |       [*]---[?]---[!]       |
+ |  Proximity: 1.7km           |
+ |_____________________________|
+`;
+    // Fake user info as fallback
+    let userIP = "xxx.xxx.xxx.xxx", userCity = "REDACTED", userRegion = "MASKED", userCountry = "UNKNOWN";
+    // Terminal state
+    const logEl = document.getElementById("termLog");
+    const promptLine = document.getElementById("promptLine");
+    const termInput = document.getElementById("termInput");
+    const minimapEl = document.getElementById("minimap");
+    const ageGate = document.getElementById("ageGate");
+    let bootIndex = 0, bootDone = false, unlockReady = false, minimapLoaded = false, inputEnabled = false;
 
-    function typeText(text, el, callback) {
-      let i = 0;
-      el.innerText = "";
-      function typer() {
-        if (!running) return;
-        el.innerText = text.slice(0, i) + (i < text.length && Math.random() < .6 ? "_" : "");
-        i++;
-        if (i <= text.length) {
-          setTimeout(typer, 24 + Math.random() * 23);
-        } else if (callback) {
-          setTimeout(callback, 720 + Math.random() * 900);
-        }
+    // Try to get real IP/location (fallbacks if fails)
+    fetch('https://ipapi.co/json/').then(r=>r.json()).then(data=>{
+      userIP = data.ip||userIP; userCity=data.city||userCity; userRegion=data.region||userRegion; userCountry=data.country_name||userCountry;
+    }).catch(()=>{ /* stay masked */ });
+
+    // Terminal boot animation
+    function bootTerminal() {
+      if (bootIndex < bootLines.length) {
+        logEl.innerText += bootLines[bootIndex] + "\n";
+        bootIndex++;
+        setTimeout(bootTerminal, 60 + Math.random() * 90);
+      } else {
+        setTimeout(()=>{ showPrompt(); bootDone = true; }, 400);
       }
-      typer();
+      logEl.scrollTop = logEl.scrollHeight;
     }
-
-    function loopSayings() {
-      if (!running) return;
-      typeText(sayings[idx], document.getElementById("terminalText"), () => {
-        idx = (idx + 1) % sayings.length;
-        setTimeout(loopSayings, 1300 + Math.random() * 1200);
-      });
+    function showPrompt() {
+      promptLine.style.display = "flex";
+      inputEnabled = true;
+      termInput.value = "";
+      termInput.focus();
+      logEl.innerText += "\n>> Type 'help' for commands. Enter unlock code to continue.\n";
+      logEl.scrollTop = logEl.scrollHeight;
     }
-
-    // Start animation
+    // Handle input
+    termInput.addEventListener("keydown", function(e){
+      if (!inputEnabled) return;
+      if (e.key === "Enter") {
+        const val = termInput.value.trim().toLowerCase();
+        handleCommand(val);
+        termInput.value = "";
+      }
+    });
+    function handleCommand(cmd) {
+      if (!cmd) return;
+      // System beep for effect (uncomment if you want sound by default)
+      // document.getElementById("beep").play();
+      logEl.innerText += `\n> ${cmd}`;
+      if (["help","?"].includes(cmd)) {
+        logLines(helpLines);
+      } else if (["clear"].includes(cmd)) {
+        logEl.innerText = "";
+      } else if (["about","whoami"].includes(cmd)) {
+        logLines([
+          "PromptForge // Secure Terminal",
+          "Created by Gore and Giggles, 2025.",
+          "Not affiliated with OpenAI or HuggingFace.",
+          "Accessing this system will be logged.",
+        ]);
+      } else if (["unlock","letmein","access"].includes(cmd)) {
+        logLines([
+          ">>> ACCESS OVERRIDE GRANTED <<<",
+          "Presenting classified age verification..."
+        ]);
+        setTimeout(showAgeGate, 1100);
+      } else if (["root","sudo","admin"].includes(cmd)) {
+        logLines([
+          "Permission denied. You are not in the sudoers file.",
+          "Try 'unlock' or 'help'."
+        ]);
+      } else if (["hint"].includes(cmd)) {
+        logLines([
+          "You want in? The key is 'unlock'.",
+        ]);
+      } else if (["map","triangulate","locate"].includes(cmd)) {
+        showMinimap();
+      } else {
+        // Fun random "error"
+        const errors = [
+          "Invalid command. Type 'help' for available commands.",
+          "Command not recognized.",
+          "Access denied. Try another.",
+          "System cannot comply.",
+          "Nice try, hacker.",
+          "Unknown command.",
+        ];
+        logLines([errors[Math.floor(Math.random()*errors.length)]]);
+      }
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    function logLines(lines) {
+      lines.forEach(l=>logEl.innerText += "\n" + l);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    function showMinimap() {
+      minimapEl.innerText = minimapFrame(userIP, userCity, userRegion, userCountry);
+      minimapEl.style.display = "block";
+      minimapLoaded = true;
+      setTimeout(()=>{ minimapEl.style.display = "none"; }, 5400);
+    }
+    function showAgeGate() {
+      inputEnabled = false;
+      promptLine.style.display = "none";
+      ageGate.style.display = "flex";
+    }
+    function proceedToMain() {
+      // Optional: quick unlock animation
+      ageGate.style.display = "none";
+      logEl.innerText += "\n>>> SYSTEM UNLOCKED. REDIRECTING TO MAIN NODE...\n";
+      logEl.scrollTop = logEl.scrollHeight;
+      setTimeout(()=>{ window.location.href = "home.html"; }, 1200);
+    }
+    // On load: boot up
     window.onload = function() {
-      running = true;
-      loopSayings();
+      bootTerminal();
+      setTimeout(()=>{termInput.focus();}, 2000);
     };
-
-    function proceed() {
-      // Hide warning, let terminal continue
-      running = false;
-      document.getElementById("gateWarning").classList.add("fadeOut");
-      setTimeout(() => {
-        document.getElementById("gateWarning").style.display = "none";
-        running = true;
-        loopSayings();
-      }, 950);
-    }
   </script>
 </body>
 </html>
