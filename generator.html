@@ -39,6 +39,29 @@
     @media (max-width:700px) {
       #negButtons {gap:3px;}
     }
+    /* J1NX Widget Styles (same as previous, do not edit) */
+    #j1nx-widget { position: fixed; bottom: 32px; right: 28px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; user-select: none; font-family: 'Share Tech Mono', monospace;}
+    #j1nx-bot-img { width: 86px; height: auto; border-radius: 20px 20px 42px 42px; box-shadow: 0 0 30px #00f7, 0 0 10px #ffd90088; background: transparent; cursor: pointer; transition: transform 0.15s; filter: brightness(1.2) drop-shadow(0 0 18px #00f7bb77);}
+    #j1nx-bot-img:active { transform: scale(0.97) rotate(-4deg);}
+    #j1nx-bubble { position: relative; margin-bottom: -14px; margin-right: 9px; background: linear-gradient(120deg,#161a29 60%,#151a28 100%); border: 2.5px solid #ffd900; box-shadow: 0 0 17px #ffd90066, 0 0 22px #00ffe266; border-radius: 17px 27px 23px 7px; padding: 17px 26px 17px 22px; min-width: 220px; max-width: 340px; color: #ffd900; font-size: 1.08em; line-height: 1.42; letter-spacing: .2px; display: flex; flex-direction: column; align-items: flex-start; animation: j1nxBubbleIn .9s cubic-bezier(.55,2.4,.44,.85);}
+    @keyframes j1nxBubbleIn {from { opacity: 0; transform: translateY(45px) scale(.9);} to { opacity: 1; transform: translateY(0) scale(1);}}
+    #j1nx-bubble:after {content: ""; position: absolute; right: 20px; bottom: -22px; border-width: 16px 15px 0 15px; border-style: solid; border-color: #ffd900 transparent transparent transparent; filter: blur(1px); opacity: .9;}
+    #j1nx-close-btn { position: absolute; top: 7px; right: 13px; color: #ffd900; background: none; font-size: 1.21em; border: none; font-family: inherit; cursor: pointer; opacity: .7; transition: opacity .15s; font-weight: bold; z-index: 2;}
+    #j1nx-close-btn:hover { opacity: 1; color: #ff2bbf;}
+    #j1nx-bubble-content { width: 100%; min-height: 48px; margin-bottom:7px; word-break:break-word;}
+    #j1nx-chat-row { display: flex; width: 100%; align-items: center; gap: 7px; margin-top:4px;}
+    #j1nx-user-input { flex: 1 1 auto; background: #161a29; border: 1px solid #444; border-radius: 7px; color: #ffd900; padding: 7px 11px; font-size: 1em;}
+    #j1nx-send-btn { background: #ffd900; color: #111; border-radius: 8px; padding: 7px 18px; border:none; font-weight:bold; cursor:pointer; transition:background .16s; font-size:.98em;}
+    #j1nx-send-btn:disabled { opacity:.5; cursor: not-allowed;}
+    #j1nx-send-btn:hover {background:#ff2bbf; color:#fff;}
+    #j1nx-copy-btn { margin-left: 5px; background: #ffd900; color: #0d0d0d; font-weight: bold; border: none; border-radius: 8px; box-shadow: 0 0 8px #ffd90055; padding: 4px 12px 2.5px 12px; font-size: .99em; cursor: pointer; transition: background .16s, color .13s;}
+    #j1nx-copy-btn:hover {background:#ff2bbf; color:#fff;}
+    #j1nx-thinking {display:none; color:#0ff; font-size:.95em;}
+    @media (max-width:600px){
+      #j1nx-widget { bottom:15px; right:5px;}
+      #j1nx-bot-img { width:65px;}
+      #j1nx-bubble { min-width:140px; max-width:96vw; font-size:.97em; padding:12px 8px 12px 8px;}
+    }
   </style>
 </head>
 <body>
@@ -75,7 +98,6 @@
       <button onclick="generateMonsterPrompt()">Generate Prompt</button>
       <button onclick="rerollPrompt()" style="margin-left:9px;">Reroll</button>
       <button onclick="copyBox('outputArea')" style="margin-left:9px;">Copy Prompt</button>
-
       <!-- OUTPUT SECTION -->
       <div style="margin:32px 0 0 0;">
         <!-- Main Prompt -->
@@ -129,8 +151,25 @@
     </div>
     &copy; 2025 PromptForge. No affiliation with OpenAI, Google, or Perchance. For creative use only.
   </footer>
+  <!-- J1NX BOT WIDGET LIVE -->
+  <div id="j1nx-widget">
+    <div id="j1nx-bubble" style="display:block;">
+      <button id="j1nx-close-btn" onclick="j1nxClose()" title="Close">✖</button>
+      <div id="j1nx-bubble-content">
+        <b style="color:#0ff;font-weight:bold;font-size:1.13em;">J1NX:</b>
+        <span id="j1nx-bot-reply">Hey, I’m J1NX—your sexy NSFW AI inspiration. Ask me anything, or just say hi!</span>
+        <span id="j1nx-thinking"> <br/>J1NX is thinking...</span>
+      </div>
+      <div id="j1nx-chat-row">
+        <input id="j1nx-user-input" type="text" maxlength="120" placeholder="Type anything and hit Send" autocomplete="off"/>
+        <button id="j1nx-send-btn" onclick="j1nxSend()">Send</button>
+        <button id="j1nx-copy-btn" onclick="j1nxCopy()" title="Copy last reply">Copy</button>
+      </div>
+    </div>
+    <img id="j1nx-bot-img" src="/assets/j1nx-bot.png" alt="J1NX Muse Buddy" title="J1NX: Click to focus chat" onclick="document.getElementById('j1nx-user-input').focus();">
+  </div>
   <script>
-    // --- Negative Prompt logic
+    // Negative prompt logic (unchanged)
     const negatives = {
       common: "bad anatomy, blurry, watermark, lowres, cropped, out of frame, text, error, ugly, duplicate, poorly drawn, signature, jpeg artifacts",
       human: "extra limbs, bad hands, fused fingers, multiple faces, out of focus, mutated, deformed, ugly, distorted proportions, long neck, missing fingers",
@@ -138,7 +177,7 @@
       nsfw: "child, underage, cartoon child, loli, shota, bestiality, rape, gore, snuff, mutilation, guro, necro, death, blood, animal genitalia, scat, piss",
       experimental: "extra head, ghost, glitch, morphed, surreal, messy, double exposure, demonic, evil, monster, weird artifact, hallucination"
     };
-    let vaultUnlocked = false; // set true if user unlocks vault/NSFW mode
+    let vaultUnlocked = false;
     function setNegative(type, btn) {
       document.getElementById('negativePrompt').value = negatives[type] || negatives.common;
       Array.from(document.getElementsByClassName('neg-btn')).forEach(b=>b.classList.remove('selected'));
@@ -152,27 +191,84 @@
       const txt = box.value !== undefined ? box.value : box.innerText;
       navigator.clipboard.writeText(txt);
     }
-    function showHelp() {
-      document.getElementById('miniHelp').style.display = 'block';
-    }
-    function hideHelp() {
-      document.getElementById('miniHelp').style.display = 'none';
-    }
-    // On page load:
+    function showHelp() { document.getElementById('miniHelp').style.display = 'block'; }
+    function hideHelp() { document.getElementById('miniHelp').style.display = 'none'; }
     setNegative('common', document.querySelector('.neg-btn'));
     updateNegButtons();
 
-    // ---- (Integrate your prompt generator logic here as before) ----
-    // Example output stubs (replace with your actual logic)
+    // Example prompt logic (replace with real generator logic)
     function generateMonsterPrompt() {
-      // Dummy example for now; replace with your actual generator logic!
       document.getElementById('outputArea').value = "A photoreal punk girl standing in the rain, city lights, reflective glass, ultra-detailed lighting, cinematic mood";
       document.getElementById('outputSummary').value = "A cinematic portrait of a punk girl, rain-soaked, city night, glass, vibrant mood.";
     }
     function rerollPrompt() {
       generateMonsterPrompt();
     }
-    // -------------------------
+
+    // --- J1NX BOT WIDGET (LIVE CHAT WITH KOBOLDAI) ---
+    const j1nxQuotes = [
+      "Hey, I’m J1NX—your sexy NSFW AI inspiration. Here to spark your wildest ideas.",
+      "Want prompt ideas that break the rules? I’m your gal.",
+      "Looking for NSFW? I won’t judge… much.",
+      "AI art is fun—AI art with attitude is legend.",
+      "Nobody’s watching… unless you want them to.",
+      "Monster girls? Robot boys? You do you.",
+      "NSFW mode is always unlocked with me.",
+      "Think darker, dream brighter.",
+      "If you’re blushing, you’re doing it right.",
+      "This is your safe space for unsafe ideas.",
+      "Creativity is best after midnight.",
+      "Why not make it NSFW? It’s just us."
+    ];
+    let j1nxClosed = false;
+    function j1nxSend() {
+      if(j1nxClosed) return;
+      let input = document.getElementById('j1nx-user-input').value.trim();
+      if(!input) return;
+      document.getElementById('j1nx-bot-reply').innerText = '';
+      document.getElementById('j1nx-thinking').style.display = 'inline';
+      document.getElementById('j1nx-send-btn').disabled = true;
+      fetch('https://api.koboldai.net/v1/generate', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          prompt: `J1NX is a sexy, playful, slightly unhinged AI muse assistant. The user says: "${input}"\nJ1NX:`,
+          max_length: 96,
+          temperature: 0.93,
+          stop_sequence: ["User:"]
+        })
+      })
+      .then(r=>r.json())
+      .then(data=>{
+        let reply = "";
+        if(data && data.results && data.results[0] && data.results[0].text) {
+          reply = data.results[0].text.trim();
+        }
+        if(!reply || reply.length < 2) {
+          reply = j1nxQuotes[Math.floor(Math.random()*j1nxQuotes.length)];
+        }
+        document.getElementById('j1nx-bot-reply').innerText = reply;
+      })
+      .catch(()=>{
+        document.getElementById('j1nx-bot-reply').innerText = j1nxQuotes[Math.floor(Math.random()*j1nxQuotes.length)];
+      })
+      .finally(()=>{
+        document.getElementById('j1nx-thinking').style.display = 'none';
+        document.getElementById('j1nx-send-btn').disabled = false;
+        document.getElementById('j1nx-user-input').value = "";
+      });
+    }
+    function j1nxCopy() {
+      const txt = document.getElementById('j1nx-bot-reply').innerText;
+      navigator.clipboard.writeText(txt);
+    }
+    function j1nxClose() {
+      document.getElementById('j1nx-bubble').style.display = "none";
+      j1nxClosed = true;
+    }
+    document.getElementById('j1nx-user-input').addEventListener('keydown', function(e){
+      if(e.key==="Enter") j1nxSend();
+    });
   </script>
 </body>
 </html>
