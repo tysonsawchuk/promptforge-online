@@ -25,8 +25,20 @@
       font-size: 1em; font-family: inherit; font-weight: bold; cursor: pointer; transition: background .16s;
       box-shadow: 0 0 8px #ffd90044; margin-right: 9px;
     }
-    button:hover { background: #ff2bbf; color: #fff;}
-    .download-link { color: #ffd900; text-decoration: underline; margin-left: 8px; font-size: 1.03em;}
+    button:hover, .copy-btn:hover { background: #ff2bbf !important; color: #fff !important;}
+    .copy-btn { transition:background .18s, color .14s;}
+    .neg-btn {
+      background: #232; color: #0ff; border: 1.1px solid #393; border-radius: 8px;
+      padding: 7px 13px; font-size: 1em; cursor: pointer;
+      transition: background .18s, color .18s, border .16s;
+      font-weight:bold; letter-spacing:.5px;
+      margin-bottom: 2px;
+    }
+    .neg-btn.selected { background: #ffd900; color: #111; border-color: #fffb81; box-shadow: 0 0 18px #ffd90080;}
+    .neg-btn:hover { background: #ff2bbf; color: #fff;}
+    @media (max-width:700px) {
+      #negButtons {gap:3px;}
+    }
     @media (max-width: 750px) {main {padding:19px 2vw 30px 2vw;}}
   </style>
 </head>
@@ -72,6 +84,15 @@
       </div>
       <canvas id="wmCanvas" class="watermark-preview" width="0" height="0" style="display:none;"></canvas>
       <div class="output-area" id="outputArea"></div>
+
+      <!-- Output (watermark settings summary/copy) -->
+      <div style="margin:32px 0 0 0;">
+        <div style="display:flex;align-items:center;margin-bottom:6px;">
+          <label for="wmSummary" style="color:#ffd900; font-weight:bold; font-size:1.12em; margin-right:10px;">Summary:</label>
+          <button type="button" class="copy-btn" onclick="copyBox('wmSummary')" title="Copy summary" style="margin-left:auto;">Copy</button>
+        </div>
+        <textarea id="wmSummary" rows="2" readonly style="width:99%; background:#181b1d; color:#ffd900; border-radius:9px; border:1px solid #444; font-family:inherit; font-size:1em; margin-bottom:9px; padding:9px 14px;resize:vertical;min-height:34px;"></textarea>
+      </div>
     </div>
   </main>
   <footer>
@@ -93,6 +114,7 @@
     const canvas = document.getElementById('wmCanvas');
     const outputArea = document.getElementById('outputArea');
     const downloadBtn = document.getElementById('downloadBtn');
+    const wmSummary = document.getElementById('wmSummary');
 
     imgInput.addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -129,6 +151,9 @@
       ctx.globalAlpha = 1.0;
       downloadBtn.style.display = 'inline-block';
       outputArea.innerText = "Preview shown below. Click Download to save.";
+      wmSummary.value =
+        "Watermark: \"" + wmText.value + "\"\n" +
+        "Size: " + wmSize.value + "px | Alpha: " + wmAlpha.value + "%";
     }
 
     function downloadImage() {
@@ -136,6 +161,12 @@
       link.download = "watermarked-" + Date.now() + ".png";
       link.href = canvas.toDataURL("image/png");
       link.click();
+    }
+
+    function copyBox(id) {
+      const box = document.getElementById(id);
+      const txt = box.value !== undefined ? box.value : box.innerText;
+      navigator.clipboard.writeText(txt);
     }
   </script>
 </body>
