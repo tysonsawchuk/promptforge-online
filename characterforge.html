@@ -3,256 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <title>PromptForge CharacterForge</title>
-  <meta name="description" content="Create unique NSFW AI characters, build personas, and prompt with style.">
-  <meta name="keywords" content="PromptForge, character generator, NSFW, persona, AI, characterforge, Gore and Giggles">
-  <meta property="og:title" content="PromptForge CharacterForge">
-  <meta property="og:description" content="Build custom characters and generate wild AI prompts with CharacterForge.">
-  <meta property="og:image" content="assets/img/og-characterforge.jpg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/brains/MonsterBrains.css">
   <style>
-    body {
-      background: #120f1a;
-      color: #ffd0ec;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    body { background: #0a0a0a; color: #ffd900; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0; }
+    main { max-width: 700px; margin: 44px auto 0 auto; background: #191919; border-radius: 20px; box-shadow: 0 0 26px #222c; padding: 33px 33px 44px 33px; }
+    .characterforge-box label { display: block; margin: 9px 0 3px 0; font-weight: bold; color: #ffd900; }
+    .characterforge-box input[type="text"] { width: 100%; padding: 8px 12px; margin-bottom: 13px; font-size: 1.1em; background: #111; color: #ffd900; border: 1.3px solid #333; border-radius: 7px; }
+    .output-area { margin-top: 25px; padding: 15px 18px; background: #222; color: #fffbe8; border-radius: 13px; font-size: 1.12em; min-height: 54px; line-height: 1.45; word-break: break-word; box-shadow: 0 0 16px #3337;}
+    .j1nx-react { margin-top: 19px; font-size: 1.1em; color: #ffd900; min-height: 24px; text-shadow: 0 0 8px #0ff7; font-style: italic; }
+    .inspire-section { margin-bottom: 9px; margin-top: 7px; }
+    .inspire-label { color: #ffd700; font-weight: bold; margin-right: 5px; font-size: 1.04em; }
+    .inspire-dropdown { display: inline-block; margin-bottom: 3px; }
+    .inspire-opt {
+      display: inline-block; background: #232; color: #0ff; border: 1.1px solid #393; border-radius: 8px;
+      margin-right: 6px; margin-bottom: 3px; padding: 6px 13px 6px 13px; font-size: 1em; cursor: pointer;
+      transition: background .18s, color .18s, border .16s; user-select: none; box-shadow: 0 0 7px #0ff2;
     }
-    header {
-      background: #18131b;
-      padding: 22px 0 11px 0;
-      box-shadow: 0 2px 12px #e3a6e0a2;
-      text-align: center;
-      border-bottom: 1.5px solid #693a5a;
-    }
-    .logo {
-      font-size: 2.1rem;
-      font-weight: bold;
-      color: #ffa7e9;
-      text-shadow: 0 0 15px #ffa7e9cc, 0 0 8px #fff6;
-      margin-bottom: 3px;
-      letter-spacing: 0.09em;
-    }
-    nav {
-      margin: 0 0 0 0;
-      padding: 0;
-    }
-    nav a {
-      color: #ff9edd;
-      margin: 0 12px;
-      text-decoration: none;
-      font-size: 1.13em;
-      font-weight: bold;
-      letter-spacing: 0.04em;
-    }
-    nav a:hover { color: #fff952; }
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 28px 0 36px 0;
-    }
-    .cf-box {
-      background: #1d1822;
-      border-radius: 15px;
-      box-shadow: 0 0 24px #e3a6e066, 0 0 5px #111c;
-      padding: 28px 32px 24px 32px;
-      min-width: 295px;
-      width: 98vw;
-      max-width: 500px;
-      margin-bottom: 32px;
-      border: 1.5px solid #a33e77;
-    }
-    label { color: #ffd6fa; font-weight: bold; margin-bottom: 8px; display: block; }
-    input[type="text"], textarea, select {
-      width: 98%;
-      padding: 9px;
-      margin-bottom: 12px;
-      border-radius: 6px;
-      border: 1.2px solid #715073;
-      background: #271f2e;
-      color: #ffd0ec;
-      font-size: 1.07em;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-    }
-    textarea {
-      min-height: 54px;
-      resize: vertical;
-    }
+    .inspire-opt.selected { background: #ffd900; color: #111; border-color: #fffb81; box-shadow: 0 0 18px #ffd90080;}
     button {
-      background: #ffa7e9;
-      color: #111;
-      font-size: 1.1em;
-      font-family: inherit;
-      border: none;
-      border-radius: 8px;
-      padding: 11px 18px;
-      font-weight: bold;
-      box-shadow: 0 0 8px #ffa7e988;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background .13s, color .13s;
+      background: #ffd900; color: #111; border: none; border-radius: 7px; padding: 9px 22px; margin-top: 7px;
+      font-size: 1em; font-family: inherit; font-weight: bold; cursor: pointer; transition: background .16s;
+      box-shadow: 0 0 8px #ffd90044; margin-right: 9px;
     }
-    button:hover {
-      background: #fffbe7;
-      color: #a33e77;
-    }
-    .output-area {
-      margin-top: 18px;
-      background: #1a1622;
-      color: #fff4fd;
-      border-radius: 8px;
-      padding: 15px;
-      font-size: 1.09em;
-      min-height: 48px;
-      box-shadow: 0 0 6px #ffa7e955;
-      border: 1px solid #a33e77;
-    }
-    .j1nx-bar {
-      margin: 32px auto 0 auto;
-      max-width: 410px;
-      padding: 16px 12px;
-      border-radius: 10px;
-      background: #20152a;
-      color: #e3a6e0;
-      font-size: 1.09em;
-      box-shadow: 0 0 16px #a33e77, 0 0 2px #fff4;
-    }
-    .j1nx-bar b { color: #ffa7e9; }
-    .j1nx-input {
-      width: 80%;
-      padding: 7px;
-      margin-right: 6px;
-      border-radius: 7px;
-      border: 1px solid #ffa7e9;
-      background: #2a1c2d;
-      color: #ffd0ec;
-      font-size: 1em;
-    }
-    .j1nx-send {
-      background: #ffa7e9;
-      color: #111;
-      font-weight: bold;
-      border-radius: 7px;
-      border: none;
-      padding: 7px 13px;
-      cursor: pointer;
-    }
-    .j1nx-send:hover { background: #fffbe7; color: #a33e77; }
-    .bmc {
-      margin-top: 17px;
-      display: block;
-      text-align: center;
-    }
-    footer {
-      margin-top: auto;
-      padding: 28px 0 20px 0;
-      color: #ffd0ec;
-      background: #191119;
-      text-align: center;
-      font-size: 1.02rem;
-      border-top: 1.5px solid #ffa7e955;
-      box-shadow: 0 0 10px #ffa7e950;
-    }
-    .footer-links a {
-      color: #ffa7e9;
-      margin: 0 12px;
-      text-decoration: underline;
-      font-size: 1.09em;
-    }
-    .footer-links a:hover { color: #fffbe7; }
+    button:hover { background: #ffe43c; color: #333;}
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">PromptForge: CharacterForge</div>
-    <nav>
-      <a href="main.html">Home</a>
-      <a href="generator.html">Prompt Generator</a>
-      <a href="pages/watermark.html">Watermark Studio</a>
-      <a href="movieprompt.html">Movie Prompt</a>
-      <a href="j1nx.html">J1NX Bot</a>
-    </nav>
-  </header>
+  <!-- NAV BAR -->
+  <nav style="background:#191919; border-bottom:2px solid #ffd900; padding:14px 0; text-align:center; letter-spacing:1.5px; font-family:'Share Tech Mono',monospace;">
+    <a href="index.html" style="color:#ffd900; text-decoration:none; margin:0 28px; font-size:1.15em; font-weight:bold;">Home</a>
+    <a href="generator.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">Monster Prompt</a>
+    <a href="characterforge.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">CharacterForge</a>
+    <a href="watermark.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">Watermark</a>
+    <a href="j1nx.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">J1NX</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" style="color:#ffd900; margin:0 18px;">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles" target="_blank" style="color:#ffd900; margin:0 18px;">X</a>
+    <a href="https://www.facebook.com/groups/393971833395749" target="_blank" style="color:#ffd900; margin:0 18px;">Facebook</a>
+    <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:#ffd900; margin:0 18px;">☕ Support</a>
+  </nav>
   <main>
-    <div class="cf-box">
+    <div class="characterforge-box" id="cfBox">
       <label for="charName">Character Name</label>
       <input type="text" id="charName" maxlength="40" placeholder="e.g., Nyx the Outlawed Witch">
-      <label for="charTraits">Traits/Descriptors</label>
-      <input type="text" id="charTraits" maxlength="90" placeholder="e.g., shy, punk, pink hair, glowing eyes, corrupted">
-      <label for="charSetting">Setting/World</label>
-      <input type="text" id="charSetting" maxlength="60" placeholder="e.g., post-apocalypse, magic, sci-fi, club">
-      <label for="charTwist">Dark/NSFW Twist</label>
-      <textarea id="charTwist" maxlength="240" placeholder="e.g., forbidden magic, cult survivor, body horror, or type your own fantasy..."></textarea>
-      <button onclick="genCharPrompt()">Generate Character Prompt</button>
-      <div class="output-area" id="charOutput"></div>
-    </div>
-    <!-- J1NX Bar (character builder) -->
-    <div class="j1nx-bar" id="j1nxBar">
-      <b>J1NX</b>: Want help with your NSFW OC? Ask here:<br>
-      <input class="j1nx-input" id="j1nxInput" type="text" maxlength="90" placeholder="Ask J1NX about your character...">
-      <button class="j1nx-send" onclick="j1nxSend()">Send</button>
-      <div id="j1nxOutput" style="margin-top:9px;min-height:24px;"></div>
-    </div>
-    <div class="bmc">
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">
-        <img src="assets/img/bmc-button.png" alt="Buy Me A Coffee" style="height:32px;border-radius:6px;vertical-align:middle;box-shadow:0 0 7px #ffdb;">
-      </a>
+      <label for="userKeywords">Extra flavor (optional)</label>
+      <input type="text" id="userKeywords" placeholder="Describe details, e.g. scars, attitude, music, 'mirror selfie'...">
+      <div id="brainsDropdowns"></div>
+      <button onclick="generateCharacterPrompt()">Generate Character Prompt</button>
+      <button onclick="rerollPrompt()" style="margin-left:9px;">Reroll</button>
+      <button onclick="copyPrompt()" style="margin-left:9px;">Copy</button>
+      <div class="output-area" id="outputArea"></div>
+      <div class="j1nx-react" id="j1nxReact"></div>
     </div>
   </main>
-  <footer>
-    <div class="footer-links">
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
-      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a> |
-      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a> |
-      <a href="legal/" target="_blank">Legal & Terms</a>
-    </div>
-    <div style="font-size:0.97em;margin-top:9px;opacity:0.8;">
-      &copy; 2025 PromptForge / Gore and Giggles. All rights reserved.
-    </div>
+  <!-- FOOTER -->
+  <footer style="background:#191919; border-top:2px solid #ffd900; color:#ffd900; text-align:center; font-size:.96em; padding:17px 0 10px 0; font-family:'Share Tech Mono',monospace;">
+    &copy; 2025 PromptForge | Created by <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" style="color:#ffd900; text-decoration:underline;">Gore and Giggles</a> | <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:#ffd900;">Support this project</a>
+    <br>
+    <span style="font-size:0.85em;">Not affiliated with OpenAI or HuggingFace. All content for entertainment only.</span>
   </footer>
-  <!-- Google AdSense placeholder -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-    data-ad-client="ca-pub-0000000000000000"></script>
-  <!-- CharacterForge JS -->
   <script>
-    function genCharPrompt() {
-      const name = document.getElementById('charName').value.trim() || 'An unnamed rebel';
-      const traits = document.getElementById('charTraits').value.trim() || 'mysterious, wild';
-      const setting = document.getElementById('charSetting').value.trim() || 'a forbidden future';
-      const twist = document.getElementById('charTwist').value.trim() || 'secret NSFW power';
-      const prompt = `${name} — ${traits}, set in ${setting}. NSFW twist: ${twist}.`;
-      document.getElementById('charOutput').innerText = prompt;
-    }
+    PROMPT_MODE = "character";
   </script>
-  <!-- J1NX Chatbot JS (character advice, fun, local) -->
+  <script src="assets/brains/MonsterBrains.js"></script>
   <script>
-    const j1nxReplies = [
-      "Make her even weirder.",
-      "Try adding a forbidden curse.",
-      "She needs more corruption.",
-      "I bet she bites.",
-      "Give her a dark secret.",
-      "Who hurt this OC?",
-      "You sure that's allowed on the internet?",
-      "Damn, that's hot. But can she fight?",
-      "Add glowing eyes. Trust me.",
-      "All my OCs are banned from Tumblr.",
-      "That's illegal in three dimensions.",
-      "You should write a whole book."
-    ];
-    function j1nxSend() {
-      const v = document.getElementById('j1nxInput').value;
-      let reply = j1nxReplies[Math.floor(Math.random() * j1nxReplies.length)];
-      if (/help/i.test(v)) reply = "Tip: Mix genres. 'NSFW punk witch, forbidden magic, cult survivor.'";
-      document.getElementById('j1nxOutput').innerText = reply;
-      document.getElementById('j1nxInput').value = '';
+    loadBrainsJSON("assets/brains/prompt_data.json", brainsReady);
+    // Custom generator to prepend the character name, if any
+    function generateCharacterPrompt() {
+      generateMonsterPrompt();
+      let name = document.getElementById('charName').value.trim();
+      if (name) {
+        let area = document.getElementById('outputArea');
+        area.innerText = name + ": " + area.innerText;
+      }
     }
-    document.getElementById('j1nxInput').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') j1nxSend();
-    });
   </script>
 </body>
 </html>
