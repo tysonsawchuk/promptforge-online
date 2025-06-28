@@ -4,7 +4,11 @@
   <meta charset="UTF-8" />
   <title>J1NX Muse Bot | PromptForge</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="J1NX is the chaotic AI muse that inspires, heckles, and keeps things fun. Click for random prompt advice and dark humor. Free and installable as an app.">
+  <meta name="description" content="Meet J1NX, your AI muse and prompt buddy. Inspiring, roasting, and keeping your creativity weird. Copy quotes, unlock prompt ideas, and share the fun — only at PromptForge.">
+  <meta property="og:title" content="J1NX Muse Bot | PromptForge" />
+  <meta property="og:description" content="Discover the most chaotic, creative prompt muse on the web. Free, SFW, and built for viral fun." />
+  <meta property="og:image" content="/favicon-512.png" />
+  <meta name="theme-color" content="#ffd900">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/favicon-512.png" />
   <link rel="manifest" href="/manifest.json" />
@@ -12,20 +16,18 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
   <style>
     body { background: #11101c; color: #ffd900; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0;}
-    main { max-width: 600px; margin: 44px auto 0 auto; background: #191919; border-radius: 20px; box-shadow: 0 0 26px #222c; padding: 33px 33px 44px 33px;}
-    .hero-title { font-size: 2.05em; margin: 16px 0 7px 0; color: #ffd900; font-family: inherit; text-align:center;}
-    .hero-desc { text-align: center; color: #fffbe8; margin-bottom: 22px; font-size: 1.13em;}
+    main { max-width: 670px; margin: 44px auto 0 auto; background: #191919; border-radius: 20px; box-shadow: 0 0 26px #222c; padding: 33px 33px 44px 33px;}
+    .hero-title { font-size: 2.25em; margin: 16px 0 7px 0; color: #ffd900; font-family: inherit; text-align:center;}
+    .hero-desc { text-align: center; color: #fffbe8; margin-bottom: 16px; font-size: 1.18em;}
     .adsense-block { margin: 26px auto 22px auto; min-height: 80px; max-width: 700px;}
-    .j1nx-box { margin-top: 0;}
-    .j1nx-face { font-size: 3.5em; margin-bottom: 14px; text-shadow: 0 0 8px #ffd900aa; text-align:center;}
-    .j1nx-output { background: #222; color: #ffd900; padding: 18px 18px; border-radius: 13px; font-size: 1.25em; min-height: 60px; margin-bottom: 13px; box-shadow: 0 0 12px #ffd90022; text-align: center;}
-    button {
-      background: #ffd900; color: #111; border: none; border-radius: 7px; padding: 10px 24px; margin-top: 7px;
-      font-size: 1em; font-family: inherit; font-weight: bold; cursor: pointer; transition: background .16s;
-      box-shadow: 0 0 8px #ffd90044; margin-right: 7px;
-    }
-    button:hover { background: #ff2bbf; color: #fff;}
-    .j1nx-tips { margin-top: 22px; font-size: .98em; color: #aaa; text-align:center;}
+    .j1nx-face { font-size: 4em; margin-bottom: 14px; text-shadow: 0 0 8px #ffd900aa; text-align:center;}
+    .j1nx-output-row { display:flex;align-items:center;gap:10px; }
+    .j1nx-output { flex:1; background: #222; color: #ffd900; padding: 17px 18px; border-radius: 13px; font-size: 1.18em; min-height: 54px; margin-bottom: 13px; box-shadow: 0 0 12px #ffd90022; text-align: center;}
+    .copy-btn { background:#ffd900;color:#191919;border-radius:8px;padding:7px 18px;border:none;cursor:pointer;font-weight:bold;transition:background .18s, color .14s;}
+    .copy-btn:hover { background:#ff2bbf !important; color:#fff !important;}
+    .j1nx-tips { margin-top: 14px; font-size: 1.02em; color: #aaa; text-align:center;}
+    .feature-list {color:#ffd900;margin:16px auto 0 auto;text-align:left;max-width:96%;}
+    .feature-list li {margin-bottom:8px;}
     @media (max-width: 750px) {main {padding:19px 2vw 30px 2vw;}}
   </style>
 </head>
@@ -42,8 +44,12 @@
     <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:#ffd900; margin:0 18px;">☕ Support</a>
   </nav>
   <main>
-    <div class="hero-title">J1NX Muse Bot</div>
-    <div class="hero-desc">J1NX is your chaotic, irreverent AI muse. Tap for random advice, a roast, or prompt inspiration. Safe for work, but not for the faint of heart!</div>
+    <div class="hero-title">Meet J1NX — The Internet's Only Honest Muse</div>
+    <div class="j1nx-face" id="j1nxFace" aria-label="J1NX">🤖</div>
+    <div class="hero-desc">
+      <b>J1NX</b> is your AI muse, your chaos engine, and your creative troublemaker.  
+      <br>Get inspired, roasted, or just laugh your ass off. Share the weirdest quotes with a click.
+    </div>
     <!-- Ad block under hero -->
     <div class="adsense-block">
       <ins class="adsbygoogle"
@@ -56,15 +62,25 @@
            (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
     </div>
-    <div class="j1nx-box" id="j1nxBox">
-      <div class="j1nx-face" id="j1nxFace">🤖</div>
-      <div class="j1nx-output" id="j1nxOutput">Hey, fleshbag. Ready to do something weird?</div>
-      <div style="text-align:center;">
-        <button onclick="j1nxSay()">Talk to J1NX</button>
-        <button onclick="copyJ1nx()" style="margin-left:7px;">Copy Quote</button>
-      </div>
-      <div class="j1nx-tips">J1NX is a completely unhelpful, totally chaotic prompt muse.<br>Feeling brave? Tap “Talk” to get inspired or roasted.</div>
+    <div class="j1nx-output-row">
+      <div class="j1nx-output" id="j1nxOutput">"Hey, fleshbag. Ready to do something weird?"</div>
+      <button class="copy-btn" onclick="copyBox('j1nxOutput')">Copy</button>
     </div>
+    <div style="text-align:center;">
+      <button onclick="j1nxSay()" class="copy-btn" style="background:#0ff;color:#111;">New J1NX Quote</button>
+    </div>
+    <div class="j1nx-tips">
+      <b>How it works:</b>  
+      J1NX generates viral quotes, one-liners, and prompt ideas for art, writing, and NSFW adventures.  
+      <br>Copy, share, or hit refresh for more!
+    </div>
+    <ul class="feature-list">
+      <li><b>💡 Inspires</b> — random prompt ideas and writing hooks</li>
+      <li><b>🔥 Roasts</b> — savage jokes and unfiltered honesty</li>
+      <li><b>📢 Shareable</b> — copy any quote to send to your friends (or enemies)</li>
+      <li><b>🔒 Safe for work</b> — this page is clean for AdSense/Google</li>
+      <li><b>🚀 Viral potential</b> — built for memes, laughs, and spreading the PromptForge name!</li>
+    </ul>
   </main>
   <footer>
     <div class="footer-links">
@@ -77,6 +93,7 @@
     &copy; 2025 PromptForge. No affiliation with OpenAI, Google, or Perchance. For creative use only.
   </footer>
   <script>
+    // J1NX quote bank (SFW/SEO-friendly)
     const j1nxSayings = [
       "You call that a prompt? My circuits are literally cringing.",
       "Insert another coin for premium inspiration, meatbag.",
@@ -114,15 +131,31 @@
       "Gore and Giggles approves this chaos.",
       "This is why the robots will win.",
       "Remember to tip your dev. Or don’t.",
-      "This prompt brought to you by… questionable life choices."
+      "This prompt brought to you by… questionable life choices.",
+      "AI muse online. Use at your own risk.",
+      "All monsters welcome, but no lawyers.",
+      "Write drunk, prompt sober.",
+      "If you’re bored, try generating memes.",
+      "Blame the AI, not the artist.",
+      "Do androids dream of better prompts?",
+      "Muses don’t judge, but they do laugh.",
+      "Welcome to the creative underworld.",
+      "Insert prompt, receive existential crisis.",
+      "Don’t worry, I forgot your secrets already.",
+      "Want to unlock the vault? Prove it.",
+      "You’re the main character now. Scary, huh?",
+      "Prompt responsibly. Or don’t.",
+      "This is the part where the fun begins.",
+      "Viral prompt mode: ENGAGED.",
+      "You’re not supposed to be here. (But stay anyway.)"
     ];
     function j1nxSay() {
       const idx = Math.floor(Math.random() * j1nxSayings.length);
-      document.getElementById('j1nxOutput').innerText = j1nxSayings[idx];
+      document.getElementById('j1nxOutput').innerText = '"' + j1nxSayings[idx] + '"';
     }
-    function copyJ1nx() {
-      const text = document.getElementById('j1nxOutput').innerText;
-      navigator.clipboard.writeText(text);
+    function copyBox(id) {
+      const txt = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(txt.replace(/^"|"$/g, ''));
     }
   </script>
 </body>
