@@ -5,8 +5,44 @@
   <title>PromptForge Monster Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="assets/brains/MonsterBrains.css">
+  <style>
+    body { background: #0a0a0a; color: #ffd900; font-family: 'Share Tech Mono', monospace; margin: 0; padding: 0; }
+    main { max-width: 700px; margin: 44px auto 0 auto; background: #191919; border-radius: 20px; box-shadow: 0 0 26px #222c; padding: 33px 33px 44px 33px; }
+    .generator-box label { display: block; margin: 9px 0 3px 0; font-weight: bold; color: #ffd900; }
+    .generator-box input[type="text"] { width: 100%; padding: 8px 12px; margin-bottom: 13px; font-size: 1.1em; background: #111; color: #ffd900; border: 1.3px solid #333; border-radius: 7px; }
+    .output-area { margin-top: 25px; padding: 15px 18px; background: #222; color: #fffbe8; border-radius: 13px; font-size: 1.12em; min-height: 54px; line-height: 1.45; word-break: break-word; box-shadow: 0 0 16px #3337;}
+    .j1nx-react { margin-top: 19px; font-size: 1.1em; color: #ffd900; min-height: 24px; text-shadow: 0 0 8px #0ff7; font-style: italic; }
+    .inspire-section { margin-bottom: 9px; margin-top: 7px; }
+    .inspire-label { color: #ffd700; font-weight: bold; margin-right: 5px; font-size: 1.04em; }
+    .inspire-dropdown { display: inline-block; margin-bottom: 3px; }
+    .inspire-opt {
+      display: inline-block; background: #232; color: #0ff; border: 1.1px solid #393; border-radius: 8px;
+      margin-right: 6px; margin-bottom: 3px; padding: 6px 13px 6px 13px; font-size: 1em; cursor: pointer;
+      transition: background .18s, color .18s, border .16s; user-select: none; box-shadow: 0 0 7px #0ff2;
+    }
+    .inspire-opt.selected { background: #ffd900; color: #111; border-color: #fffb81; box-shadow: 0 0 18px #ffd90080;}
+    button {
+      background: #ffd900; color: #111; border: none; border-radius: 7px; padding: 9px 22px; margin-top: 7px;
+      font-size: 1em; font-family: inherit; font-weight: bold; cursor: pointer; transition: background .16s;
+      box-shadow: 0 0 8px #ffd90044; margin-right: 9px;
+    }
+    button:hover { background: #ffe43c; color: #333;}
+  </style>
 </head>
 <body>
+  <!-- NAV BAR -->
+  <nav style="background:#191919; border-bottom:2px solid #ffd900; padding:14px 0; text-align:center; letter-spacing:1.5px; font-family:'Share Tech Mono',monospace;">
+    <a href="index.html" style="color:#ffd900; text-decoration:none; margin:0 28px; font-size:1.15em; font-weight:bold;">Home</a>
+    <a href="generator.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">Monster Prompt</a>
+    <a href="characterforge.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">CharacterForge</a>
+    <a href="watermark.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">Watermark</a>
+    <a href="j1nx.html" style="color:#ffd900; text-decoration:none; margin:0 28px;">J1NX</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" style="color:#ffd900; margin:0 18px;">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles" target="_blank" style="color:#ffd900; margin:0 18px;">X</a>
+    <a href="https://www.facebook.com/groups/393971833395749" target="_blank" style="color:#ffd900; margin:0 18px;">Facebook</a>
+    <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:#ffd900; margin:0 18px;">☕ Support</a>
+  </nav>
+
   <main>
     <div class="generator-box" id="genBox">
       <label for="userKeywords">What do you want to see?</label>
@@ -19,8 +55,16 @@
       <div class="j1nx-react" id="j1nxReact"></div>
     </div>
   </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#191919; border-top:2px solid #ffd900; color:#ffd900; text-align:center; font-size:.96em; padding:17px 0 10px 0; font-family:'Share Tech Mono',monospace;">
+    &copy; 2025 PromptForge | Created by <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" style="color:#ffd900; text-decoration:underline;">Gore and Giggles</a> | <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:#ffd900;">Support this project</a>
+    <br>
+    <span style="font-size:0.85em;">Not affiliated with OpenAI or HuggingFace. All content for entertainment only.</span>
+  </footer>
+
   <script>
-    PROMPT_MODE = "image"; // or "movie" for movieprompt.html!
+    PROMPT_MODE = "image";
   </script>
   <script src="assets/brains/MonsterBrains.js"></script>
   <script>
