@@ -18,24 +18,27 @@
     .adsense-block { margin: 26px auto 22px auto; min-height: 80px; max-width: 700px;}
     .generator-box label { display: block; margin: 9px 0 3px 0; font-weight: bold; color: #ffd900;}
     .generator-box input[type="text"] { width: 100%; padding: 8px 12px; margin-bottom: 13px; font-size: 1.1em; background: #111; color: #ffd900; border: 1.3px solid #333; border-radius: 7px;}
-    .output-area { margin-top: 25px; padding: 15px 18px; background: #222; color: #fffbe8; border-radius: 13px; font-size: 1.12em; min-height: 54px; line-height: 1.45; word-break: break-word; box-shadow: 0 0 16px #3337;}
-    .j1nx-react { margin-top: 19px; font-size: 1.1em; color: #ffd900; min-height: 24px; text-shadow: 0 0 8px #0ff7; font-style: italic;}
-    .inspire-section { margin-bottom: 9px; margin-top: 7px;}
-    .inspire-label { color: #ffd700; font-weight: bold; margin-right: 5px; font-size: 1.04em;}
-    .inspire-dropdown { display: inline-block; margin-bottom: 3px;}
-    .inspire-opt {
-      display: inline-block; background: #232; color: #0ff; border: 1.1px solid #393; border-radius: 8px;
-      margin-right: 6px; margin-bottom: 3px; padding: 6px 13px 6px 13px; font-size: 1em; cursor: pointer;
-      transition: background .18s, color .18s, border .16s; user-select: none; box-shadow: 0 0 7px #0ff2;
-    }
-    .inspire-opt.selected { background: #ffd900; color: #111; border-color: #fffb81; box-shadow: 0 0 18px #ffd90080;}
     button {
       background: #ffd900; color: #111; border: none; border-radius: 7px; padding: 9px 22px; margin-top: 7px;
       font-size: 1em; font-family: inherit; font-weight: bold; cursor: pointer; transition: background .16s;
       box-shadow: 0 0 8px #ffd90044; margin-right: 9px;
     }
-    button:hover { background: #ff2bbf; color: #fff;}
+    button:hover, .copy-btn:hover { background: #ff2bbf !important; color: #fff !important;}
     @media (max-width: 750px) {main {padding:19px 2vw 30px 2vw;}}
+    /* Output section buttons */
+    .copy-btn { transition:background .18s, color .14s;}
+    .neg-btn {
+      background: #232; color: #0ff; border: 1.1px solid #393; border-radius: 8px;
+      padding: 7px 13px; font-size: 1em; cursor: pointer;
+      transition: background .18s, color .18s, border .16s;
+      font-weight:bold; letter-spacing:.5px;
+      margin-bottom: 2px;
+    }
+    .neg-btn.selected { background: #ffd900; color: #111; border-color: #fffb81; box-shadow: 0 0 18px #ffd90080;}
+    .neg-btn:hover { background: #ff2bbf; color: #fff;}
+    @media (max-width:700px) {
+      #negButtons {gap:3px;}
+    }
   </style>
 </head>
 <body>
@@ -71,9 +74,49 @@
       <div id="brainsDropdowns"></div>
       <button onclick="generateMonsterPrompt()">Generate Prompt</button>
       <button onclick="rerollPrompt()" style="margin-left:9px;">Reroll</button>
-      <button onclick="copyPrompt()" style="margin-left:9px;">Copy</button>
-      <div class="output-area" id="outputArea"></div>
-      <div class="j1nx-react" id="j1nxReact"></div>
+      <button onclick="copyBox('outputArea')" style="margin-left:9px;">Copy Prompt</button>
+
+      <!-- OUTPUT SECTION -->
+      <div style="margin:32px 0 0 0;">
+        <!-- Main Prompt -->
+        <div style="display:flex;align-items:center;margin-bottom:6px;">
+          <label for="outputArea" style="color:#ffd900; font-weight:bold; font-size:1.12em; margin-right:10px;">Main Prompt:</label>
+          <button type="button" class="copy-btn" onclick="copyBox('outputArea')" title="Copy main prompt" style="margin-left:auto;">Copy</button>
+        </div>
+        <textarea id="outputArea" rows="3" readonly style="width:99%; background:#181b1d; color:#ffd900; border-radius:9px; border:1px solid #444; font-family:inherit; font-size:1.08em; margin-bottom:17px; padding:10px 14px;resize:vertical;min-height:44px;"></textarea>
+        <!-- Prompt Summary -->
+        <div style="display:flex;align-items:center;margin-bottom:6px;">
+          <label for="outputSummary" style="color:#ffd900; font-weight:bold; font-size:1.08em; margin-right:10px;">Summary:</label>
+          <button type="button" class="copy-btn" onclick="copyBox('outputSummary')" title="Copy summary" style="margin-left:auto;">Copy</button>
+        </div>
+        <textarea id="outputSummary" rows="2" readonly style="width:99%; background:#181b1d; color:#ffd900; border-radius:9px; border:1px solid #444; font-family:inherit; font-size:1em; margin-bottom:17px; padding:9px 14px;resize:vertical;min-height:34px;"></textarea>
+        <!-- Negative Prompt with Buttons -->
+        <div style="display:flex;align-items:center;margin-bottom:6px;">
+          <label for="negativePrompt" style="color:#ffd900; font-weight:bold; font-size:1.08em; margin-right:10px;">Negative Prompt:</label>
+          <button type="button" class="copy-btn" onclick="copyBox('negativePrompt')" title="Copy negative prompt" style="margin-left:auto;">Copy</button>
+        </div>
+        <div id="negButtons" style="margin:0 0 9px 0;display:flex;gap:7px;flex-wrap:wrap;">
+          <button type="button" class="neg-btn" onclick="setNegative('common', this)">Common</button>
+          <button type="button" class="neg-btn" onclick="setNegative('human', this)">Human</button>
+          <button type="button" class="neg-btn" onclick="setNegative('sfw', this)">SFW</button>
+          <button type="button" class="neg-btn" id="negNSFW" style="display:none;" onclick="setNegative('nsfw', this)">NSFW</button>
+          <button type="button" class="neg-btn" onclick="setNegative('experimental', this)">Experimental</button>
+          <button type="button" class="neg-btn" onclick="showHelp()">Help</button>
+        </div>
+        <textarea id="negativePrompt" rows="2" readonly style="width:99%; background:#181b1d; color:#ffd900; border-radius:9px; border:1px solid #444; font-family:inherit; font-size:1em; margin-bottom:9px; padding:9px 14px;resize:vertical;min-height:34px;"></textarea>
+        <!-- Mini help modal -->
+        <div id="miniHelp" style="display:none;background:#23252d;color:#fffbe8;position:fixed;top:24%;left:50%;transform:translate(-50%,0);border-radius:13px;padding:30px 28px 22px 28px;box-shadow:0 0 24px #ffd90044;z-index:333;font-size:1.04em;max-width:340px;">
+          <div style="margin-bottom:15px;font-weight:bold;color:#ffd900;">PromptForge Negative Prompt Help</div>
+          <ul style="padding-left:15px;text-align:left;">
+            <li><b>Common</b>: Removes artifacts, blur, junk (default)</li>
+            <li><b>Human</b>: Extra limbs, weird hands/faces</li>
+            <li><b>SFW</b>: Removes adult or explicit results</li>
+            <li><b>NSFW</b>: Removes censors/filters (unlocks after vault)</li>
+            <li><b>Experimental</b>: For wild outputs</li>
+          </ul>
+          <button onclick="hideHelp()" style="background:#ffd900;color:#191919;border-radius:7px;padding:5px 20px;border:none;cursor:pointer;font-weight:bold;">Close</button>
+        </div>
+      </div>
     </div>
   </main>
   <footer>
@@ -87,11 +130,49 @@
     &copy; 2025 PromptForge. No affiliation with OpenAI, Google, or Perchance. For creative use only.
   </footer>
   <script>
-    PROMPT_MODE = "image";
-  </script>
-  <script src="assets/brains/MonsterBrains.js"></script>
-  <script>
-    loadBrainsJSON("assets/brains/prompt_data.json", brainsReady);
+    // --- Negative Prompt logic
+    const negatives = {
+      common: "bad anatomy, blurry, watermark, lowres, cropped, out of frame, text, error, ugly, duplicate, poorly drawn, signature, jpeg artifacts",
+      human: "extra limbs, bad hands, fused fingers, multiple faces, out of focus, mutated, deformed, ugly, distorted proportions, long neck, missing fingers",
+      sfw: "nudity, nsfw, suggestive, explicit, sexual, lewd, adult, inappropriate, mature, violence, gore, blood, offensive, underwear, swimsuit",
+      nsfw: "child, underage, cartoon child, loli, shota, bestiality, rape, gore, snuff, mutilation, guro, necro, death, blood, animal genitalia, scat, piss",
+      experimental: "extra head, ghost, glitch, morphed, surreal, messy, double exposure, demonic, evil, monster, weird artifact, hallucination"
+    };
+    let vaultUnlocked = false; // set true if user unlocks vault/NSFW mode
+    function setNegative(type, btn) {
+      document.getElementById('negativePrompt').value = negatives[type] || negatives.common;
+      Array.from(document.getElementsByClassName('neg-btn')).forEach(b=>b.classList.remove('selected'));
+      if (btn) btn.classList.add('selected');
+    }
+    function updateNegButtons() {
+      document.getElementById('negNSFW').style.display = vaultUnlocked ? "inline-block" : "none";
+    }
+    function copyBox(id) {
+      const box = document.getElementById(id);
+      const txt = box.value !== undefined ? box.value : box.innerText;
+      navigator.clipboard.writeText(txt);
+    }
+    function showHelp() {
+      document.getElementById('miniHelp').style.display = 'block';
+    }
+    function hideHelp() {
+      document.getElementById('miniHelp').style.display = 'none';
+    }
+    // On page load:
+    setNegative('common', document.querySelector('.neg-btn'));
+    updateNegButtons();
+
+    // ---- (Integrate your prompt generator logic here as before) ----
+    // Example output stubs (replace with your actual logic)
+    function generateMonsterPrompt() {
+      // Dummy example for now; replace with your actual generator logic!
+      document.getElementById('outputArea').value = "A photoreal punk girl standing in the rain, city lights, reflective glass, ultra-detailed lighting, cinematic mood";
+      document.getElementById('outputSummary').value = "A cinematic portrait of a punk girl, rain-soaked, city night, glass, vibrant mood.";
+    }
+    function rerollPrompt() {
+      generateMonsterPrompt();
+    }
+    // -------------------------
   </script>
 </body>
 </html>
