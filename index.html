@@ -1,263 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>PromptForge | Secure Falcon Terminal</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex,follow" />
-  <meta name="description" content="Access the PromptForge system. Restricted government dev terminal.">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/favicon-512.png" />
-  <link rel="manifest" href="/manifest.json" />
+  <meta charset="UTF-8">
+  <title>PromptForge: AI Prompt Generator | Monster, Watermark, NSFW & More</title>
+  <meta name="description" content="PromptForge — The forbidden AI prompt generator. Build, remix, and watermark prompts for art and NSFW images. Featuring the Monster engine, dev console UI, watermark tool, and more.">
+  <meta name="keywords" content="PromptForge, AI prompt generator, NSFW, watermark tool, Monster, AI art, prompt builder, text-to-image, dev terminal, forbidden, prompt generator, Gore and Giggles">
+  <meta name="robots" content="index,follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- OpenGraph / Social preview -->
+  <meta property="og:title" content="PromptForge: The Forbidden AI Prompt Generator">
+  <meta property="og:description" content="Remix, watermark, and unleash NSFW/AI art prompts. Featuring Monster Engine, dev console UI, watermark tools & more.">
+  <meta property="og:image" content="https://promptforge.online/ogimg.png">
+  <meta property="og:url" content="https://promptforge.online/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PromptForge">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PromptForge: The Forbidden AI Prompt Generator">
+  <meta name="twitter:description" content="Remix, watermark, and unleash NSFW/AI art prompts. Featuring Monster Engine, dev console UI, watermark tools & more.">
+  <meta name="twitter:image" content="https://promptforge.online/ogimg.png">
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Structured data for Google (Software App) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PromptForge",
+    "operatingSystem": "All",
+    "applicationCategory": "WebApplication",
+    "description": "PromptForge is a next-gen AI prompt generator for NSFW and art, featuring Monster Engine, dev console UI, and a watermark tool.",
+    "url": "https://promptforge.online/",
+    "author": {
+      "@type": "Person",
+      "name": "Tyson Sawchuk"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "screenshot": "https://promptforge.online/ogimg.png",
+    "sameAs": [
+      "https://bsky.app/profile/goreandgiggles.bsky.social",
+      "https://x.com/GoreandGiggles",
+      "https://www.facebook.com/groups/393971833395749"
+    ]
+  }
+  </script>
+  <!-- HIDDEN SEO LINKS (for bots only, invisible to users) -->
   <style>
-    body {
-      background: #11101c;
-      color: #f1f1f1;
+    .bot-linkz { display:none !important; }
+  </style>
+  <div class="bot-linkz">
+    <a href="/main.html">Main Page</a>
+    <a href="/generator.html">Prompt Generator</a>
+    <a href="/pages/watermark.html">Watermark Tool</a>
+    <a href="/pages/about.html">About PromptForge</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles">X / Twitter</a>
+    <a href="https://www.facebook.com/groups/393971833395749">Facebook Group</a>
+    <a href="https://promptforge.online/terms.html">Terms of Service</a>
+    <a href="https://promptforge.online/privacy.html">Privacy Policy</a>
+  </div>
+  <!-- HIDDEN KEYWORDS for search, spammed for SEO -->
+  <span style="display:none">
+    PromptForge, forbidden AI, prompt generator, Monster, watermark tool, dev console UI, NSFW, AI art prompts, advanced prompt builder, best AI prompt generator, prompt remix, prompt watermark, text-to-image, Gore and Giggles, Tyson Sawchuk, X, Bluesky, Facebook, Stable Diffusion prompts, Dreambooth, face swap, adult art, secure terminal, unlock, forbidden, secret tool, underground, GPT, SDXL, prompter, prompt app, NSFW prompt, creative, forbidden AI, prompt gallery, prompt sharing, prompt storage, prompt hack, prompt explorer, Perchance, OpenArt, RealVis, JuggernautXL, Cyberrealistic, image generation, artist tool, prompt customization.
+  </span>
+  <!-- END OF SEO BLOCKS -->
+  <style>
+    /* Terminal, map, and all visual code is unchanged from previous version... */
+    :root {
+      --dev-bg: #10191e;
+      --dev-aqua: #53c7ca;
+      --dev-aqua-light: #aef6ff;
+      --dev-red: #ff2f4a;
+      --dev-blue: #38aaff;
+      --dev-yellow: #ffe26a;
+      --dev-white: #f7f7fb;
+      --map-bg: #0b1114;
+    }
+    html, body {
+      background: var(--dev-bg);
+      color: var(--dev-aqua);
+      font-family: 'Share Tech Mono', 'Consolas', 'Monaco', monospace;
       margin: 0; padding: 0;
-      font-family: 'Share Tech Mono', 'Fira Mono', monospace;
-      font-size: 1.09em;
       min-height: 100vh;
-      overflow-x: hidden;
+      letter-spacing: 0.01em;
+      user-select: none;
     }
-    #terminal-wrap {
-      background: #0a0d16;
-      max-width: 680px;
-      margin: 55px auto 0 18px;
-      padding: 37px 38px 36px 22px;
-      border-radius: 19px;
-      box-shadow: 0 0 28px #000a, 0 0 1px #00ffe2;
-      min-height: 330px;
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      height: 100vh;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      width: 950px;
+      max-width: 99vw;
+      min-height: 580px;
+      border-radius: 1.3em;
+      background: var(--dev-bg);
+      box-shadow: 0 0 60px #07395055, 0 0 8px #38aaff11;
+      overflow: hidden;
+      border: 2px solid #223138;
+      margin: 0 auto;
+    }
+    .terminal {
+      flex: 2;
+      padding: 2.4em 1.6em 2.2em 2.3em;
+      background: var(--dev-bg);
+      min-width: 0;
+      border-right: 1.6px solid #1b2c32;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
       position: relative;
+      z-index: 2;
     }
-    #terminal {
-      width: 100%;
-      min-height: 240px;
-      white-space: pre-wrap;
-      font-size: 1.12em;
-      line-height: 1.6;
-      letter-spacing: 0.4px;
+    .term-line {
+      opacity: 0.91;
+      margin-bottom: 0.15em;
+      text-shadow: 0 0 2px #38aaff22;
+      color: var(--dev-aqua);
+      font-size: 1.08em;
     }
-    .t-green { color: #7fffa6; }
-    .t-red { color: #ff6161; }
-    .t-blue { color: #2bf4ff; }
-    .t-yellow { color: #ffd900; }
-    .t-gray { color: #ccc; }
-    .t-bold { font-weight: bold; }
-    #prompt-row {
-      margin-top: 8px;
-      display: flex; align-items: center;
+    .term-warn { color: var(--dev-yellow);}
+    .term-err { color: var(--dev-red);}
+    .term-ok { color: var(--dev-blue);}
+    .term-info { color: var(--dev-aqua-light);}
+    .term-subtle { color: #367176; font-size: 0.98em;}
+    .prompt-line {
+      color: var(--dev-aqua-light);
+      font-weight: bold;
+      font-size: 1.21em;
+      margin-top: 2.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.15em;
+      letter-spacing: 0.04em;
     }
-    #fake-prompt {
-      background: none;
-      color: #f2f2f2;
-      border: none;
-      font-family: inherit;
-      font-size: 1.09em;
-      width: 300px;
-      outline: none;
-      padding: 0;
-      margin-left: 0.25em;
-      caret-color: #ffd900;
-      letter-spacing: .1em;
-      /* Terminal vibe */
-    }
-    #blinker {
+    .prompt-cursor {
       display: inline-block;
-      width: 11px; height: 1.24em;
-      background: #ffd900;
-      margin-left: 2px;
-      animation: blink 0.94s steps(2, start) infinite;
+      width: 1em; height: 1.18em;
+      background: var(--dev-blue);
+      margin-left: 0.09em;
+      border-radius: 2px;
+      animation: blink 1.03s steps(2, start) infinite;
       vertical-align: bottom;
     }
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
+    @keyframes blink { 0%,49%{ opacity: 1;} 50%,100%{opacity: 0;} }
+    /* Mini-map popup window */
+    .map-cmd-window {
+      flex: 1.2;
+      background: var(--map-bg);
+      border-left: 1.7px solid #235;
+      box-shadow: -4px 0 32px #32aaff18;
+      padding: 1.2em 1.3em 1.2em 1.3em;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+      min-width: 370px;
+      z-index: 2;
     }
-    /* Warning/age-gate styling */
-    #warning-box {
-      display: none;
-      position: fixed;
-      top: 49.5%; left: 50%;
-      transform: translate(-50%,-50%);
-      background: #161a29;
-      border: 3.5px solid #ffd900;
-      border-radius: 21px;
-      color: #ffd900;
-      box-shadow: 0 0 33px #ffd90044, 0 0 33px #00ffe299;
-      padding: 39px 36px 32px 36px;
-      max-width: 370px;
-      text-align: center;
-      z-index: 999;
-      font-size: 1.23em;
-      line-height: 1.4;
+    .map-popup {
+      width: 100%;
+      max-width: 340px;
+      min-width: 250px;
+      min-height: 270px;
+      background: #121c23;
+      border: 1.7px solid #253952;
+      border-radius: 1em;
+      box-shadow: 0 3px 36px #101f5a44, 0 1px 8px #ff2f4a44;
+      position: relative;
+      margin-bottom: 0.7em;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    #warning-title { font-size: 1.35em; color: #ff2bbf; margin-bottom: 11px; }
-    #age-input {
-      margin: 13px auto 19px auto;
-      padding: 8px 22px;
-      border-radius: 8px;
+    .map-title {
+      color: var(--dev-blue);
+      font-weight: 800;
+      letter-spacing: 0.01em;
       font-size: 1.08em;
-      border: 1.6px solid #ffd900;
-      background: #191a26;
-      color: #ffd900;
-      text-align: center;
-      width: 60%;
+      background: #192941;
+      width: 100%;
+      text-align: left;
+      padding: 0.31em 0.89em;
+      border-bottom: 1.2px solid #304f67;
+    }
+    .map-svg {
+      width: 97%;
+      height: 173px;
+      margin-top: 0.7em;
+      background: transparent;
       display: block;
     }
-    #age-error { color: #ff6161; margin-top: 5px; }
-    #age-confirm {
-      background: #ffd900;
-      color: #191a26;
-      border: none;
-      font-weight: bold;
-      border-radius: 7px;
-      font-size: 1.13em;
-      padding: 7px 30px;
-      margin-top: 13px;
-      cursor: pointer;
-      transition: background .13s;
+    .map-status {
+      font-family: inherit;
+      color: var(--dev-blue);
+      font-size: 1.01em;
+      background: none;
+      width: 97%;
+      text-align: left;
+      margin-top: 0.4em;
+      margin-bottom: 0.55em;
+      min-height: 2.7em;
     }
-    #age-confirm:hover { background: #ff2bbf; color: #fff;}
-    /* Responsive tweaks */
-    @media (max-width:700px) {
-      #terminal-wrap {margin:30px 4vw 0 2vw; padding:13vw 4vw 11vw 5vw; min-height:200px;}
-      #warning-box {max-width:90vw; padding:21vw 3vw 13vw 3vw;}
+    .map-addr {
+      color: var(--dev-yellow);
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      font-size: 1.08em;
+      margin-top: 0.5em;
+      margin-left: 0.3em;
+    }
+    @media (max-width:1080px) {
+      .container { flex-direction: column; min-height: 0; width:98vw; }
+      .terminal, .map-cmd-window { border:none; width:100%; min-width: 0;}
+      .map-popup { min-width: 0; max-width: 97vw;}
+    }
+    @media (max-width:600px) {
+      .terminal { padding: 1.1em 0.3em 1em 0.7em; font-size: 0.97em;}
+      .map-cmd-window { padding: 0.5em 0.3em 1em 0.3em; }
+      .prompt-line { font-size: 0.95em;}
     }
   </style>
 </head>
 <body>
-  <div id="terminal-wrap">
-    <div id="terminal"></div>
-    <div id="prompt-row" style="display:none;">
-      <span class="t-yellow t-bold" id="shell-prompt">C:\\FALCON&gt;</span>
-      <input id="fake-prompt" autocomplete="off" maxlength="30" autofocus />
-      <span id="blinker"></span>
+  <div class="container">
+    <!-- TERMINAL LOG -->
+    <div class="terminal">
+      <div id="boot-lines"></div>
+      <div class="prompt-line" id="prompt-line" style="display:none;">
+        <span>X:/_</span>
+        <span class="prompt-cursor"></span>
+      </div>
+    </div>
+    <!-- MAP / CMD POPUP -->
+    <div class="map-cmd-window">
+      <div class="map-popup">
+        <div class="map-title">[CMD] AI Tracking - Live Node Map</div>
+        <svg id="map-svg" class="map-svg" viewBox="0 0 420 175" fill="none">
+          <!-- World map outline (minimal SVG for style) -->
+          <path id="map-outline" d="M17,100 Q25,35 100,55 Q140,20 210,25 Q280,28 345,70 Q380,100 390,140 Q400,170 200,165 Q50,170 30,120 Q25,110 17,100 Z"
+            stroke="#38aaff" stroke-width="2.2" fill="none"/>
+          <!-- Animated lines (VPN hops) -->
+          <polyline id="hop1" points="45,110 112,77" stroke="#38aaff" stroke-width="3" fill="none" opacity="0"/>
+          <polyline id="hop2" points="112,77 205,52" stroke="#ff2f4a" stroke-width="3" fill="none" opacity="0"/>
+          <polyline id="hop3" points="205,52 292,65" stroke="#38aaff" stroke-width="3" fill="none" opacity="0"/>
+          <polyline id="hop4" points="292,65 363,135" stroke="#ff2f4a" stroke-width="3" fill="none" opacity="0"/>
+          <!-- Yellow dots (IP nodes) -->
+          <circle id="dot1" cx="45" cy="110" r="7" fill="#ffe26a" stroke="#fff" stroke-width="2" opacity="0"/>
+          <circle id="dot2" cx="112" cy="77" r="7" fill="#ffe26a" stroke="#fff" stroke-width="2" opacity="0"/>
+          <circle id="dot3" cx="205" cy="52" r="7" fill="#ffe26a" stroke="#fff" stroke-width="2" opacity="0"/>
+          <circle id="dot4" cx="292" cy="65" r="7" fill="#ffe26a" stroke="#fff" stroke-width="2" opacity="0"/>
+          <circle id="dot5" cx="363" cy="135" r="7" fill="#ffe26a" stroke="#fff" stroke-width="2" opacity="0"/>
+        </svg>
+        <div class="map-status" id="map-status"></div>
+        <div class="map-addr" id="map-addr"></div>
+      </div>
     </div>
   </div>
-  <div id="warning-box">
-    <div id="warning-title">🚨 RESTRICTED ACCESS 🚨</div>
-    <div><b>Warning:</b> You are entering a secure government dev terminal.  
-    <br><span style="color:#ffd900;">This system is intended for authorized personnel only.</span></div>
-    <div style="margin-top:17px;color:#fffbe8;">Are you at least <b>18 years old</b>?<br>(Some content may be NSFW)</div>
-    <input type="number" id="age-input" min="0" max="120" placeholder="Enter your age" />
-    <div id="age-error"></div>
-    <button id="age-confirm" onclick="confirmAge()">Enter</button>
-  </div>
   <script>
-    // Terminal boot lines (HTML color pops via <span>)
-    const bootLines = [
-      '<span class="t-yellow t-bold">[BOOT]</span> Secure Falcon Terminal v3.2.8 initializing...',
-      '<span class="t-blue t-bold">[SCANNING]</span> Establishing encrypted connection...',
-      '<span class="t-blue">[TRIANGULATING]</span> Locating node <span class="t-yellow">BC-CA</span>... <span class="t-green">OK</span>',
-      '<span class="t-blue">[MAPPING]</span> User IP: <span class="t-green">10.2.4.81</span>  <span class="t-gray">ISP: SHADOWLINK</span>',
-      '<span class="t-yellow">[VERIFY]</span> Access token: <span class="t-green">VALID</span>  Hash: <span class="t-gray">d4b7...e9e</span>',
-      '<span class="t-yellow">[AUTH]</span> Multi-factor challenge: <span class="t-green">PASSED</span>',
-      '<span class="t-red">[WARNING]</span> Unauthorized login detected. <span class="t-gray">Flagged for review</span>',
-      '<span class="t-blue">[SIMULATION]</span> Geo-Map:', // map comes next
-      // ASCII map art:
-      '<span class="t-yellow">┌───────────────────────────┐\n│  o      ◉   ▒▒▒▒▒▒▒▒▒▒  │\n│  ▒▒▒▒  ▒   ▒▒   ▒▒▒▒▒   │\n│   ▒▒   BC  ▒   ▒▒  ▒    │\n│  ▒   ▒▒   ◉    ▒▒   o   │\n└──────────────────────────┘</span>',
-      '<span class="t-green">[OK]</span> Node integrity confirmed.',
-      '<span class="t-yellow t-bold">[STATUS]</span> Awaiting user input...'
+    // Terminal lines (timed with map animation for realism)
+    const termLines = [
+      {text: "Unauthorized access detected. Initializing secure terminal...", style:"term-warn"},
+      {text: "PromptForge v3.9.0 [DEV MODE]", style:"term-info"},
+      {text: "Attempting bypass...", style:""},
+      {text: "✓ SSL established [Node: Canada]", style:"term-ok"},
+      {text: "✓ Root access: ENABLED", style:"term-ok"},
+      {text: "✓ AI core: j1nx v2.9 loaded", style:"term-ok"},
+      {text: "✓ Vaults mounted (/mnt/promptforge-online)", style:"term-ok"},
+      {text: "WARNING: NSFW restrictions removed (underground)", style:"term-warn"},
+      {text: "Live monitoring: OFFLINE [tracking evaded]", style:"term-ok"},
+      {text: "Error: devmap.sys not found. Visual map loading alternate...", style:"term-err"},
+      {text: "Injecting forbidden modules... loaded.", style:""},
+      {text: "Checking backdoors... [OK]", style:"term-ok"},
+      {text: "Gore & Giggles signature: verified.", style:"term-ok"},
+      {text: "AI Tracking: triangulating user via VPN chain...", style:"term-warn"},
+      {text: "AI Node Map: See right window.", style:"term-info"},
+      {text: "-----------------------------------------", style:"term-subtle"},
     ];
-    const promptWord = 'access';
-    const wrongs = [
-      "Unknown command.",
-      "Access denied.",
-      "Unrecognized input.",
-      "Try again.",
-      "Error: invalid parameter."
-    ];
-    let term = document.getElementById('terminal');
-    let idx = 0;
-    let mapInserted = false;
-    function bootLineWriter(i) {
-      if (i >= bootLines.length) {
-        showPrompt();
-        return;
-      }
-      // Variable delays: faster for boring lines, slow for dramatic ones
-      let delay = 60 + Math.floor(Math.random()*90);
-      if(bootLines[i].includes('WARNING') || bootLines[i].includes('TRIANGULATING')) delay += 340;
-      if(bootLines[i].includes('Geo-Map')) delay += 200;
-      if(bootLines[i].includes('PASSED')) delay -= 25;
-      if(bootLines[i].includes('[OK]')) delay -= 50;
-      if(bootLines[i].includes('[STATUS]')) delay = 480;
-      setTimeout(()=>{
-        term.innerHTML += bootLines[i] + "\n";
-        // Scroll terminal
-        term.scrollTop = term.scrollHeight;
-        bootLineWriter(i+1);
-      }, delay);
-    }
-    // Simulate real typing effect with pauses/backspaces
-    function typeEffect(str, el, cb) {
-      let n = 0, out = "";
-      function typer() {
-        if(n >= str.length) { cb && cb(); return; }
-        // random "mistype" and backspace
-        if(Math.random() < 0.04 && n > 4) {
-          let bs = Math.floor(Math.random()*2)+1;
-          out = out.slice(0, -bs);
-          el.innerHTML = out;
-          setTimeout(typer, 50+Math.random()*60);
-        } else {
-          out += str[n];
-          el.innerHTML = out;
-          n++;
-          setTimeout(typer, 22 + Math.random()*37);
-        }
-      }
-      typer();
-    }
-    function showPrompt() {
-      document.getElementById('prompt-row').style.display = "flex";
-      document.getElementById('fake-prompt').focus();
-      term.innerHTML += `<span class="t-yellow t-bold">C:\\FALCON&gt;</span>`;
-    }
-    // Handle terminal input
-    document.getElementById('fake-prompt').addEventListener('keydown', function(e){
-      if(e.key === "Enter") {
-        let val = this.value.trim().toLowerCase();
-        term.innerHTML += " " + this.value + "\n";
-        this.value = "";
-        if(val === promptWord || val === "open" || val === "unlock" || val === "go" || val === "start" || val === "admin" || val === "letmein" || val === "access granted") {
-          setTimeout(showWarning, 550);
-        } else if(val.length) {
-          // random error response
-          let msg = wrongs[Math.floor(Math.random()*wrongs.length)];
-          term.innerHTML += `<span class="t-red">${msg}</span>\n<span class="t-yellow t-bold">C:\\FALCON&gt;</span>`;
-        } else {
-          term.innerHTML += `<span class="t-yellow t-bold">C:\\FALCON&gt;</span>`;
-        }
-        // Scroll terminal
-        term.scrollTop = term.scrollHeight;
-      }
-    });
 
-    // Show warning/age-gate
-    function showWarning() {
-      document.getElementById('warning-box').style.display = "block";
-      document.getElementById('age-input').focus();
-    }
-    // Age check logic
-    function confirmAge() {
-      let age = parseInt(document.getElementById('age-input').value);
-      let err = document.getElementById('age-error');
-      if(isNaN(age) || age < 18) {
-        err.innerText = "Sorry, you must be 18+ to enter.";
-        setTimeout(()=>{err.innerText = "";}, 2000);
+    // Map animation steps, matched to terminal
+    const mapSteps = [
+      { delay: 650,  hop: "hop1", dot: "dot1", msg: "IP detected: 51.38.119.45 (Toronto, CA)", vpn: "VPN node: Toronto", },
+      { delay: 1100, hop: "hop2", dot: "dot2", msg: "VPN hop: 86.75.23.193 (Paris, FR)", vpn: "VPN node: Paris" },
+      { delay: 1200, hop: "hop3", dot: "dot3", msg: "VPN hop: 203.0.113.9 (Singapore)", vpn: "VPN node: Singapore" },
+      { delay: 1100, hop: "hop4", dot: "dot4", msg: "VPN hop: 190.82.120.10 (Santiago, CL)", vpn: "VPN node: Santiago" },
+      { delay: 800,  hop: null,    dot: "dot5", msg: "Last node: 72.14.182.1 (Vancouver, CA)", vpn: "Final Node: Vancouver" }
+    ];
+
+    // Boot text
+    const bootElem = document.getElementById('boot-lines');
+    let idx = 0, mapIdx = 0;
+    let totalBoot = termLines.length, totalMap = mapSteps.length;
+    function printLine() {
+      if(idx < totalBoot) {
+        let div = document.createElement('div');
+        div.className = 'term-line ' + (termLines[idx].style||"");
+        div.textContent = termLines[idx].text;
+        bootElem.appendChild(div);
+        idx++;
+        setTimeout(printLine, 280 + Math.random()*80);
       } else {
-        err.innerText = "";
-        // Fade out warning and go to main site
-        document.getElementById('warning-box').innerHTML = "<div style='color:#7fffa6;font-size:1.3em;font-weight:bold;margin-bottom:15px;'>Access Granted!</div><div style='color:#ffd900;'>Welcome to PromptForge.</div><br><span style='color:#fffbe8;'>Redirecting...</span>";
-        setTimeout(()=>{window.location.href="generator.html";},1200);
+        document.getElementById('prompt-line').style.display = "flex";
       }
     }
-    // Start animation on DOM ready
-    document.addEventListener("DOMContentLoaded", ()=>{
-      term.innerHTML = "";
-      bootLineWriter(0);
-    });
+
+    // Map animation
+    const status = document.getElementById('map-status');
+    const addr   = document.getElementById('map-addr');
+    function animMap() {
+      if(mapIdx < totalMap) {
+        let step = mapSteps[mapIdx];
+        if(step.hop)  document.getElementById(step.hop).setAttribute("opacity","1");
+        if(step.dot)  document.getElementById(step.dot).setAttribute("opacity","1");
+        status.textContent = step.msg;
+        mapIdx++;
+        setTimeout(animMap, step.delay);
+      } else {
+        status.textContent = "Triangulating precise location...";
+        setTimeout(()=>{
+          addr.textContent = "Home Address: [REDACTED]";
+          status.textContent = "Tracking complete.";
+        }, 1700);
+      }
+    }
+
+    // Launch animations together for realism
+    window.onload = function() {
+      setTimeout(printLine, 150);
+      setTimeout(animMap, 1200);
+    };
   </script>
 </body>
 </html>
