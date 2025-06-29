@@ -1,19 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PromptForge MONSTER - Movie Prompt</title>
-  <link rel="stylesheet" href="css/monster.css" />
-  <link rel="stylesheet" href="css/movie-style.css" />
-  <script src="js/monster-movie.js" defer></script>
+  <meta charset="UTF-8">
+  <title>PromptForge Movie Prompt Tool | Forbidden CineDrive AI</title>
+  <meta name="description" content="CineDrive: The ultimate AI movie scene prompt generator for forbidden art, NSFW and wild cinematic ideas. Unleash viral film prompts.">
+  <meta name="keywords" content="movie prompt generator, AI movie tool, cinematic prompt, NSFW, CineDrive, PromptForge, Gore and Giggles, forbidden film">
+  <meta name="robots" content="index,follow">
+  <meta property="og:title" content="PromptForge Movie Prompt Tool | CineDrive AI">
+  <meta property="og:description" content="Unleash wild, forbidden AI movie prompts. Monster, watermark, generator—all free.">
+  <meta property="og:image" content="https://promptforge.online/ogimg.png">
+  <meta property="og:url" content="https://promptforge.online/movieprompt.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PromptForge Movie Prompt Tool | Forbidden CineDrive AI">
+  <meta name="twitter:description" content="AI prompt generator for the wildest NSFW or cinematic art. Enter the dev underground.">
+  <meta name="twitter:image" content="https://promptforge.online/ogimg.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/boot.css">
+  <style>
+    body { background: var(--main-bg,#14131b); color: var(--text-main,#fffbe9); }
+    .console-header { text-align: center; margin: 2.1em 0 1.2em 0;}
+    .console-header h1 { color: #49d1ff; font-family: 'Share Tech Mono', monospace; font-size: 2em; margin-bottom: 0.25em;}
+    #console-status { color: #ffd900; font-size: 1.08em; }
+    .dropdown-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 1.3em 2.1em;
+      background: var(--card-bg,#221d2a);
+      border-radius: 1.6em;
+      box-shadow: 0 3px 32px #0005;
+      padding: 2.2em 2.2em 1.4em 2.2em;
+      max-width: 950px;
+      margin: 0 auto 1.9em auto;
+    }
+    .dropdown-block label {
+      font-weight: bold; color: #ffe46d; font-size: 1.05em; letter-spacing: 0.01em;
+    }
+    .dropdown-block select {
+      width: 100%; margin-top: 0.3em; padding: 0.7em 1em; border-radius: 1em; background: #181932; color: #49d1ff; border: 1.2px solid #35344a; font-size: 1.08em;
+    }
+    .watermark-section {
+      max-width: 540px;
+      margin: 2em auto 1.6em auto;
+      background: #212042;
+      border-radius: 1.2em;
+      padding: 1.3em 2.1em 1.2em 2.1em;
+      color: #ffe46d;
+      box-shadow: 0 2px 12px #49d1ff33;
+      font-size: 1.08em;
+    }
+    .watermark-section input[type="text"] {
+      background: #1c1c29; color: #fffbe9; border: 1.1px solid #35344a; border-radius: 1em; font-size: 1em; padding: .5em 1em; margin-top: .4em; margin-bottom: .5em; width: 85%;
+    }
+    .image-preview {
+      text-align: center;
+      margin: 2em auto 1em auto;
+    }
+    .image-preview label { display: block; color: #ffe46d; font-weight: bold; margin-bottom: 0.6em; }
+    .image-preview img { width: 220px; border-radius: 1.4em; box-shadow: 0 2px 22px #09f3, 0 0 7px #ffe46d55; opacity: .95;}
+    .prompt-output-section {
+      max-width: 640px;
+      margin: 2.5em auto 1.3em auto;
+      background: var(--card-bg,#221d2a);
+      border-radius: 1.5em;
+      box-shadow: 0 2px 12px #49d1ff33;
+      padding: 1.5em 2.2em 1.1em 2.2em;
+    }
+    #movie-prompt-output {
+      width: 100%; min-height: 72px; border-radius: 1em; background: #191932; color: #49d1ff; font-family: 'Share Tech Mono', monospace; font-size: 1.04em; line-height: 1.45; border: 1.5px solid #35344a; padding: 1em 1.2em; resize: none; margin-bottom: .7em; box-sizing: border-box;
+    }
+    .button-row { display: flex; gap: 1.1em; justify-content: flex-end; }
+    .button-row button {
+      font-weight: bold; font-size: 1em; border-radius: 1em; padding: 0.61em 1.55em; border: none; box-shadow: 0 1px 9px #09f4; background: linear-gradient(90deg,#d02 50%,#09f 100%); color: #fffbe9; cursor: pointer; transition: background .12s, color .12s, box-shadow .13s;
+    }
+    .button-row button:hover { background: linear-gradient(90deg,#09f 40%,#ffd900 100%); color: #d02; }
+    .console-output { text-align: center; margin-top: 2.3em; color: #ffe46d; font-family: inherit; font-size: 1.13em;}
+    .back-button { margin: 2.7em auto 0 auto; text-align: center; }
+    .back-button a { color: #49d1ff; font-size: 1.11em; font-weight: bold; text-decoration: none; background: #212042; border-radius: 1em; padding: .71em 2em; box-shadow: 0 1px 9px #09f2;}
+    .back-button a:hover { background: #49d1ff; color: #221d2a;}
+    @media (max-width:800px) {
+      .dropdown-grid { grid-template-columns: 1fr; padding: 1.1em .4em 1em .4em;}
+      .prompt-output-section { padding: 1em .4em .7em .4em;}
+      .watermark-section { padding: 0.9em 1em 0.9em 1em;}
+    }
+  </style>
 </head>
 <body>
+  <!-- HEADER -->
   <div class="console-header">
-    <h1>> CineDrive AI: PROMPTFORGE MOVIE MODULE</h1>
-    <p id="console-status">>> Initializing Scene Matrix...</p>
+    <h1>&gt; CineDrive AI: PROMPTFORGE MOVIE MODULE</h1>
+    <p id="console-status">&gt;&gt; Initializing Scene Matrix...</p>
   </div>
-
+  <!-- GRID OF DROPDOWNS -->
   <div class="dropdown-grid">
     <div class="dropdown-block">
       <label for="genre">🎞️ Genre</label>
@@ -56,32 +135,121 @@
       <select id="nsfw"></select>
     </div>
   </div>
-
+  <!-- WATERMARK -->
   <div class="watermark-section">
     <label for="watermark">💧 Optional Watermark Text</label>
     <input type="text" id="watermark" placeholder="Enter watermark text...">
     <label><input type="checkbox" id="apply-watermark"> Apply Watermark</label>
   </div>
-
+  <!-- SAMPLE POSTER IMAGE -->
   <div class="image-preview">
     <label>🖼️ Sample Image (placeholder only)</label>
     <img id="sample-img" src="assets/sample-poster.jpg" alt="Sample Poster" />
   </div>
-
+  <!-- OUTPUT BOX -->
   <div class="prompt-output-section">
-    <textarea id="movie-prompt-output" readonly></textarea>
+    <textarea id="movie-prompt-output" readonly placeholder="Your movie prompt will appear here..."></textarea>
     <div class="button-row">
       <button id="reroll-prompt">🎥 REROLL MOVIE PROMPT</button>
       <button id="copy-prompt">📋 COPY</button>
     </div>
   </div>
-
   <div class="console-output">
-    <p id="reactive-msg">>> Ready to roll... Choose your vibe, director.</p>
+    <p id="reactive-msg">&gt;&gt; Ready to roll... Choose your vibe, director.</p>
   </div>
-
   <div class="back-button">
     <a href="main.html">🔙 Back to Main Menu</a>
   </div>
+  <footer style="text-align:center;color:#5f637c;font-size:.97em;padding:2.2em 0 1.5em 0;opacity:.78;">
+    PromptForge by Gore & Giggles • <a href="/about.html" style="color:#49d1ff;">About</a> • <a href="/terms.html" style="color:#49d1ff;">Terms</a>
+  </footer>
+  <script>
+    // Category options (could be in external JSON, but keep inline for now)
+    const genreOptions = ["Sci-fi", "Erotic Thriller", "Cyberpunk", "Fantasy", "Horror", "Noir", "Action", "Romantic", "Drama", "Experimental"];
+    const toneOptions = ["Dark", "Playful", "Satirical", "Dreamlike", "Sinister", "Uplifting", "Psychological"];
+    const cameraOptions = ["Handheld", "Tracking Shot", "Drone View", "POV", "Closeup", "Wide Angle", "First-person", "Surveillance"];
+    const lightingOptions = ["Neon-lit", "Candlelight", "Overexposed", "Shadowy", "Soft Glow", "Red Room", "Strobe", "Dawn/Dusk"];
+    const fxOptions = ["Film Grain", "Lens Flare", "CRT Overlay", "VHS Blur", "Hyperreal", "Glitch", "Black & White", "Dramatic Fog"];
+    const plotOptions = ["Twist Ending", "Flashbacks", "Parallel Timelines", "No Dialogue", "Voiceover", "Single Room", "Revenge Plot"];
+    const dialogueOptions = ["Minimalist", "Improvised", "Scripted", "Voiceover", "Heavy Monologue", "Rapid-Fire", "Silent"];
+    const castOptions = ["Solo", "Duo", "Love Triangle", "Ensemble", "Non-Human", "AI Only", "Clone", "Masked"];
+    const durationOptions = ["30 seconds", "1 minute", "5 minutes", "10 minutes", "Feature-length"];
+    const nsfwOptions = ["Safe", "Suggestive", "Explicit", "Bizarre", "Body Horror", "Dreamlike", "Psychedelic"];
+    // Populate dropdowns
+    function populateSelect(id, options) {
+      const sel = document.getElementById(id);
+      sel.innerHTML = "";
+      options.forEach(o => {
+        let opt = document.createElement("option");
+        opt.value = o;
+        opt.textContent = o;
+        sel.appendChild(opt);
+      });
+    }
+    populateSelect("genre", genreOptions);
+    populateSelect("tone", toneOptions);
+    populateSelect("camera", cameraOptions);
+    populateSelect("lighting", lightingOptions);
+    populateSelect("fx", fxOptions);
+    populateSelect("plot", plotOptions);
+    populateSelect("dialogue", dialogueOptions);
+    populateSelect("cast", castOptions);
+    populateSelect("duration", durationOptions);
+    populateSelect("nsfw", nsfwOptions);
+    // Generate prompt
+    function buildPrompt() {
+      const g = genreOptions[document.getElementById("genre").selectedIndex];
+      const t = toneOptions[document.getElementById("tone").selectedIndex];
+      const c = cameraOptions[document.getElementById("camera").selectedIndex];
+      const l = lightingOptions[document.getElementById("lighting").selectedIndex];
+      const f = fxOptions[document.getElementById("fx").selectedIndex];
+      const p = plotOptions[document.getElementById("plot").selectedIndex];
+      const d = dialogueOptions[document.getElementById("dialogue").selectedIndex];
+      const cs = castOptions[document.getElementById("cast").selectedIndex];
+      const dur = durationOptions[document.getElementById("duration").selectedIndex];
+      const ns = nsfwOptions[document.getElementById("nsfw").selectedIndex];
+      const wm = document.getElementById("watermark").value.trim();
+      let prompt = `[MOVIE PROMPT] Genre: ${g} | Tone: ${t} | Camera: ${c} | Lighting: ${l} | FX: ${f} | Plot: ${p} | Dialogue: ${d} | Cast: ${cs} | Duration: ${dur} | NSFW: ${ns}.`;
+      if(document.getElementById("apply-watermark").checked && wm) {
+        prompt += ` [WATERMARK: "${wm}"]`;
+      }
+      return prompt;
+    }
+    function updatePrompt() {
+      document.getElementById("movie-prompt-output").value = buildPrompt();
+      document.getElementById("reactive-msg").textContent = ">> Prompt updated. Tweak anything & reroll!";
+    }
+    // Events
+    document.querySelectorAll(".dropdown-grid select, #watermark, #apply-watermark").forEach(el => {
+      el.addEventListener("change", updatePrompt);
+      el.addEventListener("input", updatePrompt);
+    });
+    document.getElementById("reroll-prompt").onclick = () => {
+      // For now: just re-randomize selections
+      function pickRand(sel, opts) {
+        sel.selectedIndex = Math.floor(Math.random() * opts.length);
+      }
+      pickRand(document.getElementById("genre"), genreOptions);
+      pickRand(document.getElementById("tone"), toneOptions);
+      pickRand(document.getElementById("camera"), cameraOptions);
+      pickRand(document.getElementById("lighting"), lightingOptions);
+      pickRand(document.getElementById("fx"), fxOptions);
+      pickRand(document.getElementById("plot"), plotOptions);
+      pickRand(document.getElementById("dialogue"), dialogueOptions);
+      pickRand(document.getElementById("cast"), castOptions);
+      pickRand(document.getElementById("duration"), durationOptions);
+      pickRand(document.getElementById("nsfw"), nsfwOptions);
+      updatePrompt();
+      document.getElementById("reactive-msg").textContent = ">> Rerolled. Remix your cinema.";
+    };
+    document.getElementById("copy-prompt").onclick = () => {
+      const box = document.getElementById("movie-prompt-output");
+      box.select();
+      document.execCommand("copy");
+      document.getElementById("reactive-msg").textContent = ">> Copied! Paste into your AI/movie app.";
+    };
+    // Init default prompt
+    updatePrompt();
+  </script>
 </body>
 </html>
