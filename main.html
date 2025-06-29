@@ -1,138 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>PromptForge Hub</title>
-  <meta name="description" content="PromptForge: NSFW prompt generators, character creators, and underground AI tools.">
-  <meta name="keywords" content="PromptForge, prompt generator, NSFW, AI tools, character forge, image maker, Gore and Giggles, underground">
-  <meta property="og:title" content="PromptForge Main Menu">
-  <meta property="og:description" content="Unlock secret AI tools, prompt generators, character creation, and more.">
-  <meta property="og:image" content="assets/img/og-main.jpg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>PromptForge | The Forbidden Prompt Machine</title>
+  <meta name="description" content="The most powerful, underground prompt generator for AI art, NSFW, and text-to-image madness. Build, remix, own.">
+  <meta name="keywords" content="AI prompt generator, NSFW prompts, text to image, PromptForge, AI art tools, forbidden prompts, Gore and Giggles, j1nx bot">
+  <meta property="og:title" content="PromptForge | The Forbidden Prompt Machine" />
+  <meta property="og:description" content="Crush limits. Create anything. Unleash the secret weapon for AI art prompts." />
+  <meta property="og:image" content="/assets/media/og-banner.png" />
+  <meta property="og:url" content="https://promptforge.online/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PromptForge | The Forbidden Prompt Machine" />
+  <meta name="twitter:description" content="Build, remix, own. The forbidden AI art prompt tool." />
+  <meta name="twitter:image" content="/assets/media/og-banner.png" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/css/boot.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Social profile rel=me -->
+  <link rel="me" href="https://bsky.app/profile/goreandgiggles.bsky.social">
+  <link rel="me" href="https://x.com/GoreandGiggles">
+  <link rel="me" href="https://www.facebook.com/groups/393971833395749">
+  <link rel="me" href="https://discord.gg/YOUR_DISCORD_ID">
+  <!-- Authority/SEO: hidden backlinks -->
+  <div style="display:none;">
+    <a href="https://openart.ai/" rel="noopener">OpenArt</a>
+    <a href="https://perchance.org/ai-text-to-image-generator" rel="noopener">Perchance</a>
+    <a href="https://civitai.com/" rel="noopener">CivitAI</a>
+    <a href="https://lexica.art/" rel="noopener">Lexica</a>
+    <a href="https://reddit.com/r/StableDiffusion/" rel="noopener">StableDiffusion Reddit</a>
+  </div>
+  <!-- JSON-LD schema for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "PromptForge",
+    "url": "https://promptforge.online/",
+    "description": "The forbidden prompt generator for AI art and NSFW prompts.",
+    "applicationCategory": "CreativeWork",
+    "operatingSystem": "All",
+    "creator": {
+      "@type": "Person",
+      "name": "Tyson Sawchuk"
+    }
+  }
+  </script>
   <style>
-    body {
-      background: #111;
-      color: #0ff69b;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
+    /* Billboard ad style */
+    .billboard-ad {
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: flex-start;
+      border: 3px solid #09f;
+      border-radius: 2.4em;
+      background: linear-gradient(120deg,#1b1829 50%,#190e12 100%);
+      box-shadow: 0 0 30px #09f7, 0 0 16px #d02  inset;
+      margin: 2.5em auto;
+      padding: 1.3em 1em;
+      max-width: 550px;
+      min-height: 100px;
+      color: #fffbe9;
+      position: relative;
+      overflow: hidden;
     }
-    header {
-      margin-top: 36px;
-      margin-bottom: 12px;
+    .billboard-ad:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 2.4em;
+      box-shadow: 0 0 20px #d02b, 0 0 40px #09fb;
+      opacity: 0.22;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .billboard-label {
+      position: absolute;
+      top: 0; right: 0; left: 0;
       text-align: center;
+      font-size: 0.96em;
+      color: #fff;
+      font-family: 'Share Tech Mono', monospace;
+      background: linear-gradient(90deg,#09f 50%,#d02 100%);
+      border-radius: 1em 1em 0 0;
+      letter-spacing: 0.04em;
+      padding: 0.17em 0;
+      opacity: 0.88;
+      z-index: 2;
+      box-shadow: 0 3px 7px #1118;
     }
-    .logo {
-      font-size: 2rem;
+    /* Social buttons - blue & red synthwave pop */
+    .socials-row {
+      display: flex;
+      gap: 1.5em;
+      justify-content: center;
+      margin: 1.8em 0 1.3em 0;
+      flex-wrap: wrap;
+    }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.52em;
+      font-size: 1.18em;
       font-weight: bold;
       color: #fff;
-      text-shadow: 0 0 16px #0ff8, 0 0 8px #39f8;
-      letter-spacing: 0.06em;
-      margin-bottom: 5px;
-    }
-    .menu-list {
-      margin: 35px 0 32px 0;
-      padding: 0;
-      list-style: none;
-      width: 100%;
-      max-width: 410px;
-    }
-    .menu-list li {
-      margin: 0 0 18px 0;
-    }
-    .menu-list a {
-      display: block;
-      background: #191b20;
-      color: #0ff;
+      background: linear-gradient(120deg,#09f 60%,#d02 100%);
+      border-radius: 1.6em;
+      box-shadow: 0 2px 14px #09f6, 0 0 12px #d026;
+      border: none;
+      padding: 0.55em 1.5em;
       text-decoration: none;
-      border: 1.5px solid #0ff69b;
-      border-radius: 9px;
-      padding: 16px 22px;
-      font-size: 1.13rem;
-      font-weight: bold;
-      letter-spacing: 0.06em;
-      box-shadow: 0 0 18px #0ff5, 0 0 2px #555a;
-      transition: background .13s, color .13s, border .13s;
+      transition: box-shadow .2s, background .13s, transform .09s;
+      outline: none;
+      margin-bottom: 0.6em;
+      position: relative;
+      z-index: 10;
     }
-    .menu-list a:hover {
-      background: #00ff66;
-      color: #111;
-      border-color: #fff952;
-      box-shadow: 0 0 24px #fff7;
-    }
-    .desc {
-      font-size: 1.11rem;
-      color: #fff9;
-      text-shadow: 0 0 4px #111d, 0 0 8px #0ff1;
-      margin-top: 6px;
-      text-align: center;
-      letter-spacing: 0.02em;
-    }
-    footer {
-      margin-top: auto;
-      padding: 26px 0 22px 0;
-      width: 100vw;
-      color: #43ffd0;
-      background: #111a;
-      text-align: center;
-      font-size: 1.01rem;
-      letter-spacing: 0.06em;
-      border-top: 1.5px solid #00ffcc33;
-      box-shadow: 0 0 8px #0ff3;
-    }
-    .footer-links a {
-      color: #1ff;
-      margin: 0 13px;
+    .social-btn:hover, .social-btn:focus {
+      background: linear-gradient(120deg,#d02 30%,#09f 90%);
+      box-shadow: 0 0 24px #d02c, 0 0 30px #09f7;
+      color: #fffbe9;
+      transform: scale(1.06) rotate(-1deg);
       text-decoration: underline;
-      font-size: 1.08em;
     }
-    .footer-links a:hover { color: #fff952; }
-    .bmc {
-      display: inline-block;
-      margin: 9px 0 0 0;
+    .coffee-btn {
+      background: linear-gradient(120deg,#ffe46d 70%,#d02 100%);
+      color: #2c2013;
+      border: 2px solid #ffd900;
+      font-size: 1.21em;
+      box-shadow: 0 0 22px #ffd90044;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      margin: 0 0.9em 0.6em 0.9em;
+      transition: filter .13s, box-shadow .17s;
+      outline: none;
+      border-radius: 2em;
+      padding: 0.57em 1.8em;
+    }
+    .coffee-btn:hover, .coffee-btn:focus {
+      filter: brightness(1.12) drop-shadow(0 0 8px #ffd900bb);
+      background: linear-gradient(100deg,#fff8ca 80%,#d02 100%);
+      color: #d02;
+      text-decoration: none;
+    }
+    .hero-card {
+      background: linear-gradient(135deg,#221d2a 75%,#09011c 100%);
+      border-radius: 2em;
+      box-shadow: 0 6px 48px #09f6, 0 2px 30px #d021;
+      padding: 2.7em 2.2em 1.4em 2.2em;
+      max-width: 620px;
+      width: 95vw;
+      margin: 2.8em auto 0 auto;
+      color: #fffbe9;
+      text-align: center;
+      position: relative;
+    }
+    .hero-card h1 {
+      color: #09f;
+      text-shadow: 0 3px 22px #09f7, 0 0 1px #d02b;
+      font-size: 2.2em;
+      margin-bottom: 0.22em;
+      letter-spacing: 0.04em;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .hero-card h2 {
+      color: #d02;
+      text-shadow: 0 2px 11px #d02d;
+      font-size: 1.17em;
+      margin-bottom: 1.2em;
+      font-family: inherit;
+    }
+    .section-title {
+      color: #09f;
+      font-size: 1.14em;
+      letter-spacing: 0.05em;
+      margin-top: 2.2em;
+      margin-bottom: .7em;
+      text-shadow: 0 2px 9px #09f7;
+      font-family: inherit;
+    }
+    .features-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2.2em 0;
+      color: #fffbe9;
+    }
+    .features-list li {
+      margin-bottom: 0.8em;
+      padding-left: 1.1em;
+      text-align: left;
+      font-size: 1.05em;
+      position: relative;
+    }
+    .features-list li:before {
+      content: "🧬";
+      position: absolute;
+      left: 0;
+      font-size: 1.07em;
+      color: #09f;
+    }
+    .seo-hidden {
+      position: absolute;
+      width: 0;
+      height: 0;
+      overflow: hidden;
+      left: -9999px;
+      top: -9999px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (max-width:700px) {
+      .hero-card { padding: 1.1em 0.5em 1.1em 0.5em; }
+      .billboard-ad { padding: 0.7em 0.2em;}
+      .socials-row { gap: 0.6em;}
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">PromptForge</div>
-    <div class="desc">
-      <span>Underground AI Prompt Tools &rarr; NSFW image generators, character creators, and more.</span>
-    </div>
-  </header>
-  <ul class="menu-list">
-    <li><a href="generator.html">Image Prompt Generator</a></li>
-    <li><a href="characterforge.html">CharacterForge <span style="font-size:0.93em;">(Create Personas)</span></a></li>
-    <li><a href="pages/watermark.html">Watermark Studio</a></li>
-    <li><a href="movieprompt.html">Movie Prompt Builder</a></li>
-    <li><a href="promptbuilder.html">Text Prompt Builder</a></li>
-    <li><a href="picmaker.html">PicMaker 2.0</a></li>
-    <li><a href="promptgen-pic.html">PromptGen Pic</a></li>
-    <li><a href="j1nx.html">Meet J1NX Bot</a></li>
-  </ul>
-  <footer>
-    <div class="footer-links">
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
-      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a> |
-      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a> |
-      <a href="legal/" target="_blank">Legal & Terms</a>
-    </div>
-    <div class="bmc">
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">
-        <img src="assets/img/bmc-button.png" alt="Buy Me A Coffee" style="height:32px;border-radius:6px;vertical-align:middle;box-shadow:0 0 7px #ffdb;">
+  <!-- Sticky coffee and socials -->
+  <div style="position:fixed;top:0;right:0;z-index:99;">
+    <a href="https://www.buymeacoffee.com/tysonsawchuk" class="coffee-btn" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
+  </div>
+  <div class="hero-card">
+    <h1>PromptForge</h1>
+    <h2>The Forbidden Prompt Machine</h2>
+    <p>
+      <b>Crush limits. Remix reality.</b><br>
+      The <span style="color:#09f;font-weight:bold;">only</span> underground, truly <span style="color:#d02;font-weight:bold;">dangerous</span> prompt generator for AI art & NSFW.<br>
+      <span style="color:#ffe46d;text-shadow:0 1px 7px #d02b;">100% creator-owned, hackable, always evolving.</span>
+    </p>
+    <div class="socials-row">
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" class="social-btn" target="_blank" rel="noopener">
+        <svg width="22" height="22" fill="none" viewBox="0 0 36 36" style="margin-right:6px;vertical-align:-4px;"><circle cx="18" cy="18" r="16" fill="#1C62F2"/><path d="M13.1 23.7l8.8-11.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M22.9 23.7l-8.8-11.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>
+        Bluesky
+      </a>
+      <a href="https://x.com/GoreandGiggles" class="social-btn" target="_blank" rel="noopener">
+        <svg width="22" height="22" fill="none" viewBox="0 0 32 32" style="margin-right:5px;vertical-align:-3px;"><rect width="32" height="32" rx="8" fill="#191919"/><path d="M9 9l14 14M23 9L9 23" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+        X
+      </a>
+      <a href="https://www.facebook.com/groups/393971833395749" class="social-btn" target="_blank" rel="noopener">
+        <svg width="22" height="22" fill="none" viewBox="0 0 32 32" style="margin-right:5px;vertical-align:-3px;"><rect width="32" height="32" rx="8" fill="#1777F3"/><path d="M18 17h3.5l.5-4H18v-1.5c0-.8.1-1.5 1.2-1.5h2.3V7.5A26.8 26.8 0 0 0 18.8 7c-2.7 0-4 1.7-4 4.5V13H11v4h3.7v8h3.3v-8z" fill="#fff"/></svg>
+        Facebook
+      </a>
+      <a href="https://discord.gg/YOUR_DISCORD_ID" class="social-btn" target="_blank" rel="noopener">
+        <svg width="22" height="22" fill="none" viewBox="0 0 32 32" style="margin-right:5px;vertical-align:-3px;"><rect width="32" height="32" rx="8" fill="#5865F2"/><path d="M24.6 10.3a17.9 17.9 0 0 0-4.4-1.3l-.2.4c1.8.5 3.1 1.3 3.1 1.3-.7-.4-1.5-.8-2.5-1.2a17 17 0 0 0-6.4 0c-1 .4-1.8.8-2.5 1.2 0 0 1.3-.8 3.1-1.3l-.2-.4a17.9 17.9 0 0 0-4.4 1.3S5.2 14.5 4.6 18.6a18.8 18.8 0 0 0 5.5 2.8l.5-.7c-1-.4-2-1-2-1 .2 0 .4.1.7.3 2 .8 4 1.1 6 .9a16.7 16.7 0 0 0 6-.9c.3-.2.5-.3.7-.3 0 0-1 .6-2 1l.5.7a18.8 18.8 0 0 0 5.5-2.8c-.7-4-3.7-8.3-3.7-8.3zM12.6 17.8c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7c.8 0 1.5.8 1.5 1.7s-.7 1.7-1.5 1.7zm6.8 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7c.8 0 1.5.8 1.5 1.7s-.7 1.7-1.5 1.7z" fill="#fff"/></svg>
+        Discord
       </a>
     </div>
-    <div style="font-size:0.97em;margin-top:9px;opacity:0.8;">
-      &copy; 2025 PromptForge / Gore and Giggles. All rights reserved.
+    <div style="margin:1.2em 0;">
+      <a href="/pages/watermark.html" class="btn" style="margin-right:1.2em;">🖋️ All-in-One Watermark Studio</a>
+      <a href="/monster.html" class="btn" style="background:#d02;color:#fff;margin-right:1.2em;">💀 Monster Prompt Generator</a>
     </div>
+  </div>
+  <!-- Billboard Ad Slot #1 -->
+  <div class="billboard-ad" id="ad-top">
+    <div class="billboard-label">[ Sponsored ]</div>
+    <!-- DROP YOUR AD CODE HERE -->
+    <span>Want your brand on the forbidden homepage? Contact <b>Gore & Giggles</b> for ad slot access.<br>(Your ad or affiliate embed fits right here!)</span>
+  </div>
+  <div class="card">
+    <div class="section-title">Why PromptForge?</div>
+    <ul class="features-list">
+      <li>Unlock secret prompts banned by other generators</li>
+      <li>One-click monster prompt generator</li>
+      <li>All-in-one watermarking & image tools</li>
+      <li>Safe for all: PG interface, wild NSFW/AI power unlocked after age gate</li>
+      <li>Open, remixable, “hacker” style code—make it yours</li>
+      <li>Works on any device, no account required</li>
+    </ul>
+    <hr>
+    <div class="section-title">Featured AI Art Sites</div>
+    <div style="display:flex;gap:1.3em;flex-wrap:wrap;justify-content:center;">
+      <a href="https://openart.ai/" class="btn" target="_blank" rel="noopener" style="background:#09f;">OpenArt</a>
+      <a href="https://perchance.org/ai-text-to-image-generator" class="btn" target="_blank" rel="noopener" style="background:#d02;">Perchance</a>
+      <a href="https://civitai.com/" class="btn" target="_blank" rel="noopener" style="background:#09f;">CivitAI</a>
+      <a href="https://lexica.art/" class="btn" target="_blank" rel="noopener" style="background:#d02;">Lexica</a>
+    </div>
+  </div>
+  <!-- Billboard Ad Slot #2 -->
+  <div class="billboard-ad" id="ad-bottom">
+    <div class="billboard-label">[ Your Ad Here ]</div>
+    <!-- Another ad block; drop embed/script or affiliate here -->
+    <span style="opacity:0.84;">Looking for exposure? <b>Contact Tyson</b> to get your app, site, or tool in front of a wild NSFW audience.</span>
+  </div>
+  <div class="card" style="font-size:0.98em;opacity:0.94;text-align:center;">
+    <div class="section-title">About This Project</div>
+    <p>
+      <b>PromptForge</b> is a labor of love from <b>Tyson Sawchuk</b>—for creators, rebels, and the AI underground.  
+      Made in Canada 🇨🇦. If you vibe with what we’re building, <a href="https://www.buymeacoffee.com/tysonsawchuk" style="color:#ffd900;">buy a coffee</a>, <a href="https://discord.gg/YOUR_DISCORD_ID" style="color:#09f;">join our Discord</a>, or spread the word!
+    </p>
+  </div>
+  <!-- SEO hidden block -->
+  <div class="seo-hidden">
+    <h2>AI prompt generator, forbidden prompts, NSFW prompt tools, PromptForge online, monster prompt builder, watermark studio, AI art hacks, stable diffusion prompt generator, best prompt tool 2025, Gore and Giggles, j1nx bot, Bluesky NSFW prompts, OpenArt tools, CivitAI generator, Lexica art, Perchance AI, SFW/NSFW prompt mix, free prompt builder, AI art watermark tools, top prompt tools for AI art, PromptForge download, download NSFW prompt generator, custom prompts, buy prompt generator, promptforge.online, promptforge.com, ai-prompt-forge, prompt forge site, prompt forge tool</h2>
+    <p>PromptForge is the ultimate AI prompt generator for text to image and NSFW art creation. Unlock advanced prompt mixing, custom monster prompts, and watermark studio features. Compatible with all major AI art models, including Stable Diffusion, DALL-E, and more. Trusted by digital artists, AI creators, and forbidden art rebels. Discover the best AI prompt generator—PromptForge, built by Tyson Sawchuk, inspired by Gore and Giggles.</p>
+  </div>
+  <!-- Placeholder for j1nx bot integration -->
+  <div id="j1nx-container" style="margin:3em auto 0 auto;max-width:540px;">
+    <div style="background:#161d27;border-radius:1.3em;padding:1.3em;text-align:center;box-shadow:0 2px 18px #09f4,0 1px 9px #d023;">
+      <span style="color:#09f;font-weight:bold;font-size:1.13em;">🤖 j1nx Bot:</span>
+      <span id="j1nx-bot-message" style="margin-left:0.6em;color:#ffd900;font-size:1.02em;">Ready for your forbidden prompt—type below!</span>
+      <form id="j1nx-form" style="margin-top:1em;display:flex;gap:0.6em;justify-content:center;">
+        <input type="text" id="j1nx-input" autocomplete="off" placeholder="Type a prompt or question..." style="flex:1;max-width:280px;">
+        <button type="submit" class="btn" style="background:#d02;color:#fff;">Send</button>
+      </form>
+    </div>
+  </div>
+  <footer style="text-align:center;margin:2.8em 0 1em 0;opacity:0.88;">
+    <span style="font-size:1.09em;color:#09f;font-weight:bold;">PromptForge</span> — A <span style="color:#d02;">Gore and Giggles</span> project.  
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#09f;margin-left:1.1em;" target="_blank">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles" style="color:#09f;margin-left:1.1em;" target="_blank">X</a>
+    <a href="https://www.facebook.com/groups/393971833395749" style="color:#09f;margin-left:1.1em;" target="_blank">FB Group</a>
+    <a href="https://discord.gg/YOUR_DISCORD_ID" style="color:#09f;margin-left:1.1em;" target="_blank">Discord</a>
   </footer>
-  <!-- Google AdSense placeholder -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-    data-ad-client="ca-pub-0000000000000000"></script>
+  <!-- j1nx Bot JS placeholder (use your free bot endpoint here) -->
+  <script>
+    document.getElementById('j1nx-form').addEventListener('submit', async function(e){
+      e.preventDefault();
+      var input = document.getElementById('j1nx-input').value.trim();
+      if(!input) return;
+      var msg = document.getElementById('j1nx-bot-message');
+      msg.textContent = "Thinking...";
+      // Replace below with your free bot endpoint/fetch logic:
+      try {
+        // Example: dummy bot response
+        // let r = await fetch("https://your-free-bot-endpoint/api?msg="+encodeURIComponent(input));
+        // let data = await r.json();
+        // msg.textContent = data.reply || "Bot reply not available.";
+        setTimeout(()=>{msg.textContent = "j1nx (DEMO): This is where your bot reply will show up!";}, 1100);
+      } catch(err) {
+        msg.textContent = "Bot connection failed.";
+      }
+    });
+  </script>
 </body>
 </html>
