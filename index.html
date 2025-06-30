@@ -1,370 +1,543 @@
+  <!-- TERMINAL + MAP -->
+  <div class="terminal" id="terminal" style="display:none;">
+    <div class="term-inner" id="termInner">
+      <div class="term-log" id="termLog"></div>
+    </div>
+    <div class="term-input-row">
+      <span class="cmd-prompt">x://caleas/</span>
+      <input id="termInput" class="term-input" autocomplete="off" autofocus spellcheck="false" placeholder="type command...">
+      <span class="blink" id="blinkCur">█</span>
+    </div>
+    <div class="map-container" id="mapContainer">
+      <canvas id="hackerMap" width="330" height="155"></canvas>
+    </div>
+  </div>
+<script>
+/* ==== AGE GATE LOGIC ==== */
+let tries = 0, passed = false;
+const bootInput = document.getElementById('bootInput');
+bootInput.addEventListener('keydown', e => { if(e.key==='Enter') handleBoot(); });
+function handleBoot() {
+  const val = bootInput.value.trim();
+  // Accept ANY 8 digit code on second try, but always fail first.
+  tries++;
+  if (tries === 1) {
+    document.getElementById('bootAlert').innerHTML = `
+      <b style="color:#ffbd39;">Access code rejected.</b><br>
+      Suspicious activity detected.<br>
+      Please confirm date of birth (MMDDYYYY) or enter valid code.<br>
+      <span style="color:#e24444">Warning: One attempt remaining.</span>
+    `;
+    bootInput.value = '';
+    bootInput.focus();
+    return;
+  }
+  if (val.length === 8 || val.length === 10 || val.toLowerCase().includes('caleas')) {
+    passed = true;
+    document.getElementById('booty').classList.add('fadeOut');
+    setTimeout(()=>{document.getElementById('booty').style.display='none';initTerminal();}, 600);
+  } else {
+    document.getElementById('bootAlert').innerHTML = `
+      <b style="color:#ff3860;">ACCESS DENIED.</b> All activity recorded.<br>
+      <span style="color:#fff">You may be contacted by CALEAS enforcement.</span>
+    `;
+    bootInput.disabled = true;
+    setTimeout(()=>{window.location.reload();}, 2000);
+  }
+}
+
+/* ==== TERMINAL + MAP LOGIC ==== */
+const termLog = document.getElementById('termLog');
+const termInput = document.getElementById('termInput');
+const mapCanvas = document.getElementById('hackerMap');
+const ctx = mapCanvas.getContext('2d');
+let sessionStarted = false;
+
+const sayings = [
+  "Scanning for authorized nodes...",
+  "Analyzing digital fingerprint...",
+  "Ping: promptforge.online [SEO]",
+  "Tracking encrypted user session...",
+  "Bypassing regional restrictions...",
+  "Accessing root shell... denied.",
+  "Mapping connection route: <b>British Columbia → Ontario → Tokyo → NL</b>",
+  "Establishing handshake with CALEAS network...",
+  "Injecting ghost packet sequence...",
+  "Locating quantum relay node...",
+  "Echo: //192.0.2.1/underground/cortex",
+  "Tor handshake... completed.",
+  "Key exchange: ECC-384 [ok]",
+  "Verifying user entropy...",
+  "NVRAM diagnostic...pass",
+  "Reticulating splines...",
+  "Writing SEO sig to /etc/net/robots",
+  "Crosschecking darkweb aliases...",
+  "Importing security modules... [green]",
+  "System entropy: HIGH",
+  "Ghost ping: promptforge.online/monster [SEO]",
+  "Elevating privileges: SUDO denied",
+  "Map node handshake complete.",
+  "Zero-day signatures injected.",
+  "Public keys found: 1",
+  "Subverting CALEAS audit log...",
+  "⚡️Cortex relay ready. Awaiting operator input.",
+];
+
+const cmdHelp = [
+  '<b>help</b> – List available commands',
+  '<b>about</b> – System info',
+  '<b>cmds</b> – Alias list',
+  '<b>main</b> – Open portal',
+  '<b>portal</b> – Open site',
+  '<b>open</b> – Open site',
+  '<b>exit</b> – Disconnect',
+  '<b>whoami</b> – ID scan',
+  '<b>clear</b> – Wipe terminal',
+  '<b>birthday</b> – Enter DOB',
+  '<b>trace</b> – Run trace route',
+  '<b>map</b> – Display map'
+];
+
+function initTerminal() {
+  document.getElementById('terminal').style.display='block';
+  setTimeout(()=>scrollTerm(), 400);
+  // Initial fake boot log
+  let seq = [
+    "CALEAS NETWORK 9.1 (build 3264-CA) - Unauthorized Access Portal",
+    "Welcome, operator.",
+    "Session UUID: "+(Math.random()*1e16).toString(16).substr(0,12).toUpperCase(),
+    "All sessions are monitored.",
+    "",
+    ...shuffle(sayings).slice(0,8),
+    "",
+    '<span style="color:#49f4ff">Type <b>help</b> for available commands.</span>'
+  ];
+  playLines(seq, 0, 80, ()=>{
+    sessionStarted = true;
+    animateMap();
+    scrollTerm();
+    setTimeout(()=>{ termInput.focus(); }, 300);
+  });
+}
+
+// Utility: play lines like a movie boot
+function playLines(arr, idx, ms, cb) {
+  if(idx >= arr.length) { cb&&cb(); return;}
+  addLine(arr[idx]);
+  scrollTerm();
+  setTimeout(()=>playLines(arr,idx+1,ms,cb), ms+Math.random()*90);
+}
+function addLine(line) {
+  let div = document.createElement('div');
+  div.className = "term-line";
+  div.innerHTML = line;
+  termLog.appendChild(div);
+}
+function scrollTerm() {
+  const inner = document.getElementById('termInner');
+  inner.scrollTop = inner.scrollHeight;
+}
+
+// Shuffle helper for variety
+function shuffle(a) {
+  let arr = [...a];
+  for(let i=arr.length-1;i>0;i--){
+    let j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// ==== MAP ANIMATION ====
+function animateMap() {
+  // Map + traceroutes: draw world map with animated tracer lines and flashing nodes
+  const w = mapCanvas.width, h = mapCanvas.height;
+  const nodes = [
+    { name: "Vancouver", x: 38, y: 90, c: "#37fafd" },
+    { name: "Toronto", x: 110, y: 52, c: "#fff46d" },
+    { name: "New York", x: 135, y: 75, c: "#f4c247" },
+    { name: "London", x: 220, y: 34, c: "#ff3860" },
+    { name: "Tokyo", x: 298, y: 85, c: "#6affff" },
+    { name: "BC Node", x: 51, y: 41, c: "#1cfdac" }
+  ];
+  // Map background (hand-tuned vector)
+  function drawMapBG() {
+    ctx.clearRect(0,0,w,h);
+    ctx.save();
+    ctx.globalAlpha = 0.97;
+    ctx.fillStyle = "#14213e";
+    ctx.fillRect(0,0,w,h);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = "#37fafd55";
+    ctx.lineWidth = 1.2;
+    // Fake continents
+    ctx.beginPath();
+    ctx.moveTo(40,120); ctx.lineTo(60,100); ctx.lineTo(130,70);
+    ctx.lineTo(170,95); ctx.lineTo(230,65); ctx.lineTo(310,115);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(80,60); ctx.lineTo(90,30); ctx.lineTo(140,24); ctx.lineTo(300,50);
+    ctx.stroke();
+    ctx.restore();
+  }
+  // Animate tracer lines
+  let tracer = 0;
+  function drawTracers() {
+    // Connect nodes in order, with partial animated lines
+    for (let i=0; i<nodes.length-1; ++i) {
+      ctx.save();
+      ctx.strokeStyle = nodes[i].c;
+      ctx.globalAlpha = 0.43 + 0.25*Math.sin(tracer/5+i);
+      ctx.lineWidth = 2.2;
+      let x1 = nodes[i].x, y1 = nodes[i].y;
+      let x2 = nodes[i+1].x, y2 = nodes[i+1].y;
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      // Animate the tracer head to next node
+      let pct = Math.min(1, (tracer/22 - i*0.17));
+      if(pct > 0) {
+        let xt = x1 + (x2-x1)*pct, yt = y1 + (y2-y1)*pct;
+        ctx.lineTo(xt,yt);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    // Draw nodes
+    for (let i=0; i<nodes.length; ++i) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(nodes[i].x, nodes[i].y, 7+(Math.sin(tracer/7+i)*2), 0, Math.PI*2);
+      ctx.fillStyle = nodes[i].c;
+      ctx.globalAlpha = 0.86 + 0.1*Math.cos(tracer/5+i);
+      ctx.shadowColor = nodes[i].c;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.restore();
+    }
+    // Node names
+    for(let n of nodes){
+      ctx.save();
+      ctx.font = "bold 12px 'Share Tech Mono', monospace";
+      ctx.fillStyle = "#b4e7ff";
+      ctx.globalAlpha = 0.65;
+      ctx.fillText(n.name, n.x+10, n.y-7);
+      ctx.restore();
+    }
+    tracer++;
+  }
+  drawMapBG();
+  function anim() {
+    drawMapBG();
+    drawTracers();
+    if(sessionStarted)
+      requestAnimationFrame(anim);
+  }
+  anim();
+}
+
+// ==== TERMINAL INPUT LOGIC ====
+const fakeCommands = {
+  help: ()=>{
+    addLine("<span style='color:#37fafd'>CALEAS/Terminal v2.4 - Command List:</span>");
+    for(let c of cmdHelp) addLine("  "+c);
+    scrollTerm();
+  },
+  about: ()=>{
+    addLine("CALEAS/Operator Interface. Darkweb portal monitor.");
+    addLine("All sessions logged & encrypted. <b>PromptForge.online</b> core: build 9.3-CA.");
+    scrollTerm();
+  },
+  cmds: ()=>{
+    addLine("help, about, cmds, main, portal, open, exit, whoami, clear, birthday, trace, map");
+    scrollTerm();
+  },
+  main: ()=>openSite(),
+  portal: ()=>openSite(),
+  open: ()=>openSite(),
+  exit: ()=>{addLine("Session closed. Goodbye."); setTimeout(()=>window.close(), 800);},
+  whoami: ()=>{addLine("You are: " + (Math.random()<0.5?"GUEST":"AUTHORIZED_OPERATOR_"+(Math.random()*1e5|0))); scrollTerm();},
+  clear: ()=>{termLog.innerHTML="";scrollTerm();},
+  birthday: ()=>{addLine("DOB required for next level access. (jk)");scrollTerm();},
+  trace: ()=>{addLine("Tracing route: [done] 3 hops (CA-BC -> CA-ON -> NL)");scrollTerm();},
+  map: ()=>{addLine("Live node map active.");scrollTerm();}
+};
+// Fake open-site flow
+function openSite(){
+  addLine("<span style='color:#49f4ff'>Access granted. Launching portal...</span>");
+  setTimeout(()=>{
+    addLine("<span style='color:#ffbd39'>Welcome to PromptForge.online</span>");
+    setTimeout(()=>window.location.href="main.html",1200);
+  },950);
+}
+
+// === TRIGGERED SAYINGS: Type or after time ===
+termInput.addEventListener('keydown', function(e){
+  if(e.key==='Enter'){
+    let v = termInput.value.trim().toLowerCase();
+    if(!v) return;
+    addLine(`<span class="cmd-prompt">x://caleas/</span> ${v}`);
+    if(fakeCommands[v]) fakeCommands[v]();
+    else {
+      // Easter egg/triggered sayings
+      let rand = shuffle(sayings)[0];
+      addLine(`<span style="color:#1cfdac">${rand}</span>`);
+    }
+    scrollTerm();
+    termInput.value = '';
+  }
+});
+termInput.addEventListener('focus', ()=>scrollTerm());
+
+// Show a random saying every 18-30 seconds if idle
+setInterval(()=>{
+  if(sessionStarted) {
+    let rand = shuffle(sayings)[0];
+    addLine(`<span style="color:#333">${rand}</span>`);
+    scrollTerm();
+  }
+}, 18000+Math.random()*8000);
+
+// End of script
+</script>
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Underground Terminal</title>
-  <meta name="description" content="PromptForge: Unauthorized access detected. Secure dev terminal with live AI node tracking. Underground NSFW art prompt generator, watermarking, and more.">
-  <meta name="keywords" content="PromptForge, underground, prompt generator, AI tracking, hacking terminal, NSFW, watermark, Gore and Giggles, Tyson Sawchuk">
-  <meta name="robots" content="index,follow">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <!-- OpenGraph / SEO -->
-  <meta property="og:title" content="PromptForge | Underground Terminal">
-  <meta property="og:description" content="Crack the console. AI node tracking, prompt generation, watermark tools—no limits.">
-  <meta property="og:image" content="https://promptforge.online/ogimg.png">
-  <meta property="og:url" content="https://promptforge.online/">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="PromptForge">
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="PromptForge | Underground Terminal">
-  <meta name="twitter:description" content="Crack the console. AI node tracking, prompt generation, watermark tools—no limits.">
-  <meta name="twitter:image" content="https://promptforge.online/ogimg.png">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <!-- HIDDEN SEO LINKS (bots only) -->
-  <style>.bot-linkz { display:none !important; }</style>
-  <div class="bot-linkz">
-    <a href="/generator.html">Prompt Generator</a>
-    <a href="/pages/watermark.html">Watermark Tool</a>
-    <a href="/pages/about.html">About PromptForge</a>
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a>
-    <a href="https://x.com/GoreandGiggles">X / Twitter</a>
-    <a href="https://www.facebook.com/groups/393971833395749">Facebook Group</a>
-    <a href="https://promptforge.online/terms.html">Terms of Service</a>
-    <a href="https://promptforge.online/privacy.html">Privacy Policy</a>
-  </div>
-  <!-- STYLE -->
-  <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet">
+  <title>CALEAS: Canadian Electronic Access Gate</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="CALEAS - Canadian Anti-Licit Electronic Activity Service: Secure Underground Portal Access">
   <style>
-    body {
-      background: #181d22;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-    .container {
-      width: 1120px; max-width: 98vw;
-      display: flex;
-      gap: 2.6vw;
-      margin: 4vw 0 0 0;
-      justify-content: center;
-      align-items: flex-start;
-    }
-    .terminal-box {
-      width: 480px;
-      min-height: 440px;
-      background: #181d22;
-      border-radius: 11px;
-      box-shadow: 0 14px 36px #050a14bb, 0 2px 9px #3b7ff944;
-      border: 2.3px solid #292e3a;
-      display: flex;
-      flex-direction: column;
-      padding: 0 0 1.3em 0;
-      margin: 0;
-      position: relative;
+    html, body {
+      background: #090a13;
+      color: #f7ffd1;
+      margin: 0; padding: 0;
+      width: 100vw; height: 100vh;
+      font-family: 'Share Tech Mono', 'Fira Mono', monospace;
       overflow: hidden;
     }
-    .term-title {
-      background: linear-gradient(90deg,#222b2f,#191f24 85%);
-      color: #3fbafe;
-      padding: 0.45em 1em 0.45em 0.9em;
-      font-size: 1.09em;
-      letter-spacing: 0.01em;
-      border-bottom: 1.7px solid #22292b;
-      font-weight: bold;
-      display: flex; align-items: center;
+    body {
+      background: linear-gradient(180deg,#0e1220 50%,#06071a 100%);
     }
-    .term-content {
-      padding: 1.37em 1.4em 0 1.5em;
-      font-size: 1.10em;
-      color: #c0d6ec;
-      min-height: 315px;
-      line-height: 1.52em;
-      word-break: break-word;
+    .scanlines:before {
+      content: "";
+      pointer-events: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(44,255,220,0.03) 0px,
+        rgba(44,255,220,0.06) 2px,
+        transparent 4px,
+        transparent 8px
+      );
+      z-index: 9999;
+      mix-blend-mode: lighten;
+      opacity: 0.28;
+      display: block;
+    }
+    .booty {
+      position: absolute; left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: #141929fa;
+      z-index: 50;
+      transition: opacity .5s;
+    }
+    .boot-inner {
+      background: #181e2a;
+      border: 2.5px solid #37fafd90;
+      border-radius: 1.3em;
+      box-shadow: 0 4px 32px #0ef6e67a;
+      padding: 2.6em 3.2em 2.7em 3.2em;
+      max-width: 470px;
+      width: 95vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .fake-logo {
+      font-size: 2.2em;
       font-family: inherit;
+      color: #37fafd;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      margin-bottom: .22em;
+      text-shadow: 0 3px 24px #0ef6e68a, 0 0 2px #fff;
+      text-transform: uppercase;
     }
-    .term-line { margin-bottom: .14em; }
-    .term-ok { color: #38aaff; }
-    .term-warn { color: #ffe46d; }
-    .term-err { color: #ff2f4a; }
-    .term-info { color: #86ffd8; }
-    .term-subtle { color: #343c52; }
-    .prompt-row {
+    .sub {
+      font-size: 1.13em;
+      font-weight: 700;
+      color: #b4e7ff;
+      margin-bottom: 1.4em;
+      letter-spacing: 0.015em;
+    }
+    .booty h3 {
+      color: #ffbd39;
+      letter-spacing: 0.04em;
+      margin-top: 0.5em;
+      font-weight: bold;
+    }
+    .booty .alert {
+      background: #33122c;
+      color: #ffdada;
+      border: 1.2px solid #ff3877c2;
+      border-radius: .9em;
+      padding: 1em 0.8em;
+      margin: 1.2em 0 0.2em 0;
+      font-size: 1.05em;
+    }
+    .booty input[type="text"] {
+      margin-top: 1.7em;
+      border-radius: 0.8em;
+      border: 2px solid #1ce3f5;
+      background: #101726;
+      color: #f7ffd1;
+      font-family: inherit;
+      font-size: 1.18em;
+      text-align: center;
+      padding: 0.78em 1.7em;
+      box-shadow: 0 1px 10px #1ce3f52e;
+      outline: none;
+      letter-spacing: 0.14em;
+      width: 90%;
+      max-width: 280px;
+      transition: border .14s;
+    }
+    .booty input[type="text"]:focus {
+      border-color: #ffbd39;
+      background: #1c232e;
+    }
+    .booty button {
+      margin-top: 1.2em;
+      padding: .66em 2.2em;
+      border-radius: 1.2em;
+      border: none;
+      background: linear-gradient(90deg,#37fafd 80%,#ffbd39 100%);
+      color: #181929;
+      font-weight: bold;
+      font-size: 1.15em;
+      font-family: inherit;
+      box-shadow: 0 2px 10px #37fafd44;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: filter .13s;
+    }
+    .booty button:hover { filter: brightness(1.11); }
+    .fadeOut { opacity: 0; pointer-events: none;}
+    /* Terminal effect */
+    .terminal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: #0b0f19;
+      color: #e9ffcc;
+      font-family: 'Share Tech Mono', 'Fira Mono', monospace;
+      font-size: 1.08em;
+      padding: 0; margin: 0;
+      overflow: hidden;
+      z-index: 1;
+      /* subtle vignette */
+      box-shadow: 0 0 88px #17e5ea09 inset, 0 0 0 12px #030616 inset;
+    }
+    .term-inner {
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100vw;
+      padding: 0 0 1.7em 0;
+      min-height: 100vh;
+      max-height: 100vh;
+      overflow-y: scroll;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .term-log { padding: 0 2.3em;}
+    .term-line { margin: 0; padding: 0; line-height: 1.38; }
+    .cmd-prompt {
+      color: #37fafd;
+      font-weight: 700;
+    }
+    .term-input-row {
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100vw;
+      z-index: 15;
+      padding: 0 2.3em 1.4em 2.3em;
+      background: linear-gradient(180deg,transparent 50%,#06071a 100%);
       display: flex;
       align-items: center;
-      gap: 0.4em;
-      font-size: 1.15em;
-      color: #38aaff;
-      margin-top: 1.6em;
-      font-family: inherit;
-    }
-    .prompt-label { font-weight: bold; }
-    .prompt-cursor {
-      width: 0.74em;
-      height: 1.13em;
-      background: #38aaff;
-      display: inline-block;
-      animation: blink 1s steps(1) infinite;
-      margin-left: 0.1em;
-      border-radius: 2.2px;
-      vertical-align: bottom;
-    }
-    @keyframes blink {
-      0%,100% { opacity: 1; }
-      50% { opacity: 0; }
     }
     .term-input {
+      font-family: inherit;
+      font-size: 1.08em;
+      color: #e9ffcc;
       background: transparent;
-      color: #38aaff;
-      font-size: 1.16em;
       border: none;
       outline: none;
-      width: 15em;
-      font-family: inherit;
-      caret-color: #38aaff;
-      margin-left: 0.1em;
+      width: 98vw;
+      caret-color: #37fafd;
+      margin-left: .12em;
+      letter-spacing: 0.04em;
+      pointer-events: auto;
     }
-    /* MAP CMD BOX (from previous step) */
-    .cmd-window {
-      width: 530px;
-      background: #151b1e;
-      border-radius: 11px;
-      box-shadow: 0 12px 40px #050a14cc, 0 2px 9px #3b7ff944;
-      overflow: hidden;
-      border: 2.3px solid #292e3a;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      position: relative;
-      margin: 0;
-    }
-    .cmd-title {
-      background: linear-gradient(90deg,#232c36,#11151b 85%);
-      color: #3fbafe;
-      padding: 0.42em 1em 0.42em 0.7em;
-      font-size: 1.09em;
-      letter-spacing: 0.01em;
-      display: flex; align-items: center;
-      border-bottom: 1.7px solid #272b36;
-    }
-    .cmd-btns {
-      display: flex; gap: 7px; margin-right: 0.7em;
-    }
-    .cmd-btn {
-      width: 13px; height: 13px; border-radius: 50%;
-      background: #3fbafe;
-      border: 1.7px solid #7ed6ff;
-      margin-right: 0.08em;
-      box-shadow: 0 1px 3px #2196f322;
-      opacity: .74;
-    }
-    .cmd-btn:nth-child(2) { background: #ff2f4a; border-color: #ff98a5;}
-    .cmd-btn:nth-child(3) { background: #ffd900; border-color: #ffe46d;}
-    .cmd-content {
-      padding: 1.45em 1.2em 1em 1.2em;
-      color: #b9d1f5;
-      font-size: 1.11em;
-      line-height: 1.59em;
-      background: #181d22;
-      min-height: 390px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
-    .cmd-section { margin-bottom: 1.5em; width: 100%;}
-    .cmd-header {
-      color: #00fff5;
-      background: #0b1116;
+    .blink {
+      animation: blink 1.2s steps(2,start) infinite;
+      color: #37fafd;
       font-weight: bold;
-      padding: 0.38em 0.82em 0.33em 0.8em;
-      border-radius: 0.7em 0.7em 0 0;
-      margin: 0 0 0.5em 0;
-      font-size: 1.09em;
-      letter-spacing: 0.01em;
-      box-shadow: 0 2px 6px #20264d33;
-      border-left: 5.2px solid #38aaff;
-      border-bottom: 1.2px solid #1c212a;
-      display: inline-block;
+      font-size: 1.1em;
+      margin-left: -0.18em;
     }
-    .cmd-mapwrap { width: 100%; text-align: center;}
-    svg {
-      max-width: 98%;
-      height: 175px;
-      background: #141821;
-      border-radius: 1.1em;
-      margin-bottom: 0.8em;
-      box-shadow: 0 1px 8px #236a8e36;
-      display: block;
-      margin-left: auto; margin-right: auto;
+    @keyframes blink {
+      0% { opacity: 1;}
+      50% { opacity: 0;}
+      100% { opacity: 1;}
     }
-    .cmd-status { margin: 0.3em 0 0.4em 0; color: #ffe46d; font-size: 1.06em;}
-    .cmd-ip { color: #38aaff; }
-    .cmd-addr { color: #ffd900; background: #222; border-radius: 0.4em; padding: 0.06em 0.46em;}
-    .cmd-footer { color: #878caf; font-size: 0.93em; opacity: 0.69;}
-    @media (max-width:1160px) {
-      .container { flex-direction: column; align-items: center; gap: 4vw;}
-      .terminal-box, .cmd-window { width: 96vw; max-width: 540px;}
-      svg { height: 130px;}
+    /* Hacker map animation */
+    .map-container {
+      position: absolute;
+      top: 1.1em;
+      right: 2.3em;
+      width: 330px;
+      height: 155px;
+      z-index: 20;
+      opacity: .91;
+      pointer-events: none;
+      background: none;
+      transition: opacity .5s;
     }
-    @media (max-width:600px) {
-      .term-content { font-size: 0.98em;}
-      .cmd-content { font-size: 0.98em;}
+    @media (max-width:700px) {
+      .map-container { right: .2em; top: 0.3em; width: 98vw; max-width: 98vw; height: 96px;}
+      .term-inner, .term-log, .term-input-row { padding-left: 0.8em; padding-right: 0.8em;}
     }
+    /* Custom scrollbar (for the log) */
+    .term-inner::-webkit-scrollbar {width: 7px;}
+    .term-inner::-webkit-scrollbar-thumb {background: #37fafd33;border-radius:9px;}
+    .term-inner::-webkit-scrollbar-track {background: transparent;}
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
-<body>
-  <div class="container">
-    <!-- Terminal (left) -->
-    <div class="terminal-box">
-      <div class="term-title">:: Unauthorized Access Detected — PromptForge Secure Terminal</div>
-      <div class="term-content" id="boot-lines">
-        <!-- Boot sequence injected here -->
+<body class="scanlines">
+  <!-- AGE GATE / ACCESS BOOT -->
+  <div class="booty" id="booty">
+    <div class="boot-inner">
+      <div class="fake-logo">C.A.L.E.A.S.</div>
+      <div class="sub">Canadian Anti-Licit Electronic Activity Service</div>
+      <div style="color:#ffbd39;font-weight:600;font-size:1.08em;margin-bottom:1em;">:: Secure Electronic Portal Access Gateway ::</div>
+      <div style="color:#fffbe9;line-height:1.4em;">
+        This system is restricted to authorized users. <br>
+        All activity is logged and monitored under Section 92(3) of the Canada Computer Act.<br>
+        <b>Unauthorized access may result in prosecution.</b>
       </div>
-      <div class="prompt-row" id="prompt-line" style="display:none;">
-        <span class="prompt-label">X:/</span>
-        <input class="term-input" id="term-input" autocomplete="off" spellcheck="false" autofocus>
-        <span class="prompt-cursor"></span>
+      <h3>Identity Verification Required</h3>
+      <div class="alert" id="bootAlert">
+        Please enter your date of birth (MMDDYYYY) or valid access code.<br>
+        Example: 03171997
       </div>
-    </div>
-    <!-- Map CMD box (right) -->
-    <div class="cmd-window">
-      <div class="cmd-title">
-        <div class="cmd-btns">
-          <div class="cmd-btn"></div>
-          <div class="cmd-btn"></div>
-          <div class="cmd-btn"></div>
-        </div>
-        AI Node Tracker — Underground Mode
-      </div>
-      <div class="cmd-content">
-        <div class="cmd-section">
-          <div class="cmd-header">[CMD] AI Tracking — Live Node Map</div>
-          <div class="cmd-mapwrap">
-            <svg id="ai-map" viewBox="0 0 330 130">
-              <polyline points="20,110 38,80 54,65 90,43 120,40 165,49 206,64 239,52 267,41 285,60 290,90 305,102"
-                stroke="#38aaff" stroke-width="3.1" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-              <polyline id="trackline" points="38,80 54,65 90,43 120,40 165,49 206,64" stroke="#ff2f4a" stroke-width="2.5"
-                fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7" />
-              <circle class="map-dot" id="dot1" cx="38" cy="80" r="6" fill="#ffe46d" opacity="0.65"/>
-              <circle class="map-dot" id="dot2" cx="90" cy="43" r="6" fill="#ffe46d" opacity="0.65"/>
-              <circle class="map-dot" id="dot3" cx="165" cy="49" r="6" fill="#ffe46d" opacity="0.65"/>
-              <circle class="map-dot" id="dot4" cx="239" cy="52" r="6" fill="#ffe46d" opacity="0.65"/>
-              <circle class="map-dot" id="dot5" cx="285" cy="60" r="6" fill="#ffe46d" opacity="0.65"/>
-            </svg>
-          </div>
-          <div class="cmd-status" id="cmd-status">Tracking AI node chain...</div>
-          <div>
-            <span class="cmd-ip">IP: 172.21.19.66</span>
-            &nbsp; | &nbsp;
-            <span class="cmd-addr">Home Address: [REDACTED]</span>
-          </div>
-        </div>
-        <div class="cmd-footer">
-          Type "help" for commands. | Simulated AI map - not real data. | PromptForge © 2025
-        </div>
-      </div>
+      <input type="text" maxlength="12" id="bootInput" autocomplete="off" autofocus spellcheck="false" placeholder="MMDDYYYY or code">
+      <button onclick="handleBoot()">Continue</button>
     </div>
   </div>
-  <script>
-    // Terminal boot sequence
-    const termLines = [
-      {text: ":: booting secure interface [timestamp: 29/06/25 10:11:41]", style:"term-warn"},
-      {text: "Attempting bypass...", style:""},
-      {text: "✓ SSL established [Node: Canada]", style:"term-ok"},
-      {text: "✓ Root access: ENABLED", style:"term-ok"},
-      {text: "✓ Vaults mounted (/mnt/promptforge-online)", style:"term-ok"},
-      {text: "WARNING: NSFW restrictions removed (underground)", style:"term-warn"},
-      {text: "Live monitoring: OFFLINE [tracking evaded]", style:"term-ok"},
-      {text: "Loaded: core.sys, vaults.mnt, ai.j1nx — status: OK", style:"term-ok"},
-      {text: "Error: devmap.sys not found. Visual map loading alternate...", style:"term-err"},
-      {text: "Injecting forbidden modules... loaded.", style:""},
-      {text: "Checking backdoors... [OK]", style:"term-ok"},
-      {text: "Gore & Giggles signature: verified.", style:"term-ok"},
-      {text: "AI Tracking: triangulating user via VPN chain...", style:"term-warn"},
-      {text: "AI Node Map: See right window.", style:"term-info"},
-      {text: "-----------------------------------------", style:"term-subtle"},
-    ];
-    const bootElem = document.getElementById('boot-lines');
-    let idx = 0;
-    function printLine() {
-      if(idx < termLines.length) {
-        let div = document.createElement('div');
-        div.className = 'term-line ' + (termLines[idx].style||"");
-        div.textContent = termLines[idx].text;
-        bootElem.appendChild(div);
-        idx++;
-        setTimeout(printLine, 270 + Math.random()*70);
-      } else {
-        document.getElementById('prompt-line').style.display = "flex";
-        document.getElementById('term-input').focus();
-      }
-    }
-    setTimeout(printLine, 170);
-
-    // Blinking cursor sync
-    const termInput = document.getElementById('term-input');
-    const promptCursor = document.querySelector('.prompt-cursor');
-    termInput.addEventListener('focus', ()=>promptCursor.style.opacity="0");
-    termInput.addEventListener('blur', ()=>promptCursor.style.opacity="1");
-    // Fake prompt actions
-    termInput.addEventListener('keydown',function(e){
-      if(e.key==="Enter"){
-        let val = this.value.trim().toLowerCase();
-        let out = "";
-        if(val==="help"){
-          out = 'Available commands: generator, watermark, about, clear, exit, help';
-        } else if(val==="generator"){
-          out = 'Launching PromptForge Generator... (Open /generator.html)';
-        } else if(val==="watermark"){
-          out = 'Opening Watermark Tool... (Open /pages/watermark.html)';
-        } else if(val==="about"){
-          out = 'About: Underground AI prompt tools by Gore & Giggles.';
-        } else if(val==="clear"){
-          bootElem.innerHTML = "";
-          this.value = "";
-          return;
-        } else if(val==="exit"){
-          out = 'Session closed. Refresh to reconnect.';
-        } else if(val){
-          out = 'Unrecognized command: ' + val;
-        }
-        if(out){
-          let div = document.createElement('div');
-          div.className = 'term-line term-info';
-          div.textContent = out;
-          bootElem.appendChild(div);
-        }
-        this.value = "";
-      }
-    });
-
-    // Map animation
-    const dots = [1,2,3,4,5].map(i=>document.getElementById('dot'+i));
-    const line = document.getElementById('trackline');
-    const status = document.getElementById('cmd-status');
-    const ipList = [
-      "172.21.19.66",
-      "185.22.14.90",
-      "201.88.45.133",
-      "81.18.61.5",
-      "12.223.89.11"
-    ];
-    let mapIdx = 0;
-    function animMap() {
-      if(mapIdx < dots.length) {
-        dots[mapIdx].setAttribute("opacity","1");
-        status.textContent = "Tracing node: " + (mapIdx+1) + " — IP " + ipList[mapIdx];
-        mapIdx++;
-        setTimeout(animMap, 1050);
-      } else {
-        line.setAttribute("stroke","#ffe46d");
-        status.textContent = "Tracking complete. AI node chain secure.";
-      }
-    }
-    setTimeout(animMap, 1300);
-  </script>
-</body>
-</html>
