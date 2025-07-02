@@ -1,247 +1,417 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge | Forbidden AI Prompt Tools</title>
-  <meta name="description" content="PromptForge: The only NSFW, photorealistic, and underground AI prompt generator. Start creating forbidden art.">
-  <meta property="og:title" content="PromptForge | Forbidden AI Prompt Tools" />
-  <meta property="og:description" content="Enter the Monster. Build, remix, and export forbidden prompts, watermarks, and more." />
-  <meta property="og:image" content="/assets/media/og-banner.png" />
-  <meta property="og:url" content="https://promptforge.online/main.html" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PromptForge | Monster Portal — Underground NSFW AI, J1NX Assistant, Watermark Tool</title>
+  <meta name="description" content="PromptForge: Forbidden prompt generator, NSFW & SFW AI art, live watermark creator, the J1NX muse, and a hacker playground. Enter the underground.">
+  <meta name="keywords" content="NSFW prompts, AI prompt generator, forbidden prompts, watermark tool, J1NX, underground AI, prompt forge, stable diffusion, midjourney, Bluesky, X, prompt art">
+  <meta name="author" content="Gore and Giggles / Tyson Sawchuk">
+  <meta property="og:title" content="PromptForge | Monster Portal" />
+  <meta property="og:description" content="Enter the forbidden playground: NSFW prompt generator, J1NX, watermark creator, and more." />
+  <meta property="og:image" content="/main/j1nx/j1nx_background.png" />
+  <meta property="og:url" content="https://promptforge.online/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PromptForge | Forbidden AI Prompt Tools" />
-  <meta name="twitter:description" content="Remix, copy, and create unstoppable AI prompts for art and NSFW." />
-  <meta name="twitter:image" content="/assets/media/og-banner.png" />
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/assets/css/boot.css" />
-  <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono:400,700&display=swap" rel="stylesheet">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+     crossorigin="anonymous"></script>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <!-- Fonts & Styling -->
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(130deg, #181726 70%, #1a061b 100%);
-      font-family: 'Share Tech Mono', monospace, sans-serif;
-      color: #fffbe9;
       margin: 0;
+      padding: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: url('/main/j1nx/j1nx_background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #eaeaea;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .top-bar {
-      width: 100%;
-      background: linear-gradient(90deg,#181830 60%,#2a0e16 100%);
-      box-shadow: 0 3px 28px #09f5;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.6em 1.8em 0.6em 1.8em;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .logo-title {
-      font-family: 'Share Tech Mono', monospace;
-      color: #09f;
-      font-weight: bold;
-      font-size: 1.65em;
-      letter-spacing: 0.05em;
-      display: flex;
-      align-items: center;
-      gap: 0.5em;
-    }
-    .top-bar-socials {
-      display: flex;
-      gap: 1.25em;
-      align-items: center;
-    }
-    .social-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.39em;
-      font-size: 1.1em;
-      font-weight: 600;
-      color: #fff;
-      background: linear-gradient(110deg,#09f 55%,#d02 100%);
-      border-radius: 1.6em;
-      box-shadow: 0 2px 9px #09f6, 0 0 6px #d026;
-      border: none;
-      padding: 0.31em 1.15em;
-      text-decoration: none;
-      transition: box-shadow .2s, background .13s, transform .09s;
-      outline: none;
-      margin: 0;
       position: relative;
-      z-index: 10;
     }
-    .social-btn:hover, .social-btn:focus {
-      background: linear-gradient(120deg,#d02 30%,#09f 90%);
-      box-shadow: 0 0 18px #d02c, 0 0 18px #09f7;
-      color: #fffbe9;
-      transform: scale(1.04) rotate(-1deg);
-    }
-    .coffee-btn {
-      background: linear-gradient(120deg,#ffe46d 80%,#d02 100%);
-      color: #2c2013;
-      border: 2px solid #ffd900;
-      font-size: 1.1em;
-      box-shadow: 0 0 11px #ffd90044;
-      font-family: 'Share Tech Mono', monospace;
-      font-weight: 900;
-      letter-spacing: 0.01em;
-      margin-left: 1.5em;
-      margin-right: 0.5em;
-      transition: filter .13s, box-shadow .17s;
-      outline: none;
-      border-radius: 1.7em;
-      padding: 0.41em 1.3em;
-    }
-    .coffee-btn:hover, .coffee-btn:focus {
-      filter: brightness(1.13) drop-shadow(0 0 8px #ffd900bb);
-      background: linear-gradient(100deg,#fff8ca 80%,#d02 100%);
-      color: #d02;
-      text-decoration: none;
-    }
-    .main-hero {
-      margin: 4vh 0 3vh 0;
+    header {
+      background: rgba(10,12,35,0.88);
+      border-bottom: 2px solid #8b3dff;
+      padding: 18px 0 10px 0;
       text-align: center;
-      max-width: 700px;
     }
-    .main-hero h1 {
-      font-size: 2.7em;
-      letter-spacing: 0.04em;
-      color: #fffa84;
-      margin: 0 0 0.2em 0;
-      text-shadow: 0 3px 22px #09f8, 0 1px 1px #2a0e16;
+    .main-logo {
+      max-width: 90px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 20px #c43dffbb);
     }
-    .main-hero p {
-      color: #ffecd1;
-      font-size: 1.29em;
-      margin: 0.6em 0 0 0;
-      letter-spacing: 0.01em;
+    h1 {
+      font-family: 'Orbitron', monospace;
+      color: #ffe470;
+      font-size: 2.8rem;
+      letter-spacing: 2px;
+      margin: 0 0 8px 0;
+      text-shadow: 0 2px 10px #220c47, 0 0 6px #c43dff66;
     }
-    .main-nav-cards {
+    nav {
+      margin-top: 6px;
+      margin-bottom: 12px;
+    }
+    nav a {
+      color: #94ecff;
+      text-decoration: none;
+      padding: 0 14px;
+      font-size: 1.12rem;
+      letter-spacing: 1.2px;
+      text-shadow: 0 2px 6px #221c47, 0 0 2px #8b3dff22;
+      transition: color 0.18s;
+    }
+    nav a:hover {
+      color: #fc72ff;
+    }
+    .adsense-bar {
       display: flex;
-      gap: 2em;
-      flex-wrap: wrap;
       justify-content: center;
-      margin: 3.4em 0 3.2em 0;
+      margin: 14px 0;
     }
-    .main-card {
-      background: linear-gradient(120deg,#221d2a 90%,#09011c 100%);
-      border-radius: 2.2em;
-      box-shadow: 0 6px 48px #09f6, 0 2px 18px #d021;
-      color: #ffe46d;
-      max-width: 320px;
-      width: 90vw;
-      padding: 2.1em 1.6em 2em 1.6em;
-      margin: 0.3em 0.2em;
-      display: flex;
+    .underground-content {
+      max-width: 980px;
+      margin: 40px auto;
+      background: rgba(20,12,50,0.89);
+      border-radius: 22px;
+      padding: 28px 34px 38px 34px;
+      box-shadow: 0 8px 36px #0008, 0 0 12px #7e23b988;
+      border: 2.5px solid #302040;
+      position: relative;
+    }
+    /* J1NX Assistant Floating Avatar */
+    .j1nx-float {
+      position: fixed;
+      bottom: 24px;
+      right: 38px;
+      width: 105px;
+      z-index: 99;
+      animation: breathe 3.4s ease-in-out infinite alternate;
+      cursor: pointer;
+      filter: drop-shadow(0 0 18px #ff68e055) drop-shadow(0 0 6px #fff4);
+    }
+    @keyframes breathe {
+      0% { transform: scale(1) rotate(-2deg);}
+      100% { transform: scale(1.06) rotate(2deg);}
+    }
+    /* J1NX Chat Bubble */
+    .j1nx-chatbox {
+      position: fixed;
+      bottom: 144px;
+      right: 40px;
+      width: 350px;
+      max-width: 98vw;
+      background: rgba(44, 23, 66, 0.98);
+      border-radius: 18px;
+      border: 2px solid #ca5dffcc;
+      box-shadow: 0 6px 28px #1d022099;
+      display: none;
       flex-direction: column;
+      padding: 18px 18px 10px 18px;
+      z-index: 110;
+    }
+    .j1nx-chatbox.visible { display: flex; }
+    .j1nx-chat-log {
+      min-height: 110px;
+      max-height: 220px;
+      overflow-y: auto;
+      font-size: 1.02rem;
+      color: #ffb8fc;
+      margin-bottom: 9px;
+      padding-right: 4px;
+    }
+    .j1nx-chat-input-row {
+      display: flex;
       align-items: center;
-      text-align: center;
-      transition: transform .13s, box-shadow .13s;
-      text-decoration: none;
-      font-size: 1.13em;
+      gap: 7px;
     }
-    .main-card:hover {
-      transform: scale(1.045) translateY(-5px);
-      box-shadow: 0 10px 44px #ffd90077, 0 2px 22px #09f6;
-      background: linear-gradient(120deg,#291a39 70%,#181831 100%);
-      color: #fffbe9;
+    .j1nx-chat-input {
+      flex: 1;
+      border-radius: 7px;
+      border: 1.5px solid #b05fff;
+      padding: 6px 9px;
+      font-size: 1.01rem;
+      background: #231133;
+      color: #eee;
+      outline: none;
     }
-    .main-card .card-icon {
-      font-size: 2.7em;
-      margin-bottom: 0.43em;
-      display: block;
-      text-shadow: 0 2px 13px #09f6;
-    }
-    .main-card .card-title {
-      font-size: 1.23em;
-      color: #fffa84;
+    .j1nx-chat-send {
+      background: #fd43ff;
+      color: #211;
+      border: none;
+      border-radius: 7px;
+      padding: 6px 17px;
+      font-size: 1.07rem;
       font-weight: bold;
-      margin-bottom: 0.3em;
+      cursor: pointer;
+      transition: background 0.18s;
     }
-    .main-card .card-desc {
-      color: #ffe46d;
-      font-size: 1.02em;
-      opacity: 0.91;
-      margin-bottom: 0.6em;
+    .j1nx-chat-send:hover {
+      background: #ffdb43;
+      color: #b100a8;
     }
-    .main-card .card-link {
-      color: #09f;
-      font-weight: bold;
-      text-decoration: underline;
-      font-size: 1.09em;
-    }
-    @media (max-width:850px) {
-      .main-hero h1 { font-size: 2.0em;}
-      .main-nav-cards { gap: 1.2em; }
-      .main-card { max-width: 98vw; }
-    }
-    @media (max-width:600px) {
-      .main-hero { margin: 2.2vh 0 1.2vh 0;}
-      .main-nav-cards { flex-direction: column; gap: 1em;}
+    /* Responsive tweaks */
+    @media (max-width: 680px) {
+      .underground-content {padding: 11px 2vw;}
+      .j1nx-float {right: 8px;}
+      .j1nx-chatbox {right: 8px;}
     }
   </style>
 </head>
 <body>
-  <div class="top-bar">
-    <span class="logo-title">
-      <img src="/favicon.svg" width="28" height="28" style="vertical-align:-6px;" alt="PromptForge Logo">
-      PromptForge
-    </span>
-    <div class="top-bar-socials">
-      <a href="https://www.buymeacoffee.com/tysonsawchuk" class="coffee-btn" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" class="social-btn" target="_blank" rel="noopener" title="Bluesky">
-        <svg width="18" height="18" fill="none" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="#1C62F2"/><path d="M13.1 23.7l8.8-11.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M22.9 23.7l-8.8-11.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>
-      </a>
-      <a href="https://x.com/GoreandGiggles" class="social-btn" target="_blank" rel="noopener" title="X / Twitter">
-        <svg width="18" height="18" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#191919"/><path d="M9 9l14 14M23 9L9 23" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
-      </a>
-      <a href="https://www.facebook.com/groups/393971833395749" class="social-btn" target="_blank" rel="noopener" title="Facebook Group">
-        <svg width="18" height="18" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1777F3"/><path d="M18 17h3.5l.5-4H18v-1.5c0-.8.1-1.5 1.2-1.5h2.3V7.5A26.8 26.8 0 0 0 18.8 7c-2.7 0-4 1.7-4 4.5V13H11v4h3.7v8h3.3v-8z" fill="#fff"/></svg>
-      </a>
-    </div>
+  <!-- HEADER + LOGO -->
+  <header>
+    <img src="/main/j1nx/j1nx_cutout.png" class="main-logo" alt="PromptForge J1NX Logo" />
+    <h1>PromptForge: Monster Portal</h1>
+    <nav>
+      <a href="/main.html">Home</a>
+      <a href="/monster-prompt.html">Monster Prompt</a>
+      <a href="/watermark.html">Watermark Tool</a>
+      <a href="/forbidden-ai.html">Forbidden AI</a>
+      <a href="/movies.html">Movie Prompt FX</a>
+      <a href="/picture.html">Pic Prompt FX</a>
+      <a href="/about.html">About</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+      <a href="https://x.com/GoreandGiggles" target="_blank">X</a>
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">FB Group</a>
+      <a href="https://github.com/tysonsawchuk/promptforge-online" target="_blank">GitHub</a>
+    </nav>
+  </header>
+
+  <!-- GOOGLE ADSENSE BLOCK -->
+  <div class="adsense-bar">
+    <ins class="adsbygoogle"
+         style="display:block;min-width:320px;min-height:70px;height:90px"
+         data-ad-client="ca-pub-4963053724895140"
+         data-ad-slot="4979279167"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
   </div>
-  <section class="main-hero">
-    <h1>Unleash the Monster.<br>NSFW, Uncensored, Photorealistic Prompts.</h1>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <div class="underground-content">
+    <h2 style="font-family:'Orbitron';color:#fdaeff;font-size:2.05rem;text-shadow:0 1px 6px #000;">
+      Welcome to the Underground 👾
+    </h2>
     <p>
-      Welcome to <b>PromptForge</b>—your gateway to forbidden creative tools.<br>
-      Build, remix, and export unstoppable prompts for AI art. Plus: watermark anything, chat with J1NX, and more.<br>
-      <span style="color:#ffd900;">All free. All underground. No login.</span>
+      <b>PromptForge</b> is your all-in-one forbidden AI prompt lab, watermark tool, and viral prompt generator, featuring the legendary NSFW muse <b>J1NX</b>.
+      <br>
+      Unleash monster prompts for Stable Diffusion, Midjourney, and more. 
+      <br>
+      <span style="color:#ffe470;font-weight:bold;">Push boundaries, break rules, go viral.</span>
     </p>
-  </section>
-  <div class="main-nav-cards">
-    <a href="/monster.html" class="main-card">
-      <span class="card-icon">💀</span>
-      <span class="card-title">Monster Prompt Generator</span>
-      <span class="card-desc">Build and remix ultra-detailed, uncensored prompts. Go full NSFW or photoreal. Instant copy, infinite reroll.</span>
-      <span class="card-link">Enter &rarr;</span>
-    </a>
-    <a href="/pages/watermark.html" class="main-card">
-      <span class="card-icon">🖋️</span>
-      <span class="card-title">Watermark Studio</span>
-      <span class="card-desc">Upload, draw, sign, and export watermarks. Protect your creations or brand your art in seconds.</span>
-      <span class="card-link">Start &rarr;</span>
-    </a>
-    <a href="/about.html" class="main-card">
-      <span class="card-icon">❓</span>
-      <span class="card-title">About + Roadmap</span>
-      <span class="card-desc">How it works, what's next, who made this, and how to help.</span>
-      <span class="card-link">Read &rarr;</span>
-    </a>
-    <a href="/generator.html" class="main-card">
-      <span class="card-icon">🧬</span>
-      <span class="card-title">Classic Generator (NEW!)</span>
-      <span class="card-desc">Try the upgraded forbidden prompt engine. More randomness, smarter results, even dirtier outputs.</span>
-      <span class="card-link">Test &rarr;</span>
-    </a>
+
+    <!-- Example Backlink Block / AI Resources (SEO "hidden in plain sight") -->
+    <div style="margin:16px 0 9px 0;">
+      <details>
+        <summary style="color:#97eeff;cursor:pointer;font-size:1.09rem;">⭐️ Top AI Art Resources & Prompt Tools (expand for links)</summary>
+        <ul style="margin-top:8px;font-size:0.99rem;">
+          <li><a href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener">Perchance Prompt Generator</a></li>
+          <li><a href="https://prompt.noonshot.com/" target="_blank" rel="noopener">PromptHero</a></li>
+          <li><a href="https://openart.ai/" target="_blank" rel="noopener">OpenArt</a></li>
+          <li><a href="https://www.civitai.com/" target="_blank" rel="noopener">CivitAI</a></li>
+          <li><a href="https://lexica.art/" target="_blank" rel="noopener">Lexica</a></li>
+          <li><a href="https://huggingface.co/" target="_blank" rel="noopener">HuggingFace</a></li>
+          <li><a href="https://replicate.com/" target="_blank" rel="noopener">Replicate</a></li>
+          <li><a href="https://github.com/tysonsawchuk/promptforge-online" target="_blank">PromptForge GitHub</a></li>
+        </ul>
+      </details>
+    </div>
+
+    <!-- J1NX Floating Avatar + Chatbox (interactive, always visible) -->
+    <img src="/main/j1nx/j1nx_cutout.png" alt="J1NX Virtual Muse" class="j1nx-float" id="j1nx-avatar" title="Chat with J1NX" />
+    <div class="j1nx-chatbox" id="j1nx-chatbox">
+      <div class="j1nx-chat-log" id="j1nx-chat-log">
+        <span style="color:#efbfff;">👾 J1NX:</span> Hey, need help with a killer prompt or just wanna break some rules?
+      </div>
+      <div class="j1nx-chat-input-row">
+        <input class="j1nx-chat-input" id="j1nx-chat-input" type="text" maxlength="180" placeholder="Ask J1NX anything..." autocomplete="off" />
+        <button class="j1nx-chat-send" id="j1nx-chat-send">Send</button>
+      </div>
+    </div>
+    <!-- Main Features Block -->
+    <div class="features-block">
+      <h3>🔥 Main Features:</h3>
+      <ul>
+        <li>Monster Prompt Generator — NSFW, viral, cinematic, detailed, rules-breaking prompts.</li>
+        <li>Watermark Tool — Embed or strip watermarks in seconds.</li>
+        <li>J1NX Virtual Muse — Ask for inspiration, prompt help, or NSFW advice (she’s sassy!).</li>
+        <li>Picture & Movie Prompt FX — Compare what normies generate vs. PromptForge results.</li>
+        <li>Secret AI Vault — Unlisted models, prompt packs, exclusive add-ons (coming soon).</li>
+        <li>100% FREE. No logins. No limits. Built for rebels & creators.</li>
+      </ul>
+    </div>
+
+    <!-- (Put your AdSense block again if you want mid-page ads here) -->
+
+    <!-- Socials, Add space, and SEO-rich area -->
+    <section class="promo-section">
+      <h4>Follow, Share, and Get Exclusive AI Drops</h4>
+      <p>
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> | 
+        <a href="https://x.com/GoreandGiggles" target="_blank">X (Twitter)</a> | 
+        <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a>
+      </p>
+      <div class="adspace">
+        <span>Advertise here? Contact: 0fearnofish0@gmail.com</span>
+      </div>
+    </section>
   </div>
-  <footer style="text-align:center;margin:2.7em 0 1em 0;opacity:0.94;">
-    <span style="font-size:1.09em;color:#09f;font-weight:bold;">PromptForge</span> — A <span style="color:#d02;">Gore and Giggles</span> project.<br>
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#09f;margin-left:0.8em;" target="_blank">Bluesky</a>
-    <a href="https://x.com/GoreandGiggles" style="color:#09f;margin-left:0.8em;" target="_blank">X</a>
-    <a href="https://www.facebook.com/groups/393971833395749" style="color:#09f;margin-left:0.8em;" target="_blank">FB Group</a>
+
+  <!-- SEO Footer - Hidden & Embedded Backlinks, Schema, Copyright -->
+  <footer>
+    <div style="display:none">
+      <a href="https://openart.ai/" title="AI image generation" rel="noopener">AI Images</a>
+      <a href="https://prompt.noonshot.com/" title="Prompt marketplace" rel="noopener">Prompt Marketplace</a>
+      <a href="https://lexica.art/" title="Lexica Art" rel="noopener">Lexica Art</a>
+    </div>
+    <p>
+      &copy; 2025 PromptForge.online | Powered by Gore & Giggles | No boring AI, ever.<br>
+      <small>
+        <span style="color: #888;">PromptForge, Monster Muse, J1NX Forbidden AI — All trademarks &copy; Tyson Sawchuk.<br>
+        Not affiliated with OpenAI, Midjourney, or Stable Diffusion. For adults 18+ only.</span>
+      </small>
+    </p>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "PromptForge",
+        "url": "https://promptforge.online/",
+        "logo": "https://promptforge.online/main/j1nx/j1nx_cutout.png",
+        "sameAs": [
+          "https://bsky.app/profile/goreandgiggles.bsky.social",
+          "https://x.com/GoreandGiggles",
+          "https://www.facebook.com/groups/393971833395749"
+        ]
+      }
+    </script>
   </footer>
+
+  <!-- J1NX Chat Logic -->
+  <script>
+    // Local fake AI logic, pluggable with real API (swap fetch for OpenRouter or Kobold API)
+    const J1NX_LINES = [
+      "What prompt are you stuck on? Need a new idea?",
+      "Try adding a forbidden tag. Go on, push it.",
+      "You want viral? Mix glass, bokeh, sweat, and drama.",
+      "Did you try 'monster mode'? It’s wild.",
+      "Feeling lucky? Type: /random",
+      "Your prompt is too safe! Go harder.",
+      "Need inspiration? Just describe the weirdest scene you can imagine.",
+      "Want a watermark? I got you.",
+      "NSFW? No problem. Be specific.",
+      "Eye contact is EVERYTHING.",
+      "Broke the AI? Good.",
+      "Try using a POV angle.",
+      "Stuck? Just ask me.",
+      "Picture prompt or movie prompt? I can help with both.",
+      "Remember: All your data is safe here (and nowhere else).",
+      "Cinematic lighting always wins.",
+      "Negative prompt? Try: 'low quality, ugly, deformed, blurry, watermark, error, duplicate.'",
+      "Looking for secret models? Drop me a DM.",
+      "Wanna collab? Bluesky me.",
+      "I see you, creator. Go viral.",
+      "No limits. No censors. Just art.",
+      "Try a forbidden keyword, just once.",
+      "You want premium? Wait for PromptForge Pro.",
+      "Ask for a free prompt. Go ahead.",
+      "Try combining genres. Horror + Cute = Win.",
+      "If you want to break the rules, start here."
+    ];
+    const chatLog = document.getElementById('j1nx-chat-log');
+    const chatInput = document.getElementById('j1nx-chat-input');
+    const chatSend = document.getElementById('j1nx-chat-send');
+
+    function j1nxReply(msg) {
+      let reply = "";
+      const lower = msg.toLowerCase();
+      if (lower.includes("prompt") || lower.includes("idea")) {
+        reply = "Describe your vibe and I’ll craft something wild for you.";
+      } else if (lower.includes("watermark")) {
+        reply = "Head to the Watermark Tool. Or do you want a watermark prompt?";
+      } else if (lower.includes("movie") || lower.includes("cinema")) {
+        reply = "Try mixing dramatic light, film grain, closeup, emotion, and a twist.";
+      } else if (lower.includes("forbidden") || lower.includes("nsfw")) {
+        reply = "I don’t judge. Want to see my monster prompt?";
+      } else if (lower.startsWith("/random")) {
+        reply = J1NX_LINES[Math.floor(Math.random()*J1NX_LINES.length)];
+      } else {
+        reply = J1NX_LINES[Math.floor(Math.random()*J1NX_LINES.length)];
+      }
+      return reply;
+    }
+
+    chatSend.onclick = () => {
+      const val = chatInput.value.trim();
+      if (!val) return;
+      chatLog.innerHTML += `<br><span style="color:#90dfff;">You:</span> ${val}`;
+      setTimeout(() => {
+        chatLog.innerHTML += `<br><span style="color:#efbfff;">👾 J1NX:</span> ${j1nxReply(val)}`;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }, 450 + Math.random()*400);
+      chatInput.value = "";
+    };
+    chatInput.addEventListener('keydown', e => {
+      if (e.key === 'Enter') chatSend.onclick();
+    });
+  </script>
+
+  <!-- Styling: J1NX, page, chat -->
+  <style>
+    body {
+      background: #1e1937 url('/main/j1nx/j1nx_background.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #f2e8ff;
+      font-family: 'JetBrains Mono', 'Orbitron', 'Montserrat', 'Consolas', monospace;
+      margin: 0;
+      min-height: 100vh;
+    }
+    header {
+      padding: 10px 0 0 0;
+      background: rgba(25,17,40,0.93);
+      text-align: center;
+    }
+    .main-logo { height: 90px; vertical-align: middle; margin-top: 2px; }
+    nav {
+      margin: 10px auto 8px;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      word-spacing: 3px;
+    }
+    nav a {
+      color: #80e1ff;
+      padding: 0 8px;
+      text-decoration: none;
+      font-family: 'Orbitron', monospace;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #ff80f4; }
+    .adsense-bar { width:100%; text-align:center; margin:14px 0 6px 0;}
+    .underground-content { max-width: 750px; margin: 0 auto; background:rgba(12,9,24,0.77); border-radius:14px; padding:26px 24px 20px; box-shadow:0 6px 22px #0006;}
+    .j1nx-float { position:fixed; bottom:31px; right:31px; height:106px; z-index:44; border-radius:60px; box-shadow:0 2px 18px #df64ff77,0 0 0 4px #2a003677; cursor:pointer; transition:transform 0.15s;}
+    .j1nx-float:hover { transform: scale(1.09) rotate(-3deg);}
+    .j1nx-chatbox { position:fixed; bottom:153px; right:35px; width:330px; max-width:96vw; background:#220c35e6; border-radius:13px; border:2px solid #382258; box-shadow:0 2px 28px #9e7cff45; display:flex; flex-direction:column; z-index:200;}
+    .j1nx-chat-log { max-height:170px; overflow-y:auto; padding:13px 14px 3px 15px; font-size:1.02rem; }
+    .j1nx-chat-input-row { display:flex; align-items:center; padding:7px 11px 11px 11px;}
+    .j1nx-chat-input { flex:1; border-radius:6px; border:none; background:#1f1431; color:#ffeaff; padding:7px 10px; font-size:1.02rem;}
+    .j1nx-chat-send { margin-left:8px; padding:7px 16px; border-radius:7px; border:none; background:linear-gradient(90deg,#eb91ff,#64f4ff); color:#231233;font-weight:700; font-family: 'Orbitron'; font-size:1.05rem; cursor:pointer;}
+    .j1nx-chat-send:hover { background:linear-gradient(90deg,#64f4ff,#eb91ff);}
+    .features-block {margin:22px 0 18px 0; padding:12px 15px; background:rgba(35,23,58,0.75); border-radius:10px; border:1.4px solid #383d60;}
+    .promo-section {text-align:center; margin:25px 0 15px 0;}
+    .promo-section a { color:#ffbcf7;}
+    .adspace { margin-top:6px; color:#7677bb; font-size:0.94rem;}
+    footer {margin-top:60px; text-align:center; color:#8e7fa1; font-size:1.03rem;}
+    @media (max-width:550px) {
+      .j1nx-float { bottom:10px; right:10px; height:64px;}
+      .j1nx-chatbox { bottom:78px; right:10px; width:98vw;}
+      .underground-content { padding:13px 2vw 13px;}
+    }
+  </style>
 </body>
 </html>
