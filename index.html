@@ -2,491 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Terminal Boot</title>
+  <title>PromptForge Debug Mode</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PromptForge: Advanced NSFW/SFW AI prompt generator and cyberpunk hacking terminal for creative professionals. Military-grade interface, custom tools, and the best prompt builder online.">
-  <meta name="keywords" content="NSFW, AI prompt, prompt generator, hacking, terminal, military, JuggernautXL, RealVis, Gore and Giggles, promptforge, prompt tools, ASCII, cyberpunk, creative, text to image, AI art, prompt battle">
   <meta name="robots" content="index,follow">
-  <link rel="icon" href="assets/favicon.png" />
-  <!-- GOOGLE ADSENSE VERIFICATION SNIPPET -->
+  <!-- Google AdSense Verification -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
      crossorigin="anonymous"></script>
-  <!-- END GOOGLE ADSENSE SNIPPET -->
   <style>
-    html, body {
-      margin: 0; padding: 0; width: 100vw; height: 100vh;
-      background: #0d1016;
-      color: #98ffe3;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      overflow: hidden;
+    body {
+      margin: 0; padding: 2vw;
+      background: #161616; color: #22ffce;
+      font-family: monospace, monospace;
     }
-    #terminal-bg {
-      width: 100vw; height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start;
-      background: #0d1016;
-      user-select: none;
-      padding-top: 3vh;
-      box-sizing: border-box;
+    #main, #err {
+      padding: 1.2em;
+      margin: 2vw auto 0;
+      background: #181e20;
+      border-radius: 14px;
+      max-width: 50em;
+      font-size: 1.1em;
+      box-shadow: 0 0 8px #12ffd3aa;
+      min-height: 100px;
     }
-    .ascii-eye {
-      font-size: 1.05vw;
-      line-height: 1.06;
-      color: #03ffd5;
-      letter-spacing: 0.025em;
-      text-shadow: 0 0 15px #0e7777, 0 0 2px #24ffe0, 0 0 2px #30ffee;
-      min-width: 65vw;
-      max-width: 95vw;
-      min-height: 25vw;
-      max-height: 60vw;
-      transition: filter 0.2s;
-      margin-bottom: 2.1vh;
-      white-space: pre;
-      border-radius: 1vw;
-      pointer-events: none;
-      outline: none;
-    }
-    .ascii-eye.flash {
-      filter: brightness(2.4) contrast(1.8);
-      text-shadow: 0 0 25px #44fff0, 0 0 4px #eafffb;
-      transition: filter 0.05s;
-    }
-    .boot-log {
-      font-size: 1.09vw;
-      font-family: inherit;
-      width: 66vw; max-width: 96vw;
-      background: none; border: none; outline: none;
-      color: #bafff6;
-      margin: 0 auto;
-      padding: 0.7em 0 0 0;
-      text-align: left;
-      min-height: 7em;
-      white-space: pre-line;
-      user-select: text;
-      transition: opacity 0.6s;
-      overflow-y: auto;
-      max-height: 30vh;
-    }
-    .log-warn  { color: #ffa94d; }
-    .log-ok    { color: #a2ffa6; }
-    .log-trace { color: #54b5ff; }
-    .log-error { color: #ff5b61; }
-    .log-help  { color: #f4ff58; }
-    .log-info  { color: #b4f7ff; }
-    .badge {
-      background: #1a2d27; color: #1bfff6; border: 1px solid #48ffe4;
-      display: inline-block; border-radius: 6px; font-size:0.98vw; padding:0.2em 0.7em; margin:0.12em 0.15em 0.12em 0;
-      letter-spacing: 0.03em;
-      box-shadow: 0 0 6px #32d3c9aa;
-      font-weight: bold;
-      vertical-align: baseline;
-    }
-    .terminal-input-row {
-      display: flex; align-items: center;
-      font-family: inherit; font-size: 1.15vw; color: #d0fff7;
-      margin-top: 0.7em;
-    }
-    .prompt-arrow {
-      color: #0fffe8; margin-right: 0.5vw; font-weight: bold;
-      font-size: 1.25vw;
-      user-select: none;
-    }
-    .terminal-input {
-      background: none; border: none; outline: none;
-      color: #eafffb;
-      font-family: inherit; font-size: 1.15vw;
-      width: 45vw;
-      caret-color: #33ffd5;
-      letter-spacing: 0.04em;
-    }
-    .terminal-cursor {
-      display: inline-block;
-      width: 0.8ch; height: 1.2em;
-      margin-left: 0.08em;
-      background: #4fffe8;
-      animation: blinkCursor 1s steps(1) infinite;
-      border-radius: 1px;
-      vertical-align: middle;
-      opacity: 0.9;
-    }
-    @keyframes blinkCursor {
-      0%, 60% { opacity: 1; }
-      61%, 100% { opacity: 0.07; }
-    }
-    .boot-log::-webkit-scrollbar { background: #222; width: 8px; border-radius: 3px;}
-    .boot-log::-webkit-scrollbar-thumb { background: #34ffdd55; border-radius: 4px; }
-    #ageGate {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(9, 12, 18, 0.97);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      z-index: 21;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.8s;
-    }
-    #ageGate.active { opacity: 1; pointer-events: all; }
-    .age-prompt {
-      font-size: 2.3vw;
-      color: #7ffff9;
-      margin-bottom: 1.7em;
-      font-family: inherit;
-      text-shadow: 0 0 12px #00d1aa, 0 0 2px #fff5;
-      letter-spacing: 0.02em;
-      font-weight: 600;
-      text-align: center;
-    }
+    #err { color: #ff69a1; background: #2d001b; }
     .age-btn {
-      font-size: 1.22vw;
-      font-family: inherit;
-      background: #121f1a;
-      color: #18ffd6;
-      border: 2px solid #2dfbdc;
-      border-radius: 12px;
-      padding: 0.7em 2.6em;
+      margin: 0.7em 1.1em 0.7em 0;
+      background: #232;
+      color: #23ffe6;
+      border: 1px solid #48ffe4;
+      border-radius: 8px;
+      font-size: 1.1em;
+      padding: 0.5em 2.4em;
       cursor: pointer;
-      margin: 0.3em 1em 0.8em 0;
-      box-shadow: 0 2px 8px #0fffc880;
-      transition: all 0.14s;
-      outline: none;
+      font-family: inherit;
+      transition: background 0.16s;
     }
-    .age-btn:hover {
-      background: #203a33;
-      color: #b3fff4;
-      border-color: #8cffe3;
-    }
-    .age-disclaimer {
-      color:#fa5; font-size:1vw;margin-top:2em;text-align:center;
-      text-shadow: 0 0 5px #b47700;
-    }
-    @media (max-width: 900px) {
-      .ascii-eye { font-size: 2.5vw; min-width: 0; }
-      .boot-log { font-size: 2.2vw; width: 95vw; }
-      .age-prompt { font-size: 4vw; }
-      .age-btn { font-size: 2.5vw; }
-      .terminal-input, .terminal-input-row { font-size: 2vw;}
-      .badge { font-size: 1.6vw;}
-    }
+    .age-btn:hover { background: #1b3230; }
   </style>
 </head>
 <body>
-  <div id="terminal-bg">
-    <pre class="ascii-eye" id="asciiEye" tabindex="0"></pre>
-    <div class="boot-log" id="bootLog"></div>
-    <div class="terminal-input-row" id="terminalInputRow" style="display:none;">
-      <span class="prompt-arrow">&gt;</span>
-      <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
-      <span class="terminal-cursor" id="termCursor"></span>
+  <div id="main">
+    <h2>PromptForge is loading…</h2>
+    <div id="age-gate" style="display:none;">
+      <p style="font-size:1.25em;color:#80ffe8;">Are you 18+ and wish to continue?</p>
+      <button class="age-btn" id="yesBtn">YES – I’m 18+</button>
+      <button class="age-btn" id="noBtn">NO – Let me out</button>
+      <div style="font-size:0.98em;color:#fffaab;margin-top:1.7em;">Access requires age verification. Stay cool, stay safe.</div>
     </div>
+    <pre id="ascii">[ASCII ART EYE PLACEHOLDER]</pre>
+    <div id="bootlog"></div>
   </div>
-  <div id="ageGate">
-    <div class="age-prompt">
-      <span>Are you sure you wish to enter this secure site?<br>
-      <small style="font-size:1.1vw;color:#19eac7;">(Official Use Only – 18+ Confirm Required)</small>
-      </span>
-    </div>
-    <button class="age-btn" id="yesBtn">YES – I’m 18+</button>
-    <button class="age-btn" id="noBtn">NO – Let me out</button>
-    <div class="age-disclaimer">
-      Access to PromptForge requires age verification. Stay cool, stay safe.
-    </div>
-  </div>
+  <pre id="err"></pre>
   <script>
-    // ============= STORAGE & "ONE VISIT PER DAY" ==============
-    const todayKey = new Date().toISOString().slice(0,10);
-    const bootCookie = 'pf_boot_' + todayKey;
-    const accessCookie = 'pf_access_' + todayKey;
-    function setVisitCookie(k,v) { try { localStorage.setItem(k,v); } catch(e){} }
-    function getVisitCookie(k) { try { return localStorage.getItem(k); } catch(e){ return null;} }
-
-    // ============= GIANT ASCII EYE ==============
-    const eyeMaster = [
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣶⡿⣿⣿⠋⣴⡾⠟⢟⣾⠿⠷⢶⣦⣿⣅⡀⣰⣾⣮⣽⡿⠟⠛⠿⠿⠛⠋⠙⠛⠛⠋⠉⠉⠉⠙⠻⣿⡄⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⡿⢫⣿⣋⣾⠟⢛⣿⢿⣦⣤⣿⣃⡀⢀⣼⣿⣬⣿⠟⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⣾⠏⣴⢏⣴⠟⢉⣿⠻⢷⣾⣏⡀⣠⣾⣉⣉⣿⠿⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠏⡼⣣⣾⢿⣾⠟⠳⣾⣯⣄⣼⠏⢉⣿⠟⠛⛛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⣼⣿⠟⢡⣾⢃⣠⡾⠃⣠⣿⠏⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⣰⡟⠁⣰⣿⡷⠟⢋⣤⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣼⠏⠀⢈⣉⣤⣶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠖⠚⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣶⡶⣶⠶⡶⠶⢶⢶⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⠾⡟⠋⡏⢈⡇⣸⢠⣏⣠⣇⣴⠏⢀⡠⠆⢀⠈⠉⡛⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡶⢟⠉⣇⢀⣷⣼⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⣖⣫⣤⠞⠁⢀⡄⠀⠉⠓⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⢋⠙⡆⣸⣶⣿⣿⣿⠟⠋⣿⠉⢉⠻⣇⠉⠉⠙⢿⣿⣿⣿⣿⣶⣾⣋⣁⣀⣠⠖⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢸⣶⣿⡿⠛⠁⣼⠃⠀⠀⣿⢿⣿⣟⣻⣦⡀⠀⠀⢻⡄⠉⠛⢿⣿⣿⣿⣦⠤⠤⠖⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢀⣴⡿⠟⠁⠀⠀⢸⡏⠀⠀⢡⣿⡿⣿⣿⢻⡏⡙⠷⣦⠈⣷⠀⠀⠀⠉⠻⣿⣿⣿⣿⣒⣚⣉⡡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⢀⣠⡿⠋⠀⠀⠀⠀⠀⠸⣷⠀⣰⡟⢬⣻⣮⣛⣾⢻⠁⠀⢘⣿⡏⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣖⣒⣒⣚⣁⡤⠄⣀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣯⣀⣀⡀⠀⠀⠀⠀⠀⠹⣶⣿⠁⠀⣈⣴⠟⠙⠻⠿⠛⢋⣿⠁⠀⠀⠀⢀⣀⣶⢟⠁⣍⡉⠛⠻⠿⠿⠶⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠉⠁⠀⠈⠉⠛⠛⠷⣦⣤⣄⣀⣙⢿⣟⡛⠋⠁⠀⠀⠀⣀⣴⠟⠁⢀⣠⣤⡶⠟⠉⠠⣵⡛⢮⡛⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡏⢭⡙⢛⡛⠿⡿⠶⠶⠾⢿⡿⠟⠛⢛⠉⠉⣀⠀⢦⠈⢷⡈⠳⣄⠱⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠾⠀⢸⠁⠘⡇⠀⢻⠀⠘⡆⠐⣶⠀⢷⠈⠻⡄⠙⣆⠈⢷⠀⢱⠀⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠃⠀⢸⡇⠀⡇⠀⢹⠀⢸⠀⠀⢱⠀⢸⡆⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠘⠀⠀⠇⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
-"⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
-    ];
-    const eyeRows = eyeMaster.length;
-    const eyeCols = Math.max(...eyeMaster.map(l => l.length));
-    const irisRow = 13, irisCol = 38;
-    const moveRangeRow = 4, moveRangeCol = 10;
-    let eyeTargetX = 0, eyeTargetY = 0, lastMove = Date.now();
-    let animX = 0, animY = 0;
-    function renderEye(offsetRow, offsetCol) {
-      const rowShift = Math.round(offsetRow * moveRangeRow);
-      const colShift = Math.round(offsetCol * moveRangeCol);
-      let newEye = [];
-      for (let r = 0; r < eyeRows; ++r) {
-        if (r === irisRow || r === irisRow-1 || r === irisRow+1) {
-          let line = eyeMaster[r];
-          let base = irisCol-3 + colShift;
-          let before = line.slice(0, base);
-          let iris = line.substr(base, 7);
-          let after = line.slice(base+7);
-          if (r === irisRow)
-            iris = iris.replace(/⣿|⣿|⣿/, "⠿⠿⠿");
-          newEye.push(before + iris + after);
-        } else {
-          newEye.push(eyeMaster[r]);
-        }
-      }
-      document.getElementById('asciiEye').textContent = newEye.join('\n');
-    }
-    function updateFromEvent(e) {
-      let x = 0.5, y = 0.5;
-      if (e.touches && e.touches.length) {
-        x = e.touches[0].clientX / window.innerWidth;
-        y = e.touches[0].clientY / window.innerHeight;
-      } else if (typeof e.clientX === "number") {
-        x = e.clientX / window.innerWidth;
-        y = e.clientY / window.innerHeight;
-      }
-      eyeTargetX = x*2 - 1; // -1 (left) ... 1 (right)
-      eyeTargetY = y*2 - 1; // -1 (top) ... 1 (bottom)
-      lastMove = Date.now();
-    }
-    window.addEventListener('mousemove', updateFromEvent);
-    window.addEventListener('touchmove', updateFromEvent);
-    setTimeout(function(){
-      if(animX === 0 && animY === 0){
-        let eye = document.getElementById('asciiEye');
-        eye.textContent += "\n\n(Click or move mouse/touch to wake up the watcher...)";
-      }
-    }, 2100);
-    function idleScan(now) {
-      let t = now * 0.0003;
-      let x = Math.sin(t) * 0.6, y = Math.cos(t*1.4) * 0.45;
-      return [x, y];
-    }
-    function eyeLoop(now) {
-      let tx = eyeTargetX, ty = eyeTargetY;
-      if (Date.now() - lastMove > 2600) {
-        [tx, ty] = idleScan(now);
-      }
-      animX += (tx - animX) * 0.18;
-      animY += (ty - animY) * 0.18;
-      renderEye(animY, animX);
-      requestAnimationFrame(eyeLoop);
-    }
-    renderEye(0, 0);
-    requestAnimationFrame(eyeLoop);
-    setInterval(() => {
-      let eye = document.getElementById('asciiEye');
-      eye.classList.add('flash');
-      setTimeout(() => eye.classList.remove('flash'), 110+Math.random()*150);
-    }, 5400 + Math.random()*1700);
-
-    // ============ BOOT + INTERACTIVE TERMINAL ===============
-    const bootLines = [
-      '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
-      '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
-      '<span class="log-warn">[SEC]</span>    Bypassing system security protocols...',
-      '<span class="log-trace">[MAP]</span>   Scanning active IPs – globe trace active',
-      '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
-      '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
-      '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
-      '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
-    ];
-    let bootIndex = 0, bootDone = false;
-    // ============= Terminal Command Handler ================
-    const fakeHelp = `
-<span class="log-help">PromptForge OS v1.0 Help Menu</span>
-Available commands:
-  <span class="log-help">help</span>      Show this menu
-  <span class="log-help">about</span>     About PromptForge, legal info
-  <span class="log-help">trace</span>     Trace globe, fake IP scan
-  <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
-  <span class="log-help">contact</span>   Show support info
-  <span class="log-help">open</span>      Open secure access (try: <b>open sesame</b>)
-  <span class="log-help">unlock</span>    Unlock promptforge mainframe
-  <span class="log-help">enter</span>     Enter forbidden zone
-  <span class="log-help">continue</span>  Proceed (age verification)
-  <span class="log-help">passcode</span>  Enter 8+ digit passcode for restricted access
-  <span class="log-help">exit</span>      Disconnect (reload)
-  <span class="log-help">easteregg</span> Hidden Easter Egg
-`;
-    const fakeAbout = `
-PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking. 
-All actions monitored. Use <span class="log-help">continue</span>, <span class="log-help">open</span>, or <span class="log-help">passcode</span> to access.<br>
-<span class="badge">Achievement: Meta Detected</span>
-<span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
-`;
-    const fakeTrace = `
-[TRACE]  Tracing route to user... 
-  10.27.14.2 —> 47.23.181.7 [OK]
-  47.23.181.7 —> 104.223.13.58 [OK]
-  104.223.13.58 —> 127.0.0.1 [LOOP]
-<span class="log-info">[GLOBE]</span> <span style="font-family:monospace;color:#33b0ff;">🌐 · · · · · · ⬤ · · · · · ·</span> 
-<span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
-<span class="badge">Badge: Hacker Scanned</span>
-`;
-    const fakeJ1NX = `
-<span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
-<span class="badge">Badge: J1NX Contacted</span>
-`;
-    const fakeContact = `
-<span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
-Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
-<span class="badge">Supporter</span>
-`;
-    // === Easter Egg: Passcode input for forbidden access ===
-    function promptPasscode() {
-      let code = prompt("Restricted Area - Enter 8+ digit passcode:");
-      if (code && code.trim().length >= 8) {
-        grantAccess();
-        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Passcode accepted. Welcome, Operator.<span class="badge">Forbidden Egg Cracked</span>');
-      } else if (code) {
-        printToTerminal('<span class="log-error">[DENIED]</span> Passcode too short. Try again.');
-      }
-    }
-    const fakeEasterEgg = `
-<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
-<span style="color:#ff5b61">Enter 8+ character passcode now for instant access.</span>
-<script>setTimeout(promptPasscode,200);</script>
-<span class="badge">Easter Egg Hunter</span>
-`;
-    // === Terminal Logic ===
-    const bootLogDiv = document.getElementById('bootLog');
-    const inputRow = document.getElementById('terminalInputRow');
-    const inputBox = document.getElementById('terminalInput');
-    let promptActive = false;
-    function printToTerminal(txt) {
-      bootLogDiv.innerHTML += txt + '<br>';
-      bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
-    }
-    function unlockByCommand() {
-      inputRow.style.display = "none";
-      grantAccess();
-    }
-    function grantAccess() {
-      setVisitCookie(accessCookie, "1");
-      document.getElementById('ageGate').classList.add('active');
-      setTimeout(()=>{document.getElementById('yesBtn').focus()},600);
-    }
-    function handleTerminalCommand(cmdRaw) {
-      const cmd = cmdRaw.trim().toLowerCase();
-      if (!cmd) return;
-      // Any access words or plausible passcodes
-      if (
-        cmd === "open" || cmd.startsWith("open ") ||
-        cmd === "unlock" || cmd.startsWith("unlock ") ||
-        cmd === "enter" || cmd === "continue" ||
-        cmd === "passcode" ||
-        (cmd.length >= 8 && /^\d+$/.test(cmd)) // numeric 8+ char passcode
-      ) {
-        unlockByCommand();
-        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator.<span class="badge">Terminal Unlocked</span>');
-        return;
-      }
-      switch (cmd) {
-        case "help":
-          printToTerminal(fakeHelp);
-          break;
-        case "about":
-          printToTerminal(fakeAbout);
-          break;
-        case "trace":
-          printToTerminal(fakeTrace);
-          break;
-        case "j1nx":
-          printToTerminal(fakeJ1NX);
-          break;
-        case "contact":
-          printToTerminal(fakeContact);
-          break;
-        case "easteregg":
-          printToTerminal(fakeEasterEgg);
-          setTimeout(promptPasscode, 300);
-          break;
-        case "exit":
-        case "disconnect":
-          printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
-          inputRow.style.display = "none";
-          break;
-        default:
-          // Accept any 8+ letter/digit passcodes as hidden door
-          if (cmd.length >= 8) {
-            unlockByCommand();
-            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
-          } else {
-            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
-          }
-          break;
-      }
-    }
-    inputBox.addEventListener('keydown', function(e){
-      if (e.key === "Enter") {
-        handleTerminalCommand(inputBox.value);
-        inputBox.value = "";
-      }
-    });
-    inputRow.addEventListener('click',()=>inputBox.focus());
-    // ========== Boot/Replay Control ==============
-    function skipBootIfVisited() {
-      if(getVisitCookie(bootCookie)==="1") {
-        bootDone = true;
-        document.getElementById('bootLog').innerHTML = '<span class="log-ok">[OK]</span>  Welcome back, Operator.<br>Type <span class="log-help">help</span> for commands.<br>';
-        document.getElementById('terminalInputRow').style.display = '';
-        document.getElementById('terminalInput').focus();
-        // If access granted today, skip gate too:
-        if(getVisitCookie(accessCookie)==="1") {
-          setTimeout(()=>{window.location="main.html"},900);
-        }
-        return true;
-      }
-      return false;
-    }
-    // Only play boot if first visit this day
-    if(!skipBootIfVisited()){
-      setTimeout(typeBootLine, 1000);
-      setVisitCookie(bootCookie, "1");
-    }
-    function typeBootLine() {
-      if (bootIndex < bootLines.length) {
-        printToTerminal(bootLines[bootIndex]);
-        bootIndex++;
-        setTimeout(typeBootLine, 1100);
-      } else {
-        bootDone = true;
-        document.getElementById('terminalInputRow').style.display = '';
-        document.getElementById('terminalInput').focus();
-      }
-    }
-
-    // AGE GATE BUTTONS
-    document.getElementById('yesBtn').onclick = function() {
-      setVisitCookie(accessCookie, "1");
-      window.location = "main.html";
+    // Error catcher
+    window.onerror = function(msg, src, line, col, err) {
+      document.getElementById('err').textContent += `JS ERROR: ${msg}\n@${src}:${line}:${col}\n`;
     };
-    document.getElementById('noBtn').onclick = function() {
-      setVisitCookie(accessCookie, "0");
-      window.location = "https://www.google.com";
+    // Minimal JS to verify page logic
+    document.getElementById('ascii').textContent =
+`    _   _
+   (.)_(.)
+    /   \\
+   (     )
+    \\\\_//`;
+    document.getElementById('bootlog').innerHTML =
+      "<b style='color:#fff'>[BOOT]</b> Debug mode active.<br>Type will appear here.<br><br>If you see this, JS is running.";
+    // Show age gate
+    document.getElementById('age-gate').style.display = '';
+    document.getElementById('yesBtn').onclick = function(){
+      document.getElementById('bootlog').innerHTML += "<br>[OK] Age verified! Continue to <b>main.html</b> (placeholder).";
+    };
+    document.getElementById('noBtn').onclick = function(){
+      document.getElementById('bootlog').innerHTML += "<br>[EXIT] Redirecting to Google…";
+      setTimeout(()=>{window.location="https://google.com"},1200);
     };
   </script>
 </body>
