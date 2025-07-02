@@ -8,6 +8,10 @@
   <meta name="keywords" content="NSFW, AI prompt, prompt generator, hacking, terminal, military, JuggernautXL, RealVis, Gore and Giggles, promptforge, prompt tools, ASCII, cyberpunk, creative, text to image, AI art, prompt battle">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/favicon.png" />
+  <!-- GOOGLE ADSENSE VERIFICATION SNIPPET -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+     crossorigin="anonymous"></script>
+  <!-- END GOOGLE ADSENSE SNIPPET -->
   <style>
     html, body {
       margin: 0; padding: 0; width: 100vw; height: 100vh;
@@ -26,11 +30,11 @@
       box-sizing: border-box;
     }
     .ascii-eye {
-      font-size: 1.05vw;
+      font-size: 1.09vw;
       line-height: 1.06;
       color: #03ffd5;
       letter-spacing: 0.025em;
-      text-shadow: 0 0 15px #0e7777, 0 0 2px #24ffe0, 0 0 2px #30ffee;
+      text-shadow: 0 0 17px #0e7777, 0 0 2px #24ffe0, 0 0 2px #30ffee;
       min-width: 65vw;
       max-width: 95vw;
       min-height: 25vw;
@@ -41,16 +45,17 @@
       border-radius: 1vw;
       pointer-events: none;
       outline: none;
+      user-select: none;
     }
     .ascii-eye.flash {
-      filter: brightness(2.4) contrast(1.8);
-      text-shadow: 0 0 25px #44fff0, 0 0 4px #eafffb;
+      filter: brightness(2.6) contrast(1.9);
+      text-shadow: 0 0 29px #44fff0, 0 0 8px #eafffb;
       transition: filter 0.05s;
     }
     .boot-log {
-      font-size: 1.09vw;
+      font-size: 1.13vw;
       font-family: inherit;
-      width: 66vw; max-width: 96vw;
+      width: 70vw; max-width: 98vw;
       background: none; border: none; outline: none;
       color: #bafff6;
       margin: 0 auto;
@@ -79,19 +84,19 @@
     }
     .terminal-input-row {
       display: flex; align-items: center;
-      font-family: inherit; font-size: 1.15vw; color: #d0fff7;
+      font-family: inherit; font-size: 1.17vw; color: #d0fff7;
       margin-top: 0.7em;
     }
     .prompt-arrow {
       color: #0fffe8; margin-right: 0.5vw; font-weight: bold;
-      font-size: 1.25vw;
+      font-size: 1.28vw;
       user-select: none;
     }
     .terminal-input {
       background: none; border: none; outline: none;
       color: #eafffb;
-      font-family: inherit; font-size: 1.15vw;
-      width: 45vw;
+      font-family: inherit; font-size: 1.16vw;
+      width: 47vw;
       caret-color: #33ffd5;
       letter-spacing: 0.04em;
     }
@@ -112,7 +117,7 @@
     .boot-log::-webkit-scrollbar { background: #222; width: 8px; border-radius: 3px;}
     .boot-log::-webkit-scrollbar-thumb { background: #34ffdd55; border-radius: 4px; }
     @media (max-width: 900px) {
-      .ascii-eye { font-size: 2.5vw; min-width: 0; }
+      .ascii-eye { font-size: 2.3vw; min-width: 0; }
       .boot-log { font-size: 2.2vw; width: 95vw; }
       .terminal-input, .terminal-input-row { font-size: 2vw;}
       .badge { font-size: 1.6vw;}
@@ -130,31 +135,32 @@
     </div>
   </div>
   <script>
-    // ============= ASCII EYE ART AND ANIMATION ==============
-    const eyeArt = [
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣶⡿⣿⣿⠋⣴⡾⠟⢟⣾⠿⠷⢶⣦⣿⣅⡀⣰⣾⣮⣽⡿⠟⠛⠿⠿⠛⠋⠙⠛⠛⠋⠉⠉⠉⠙⠻⣿⡄⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⡿⢫⣿⣋⣾⠟⢛⣿⢿⣦⣤⣿⣃⡀⢀⣼⣿⣬⣿⠟⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⣾⠏⣴⢏⣴⠟⢉⣿⠻⢷⣾⣏⡀⣠⣾⣉⣉⣿⠿⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠏⡼⣣⣾⢿⣾⠟⠳⣾⣯⣄⣼⠏⢉⣿⠟⠛⛛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⣼⣿⠟⢡⣾⢃⣠⡾⠃⣠⣿⠏⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⣰⡟⠁⣰⣿⡷⠟⢋⣤⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣼⠏⠀⢈⣉⣤⣶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠖⠚⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣶⡶⣶⠶⡶⠶⢶⢶⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⠾⡟⠋⡏⢈⡇⣸⢠⣏⣠⣇⣴⠏⢀⡠⠆⢀⠈⠉⡛⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡶⢟⠉⣇⢀⣷⣼⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⣖⣫⣤⠞⠁⢀⡄⠀⠉⠓⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⢋⠙⡆⣸⣶⣿⣿⣿⠟⠋⣿⠉⢉⠻⣇⠉⠉⠙⢿⣿⣿⣿⣿⣶⣾⣋⣁⣀⣠⠖⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢸⣶⣿⡿⠛⠁⣼⠃⠀⠀⣿⢿⣿⣟⣻⣦⡀⠀⠀⢻⡄⠉⠛⢿⣿⣿⣿⣦⠤⠤⠖⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢀⣴⡿⠟⠁⠀⠀⢸⡏⠀⠀⢡⣿⡿⣿⣿⢻⡏⡙⠷⣦⠈⣷⠀⠀⠀⠉⠻⣿⣿⣿⣿⣒⣚⣉⡡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⢀⣠⡿⠋⠀⠀⠀⠀⠀⠸⣷⠀⣰⡟⢬⣻⣮⣛⣾⢻⠁⠀⢘⣿⡏⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣖⣒⣒⣚⣁⡤⠄⣀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣯⣀⣀⡀⠀⠀⠀⠀⠀⠹⣶⣿⠁⠀⣈⣴⠟⠙⠻⠿⠛⢋⣿⠁⠀⠀⠀⢀⣀⣶⢟⠁⣍⡉⠛⠻⠿⠿⠶⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠉⠁⠀⠈⠉⠛⠛⠷⣦⣤⣄⣀⣙⢿⣟⡛⠋⠁⠀⠀⠀⣀⣴⠟⠁⢀⣠⣤⡶⠟⠉⠠⣵⡛⢮⡛⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡏⢭⡙⢛⡛⠿⡿⠶⠶⠾⢿⡿⠟⠛⢛⠉⠉⣀⠀⢦⠈⢷⡈⠳⣄⠱⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠾⠀⢸⠁⠘⡇⠀⢻⠀⠘⡆⠐⣶⠀⢷⠈⠻⡄⠙⣆⠈⢷⠀⢱⠀⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠃⠀⢸⡇⠀⡇⠀⢹⠀⢸⠀⠀⢱⠀⢸⡆⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠘⠀⠀⠇⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+    // ============= NEXT-LEVEL ASCII EYE ANIMATION ============
+    // Pupil is now a colored "◉" and actually tracks closely!
+    const eyeBase = [
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣶⡿⣿⣿⠋⣴⡾⠟⢟⣾⠿⠷⢶⣦⣿⣅⡀⣰⣾⣮⣽⡿⠟⠛⠿⠿⠛⠋⠙⠛⠛⠋⠉⠉⠉⠙⠻⣿⡄⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⡿⢫⣿⣋⣾⠟⢛⣿⢿⣦⣤⣿⣃⡀⢀⣼⣿⣬⣿⠟⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⣾⠏⣴⢏⣴⠟⢉⣿⠻⢷⣾⣏⡀⣠⣾⣉⣉⣿⠿⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠏⡼⣣⣾⢿⣾⠟⠳⣾⣯⣄⣼⠏⢉⣿⠟⠛⛛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⣼⣿⠟⢡⣾⢃⣠⡾⠃⣠⣿⠏⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⣰⡟⠁⣰⣿⡷⠟⢋⣤⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⣿⣼⠏⠀⢈⣉⣤⣶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠖⠚⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣶⡶⣶⠶⡶⠶⢶⢶⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⠾⡟⠋⡏⢈⡇⣸⢠⣏⣠⣇⣴⠏⢀⡠⠆⢀⠈⠉⡛⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡶⢟⠉⣇⢀⣷⣼⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⣖⣫⣤⠞⠁⢀⡄⠀⠉⠓⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⢋⠙⡆⣸⣶⣿⣿⣿⠟⠋⣿⠉⢉⠻⣇⠉⠉⠙⢿⣿⣿⣿⣿⣶⣾⣋⣁⣀⣠⠖⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢸⣶⣿⡿⠛⠁⣼⠃⠀⠀⣿⢿⣿⣟⣻⣦⡀⠀⠀⢻⡄⠉⠛⢿⣿⣿⣿⣦⠤⠤⠖⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢀⣴⡿⠟⠁⠀⠀⢸⡏⠀⠀⢡⣿⡿⣿⣿⢻⡏⡙⠷⣦⠈⣷⠀⠀⠀⠉⠻⣿⣿⣿⣿⣒⣚⣉⡡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⢀⣠⡿⠋⠀⠀⠀⠀⠀⠸⣷⠀⣰⡟⢬⣻⣮⣛⣾⢻⠁⠀⢘⣿⡏⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣖⣒⣒⣚⣁⡤⠄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣯⣀⣀⡀⠀⠀⠀⠀⠀⠹⣶⣿⠁⠀⣈⣴⠟⠙⠻⠿⠛⢋⣿⠁⠀⠀⠀⢀⣀⣶⢟⠁⣍⡉⠛⠻⠿⠿⠶⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠉⠁⠀⠈⠉⠛⠛⠷⣦⣤⣄⣀⣙⢿⣟⡛⠋⠁⠀⠀⠀⣀⣴⠟⠁⢀⣠⣤⡶⠟⠉⠠⣵⡛⢮⡛⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡏⢭⡙⢛⡛⠿⡿⠶⠶⠾⢿⡿⠟⠛⢛⠉⠉⣀⠀⢦⠈⢷⡈⠳⣄⠱⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠾⠀⢸⠁⠘⡇⠀⢻⠀⠘⡆⠐⣶⠀⢷⠈⠻⡄⠙⣆⠈⢷⠀⢱⠀⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠃⠀⢸⡇⠀⡇⠀⢹⠀⢸⠀⠀⢱⠀⢸⡆⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠘⠀⠀⠇⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
@@ -163,15 +169,23 @@
 "⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
 "⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
     ];
-    // Eye movement: Track mouse or slowly idle-scan
-    let targetX = 0, targetY = 0, eyeX = 0, eyeY = 0, lastMove = Date.now();
+
+    // Eye Pupil: More lively + purple. The ◉ is the "pupil" (will shift position)
     function drawEye(offsetY, offsetX) {
-      let rows = [...eyeArt];
-      // (Pseudo) Animate "iris" by shifting lines
-      let irisR = 13 + Math.round(offsetY*3), irisC = 38 + Math.round(offsetX*7);
-      rows[irisR] = rows[irisR].slice(0, irisC) + "⠿⠿⠿" + rows[irisR].slice(irisC+3);
-      document.getElementById('asciiEye').textContent = rows.join('\n');
+      let lines = eyeBase.map(l=>l);
+      // Calculated iris center for max realism
+      let irisR = 13 + Math.round(offsetY*2.4); // y = -1...1
+      let irisC = 42 + Math.round(offsetX*10); // x = -1...1, wider for real tracking
+      // Reconstruct line with the purple animated pupil!
+      let row = lines[irisR];
+      if(row) {
+        lines[irisR] = row.slice(0, irisC) +
+          '<span style="color:#c488ff;text-shadow:0 0 11px #c488ff,0 0 7px #fff1; font-size:1.4em;">◉</span>' +
+          row.slice(irisC+1);
+      }
+      document.getElementById('asciiEye').innerHTML = lines.join('\n');
     }
+    let targetX = 0, targetY = 0, eyeX = 0, eyeY = 0, lastMove = Date.now();
     function updateTarget(e) {
       let x = 0.5, y = 0.5;
       if (e.touches && e.touches.length) {
@@ -188,15 +202,15 @@
     window.addEventListener('mousemove', updateTarget);
     window.addEventListener('touchmove', updateTarget);
     function idleEye(now) {
-      let t = now * 0.0003;
-      let x = Math.sin(t) * 0.7, y = Math.cos(t*1.2) * 0.55;
+      let t = now * 0.00024;
+      let x = Math.sin(t) * 0.74, y = Math.cos(t*1.2) * 0.65;
       return [x, y];
     }
     function animateEye(now) {
       let tx = targetX, ty = targetY;
-      if (Date.now() - lastMove > 3000) [tx, ty] = idleEye(now);
-      eyeX += (tx - eyeX) * 0.15;
-      eyeY += (ty - eyeY) * 0.15;
+      if (Date.now() - lastMove > 2300) [tx, ty] = idleEye(now);
+      eyeX += (tx - eyeX) * 0.17;
+      eyeY += (ty - eyeY) * 0.17;
       drawEye(eyeY, eyeX);
       requestAnimationFrame(animateEye);
     }
@@ -206,8 +220,8 @@
     setInterval(() => {
       let eye = document.getElementById('asciiEye');
       eye.classList.add('flash');
-      setTimeout(() => eye.classList.remove('flash'), 140 + Math.random()*120);
-    }, 5100 + Math.random()*2000);
+      setTimeout(() => eye.classList.remove('flash'), 130 + Math.random()*110);
+    }, 5100 + Math.random()*1600);
 
     // ============ TERMINAL BOOT LOGIC ===============
     const bootLines = [
@@ -218,7 +232,7 @@
       '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
       '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
       '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
-      '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
+      '<span class="log-ok">[OK]</span>     Welcome, Operator – enter <span class="log-help">help</span> for system commands.'
     ];
     let bootIndex = 0;
     const bootLogDiv = document.getElementById('bootLog');
@@ -232,15 +246,15 @@
       if (bootIndex < bootLines.length) {
         printToTerminal(bootLines[bootIndex]);
         bootIndex++;
-        setTimeout(typeBootLine, 1000);
+        setTimeout(typeBootLine, 1050);
       } else {
         inputRow.style.display = '';
         inputBox.focus();
       }
     }
-    setTimeout(typeBootLine, 800);
+    setTimeout(typeBootLine, 700);
 
-    // ============ TERMINAL COMMANDS (Fake) ===============
+    // ============ TERMINAL COMMANDS (Fun + Real-feeling) ===============
     const fakeHelp = `
 <span class="log-help">PromptForge OS v1.0 Help Menu</span>
 Available commands:
@@ -250,6 +264,9 @@ Available commands:
   <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
   <span class="log-help">contact</span>   Show support info
   <span class="log-help">easteregg</span> Hidden Easter Egg
+  <span class="log-help">access</span>    Attempt secure access (try: <b>access 696969</b>)
+  <span class="log-help">passcode</span>  Enter secret code (try: <b>passcode letmein</b>)
+  <span class="log-help">disconnect</span> Disconnect from terminal
 `;
     const fakeAbout = `
 PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking.<br>
@@ -274,7 +291,7 @@ PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creati
 Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
 <span class="badge">Supporter</span>
 `;
-    const fakeEasterEgg = `
+    const fakeEgg = `
 <span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
 <span class="badge">Easter Egg Hunter</span>
 `;
@@ -282,6 +299,16 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
     function handleTerminalCommand(cmdRaw) {
       const cmd = cmdRaw.trim().toLowerCase();
       if (!cmd) return;
+      // Simulate access codes/forbidden zones
+      if (cmd.startsWith("access") || cmd.startsWith("passcode")) {
+        let code = cmd.split(" ")[1] || "";
+        if (code === "696969" || code === "letmein" || code === "nsfwgod" || code === "gore") {
+          printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator. <span class="badge">Terminal Unlocked</span><br>Enjoy your stay in the forbidden zone. (There is nothing else here... yet.)');
+        } else {
+          printToTerminal('<span class="log-error">[ACCESS DENIED]</span> Invalid code, try again. (Tip: Try <span class="log-help">access 696969</span> or <span class="log-help">passcode letmein</span>)');
+        }
+        return;
+      }
       switch (cmd) {
         case "help":
           printToTerminal(fakeHelp);
@@ -299,15 +326,19 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
           printToTerminal(fakeContact);
           break;
         case "easteregg":
-          printToTerminal(fakeEasterEgg);
+          printToTerminal(fakeEgg);
           break;
-        case "exit":
         case "disconnect":
+        case "exit":
           printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
           inputRow.style.display = "none";
           break;
         default:
-          printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          if(cmd.length >= 8 && /^[a-z0-9]+$/.test(cmd)) {
+            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
+          } else {
+            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          }
           break;
       }
     }
