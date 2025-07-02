@@ -7,11 +7,11 @@
   <meta name="description" content="PromptForge: Advanced NSFW/SFW AI prompt generator and cyberpunk hacking terminal for creative professionals. Military-grade interface, custom tools, and the best prompt builder online.">
   <meta name="keywords" content="NSFW, AI prompt, prompt generator, hacking, terminal, military, JuggernautXL, RealVis, Gore and Giggles, promptforge, prompt tools, ASCII, cyberpunk, creative, text to image, AI art, prompt battle">
   <meta name="robots" content="index,follow">
-  <link rel="icon" href="assets/favicon.png" />
-  <!-- GOOGLE ADSENSE VERIFICATION SNIPPET -->
+  <!-- GOOGLE ADSENSE -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
      crossorigin="anonymous"></script>
-  <!-- END GOOGLE ADSENSE SNIPPET -->
+  <!-- END GOOGLE ADSENSE -->
+  <link rel="icon" href="assets/favicon.png" />
   <style>
     html, body {
       margin: 0; padding: 0; width: 100vw; height: 100vh;
@@ -45,6 +45,7 @@
       border-radius: 1vw;
       pointer-events: none;
       outline: none;
+      background: none;
     }
     .ascii-eye.flash {
       filter: brightness(2.4) contrast(1.8);
@@ -192,16 +193,25 @@
     </div>
   </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      // === Boot control: show only once per day
-      const todayKey = new Date().toISOString().slice(0,10);
-      const bootCookie = 'pf_boot_' + todayKey;
-      const accessCookie = 'pf_access_' + todayKey;
-      function setVisitCookie(k,v) { try { localStorage.setItem(k,v); } catch(e){} }
-      function getVisitCookie(k) { try { return localStorage.getItem(k); } catch(e){ return null;} }
+    // --- Utility: Try localStorage, but fallback to memory if not allowed ---
+    let safeStorage = (() => {
+      let ok = true, test = 'pf_test_' + Math.random();
+      try { localStorage.setItem(test, "1"); localStorage.removeItem(test); }
+      catch(e) { ok = false; }
+      let mem = {};
+      return {
+        set: (k, v) => { try { ok ? localStorage.setItem(k, v) : mem[k] = v; } catch(e){ mem[k]=v; }},
+        get: (k) => { try { return ok ? localStorage.getItem(k) : mem[k]; } catch(e){ return mem[k]; }}
+      };
+    })();
 
-      // ===== ASCII Eye logic (soul stare!) =====
-      const eyeMaster = [
+    // --- One visit per day intro logic ---
+    const todayKey = new Date().toISOString().slice(0,10);
+    const bootCookie = 'pf_boot_' + todayKey;
+    const accessCookie = 'pf_access_' + todayKey;
+
+    // --- ASCII Eye: improved focus tracking + soul stare ---
+    const eyeArt = [
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀",
@@ -232,78 +242,128 @@
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
 "⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
-      ];
-      const eyeRows = eyeMaster.length;
-      const eyeCols = Math.max(...eyeMaster.map(l => l.length));
-      const irisRow = 13, irisCol = 38;
-      const moveRangeRow = 4, moveRangeCol = 11;
-      let eyeTargetX = 0, eyeTargetY = 0, lastMove = Date.now();
-      let animX = 0, animY = 0;
-      function renderEye(offsetRow, offsetCol) {
-        const rowShift = Math.round(offsetRow * moveRangeRow);
-        const colShift = Math.round(offsetCol * moveRangeCol);
-        let newEye = [];
-        for (let r = 0; r < eyeRows; ++r) {
-          if (r === irisRow || r === irisRow-1 || r === irisRow+1) {
-            let line = eyeMaster[r];
-            let base = irisCol-3 + colShift;
-            let before = line.slice(0, base);
-            let iris = line.substr(base, 7);
-            let after = line.slice(base+7);
-            if (r === irisRow)
-              iris = iris.replace(/⣿|⣿|⣿/, "⠿⠿⠿");
-            newEye.push(before + iris + after);
-          } else {
-            newEye.push(eyeMaster[r]);
-          }
+    ];
+    // Center of the iris (manually tuned)
+    const irisRow = 13, irisCol = 38;
+    function renderEye(trackX = 0, trackY = 0) {
+      // Move iris inside a soft box, smooth focus
+      const moveR = Math.round(trackY * 4);
+      const moveC = Math.round(trackX * 11);
+      let output = [];
+      for (let r = 0; r < eyeArt.length; ++r) {
+        if (r === irisRow || r === irisRow-1 || r === irisRow+1) {
+          let line = eyeArt[r];
+          let base = irisCol-3 + moveC;
+          let before = line.slice(0, base);
+          let iris = line.substr(base, 7);
+          let after = line.slice(base+7);
+          if (r === irisRow)
+            iris = iris.replace(/⣿|⣿|⣿/, "⠿⠿⠿"); // draw iris highlight
+          output.push(before + iris + after);
+        } else {
+          output.push(eyeArt[r]);
         }
-        document.getElementById('asciiEye').textContent = newEye.join('\n');
       }
-      function updateFromEvent(e) {
-        let x = 0.5, y = 0.5;
-        if (e.touches && e.touches.length) {
-          x = e.touches[0].clientX / window.innerWidth;
-          y = e.touches[0].clientY / window.innerHeight;
-        } else if (typeof e.clientX === "number") {
-          x = e.clientX / window.innerWidth;
-          y = e.clientY / window.innerHeight;
-        }
-        eyeTargetX = x*2 - 1;
-        eyeTargetY = y*2 - 1;
-        lastMove = Date.now();
-      }
-      window.addEventListener('mousemove', updateFromEvent);
-      window.addEventListener('touchmove', updateFromEvent);
-      function idleScan(now) {
-        let t = now * 0.0003;
-        let x = Math.sin(t) * 0.8, y = Math.cos(t*1.5) * 0.6;
-        return [x, y];
-      }
-      function eyeLoop(now) {
-        let tx = eyeTargetX, ty = eyeTargetY;
-        if (Date.now() - lastMove > 2200) {
-          // If idle, stare at "soul" (center, but randomly pulse)
-          tx = Math.sin(now/777) * 0.14;
-          ty = Math.cos(now/1577) * 0.07;
-        }
-        animX += (tx - animX) * 0.22;
-        animY += (ty - animY) * 0.22;
-        renderEye(animY, animX);
-        requestAnimationFrame(eyeLoop);
-      }
-      renderEye(0, 0);
-      requestAnimationFrame(eyeLoop);
+      document.getElementById('asciiEye').textContent = output.join('\n');
+    }
 
-      // ===== Terminal Logic =====
-      const bootLogDiv = document.getElementById('bootLog');
-      const inputRow = document.getElementById('terminalInputRow');
-      const inputBox = document.getElementById('terminalInput');
-      function printToTerminal(txt) {
-        bootLogDiv.innerHTML += txt + '<br>';
-        bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
+    // --- Eye movement logic (mouse/touch tracking) ---
+    let lastTrack = { x: 0, y: 0, t: Date.now() };
+    function focusTrack(e) {
+      let x = 0.5, y = 0.5;
+      if (e.touches && e.touches.length) {
+        x = e.touches[0].clientX / window.innerWidth;
+        y = e.touches[0].clientY / window.innerHeight;
+      } else if (typeof e.clientX === "number") {
+        x = e.clientX / window.innerWidth;
+        y = e.clientY / window.innerHeight;
       }
-      // Terminal command logic
-      const fakeHelp = `
+      lastTrack.x = x*2 - 1;
+      lastTrack.y = y*2 - 1;
+      lastTrack.t = Date.now();
+    }
+    window.addEventListener('mousemove', focusTrack, false);
+    window.addEventListener('touchmove', focusTrack, false);
+
+    // Animate eye
+    let animX = 0, animY = 0;
+    function idleScan(now) {
+      let t = now * 0.0003;
+      return [Math.sin(t)*0.7, Math.cos(t*1.4)*0.5];
+    }
+    function eyeLoop(now) {
+      let tx = lastTrack.x, ty = lastTrack.y;
+      if (Date.now() - lastTrack.t > 2600) [tx, ty] = idleScan(now);
+      animX += (tx - animX) * 0.14;
+      animY += (ty - animY) * 0.14;
+      renderEye(animX, animY);
+      requestAnimationFrame(eyeLoop);
+    }
+    renderEye(0, 0);
+    requestAnimationFrame(eyeLoop);
+
+    setInterval(() => {
+      let eye = document.getElementById('asciiEye');
+      eye.classList.add('flash');
+      setTimeout(() => eye.classList.remove('flash'), 110+Math.random()*150);
+    }, 5400 + Math.random()*1700);
+
+    // === BOOT + AgeGate System (once per day logic) ===
+    function showTerminal() {
+      document.getElementById('bootLog').innerHTML = '<span class="log-ok">[OK]</span> Welcome back, Operator.<br>Type <span class="log-help">help</span> for commands.<br>';
+      document.getElementById('terminalInputRow').style.display = '';
+      document.getElementById('terminalInput').focus();
+    }
+
+    function showBoot() {
+      // animated type-in
+      const bootLines = [
+        '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
+        '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
+        '<span class="log-warn">[SEC]</span>    Bypassing system security protocols...',
+        '<span class="log-trace">[MAP]</span>   Scanning active IPs – globe trace active',
+        '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
+        '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
+        '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
+        '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
+      ];
+      let bootIndex = 0;
+      function printBootLine() {
+        if (bootIndex < bootLines.length) {
+          printToTerminal(bootLines[bootIndex]);
+          bootIndex++;
+          setTimeout(printBootLine, 1100);
+        } else {
+          document.getElementById('terminalInputRow').style.display = '';
+          document.getElementById('terminalInput').focus();
+          safeStorage.set(bootCookie, "1");
+        }
+      }
+      printBootLine();
+    }
+
+    function printToTerminal(txt) {
+      let log = document.getElementById('bootLog');
+      log.innerHTML += txt + '<br>';
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function skipBootIfVisited() {
+      try {
+        if(safeStorage.get(bootCookie)==="1") {
+          showTerminal();
+          // If access granted today, skip gate too:
+          if(safeStorage.get(accessCookie)==="1") {
+            setTimeout(()=>{window.location="main.html"},800);
+          }
+          return true;
+        }
+      } catch(e){}
+      return false;
+    }
+
+    // === Terminal Command Handler (same as before) ===
+    const fakeHelp = `
 <span class="log-help">PromptForge OS v1.0 Help Menu</span>
 Available commands:
   <span class="log-help">help</span>      Show this menu
@@ -319,13 +379,13 @@ Available commands:
   <span class="log-help">exit</span>      Disconnect (reload)
   <span class="log-help">easteregg</span> Hidden Easter Egg
 `;
-      const fakeAbout = `
-PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking.<br>
+    const fakeAbout = `
+PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking. 
 All actions monitored. Use <span class="log-help">continue</span>, <span class="log-help">open</span>, or <span class="log-help">passcode</span> to access.<br>
 <span class="badge">Achievement: Meta Detected</span>
 <span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
 `;
-      const fakeTrace = `
+    const fakeTrace = `
 [TRACE]  Tracing route to user... 
   10.27.14.2 —> 47.23.181.7 [OK]
   47.23.181.7 —> 104.223.13.58 [OK]
@@ -334,133 +394,97 @@ All actions monitored. Use <span class="log-help">continue</span>, <span class="
 <span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
 <span class="badge">Badge: Hacker Scanned</span>
 `;
-      const fakeJ1NX = `
+    const fakeJ1NX = `
 <span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
 <span class="badge">Badge: J1NX Contacted</span>
 `;
-      const fakeContact = `
+    const fakeContact = `
 <span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
 Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
 <span class="badge">Supporter</span>
 `;
-      function promptPasscode() {
-        let code = prompt("Restricted Area - Enter 8+ digit passcode:");
-        if (code && code.trim().length >= 8) {
-          grantAccess();
-          printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Passcode accepted. Welcome, Operator.<span class="badge">Forbidden Egg Cracked</span>');
-        } else if (code) {
-          printToTerminal('<span class="log-error">[DENIED]</span> Passcode too short. Try again.');
-        }
+    function promptPasscode() {
+      let code = prompt("Restricted Area - Enter 8+ digit passcode:");
+      if (code && code.trim().length >= 8) {
+        grantAccess();
+        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Passcode accepted. Welcome, Operator.<span class="badge">Forbidden Egg Cracked</span>');
+      } else if (code) {
+        printToTerminal('<span class="log-error">[DENIED]</span> Passcode too short. Try again.');
       }
-      const fakeEasterEgg = `
+    }
+    const fakeEasterEgg = `
 <span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
 <span style="color:#ff5b61">Enter 8+ character passcode now for instant access.</span>
 <script>setTimeout(promptPasscode,200);</script>
 <span class="badge">Easter Egg Hunter</span>
 `;
-      function unlockByCommand() {
-        inputRow.style.display = "none";
-        grantAccess();
-      }
-      function handleTerminalCommand(cmdRaw) {
-        const cmd = cmdRaw.trim().toLowerCase();
-        if (!cmd) return;
-        if (
-          cmd === "open" || cmd.startsWith("open ") ||
-          cmd === "unlock" || cmd.startsWith("unlock ") ||
-          cmd === "enter" || cmd === "continue" ||
-          cmd === "passcode" ||
-          (cmd.length >= 8 && /^\d+$/.test(cmd))
-        ) {
-          unlockByCommand();
-          printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator.<span class="badge">Terminal Unlocked</span>');
-          return;
-        }
-        switch (cmd) {
-          case "help": printToTerminal(fakeHelp); break;
-          case "about": printToTerminal(fakeAbout); break;
-          case "trace": printToTerminal(fakeTrace); break;
-          case "j1nx": printToTerminal(fakeJ1NX); break;
-          case "contact": printToTerminal(fakeContact); break;
-          case "easteregg": printToTerminal(fakeEasterEgg); setTimeout(promptPasscode, 300); break;
-          case "exit":
-          case "disconnect":
-            printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
-            inputRow.style.display = "none";
-            break;
-          default:
-            if (cmd.length >= 8) {
-              unlockByCommand();
-              printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
-            } else {
-              printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
-            }
-            break;
-        }
-      }
-      inputBox.addEventListener('keydown', function(e){
-        if (e.key === "Enter") {
-          handleTerminalCommand(inputBox.value);
-          inputBox.value = "";
-        }
-      });
-      inputRow.addEventListener('click',()=>inputBox.focus());
 
-      // === Age Gate Buttons ===
-      document.getElementById('yesBtn').onclick = function() {
-        setVisitCookie(accessCookie, "1");
-        window.location = "main.html";
-      };
-      document.getElementById('noBtn').onclick = function() {
-        setVisitCookie(accessCookie, "0");
-        window.location = "https://www.google.com";
-      };
-
-      // ====== BOOT/TERMINAL LOGIC ======
-      function showTerminal() {
-        inputRow.style.display = '';
-        inputBox.focus();
+    const inputRow = document.getElementById('terminalInputRow');
+    const inputBox = document.getElementById('terminalInput');
+    function unlockByCommand() {
+      inputRow.style.display = "none";
+      grantAccess();
+    }
+    function grantAccess() {
+      safeStorage.set(accessCookie, "1");
+      document.getElementById('ageGate').classList.add('active');
+      setTimeout(()=>{document.getElementById('yesBtn').focus()},600);
+    }
+    function handleTerminalCommand(cmdRaw) {
+      const cmd = cmdRaw.trim().toLowerCase();
+      if (!cmd) return;
+      if (
+        cmd === "open" || cmd.startsWith("open ") ||
+        cmd === "unlock" || cmd.startsWith("unlock ") ||
+        cmd === "enter" || cmd === "continue" ||
+        cmd === "passcode" ||
+        (cmd.length >= 8 && /^\d+$/.test(cmd))
+      ) {
+        unlockByCommand();
+        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator.<span class="badge">Terminal Unlocked</span>');
+        return;
       }
-      function playBootAnimation(done) {
-        const bootLines = [
-          '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
-          '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
-          '<span class="log-warn">[SEC]</span>    Bypassing system security protocols...',
-          '<span class="log-trace">[MAP]</span>   Scanning active IPs – globe trace active',
-          '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
-          '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
-          '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
-          '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
-        ];
-        let i = 0;
-        function nextLine() {
-          if (i < bootLines.length) {
-            printToTerminal(bootLines[i]);
-            i++;
-            setTimeout(nextLine, 1100);
+      switch (cmd) {
+        case "help": printToTerminal(fakeHelp); break;
+        case "about": printToTerminal(fakeAbout); break;
+        case "trace": printToTerminal(fakeTrace); break;
+        case "j1nx": printToTerminal(fakeJ1NX); break;
+        case "contact": printToTerminal(fakeContact); break;
+        case "easteregg": printToTerminal(fakeEasterEgg); setTimeout(promptPasscode, 300); break;
+        case "exit":
+        case "disconnect": printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.'); inputRow.style.display = "none"; break;
+        default:
+          if (cmd.length >= 8) {
+            unlockByCommand();
+            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
           } else {
-            done();
+            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
           }
-        }
-        nextLine();
+          break;
       }
-      // Initial render always shows the eye and blank log
-      bootLogDiv.innerHTML = '';
-      inputRow.style.display = 'none';
-
-      if (getVisitCookie(bootCookie) === "1") {
-        printToTerminal('<span class="log-ok">[OK]</span>  Welcome back, Operator.<br>Type <span class="log-help">help</span> for commands.<br>');
-        showTerminal();
-        if(getVisitCookie(accessCookie)==="1") {
-          setTimeout(()=>{window.location="main.html"},900);
-        }
-      } else {
-        setVisitCookie(bootCookie, "1");
-        playBootAnimation(function() {
-          showTerminal();
-        });
+    }
+    inputBox.addEventListener('keydown', function(e){
+      if (e.key === "Enter") {
+        handleTerminalCommand(inputBox.value);
+        inputBox.value = "";
       }
     });
+    inputRow.addEventListener('click',()=>inputBox.focus());
+
+    // Boot / Age gate logic
+    if(!skipBootIfVisited()){
+      showBoot();
+    }
+
+    // === AGE GATE BUTTONS ===
+    document.getElementById('yesBtn').onclick = function() {
+      safeStorage.set(accessCookie, "1");
+      window.location = "main.html";
+    };
+    document.getElementById('noBtn').onclick = function() {
+      safeStorage.set(accessCookie, "0");
+      window.location = "https://www.google.com";
+    };
   </script>
 </body>
 </html>
