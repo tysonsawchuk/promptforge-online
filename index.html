@@ -30,8 +30,8 @@
       box-sizing: border-box;
     }
     .ascii-eye {
-      font-size: 1.09vw;
-      line-height: 1.06;
+      font-size: 1.08vw;
+      line-height: 1.08;
       color: #03ffd5;
       letter-spacing: 0.025em;
       text-shadow: 0 0 17px #0e7777, 0 0 2px #24ffe0, 0 0 2px #30ffee;
@@ -48,12 +48,12 @@
       user-select: none;
     }
     .ascii-eye.flash {
-      filter: brightness(2.6) contrast(1.9);
+      filter: brightness(2.5) contrast(1.9);
       text-shadow: 0 0 29px #44fff0, 0 0 8px #eafffb;
       transition: filter 0.05s;
     }
     .boot-log {
-      font-size: 1.13vw;
+      font-size: 1.14vw;
       font-family: inherit;
       width: 70vw; max-width: 98vw;
       background: none; border: none; outline: none;
@@ -135,8 +135,8 @@
     </div>
   </div>
   <script>
-    // ============= NEXT-LEVEL ASCII EYE ANIMATION ============
-    // Pupil is now a colored "◉" and actually tracks closely!
+    // ============= ASCII EYE: Iris centered, tracks pointer ================
+    // Pupil (◉) starts *perfectly* in the middle and tracks smoothly!
     const eyeBase = [
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀",
@@ -165,23 +165,21 @@
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
 "⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
     ];
 
-    // Eye Pupil: More lively + purple. The ◉ is the "pupil" (will shift position)
+    // Eye pupil logic - **centered and tracks pointer**
     function drawEye(offsetY, offsetX) {
       let lines = eyeBase.map(l=>l);
-      // Calculated iris center for max realism
-      let irisR = 13 + Math.round(offsetY*2.4); // y = -1...1
-      let irisC = 42 + Math.round(offsetX*10); // x = -1...1, wider for real tracking
-      // Reconstruct line with the purple animated pupil!
-      let row = lines[irisR];
+      // Center of iris/pupil (tuned for this ASCII)
+      let irisRow = 13 + Math.round(offsetY * 2.5);  // y = -1...1
+      let irisCol = 46 + Math.round(offsetX * 8.5);  // x = -1...1
+      let row = lines[irisRow];
       if(row) {
-        lines[irisR] = row.slice(0, irisC) +
-          '<span style="color:#c488ff;text-shadow:0 0 11px #c488ff,0 0 7px #fff1; font-size:1.4em;">◉</span>' +
-          row.slice(irisC+1);
+        lines[irisRow] = row.slice(0, irisCol) +
+          '<span style="color:#c488ff;text-shadow:0 0 11px #c488ff,0 0 8px #fff4; font-size:1.1em;">◉</span>' +
+          row.slice(irisCol+1);
       }
       document.getElementById('asciiEye').innerHTML = lines.join('\n');
     }
@@ -201,29 +199,29 @@
     }
     window.addEventListener('mousemove', updateTarget);
     window.addEventListener('touchmove', updateTarget);
+
     function idleEye(now) {
-      let t = now * 0.00024;
-      let x = Math.sin(t) * 0.74, y = Math.cos(t*1.2) * 0.65;
+      let t = now * 0.00029;
+      let x = Math.sin(t) * 0.65, y = Math.cos(t*1.3) * 0.58;
       return [x, y];
     }
     function animateEye(now) {
       let tx = targetX, ty = targetY;
-      if (Date.now() - lastMove > 2300) [tx, ty] = idleEye(now);
-      eyeX += (tx - eyeX) * 0.17;
-      eyeY += (ty - eyeY) * 0.17;
+      if (Date.now() - lastMove > 2200) [tx, ty] = idleEye(now);
+      eyeX += (tx - eyeX) * 0.18;
+      eyeY += (ty - eyeY) * 0.18;
       drawEye(eyeY, eyeX);
       requestAnimationFrame(animateEye);
     }
     drawEye(0, 0);
     requestAnimationFrame(animateEye);
-
     setInterval(() => {
       let eye = document.getElementById('asciiEye');
       eye.classList.add('flash');
-      setTimeout(() => eye.classList.remove('flash'), 130 + Math.random()*110);
-    }, 5100 + Math.random()*1600);
+      setTimeout(() => eye.classList.remove('flash'), 140 + Math.random()*120);
+    }, 5200 + Math.random()*1600);
 
-    // ============ TERMINAL BOOT LOGIC ===============
+    // ============ TERMINAL BOOT LOGIC + REDIRECT TO MAIN ===============
     const bootLines = [
       '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
       '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
@@ -232,7 +230,7 @@
       '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
       '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
       '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
-      '<span class="log-ok">[OK]</span>     Welcome, Operator – enter <span class="log-help">help</span> for system commands.'
+      '<span class="log-ok">[OK]</span>     Welcome, Operator – type anything and hit enter.'
     ];
     let bootIndex = 0;
     const bootLogDiv = document.getElementById('bootLog');
@@ -246,7 +244,7 @@
       if (bootIndex < bootLines.length) {
         printToTerminal(bootLines[bootIndex]);
         bootIndex++;
-        setTimeout(typeBootLine, 1050);
+        setTimeout(typeBootLine, 950);
       } else {
         inputRow.style.display = '';
         inputBox.focus();
@@ -254,98 +252,10 @@
     }
     setTimeout(typeBootLine, 700);
 
-    // ============ TERMINAL COMMANDS (Fun + Real-feeling) ===============
-    const fakeHelp = `
-<span class="log-help">PromptForge OS v1.0 Help Menu</span>
-Available commands:
-  <span class="log-help">help</span>      Show this menu
-  <span class="log-help">about</span>     About PromptForge, legal info
-  <span class="log-help">trace</span>     Trace globe, fake IP scan
-  <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
-  <span class="log-help">contact</span>   Show support info
-  <span class="log-help">easteregg</span> Hidden Easter Egg
-  <span class="log-help">access</span>    Attempt secure access (try: <b>access 696969</b>)
-  <span class="log-help">passcode</span>  Enter secret code (try: <b>passcode letmein</b>)
-  <span class="log-help">disconnect</span> Disconnect from terminal
-`;
-    const fakeAbout = `
-PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking.<br>
-<span class="badge">Achievement: Meta Detected</span>
-<span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
-`;
-    const fakeTrace = `
-[TRACE]  Tracing route to user... 
-  10.27.14.2 —> 47.23.181.7 [OK]
-  47.23.181.7 —> 104.223.13.58 [OK]
-  104.223.13.58 —> 127.0.0.1 [LOOP]
-<span class="log-info">[GLOBE]</span> <span style="font-family:monospace;color:#33b0ff;">🌐 · · · · · · ⬤ · · · · · ·</span> 
-<span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
-<span class="badge">Badge: Hacker Scanned</span>
-`;
-    const fakeJ1NX = `
-<span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
-<span class="badge">Badge: J1NX Contacted</span>
-`;
-    const fakeContact = `
-<span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
-Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
-<span class="badge">Supporter</span>
-`;
-    const fakeEgg = `
-<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
-<span class="badge">Easter Egg Hunter</span>
-`;
-
-    function handleTerminalCommand(cmdRaw) {
-      const cmd = cmdRaw.trim().toLowerCase();
-      if (!cmd) return;
-      // Simulate access codes/forbidden zones
-      if (cmd.startsWith("access") || cmd.startsWith("passcode")) {
-        let code = cmd.split(" ")[1] || "";
-        if (code === "696969" || code === "letmein" || code === "nsfwgod" || code === "gore") {
-          printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator. <span class="badge">Terminal Unlocked</span><br>Enjoy your stay in the forbidden zone. (There is nothing else here... yet.)');
-        } else {
-          printToTerminal('<span class="log-error">[ACCESS DENIED]</span> Invalid code, try again. (Tip: Try <span class="log-help">access 696969</span> or <span class="log-help">passcode letmein</span>)');
-        }
-        return;
-      }
-      switch (cmd) {
-        case "help":
-          printToTerminal(fakeHelp);
-          break;
-        case "about":
-          printToTerminal(fakeAbout);
-          break;
-        case "trace":
-          printToTerminal(fakeTrace);
-          break;
-        case "j1nx":
-          printToTerminal(fakeJ1NX);
-          break;
-        case "contact":
-          printToTerminal(fakeContact);
-          break;
-        case "easteregg":
-          printToTerminal(fakeEgg);
-          break;
-        case "disconnect":
-        case "exit":
-          printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
-          inputRow.style.display = "none";
-          break;
-        default:
-          if(cmd.length >= 8 && /^[a-z0-9]+$/.test(cmd)) {
-            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
-          } else {
-            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
-          }
-          break;
-      }
-    }
     inputBox.addEventListener('keydown', function(e){
       if (e.key === "Enter") {
-        handleTerminalCommand(inputBox.value);
-        inputBox.value = "";
+        // Immediately go to main page, no validation
+        window.location = "main.html";
       }
     });
     inputRow.addEventListener('click',()=>inputBox.focus());
