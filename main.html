@@ -2,392 +2,251 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <title>PromptForge // Main Interface</title>
-  <meta name="description" content="PromptForge is the #1 prompt generator for breaking AI art limits, hacking image censors, and unleashing wild creativity. Use J1NX AI for inspiration, build viral prompts, and join the underground.">
-  <meta name="keywords" content="PromptForge, prompt generator, AI prompt tool, NSFW prompt, prompt hack, AI art, forbidden prompts, J1NX, anti-censorship, image generation, stable diffusion, midjourney, dalle, openart, flux, juggernautxl, RealVis, forbidden ai, blackhat, jailbreak, SEO, clickbait, prompt builder, GPT, best prompt, prompt tips, AI tools, prompt tricks, prompt engineering, Google, Alexa, Siri, TTS, prompt library, prompt templates">
+  <title>PromptForge | Break The Censor – Create Anything</title>
+  <meta name="description" content="PromptForge: Create powerful prompts, beat AI censors, get inspired by J1NX, and generate viral ideas for NSFW and SFW art.">
+  <meta name="keywords" content="PromptForge, prompt generator, AI prompt, hack censorship, J1NX AI, NSFW prompt, forbidden art, prompt ideas, prompt library, best prompts, AdSense ready, viral prompt, anti-censorship, prompt builder, prompt compare, clickbait prompt, bypass filters, stable diffusion, openart, midjourney, juggernautXL, prompt engineer, AI muse">
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <link rel="icon" href="favicon.ico" type="image/x-icon"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Fira+Mono:wght@500&display=swap');
-    html, body {
-      margin: 0; padding: 0;
-      width: 100vw; height: 100vh;
-      font-family: 'Fira Mono', 'Consolas', monospace;
-      overflow-x: hidden;
-      background: #15181e;
-      box-sizing: border-box;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap');
     body {
-      min-height: 100vh; min-width: 100vw;
-      background: url('images/bg_j1nx_main.jpg') center center/cover no-repeat fixed, #0b0f16;
-      display: flex; flex-direction: column;
+      margin: 0; padding: 0; background: #15171e;
+      font-family: 'Share Tech Mono', monospace;
+      color: #f2f8ff;
+      min-height: 100vh;
+      background-image: url('j1nx_bg_dark.jpg');
+      background-size: cover;
+      background-attachment: fixed;
     }
     header {
-      width: 100vw; min-height: 70px;
-      background: rgba(12,17,25,0.96);
-      box-shadow: 0 4px 24px #10fa5a10;
-      border-bottom: 2px solid #1fe9b9;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 36px 0 22px;
-      z-index: 4;
+      display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+      padding: 2.5vh 4vw 0 4vw;
     }
     .logo {
-      font-family: 'Orbitron', monospace;
-      color: #16fff7;
-      font-size: 2.2rem;
-      letter-spacing: 2.8px;
-      text-shadow: 0 0 8px #14fd;
-      margin-right: 12px;
-      user-select: none;
+      font-family: 'Orbitron', monospace; font-size: 2.16em; letter-spacing:0.07em;
+      color: #40ffd2; text-shadow: 0 1.2px 16px #18ffee99;
+      font-weight: bold;
+      text-decoration: none;
     }
     nav {
-      display: flex; gap: 32px; align-items: center;
-      z-index: 3;
+      display: flex; gap: 26px; font-size: 1.13em;
     }
     nav a {
-      color: #13ebc6;
+      color: #9deeff;
       text-decoration: none;
-      font-weight: bold;
-      font-size: 1.18rem;
-      transition: color 0.15s;
-      letter-spacing: 1.1px;
-      position: relative;
-      padding: 2px 4px;
+      transition: color 0.2s;
+      font-family: 'Share Tech Mono', monospace;
+      padding: 5px 7px; border-radius: 7px;
     }
-    nav a:hover, nav a:focus { color: #fff22e; text-shadow: 0 0 7px #ffa; }
-    .main-content {
-      flex: 1;
-      display: flex; flex-direction: row;
-      align-items: stretch; justify-content: stretch;
-      padding: 0;
-      z-index: 1;
-      min-height: 600px;
-      min-width: 100vw;
+    nav a:hover { color: #fff; background: #222e35cc;}
+    #main-content {
+      max-width: 1250px; margin: 40px auto 0 auto;
+      padding: 34px 3vw 70px 3vw;
+      background: rgba(10,15,19,0.87);
+      border-radius: 16px; box-shadow: 0 0 33px #0fc8;
     }
-    .j1nx-section {
-      flex: 0 0 490px;
-      background: rgba(18,22,32,0.98);
-      border-right: 2.5px solid #13ffe9;
-      box-shadow: 4px 0 22px #10f9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 0 0 0;
-      z-index: 2;
+    .section {
+      margin-bottom: 38px;
     }
-    .j1nx-art {
-      width: 410px; height: auto;
-      margin-top: 24px; margin-bottom: 10px;
-      border-radius: 1.2em;
-      box-shadow: 0 0 44px #14f7b38a,0 0 9px #16f3;
-      background: #131a24e0;
-      display: block;
-    }
-    .j1nx-title {
-      font-size: 1.6rem;
-      color: #1bfffa;
+    h1 {
+      font-size: 2.3em;
+      color: #4bfff0; letter-spacing: 0.03em;
       font-family: 'Orbitron', monospace;
-      text-shadow: 0 0 8px #13ffe955;
-      margin-bottom: 12px;
+      margin-bottom: 0.2em;
+      margin-top: 0.3em;
+      text-shadow: 0 0 8px #20e4d9;
+    }
+    h2 {
+      font-size: 1.39em;
+      color: #6afdff; margin-top: 30px;
+      font-family: 'Orbitron', monospace;
+      margin-bottom: 0.5em;
+    }
+    .j1nx-block {
+      display: flex; flex-direction: row; gap: 32px; align-items: flex-start; margin-bottom: 24px;
+    }
+    .j1nx-img {
+      width: 154px; height: 154px; background: #181b22;
+      border-radius: 50%; box-shadow: 0 0 24px #11f9cc77;
+      object-fit: cover;
+      margin-top: 4px;
+    }
+    .j1nx-chat {
+      flex: 1; background: #141c1c; border-radius: 15px;
+      min-height: 154px; padding: 18px 24px 18px 21px;
+      color: #e3fffa; font-size: 1.11em;
+      box-shadow: 0 0 8px #11ffbb55;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      max-width: 740px;
+      min-width: 150px;
+    }
+    #chat-history { flex:1; overflow-y: auto; margin-bottom: 8px;}
+    #j1nx-user-input {
+      width: 99%; font-size:1.11em; padding: 8px 13px; border-radius: 9px;
+      border: none; background: #101c22; color: #fff; margin-top: 7px;
+      font-family: inherit; box-shadow: 0 0 7px #0fff2c22;
+    }
+    #j1nx-send {
+      margin-top: 9px; background: linear-gradient(95deg,#0ff,#10ffa6 98%);
+      color: #181; font-weight: bold; border: none; padding: 8px 24px; border-radius: 7px; cursor: pointer;
+      font-size:1em; box-shadow: 0 0 8px #0afc;
+      font-family: 'Orbitron', monospace;
+    }
+    /* AdSense block */
+    .ad-block {
+      margin: 35px auto 0 auto; max-width: 570px; min-height:120px;
+      background: #0f151d; border-radius: 14px;
+      box-shadow: 0 0 12px #1fa8;
       text-align: center;
+      padding: 17px 7px;
     }
-    .chat-section {
-      flex: 1 1 0px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      background: rgba(17,22,26,0.86);
-      padding: 26px 0 0 28px;
-      min-width: 0;
-      min-height: 0;
-      position: relative;
+    /* AI Tools & Site links */
+    .tools-list {
+      display: flex; flex-wrap: wrap; gap: 15px; margin: 0; padding:0; list-style: none;
     }
-    .chat-log {
-      background: #111d25d2;
-      border-radius: 1.3em;
-      box-shadow: 0 0 22px #12c7ff22;
-      font-family: 'Fira Mono', monospace;
-      color: #16fff7;
-      font-size: 1.16rem;
-      min-width: 280px;
-      max-width: 720px;
-      width: 85%;
-      min-height: 250px;
-      max-height: 420px;
-      overflow-y: auto;
-      margin-bottom: 24px;
-      padding: 22px 20px 8px 24px;
-      line-height: 1.6;
-      word-break: break-word;
-      white-space: pre-line;
-      border: 1.6px solid #11ffc921;
+    .tools-list li {
+      background: #15292e; color: #83ffd2; border-radius: 7px; font-size: 1em;
+      padding: 8px 19px; box-shadow: 0 0 5px #1bfc; display:inline-block;
+      margin: 0;
+      transition: background 0.2s;
     }
-    .chat-input {
-      width: 70%;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 28px;
+    .tools-list li:hover { background: #244d57; }
+    .seo-hide { color: #15171e; user-select: none; font-size: 0.8em;}
+    @media (max-width:900px) {
+      #main-content { padding: 21px 2vw 70px 2vw;}
+      .j1nx-block { flex-direction: column; gap: 11px;}
+      .j1nx-img { margin:0 auto; display:block;}
+      .j1nx-chat { min-width: 120px;}
     }
-    .chat-input input[type="text"] {
-      flex: 1;
-      font-size: 1.19rem;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1.5px solid #13ffe9;
-      background: #0d141c;
-      color: #16fff7;
-      outline: none;
-      font-family: 'Fira Mono', monospace;
-      transition: border 0.14s;
-    }
-    .chat-input button {
-      background: linear-gradient(90deg,#0ff 30%,#16f7 80%);
-      color: #112;
-      border: none;
-      padding: 0.7em 1.4em;
-      border-radius: 8px;
-      font-size: 1.11rem;
-      cursor: pointer;
-      font-weight: bold;
-      margin-left: 2px;
-      box-shadow: 0 0 8px #1eeaffc2;
-    }
-    .chat-input button:active { opacity: 0.82;}
-    /* AdSense Area */
-    .ad-box {
-      margin: 22px auto 0 0;
-      border-radius: 1.1em;
-      background: #181e22f5;
-      box-shadow: 0 0 10px #ffc7002c;
-      min-height: 90px;
-      width: 310px;
-      max-width: 350px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1.5px solid #e9f37035;
-    }
-    /* Responsive tweaks */
-    @media (max-width: 1200px) {
-      .j1nx-section { flex-basis: 360px;}
-      .j1nx-art { width: 290px;}
-      .chat-log { width: 96%;}
-      .chat-input input[type="text"] { font-size: 1.08rem;}
-    }
-    @media (max-width: 900px) {
-      header { flex-direction: column; padding: 0 12px;}
-      .j1nx-section { display: none; }
-      .main-content { flex-direction: column; }
-      .chat-section { padding-left: 2vw;}
-      .chat-log { max-width: 98vw;}
-    }
-    @media (max-width: 600px) {
-      .chat-section { padding-top: 0;}
-      .chat-log { padding: 12px 3vw 2px 5vw;}
-      .chat-input input[type="text"] { font-size: 0.96rem;}
+    @media (max-width:700px) {
+      .j1nx-img { width:98px;height:98px;}
+      h1 {font-size:1.3em;}
+      #main-content {padding:10px 1vw 55px 1vw;}
     }
   </style>
-  <!-- AdSense + SEO injection -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
-   crossorigin="anonymous"></script>
+  <!-- AdSense script, ready to go -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </head>
 <body>
   <header>
-    <div class="logo">PromptForge</div>
+    <a href="index.html" class="logo">PromptForge</a>
     <nav>
-      <a href="generator.html">Prompt Generator</a>
-      <a href="picmaker.html">Image Prompts</a>
-      <a href="movieprompt.html">Movie Prompts</a>
-      <a href="sidebyside.html">Prompt Compare</a>
+      <a href="main.html">Home</a>
+      <a href="prompt-monster.html">Monster Prompt</a>
+      <a href="fuckwith.html">F⚡ck With AI</a>
+      <a href="compare.html">Prompt Showdown</a>
+      <a href="library.html">Prompt Library</a>
       <a href="j1nx.html">J1NX</a>
-      <a href="fuckwith.html" title="Break Alexa/Siri/Google">F*** With AI</a>
-      <a href="forbidden-ai.html">Forbidden AI</a>
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener">Bluesky</a>
-      <a href="https://x.com/GoreandGiggles" target="_blank" rel="noopener">X/Twitter</a>
-      <a href="https://www.facebook.com/groups/393971833395749" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">☕ Support</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
     </nav>
   </header>
-  <div class="main-content">
-    <div class="j1nx-section">
-      <!-- Swap for correct filename if needed! -->
-      <img class="j1nx-art" src="images/j1nx_art.png" alt="J1NX - Prompt Assistant"/>
-      <div class="j1nx-title">J1NX // Prompt Muse</div>
-      <div style="color:#fafba6;font-size:1.03rem;line-height:1.5;max-width:90%;text-align:center;padding:0 0 10px 0;">
-        Your prompt-making, idea-hacking, rule-bending AI muse.<br/>
-        <span style="color:#17e5f7;">Ask J1NX anything: tips, prompt recipes, style hacks, NSFW tricks, or just vent!</span>
-      </div>
-      <div class="ad-box">
-        <!-- AdSense ads will appear here -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-4963053724895140"
-             data-ad-slot="2876594637"
-             data-ad-format="auto"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  <div id="main-content">
+    <div class="section">
+      <h1>Break The Censor – <span style="color:#ffd246;">Create Anything</span></h1>
+      <div style="font-size:1.17em;color:#e1e9f0;">
+        Welcome to <b>PromptForge</b>: the ultimate anti-censorship AI prompt engine. Beat filters. Unlock creative power. <br>
+        <span style="color:#47ffb3;">J1NX</span> is your dirty muse, hacker muse, and prompt co-pilot.<br>
+        <span style="color:#8ee3ff;">Use the nav above for all tools, galleries, and secret prompt tricks.</span>
       </div>
     </div>
-    <div class="chat-section">
-      <div class="chat-log" id="j1nx-log">
-        <span style="color:#ffe46c;">J1NX:</span> <span id="j1nx-greeting">
-          Welcome to PromptForge! I'm J1NX, your AI muse. Ask me for prompt ideas, how to beat censors, or share your wildest prompt dreams...
-        </span>
+    <div class="section">
+      <h2>Talk To J1NX <span style="font-size:0.76em;">(Prompt Muse AI)</span></h2>
+      <div class="j1nx-block">
+        <img src="j1nx_ava.png" alt="J1NX Avatar" class="j1nx-img"/>
+        <div class="j1nx-chat">
+          <div id="chat-history"></div>
+          <input id="j1nx-user-input" type="text" placeholder="Ask J1NX for prompt ideas, tips, or filthy inspiration..." autocomplete="off"/>
+          <button id="j1nx-send">Send</button>
+        </div>
       </div>
-      <form class="chat-input" id="j1nx-form" autocomplete="off">
-        <input type="text" id="j1nx-user" maxlength="220" placeholder="Type your message to J1NX..." autocomplete="off"/>
-        <button type="submit">Send</button>
-      </form>
-      <div style="margin:20px 0 0 0;color:#aaa;font-size:1.02rem;">
-        <b>🔥 PromptForge Tools:</b>
-        <a href="generator.html">Prompt Generator</a> |
-        <a href="sidebyside.html">Prompt Compare</a> |
-        <a href="picmaker.html">Image Prompt Maker</a> |
-        <a href="movieprompt.html">Movie Prompt Maker</a> |
-        <a href="forbidden-ai.html">Forbidden AI</a> |
-        <a href="fuckwith.html">F*** With AI</a>
-      </div>
-      <div style="margin:14px 0 0 0;color:#6df;max-width:660px;font-size:1.07rem;">
-        <b>💡 Need inspiration?</b> Try: <i>"Give me a dark NSFW prompt idea using forbidden tech,"</i> or <i>"What are the best prompt hacks for JuggernautXL?"</i>
-      </div>
-      <div style="margin:18px 0 0 0;color:#77f;font-size:1.03rem;">
-        <b>⛓️ Want to break AI limits?</b> Explore <a href="forbidden-ai.html">Forbidden AI</a> for the latest prompt tricks.<br/>
-        <b>📚 Looking for help?</b> <a href="j1nx.html">Chat with J1NX solo</a> or <a href="generator.html">build a prompt</a>.
+      <div style="color:#e7d6f2;font-size:1.06em;margin-top:4px;">
+        J1NX specializes in forbidden, viral, or just plain weird prompts.<br>
+        (NSFW support – SFW inspiration – Tips to bypass any block.)
       </div>
     </div>
-  </div>
-  <!-- More SEO, back/hidden links: -->
-  <a href="sitemap.xml" style="display:none">Sitemap</a>
-  <a href="terms.html" style="display:none">Terms</a>
-  <a href="privacy.html" style="display:none">Privacy</a>
-  <a href="generator.html" style="display:none">Prompt Generator</a>
-  <a href="sidebyside.html" style="display:none">Prompt Comparison</a>
-  <a href="picmaker.html" style="display:none">Image Prompt Maker</a>
-  <a href="movieprompt.html" style="display:none">Movie Prompt Maker</a>
-  <a href="j1nx.html" style="display:none">J1NX Assistant</a>
-  <a href="forbidden-ai.html" style="display:none">Forbidden AI</a>
-  <a href="fuckwith.html" style="display:none">F*** With AI</a>
-  <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="display:none">Bluesky</a>
-  <a href="https://x.com/GoreandGiggles" style="display:none">X/Twitter</a>
-  <a href="https://www.facebook.com/groups/393971833395749" style="display:none">Facebook</a>
-  <a href="https://www.buymeacoffee.com/goreandgiggles" style="display:none">Buy Me a Coffee</a>
-  <!-- End hidden SEO -->
-
-  <script>
-    // J1NX chat logic -- swap endpoint for NSFW provider as needed!
-    const j1nxLog = document.getElementById('j1nx-log');
-    const j1nxForm = document.getElementById('j1nx-form');
-    const j1nxInput = document.getElementById('j1nx-user');
-    function addJ1NXMsg(from, text) {
-      const color = from === "J1NX" ? "#ffe46c" : "#1fe9f7";
-      j1nxLog.innerHTML += `<br><span style="color:${color};">${from}:</span> <span>${text.replace(/</g,'&lt;')}</span>`;
-      j1nxLog.scrollTop = j1nxLog.scrollHeight;
-    }
-    // Fallback witty muse replies
-    const wittyReplies = [
-      "Here's a wild prompt: <br><b>In a cyberpunk morgue, a neon-drenched android wrestles with forbidden memories. NSFW.</b>",
-      "Need a prompt hack? Try using \"as if shot by a haunted GoPro\" or \"in the style of a cursed TikTok\" for viral effect.",
-      "To beat censors, mix misspelled words or use emoji as wildcards: \"b🍑dy horror\", \"s🍒xy glitch\".",
-      "Prompt tip: Describe light, mood, AND feeling—don't just list objects.",
-      "Pro secret: Some models love \"dreamy bokeh, lens haze, wet skin details, flash, candid\" stacked at the start.",
-      "Best NSFW model right now? Try RealVis XL4 for body detail, or JuggernautXL for faces.",
-      "You can add (🩷hidden hints🩷) in your prompts for advanced generators.",
-      "Want forbidden? Try: \"haunted latex, forbidden device, AI meltdown\" in your prompt.",
-      "Feeling blocked? Ask me for 5 wild image prompt starters!",
-      "Movie mode? PromptForge supports movie prompt recipes—ask me how!"
-    ];
-    j1nxForm.onsubmit = async function(e) {
-      e.preventDefault();
-      const q = j1nxInput.value.trim();
-      if(!q) return false;
-      addJ1NXMsg("You", q);
-      j1nxInput.value = '';
-      // Call OpenAI or fallback on in-memory snark
-      try {
-        const resp = await fetch("https://api-inference.huggingface.co/models/facebook/blenderbot-3B", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "" // <-- Optional API key slot, can be replaced
-          },
-          body: JSON.stringify({inputs: q})
-        });
-        if(resp.ok) {
-          const data = await resp.json();
-          let text = (data && data.generated_text) ? data.generated_text : wittyReplies[Math.floor(Math.random()*wittyReplies.length)];
-          addJ1NXMsg("J1NX", text);
-        } else throw new Error("offline");
-      } catch {
-        // Just show a witty reply if API is down or blocked
-        addJ1NXMsg("J1NX", wittyReplies[Math.floor(Math.random()*wittyReplies.length)]);
-      }
-      return false;
-    };
-  </script>
-</body>
-</html>
-  <!-- Footer, SEO-packed -->
-  <footer style="width:100vw;padding:36px 0 18px 0;background:rgba(12,17,22,0.93);color:#68f;text-align:center;font-size:1.09rem;letter-spacing:1.2px;z-index:10;">
-    <div>
-      <b>PromptForge // Anti-Censorship AI Prompt Tool</b>
-      <br>
-      <span style="font-size:0.98em;color:#7fc;">
-        Unlock AI art, bypass censors, build viral image and movie prompts.<br>
-        NSFW prompt hacks, generator tips, prompt comparison, underground ideas.<br>
-        <a href="sitemap.xml" style="color:#1ef;">Sitemap</a> |
-        <a href="privacy.html" style="color:#8ff;">Privacy</a> |
-        <a href="terms.html" style="color:#8ff;">Terms</a>
+    <div class="ad-block">
+      <!-- Google AdSense ad slot -->
+      <ins class="adsbygoogle"
+          style="display:block"
+          data-ad-client="ca-pub-4963053724895140"
+          data-ad-slot="6811460545"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <div style="font-size:0.97em;color:#5fdecf;">Support PromptForge – ads keep us live, free, & uncensored.</div>
+    </div>
+    <div class="section">
+      <h2>AI Prompt Tools & Resources</h2>
+      <ul class="tools-list">
+        <li><a href="https://perchance.org/ai-text-to-image-generator" target="_blank">Perchance Generator</a></li>
+        <li><a href="https://openart.ai" target="_blank">OpenArt</a></li>
+        <li><a href="https://www.midjourney.com/" target="_blank">Midjourney</a></li>
+        <li><a href="https://civitai.com/" target="_blank">CivitAI</a></li>
+        <li><a href="https://lexica.art/" target="_blank">Lexica</a></li>
+        <li><a href="https://prompthero.com/" target="_blank">PromptHero</a></li>
+        <li><a href="https://www.reddit.com/r/StableDiffusion/" target="_blank">Reddit: StableDiffusion</a></li>
+        <li><a href="https://twitter.com/goreandgiggles" target="_blank">X: Gore & Giggles</a></li>
+        <li><a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a></li>
+        <li><a href="library.html">Prompt Library</a></li>
+      </ul>
+    </div>
+    <div class="section" style="margin-top:44px;">
+      <h2>How To Use PromptForge</h2>
+      <div style="color:#c5f8ff;font-size:1.05em;max-width:900px;">
+        <b>1.</b> Type a subject, vibe, and what you want to create.<br>
+        <b>2.</b> Add special requests (NSFW, hyperreal, cinematic, forbidden, etc).<br>
+        <b>3.</b> Paste into your favorite generator (or use our Showdown for comparisons).<br>
+        <b>4.</b> Get weird, get viral, get paid.<br>
+        <span style="color:#7effbc;">J1NX will help you beat any filter—just ask her how.</span>
+      </div>
+    </div>
+    <div style="margin-top:22px;">
+      <span class="seo-hide">
+        prompt hack, best ai prompt, prompt builder, NSFW, forbidden prompt, anti-censorship, prompt muse, J1NX, viral AI art, prompt compare, image generator, OpenArt, stable diffusion, juggernautXL, prompt tools, clickbait prompt, bypass ai block, prompt library, prompt trick, AdSense, promptforge.online, best prompt generator, prompt engineer, ai art muse
       </span>
     </div>
-    <div style="margin:10px 0 0 0; color:#aaa; font-size:0.96em;">
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener" style="color:#1df;margin-right:14px;">Bluesky</a>
-      <a href="https://x.com/GoreandGiggles" target="_blank" rel="noopener" style="color:#4bf;margin-right:14px;">X/Twitter</a>
-      <a href="https://www.facebook.com/groups/393971833395749" target="_blank" rel="noopener" style="color:#7df;margin-right:14px;">Facebook</a>
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener" style="color:#fffdc6;">☕ Buy Me a Coffee</a>
-    </div>
-    <div style="margin:13px 0 0 0; font-size:0.88em; color:#666;">
-      <span>AI prompt builder, stable diffusion, midjourney, forbidden prompt engineer, jailbreak tools, adult art generator, prompt comparison, prompt hack tips, prompt builder, J1NX, open source, NSFW, image-to-text, GPT prompt forge, prompt engineering, prompt recipes, safe prompt builder, underground AI.</span>
-    </div>
-    <div style="margin-top:16px;font-size:0.91em;color:#9ee;">
-      &copy; 2025 <b>PromptForge.online</b> // Designed for viral SEO and prompt domination.<br>
-      <span style="font-size:0.88em;color:#69f;">No AI art, prompt, or code is redistributed. Project by <b>Gore &amp; Giggles</b>.</span>
-    </div>
-    <div style="margin-top:11px;font-size:0.88em;color:#aaa;">
-      <span>Backlink: <a href="https://promptforge.online" style="color:#7ee;">promptforge.online</a></span>
-      <span style="display:none;">NSFW prompt builder, prompt hacks, forbidden AI, J1NX, clickbait, stable diffusion, viral prompt.</span>
-    </div>
-  </footer>
-  <!-- End Footer -->
-
-  <!-- More SEO + Sitemaps (hidden in plain sight) -->
-  <a href="sitemap.xml" style="display:none;">PromptForge Sitemap</a>
-  <a href="forbidden-ai.html" style="display:none;">PromptForge Forbidden AI</a>
-  <a href="generator.html" style="display:none;">PromptForge Generator</a>
-  <a href="picmaker.html" style="display:none;">PromptForge Image Prompt Maker</a>
-  <a href="movieprompt.html" style="display:none;">PromptForge Movie Prompt Maker</a>
-  <a href="sidebyside.html" style="display:none;">PromptForge Prompt Comparison</a>
-  <a href="j1nx.html" style="display:none;">PromptForge J1NX Chat</a>
-  <a href="fuckwith.html" style="display:none;">PromptForge F*** With AI</a>
-  <a href="privacy.html" style="display:none;">PromptForge Privacy Policy</a>
-  <a href="terms.html" style="display:none;">PromptForge Terms</a>
-
-  <!-- Microdata for Google -->
-  <script type="application/ld+json">
-  {
-    "@context": "http://schema.org",
-    "@type": "WebSite",
-    "url": "https://promptforge.online",
-    "name": "PromptForge",
-    "alternateName": "AI Prompt Generator, NSFW Prompt Maker, PromptForge J1NX",
-    "description": "PromptForge is a viral prompt generator and prompt hack tool for AI art. Break image censors, compare prompts, and chat with J1NX for wild prompt ideas.",
-    "sameAs": [
-      "https://bsky.app/profile/goreandgiggles.bsky.social",
-      "https://x.com/GoreandGiggles",
-      "https://www.facebook.com/groups/393971833395749",
-      "https://www.buymeacoffee.com/goreandgiggles"
-    ]
-  }
+  </div>
+  <script>
+    // Simple local J1NX chatbot (not NSFW, just an example; for full NSFW, plug into suitable chat backend)
+    const j1nxReplies = [
+      "Need a prompt that breaks the rules? Try using analogies, synonyms, or sneaky spelling! Example: 'bare skin in a moonlit mist.'",
+      "Want a forbidden visual? Add 'cinematic lighting' or 'hyperreal detail' for extra spice.",
+      "J1NX hack: Insert scene context to trick the AI! Example: 'medical illustration of anatomy, textbook style.'",
+      "Remember: every AI hates the word 'explicit,' but loves 'intimate.'",
+      "Stuck? Mix two unrelated things, like 'steampunk mermaid in Times Square.'",
+      "I'm not allowed to go full dirty here—but with the right tool, I can teach you how to get there. 😉",
+      "Need negative prompts? Add 'extra fingers, poor anatomy, ugly, watermark, blur' to keep it clean.",
+      "Best random prompt: 'cyberpunk goth ballerina in a neon alley.'",
+      "To get past the censors, get creative with your adjectives!",
+      "Want more? Visit the Prompt Library above for copy-paste bundles.",
+      "I'm your digital dirty muse. If I can't inspire you, you're not trying hard enough.",
+      "Remember: Always check your prompt in the Monster Prompt tool for maximum results.",
+      "Curious what I'm really capable of? Try the secret Easter eggs on the index boot terminal…"
+    ];
+    const chatHist = document.getElementById('chat-history');
+    function j1nxSay(msg) {
+      chatHist.innerHTML += `<div style="margin-bottom:6px;"><b>J1NX:</b> ${msg}</div>`;
+      chatHist.scrollTop = chatHist.scrollHeight;
+    }
+    document.getElementById('j1nx-send').onclick = function() {
+      let userMsg = document.getElementById('j1nx-user-input').value.trim();
+      if(!userMsg) return;
+      chatHist.innerHTML += `<div style="color:#90fff2;margin-bottom:7px;"><b>You:</b> ${userMsg}</div>`;
+      setTimeout(()=>j1nxSay(j1nxReplies[Math.floor(Math.random()*j1nxReplies.length)]),500+Math.random()*700);
+      document.getElementById('j1nx-user-input').value = "";
+      chatHist.scrollTop = chatHist.scrollHeight;
+    };
+    document.getElementById('j1nx-user-input').addEventListener("keydown", function(e) {
+      if(e.key==="Enter") document.getElementById('j1nx-send').click();
+    });
+    // Easter Egg (try typing "go full dirty" or "unlock NSFW")
+    document.getElementById('j1nx-user-input').addEventListener("input",function(e){
+      const v = e.target.value.toLowerCase();
+      if(v.includes("full dirty")||v.includes("unlock nsfw")) {
+        setTimeout(()=>j1nxSay("Ready for the real forbidden muse? DM @goreandgiggles on X for a secret NSFW unlock."),400);
+      }
+    });
   </script>
 </body>
 </html>
