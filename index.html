@@ -163,6 +163,10 @@
       .terminal-input, .terminal-input-row { font-size: 2vw;}
       .badge { font-size: 1.6vw;}
     }
+    /* Hidden SEO Crawler Block */
+    .seo-crawler {
+      display:none;
+    }
   </style>
 </head>
 <body>
@@ -187,14 +191,23 @@
       Access to PromptForge requires age verification. Stay cool, stay safe.
     </div>
   </div>
+  <!-- === SEO CRAWLER BLOCK (hidden) === -->
+  <div class="seo-crawler">
+    Forbidden NSFW/SFW AI prompt generator and hacking terminal. Build better prompts for JuggernautXL, RealVis, CyberRealistic, and more. Prompt battles, image galleries, NSFW chatbot, prompt directory, and creative resources.
+    Best prompt builder online. Operator access. J1NX. Gore and Giggles.
+    PromptForge mainframe. 2025. Creative AI. Trauma recovery. Adult prompt generator.
+    <a href="https://promptforge.online">promptforge.online</a>
+    <a href="https://github.com/tysonsawchuk/promptforge-online">github</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social">bluesky</a>
+    <a href="https://x.com/GoreandGiggles">twitter</a>
+    <a href="https://www.facebook.com/groups/393971833395749">facebook</a>
+  </div>
   <script>
-    // ============= STORAGE & "ONE VISIT PER DAY" ==============
-    const todayKey = new Date().toISOString().slice(0,10);
-    const bootCookie = 'pf_boot_' + todayKey;
-    const accessCookie = 'pf_access_' + todayKey;
-    function setVisitCookie(k,v) { try { localStorage.setItem(k,v); } catch(e){} }
-    function getVisitCookie(k) { try { return localStorage.getItem(k); } catch(e){ return null;} }
-    // ============= GIANT ASCII EYE (eye tracking improved) ==============
+    // ----------- Storage Guard: always safe in incognito -----------
+    function setVisitCookie(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    function getVisitCookie(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+    // ----------- Eye ASCII + Tracking -----------
     const eyeMaster = [
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
@@ -298,7 +311,7 @@
       setTimeout(() => eye.classList.remove('flash'), 110+Math.random()*150);
     }, 5400 + Math.random()*1700);
 
-    // ============ BOOT + INTERACTIVE TERMINAL ===============
+    // ----------- Boot & Terminal Logic -----------
     const bootLines = [
       '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
       '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
@@ -310,7 +323,6 @@
       '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
     ];
     let bootIndex = 0, bootDone = false;
-    // ============= Terminal Command Handler ================
     const fakeHelp = `
 <span class="log-help">PromptForge OS v1.0 Help Menu</span>
 Available commands:
@@ -443,66 +455,55 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
       }
     });
     inputRow.addEventListener('click',()=>inputBox.focus());
+
     // ========== Boot/Replay Control ==============
     function skipBootIfVisited() {
-      if(getVisitCookie(bootCookie)==="1") {
+      let ok = false;
+      try { ok = getVisitCookie('pf_boot_' + new Date().toISOString().slice(0,10))==="1"; } catch(e){}
+      if(ok) {
         bootDone = true;
         document.getElementById('bootLog').innerHTML = '<span class="log-ok">[OK]</span>  Welcome back, Operator.<br>Type <span class="log-help">help</span> for commands.<br>';
         document.getElementById('terminalInputRow').style.display = '';
         document.getElementById('terminalInput').focus();
         // If access granted today, skip gate too:
-        if(getVisitCookie(accessCookie)==="1") {
-          setTimeout(()=>{window.location="main.html"},900);
-        }
+        let access = false;
+        try { access = getVisitCookie('pf_access_' + new Date().toISOString().slice(0,10))==="1"; } catch(e){}
+        if(access) setTimeout(()=>{window.location="main.html"},900);
         return true;
       }
       return false;
     }
+
     // Only play boot if first visit this day
     if(!skipBootIfVisited()){
       setTimeout(typeBootLine, 1000);
-      setVisitCookie(bootCookie, "1");
+      setVisitCookie('pf_boot_' + new Date().toISOString().slice(0,10), "1");
     }
     function typeBootLine() {
-      if
-    function typeBootLine() {
       if (bootIndex < bootLines.length) {
-        bootLogDiv.innerHTML += bootLines[bootIndex] + '<br>';
-        bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
-        bootIndex++;
-        setTimeout(typeBootLine, 700 + Math.random()*320);
+        printToTerminal(bootLines[bootIndex++]);
+        setTimeout(typeBootLine, 650 + Math.random()*350);
       } else {
         bootDone = true;
-        inputRow.style.display = '';
-        inputBox.focus();
+        document.getElementById('terminalInputRow').style.display = '';
+        document.getElementById('terminalInput').focus();
       }
     }
 
-    // ========== Age Gate Logic ==========
-    // YES - age verified, move to main.html or next step
-    document.getElementById('yesBtn').onclick = function() {
-      setVisitCookie(accessCookie,"1");
-      // Replace with your actual main page!
+    // Age gate logic
+    document.getElementById('yesBtn').onclick = function(){
+      setVisitCookie('pf_access_' + new Date().toISOString().slice(0,10), "1");
       window.location = "main.html";
     };
-    // NO - redirect to Google
-    document.getElementById('noBtn').onclick = function() {
-      setVisitCookie(accessCookie,"0");
-      window.location = "https://www.google.com";
+    document.getElementById('noBtn').onclick = function(){
+      setTimeout(()=>window.location='https://google.com', 260);
     };
-
-    // ========== SEO: Show content for crawlers ==========
-    // If you want to add extra static keywords/content for Google without showing it to users:
-    const crawlerSEO = document.createElement('div');
-    crawlerSEO.style.position = "absolute";
-    crawlerSEO.style.left = "-9999px";
-    crawlerSEO.innerHTML = `
-      PromptForge NSFW prompt generator, SFW prompt generator, AI prompt builder, hacking terminal, forbidden prompt tool, cyberpunk interface, creative prompt builder, JuggernautXL, RealVis, Gore and Giggles.
-      For support email 0fearnofish0@gmail.com.
-      Unlock the best NSFW prompt generator: enter, open, continue, unlock, passcode, forbidden zone.
-      Access for 18+ users only.
-    `;
-    document.body.appendChild(crawlerSEO);
+    // Make ageGate close on ESC
+    document.body.addEventListener("keydown", function(e){
+      if(document.getElementById('ageGate').classList.contains('active') && e.key==="Escape"){
+        window.location='https://google.com';
+      }
+    });
   </script>
 </body>
 </html>
