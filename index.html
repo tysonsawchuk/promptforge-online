@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <title>PromptForge Terminal Boot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PromptForge: The most advanced AI NSFW prompt generator and hacking terminal for creative professionals.">
-  <!-- SEO in plain sight (hidden via terminal boot) -->
-  <meta name="keywords" content="NSFW, AI prompt, prompt generator, hacking, terminal, military, JuggernautXL, RealVis, Gore and Giggles, forbidden, promptforge, prompt tools, ASCII, cyberpunk, creative, text to image, AI art, prompt battle">
+  <meta name="description" content="PromptForge: Advanced NSFW/SFW AI prompt generator and cyberpunk hacking terminal for creative professionals. Military-grade interface, custom tools, and the best prompt builder online.">
+  <meta name="keywords" content="NSFW, AI prompt, prompt generator, hacking, terminal, military, JuggernautXL, RealVis, Gore and Giggles, promptforge, prompt tools, ASCII, cyberpunk, creative, text to image, AI art, prompt battle">
+  <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/favicon.png" />
   <style>
     html, body {
@@ -40,6 +40,7 @@
       white-space: pre;
       border-radius: 1vw;
       pointer-events: none;
+      outline: none;
     }
     .ascii-eye.flash {
       filter: brightness(2.4) contrast(1.8);
@@ -59,6 +60,8 @@
       white-space: pre-line;
       user-select: text;
       transition: opacity 0.6s;
+      overflow-y: auto;
+      max-height: 30vh;
     }
     .log-warn  { color: #ffa94d; }
     .log-ok    { color: #a2ffa6; }
@@ -66,6 +69,14 @@
     .log-error { color: #ff5b61; }
     .log-help  { color: #f4ff58; }
     .log-info  { color: #b4f7ff; }
+    .badge {
+      background: #1a2d27; color: #1bfff6; border: 1px solid #48ffe4;
+      display: inline-block; border-radius: 6px; font-size:0.98vw; padding:0.2em 0.7em; margin:0.12em 0.15em 0.12em 0;
+      letter-spacing: 0.03em;
+      box-shadow: 0 0 6px #32d3c9aa;
+      font-weight: bold;
+      vertical-align: baseline;
+    }
     .terminal-input-row {
       display: flex; align-items: center;
       font-family: inherit; font-size: 1.15vw; color: #d0fff7;
@@ -96,12 +107,10 @@
     }
     @keyframes blinkCursor {
       0%, 60% { opacity: 1; }
-      61%, 100% { opacity: 0.05; }
+      61%, 100% { opacity: 0.07; }
     }
-    /* Scrollbar styling */
     .boot-log::-webkit-scrollbar { background: #222; width: 8px; border-radius: 3px;}
     .boot-log::-webkit-scrollbar-thumb { background: #34ffdd55; border-radius: 4px; }
-    /* Age gate */
     #ageGate {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -152,12 +161,13 @@
       .age-prompt { font-size: 4vw; }
       .age-btn { font-size: 2.5vw; }
       .terminal-input, .terminal-input-row { font-size: 2vw;}
+      .badge { font-size: 1.6vw;}
     }
   </style>
 </head>
 <body>
   <div id="terminal-bg">
-    <pre class="ascii-eye" id="asciiEye"></pre>
+    <pre class="ascii-eye" id="asciiEye" tabindex="0"></pre>
     <div class="boot-log" id="bootLog"></div>
     <div class="terminal-input-row" id="terminalInputRow" style="display:none;">
       <span class="prompt-arrow">&gt;</span>
@@ -178,7 +188,13 @@
     </div>
   </div>
   <script>
-    // ============= GIANT ASCII EYE (as before) ==============
+    // ============= STORAGE & "ONE VISIT PER DAY" ==============
+    const todayKey = new Date().toISOString().slice(0,10);
+    const bootCookie = 'pf_boot_' + todayKey;
+    const accessCookie = 'pf_access_' + todayKey;
+    function setVisitCookie(k,v) { try { localStorage.setItem(k,v); } catch(e){} }
+    function getVisitCookie(k) { try { return localStorage.getItem(k); } catch(e){ return null;} }
+    // ============= GIANT ASCII EYE (eye tracking improved) ==============
     const eyeMaster = [
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
@@ -242,7 +258,7 @@
       if (e.touches && e.touches.length) {
         x = e.touches[0].clientX / window.innerWidth;
         y = e.touches[0].clientY / window.innerHeight;
-      } else {
+      } else if (typeof e.clientX === "number") {
         x = e.clientX / window.innerWidth;
         y = e.clientY / window.innerHeight;
       }
@@ -252,6 +268,13 @@
     }
     window.addEventListener('mousemove', updateFromEvent);
     window.addEventListener('touchmove', updateFromEvent);
+    // Tip: prompt user if eye isn't moving after 2 sec
+    setTimeout(function(){
+      if(animX === 0 && animY === 0){
+        let eye = document.getElementById('asciiEye');
+        eye.textContent += "\n\n(Click or move mouse/touch to wake up the watcher...)";
+      }
+    }, 2100);
     function idleScan(now) {
       let t = now * 0.0003;
       let x = Math.sin(t) * 0.6, y = Math.cos(t*1.4) * 0.45;
@@ -275,7 +298,7 @@
       setTimeout(() => eye.classList.remove('flash'), 110+Math.random()*150);
     }, 5400 + Math.random()*1700);
 
-    // ============ TERMINAL BOOT + PROMPT INTERACTIVE ===============
+    // ============ BOOT + INTERACTIVE TERMINAL ===============
     const bootLines = [
       '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
       '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
@@ -283,26 +306,11 @@
       '<span class="log-trace">[MAP]</span>   Scanning active IPs – globe trace active',
       '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
       '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
-      // SEO IN PLAIN SIGHT (terminal meta)
       '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
       '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
     ];
     let bootIndex = 0, bootDone = false;
-    function typeBootLine() {
-      if (bootIndex < bootLines.length) {
-        document.getElementById('bootLog').innerHTML += bootLines[bootIndex++] + "<br>";
-        setTimeout(typeBootLine, 710 + Math.random()*120);
-      } else {
-        bootDone = true;
-        setTimeout(() => {
-          document.getElementById('terminalInputRow').style.display = '';
-          document.getElementById('terminalInput').focus();
-        }, 500);
-      }
-    }
-    setTimeout(typeBootLine, 1000);
-
-    // ========= TERMINAL FAKE INPUT & COMMANDS ===========
+    // ============= Terminal Command Handler ================
     const fakeHelp = `
 <span class="log-help">PromptForge OS v1.0 Help Menu</span>
 Available commands:
@@ -311,17 +319,20 @@ Available commands:
   <span class="log-help">trace</span>     Trace globe, fake IP scan
   <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
   <span class="log-help">contact</span>   Show support info
+  <span class="log-help">open</span>      Open secure access (try: <b>open sesame</b>)
+  <span class="log-help">unlock</span>    Unlock promptforge mainframe
+  <span class="log-help">enter</span>     Enter forbidden zone
   <span class="log-help">continue</span>  Proceed (age verification)
+  <span class="log-help">passcode</span>  Enter 8+ digit passcode for restricted access
   <span class="log-help">exit</span>      Disconnect (reload)
-  <span class="log-help">easteregg</span> Forbidden Easter Egg
+  <span class="log-help">easteregg</span> Hidden Easter Egg
 `;
-
     const fakeAbout = `
 PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking. 
-All actions monitored. Use <span class="log-help">continue</span> to proceed.<br>
+All actions monitored. Use <span class="log-help">continue</span>, <span class="log-help">open</span>, or <span class="log-help">passcode</span> to access.<br>
+<span class="badge">Achievement: Meta Detected</span>
 <span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
 `;
-
     const fakeTrace = `
 [TRACE]  Tracing route to user... 
   10.27.14.2 —> 47.23.181.7 [OK]
@@ -329,34 +340,66 @@ All actions monitored. Use <span class="log-help">continue</span> to proceed.<br
   104.223.13.58 —> 127.0.0.1 [LOOP]
 <span class="log-info">[GLOBE]</span> <span style="font-family:monospace;color:#33b0ff;">🌐 · · · · · · ⬤ · · · · · ·</span> 
 <span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
+<span class="badge">Badge: Hacker Scanned</span>
 `;
-
     const fakeJ1NX = `
 <span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
+<span class="badge">Badge: J1NX Contacted</span>
 `;
-
     const fakeContact = `
 <span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
 Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
+<span class="badge">Supporter</span>
 `;
-
+    // === Easter Egg: Passcode input for forbidden access ===
+    function promptPasscode() {
+      let code = prompt("Restricted Area - Enter 8+ digit passcode:");
+      if (code && code.trim().length >= 8) {
+        grantAccess();
+        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Passcode accepted. Welcome, Operator.<span class="badge">Forbidden Egg Cracked</span>');
+      } else if (code) {
+        printToTerminal('<span class="log-error">[DENIED]</span> Passcode too short. Try again.');
+      }
+    }
     const fakeEasterEgg = `
-<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked. <br> 
-<span style="color:#ff5b61">You found the EASTER EGG. The eye is always watching.<br>Glory to Gore and Giggles.</span>
+<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
+<span style="color:#ff5b61">Enter 8+ character passcode now for instant access.</span>
+<script>setTimeout(promptPasscode,200);</script>
+<span class="badge">Easter Egg Hunter</span>
 `;
-
+    // === Terminal Logic ===
     const bootLogDiv = document.getElementById('bootLog');
     const inputRow = document.getElementById('terminalInputRow');
     const inputBox = document.getElementById('terminalInput');
     let promptActive = false;
-
     function printToTerminal(txt) {
       bootLogDiv.innerHTML += txt + '<br>';
       bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
     }
+    function unlockByCommand() {
+      inputRow.style.display = "none";
+      grantAccess();
+    }
+    function grantAccess() {
+      setVisitCookie(accessCookie, "1");
+      document.getElementById('ageGate').classList.add('active');
+      setTimeout(()=>{document.getElementById('yesBtn').focus()},600);
+    }
     function handleTerminalCommand(cmdRaw) {
       const cmd = cmdRaw.trim().toLowerCase();
       if (!cmd) return;
+      // Any access words or plausible passcodes
+      if (
+        cmd === "open" || cmd.startsWith("open ") ||
+        cmd === "unlock" || cmd.startsWith("unlock ") ||
+        cmd === "enter" || cmd === "continue" ||
+        cmd === "passcode" ||
+        (cmd.length >= 8 && /^\d+$/.test(cmd)) // numeric 8+ char passcode
+      ) {
+        unlockByCommand();
+        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator.<span class="badge">Terminal Unlocked</span>');
+        return;
+      }
       switch (cmd) {
         case "help":
           printToTerminal(fakeHelp);
@@ -373,21 +416,23 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
         case "contact":
           printToTerminal(fakeContact);
           break;
-        case "continue":
-        case "enter":
-          inputRow.style.display = "none";
-          setTimeout(showAgeGate, 500);
+        case "easteregg":
+          printToTerminal(fakeEasterEgg);
+          setTimeout(promptPasscode, 300);
           break;
         case "exit":
         case "disconnect":
           printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
           inputRow.style.display = "none";
           break;
-        case "easteregg":
-          printToTerminal(fakeEasterEgg);
-          break;
         default:
-          printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          // Accept any 8+ letter/digit passcodes as hidden door
+          if (cmd.length >= 8) {
+            unlockByCommand();
+            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
+          } else {
+            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          }
           break;
       }
     }
@@ -397,38 +442,67 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
         inputBox.value = "";
       }
     });
-    // Mobile tap to focus
     inputRow.addEventListener('click',()=>inputBox.focus());
-    // Autofocus terminal input after boot
-    setTimeout(()=>{
-      if(bootDone)inputBox.focus();
-    },3000);
-
-    // ========= AGE GATE ===========
-    function showAgeGate() {
-      document.getElementById('ageGate').classList.add('active');
-      setTimeout(()=>{document.getElementById('yesBtn').focus()},600);
-    }
-    document.getElementById('yesBtn').onclick = function() {
-      document.getElementById('ageGate').innerHTML = '<div class="age-prompt">Access Granted.<br>Loading PromptForge...</div>';
-      setTimeout(function() {
-        window.location = "main.html";
-      }, 1200);
-    };
-    document.getElementById('noBtn').onclick = function() {
-      document.getElementById('ageGate').innerHTML = '<div class="age-prompt" style="color:#fa8;">Good call.<br>Stay safe.</div>';
-      setTimeout(function() {
-        window.location = "https://www.google.com";
-      }, 1500);
-    };
-    // Focus trap on age gate
-    document.getElementById('ageGate').addEventListener('keydown',function(e){
-      if(e.key==="Enter"||e.key===" "){
-        document.getElementById('yesBtn').click();
+    // ========== Boot/Replay Control ==============
+    function skipBootIfVisited() {
+      if(getVisitCookie(bootCookie)==="1") {
+        bootDone = true;
+        document.getElementById('bootLog').innerHTML = '<span class="log-ok">[OK]</span>  Welcome back, Operator.<br>Type <span class="log-help">help</span> for commands.<br>';
+        document.getElementById('terminalInputRow').style.display = '';
+        document.getElementById('terminalInput').focus();
+        // If access granted today, skip gate too:
+        if(getVisitCookie(accessCookie)==="1") {
+          setTimeout(()=>{window.location="main.html"},900);
+        }
+        return true;
       }
-    });
+      return false;
+    }
+    // Only play boot if first visit this day
+    if(!skipBootIfVisited()){
+      setTimeout(typeBootLine, 1000);
+      setVisitCookie(bootCookie, "1");
+    }
+    function typeBootLine() {
+      if
+    function typeBootLine() {
+      if (bootIndex < bootLines.length) {
+        bootLogDiv.innerHTML += bootLines[bootIndex] + '<br>';
+        bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
+        bootIndex++;
+        setTimeout(typeBootLine, 700 + Math.random()*320);
+      } else {
+        bootDone = true;
+        inputRow.style.display = '';
+        inputBox.focus();
+      }
+    }
 
-    // ========== END ===============
+    // ========== Age Gate Logic ==========
+    // YES - age verified, move to main.html or next step
+    document.getElementById('yesBtn').onclick = function() {
+      setVisitCookie(accessCookie,"1");
+      // Replace with your actual main page!
+      window.location = "main.html";
+    };
+    // NO - redirect to Google
+    document.getElementById('noBtn').onclick = function() {
+      setVisitCookie(accessCookie,"0");
+      window.location = "https://www.google.com";
+    };
+
+    // ========== SEO: Show content for crawlers ==========
+    // If you want to add extra static keywords/content for Google without showing it to users:
+    const crawlerSEO = document.createElement('div');
+    crawlerSEO.style.position = "absolute";
+    crawlerSEO.style.left = "-9999px";
+    crawlerSEO.innerHTML = `
+      PromptForge NSFW prompt generator, SFW prompt generator, AI prompt builder, hacking terminal, forbidden prompt tool, cyberpunk interface, creative prompt builder, JuggernautXL, RealVis, Gore and Giggles.
+      For support email 0fearnofish0@gmail.com.
+      Unlock the best NSFW prompt generator: enter, open, continue, unlock, passcode, forbidden zone.
+      Access for 18+ users only.
+    `;
+    document.body.appendChild(crawlerSEO);
   </script>
 </body>
 </html>
