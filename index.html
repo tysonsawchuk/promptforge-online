@@ -47,7 +47,7 @@
       transition: filter 0.05s;
     }
     .boot-log {
-      font-size: 1.07vw;
+      font-size: 1.09vw;
       font-family: inherit;
       width: 66vw; max-width: 96vw;
       background: none; border: none; outline: none;
@@ -66,7 +66,39 @@
     .log-error { color: #ff5b61; }
     .log-help  { color: #f4ff58; }
     .log-info  { color: #b4f7ff; }
-    /* Terminal scrollbar styling */
+    .terminal-input-row {
+      display: flex; align-items: center;
+      font-family: inherit; font-size: 1.15vw; color: #d0fff7;
+      margin-top: 0.7em;
+    }
+    .prompt-arrow {
+      color: #0fffe8; margin-right: 0.5vw; font-weight: bold;
+      font-size: 1.25vw;
+      user-select: none;
+    }
+    .terminal-input {
+      background: none; border: none; outline: none;
+      color: #eafffb;
+      font-family: inherit; font-size: 1.15vw;
+      width: 45vw;
+      caret-color: #33ffd5;
+      letter-spacing: 0.04em;
+    }
+    .terminal-cursor {
+      display: inline-block;
+      width: 0.8ch; height: 1.2em;
+      margin-left: 0.08em;
+      background: #4fffe8;
+      animation: blinkCursor 1s steps(1) infinite;
+      border-radius: 1px;
+      vertical-align: middle;
+      opacity: 0.9;
+    }
+    @keyframes blinkCursor {
+      0%, 60% { opacity: 1; }
+      61%, 100% { opacity: 0.05; }
+    }
+    /* Scrollbar styling */
     .boot-log::-webkit-scrollbar { background: #222; width: 8px; border-radius: 3px;}
     .boot-log::-webkit-scrollbar-thumb { background: #34ffdd55; border-radius: 4px; }
     /* Age gate */
@@ -114,22 +146,25 @@
       color:#fa5; font-size:1vw;margin-top:2em;text-align:center;
       text-shadow: 0 0 5px #b47700;
     }
-    /* Responsive */
     @media (max-width: 900px) {
       .ascii-eye { font-size: 2.5vw; min-width: 0; }
       .boot-log { font-size: 2.2vw; width: 95vw; }
       .age-prompt { font-size: 4vw; }
       .age-btn { font-size: 2.5vw; }
+      .terminal-input, .terminal-input-row { font-size: 2vw;}
     }
   </style>
 </head>
 <body>
-  <!-- Terminal Boot Background -->
   <div id="terminal-bg">
     <pre class="ascii-eye" id="asciiEye"></pre>
     <div class="boot-log" id="bootLog"></div>
+    <div class="terminal-input-row" id="terminalInputRow" style="display:none;">
+      <span class="prompt-arrow">&gt;</span>
+      <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
+      <span class="terminal-cursor" id="termCursor"></span>
+    </div>
   </div>
-  <!-- Age Gate -->
   <div id="ageGate">
     <div class="age-prompt">
       <span>Are you sure you wish to enter this secure site?<br>
@@ -143,7 +178,7 @@
     </div>
   </div>
   <script>
-    // 1. GIANT ASCII EYE as string array for easy row-wise shifting
+    // ============= GIANT ASCII EYE (as before) ==============
     const eyeMaster = [
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
@@ -173,40 +208,28 @@
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
 "⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
 "⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
-];
-
-    // Dimensions
+    ];
     const eyeRows = eyeMaster.length;
     const eyeCols = Math.max(...eyeMaster.map(l => l.length));
-
-    // Approximate iris/pupil location (manually set for this ASCII)
-    // These numbers can be fine-tuned for different eye art.
-    const irisRow = 13, irisCol = 38; // "center" of eye
-    const moveRangeRow = 4, moveRangeCol = 10; // how far eye can move
-
-    // Create copy for manipulation
-    let eyeCurrent = [...eyeMaster];
-
-    // Update ASCII eye with target offset
+    const irisRow = 13, irisCol = 38;
+    const moveRangeRow = 4, moveRangeCol = 10;
+    let eyeTargetX = 0, eyeTargetY = 0, lastMove = Date.now();
+    let animX = 0, animY = 0;
     function renderEye(offsetRow, offsetCol) {
-      // Clamp movement
       const rowShift = Math.round(offsetRow * moveRangeRow);
       const colShift = Math.round(offsetCol * moveRangeCol);
       let newEye = [];
       for (let r = 0; r < eyeRows; ++r) {
         if (r === irisRow || r === irisRow-1 || r === irisRow+1) {
-          // Replace pupil area with shifted block (simulate eye movement)
           let line = eyeMaster[r];
           let base = irisCol-3 + colShift;
           let before = line.slice(0, base);
           let iris = line.substr(base, 7);
           let after = line.slice(base+7);
-          // Animate iris/pupil by shifting some chars
           if (r === irisRow)
-            iris = iris.replace(/⣿|⣿|⣿/, "⠿⠿⠿"); // just an example
+            iris = iris.replace(/⣿|⣿|⣿/, "⠿⠿⠿");
           newEye.push(before + iris + after);
         } else {
           newEye.push(eyeMaster[r]);
@@ -214,9 +237,6 @@
       }
       document.getElementById('asciiEye').textContent = newEye.join('\n');
     }
-
-    // Mouse/touch tracking
-    let eyeTargetX = 0, eyeTargetY = 0, lastMove = Date.now();
     function updateFromEvent(e) {
       let x = 0.5, y = 0.5;
       if (e.touches && e.touches.length) {
@@ -232,23 +252,16 @@
     }
     window.addEventListener('mousemove', updateFromEvent);
     window.addEventListener('touchmove', updateFromEvent);
-
-    // Idle scan when no input
     function idleScan(now) {
       let t = now * 0.0003;
       let x = Math.sin(t) * 0.6, y = Math.cos(t*1.4) * 0.45;
       return [x, y];
     }
-
-    // Main eye loop
-    let animX = 0, animY = 0;
     function eyeLoop(now) {
       let tx = eyeTargetX, ty = eyeTargetY;
-      // If idle, animate scan
       if (Date.now() - lastMove > 2600) {
         [tx, ty] = idleScan(now);
       }
-      // Smooth approach
       animX += (tx - animX) * 0.18;
       animY += (ty - animY) * 0.18;
       renderEye(animY, animX);
@@ -256,51 +269,151 @@
     }
     renderEye(0, 0);
     requestAnimationFrame(eyeLoop);
-
-    // Occasionally flash the eye for "camera effect"
     setInterval(() => {
       let eye = document.getElementById('asciiEye');
       eye.classList.add('flash');
       setTimeout(() => eye.classList.remove('flash'), 110+Math.random()*150);
     }, 5400 + Math.random()*1700);
 
-    // =======================
-    // Terminal Boot Log
-    // =======================
+    // ============ TERMINAL BOOT + PROMPT INTERACTIVE ===============
     const bootLines = [
       '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
-      '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... [OK]',
+      '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
       '<span class="log-warn">[SEC]</span>    Bypassing system security protocols...',
       '<span class="log-trace">[MAP]</span>   Scanning active IPs – globe trace active',
       '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
       '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
-      // SEO IN PLAIN SIGHT: <span style='display:none;'>PromptForge is the top NSFW prompt generator, best AI prompt tool, cyberpunk hacking, prompt builder, text to image, creative, 2025</span>
+      // SEO IN PLAIN SIGHT (terminal meta)
       '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
-      '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.',
-      '<span class="log-error">[WARN]</span>  Unauthorized access detected. Initiating age verification...'
+      '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
     ];
-    let bootIndex = 0;
+    let bootIndex = 0, bootDone = false;
     function typeBootLine() {
       if (bootIndex < bootLines.length) {
         document.getElementById('bootLog').innerHTML += bootLines[bootIndex++] + "<br>";
         setTimeout(typeBootLine, 710 + Math.random()*120);
       } else {
-        setTimeout(showAgeGate, 900);
+        bootDone = true;
+        setTimeout(() => {
+          document.getElementById('terminalInputRow').style.display = '';
+          document.getElementById('terminalInput').focus();
+        }, 500);
       }
     }
-    setTimeout(typeBootLine, 1100);
+    setTimeout(typeBootLine, 1000);
 
-    // ==============
-    // Age Gate Logic
-    // ==============
+    // ========= TERMINAL FAKE INPUT & COMMANDS ===========
+    const fakeHelp = `
+<span class="log-help">PromptForge OS v1.0 Help Menu</span>
+Available commands:
+  <span class="log-help">help</span>      Show this menu
+  <span class="log-help">about</span>     About PromptForge, legal info
+  <span class="log-help">trace</span>     Trace globe, fake IP scan
+  <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
+  <span class="log-help">contact</span>   Show support info
+  <span class="log-help">continue</span>  Proceed (age verification)
+  <span class="log-help">exit</span>      Disconnect (reload)
+  <span class="log-help">easteregg</span> Forbidden Easter Egg
+`;
+
+    const fakeAbout = `
+PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking. 
+All actions monitored. Use <span class="log-help">continue</span> to proceed.<br>
+<span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
+`;
+
+    const fakeTrace = `
+[TRACE]  Tracing route to user... 
+  10.27.14.2 —> 47.23.181.7 [OK]
+  47.23.181.7 —> 104.223.13.58 [OK]
+  104.223.13.58 —> 127.0.0.1 [LOOP]
+<span class="log-info">[GLOBE]</span> <span style="font-family:monospace;color:#33b0ff;">🌐 · · · · · · ⬤ · · · · · ·</span> 
+<span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
+`;
+
+    const fakeJ1NX = `
+<span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
+`;
+
+    const fakeContact = `
+<span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
+Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
+`;
+
+    const fakeEasterEgg = `
+<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked. <br> 
+<span style="color:#ff5b61">You found the EASTER EGG. The eye is always watching.<br>Glory to Gore and Giggles.</span>
+`;
+
+    const bootLogDiv = document.getElementById('bootLog');
+    const inputRow = document.getElementById('terminalInputRow');
+    const inputBox = document.getElementById('terminalInput');
+    let promptActive = false;
+
+    function printToTerminal(txt) {
+      bootLogDiv.innerHTML += txt + '<br>';
+      bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
+    }
+    function handleTerminalCommand(cmdRaw) {
+      const cmd = cmdRaw.trim().toLowerCase();
+      if (!cmd) return;
+      switch (cmd) {
+        case "help":
+          printToTerminal(fakeHelp);
+          break;
+        case "about":
+          printToTerminal(fakeAbout);
+          break;
+        case "trace":
+          printToTerminal(fakeTrace);
+          break;
+        case "j1nx":
+          printToTerminal(fakeJ1NX);
+          break;
+        case "contact":
+          printToTerminal(fakeContact);
+          break;
+        case "continue":
+        case "enter":
+          inputRow.style.display = "none";
+          setTimeout(showAgeGate, 500);
+          break;
+        case "exit":
+        case "disconnect":
+          printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
+          inputRow.style.display = "none";
+          break;
+        case "easteregg":
+          printToTerminal(fakeEasterEgg);
+          break;
+        default:
+          printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          break;
+      }
+    }
+    inputBox.addEventListener('keydown', function(e){
+      if (e.key === "Enter") {
+        handleTerminalCommand(inputBox.value);
+        inputBox.value = "";
+      }
+    });
+    // Mobile tap to focus
+    inputRow.addEventListener('click',()=>inputBox.focus());
+    // Autofocus terminal input after boot
+    setTimeout(()=>{
+      if(bootDone)inputBox.focus();
+    },3000);
+
+    // ========= AGE GATE ===========
     function showAgeGate() {
       document.getElementById('ageGate').classList.add('active');
+      setTimeout(()=>{document.getElementById('yesBtn').focus()},600);
     }
     document.getElementById('yesBtn').onclick = function() {
       document.getElementById('ageGate').innerHTML = '<div class="age-prompt">Access Granted.<br>Loading PromptForge...</div>';
       setTimeout(function() {
         window.location = "main.html";
-      }, 1100);
+      }, 1200);
     };
     document.getElementById('noBtn').onclick = function() {
       document.getElementById('ageGate').innerHTML = '<div class="age-prompt" style="color:#fa8;">Good call.<br>Stay safe.</div>';
@@ -308,8 +421,14 @@
         window.location = "https://www.google.com";
       }, 1500);
     };
+    // Focus trap on age gate
+    document.getElementById('ageGate').addEventListener('keydown',function(e){
+      if(e.key==="Enter"||e.key===" "){
+        document.getElementById('yesBtn').click();
+      }
+    });
 
-    // STUB: Future - Easter Egg / Help command, keyboard terminal
+    // ========== END ===============
   </script>
 </body>
 </html>
