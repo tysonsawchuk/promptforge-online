@@ -31,7 +31,7 @@
     }
     .ascii-eye {
       font-size: 1.1vw;
-      line-height: 1.09;
+      line-height: 1.1;
       color: #03ffd5;
       letter-spacing: 0.025em;
       text-shadow: 0 0 15px #0e7777, 0 0 2px #24ffe0, 0 0 2px #30ffee;
@@ -45,9 +45,10 @@
       border-radius: 1vw;
       pointer-events: none;
       outline: none;
+      background: none;
     }
     .ascii-eye.flash {
-      filter: brightness(2.4) contrast(1.8);
+      filter: brightness(2.3) contrast(1.6);
       text-shadow: 0 0 25px #44fff0, 0 0 4px #eafffb;
       transition: filter 0.05s;
     }
@@ -134,67 +135,74 @@
     </div>
   </div>
   <script>
-    // ============= BOOT "ONCE PER DAY" LOGIC ==============
+    // --- VISIT TRACKING: show boot once per day ---
     const todayKey = new Date().toISOString().slice(0,10);
-    function setBootCookie() { try { localStorage.setItem("pf_boot_" + todayKey, "1"); } catch(e){} }
-    function seenBootToday() { try { return localStorage.getItem("pf_boot_" + todayKey) === "1"; } catch(e){ return false; } }
+    const bootCookie = 'pf_boot_' + todayKey;
+    function setVisitCookie(k,v) { try { localStorage.setItem(k,v); } catch(e){} }
+    function getVisitCookie(k) { try { return localStorage.getItem(k); } catch(e){ return null;} }
 
-    // ============ ASCII EYE - "PUPIL" LOGIC ============
+    // --- GIANT ASCII EYE, pupil movement, real feel ---
     const eyeArt = [
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣶⡿⣿⣿⠋⣴⡾⠟⢟⣾⠿⠷⢶⣦⣿⣅⡀⣰⣾⣮⣽⡿⠟⠛⠿⠿⠛⠋⠙⠛⠛⠋⠉⠉⠉⠙⠻⣿⡄⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⡿⢫⣿⣋⣾⠟⢛⣿⢿⣦⣤⣿⣃⡀⢀⣼⣿⣬⣿⠟⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⣾⠏⣴⢏⣴⠟⢉⣿⠻⢷⣾⣏⡀⣠⣾⣉⣉⣿⠿⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠏⡼⣣⣾⢿⣾⠟⠳⣾⣯⣄⣼⠏⢉⣿⠟⠛⛛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⣼⣿⠟⢡⣾⢃⣠⡾⠃⣠⣿⠏⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⣰⡟⠁⣰⣿⡷⠟⢋⣤⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣼⠏⠀⢈⣉⣤⣶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠖⠚⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣶⡶⣶⠶⡶⠶⢶⢶⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⠾⡟⠋⡏⢈⡇⣸⢠⣏⣠⣇⣴⠏⢀⡠⠆⢀⠈⠉⡛⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡶⢟⠉⣇⢀⣷⣼⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⣖⣫⣤⠞⠁⢀⡄⠀⠉⠓⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⢋⠙⡆⣸⣶⣿⣿⣿⠟⠋⣿⠉⢉⠻⣇⠉⠉⠙⢿⣿⣿⣿⣿⣶⣾⣋⣁⣀⣠⠖⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢸⣶⣿⡿⠛⠁⣼⠃⠀⠀⣿⢿⣿⣟⣻⣦⡀⠀⠀⢻⡄⠉⠛⢿⣿⣿⣿⣦⠤⠤⠖⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢀⣴⡿⠟⠁⠀⠀⢸⡏⠀⠀⢡⣿⡿⣿⣿⢻⡏⡙⠷⣦⠈⣷⠀⠀⠀⠉⠻⣿⣿⣿⣿⣒⣚⣉⡡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⢀⣠⡿⠋⠀⠀⠀⠀⠀⠸⣷⠀⣰⡟⢬⣻⣮⣛⣾⢻⠁⠀⢘⣿⡏⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣖⣒⣒⣚⣁⡤⠄⣀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣯⣀⣀⡀⠀⠀⠀⠀⠀⠹⣶⣿⠁⠀⣈⣴⠟⠙⠻⠿⠛⢋⣿⠁⠀⠀⠀⢀⣀⣶⢟⠁⣍⡉⠛⠻⠿⠿⠶⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠉⠁⠀⠈⠉⠛⠛⠷⣦⣤⣄⣀⣙⢿⣟⡛⠋⠁⠀⠀⠀⣀⣴⠟⠁⢀⣠⣤⡶⠟⠉⠠⣵⡛⢮⡛⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡏⢭⡙⢛⡛⠿⡿⠶⠶⠾⢿⡿⠟⠛⢛⠉⠉⣀⠀⢦⠈⢷⡈⠳⣄⠱⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠾⠀⢸⠁⠘⡇⠀⢻⠀⠘⡆⠐⣶⠀⢷⠈⠻⡄⠙⣆⠈⢷⠀⢱⠀⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠃⠀⢸⡇⠀⡇⠀⢹⠀⢸⠀⠀⢱⠀⢸⡆⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠘⠀⠀⠇⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-      "⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
-      "⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣶⡿⣿⣿⠋⣴⡾⠟⢟⣾⠿⠷⢶⣦⣿⣅⡀⣰⣾⣮⣽⡿⠟⠛⠿⠿⠛⠋⠙⠛⠛⠋⠉⠉⠉⠙⠻⣿⡄⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⡿⢫⣿⣋⣾⠟⢛⣿⢿⣦⣤⣿⣃⡀⢀⣼⣿⣬⣿⠟⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⣾⠏⣴⢏⣴⠟⢉⣿⠻⢷⣾⣏⡀⣠⣾⣉⣉⣿⠿⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠏⡼⣣⣾⢿⣾⠟⠳⣾⣯⣄⣼⠏⢉⣿⠟⠛⛛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⣼⣿⠟⢡⣾⢃⣠⡾⠃⣠⣿⠏⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⣰⡟⠁⣰⣿⡷⠟⢋⣤⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣼⠏⠀⢈⣉⣤⣶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠖⠚⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣶⡶⣶⠶⡶⠶⢶⢶⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⠾⡟⠋⡏⢈⡇⣸⢠⣏⣠⣇⣴⠏⢀⡠⠆⢀⠈⠉⡛⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡶⢟⠉⣇⢀⣷⣼⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⣖⣫⣤⠞⠁⢀⡄⠀⠉⠓⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⢋⠙⡆⣸⣶⣿⣿⣿⠟⠋⣿⠉⢉⠻⣇⠉⠉⠙⢿⣿⣿⣿⣿⣶⣾⣋⣁⣀⣠⠖⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢸⣶⣿⡿⠛⠁⣼⠃⠀⠀⣿⢿⣿⣟⣻⣦⡀⠀⠀⢻⡄⠉⠛⢿⣿⣿⣿⣦⠤⠤⠖⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢀⣴⡿⠟⠁⠀⠀⢸⡏⠀⠀⢡⣿⡿⣿⣿⢻⡏⡙⠷⣦⠈⣷⠀⠀⠀⠉⠻⣿⣿⣿⣿⣒⣚⣉⡡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⢀⣠⡿⠋⠀⠀⠀⠀⠀⠸⣷⠀⣰⡟⢬⣻⣮⣛⣾⢻⠁⠀⢘⣿⡏⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣖⣒⣒⣚⣁⡤⠄⣀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣯⣀⣀⡀⠀⠀⠀⠀⠀⠹⣶⣿⠁⠀⣈⣴⠟⠙⠻⠿⠛⢋⣿⠁⠀⠀⠀⢀⣀⣶⢟⠁⣍⡉⠛⠻⠿⠿⠶⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠉⠁⠀⠈⠉⠛⠛⠷⣦⣤⣄⣀⣙⢿⣟⡛⠋⠁⠀⠀⠀⣀⣴⠟⠁⢀⣠⣤⡶⠟⠉⠠⣵⡛⢮⡛⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡏⢭⡙⢛⡛⠿⡿⠶⠶⠾⢿⡿⠟⠛⢛⠉⠉⣀⠀⢦⠈⢷⡈⠳⣄⠱⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠾⠀⢸⠁⠘⡇⠀⢻⠀⠘⡆⠐⣶⠀⢷⠈⠻⡄⠙⣆⠈⢷⠀⢱⠀⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠃⠀⢸⡇⠀⡇⠀⢹⠀⢸⠀⠀⢱⠀⢸⡆⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠘⠀⠀⠇⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
+"⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
+"⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
     ];
-    // Center of the eye for the "pupil"
-    const pupilRow = 19, pupilCol = 35;
-    let animX = 0, animY = 0, lastMove = Date.now();
-    let pupilTargetX = 0, pupilTargetY = 0;
-    function renderEye(x, y) {
-      const maxRowMove = 3, maxColMove = 10;
-      const rowShift = Math.round(y * maxRowMove);
-      const colShift = Math.round(x * maxColMove);
-      let newEye = [];
-      for (let r = 0; r < eyeArt.length; ++r) {
-        let line = eyeArt[r];
-        if (r === pupilRow + rowShift) {
-          let before = line.slice(0, pupilCol + colShift);
-          let after = line.slice(pupilCol + colShift + 1);
-          newEye.push(before + "▲" + after);
-        } else {
-          newEye.push(line);
+
+    // Eye tracking constants (center of "iris" visually)
+    const pupilBaseRow = 13;
+    const pupilBaseCol = 42; // Adjust as needed for visual center
+    const pupilChar = "◉";   // looks cyber, shows "pupil"
+    const moveMaxRow = 2; // vertical motion (in lines)
+    const moveMaxCol = 8; // horizontal (in chars)
+
+    let pupilOffsetRow = 0, pupilOffsetCol = 0, lastMove = Date.now();
+
+    // Helper: insert the "pupil" at the right spot in the ASCII art
+    function renderEye(offsetRow, offsetCol) {
+      // Deep copy to not mutate base
+      let out = eyeArt.map(l => l.split(""));
+      let row = Math.min(eyeArt.length-1, Math.max(0, Math.round(pupilBaseRow + offsetRow)));
+      let col = Math.min(eyeArt[0].length-2, Math.max(0, Math.round(pupilBaseCol + offsetCol)));
+      // Remove old ◉ if present
+      for (let r = 0; r < out.length; r++) {
+        for (let c = 0; c < out[r].length; c++) {
+          if (out[r][c] === pupilChar) out[r][c] = "⣿";
         }
       }
-      document.getElementById('asciiEye').textContent = newEye.join('\n');
+      out[row][col] = pupilChar;
+      document.getElementById('asciiEye').textContent = out.map(a=>a.join("")).join("\n");
     }
-    function updateEyeTarget(e) {
-      let x = 0, y = 0;
+
+    // Mouse/touch move: update pupil offset
+    function updateEyeFromEvent(e) {
+      let x = 0.5, y = 0.5;
       if (e.touches && e.touches.length) {
         x = e.touches[0].clientX / window.innerWidth;
         y = e.touches[0].clientY / window.innerHeight;
@@ -202,32 +210,38 @@
         x = e.clientX / window.innerWidth;
         y = e.clientY / window.innerHeight;
       }
-      pupilTargetX = x * 2 - 1;
-      pupilTargetY = y * 2 - 1;
+      // Eye tracks mouse with deadzone and slight delay
+      pupilOffsetCol = (x - 0.5) * 2 * moveMaxCol;
+      pupilOffsetRow = (y - 0.5) * 2 * moveMaxRow;
       lastMove = Date.now();
     }
-    window.addEventListener('mousemove', updateEyeTarget);
-    window.addEventListener('touchmove', updateEyeTarget);
-    function idleEye(now) {
-      let t = now * 0.00018;
-      return [Math.sin(t) * 0.85, Math.cos(t * 1.2) * 0.85];
-    }
+    window.addEventListener('mousemove', updateEyeFromEvent);
+    window.addEventListener('touchmove', updateEyeFromEvent);
+
+    // Idle: wander a little, but always recenters
+    let animCol = 0, animRow = 0;
     function eyeLoop(now) {
-      let tx = pupilTargetX, ty = pupilTargetY;
-      if (Date.now() - lastMove > 1900) [tx, ty] = idleEye(now);
-      animX += (tx - animX) * 0.16;
-      animY += (ty - animY) * 0.16;
-      renderEye(animX, animY);
+      let targetCol = pupilOffsetCol, targetRow = pupilOffsetRow;
+      if (Date.now() - lastMove > 1800) {
+        // idle "breathing"
+        let t = now * 0.00022;
+        targetCol = Math.sin(t*1.1) * moveMaxCol * 0.5;
+        targetRow = Math.cos(t*0.8) * moveMaxRow * 0.7;
+      }
+      animCol += (targetCol - animCol) * 0.19;
+      animRow += (targetRow - animRow) * 0.18;
+      renderEye(animRow, animCol);
       requestAnimationFrame(eyeLoop);
     }
-    renderEye(0, 0); requestAnimationFrame(eyeLoop);
+    renderEye(0, 0);
+    requestAnimationFrame(eyeLoop);
     setInterval(() => {
       let eye = document.getElementById('asciiEye');
       eye.classList.add('flash');
-      setTimeout(() => eye.classList.remove('flash'), 100+Math.random()*100);
-    }, 4200 + Math.random()*1400);
+      setTimeout(() => eye.classList.remove('flash'), 100+Math.random()*180);
+    }, 5400 + Math.random()*1600);
 
-    // ============ BOOT + TERMINAL ===============
+    // --- BOOT + TERMINAL (once/day logic) ---
     const bootLines = [
       '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
       '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
@@ -247,38 +261,31 @@
       bootLogDiv.innerHTML += txt + '<br>';
       bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
     }
-    function unlockToMain() { window.location = "main.html"; }
-    function handleTerminalCommand(cmdRaw) {
-      const cmd = cmdRaw.trim().toLowerCase();
-      if (!cmd) return;
-      // Allow main triggers
-      if (
-        cmd === "open" || cmd.startsWith("open ") ||
-        cmd === "unlock" || cmd.startsWith("unlock ") ||
-        cmd === "continue" ||
-        (cmd.length >= 8 && /^\d+$/.test(cmd))
-      ) {
-        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Redirecting...');
-        setTimeout(unlockToMain, 900);
-        return;
-      }
-      switch (cmd) {
-        case "help":
-          printToTerminal(`
+
+    // Fun terminal commands
+    const fakeHelp = `
 <span class="log-help">PromptForge OS v1.0 Help Menu</span>
 Available commands:
   <span class="log-help">help</span>      Show this menu
+  <span class="log-help">about</span>     About PromptForge, legal info
   <span class="log-help">trace</span>     Trace globe, fake IP scan
   <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
   <span class="log-help">contact</span>   Show support info
   <span class="log-help">open</span>      Open secure access (try: <b>open sesame</b>)
   <span class="log-help">unlock</span>    Unlock promptforge mainframe
-  <span class="log-help">continue</span>  Proceed to next phase
+  <span class="log-help">enter</span>     Enter forbidden zone
+  <span class="log-help">continue</span>  Proceed to PromptForge
+  <span class="log-help">passcode</span>  Enter 8+ digit passcode for restricted access
   <span class="log-help">exit</span>      Disconnect (reload)
-`);
-          break;
-        case "trace":
-          printToTerminal(`
+  <span class="log-help">easteregg</span> Hidden Easter Egg
+`;
+    const fakeAbout = `
+PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking. 
+All actions monitored. Use <span class="log-help">continue</span>, <span class="log-help">open</span>, or <span class="log-help">passcode</span> to access.<br>
+<span class="badge">Achievement: Meta Detected</span>
+<span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
+`;
+    const fakeTrace = `
 [TRACE]  Tracing route to user... 
   10.27.14.2 —> 47.23.181.7 [OK]
   47.23.181.7 —> 104.223.13.58 [OK]
@@ -286,15 +293,57 @@ Available commands:
 <span class="log-info">[GLOBE]</span> <span style="font-family:monospace;color:#33b0ff;">🌐 · · · · · · ⬤ · · · · · ·</span> 
 <span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
 <span class="badge">Badge: Hacker Scanned</span>
-`);
+`;
+    const fakeJ1NX = `
+<span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
+<span class="badge">Badge: J1NX Contacted</span>
+`;
+    const fakeContact = `
+<span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
+Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
+<span class="badge">Supporter</span>
+`;
+
+    // --- Terminal Logic
+    function unlockByCommand() {
+      inputRow.style.display = "none";
+      setVisitCookie(bootCookie, "1");
+      window.location = "main.html";
+    }
+    function handleTerminalCommand(cmdRaw) {
+      const cmd = cmdRaw.trim().toLowerCase();
+      if (!cmd) return;
+      // Any access words or plausible passcodes
+      if (
+        cmd === "open" || cmd.startsWith("open ") ||
+        cmd === "unlock" || cmd.startsWith("unlock ") ||
+        cmd === "enter" || cmd === "continue" ||
+        cmd === "passcode" ||
+        (cmd.length >= 8 && /^\d+$/.test(cmd)) // numeric 8+ char passcode
+      ) {
+        unlockByCommand();
+        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator.<span class="badge">Terminal Unlocked</span>');
+        return;
+      }
+      switch (cmd) {
+        case "help":
+          printToTerminal(fakeHelp);
+          break;
+        case "about":
+          printToTerminal(fakeAbout);
+          break;
+        case "trace":
+          printToTerminal(fakeTrace);
           break;
         case "j1nx":
-          printToTerminal(`<span class="log-help">J1NX:</span> "You called? Need a dirty prompt, or just lonely, Operator?"<span class="badge">Badge: J1NX Contacted</span>`);
+          printToTerminal(fakeJ1NX);
           break;
         case "contact":
-          printToTerminal(`<span class="log-info">Support:</span> <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
-Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
-<span class="badge">Supporter</span>`);
+          printToTerminal(fakeContact);
+          break;
+        case "easteregg":
+          printToTerminal(`<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
+            <span style="color:#ff5b61">Enter 8+ character passcode now for instant access.</span>`);
           break;
         case "exit":
         case "disconnect":
@@ -302,7 +351,12 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
           inputRow.style.display = "none";
           break;
         default:
-          printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          if (cmd.length >= 8) {
+            unlockByCommand();
+            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
+          } else {
+            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
+          }
           break;
       }
     }
@@ -314,18 +368,24 @@ Find more at: <a href="https://promptforge.online" target="_blank" style="color:
     });
     inputRow.addEventListener('click',()=>inputBox.focus());
 
-    // New: Only show the boot terminal ONCE per day, otherwise instantly send to main
-    if (seenBootToday()) {
-      window.location = "main.html";
-    } else {
-      setTimeout(typeBootLine, 1000);
-      setBootCookie();
+    // --- Boot Sequence & Once/Day logic
+    function skipBootIfVisited() {
+      if(getVisitCookie(bootCookie)==="1") {
+        window.location = "main.html";
+        return true;
+      }
+      return false;
+    }
+    // Only play boot if first visit today
+    if(!skipBootIfVisited()){
+      setTimeout(typeBootLine, 900);
+      setVisitCookie(bootCookie, "1");
     }
     function typeBootLine() {
       if (bootIndex < bootLines.length) {
         printToTerminal(bootLines[bootIndex]);
         bootIndex++;
-        setTimeout(typeBootLine, 1100);
+        setTimeout(typeBootLine, 950);
       } else {
         bootDone = true;
         document.getElementById('terminalInputRow').style.display = '';
