@@ -2,233 +2,353 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Main — AI Prompt Terminal, J1NX, NSFW</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PromptForge: Elite NSFW/SFW AI prompt terminal. Meet J1NX, generate viral art prompts, and hack your creativity.">
-  <meta name="keywords" content="NSFW, AI prompt, J1NX, terminal, hacking, military, promptforge, art generator, cyberpunk, creative, image AI, main page">
+  <title>PromptForge Mainframe - NSFW/SFW AI OS by Gore and Giggles</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="PromptForge: Cyberpunk AI Prompt Mainframe for NSFW/SFW art, tools, and AI projects. Terminal dashboard. J1NX assistant.">
+  <meta name="keywords" content="PromptForge, NSFW, AI, prompts, J1NX, cyberpunk, mainframe, terminal, AI art, watermark, prompt tools, Gore and Giggles">
   <meta name="robots" content="index,follow">
   <link rel="icon" href="assets/favicon.png" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap">
-  <style>
-    html, body {
-      background: #0d1016;
-      margin: 0; padding: 0;
-      color: #c0ffe0;
-      font-family: 'Fira Mono', Consolas, monospace;
-      height: 100%;
-      min-height: 100vh;
-      box-sizing: border-box;
-      overflow-x: hidden;
-    }
-    .header {
-      padding: 2vh 0 1vh 0;
-      text-align: center;
-      background: #111c22dd;
-      box-shadow: 0 0 20px #19eac740;
-      letter-spacing: 0.03em;
-    }
-    .header h1 {
-      font-size: 2.6em; margin: 0; color: #98ffe3; font-family: inherit;
-      text-shadow: 0 0 14px #26fff9, 0 0 2px #34ffde;
-    }
-    .header .subtitle {
-      font-size: 1.1em; color: #58ffe3; margin-top: 0.2em;
-    }
-    .main-flex {
-      display: flex; flex-wrap: wrap;
-      justify-content: center; align-items: flex-start;
-      gap: 3vw; margin: 3vh auto 2vh auto; max-width: 1100px;
-      min-height: 40vh;
-    }
-    .j1nx-container {
-      background: #171e22;
-      border-radius: 22px;
-      box-shadow: 0 0 25px #00ffbb45;
-      padding: 2em 2.2em 1.3em 2em;
-      display: flex; flex-direction: column; align-items: center;
-      min-width: 320px; max-width: 390px;
-      position: relative;
-    }
-    .j1nx-img {
-      width: 160px; min-height: 210px; object-fit: contain; z-index: 2;
-      filter: drop-shadow(0 2px 32px #12ffe990);
-      margin-bottom: 0.2em;
-      border-radius: 1.6em;
-      background: #1b242e;
-    }
-    .speech-bubble {
-      background: #1d3232;
-      color: #e2fff9;
-      font-size: 1.1em;
-      border-radius: 1.5em 1.5em 1.5em 0.6em;
-      padding: 0.7em 1.1em;
-      margin: 0.5em 0 0 0;
-      min-width: 120px; max-width: 260px;
-      border: 1.5px solid #16ffd8;
-      box-shadow: 0 0 13px #23ffe855;
-      position: relative;
-    }
-    .speech-bubble:after {
-      content: "";
-      position: absolute; left: 1.3em; bottom: -0.75em;
-      width: 0; height: 0;
-      border-left: 16px solid #1d3232;
-      border-top: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-bottom: 0 solid transparent;
-      filter: drop-shadow(0 0 2px #0fffc6);
-    }
-    .start-btn {
-      background: linear-gradient(90deg, #18ffe3 30%, #32e1ff 100%);
-      color: #001b15; font-size: 1.2em;
-      font-family: inherit; font-weight: bold;
-      border: none; border-radius: 1.6em;
-      padding: 0.8em 2.4em; margin: 1.3em 0 0 0;
-      box-shadow: 0 0 12px #24ffd440;
-      cursor: pointer; letter-spacing: 0.08em;
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    .start-btn:hover {
-      background: #10ffd0; color: #00221b;
-      box-shadow: 0 0 18px #6afff955;
-    }
-    .links-panel {
-      display: flex; flex-direction: column; align-items: flex-start;
-      background: #13191e;
-      border-radius: 18px; box-shadow: 0 0 20px #23eaf7bb;
-      padding: 2em 2.3em 1.4em 2em;
-      min-width: 250px; max-width: 340px; margin-left: 0.7em;
-      gap: 1.1em;
-      font-size: 1.09em;
-    }
-    .links-panel a, .links-panel .linkbtn {
-      color: #22fff5;
-      text-decoration: none;
-      padding: 0.27em 0.77em 0.27em 0.7em;
-      border-radius: 8px;
-      font-weight: bold;
-      margin-bottom: 0.14em;
-      display: inline-block;
-      transition: background 0.18s, color 0.18s;
-      background: #18202a11;
-      border: 1.1px solid #17ffe4;
-      box-shadow: 0 0 6px #23eaf7a8;
-    }
-    .links-panel a:hover, .links-panel .linkbtn:hover {
-      background: #17ffd8;
-      color: #0d1720;
-    }
-    .ad-tv {
-      position: fixed;
-      bottom: 3vh; right: 2vw;
-      background: #10141cdd;
-      border-radius: 19px;
-      box-shadow: 0 0 22px #17ffd633, 0 0 11px #00eacc45;
-      width: 340px; min-height: 108px; z-index: 100;
-      padding: 1.3em 1.2em 1em 1.2em;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .ad-tv .ad-label {
-      font-size: 1.02em; color: #15ffe1b2; font-weight: bold;
-      margin-bottom: 0.15em;
-      letter-spacing: 0.04em;
-    }
-    .footer {
-      text-align: center;
-      color: #70ffd9a8;
-      font-size: 1em;
-      margin-top: 4vh; margin-bottom: 2vh;
-      background: #151a1e;
-      padding: 1.3em 0 0.5em 0;
-      border-top: 1.2px solid #17ffd878;
-      box-shadow: 0 0 18px #19eac74a;
-      letter-spacing: 0.04em;
-    }
-    .footer .watermark { color: #36ffe5; }
-    .footer a { color: #23ffd8; text-decoration: none; margin: 0 0.7em;}
-    .footer a:hover { color: #bbffec; }
-    @media (max-width: 950px) {
-      .main-flex { flex-direction: column; align-items: center; gap: 1.2em;}
-      .ad-tv { position: static; width: 98vw; min-width: 220px;}
-    }
-    @media (max-width: 680px) {
-      .j1nx-img { width: 110px; min-height: 130px;}
-      .ad-tv { min-width: 180px; width: 95vw; font-size: 0.98em;}
-    }
-  </style>
-  <!-- GOOGLE ADSENSE CODE -->
+  <!-- GOOGLE ADSENSE SNIPPET (hidden in operator feed) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
     crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --main-bg: #0e121a;
+      --panel-bg: #181f2a;
+      --glow: 0 0 32px #00ffe4aa, 0 0 8px #17ffc7;
+      --highlight: #03ffd5;
+      --accent: #16ff8b;
+      --j1nx-bubble: #151c2a;
+      --font: 'Fira Mono', 'Consolas', monospace;
+    }
+    body {
+      margin: 0; padding: 0;
+      background: var(--main-bg);
+      color: #c2ffea;
+      font-family: var(--font);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    .mainframe-wrap {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      gap: 2vw;
+      padding: 4vh 3vw 0 3vw;
+      min-height: 80vh;
+    }
+    /* J1NX mascot panel */
+    .j1nx-panel {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--panel-bg);
+      border-radius: 2.2em;
+      box-shadow: var(--glow);
+      padding: 2.3em 1.4em 1em 1.4em;
+      min-width: 260px;
+      max-width: 340px;
+      min-height: 520px;
+      justify-content: flex-start;
+      position: relative;
+    }
+    .j1nx-cutout {
+      width: 160px; height: 260px;
+      background: #181f2a;
+      border-radius: 1.1em;
+      box-shadow: 0 0 32px #00ffe466;
+      margin-bottom: 1.3em;
+      display: flex; align-items: flex-end; justify-content: center;
+      overflow: hidden;
+      border: 2.5px solid #0fffe7a0;
+    }
+    .j1nx-cutout img {
+      width: 100%; height: 100%; object-fit: contain; object-position: center bottom;
+      filter: drop-shadow(0 2px 8px #00f7fa99);
+    }
+    .j1nx-bubble {
+      background: var(--j1nx-bubble);
+      color: #b7fff5;
+      font-size: 1.09em;
+      border-radius: 1em;
+      box-shadow: 0 0 12px #13ffca38;
+      padding: 1.1em 1.1em 1em 1.3em;
+      margin-bottom: 0.7em;
+      min-width: 210px;
+      max-width: 258px;
+      border-left: 3.2px solid var(--highlight);
+      border-bottom: 2.1px solid #17ffe1a1;
+      position: relative;
+    }
+    .j1nx-bubble::after {
+      content: "";
+      position: absolute; left: 24px; bottom: -15px;
+      width: 0; height: 0;
+      border: 13px solid transparent;
+      border-top: 17px solid var(--j1nx-bubble);
+      border-right: 0;
+      border-left: 11px solid transparent;
+      filter: blur(0.2px);
+    }
+    .j1nx-links {
+      margin-top: 1em; width: 100%;
+    }
+    .j1nx-links a {
+      display: inline-block;
+      margin: 0.14em 0.5em 0.14em 0;
+      font-size: 1em;
+      color: var(--highlight);
+      text-decoration: none;
+      padding: 0.12em 0.6em;
+      border-radius: 0.8em;
+      border: 1.2px solid #12e7ff77;
+      background: #16282aee;
+      box-shadow: 0 1px 7px #0beed819;
+      transition: background 0.14s, color 0.13s, border 0.13s;
+    }
+    .j1nx-links a:hover { background: #19313c; color: #fff;}
+    /* Main dashboard center panel */
+    .main-dashboard {
+      background: var(--panel-bg);
+      border-radius: 2.1em;
+      box-shadow: var(--glow);
+      padding: 2.6em 2.1em 2.1em 2.2em;
+      display: flex; flex-direction: column; gap: 2.2em;
+      align-items: flex-start; justify-content: flex-start;
+      min-height: 530px;
+    }
+    .dash-title {
+      font-size: 2.32em;
+      color: var(--highlight);
+      text-shadow: 0 0 22px #00ffe577, 0 0 6px #27ffe7;
+      font-family: inherit;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.07em;
+    }
+    .dash-desc {
+      font-size: 1.13em;
+      color: #b8ffe8;
+      margin-bottom: 0.3em;
+      max-width: 680px;
+      line-height: 1.6;
+    }
+    .project-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.3em 2.3em;
+      width: 100%;
+      margin-bottom: 0.5em;
+    }
+    .project-links a {
+      font-size: 1.12em;
+      color: var(--accent);
+      background: #18231e;
+      padding: 1.08em 1.2em;
+      border-radius: 0.9em;
+      text-decoration: none;
+      border: 1.3px solid #16ff8b50;
+      box-shadow: 0 0 8px #05f7a46a;
+      font-weight: 500;
+      transition: background 0.13s, color 0.13s, border 0.14s;
+      position: relative;
+    }
+    .project-links a:hover {
+      background: #242b2e;
+      color: #fff;
+      border-color: #10ffa4b3;
+    }
+    .coming-soon {
+      font-size: 0.95em;
+      color: #96aaff;
+      background: #11193a;
+      border-radius: 7px;
+      padding: 0.19em 0.7em;
+      margin-left: 1.1em;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+    .dash-news {
+      background: #102017;
+      color: #95ffda;
+      border-radius: 1em;
+      padding: 1.3em 1.2em;
+      box-shadow: 0 0 14px #13ffd9a5;
+      font-size: 1.05em;
+      margin-top: 0.7em;
+      width: 100%;
+      max-width: 640px;
+      min-height: 68px;
+    }
+    /* Operator feed (AdSense) */
+    .operator-feed {
+      background: #112726;
+      color: #77ffe6;
+      border-radius: 1.3em;
+      box-shadow: 0 0 18px #10e7c38a;
+      min-height: 120px;
+      max-width: 340px;
+      margin: 1em auto;
+      padding: 1.4em 1.2em;
+      position: relative;
+      font-size: 1.08em;
+      z-index: 5;
+      overflow: hidden;
+    }
+    .operator-feed h3 {
+      color: #16ffc1;
+      font-size: 1.11em;
+      margin: 0 0 0.6em 0;
+      font-weight: 600;
+    }
+    /* Footer */
+    .site-footer {
+      width: 100%;
+      padding: 2.2em 0 1em 0;
+      background: #161e23;
+      color: #8dffe9;
+      font-size: 1.1em;
+      font-family: inherit;
+      text-align: center;
+      border-top: 1.7px solid #0fffe444;
+      margin-top: 2.7em;
+      letter-spacing: 0.01em;
+    }
+    .footer-links {
+      margin: 0.9em 0 0.4em 0;
+    }
+    .footer-links a {
+      color: #0be7c7;
+      margin: 0 1.2em 0 0;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1em;
+      opacity: 0.92;
+      transition: color 0.13s;
+    }
+    .footer-links a:hover { color: #ffaf0f; opacity: 1; }
+    .footer-socials {
+      margin: 0.8em 0 0 0;
+      font-size: 1.2em;
+    }
+    .footer-socials a {
+      margin: 0 0.7em;
+      color: #1aebc4;
+      opacity: 0.88;
+      text-decoration: none;
+      transition: color 0.14s;
+    }
+    .footer-socials a:hover { color: #fd44e1; }
+    @media (max-width: 1080px) {
+      .mainframe-wrap { grid-template-columns: 1fr; gap: 2.4vw; }
+      .j1nx-panel, .operator-feed { max-width: 96vw; min-width: 0; }
+      .main-dashboard { padding: 2em 0.7em 1.2em 0.7em; }
+    }
+    @media (max-width: 680px) {
+      .mainframe-wrap { grid-template-columns: 1fr; gap: 2vw; padding: 2vw 1vw 0 1vw;}
+      .j1nx-panel, .operator-feed { max-width: 100vw; min-width: 0; border-radius: 1.1em;}
+      .main-dashboard { border-radius: 1em;}
+    }
+  </style>
 </head>
 <body>
-  <div class="header">
-    <h1>PromptForge <span style="font-size:0.6em;font-weight:400;color:#37ffe6;">Mainframe</span></h1>
-    <div class="subtitle">Elite AI Prompt Terminal • NSFW/SFW • Powered by <b>J1NX</b></div>
-  </div>
-
-  <div class="main-flex">
-    <!-- J1NX Hero Panel -->
-    <div class="j1nx-container">
-      <img src="assets/j1nx_cutout.png" alt="J1NX AI Mascot" class="j1nx-img" id="j1nximg">
-      <div class="speech-bubble" id="j1nxBubble">
-        Hi, I’m J1NX.<br>Ready to generate something mind-blowing? 😉<br>
-        <span style="font-size:0.83em;color:#a1ffe9;">(Click me for tips, secrets, and NSFW hacks!)</span>
+  <div class="mainframe-wrap">
+    <!-- J1NX Sidebar -->
+    <aside class="j1nx-panel">
+      <div class="j1nx-cutout">
+        <img src="j1nx/j1nx_cutout.png" alt="J1NX Mascot">
       </div>
-      <button class="start-btn" onclick="window.location='prompt.html'">💥 Start PromptForge</button>
-    </div>
-    <!-- LINKS PANEL -->
-    <div class="links-panel">
-      <a href="prompt.html">🎨 Prompt Generator</a>
-      <a href="help.html">📖 Help &amp; FAQ</a>
-      <a href="https://github.com/tysonsawchuk/GoreandGiggles" target="_blank">🐙 GitHub</a>
-      <a href="https://promptforge.online" target="_blank">🌐 Home / News</a>
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">🔗 Bluesky</a>
-      <a href="https://x.com/GoreandGiggles" target="_blank">❌ Twitter/X</a>
-      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">📘 Facebook Group</a>
-      <a href="mailto:0fearnofish0@gmail.com" target="_blank">✉️ Email Support</a>
-      <a href="j1nx.html">🤖 Meet J1NX</a>
-    </div>
+      <div class="j1nx-bubble" id="j1nxBubble">
+        Hi, I’m J1NX.<br>
+        Ready to generate something legendary?<br>
+        (Click me for tips, secrets, or NSFW hacks!)
+      </div>
+      <div class="j1nx-links">
+        <a href="j1nx_landing.html">J1NX Home</a>
+        <a href="mailto:0fearnofish0@gmail.com">Email Support</a>
+        <a href="https://github.com/tysonsawchuk/promptforge-online" target="_blank">GitHub</a>
+      </div>
+    </aside>
+    <!-- Central Dashboard -->
+    <main class="main-dashboard">
+      <div class="dash-title">PromptForge Mainframe</div>
+      <div class="dash-desc">
+        Welcome, Operator. This is your all-access hub for every tool, prompt, and AI hack in the <b>PromptForge</b> arsenal.<br>
+        <span style="color:#20ffd5;">J1NX</span> is your AI sidekick—click her for tricks, tips, and secrets.<br>
+        <span style="color:#ffc48b;">100% AI-powered. NSFW-friendly. Google Safe. No b.s. Just raw creative energy.</span>
+      </div>
+      <div class="project-links">
+        <a href="movie_prompt.html">🎬 Movie Prompt Generator</a>
+        <a href="image_prompt.html">🖼️ Image Prompt Generator</a>
+        <a href="fuck_with_ai.html">🛠️ Fuck With AI Tool</a>
+        <a href="watermark.html">💧 Watermark Generator</a>
+        <a href="j1nx_landing.html">🤖 Meet J1NX</a>
+        <a href="news.html">📰 Operator Feed / News</a>
+        <a href="https://github.com/tysonsawchuk/promptforge-online" target="_blank">💻 Source Code (GitHub)</a>
+        <a href="https://promptforge.online/updates" target="_blank">⏫ Get Updates & DLC</a>
+      </div>
+      <div class="dash-news" id="dashNews">
+        Latest update: PromptForge is now LIVE. Submit your best prompts, hacks, and feedback to become an Operator!
+        <span class="coming-soon">New: Face-Mapping & Video Tools Coming Soon</span>
+      </div>
+    </main>
+    <!-- Operator Feed/Ad Block -->
+    <aside class="operator-feed">
+      <h3>Sponsored: Secret Operator Feed</h3>
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-4963053724895140"
+        data-ad-slot="5689037987"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      <div style="margin-top:0.7em;font-size:0.99em;opacity:0.62;">
+        No annoying popups. All ad revenue goes to future PromptForge upgrades.<br>
+        <b>Pro tip:</b> Operators who donate or contribute get secret perks!
+      </div>
+    </aside>
   </div>
-  <!-- AD TERMINAL TV -->
-  <div class="ad-tv">
-    <div class="ad-label">Sponsored: Secret Operator Feed</div>
-    <!-- GOOGLE AD -->
-    <ins class="adsbygoogle"
-         style="display:block; min-height:90px;"
-         data-ad-client="ca-pub-4963053724895140"
-         data-ad-slot="3426414519"
-         data-ad-format="auto"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
-  <div class="footer">
-    <span class="watermark">PromptForge © 2025 by Gore and Giggles</span><br>
-    <a href="terms.html">Terms</a> |
-    <a href="privacy.html">Privacy</a> |
-    <a href="https://github.com/tysonsawchuk/GoreandGiggles" target="_blank">GitHub</a> |
+  <!-- Footer -->
+  <footer class="site-footer">
+    PromptForge © 2025 by Gore and Giggles &middot; 
+    <a href="terms.html">Terms</a> &middot; 
+    <a href="privacy.html">Privacy</a> &middot;
+    <a href="https://github.com/tysonsawchuk/promptforge-online" target="_blank">GitHub</a> &middot;
     <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-    <br>
-    <span style="font-size:0.93em;color:#8afffa8e;">
-      AI-Generated, NSFW-friendly. Google Safe, SEO-optimized.
-    </span>
-  </div>
-  <!-- Optional: J1NX Speech Bubble Logic -->
+    <div class="footer-links">
+      <a href="https://twitter.com/GoreandGiggles" target="_blank">Twitter/X</a>
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a>
+      <a href="mailto:0fearnofish0@gmail.com">Email</a>
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">☕ Buy Me a Coffee</a>
+    </div>
+    <div class="footer-socials">
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky">🌌</a>
+      <a href="https://twitter.com/GoreandGiggles" target="_blank" title="Twitter">🐦</a>
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank" title="Facebook">📘</a>
+      <a href="https://github.com/tysonsawchuk/promptforge-online" target="_blank" title="GitHub">💻</a>
+    </div>
+    <div style="margin-top:0.8em;font-size:0.91em;color:#7ffffb;">
+      AI-Generated. NSFW/SFW. Google Safe. SEO-optimized. <br>
+      Powered by J1NX. All rights reserved.
+    </div>
+  </footer>
+  <!-- J1NX speech randomizer -->
   <script>
-    const j1nxQuotes = [
-      "Need help? Type ‘help’—or just click me again!",
-      "Try wild NSFW keywords. I won’t tell.",
-      "Pro tip: Longer prompts = better images.",
-      "Feeling stuck? Randomize until it’s right.",
-      "Save your best creations—you’ll want them later.",
-      "Want secret commands? Ask on Discord.",
-      "Model tip: JuggernautXL is 🔥 for skin and detail.",
-      "Stay safe, operator. NSFW mode is always one click away.",
-      "PromptForge is for artists, rebels, and pros only!"
+    // J1NX random tips
+    const j1nxLines = [
+      "Hi, I’m J1NX.<br>Ready to generate something legendary?<br>(Click me for tips, secrets, or NSFW hacks!)",
+      "Need a prompt nobody's seen before? Ask me!<br>(Click my face to get a new tip.)",
+      "Want to break the algorithm? Use the 'Fuck With AI' tool for wild results.",
+      "Movie mode makes <b>cinematic AI art</b> easy—try it now.",
+      "Try the watermark tool—protect your masterpieces.",
+      "Join our Bluesky or Facebook for secret operator perks!",
+      "Operators who donate on Buy Me a Coffee unlock exclusive beta tools.",
+      "Try entering 'hacker mode'—you never know what you’ll find.",
+      "All prompt tools work for both SFW and NSFW—just add your flavor.",
+      "Have a killer prompt idea? Submit it on GitHub or DM me.",
+      "Check back for face-mapping and video AI tools—coming soon!"
     ];
-    document.getElementById('j1nximg').onclick = document.getElementById('j1nxBubble').onclick = function() {
-      const q = j1nxQuotes[Math.floor(Math.random()*j1nxQuotes.length)];
-      document.getElementById('j1nxBubble').innerHTML = q + "<br><span style='font-size:0.83em;color:#a1ffe9;'>(Click me for more tips and secrets!)</span>";
+    const bubble = document.getElementById("j1nxBubble");
+    bubble.onclick = () => {
+      let i = Math.floor(Math.random() * j1nxLines.length);
+      bubble.innerHTML = j1nxLines[i];
     };
   </script>
 </body>
