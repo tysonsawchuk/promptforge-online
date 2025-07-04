@@ -1,148 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ASCII Animation Terminal | Fun Web Toy</title>
-  <meta name="description" content="A fun animated ASCII art demo with fake terminal and retro code vibes. Enjoy a playful distraction—Google-safe, zero NSFW." />
-  <meta name="keywords" content="ascii art, animation, fun web toy, terminal, code, retro, javascript, google safe, no nsfw" />
-  <meta name="robots" content="index,follow" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='black'/%3E%3Ctext x='3' y='13' font-size='12' fill='lime'%3E%3E_%3C/text%3E%3C/svg%3E">
+  <meta charset="UTF-8">
+  <title>ASCII Terminal Animation | PromptForge</title>
+  <meta name="description" content="A retro terminal with live ASCII animation and boot sequence, for fun, nerdy, kid-friendly entertainment.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1em' font-size='96'>🎮</text></svg>">
   <style>
     body {
-      background: #181b20;
-      color: #d0f1d6;
-      font-family: "Fira Mono", "Consolas", monospace;
+      background: #1a1d23;
       margin: 0;
-      padding: 0;
+      font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
+      color: #d3f7d3;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
     .container {
       display: flex;
       flex-direction: row;
-      background: #1c2227;
-      border-radius: 14px;
-      box-shadow: 0 6px 24px #0009;
-      overflow: hidden;
-      max-width: 1100px;
-      min-width: 340px;
-      min-height: 480px;
-      margin: 40px auto;
-      border: 2px solid #262b31;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2vw;
+      margin-top: 6vh;
+      width: 92vw;
+      max-width: 1440px;
     }
     .terminal {
-      background: #191e22;
-      color: #b0fcbc;
-      width: 540px;
-      min-width: 320px;
-      padding: 28px 22px;
-      font-size: 1.13rem;
-      border-right: 2px solid #222;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
+      background: #23272f;
+      border-radius: 12px;
+      box-shadow: 0 3px 32px 0 #000a;
+      min-width: 420px;
+      max-width: 500px;
+      min-height: 340px;
+      padding: 32px 26px 22px 26px;
+      font-size: 1.1em;
+      line-height: 1.72;
+      color: #9efca0;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 30px;
     }
-    .terminal-bar {
-      display: flex;
-      align-items: center;
-      height: 22px;
-      margin-bottom: 16px;
-    }
-    .dot {
-      height: 13px;
-      width: 13px;
-      border-radius: 50%;
-      margin-right: 7px;
+    .terminal-cursor {
       display: inline-block;
+      width: 1ch;
+      background: #f7d774;
+      color: #1a1d23;
+      margin-left: 2px;
+      animation: blink 1s steps(1) infinite;
+      border-radius: 2px;
+      height: 1.12em;
+      vertical-align: -3px;
     }
-    .dot.red { background: #ff4c4c; }
-    .dot.yellow { background: #ffe66b; }
-    .dot.green { background: #3de96f; }
-    .terminal-content {
-      font-size: 1.1rem;
-      line-height: 1.7;
-      letter-spacing: 0.05em;
-      white-space: pre-wrap;
-      word-break: break-all;
-      flex: 1;
-      min-height: 200px;
+    @keyframes blink {
+      50% { opacity: 0; }
     }
-    .ascii-art {
-      width: 520px;
-      min-width: 250px;
-      background: #171a1e;
-      color: #8cf7c3;
-      font-family: "Fira Mono", "Consolas", "monospace";
-      font-size: 1.01rem;
-      padding: 24px 10px 24px 18px;
+    .ascii-panel {
+      background: #181c22;
+      border-radius: 12px;
+      box-shadow: 0 3px 32px 0 #000b;
+      min-width: 500px;
+      min-height: 340px;
+      font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
+      color: #e2deed;
+      font-size: 1em;
+      line-height: 1.05;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-sizing: border-box;
-      user-select: none;
+      padding: 10px 18px;
+      white-space: pre;
+      overflow: hidden;
+      margin-bottom: 30px;
     }
-    @media (max-width: 1020px) {
-      .container { flex-direction: column; max-width: 98vw; }
-      .ascii-art, .terminal { width: 100%; min-width: 0; }
-      .ascii-art { min-height: 220px; }
+    @media (max-width: 1100px) {
+      .container { flex-direction: column; align-items: center;}
+      .ascii-panel, .terminal { min-width: 340px; width: 92vw; max-width: 98vw;}
     }
+    @media (max-width: 750px) {
+      .ascii-panel, .terminal { min-width: 0; padding: 12px; font-size: .99em;}
+    }
+    ::selection { background: #f7d77430; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="terminal">
-      <div class="terminal-bar">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
-      </div>
-      <div class="terminal-content" id="terminal-content">
-<!-- Terminal Content -->
-<span style="color:#7FFFBF;">user@ascii-fun:</span><span style="color:#fff;">~$</span> ./launch_ascii_animation.sh<br/>
-Initializing sequence...<br/>
-<span style="color:#f7e177;">[ OK ]</span> ASCII frames loaded.<br/>
-<span style="color:#a9d7ff;">[ * ]</span> Syncing with retro core...<br/>
-<span style="color:#8cf7c3;">[  ✓ ]</span> Terminal ready.<br/>
-<br/>
-<span style="color:#f7e177;">Fake Command Prompt</span><br/>
-> <span id="typewriter"></span>
-      </div>
+      <div id="terminal-output"></div>
     </div>
-    <div class="ascii-art">
-      <pre id="ascii-frame">
-        <!-- ASCII animation will appear here -->
-      </pre>
-    </div>
+    <div class="ascii-panel" id="ascii-art"></div>
   </div>
   <script>
-    // 16 ASCII FRAMES - paste as-is, keep order!
     const asciiFrames = [
-`z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z"f.z"t.z"t.z"t.z"t.z^t
+`z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z"f.z"t.z"t.z"t.z"t.z"t.z^t
 .}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
 (.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.n.(.x.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.x.(.n.(.n
-.I._.;._.;.-.I._.I._.I._.I.-.I._.I._.I.-.I._.I._.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.
+.I._.;._.;.-.I._.I._.I._.I.-.I._.I._.I.-.I._.I._.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.
 `,
 `z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z^t.z^t.z^t.z^t.z"t.z"t.z"t.z^f.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z^t.z"f.z"t.z"t.z"t.z"t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z^t.z"t.z"t.z"t.z^t
 .}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
 (.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n
-.I._.I._.I._.I._.;._.I._.I._.I._.I._.I._.I._.;._.I._.I.-.I.-.I._.I._.I._.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I.-.I.
+.I._.I._.I._.I._.;._.I._.I._.I._.I._.I._.I._.;._.I._.I.-.I.-.I._.I._.I._.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I.-.I.
 `,
 `z^t.z"t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z"t.z^f.z"t.z"f.z"t.z^t.z"t.z"t.z"t.z^t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t
-.[.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+.[.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
 ).x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.n.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.x.(.n.(.x.(.n.(.n.(.n.(.x.(.x.(.x.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.n
-.I._.I._.;._.I.-.I._.I._.I._.I._.I._.I.-.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I.-.I._.I._.I.-.I.-.I.-.I.-.I._.I.-.I.
+.I._.I._.;._.I.-.I._.I._.I._.I._.I._.I.-.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.
 `,
 `z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"f.z"t.z"t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"f.z"t.z"t.z"t
 .[.>.[.>.}.>.}.>.}.>.[.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.}.
 ).x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.x.(.n
 .;._.I._.;.-.I._.I._.I._.I._.I._.;._.I._.I.-.I._.I._.I.-.I.-.I.-.I._.I.-.I._.I.-.I.-.I.-.I._.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.
 `,
-// --- continue with the next 12 frames in part 3 ---
-// ...continuing ASCII FRAMES array:
 `z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z^t.z"t.z"t.z^(                         r"t.X"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"f.z^t.z"t.z^f.z"t
 .[.>.}.>.[.>.}.>.[.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>      .>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.;      .<.}.<.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
 (.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.    (.x.(.n.(.x.(.n.(.x.(.j                          .x.(.n.(.n.(.    j.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.x.(.n
@@ -173,86 +144,81 @@ Initializing sequence...<br/>
 ).x.).x.(.x.).x.).x.(.x.(.x.(.n.(.     .Z<a h-#j#|$n#|$u#|$nb    .v"x'm-Z_#(m.                  t>o)ZlZ!n.v.     1$n#|$uM|$u#|$uM|$n#|$n#|$nM. '\.u  . .(.n.(.n.(.x.(.x.(.n.(.x.(.x
 .;._.;._.;._.;._.;._.;.-.;._.I.      t"Y.j,X ulLlC-plC-plC-pIi   ,.?.|;L'uIr.>                  .r;J.x;U.\.].   .C-plC?plL?plC-plC-plC-plC~O :.  l.  I._.I.-.I._.I.-.;._.I._.I.-.I.
 `,
-`c^t.z^t.c^t.z^t.z^t.z^t.z^t.c      :M|p?M\p?k-*{%X%f$X%f$X%f$/   "j.Y:r.Jlw>0>c               |_8tk[W)q-*_u.   .$X%j$X%j$X%f$z%f$X%f$X%f$l .X"f.z.t.z"t.z"t.z^t.z"t.z^t.z"t.z"t
+`c^t.z^t.c^t.z^t.z^t.z^t.z^t.c      :M|p?M\p?k-*{%X%f$X%f$X%f$/   "j.Y:r.Jlw>0>c               |_8tk[W)q-*_u.   .$X%j$X%j$X%f$z%f$X%f$X%f$l .X"f.z.t.z"t.z"t.z"t.z^t.z"t.z^t.z"t.z"t
 .[.>.[.>.}.>.[.>.[.>.[.>.}         ulL'ulL'ulC O[Z,O}h<O}h<O}h.     .[.-.\.c>n.v.?          .n`/i0^ciX.?.     .0}a<Z{a<Z{a<Z{h<O}a<O}k! .}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
 ).x.(.x.(.x.(.x.(.x.(.n.     .n.(.n.      q}Z<Y  {$tp]$u#|$n#|$/     .wlL.X-O-#|q_m)m`L!vi*)w'*)q~X!w~z]z.   .$n#|$uM|$uM|$n#|$n#($  .u.|.n.   .(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.n.(.x
 .;._.;._.;._.;._.I.-.  -  .-.I.-.I.-.I._.I.-.I.-.l.  t-q`v_plC-p;-     i.-lC.~lJ.fIY.x.U.n"f.x;].r.U.,      `C-plC?plC-plC-pIC- .l.?   _.I._.I._.I.-.I.-.I._.I.-.I.-.I._.I._.I._.I.
 `,
-`z^t.c^t.c^t.c`t.z^t.c^t.c^t.c^t.c^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.c"t.z^t.z^t.c^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.c^t.z"t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z^t.z^t
+`z^t.c^t.c^t.c^t.z"  X^                /.X"t.z"t.X"f.X"t.  Lf$vh\$X8'    x.|.#]j?Otu}8tu]&}b"X/q}w'O.n     kf$X%f$X%j$z8f$zU.z"f.z       z^t.z^t.z"t.z^t.z"t.z^t.z^t.z^t.z^t.z"t.z^t
+.[.i.}.i.[.i.[.> [.  [.>.}.>.}.>.}.>.}.>.}.>.}.I   >.}.>.}.>.{. .k<0_X      .-.<>/.civ.]!].f.?.!.      _[h<Z{h!0}h<J.{.<.}.<.].    <.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.[.>.}.
+(.x.).x.(.x.(.x.(. .(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x  .x.(   }  .(.n.(.n.|($ud. '1  >Y.  u r.        Q|$n#}Q'|.u.|.n.(.   .r  .n.(.n.(.r.(.n.(.n.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x
+.;._.;._.;.+.;._.;._.;._.;.-.;._.I._.I._.I._.;._.I._.`    .-.I   ;._.I.-.I.-.I.-.I.-.l.-.l.-.I.-.l.-.I._.I. .I.-.I.-.  -.I.  I.~ I._.I._.I._.;._.I._.I._.I._.I._.I._.I._.I.-.;._.I.
+`,
+`c^t.c^t.c^t.c`t.c^/.z^t.z^t.z"t.z^t.z^t.z^t.z^t.z"t  "t.z^  z^t.z^t.z^t.z t.z t.z"f.X"f.z"t.z^t. "f.  f.    X"t z"f.z^t. 't.z"|.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t
 .[.i.[.>.}.i.[.i.[.i.[.>.[.>.[.>.[.i.[.i.[.>.}.>.[.>.}.>.[.>.[.>.[.>.}. .}.>. .>.}. .}. .}.>.}.>. .>.}. .}.    i.- >.}.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.[.>.}.>.}.>.[.
-).x.).x.).x.).x.(.x.).x.(.x.).x.).x.).x.(.x.).x.(.x.(.x.(.x.(.x.( x.(.x. .x.(.n (.n. .n.(.n.(. .(.n. .n.( n.(.n.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x
-.;.+.;._.;._.;.+.;._.I._.;._.;._.;._.I._.;._.;._.I._.;._.;._.;._.;._.;._ ;._.I.-.I.- I._.I._.I._.;.-.I.-.I._.I._.I._.;._.I._.I._.I._.;._.I._.I._.I.-.I._.I._.I._.I._.;._.;._.I.
+).x.).x.).x.).x.(.x.).x.(.x.).x.).x.).x.(.x.).x.(.x.(.x.(.x.(.x.(.x.( x.(.x. .x.(.n (.n. .n.(.n.(. .(.n. .n.( n.(.n.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x
+.;.+.;._.;._.;.+.;._.I._.;._.;._.;._.I._.;._.;._.I._.;._.;._.;._.;._.;._.;._ ;._.I.-.I.- I._.I._.I._.;.-.I.-.I._.I._.I._.;._.I._.I._.I._.;._.I._.I._.I.-.I._.I._.I._.I._.;._.;._.I.
+`,
+`c^/.z^t.c^t.c^t.c^/.z`/.z^t.c^/.z^t.z^t.c^t.z^t.z^t.z^t.z^t.z^t.c"t.z^t.z^t.c^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.c^t.z"t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z^t.z^t
+.[.i.[.i.[.i.[.>.[.i.[.>.[.>.}.i.[.>.[.>.[.i.[.>.[.>.}.>.[.i.[.i.[.>.}.>.[.>.[.>.[.i.[.i.[.>.}.>.}.>.}.>.}.>.}.>.[.>.}.>.}.>.[.>.[.>.}.>.[.>.[.>.}.>.[.>.}.>.}.>.}.i.}.>.}.>.[.>.}.
+).x.).x.).x.).x.).x.).x.(.x.(.x.).x.).x.(.x.(.x.).x.).x.).x.(.x.).x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.).x.(.n.(.x.(.x.(.x.(.x
+.;._.;._.;._.;.+.;._.;._.;._.;._.I.+.;._.;._.;.+.;._.;._.;._.;._.;._.;._.;._.;._.;._.I._.;._.;._.I._.;._.;._.I._.;._.I._.;._.;._.;._.I._.I._.;.+.;._.I._.I._.I._.;._.;._.;._.;._.;.
+`,
+`c^/.z`/.c^t.c`t.z^t.c^t.c^t.c^t.c^t.c^t.c^t.z^t.z^t.z^t.z^t.c^t.z^t.z^/.z^t.z^t.c"t.z^t.z^t.z^t.z^t.c^t.c^t.c^t.z^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z`t.z^/.z^t.z^t.z^t
+.[.i.[.i.[.i.[.i.[.i.[.i.[.>.[.i.[.i.[.i.[.i.[.>.[.>.[.i.[.i.}.>.}.>.[.>.[.>.[.>.[.>.[.>.[.>.[.>.}.>.[.>.}.>.[.>.[.>.[.>.[.>.}.>.}.>.[.>.[.>.[.>.[.>.[.>.}.>.[.>.}.i.[.>.[.>.}.i.}.
+).x.).x.).x.).x.).x.).x.).x.(.x.).x.(.x.).x.).x.(.r.).x.).x.(.x.).n.).x.(.x.).x.(.x.(.x.).x.(.x.(.x.(.x.).x.).n.(.x.(.x.(.x.(.x.(.x.(.x.).x.(.x.(.x.).x.(.x.).x.(.x.(.x.(.x.(.x.(.x
+.;._.;.+.;.+.;._.;.+.;.+.I.+.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.I._.;._.;._.;._.;._.;._.;._.I._.;._.I._.;._.;._.;._.;._.I._.;._.;._.;._.;._.;._.I._.I.
+`,
+`c^t.c^/.c`t.z`t.c^/.c^/.c`t.z^t.c^t.c^t.z^/.z`t.c^t.c^t.c`t.z^t.z^t.c^t.z^/.z^t.c^t.c^t.z^/.c^t.z^t.c^t.c^t.c^t.c^t.z^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.c^t.z^t.z^t.z^t.z^t
+.[.i.[.i.[.>.}.>.[.>.[.>.[.i.[.>.[.>.[.>.[.i.[.i.[.>.[.>.[.>.[.>.[.i.[.>.[.i.}.>.}.i.[.>.}.>.[.>.[.>.[.i.}.>.}.>.[.>.}.>.[.>.}.>.[.>.[.>.[.>.[.>.[.>.}.>.}.>.}.>.[.>.}.>.[.>.}.>.
+).x.).x.).x.).x.).x.).x.).x.).x.(.x.).x.(.x.).x.(.x.).x.).x.(.x.).x.).x.).x.(.x.).x.(.x.).x.(.x.).x.(.x.).x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x
+.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;._.;
 `,
 ];
 
-    // Animation logic (will be completed in Part 4)
-
-// ---- ANIMATION LOGIC ----
-    let currentFrame = 0;
-    const asciiDiv = document.getElementById('ascii-animation');
-    function showFrame() {
-      asciiDiv.textContent = asciiFrames[currentFrame];
-      currentFrame = (currentFrame + 1) % asciiFrames.length;
-    }
-    setInterval(showFrame, 150); // ~7 FPS
-
-    // ---- TERMINAL FAKERY ----
-    const terminalOutput = document.getElementById('terminal-output');
-    const terminalLines = [
-      'Welcome to Gore and Giggles ASCII Portal!',
-      'Initializing...',
-      'Loading forbidden animation...',
-      'Establishing secure connection...',
-      'Access granted. Enjoy the show!',
-      '',
-      'Type "help" for commands.',
-      '',
-      '> '
+    // Fake terminal boot sequence
+    const bootLines = [
+      `user@ascii-fun:~$ ./launch_ascii_animation.sh`,
+      "",
+      "Initializing sequence...",
+      "",
+      "[ OK ] ASCII frames loaded.",
+      "",
+      "[ * ] Syncing with retro core...",
+      "",
+      "[ ✓ ] Terminal ready.",
+      "",
+      "Fake Command Prompt",
+      ">",
     ];
-    let line = 0;
-    let char = 0;
-    function typeLine() {
-      if (line >= terminalLines.length) return;
-      let output = '';
-      for (let i = 0; i < line; ++i) output += terminalLines[i] + '\n';
-      output += terminalLines[line].slice(0, char);
-      terminalOutput.textContent = output + (char % 2 === 0 ? '_' : '');
-      char++;
-      if (char <= terminalLines[line].length) {
-        setTimeout(typeLine, 40);
+    let bootIdx = 0;
+    let typed = '';
+    const terminalOut = document.getElementById('terminal-output');
+    function printBootLine() {
+      if (bootIdx < bootLines.length) {
+        let l = bootLines[bootIdx];
+        let html = l.replace(/\[/g, "<span style='color:#f7d774;'>[</span>")
+                    .replace(/\]/g, "<span style='color:#f7d774;'>]</span>")
+                    .replace(/\* /g, "<span style='color:#f76c6c;'>* </span>")
+                    .replace(/OK/g, "<span style='color:#aaff6c;'>OK</span>")
+                    .replace(/✓/g, "<span style='color:#aaff6c;'>✓</span>");
+        terminalOut.innerHTML += html + '<br>';
+        bootIdx++;
+        setTimeout(printBootLine, 340 - Math.min(bootIdx * 19, 180));
       } else {
-        char = 0;
-        line++;
-        setTimeout(typeLine, 400);
+        terminalOut.innerHTML += "<span class='terminal-cursor'>&nbsp;</span>";
       }
     }
-    setTimeout(typeLine, 800);
+    printBootLine();
 
-    // ---- SEO: Add meta tags, description, title, etc. ----
+    // Animate ASCII
+    let frame = 0;
+    function loopFrames() {
+      document.getElementById('ascii-art').textContent = asciiFrames[frame];
+      frame = (frame + 1) % asciiFrames.length;
+      setTimeout(loopFrames, 100);
+    }
+    loopFrames();
   </script>
-  <title>ASCII Animated Portal | Gore and Giggles</title>
-  <meta name="description" content="Animated ASCII art with live terminal simulation. Fun, safe, and unique—no NSFW. Built for web, with love from Gore and Giggles.">
-  <meta name="keywords" content="ASCII, animation, art, terminal, fun, safe, creative, web, Gore and Giggles">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="index, follow">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><text y=%2252%22 font-size=%2250%22>👾</text></svg>">
-
-  <style>
-    /* Mobile & desktop friendly tweaks */
-    @media (max-width: 800px) {
-      .container {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      #ascii-animation, #terminal-fake {
-        min-width: unset;
-        max-width: 100vw;
-        font-size: 12px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- The actual app rendered above! -->
 </body>
 </html>
