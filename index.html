@@ -1,397 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge Terminal Boot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PromptForge: Advanced NSFW/SFW AI prompt generator and cyberpunk hacking terminal for creative professionals. Military-grade interface, custom tools, and the best prompt builder online.">
-  <meta name="keywords" content="NSFW, AI prompt, prompt generator, hacking, terminal, military, JuggernautXL, RealVis, Gore and Giggles, promptforge, prompt tools, ASCII, cyberpunk, creative, text to image, AI art, prompt battle">
-  <meta name="robots" content="index,follow">
-  <link rel="icon" href="assets/favicon.png" />
-  <!-- GOOGLE ADSENSE VERIFICATION SNIPPET -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
-     crossorigin="anonymous"></script>
-  <!-- END GOOGLE ADSENSE SNIPPET -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASCII Animation Terminal | Fun Web Toy</title>
+  <meta name="description" content="A fun animated ASCII art demo with fake terminal and retro code vibes. Enjoy a playful distraction—Google-safe, zero NSFW." />
+  <meta name="keywords" content="ascii art, animation, fun web toy, terminal, code, retro, javascript, google safe, no nsfw" />
+  <meta name="robots" content="index,follow" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='black'/%3E%3Ctext x='3' y='13' font-size='12' fill='lime'%3E%3E_%3C/text%3E%3C/svg%3E">
   <style>
-    html, body {
-      margin: 0; padding: 0; width: 100vw; height: 100vh;
-      background: #0d1016;
-      color: #98ffe3;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+    body {
+      background: #181b20;
+      color: #d0f1d6;
+      font-family: "Fira Mono", "Consolas", monospace;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      background: #1c2227;
+      border-radius: 14px;
+      box-shadow: 0 6px 24px #0009;
       overflow: hidden;
+      max-width: 1100px;
+      min-width: 340px;
+      min-height: 480px;
+      margin: 40px auto;
+      border: 2px solid #262b31;
     }
-    #terminal-bg {
-      width: 100vw; height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start;
-      background: #0d1016;
-      user-select: none;
-      padding-top: 3vh;
+    .terminal {
+      background: #191e22;
+      color: #b0fcbc;
+      width: 540px;
+      min-width: 320px;
+      padding: 28px 22px;
+      font-size: 1.13rem;
+      border-right: 2px solid #222;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
-    .ascii-eye {
-      font-size: 1.1vw;
-      line-height: 1.1;
-      color: #03ffd5;
-      letter-spacing: 0.025em;
-      text-shadow: 0 0 15px #0e7777, 0 0 2px #24ffe0, 0 0 2px #30ffee;
-      min-width: 65vw;
-      max-width: 95vw;
-      min-height: 25vw;
-      max-height: 60vw;
-      transition: filter 0.2s;
-      margin-bottom: 2.1vh;
-      white-space: pre;
-      border-radius: 1vw;
-      pointer-events: none;
-      outline: none;
-      background: none;
+    .terminal-bar {
+      display: flex;
+      align-items: center;
+      height: 22px;
+      margin-bottom: 16px;
     }
-    .ascii-eye.flash {
-      filter: brightness(2.3) contrast(1.6);
-      text-shadow: 0 0 25px #44fff0, 0 0 4px #eafffb;
-      transition: filter 0.05s;
+    .dot {
+      height: 13px;
+      width: 13px;
+      border-radius: 50%;
+      margin-right: 7px;
+      display: inline-block;
     }
-    .boot-log {
-      font-size: 1.09vw;
-      font-family: inherit;
-      width: 66vw; max-width: 96vw;
-      background: none; border: none; outline: none;
-      color: #bafff6;
-      margin: 0 auto;
-      padding: 0.7em 0 0 0;
-      text-align: left;
-      min-height: 7em;
-      white-space: pre-line;
-      user-select: text;
-      transition: opacity 0.6s;
-      overflow-y: auto;
-      max-height: 30vh;
+    .dot.red { background: #ff4c4c; }
+    .dot.yellow { background: #ffe66b; }
+    .dot.green { background: #3de96f; }
+    .terminal-content {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      letter-spacing: 0.05em;
+      white-space: pre-wrap;
+      word-break: break-all;
+      flex: 1;
+      min-height: 200px;
     }
-    .log-warn  { color: #ffa94d; }
-    .log-ok    { color: #a2ffa6; }
-    .log-trace { color: #54b5ff; }
-    .log-error { color: #ff5b61; }
-    .log-help  { color: #f4ff58; }
-    .log-info  { color: #b4f7ff; }
-    .badge {
-      background: #1a2d27; color: #1bfff6; border: 1px solid #48ffe4;
-      display: inline-block; border-radius: 6px; font-size:0.98vw; padding:0.2em 0.7em; margin:0.12em 0.15em 0.12em 0;
-      letter-spacing: 0.03em;
-      box-shadow: 0 0 6px #32d3c9aa;
-      font-weight: bold;
-      vertical-align: baseline;
-    }
-    .terminal-input-row {
-      display: flex; align-items: center;
-      font-family: inherit; font-size: 1.15vw; color: #d0fff7;
-      margin-top: 0.7em;
-    }
-    .prompt-arrow {
-      color: #0fffe8; margin-right: 0.5vw; font-weight: bold;
-      font-size: 1.25vw;
+    .ascii-art {
+      width: 520px;
+      min-width: 250px;
+      background: #171a1e;
+      color: #8cf7c3;
+      font-family: "Fira Mono", "Consolas", "monospace";
+      font-size: 1.01rem;
+      padding: 24px 10px 24px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
       user-select: none;
     }
-    .terminal-input {
-      background: none; border: none; outline: none;
-      color: #eafffb;
-      font-family: inherit; font-size: 1.15vw;
-      width: 45vw;
-      caret-color: #33ffd5;
-      letter-spacing: 0.04em;
-    }
-    .terminal-cursor {
-      display: inline-block;
-      width: 0.8ch; height: 1.2em;
-      margin-left: 0.08em;
-      background: #4fffe8;
-      animation: blinkCursor 1s steps(1) infinite;
-      border-radius: 1px;
-      vertical-align: middle;
-      opacity: 0.9;
-    }
-    @keyframes blinkCursor {
-      0%, 60% { opacity: 1; }
-      61%, 100% { opacity: 0.07; }
-    }
-    .boot-log::-webkit-scrollbar { background: #222; width: 8px; border-radius: 3px;}
-    .boot-log::-webkit-scrollbar-thumb { background: #34ffdd55; border-radius: 4px; }
-    @media (max-width: 900px) {
-      .ascii-eye { font-size: 2.5vw; min-width: 0; }
-      .boot-log { font-size: 2.2vw; width: 95vw; }
-      .terminal-input, .terminal-input-row { font-size: 2vw;}
-      .badge { font-size: 1.6vw;}
+    @media (max-width: 1020px) {
+      .container { flex-direction: column; max-width: 98vw; }
+      .ascii-art, .terminal { width: 100%; min-width: 0; }
+      .ascii-art { min-height: 220px; }
     }
   </style>
 </head>
 <body>
-  <div id="terminal-bg">
-    <pre class="ascii-eye" id="asciiEye" tabindex="0"></pre>
-    <div class="boot-log" id="bootLog"></div>
-    <div class="terminal-input-row" id="terminalInputRow" style="display:none;">
-      <span class="prompt-arrow">&gt;</span>
-      <input type="text" class="terminal-input" id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
-      <span class="terminal-cursor" id="termCursor"></span>
+  <div class="container">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-content" id="terminal-content">
+<!-- Terminal Content -->
+<span style="color:#7FFFBF;">user@ascii-fun:</span><span style="color:#fff;">~$</span> ./launch_ascii_animation.sh<br/>
+Initializing sequence...<br/>
+<span style="color:#f7e177;">[ OK ]</span> ASCII frames loaded.<br/>
+<span style="color:#a9d7ff;">[ * ]</span> Syncing with retro core...<br/>
+<span style="color:#8cf7c3;">[  ✓ ]</span> Terminal ready.<br/>
+<br/>
+<span style="color:#f7e177;">Fake Command Prompt</span><br/>
+> <span id="typewriter"></span>
+      </div>
+    </div>
+    <div class="ascii-art">
+      <pre id="ascii-frame">
+        <!-- ASCII animation will appear here -->
+      </pre>
     </div>
   </div>
   <script>
-    // --- VISIT TRACKING: show boot once per day ---
-    const todayKey = new Date().toISOString().slice(0,10);
-    const bootCookie = 'pf_boot_' + todayKey;
-    function setVisitCookie(k,v) { try { localStorage.setItem(k,v); } catch(e){} }
-    function getVisitCookie(k) { try { return localStorage.getItem(k); } catch(e){ return null;} }
+    // 16 ASCII FRAMES - paste as-is, keep order!
+    const asciiFrames = [
+`z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z"f.z"t.z"t.z"t.z"t.z^t
+.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.n.(.x.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.x.(.n.(.n
+.I._.;._.;.-.I._.I._.I._.I.-.I._.I._.I.-.I._.I._.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.
+`,
+`z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z^t.z^t.z^t.z^t.z"t.z"t.z"t.z^f.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z^t.z"f.z"t.z"t.z"t.z"t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z^t.z"t.z"t.z"t.z^t
+.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n
+.I._.I._.I._.I._.;._.I._.I._.I._.I._.I._.I._.;._.I._.I.-.I.-.I._.I._.I._.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I.-.I.
+`,
+`z^t.z"t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z"t.z^f.z"t.z"f.z"t.z^t.z"t.z"t.z"t.z^t.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t
+.[.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+).x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.n.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.x.(.n.(.x.(.n.(.n.(.n.(.x.(.x.(.x.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.n
+.I._.I._.;._.I.-.I._.I._.I._.I._.I._.I.-.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I.-.I._.I._.I.-.I.-.I.-.I.-.I._.I.-.I.
+`,
+`z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"f.z"t.z"t.z^t.z^t.z"t.z^t.z"t.z^t.z"t.z"f.z"t.z"t.z"t
+.[.>.[.>.}.>.}.>.}.>.[.>.[.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.}.
+).x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.n.(.n.(.n.(.n.(.n.(.x.(.x.(.n
+.;._.I._.;.-.I._.I._.I._.I._.I._.;._.I._.I.-.I._.I._.I.-.I.-.I.-.I._.I.-.I._.I.-.I.-.I.-.I._.I.-.I._.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I.-.I._.I._.I._.I._.I.-.I.-.I._.I.-.I.-.I.-.I.
+`,
+// --- continue with the next 12 frames in part 3 ---
+// ...continuing ASCII FRAMES array:
+`z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z"t.z"t.z"t.z"t.z"t.z^t.z^t.z"t.z"t.z^(                         r"t.X"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"f.z^t.z"t.z^f.z"t
+.[.>.}.>.[.>.}.>.[.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>      .>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.;      .<.}.<.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.    (.x.(.n.(.x.(.n.(.x.(.j                          .x.(.n.(.n.(.    j.(.n.(.n.(.n.(.x.(.n.(.x.(.n.(.x.(.n.(.n.(.n.(.n.(.x.(.n
+.I._.I._.;._.I._.;.-.I._.I._.;._.I.-.;._.I._.I._.I.-.I.-.I.-.I._.      >.I._.I.-.I._.I.-.I.-.I.-.I.-.I.-.I._.I.     .I.-.I.-.    ;.-.I.-.I._.I._.I.-.I._.I._.I.-.I.-.I._.I.-.I._.I.
+`,
+`z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z^t.z^t.z"t     c^t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z^t.z"t.z"t.z"t.z"t.z"f.z^t    .z"t.z^t    .z"t.z"t.z^f.z^t.z"t.z"t.z"t.z"t.z"t.z"t.z"t
+.}.>.[.>.}.>.[.>.}.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>    .}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.<.}.<.}.>.}.<.}.>.}.>.}.>.}.>.}.>.}.>.}.>.   .}.>.  <.   .}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.   .x.(.n.(.n.(.n.(.x.(.n.(.n.{                                .n.( n.|.n.(.n.(.n.(.n.(.   .n.|  .|.t   n.|.n.|.n.(.x.(.n.(.n.(.x.(.n.(.n
+.;._.;._.I._.;._.I._.I._.I._.;._.I.-.   .I._.;._.I.-.I.-.I.-.I.       ._.;.-. .-. .  I.-.I.-.I._.l.?. .- i           l.-.I.-.I.-.I.-.I.  I._.  -.;._.I  .I._.I.-.I.-.I.-.I.-.I._.I.
+`,
+`z^t.z^t.c^t.z"t.z^t.z"f.z^t.z^t.z^ .z^t.z^t.z"t.z^t.z"t.x     (.X^ .z" .z t X /.X r  "f.X"f U j.X,f      : .X  .X' .       . ^ .X f.z"f.z^   ^t.   .z^t.z"t.z"t.z"f.z"t.z"t.z"t.z"t
+.[.>.[.>.[.>.}.i.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.     .}.> }.> {  . . .}  .{ <.   . .<.{ _ { ~.  I     {.  ?.  [ l [. .{       _ <. .>.{ >.[  .}.>  .>.}.>.}.>.}.>.}.>.}.>.[.>.}.
+(.x.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.j    .(.n.|.r \  '( v   x                                    .      v    "   ^     .    j  . .(.n.(  .(.n.   .(.n.(.n.(.x.(.n.(.x.(.n
+.;._.I._.I._.;._.I._.I._.I.-.I._.I.-.I._.I.   .-.I.? I. . . .                :IpIC_plC-plC-plC-pIC-plC-qIC-J.               .   .!.          I.-.I.-  ._.I._.    ;._.I.-.I.-.I._.I.
+`,
+`z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.  ).z"t.z" . :      n     pf$X%f$X%j$X%f$X%f$X%f$X%f$X%j$X%j$X%j$X%f$X%f$X%f$X%t           .X    "t   t.z"t.z"f   t.z"t.z^t.z"t.z"t.z"t.z"t
+.}.>.[.>.}.>.}.>.[.>.}.>.}.>.[.>.}.>.  >.}.>.}.>.  <.        h<O{h<Z{a<Z{a<Z{a<Z}h<O}h<O{h<Z{h<Z{a<Z{a<Z{a<Z{a<Z{h<O{h<Z{h<O}h             l.1   }.>.}.>.}.   .>.}.>.}.>.}.>.}.>.}.
+(.x.(.x.).x.(.x.(.x.(.x.(.x.(.x.(.  [.n.(.n. .x.(.x.|.   |$uM|$uM|$uM|$u#|$n#|$n#|$uM|$uM|$u#|$uM|$uM|$nM|$uM|$u#|$n#|$nM|$n#|$n#|$           f.).        /.(.n.(   (.n.(.n.(.n.(.n
+.;._.;._.I._.;._.I._.I._.I._.I._  .-.I._.I.-.I.-.I    ,plL-plC-plC-O.                                        [IC.ulC.ulC^U-qlC-plC-pIC-       ._.I.-.I._.I._.I.-.I.-.I.-.I.-.I.-.I.
+`,
+`z^t.c^t.z^t.z^t.z^t.z^t.z^t.z^  z^t.z^t.z^t.x       $z%f$.m  .b]                                              |\$z%f$z&(%fh}%fh}%fat$X%f$zz        .z"t.z^t.z"t.z"t.z"t.z^t.z"t.z"t
+.[.i.[.>.[.i.[.>.}.>.}.>.}.>. .>.}.>.}.>.]        .X"u  _  Q k      . .            ; [.l.[.~.-.1.].{. .         _h<O}h<O}h<O}h<O}h<O}hiX<b<Z}h           }.>.}.>.}.>.}.>.}.>.}.>.}.
+(.x.(.x.(.x.(.x.(.x.(.x.(.n  .n.(.x.(.n.(.x      +d |]B #( uX.        f 1:oi\.d}Y.Q"]    .zIv+J>q.Xlu.Z(w'r.    |($nM|$uM|$n#|$n#|$n#|$n#($n#(%u#+ .).    n.}           (.n.(.n.(.n
+.;._.;._.;._.I._.;._.I._.I _.I.-.I.-.I.-      ' .xIL.C-<IC p:"     >.I.].?.1._.|.             .\.x;{.!.U.^.      v-plL?plL?plL-plL?plC?plC-plC-q.  }lC.?.l._.,  .I.-.I.-.I.-.I._.I.
+`,
+`z^t.z^t.z^t.z^t.z^t.c^t.z^t.z^t.z^t.z^      8fh}8X%f$X%f$X%f$       r./.YIc;k}f                .b<c.U:f.v.       |%f$X%j$X%j$X%j$X%f$X%f$X%f$X*t  j.X,j.Y"    |.z"f.z"t.z"t.z"t.z"t
+.[.i.[.i.[.>.}.>.[.>.[.>.}.>.}.>.}.>      `n<O"0}h<O{h<Z{a<Ol     .!.}.~.1._.{                  .(.+.|.}.(.;     Z<O{h<Z{a<Z{a<Z}h<Z{h<O}h<O{b<  1.~.{.  }.>.}.>.}.>.}.>.}.>.[.>.}.
+).x.).x.(.x.).x.).x.(.x.(.x.(.n.(.     .Z<a h-#j#|$n#|$u#|$nb    .v"x'm-Z_#(m.                  t>o)ZlZ!n.v.     1$n#|$uM|$u#|$uM|$n#|$n#|$nM. '\.u  . .(.n.(.n.(.x.(.x.(.n.(.x.(.x
+.;._.;._.;._.;._.;._.;.-.;._.I.      t"Y.j,X ulLlC-plC-plC-pIi   ,.?.|;L'uIr.>                  .r;J.x;U.\.].   .C-plC?plL?plC-plC-plC-plC~O :.  l.  I._.I.-.I._.I.-.;._.I._.I.-.I.
+`,
+`c^t.z^t.c^t.z^t.z^t.z^t.z^t.c      :M|p?M\p?k-*{%X%f$X%f$X%f$/   "j.Y:r.Jlw>0>c               |_8tk[W)q-*_u.   .$X%j$X%j$X%f$z%f$X%f$X%f$l .X"f.z.t.z"t.z"t.z^t.z"t.z^t.z"t.z"t
+.[.>.[.>.}.>.[.>.[.>.[.>.}         ulL'ulL'ulC O[Z,O}h<O}h<O}h.     .[.-.\.c>n.v.?          .n`/i0^ciX.?.     .0}a<Z{a<Z{a<Z{h<O}a<O}k! .}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.}.
+).x.(.x.(.x.(.x.(.x.(.n.     .n.(.n.      q}Z<Y  {$tp]$u#|$n#|$/     .wlL.X-O-#|q_m)m`L!vi*)w'*)q~X!w~z]z.   .$n#|$uM|$uM|$n#|$n#($  .u.|.n.   .(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.n.(.x
+.;._.;._.;._.;._.I.-.  -  .-.I.-.I.-.I._.I.-.I.-.l.  t-q`v_plC-p;-     i.-lC.~lJ.fIY.x.U.n"f.x;].r.U.,      `C-plC?plC-plC-pIC- .l.?   _.I._.I._.I.-.I.-.I._.I.-.I.-.I._.I._.I._.I.
+`,
+`z^t.c^t.c^t.c`t.z^t.c^t.c^t.c^t.c^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.c"t.z^t.z^t.c^t.c^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.c^t.z"t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z^t.z"t.z^t.z^t.z^t
+.[.i.[.>.}.i.[.i.[.i.[.>.[.>.[.>.[.i.[.i.[.>.}.>.[.>.}.>.[.>.[.>.[.>.}. .}.>. .>.}. .}. .}.>.}.>. .>.}. .}.    i.- >.}.>.}.>.}.>.[.>.}.>.}.>.}.>.}.>.}.>.}.>.}.>.[.>.[.>.}.>.}.>.[.
+).x.).x.).x.).x.(.x.).x.(.x.).x.).x.).x.(.x.).x.(.x.(.x.(.x.(.x.( x.(.x. .x.(.n (.n. .n.(.n.(. .(.n. .n.( n.(.n.(.x.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x.(.x.(.x.(.n.(.x.(.x.(.x
+.;.+.;._.;._.;.+.;._.I._.;._.;._.;._.I._.;._.;._.I._.;._.;._.;._.;._.;._ ;._.I.-.I.- I._.I._.I._.;.-.I.-.I._.I._.I._.;._.I._.I._.I._.;._.I._.I._.I.-.I._.I._.I._.I._.;._.;._.I.
+`,
+];
 
-    // --- GIANT ASCII EYE, pupil movement, real feel ---
-    const eyeArt = [
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⣀⡄⠀⣀⣤⣄⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⣠⢤⣤⣴⣞⣿⣟⣿⣿⣿⣏⣥⣾⣿⠿⢿⣛⣵⣿⣿⡿⠷⢶⣤⡀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣤⠔⣾⠿⠛⣩⣿⠟⠛⢛⣿⠟⠿⣷⣤⣾⡋⠉⣹⣿⠶⣿⣏⣡⣼⡿⢛⣂⣀⣉⡻⣦⡀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣶⡿⣿⣿⠋⣴⡾⠟⢟⣾⠿⠷⢶⣦⣿⣅⡀⣰⣾⣮⣽⡿⠟⠛⠿⠿⠛⠋⠙⠛⠛⠋⠉⠉⠉⠙⠻⣿⡄⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣶⡿⢫⣿⣋⣾⠟⢛⣿⢿⣦⣤⣿⣃⡀⢀⣼⣿⣬⣿⠟⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⣾⠏⣴⢏⣴⠟⢉⣿⠻⢷⣾⣏⡀⣠⣾⣉⣉⣿⠿⠁⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠏⡼⣣⣾⢿⣾⠟⠳⣾⣯⣄⣼⠏⢉⣿⠟⠛⛛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠃⣼⣿⠟⢡⣾⢃⣠⡾⠃⣠⣿⠏⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠇⣰⡟⠁⣰⣿⡷⠟⢋⣤⡾⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣼⠏⠀⢈⣉⣤⣶⠾⠛⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠿⠖⠚⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣶⡶⣶⠶⡶⠶⢶⢶⣤⣤⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⠾⡟⠋⡏⢈⡇⣸⢠⣏⣠⣇⣴⠏⢀⡠⠆⢀⠈⠉⡛⠲⠦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡶⢟⠉⣇⢀⣷⣼⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣵⣖⣫⣤⠞⠁⢀⡄⠀⠉⠓⢦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⢋⠙⡆⣸⣶⣿⣿⣿⠟⠋⣿⠉⢉⠻⣇⠉⠉⠙⢿⣿⣿⣿⣿⣶⣾⣋⣁⣀⣠⠖⠁⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢸⣶⣿⡿⠛⠁⣼⠃⠀⠀⣿⢿⣿⣟⣻⣦⡀⠀⠀⢻⡄⠉⠛⢿⣿⣿⣿⣦⠤⠤⠖⠊⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⠞⠁⠀⢀⣴⡿⠟⠁⠀⠀⢸⡏⠀⠀⢡⣿⡿⣿⣿⢻⡏⡙⠷⣦⠈⣷⠀⠀⠀⠉⠻⣿⣿⣿⣿⣒⣚⣉⡡⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠁⠀⢀⣠⡿⠋⠀⠀⠀⠀⠀⠸⣷⠀⣰⡟⢬⣻⣮⣛⣾⢻⠁⠀⢘⣿⡏⠀⠀⠀⠀⠀⠈⢻⣿⣿⣿⣖⣒⣒⣚⣁⡤⠄⣀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣾⣯⣀⣀⡀⠀⠀⠀⠀⠀⠹⣶⣿⠁⠀⣈⣴⠟⠙⠻⠿⠛⢋⣿⠁⠀⠀⠀⢀⣀⣶⢟⠁⣍⡉⠛⠻⠿⠿⠶⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠉⠁⠀⠈⠉⠛⠛⠷⣦⣤⣄⣀⣙⢿⣟⡛⠋⠁⠀⠀⠀⣀⣴⠟⠁⢀⣠⣤⡶⠟⠉⠠⣵⡛⢮⡛⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡏⢭⡙⢛⡛⠿⡿⠶⠶⠾⢿⡿⠟⠛⢛⠉⠉⣀⠀⢦⠈⢷⡈⠳⣄⠱⠌⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠾⠀⢸⠁⠘⡇⠀⢻⠀⠘⡆⠐⣶⠀⢷⠈⠻⡄⠙⣆⠈⢷⠀⢱⠀⠙⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠃⠀⢸⡇⠀⡇⠀⢹⠀⢸⠀⠀⢱⠀⢸⡆⠈⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠘⠀⠀⠇⠀⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀",
-"⣤⡄⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤⡤⠤⢤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡤",
-"⢈⠀⠀⣙⡋⣉⣉⠉⢉⣉⣛⡍⣉⣉⡙⣉⡋⡉⢉⢉⣱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣈⣈⣉⣉⣉⣉⣉⣉⣉⣉⣉"
+    // Animation logic (will be completed in Part 4)
+
+// ---- ANIMATION LOGIC ----
+    let currentFrame = 0;
+    const asciiDiv = document.getElementById('ascii-animation');
+    function showFrame() {
+      asciiDiv.textContent = asciiFrames[currentFrame];
+      currentFrame = (currentFrame + 1) % asciiFrames.length;
+    }
+    setInterval(showFrame, 150); // ~7 FPS
+
+    // ---- TERMINAL FAKERY ----
+    const terminalOutput = document.getElementById('terminal-output');
+    const terminalLines = [
+      'Welcome to Gore and Giggles ASCII Portal!',
+      'Initializing...',
+      'Loading forbidden animation...',
+      'Establishing secure connection...',
+      'Access granted. Enjoy the show!',
+      '',
+      'Type "help" for commands.',
+      '',
+      '> '
     ];
-
-    // Eye tracking constants (center of "iris" visually)
-    const pupilBaseRow = 13;
-    const pupilBaseCol = 42; // Adjust as needed for visual center
-    const pupilChar = "◉";   // looks cyber, shows "pupil"
-    const moveMaxRow = 2; // vertical motion (in lines)
-    const moveMaxCol = 8; // horizontal (in chars)
-
-    let pupilOffsetRow = 0, pupilOffsetCol = 0, lastMove = Date.now();
-
-    // Helper: insert the "pupil" at the right spot in the ASCII art
-    function renderEye(offsetRow, offsetCol) {
-      // Deep copy to not mutate base
-      let out = eyeArt.map(l => l.split(""));
-      let row = Math.min(eyeArt.length-1, Math.max(0, Math.round(pupilBaseRow + offsetRow)));
-      let col = Math.min(eyeArt[0].length-2, Math.max(0, Math.round(pupilBaseCol + offsetCol)));
-      // Remove old ◉ if present
-      for (let r = 0; r < out.length; r++) {
-        for (let c = 0; c < out[r].length; c++) {
-          if (out[r][c] === pupilChar) out[r][c] = "⣿";
-        }
-      }
-      out[row][col] = pupilChar;
-      document.getElementById('asciiEye').textContent = out.map(a=>a.join("")).join("\n");
-    }
-
-    // Mouse/touch move: update pupil offset
-    function updateEyeFromEvent(e) {
-      let x = 0.5, y = 0.5;
-      if (e.touches && e.touches.length) {
-        x = e.touches[0].clientX / window.innerWidth;
-        y = e.touches[0].clientY / window.innerHeight;
-      } else if (typeof e.clientX === "number") {
-        x = e.clientX / window.innerWidth;
-        y = e.clientY / window.innerHeight;
-      }
-      // Eye tracks mouse with deadzone and slight delay
-      pupilOffsetCol = (x - 0.5) * 2 * moveMaxCol;
-      pupilOffsetRow = (y - 0.5) * 2 * moveMaxRow;
-      lastMove = Date.now();
-    }
-    window.addEventListener('mousemove', updateEyeFromEvent);
-    window.addEventListener('touchmove', updateEyeFromEvent);
-
-    // Idle: wander a little, but always recenters
-    let animCol = 0, animRow = 0;
-    function eyeLoop(now) {
-      let targetCol = pupilOffsetCol, targetRow = pupilOffsetRow;
-      if (Date.now() - lastMove > 1800) {
-        // idle "breathing"
-        let t = now * 0.00022;
-        targetCol = Math.sin(t*1.1) * moveMaxCol * 0.5;
-        targetRow = Math.cos(t*0.8) * moveMaxRow * 0.7;
-      }
-      animCol += (targetCol - animCol) * 0.19;
-      animRow += (targetRow - animRow) * 0.18;
-      renderEye(animRow, animCol);
-      requestAnimationFrame(eyeLoop);
-    }
-    renderEye(0, 0);
-    requestAnimationFrame(eyeLoop);
-    setInterval(() => {
-      let eye = document.getElementById('asciiEye');
-      eye.classList.add('flash');
-      setTimeout(() => eye.classList.remove('flash'), 100+Math.random()*180);
-    }, 5400 + Math.random()*1600);
-
-    // --- BOOT + TERMINAL (once/day logic) ---
-    const bootLines = [
-      '<span class="log-info">[BOOT]</span>   PromptForge v1.0 initializing...',
-      '<span class="log-trace">[TRACE]</span>  Establishing blacksite uplink... <span class="log-ok">[OK]</span>',
-      '<span class="log-warn">[SEC]</span>    Bypassing system security protocols...',
-      '<span class="log-trace">[MAP]</span>   Scanning active IPs – globe trace active',
-      '<span class="log-ok">[OK]</span>     AI model load: JuggernautXL, RealVis5... Success',
-      '<span class="log-warn">[SYS]</span>    Enabling classified modules...',
-      '<span style="display:none;">PromptForge: NSFW, AI prompt generator, text to image, hacking terminal, Gore and Giggles, 2025</span>',
-      '<span class="log-ok">[OK]</span>     Welcome, <b>Operator</b> – enter <span class="log-help">help</span> for system commands.'
-    ];
-    let bootIndex = 0, bootDone = false;
-    const bootLogDiv = document.getElementById('bootLog');
-    const inputRow = document.getElementById('terminalInputRow');
-    const inputBox = document.getElementById('terminalInput');
-
-    function printToTerminal(txt) {
-      bootLogDiv.innerHTML += txt + '<br>';
-      bootLogDiv.scrollTop = bootLogDiv.scrollHeight;
-    }
-
-    // Fun terminal commands
-    const fakeHelp = `
-<span class="log-help">PromptForge OS v1.0 Help Menu</span>
-Available commands:
-  <span class="log-help">help</span>      Show this menu
-  <span class="log-help">about</span>     About PromptForge, legal info
-  <span class="log-help">trace</span>     Trace globe, fake IP scan
-  <span class="log-help">j1nx</span>      Talk to J1NX (AI assistant)
-  <span class="log-help">contact</span>   Show support info
-  <span class="log-help">open</span>      Open secure access (try: <b>open sesame</b>)
-  <span class="log-help">unlock</span>    Unlock promptforge mainframe
-  <span class="log-help">enter</span>     Enter forbidden zone
-  <span class="log-help">continue</span>  Proceed to PromptForge
-  <span class="log-help">passcode</span>  Enter 8+ digit passcode for restricted access
-  <span class="log-help">exit</span>      Disconnect (reload)
-  <span class="log-help">easteregg</span> Hidden Easter Egg
-`;
-    const fakeAbout = `
-PromptForge™ is the ultimate forbidden AI prompt builder for NSFW, SFW, creative, and military-grade hacking. 
-All actions monitored. Use <span class="log-help">continue</span>, <span class="log-help">open</span>, or <span class="log-help">passcode</span> to access.<br>
-<span class="badge">Achievement: Meta Detected</span>
-<span style="display:none;">Best NSFW prompt tool, cyberpunk hacking, prompt battle, AI art, 2025, text-to-image, promptforge.online</span>
-`;
-    const fakeTrace = `
-[TRACE]  Tracing route to user... 
-  10.27.14.2 —> 47.23.181.7 [OK]
-  47.23.181.7 —> 104.223.13.58 [OK]
-  104.223.13.58 —> 127.0.0.1 [LOOP]
-<span class="log-info">[GLOBE]</span> <span style="font-family:monospace;color:#33b0ff;">🌐 · · · · · · ⬤ · · · · · ·</span> 
-<span class="log-warn">Active trace found: <b>GOREANDGIGGLES</b></span>
-<span class="badge">Badge: Hacker Scanned</span>
-`;
-    const fakeJ1NX = `
-<span class="log-help">J1NX:</span>  "You called? Need a dirty prompt, or just lonely, Operator?"
-<span class="badge">Badge: J1NX Contacted</span>
-`;
-    const fakeContact = `
-<span class="log-info">Support:</span>  <a href="mailto:0fearnofish0@gmail.com" style="color:#b4fff5;">0fearnofish0@gmail.com</a><br>
-Find more at: <a href="https://promptforge.online" target="_blank" style="color:#fff;">promptforge.online</a>
-<span class="badge">Supporter</span>
-`;
-
-    // --- Terminal Logic
-    function unlockByCommand() {
-      inputRow.style.display = "none";
-      setVisitCookie(bootCookie, "1");
-      window.location = "main.html";
-    }
-    function handleTerminalCommand(cmdRaw) {
-      const cmd = cmdRaw.trim().toLowerCase();
-      if (!cmd) return;
-      // Any access words or plausible passcodes
-      if (
-        cmd === "open" || cmd.startsWith("open ") ||
-        cmd === "unlock" || cmd.startsWith("unlock ") ||
-        cmd === "enter" || cmd === "continue" ||
-        cmd === "passcode" ||
-        (cmd.length >= 8 && /^\d+$/.test(cmd)) // numeric 8+ char passcode
-      ) {
-        unlockByCommand();
-        printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Welcome, Operator.<span class="badge">Terminal Unlocked</span>');
-        return;
-      }
-      switch (cmd) {
-        case "help":
-          printToTerminal(fakeHelp);
-          break;
-        case "about":
-          printToTerminal(fakeAbout);
-          break;
-        case "trace":
-          printToTerminal(fakeTrace);
-          break;
-        case "j1nx":
-          printToTerminal(fakeJ1NX);
-          break;
-        case "contact":
-          printToTerminal(fakeContact);
-          break;
-        case "easteregg":
-          printToTerminal(`<span class="log-error">[FORBIDDEN ACCESS]</span>  Secret protocol unlocked.<br>
-            <span style="color:#ff5b61">Enter 8+ character passcode now for instant access.</span>`);
-          break;
-        case "exit":
-        case "disconnect":
-          printToTerminal('<span class="log-warn">[DISCONNECT]</span> Connection dropped. Refresh to reconnect.');
-          inputRow.style.display = "none";
-          break;
-        default:
-          if (cmd.length >= 8) {
-            unlockByCommand();
-            printToTerminal('<span class="log-ok">[ACCESS GRANTED]</span> Secret code accepted. <span class="badge">Master Unlock</span>');
-          } else {
-            printToTerminal('<span class="log-error">Unknown command:</span> ' + cmd + ' (<span class="log-help">type "help"</span>)');
-          }
-          break;
-      }
-    }
-    inputBox.addEventListener('keydown', function(e){
-      if (e.key === "Enter") {
-        handleTerminalCommand(inputBox.value);
-        inputBox.value = "";
-      }
-    });
-    inputRow.addEventListener('click',()=>inputBox.focus());
-
-    // --- Boot Sequence & Once/Day logic
-    function skipBootIfVisited() {
-      if(getVisitCookie(bootCookie)==="1") {
-        window.location = "main.html";
-        return true;
-      }
-      return false;
-    }
-    // Only play boot if first visit today
-    if(!skipBootIfVisited()){
-      setTimeout(typeBootLine, 900);
-      setVisitCookie(bootCookie, "1");
-    }
-    function typeBootLine() {
-      if (bootIndex < bootLines.length) {
-        printToTerminal(bootLines[bootIndex]);
-        bootIndex++;
-        setTimeout(typeBootLine, 950);
+    let line = 0;
+    let char = 0;
+    function typeLine() {
+      if (line >= terminalLines.length) return;
+      let output = '';
+      for (let i = 0; i < line; ++i) output += terminalLines[i] + '\n';
+      output += terminalLines[line].slice(0, char);
+      terminalOutput.textContent = output + (char % 2 === 0 ? '_' : '');
+      char++;
+      if (char <= terminalLines[line].length) {
+        setTimeout(typeLine, 40);
       } else {
-        bootDone = true;
-        document.getElementById('terminalInputRow').style.display = '';
-        document.getElementById('terminalInput').focus();
+        char = 0;
+        line++;
+        setTimeout(typeLine, 400);
       }
     }
+    setTimeout(typeLine, 800);
+
+    // ---- SEO: Add meta tags, description, title, etc. ----
   </script>
+  <title>ASCII Animated Portal | Gore and Giggles</title>
+  <meta name="description" content="Animated ASCII art with live terminal simulation. Fun, safe, and unique—no NSFW. Built for web, with love from Gore and Giggles.">
+  <meta name="keywords" content="ASCII, animation, art, terminal, fun, safe, creative, web, Gore and Giggles">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><text y=%2252%22 font-size=%2250%22>👾</text></svg>">
+
+  <style>
+    /* Mobile & desktop friendly tweaks */
+    @media (max-width: 800px) {
+      .container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      #ascii-animation, #terminal-fake {
+        min-width: unset;
+        max-width: 100vw;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- The actual app rendered above! -->
 </body>
 </html>
