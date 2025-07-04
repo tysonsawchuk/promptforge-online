@@ -2,297 +2,240 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Gore & Giggles - Terminal Entry</title>
-  <meta name="description" content="Ultra-cool hacker terminal. Secret admin access. SFW and fun! | Gore and Giggles.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- SEO for Google -->
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Gore & Giggles | Secret Terminal">
-  <meta property="og:description" content="Crack the code. Find the secret. Enter the vault. SFW, cool, and fun for all.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://promptforge.online/">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="PromptForge: The underground hacker terminal for creative minds. Interactive, fun, and totally safe.">
+  <meta name="keywords" content="PromptForge, ASCII, terminal, fake hacking, hacker, animation, interactive, creative, cyber, fun, safe">
+  <title>PromptForge • Hacker Terminal Demo</title>
   <style>
     html, body {
-      height: 100%;
-      margin: 0;
-      background: #050708;
-      color: #5FFFB7;
-      font-family: 'Fira Mono', 'Consolas', monospace;
+      height: 100%; margin: 0; padding: 0; background: #0a0d11; color: #37ffe5;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace; font-size: 1.04em;
       overflow: hidden;
     }
-    body {
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      flex-direction: row;
-      align-items: stretch;
-      justify-content: flex-start;
-      background: #050708;
+    .container {
+      display: flex; flex-direction: row; justify-content: flex-start;
+      align-items: stretch; height: 100vh; width: 100vw;
     }
-    #terminal {
-      flex: 1.2;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 3vw 2vw 2vw 4vw;
-      min-width: 0;
-      max-width: 56vw;
-      min-height: 100vh;
-      background: transparent;
+    .terminal {
+      width: 56vw; height: 100vh; padding: 2.5vw 2vw;
+      background: none; display: flex; flex-direction: column; justify-content: flex-end;
     }
-    #screen {
-      flex: 1;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      font-size: 1.1rem;
-      margin-bottom: 1.4em;
-      outline: none;
-      background: transparent;
-      scrollbar-color: #222 #111;
-      scrollbar-width: thin;
-      border: none;
+    .terminal-output {
+      flex: 1; overflow: hidden; display: flex; flex-direction: column-reverse;
+      letter-spacing: 0.06em; word-break: break-all;
     }
-    #input-line {
-      display: flex;
-      align-items: center;
+    .prompt-bar {
+      color: #65ffe2; font-weight: bold;
+      margin-top: 1.5em; margin-bottom: 0.4em;
     }
-    #prompt {
-      color: #8af6ff;
-      margin-right: 0.2em;
-      font-weight: bold;
+    .input-line {
+      display: flex; align-items: center;
     }
-    #cmdline {
-      background: transparent;
-      border: none;
-      color: #5FFFB7;
-      font-family: inherit;
-      font-size: 1.1rem;
-      outline: none;
-      width: 100%;
-      padding: 0;
+    .fake-input {
+      background: none; border: none; outline: none;
+      color: #37ffe5; font: inherit; width: 70%;
+      caret-color: #39ff14;
+      margin-left: 0.2em;
     }
-    #video-ani {
-      flex: 0.9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: transparent;
-      min-width: 0;
-      min-height: 100vh;
-      max-width: 44vw;
-      z-index: 1;
-      box-shadow: none;
+    .hint {
+      font-size: 0.95em; color: #1de9b6;
+      margin-top: 0.2em; margin-left: 0.5em;
+      opacity: 0.85;
     }
-    #video-ani video {
-      width: 32vw;
-      height: auto;
-      min-width: 360px;
-      background: #050708;
-      border-radius: 0.6em;
-      box-shadow: 0 0 44px 0 #011, 0 0 5px #33f3ff66;
+    .footer {
+      position: absolute; left: 2vw; bottom: 1vw;
+      color: #18ffa6a0; font-size: 0.97em;
+    }
+    .video-pane {
+      flex: 1 1 0%; display: flex; align-items: center; justify-content: center;
+      background: none; min-width: 0; height: 100vh;
+    }
+    .globe-video {
+      width: 460px; height: 340px; background: none;
+      border-radius: 1.5em; box-shadow: 0 0 54px #00fff488;
+      object-fit: cover; /* perfect blend for black bg */
+      filter: saturate(1.13) drop-shadow(0 0 20px #5ef8fa99);
     }
     @media (max-width: 900px) {
-      #terminal { padding: 1vw 1vw 1vw 2vw; font-size: 0.98rem;}
-      #video-ani video { width: 95vw; min-width: 0; max-width: 98vw; margin: auto;}
-      body { flex-direction: column;}
-      #terminal, #video-ani { min-height: 40vh; max-width: 100vw; }
+      .container { flex-direction: column; }
+      .terminal, .video-pane { width: 100vw; }
+      .globe-video { width: 98vw; height: 44vw; }
     }
-    /* Hide scrollbars on video/terminal for clean look */
-    #screen::-webkit-scrollbar { width: 8px; background: #111;}
-    #screen::-webkit-scrollbar-thumb { background: #2A2A2A;}
   </style>
 </head>
 <body>
-  <div id="terminal">
-    <div id="screen" tabindex="0"></div>
-    <div id="input-line">
-      <span id="prompt">&gt;_</span>
-      <input id="cmdline" autocomplete="off" autofocus />
+  <div class="container">
+    <div class="terminal">
+      <div id="output" class="terminal-output"></div>
+      <div class="prompt-bar">
+        <span style="color:#0aff9d;font-weight:bold;">root@network:/#</span>
+        <div class="input-line">
+          <input id="terminalInput" class="fake-input" autofocus autocomplete="off" spellcheck="false" />
+          <span id="blinker" style="font-size:1.23em;color:#0aff9d;">█</span>
+        </div>
+      </div>
+      <div class="hint">
+        try: <span style="color:#fff;">help</span>, about, contact, clear, passkey, main
+      </div>
+      <div class="footer">
+        <em>This is a demo terminal. No sensitive info is ever processed. | PromptForge 2025</em>
+      </div>
+    </div>
+    <div class="video-pane">
+      <video class="globe-video" src="openart-video_106dc64a_1751649473737.mp4" autoplay loop muted playsinline></video>
     </div>
   </div>
-  <div id="video-ani">
-    <video src="openart-video_106dc64a_1751649473737.mp4" autoplay loop muted playsinline></video>
-  </div>
 <script>
-/* --- Terminal Setup --- */
-const screen = document.getElementById('screen');
-const input = document.getElementById('cmdline');
-const prompt = document.getElementById('prompt');
-let history = [];
-let histPtr = 0;
-let gate = { awaiting: false, tries: 0 };
-
-// Start session:
-const MOTD = [
-  "Welcome to Gore & Giggles Secure Terminal",
-  "Type 'help' for a list of commands. This portal is for authorized fun only.",
-  "Hint: There's always a way in...",
-  "",
+const bootLines = [
+  "booting up...",
+  "verifying root@network:/$",
+  "scanning global nodes: OK",
+  "retrieving handshake...",
+  "connection secured [TLS 1.3]",
+  "pinging world backbone ... 42ms",
+  "connected: 192.168.88.1 → 17.253.144.10",
+  "updating firewall signatures: done",
+  "tracing dynamic IP routes...",
+  " | 213.44.12.34 → 88.21.41.17",
+  " | 182.33.66.5 → 101.88.21.200",
+  "synchronizing system clock: +0.0001s",
+  "collecting packet logs: ░░░░░░░░░░░ 79%",
+  "injecting stealth payload... done",
+  "node handshake: [✓] validated",
+  "status: ALL SYSTEMS ONLINE"
 ];
-function scrollToBottom() { screen.scrollTop = screen.scrollHeight; }
-function print(txt, speed=0) {
-  if (speed > 0) {
-    let i = 0;
-    let id = setInterval(()=>{
-      if (i < txt.length) {
-        screen.innerHTML += txt[i++];
-        scrollToBottom();
-      } else { clearInterval(id); screen.innerHTML += "<br>"; }
-    }, speed);
-  } else {
-    screen.innerHTML += txt.replace(/\n/g,'<br>') + '<br>';
-    scrollToBottom();
-  }
+
+const helpText = `
+Commands:<br>
+• <b>help</b> — show this help<br>
+• <b>about</b> — about this terminal<br>
+• <b>contact</b> — how to reach the admin<br>
+• <b>clear</b> — wipe terminal history<br>
+• <b>passkey</b> — try the hidden admin unlock<br>
+• <b>main</b> — (locked, requires passkey)<br>
+• <b>sudo</b> — do you really think that’ll work? 😉<br>
+• <b>secret</b> — (try it)<br>
+`;
+
+const aboutText = `
+PromptForge • Underground Terminal<br>
+• Created for fun, learning, and that hacker vibe<br>
+• <b>100% safe</b>, no data leaves your browser<br>
+• Globe video: original OpenArt creation<br>
+• To unlock main, <b>type: passkey</b> and enter the code<br>
+`;
+
+const contactText = `
+You found the hidden signal!<br>
+Contact: <span style="color:#5af;">tysonsawchuk@gmail.com</span><br>
+Or try our <a style="color:#1cf;" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+`;
+
+const passkeySecret = "giggles1337"; // Change this as you wish!
+let passkeyUnlocked = false;
+
+const secretEasterEggs = [
+  "🦑 You found the secret squid.",
+  "Try 'sudo make me a sandwich' — see what happens.",
+  "👻 Boo! (You triggered the ghost in the machine.)",
+  "The cake is a lie.",
+  "Nice try, but no backdoors here.",
+  "You are root, but root is powerless here."
+];
+
+// Store all scroll lines
+let lines = [];
+let typing = false;
+
+function scrollTerminal() {
+  const output = document.getElementById('output');
+  output.innerHTML = lines.map(line =>
+    `<div style="margin-bottom:0.13em;">${line}</div>`
+  ).join('');
 }
-function newPrompt() { input.value = ''; input.focus(); }
-function clearTerm() { screen.innerHTML = ""; }
-MOTD.forEach(line => print(line, 0));
-newPrompt();
-</script>
-<!-- PART 2 (JS logic and command handling) follows next! -->
-// --- Command logic ---
-const ADMIN_PASS = "gigglesvault";
-let adminUnlocked = false;
 
-const cmds = {
-  help: () => {
-    print(`Available commands:
-- <b>help</b>: Show this help menu
-- <b>about</b>: Who made this
-- <b>clear</b>: Wipe the terminal
-- <b>vault</b>: ??? (requires admin)
-- <b>main</b>: Open the main app (if you can)
-- <b>easteregg</b>: Reveal a secret
-- <b>contact</b>: How to reach us
-- <b>links</b>: Our socials & more
-
-Tip: Type <b>admin</b> for secret access. Some doors require passwords!
-`);
-  },
-
-  about: () => {
-    print("Gore & Giggles is a playful experiment in code, creativity, and secrecy. Built with ❤️ by a small but mighty crew in BC, Canada. No gore, just giggles. SFW for the world, cool for the curious.");
-  },
-
-  clear: () => {
-    clearTerm();
-  },
-
-  main: () => {
-    if (adminUnlocked) {
-      print("Access granted. Redirecting to the main app...");
-      setTimeout(() => window.location = '/main', 1600);
-    } else {
-      print("🔒 This command is restricted. Try typing <b>admin</b> to proceed.");
-    }
-  },
-
-  vault: () => {
-    if (adminUnlocked) {
-      print("Vault access opened! Welcome to the secret vault. (Not yet implemented)");
-    } else {
-      print("The vault is locked tight. Type <b>admin</b> to attempt access.");
-    }
-  },
-
-  admin: () => {
-    if (adminUnlocked) {
-      print("You're already in! Type <b>main</b> to open the app or <b>vault</b> for secrets.");
-      return;
-    }
-    gate.awaiting = true;
-    print("🔑 Admin authentication required. Enter admin password:");
-  },
-
-  contact: () => {
-    print("Contact: <a href='mailto:0fearnofish0@gmail.com' style='color:#5FFFB7;text-decoration:underline;'>0fearnofish0@gmail.com</a> | <a href='https://bsky.app/profile/goreandgiggles.bsky.social' target='_blank' style='color:#5FFFB7;'>Bluesky</a>");
-  },
-
-  links: () => {
-    print(`Links:
-- <a href="https://promptforge.online/" style="color:#5FFFB7;" target="_blank">PromptForge</a>
-- <a href="https://x.com/GoreandGiggles" style="color:#5FFFB7;" target="_blank">X (Twitter)</a>
-- <a href="https://www.facebook.com/groups/393971833395749" style="color:#5FFFB7;" target="_blank">Facebook Group</a>
-`);
-  },
-
-  easteregg: () => {
-    print("🥚 <b>Congratulations!</b> You found a hidden egg. Type <b>main</b> after unlocking admin, or try a few more 'random' commands...");
-  },
-
-  // Fun: Easter eggs for failed attempts
-  iloveyou: () => {
-    print("Aww, we love you too. But that's not the password...");
-  },
-  hacktheplanet: () => {
-    print("Nice try, Acid Burn. Wrong decade! 😜");
-  },
-  sudo: () => {
-    print("Permission denied. This isn't *nix... or is it?");
-  }
-};
-
-function processCmd(cmd) {
-  const inputRaw = cmd.trim();
-  if (inputRaw === "") return;
-  // If awaiting password for admin
-  if (gate.awaiting) {
-    if (inputRaw === ADMIN_PASS) {
-      adminUnlocked = true;
-      gate.awaiting = false;
-      print("✅ Admin unlocked. Type <b>main</b> to enter or <b>vault</b> for secrets.");
-    } else {
-      gate.tries++;
-      if (gate.tries > 2) {
-        print("Too many failed attempts. Try again in a minute.");
-        setTimeout(()=>{ gate.awaiting = false; gate.tries = 0; }, 3000);
-      } else {
-        print("❌ Incorrect password. Try again:");
-      }
-    }
-    return;
-  }
-
-  // Easter eggs
-  if (["iloveyou", "hacktheplanet", "sudo"].includes(inputRaw)) {
-    cmds[inputRaw]();
-    return;
-  }
-
-  // Known commands
-  if (cmds.hasOwnProperty(inputRaw)) {
-    cmds[inputRaw]();
+function fakeBootup(i = 0) {
+  if (i < bootLines.length) {
+    lines.unshift('<span style="color:#2efcd7;">' + bootLines[i] + '</span>');
+    scrollTerminal();
+    setTimeout(() => fakeBootup(i+1), 120 + Math.random()*140);
   } else {
-    print(`Unknown command: <b>${inputRaw}</b> (type <b>help</b> for options)`);
+    lines.unshift('<span style="color:#1cf;">root@network:/# <em>Type a command...</em></span>');
+    scrollTerminal();
   }
 }
 
-// Initial hint for first time
-print("Type <b>help</b> to begin, or <b>admin</b> if you think you know the way...<br>");
+function showHint(text) {
+  lines.unshift('<span style="color:#23c9f7;">' + text + '</span>');
+  scrollTerminal();
+}
 
-input.addEventListener('keydown', function(e) {
-  if (e.key === "Enter") {
-    const val = input.value;
-    print(`<span style="color:#8af6ff;">&gt;_</span> ${val}`);
-    processCmd(val);
-    history.push(val);
-    histPtr = history.length;
-    input.value = '';
-  } else if (e.key === "ArrowUp") {
-    if (histPtr > 0) { histPtr--; input.value = history[histPtr]; }
-  } else if (e.key === "ArrowDown") {
-    if (histPtr < history.length-1) { histPtr++; input.value = history[histPtr]; }
-    else { input.value = ""; }
+function handleCommand(cmd) {
+  const c = cmd.trim().toLowerCase();
+  if (c === '') return;
+  lines.unshift('<span style="color:#0aff9d;font-weight:bold;">root@network:/#</span> ' + cmd);
+
+  // Command actions
+  if (c === "help") {
+    showHint(helpText);
+  } else if (c === "about") {
+    showHint(aboutText);
+  } else if (c === "contact") {
+    showHint(contactText);
+  } else if (c === "clear") {
+    lines = [];
+    scrollTerminal();
+  } else if (c === "main") {
+    if (passkeyUnlocked) {
+      showHint("<b>ACCESS GRANTED.</b><br>Welcome to Main! (Placeholder — coming soon.)");
+    } else {
+      showHint("🔒 <b>Access denied.</b> Type <b>passkey</b> and enter admin code.");
+    }
+  } else if (c === "passkey") {
+    let code = prompt("Enter admin passkey:");
+    if (code && code.trim() === passkeySecret) {
+      passkeyUnlocked = true;
+      showHint("<b>ADMIN KEY ACCEPTED</b><br>Type <span style='color:#fff'>main</span> to open main.");
+    } else {
+      showHint("❌ Wrong passkey. Try again.");
+    }
+  } else if (c === "sudo") {
+    showHint("You are not in the sudoers file. This incident will be reported.");
+  } else if (c === "secret") {
+    showHint(secretEasterEggs[Math.floor(Math.random()*secretEasterEggs.length)]);
+  } else if (c === "mainframe" || c === "open sesame") {
+    showHint("Wrong timeline, friend.");
+  } else {
+    showHint(`Command not found: <b>${cmd}</b> — type <span style="color:#fff;">help</span> for list of commands.`);
   }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  fakeBootup();
+
+  const input = document.getElementById('terminalInput');
+  const blinker = document.getElementById('blinker');
+
+  input.value = "";
+  input.focus();
+
+  // Blinker animation
+  setInterval(() => {
+    blinker.style.opacity = (blinker.style.opacity === "0" ? "1" : "0");
+  }, 460);
+
+  input.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      handleCommand(input.value);
+      input.value = "";
+    }
+  });
+
+  // Auto-scroll focus if click anywhere on left
+  document.querySelector(".terminal").addEventListener("click", () => {
+    input.focus();
+  });
 });
-
-// Autofocus fix
-window.onload = () => { input.focus(); scrollToBottom(); };
-
-// Fake blinking cursor (for terminal style)
-setInterval(() => {
-  prompt.style.opacity = (prompt.style.opacity == 1 ? 0.2 : 1);
-}, 600);
-
 </script>
-<!-- END OF FILE -->
+</body>
+</html>
