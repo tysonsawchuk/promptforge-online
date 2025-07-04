@@ -2,278 +2,200 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="A realistic retro terminal gateway for PromptForge. Experience a hacker-style boot sequence and unlock hidden features. No sensitive info processed.">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" type="image/png" href="favicon.png">
+  <title>PromptForge Terminal</title>
+  <meta name="description" content="PromptForge | Forbidden Console - A fun hacker-style terminal intro to your private tool.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      background: #090b10;
+    html, body {
+      height: 100%;
+      background: #111;
       margin: 0;
-      color: #20ffe0;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      overflow-x: hidden;
+      padding: 0;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      align-items: stretch;
+      background: #111;
     }
     .terminal {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 54vw;
-      height: 100vh;
-      background: transparent;
-      padding: 2vw 3vw;
-      border: none;
-      z-index: 1;
+      flex: 1.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: #111;
+      color: #32ff8f;
+      padding: 32px 0 24px 48px;
+      font-size: 1.1rem;
+      min-width: 0;
       overflow: hidden;
-      box-shadow: none;
     }
     #output {
-      font-size: 1.09rem;
-      line-height: 1.27;
-      min-height: 60vh;
-      user-select: text;
-      word-break: break-all;
-      color: #20ffe0;
-      text-shadow: 0 0 2px #01f0ff77;
-      margin-bottom: 16px;
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 14px;
       white-space: pre-wrap;
+      word-break: break-all;
     }
-    .input-row {
-      display: flex;
-      align-items: center;
-      color: #00ffd0;
+    .prompt {
+      color: #00ffe8;
+      font-weight: bold;
+      margin-right: 0.5em;
     }
-    #terminalInput {
+    #input {
       background: transparent;
-      color: #2efcd7;
       border: none;
       outline: none;
+      color: #6fff87;
+      font-size: 1.1rem;
       font-family: inherit;
-      font-size: 1.07rem;
-      width: 50vw;
+      width: 60%;
     }
-    #blinker {
-      width: 1ch;
-      height: 1.2em;
-      margin-left: -0.2em;
-      display: inline-block;
-      background: #22ffe8;
-      opacity: 1;
-      animation: blink 0.9s steps(1) infinite;
+    .globe-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      min-width: 0;
+      overflow: hidden;
     }
-    @keyframes blink { 0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;} }
-    .network-video {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 44vw;
-      height: 100vh;
-      object-fit: cover;
-      background: #000;
-      box-shadow: none !important;
-      border: none !important;
-      z-index: 0;
-      pointer-events: none;
+    #globe-video {
+      max-width: 95%;
+      max-height: 80vh;
+      display: block;
+      background: #111;
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      margin: 0 auto;
     }
-    .cmd-hints {
-      margin-top: 0.7em;
-      color: #38ffe0b0;
-      font-size: 0.98em;
-      letter-spacing: 0.02em;
-      font-style: italic;
-    }
-    .footer-note {
-      color: #254a47a0;
-      font-size: 0.91em;
-      margin-top: 1.2em;
-      font-style: italic;
+    ::selection {
+      background: #444;
+      color: #fff;
     }
     @media (max-width: 900px) {
-      .terminal { width: 100vw; padding: 2vw 2vw; }
-      .network-video { display: none; }
+      .container { flex-direction: column; }
+      .terminal { padding: 14px 8px 14px 8px; }
+      .globe-area { min-height: 30vh; }
+      #input { width: 95%; }
     }
   </style>
 </head>
 <body>
+<div class="container">
   <div class="terminal">
     <div id="output"></div>
-    <div class="input-row">
-      <span style="color:#13f9d6">root@network:/#</span>
-      <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
-      <span id="blinker"></span>
-    </div>
-    <div class="cmd-hints">
-      try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>
-    </div>
-    <div class="footer-note">
-      This is a demo terminal. No sensitive info is ever processed.<br>
-      <span style="color:#1f7c7a">Tip: 'main' is locked, try <b>passkey</b> for a secret entry code.</span>
-    </div>
+    <span class="prompt">&gt;</span><input id="input" autocomplete="off" autofocus />
   </div>
-  <video class="network-video" autoplay muted loop playsinline>
-    <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
-  </video>
-  <script>
-    // Initial scrollback "boot" text
-    const bootLines = [
-      "booting up...",
-      "",
-      "verifying root@network:/$",
-      "",
-      "scanning global nodes: OK",
-      "retrieving handshake...",
-      "connection secured [TLS 1.3]",
-      "pinging world backbone ... 42ms",
-      "connected: 192.168.88.1 → 17.253.144.10",
-      "updating firewall signatures: done",
-      "",
-      "tracing dynamic IP routes...",
-      "  | 213.44.12.34  → 88.21.41.17",
-      "  | 182.33.66.5   → 101.88.21.200",
-      "",
-      "synchronizing system clock: +0.0001s",
-      "",
-      "collecting packet logs: ▓▓▓░░░░░░░░░░ 79%",
-      "injecting stealth payload... done",
-      "",
-      "node handshake: [✓] validated",
-      "status: ALL SYSTEMS ONLINE",
-      ""
-    ];
+  <div class="globe-area">
+    <video id="globe-video" src="openart-video_106dc64a_1751649473737.mp4" autoplay loop muted playsinline></video>
+  </div>
+</div>
+<script>
+const output = document.getElementById('output');
+const input = document.getElementById('input');
+let stage = 0; // 0: initial, 1: waiting for passkey, 2: ready for main, 3: unlocked
 
-    // Terminal logic
-    let unlockedMain = false;
-    let passkeyStep = false;
+const helpLines = [
+  "<span style='color:#6fff87'>Available commands:</span>",
+  "<span style='color:#00ffe8'>help</span> - Show this help message.",
+  "<span style='color:#00ffe8'>about</span> - What is PromptForge?",
+  "<span style='color:#00ffe8'>passkey</span> - Unlock system (hint: any code).",
+  "<span style='color:#00ffe8'>main</span> - (After passkey) open to main system.",
+  "<span style='color:#fff668'>Try some wrong commands for surprises...</span>",
+  "<span style='color:#a588ff'>Easter egg: Type <b>xyzzy</b> for a treat.</span>",
+];
 
-    const output = document.getElementById('output');
-    const input = document.getElementById('terminalInput');
-    input.value = "";
+const easterEggs = [
+  "The cake is a lie.",
+  "Accessing secret vault... Error: Not enough coffee.",
+  "You found the hidden passage. Nothing here but dust.",
+  "Nice try. Try again.",
+];
 
-    function printLine(str = '', delay = 25) {
-      return new Promise(resolve => {
-        let i = 0;
-        let interval = setInterval(() => {
-          if (i <= str.length) {
-            output.innerHTML += str.substring(0, i) + "<br>";
-            output.scrollTop = output.scrollHeight;
-            i = str.length + 1;
-          } else {
-            clearInterval(interval);
-            resolve();
-          }
-        }, delay);
-      });
+const failLines = [
+  "Command not recognized.",
+  "Syntax error: unexpected input.",
+  "System does not compute. Try 'help'.",
+  "Access denied. You're not admin.",
+];
+
+function print(text) {
+  output.innerHTML += text + "<br>";
+  output.scrollTop = output.scrollHeight;
+}
+
+function startTerminal() {
+  print("<span style='color:#00ffe8'>Booting Forbidden Console...</span>");
+  setTimeout(() => {
+    print("█ PromptForge Console v3.2");
+    print("█ Welcome, guest.");
+    print("Type <span style='color:#00ffe8'>help</span> for available commands.");
+    input.focus();
+  }, 800);
+}
+
+input.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    let cmd = input.value.trim();
+    print("<span class='prompt'>&gt;</span>" + cmd);
+    input.value = '';
+    handleCmd(cmd);
+  }
+});
+
+function handleCmd(cmd) {
+  if (stage === 0) {
+    if (cmd.toLowerCase() === 'help') {
+      helpLines.forEach(l => print(l));
+    } else if (cmd.toLowerCase() === 'about') {
+      print("PromptForge is your forbidden AI-powered creative terminal. All experiments are for fun. Stay curious, stay safe!");
+    } else if (cmd.toLowerCase() === 'passkey') {
+      print("Enter passkey (6-16 chars, any value accepted):");
+      stage = 1;
+    } else if (cmd.toLowerCase() === 'xyzzy') {
+      print("<span style='color:#d16aff'>" + easterEggs[Math.floor(Math.random()*easterEggs.length)] + "</span>");
+    } else if (cmd.toLowerCase() === 'main') {
+      print("<span style='color:#ff6666'>System locked. You must unlock with passkey first.</span>");
+    } else {
+      print("<span style='color:#ff6666'>" + failLines[Math.floor(Math.random()*failLines.length)] + "</span>");
     }
-
-    // Boot sequence animation
-    async function showBoot() {
-      for (const line of bootLines) {
-        output.innerHTML += line + "<br>";
-        output.scrollTop = output.scrollHeight;
-        await new Promise(r => setTimeout(r, 55 + Math.random()*30));
-      }
-      output.innerHTML += '<span style="color:#13f9d6">root@network:/#</span> <span style="opacity:0.5;">|type a command...</span><br>';
+  } else if (stage === 1) {
+    // Accept anything as passkey
+    if (cmd.length >= 6 && cmd.length <= 16) {
+      print("<span style='color:#6fff87'>Passkey accepted. Type 'main' to open main system.</span>");
+      stage = 2;
+    } else {
+      print("<span style='color:#ff6666'>Invalid passkey. Must be 6-16 chars (any value).</span>");
     }
-
-    function terminalHelp() {
-      return [
-        "Available commands:",
-        "  help      Show this help",
-        "  about     About this gateway",
-        "  contact   Contact admin",
-        "  clear     Clear terminal",
-        "  passkey   Unlock advanced access",
-        "  main      Enter main system (locked, try passkey)"
-      ].join('\n');
+  } else if (stage === 2) {
+    if (cmd.toLowerCase() === 'main') {
+      showMain();
+    } else if (cmd.toLowerCase() === 'help') {
+      helpLines.forEach(l => print(l));
+    } else if (cmd.toLowerCase() === 'about') {
+      print("PromptForge is your forbidden AI-powered creative terminal. All experiments are for fun. Stay curious, stay safe!");
+    } else if (cmd.toLowerCase() === 'xyzzy') {
+      print("<span style='color:#d16aff'>" + easterEggs[Math.floor(Math.random()*easterEggs.length)] + "</span>");
+    } else {
+      print("<span style='color:#ff6666'>Type 'main' to continue.</span>");
     }
+  }
+}
 
-    function terminalAbout() {
-      return [
-        "PromptForge Network Entry Terminal",
-        "----------------------------------",
-        "A closed demo gateway for PromptForge.",
-        "Built for fun, with realistic terminal simulation.",
-        "Tip: Find the secret passkey to unlock main!"
-      ].join('\n');
-    }
+function showMain() {
+  print("<span style='color:#6fff87'>>>> Main System Unlocked! Welcome to PromptForge.</span>");
+  print("<span style='color:#00ffe8'>You're in. Redirecting to main...</span>");
+  setTimeout(() => {
+    window.location.href = "main.html";
+  }, 1600);
+}
 
-    function terminalContact() {
-      return [
-        "Contact:",
-        "  admin@goreandgiggles.com",
-        "  Bluesky: https://bsky.app/profile/goreandgiggles.bsky.social",
-        "  X: https://x.com/GoreandGiggles",
-        "  Facebook: https://www.facebook.com/groups/393971833395749"
-      ].join('\n');
-    }
-
-    function fakePasskeyPrompt() {
-      const chars = Math.floor(Math.random()*4)+6;
-      let pass = prompt(`Enter passkey (${chars} chars):`);
-      // No matter what, unlock main.
-      unlockedMain = true;
-      output.innerHTML += "verifying passkey... [OK]<br>Access granted.<br>";
-      output.innerHTML += "<span style='color:#11ffc4'>You can now type <b>main</b> to enter.</span><br>";
-      input.focus();
-    }
-
-    function showMain() {
-      output.innerHTML += `<span style='color:#6fff87'>>>> Main System Unlocked! Welcome to PromptForge.</span><br>`;
-      output.innerHTML += `<span style='color:#00ffe8'>You're in. Enjoy exploring the tools.<br>(Index page shows once per session.)</span><br>`;
-      // Optionally auto-redirect or reveal main UI here
-    }
-
-    function easterEgg() {
-      output.innerHTML += `<span style='color:#e3f363'>Hidden dev entry unlocked! Welcome, admin 👾</span><br>`;
-      output.innerHTML += `<span style='color:#f363a3'>Redirecting to main...</span><br>`;
-      unlockedMain = true;
-      setTimeout(() => { showMain(); }, 800);
-    }
-
-    // Command handler
-    input.addEventListener('keydown', function(e){
-      if(e.key === "Enter"){
-        let cmd = input.value.trim().toLowerCase();
-        output.innerHTML += `<span style="color:#13f9d6">root@network:/#</span> ${cmd}<br>`;
-        if(cmd === "help") {
-          output.innerHTML += terminalHelp().replace(/\n/g,"<br>") + "<br>";
-        }
-        else if(cmd === "about") {
-          output.innerHTML += terminalAbout().replace(/\n/g,"<br>") + "<br>";
-        }
-        else if(cmd === "contact") {
-          output.innerHTML += terminalContact().replace(/\n/g,"<br>") + "<br>";
-        }
-        else if(cmd === "clear") {
-          output.innerHTML = '';
-        }
-        else if(cmd === "passkey") {
-          fakePasskeyPrompt();
-        }
-        else if(cmd === "main") {
-          if (unlockedMain) showMain();
-          else output.innerHTML += "<span style='color:#f3d563'>Access denied. Try <b>passkey</b> first.</span><br>";
-        }
-        else if(cmd === "admin1337") {
-          easterEgg();
-        }
-        else if(cmd === "") {
-          // do nothing
-        }
-        else {
-          output.innerHTML += `<span style='color:#fd8989'>Unknown command: <b>${cmd}</b> — type 'help' for list.</span><br>`;
-        }
-        input.value = "";
-        output.scrollTop = output.scrollHeight;
-      }
-    });
-
-    // Initial boot
-    showBoot();
-    // Blinker animation (invisible if input focused)
-    setInterval(() => {
-      document.getElementById('blinker').style.opacity = input === document.activeElement ? 0 : 1;
-    }, 400);
-  </script>
+window.onload = startTerminal;
+</script>
 </body>
 </html>
