@@ -2,200 +2,248 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Terminal</title>
-  <meta name="description" content="PromptForge | Forbidden Console - A fun hacker-style terminal intro to your private tool.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptForge Console</title>
+  <meta name="description" content="PromptForge is the most advanced AI prompt tool for creators. Unlock hidden features with our interactive hacker terminal.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <style>
     html, body {
       height: 100%;
-      background: #111;
       margin: 0;
       padding: 0;
+      background: #0a0a0a;
+      color: #94f7c7;
       font-family: 'Fira Mono', 'Consolas', monospace;
       overflow: hidden;
     }
-    .container {
-      display: flex;
-      height: 100vh;
+    #container {
       width: 100vw;
-      align-items: stretch;
-      background: #111;
+      height: 100vh;
+      display: flex;
+      flex-direction: row;
+      background: #000;
     }
-    .terminal {
-      flex: 1.5;
+    #terminal {
+      width: 65vw;
+      min-width: 360px;
+      height: 100vh;
+      padding: 0;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      background: #111;
-      color: #32ff8f;
-      padding: 32px 0 24px 48px;
-      font-size: 1.1rem;
-      min-width: 0;
-      overflow: hidden;
+      position: relative;
     }
     #output {
       flex: 1;
       overflow-y: auto;
-      margin-bottom: 14px;
+      padding: 36px 24px 12px 24px;
+      display: flex;
+      flex-direction: column-reverse;
+      font-size: 1.15em;
+      letter-spacing: 0.05em;
       white-space: pre-wrap;
-      word-break: break-all;
+      user-select: text;
     }
-    .prompt {
-      color: #00ffe8;
-      font-weight: bold;
-      margin-right: 0.5em;
+    #input-bar {
+      width: 100%;
+      padding: 0 24px 18px 24px;
+      background: transparent;
+      display: flex;
+      align-items: center;
     }
     #input {
       background: transparent;
+      color: #afffd6;
       border: none;
+      border-bottom: 2px solid #222;
+      width: 100%;
+      font-size: 1.11em;
+      padding: 5px 10px;
       outline: none;
-      color: #6fff87;
-      font-size: 1.1rem;
-      font-family: inherit;
-      width: 60%;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      letter-spacing: 0.06em;
     }
-    .globe-area {
-      flex: 1;
+    #video-wrap {
+      width: 35vw;
+      min-width: 270px;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #111;
-      min-width: 0;
-      overflow: hidden;
+      background: #0a0a0a;
+      margin: 0;
+      padding: 0;
     }
-    #globe-video {
-      max-width: 95%;
-      max-height: 80vh;
+    #globevid {
+      width: 340px;
+      height: 340px;
+      background: #0a0a0a;
       display: block;
-      background: #111;
+      margin: 0 auto;
       border: none;
       box-shadow: none;
-      border-radius: 0;
-      margin: 0 auto;
+      object-fit: contain;
+      outline: none;
+    }
+    @media (max-width:900px) {
+      #container {
+        flex-direction: column;
+      }
+      #terminal, #video-wrap {
+        width: 100vw;
+        height: 50vh;
+        min-width: unset;
+      }
+      #globevid {
+        width: 220px;
+        height: 220px;
+      }
     }
     ::selection {
-      background: #444;
-      color: #fff;
+      background: #0e3;
+      color: #111;
     }
-    @media (max-width: 900px) {
-      .container { flex-direction: column; }
-      .terminal { padding: 14px 8px 14px 8px; }
-      .globe-area { min-height: 30vh; }
-      #input { width: 95%; }
+    .prompt {
+      color: #1ee897;
+    }
+    .hint {
+      color: #fffb9a;
+    }
+    .fail {
+      color: #ff5370;
+    }
+    .success {
+      color: #44ff99;
+    }
+    .info {
+      color: #4cf4ff;
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="terminal">
-    <div id="output"></div>
-    <span class="prompt">&gt;</span><input id="input" autocomplete="off" autofocus />
+  <div id="container">
+    <div id="terminal">
+      <div id="output"></div>
+      <div id="input-bar">
+        <span class="prompt">&gt;</span>
+        <input id="input" autocomplete="off" autofocus spellcheck="false" maxlength="48" />
+      </div>
+    </div>
+    <div id="video-wrap">
+      <video id="globevid" src="openart-video_106dc64a_1751649473737.mp4" autoplay loop muted playsinline></video>
+    </div>
   </div>
-  <div class="globe-area">
-    <video id="globe-video" src="openart-video_106dc64a_1751649473737.mp4" autoplay loop muted playsinline></video>
-  </div>
-</div>
-<script>
-const output = document.getElementById('output');
-const input = document.getElementById('input');
-let stage = 0; // 0: initial, 1: waiting for passkey, 2: ready for main, 3: unlocked
+  <script>
+    // Terminal fakery + unlock logic
+    const output = document.getElementById('output');
+    const input = document.getElementById('input');
+    let lines = [];
+    let maxLines = 44;
+    let scrollTimeout = null;
+    let stage = 0; // 0=default, 1=waiting for passkey, 2=passkey ok (wait for 'main')
+    let enteredPasskey = '';
 
-const helpLines = [
-  "<span style='color:#6fff87'>Available commands:</span>",
-  "<span style='color:#00ffe8'>help</span> - Show this help message.",
-  "<span style='color:#00ffe8'>about</span> - What is PromptForge?",
-  "<span style='color:#00ffe8'>passkey</span> - Unlock system (hint: any code).",
-  "<span style='color:#00ffe8'>main</span> - (After passkey) open to main system.",
-  "<span style='color:#fff668'>Try some wrong commands for surprises...</span>",
-  "<span style='color:#a588ff'>Easter egg: Type <b>xyzzy</b> for a treat.</span>",
-];
-
-const easterEggs = [
-  "The cake is a lie.",
-  "Accessing secret vault... Error: Not enough coffee.",
-  "You found the hidden passage. Nothing here but dust.",
-  "Nice try. Try again.",
-];
-
-const failLines = [
-  "Command not recognized.",
-  "Syntax error: unexpected input.",
-  "System does not compute. Try 'help'.",
-  "Access denied. You're not admin.",
-];
-
-function print(text) {
-  output.innerHTML += text + "<br>";
-  output.scrollTop = output.scrollHeight;
-}
-
-function startTerminal() {
-  print("<span style='color:#00ffe8'>Booting Forbidden Console...</span>");
-  setTimeout(() => {
-    print("█ PromptForge Console v3.2");
-    print("█ Welcome, guest.");
-    print("Type <span style='color:#00ffe8'>help</span> for available commands.");
-    input.focus();
-  }, 800);
-}
-
-input.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    let cmd = input.value.trim();
-    print("<span class='prompt'>&gt;</span>" + cmd);
-    input.value = '';
-    handleCmd(cmd);
-  }
-});
-
-function handleCmd(cmd) {
-  if (stage === 0) {
-    if (cmd.toLowerCase() === 'help') {
-      helpLines.forEach(l => print(l));
-    } else if (cmd.toLowerCase() === 'about') {
-      print("PromptForge is your forbidden AI-powered creative terminal. All experiments are for fun. Stay curious, stay safe!");
-    } else if (cmd.toLowerCase() === 'passkey') {
-      print("Enter passkey (6-16 chars, any value accepted):");
-      stage = 1;
-    } else if (cmd.toLowerCase() === 'xyzzy') {
-      print("<span style='color:#d16aff'>" + easterEggs[Math.floor(Math.random()*easterEggs.length)] + "</span>");
-    } else if (cmd.toLowerCase() === 'main') {
-      print("<span style='color:#ff6666'>System locked. You must unlock with passkey first.</span>");
-    } else {
-      print("<span style='color:#ff6666'>" + failLines[Math.floor(Math.random()*failLines.length)] + "</span>");
+    // Scroll from bottom up
+    function print(text) {
+      lines.unshift(text);
+      if (lines.length > maxLines) lines.length = maxLines;
+      output.innerHTML = lines.join('\n');
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        output.scrollTop = output.scrollHeight;
+      }, 25);
     }
-  } else if (stage === 1) {
-    // Accept anything as passkey
-    if (cmd.length >= 6 && cmd.length <= 16) {
-      print("<span style='color:#6fff87'>Passkey accepted. Type 'main' to open main system.</span>");
-      stage = 2;
-    } else {
-      print("<span style='color:#ff6666'>Invalid passkey. Must be 6-16 chars (any value).</span>");
-    }
-  } else if (stage === 2) {
-    if (cmd.toLowerCase() === 'main') {
-      showMain();
-    } else if (cmd.toLowerCase() === 'help') {
-      helpLines.forEach(l => print(l));
-    } else if (cmd.toLowerCase() === 'about') {
-      print("PromptForge is your forbidden AI-powered creative terminal. All experiments are for fun. Stay curious, stay safe!");
-    } else if (cmd.toLowerCase() === 'xyzzy') {
-      print("<span style='color:#d16aff'>" + easterEggs[Math.floor(Math.random()*easterEggs.length)] + "</span>");
-    } else {
-      print("<span style='color:#ff6666'>Type 'main' to continue.</span>");
-    }
-  }
-}
 
-function showMain() {
-  print("<span style='color:#6fff87'>>>> Main System Unlocked! Welcome to PromptForge.</span>");
-  print("<span style='color:#00ffe8'>You're in. Redirecting to main...</span>");
-  setTimeout(() => {
-    window.location.href = "main.html";
-  }, 1600);
-}
+    // Boot banner
+    function bootBanner() {
+      print("<span class='info'>[Welcome to <b>PROMPTFORGE</b> — Booting...]\nInitializing AI Prompt Console v1.5\nType <span class='hint'>'help'</span> for commands. For admin access type <span class='hint'>'passkey'</span>.</span>");
+      print("<span class='prompt'>&gt;</span>");
+    }
 
-window.onload = startTerminal;
-</script>
+    // Fun/fake terminal commands
+    function handleCmd(cmd) {
+      cmd = cmd.trim();
+      if (!cmd) return;
+
+      if (stage === 0) {
+        if (cmd.toLowerCase() === 'help') {
+          print(`<span class='hint'>Commands: <b>help</b>, <b>info</b>, <b>about</b>, <b>clear</b>, <b>passkey</b>
+- Type <b>passkey</b> to attempt admin unlock.
+- Type <b>main</b> for main console (needs admin).
+- Find the secret phrase for an easter egg!
+</span>`);
+        }
+        else if (cmd.toLowerCase() === 'about' || cmd.toLowerCase() === 'info') {
+          print(`<span class='info'><b>PromptForge</b>: Next-gen AI prompt engine. <br>
+Built for creators, hackers, and explorers. <br>
+Visit <b>https://promptforge.online</b> for updates.</span>`);
+        }
+        else if (cmd.toLowerCase() === 'clear') {
+          lines = [];
+          bootBanner();
+        }
+        else if (cmd.toLowerCase() === 'main') {
+          print("<span class='fail'>System locked. Type <b>passkey</b> for admin access.</span>");
+        }
+        else if (cmd.toLowerCase() === 'passkey') {
+          print("<span class='hint'>Enter passkey (6-16 chars, any value):</span>");
+          stage = 1;
+        }
+        else if (cmd.toLowerCase() === 'xyzzy') {
+          print(`<span class='info'>Easter Egg: The ancient magic word unlocks... nothing? 🤭</span>`);
+        }
+        else {
+          // fun/fake error lines for bad/unknown cmds
+          const snark = [
+            "<span class='fail'>Unknown command. Try 'help'.</span>",
+            "<span class='fail'>Command not recognized. Please check spelling.</span>",
+            "<span class='fail'>Access denied. No such function.</span>",
+            "<span class='fail'>Error 401: Permission required.</span>",
+            "<span class='fail'>Try again. Hint: 'help' lists commands.</span>"
+          ];
+          print(snark[Math.floor(Math.random()*snark.length)]);
+        }
+      } else if (stage === 1) {
+        // Accept any passkey, 6-16 chars
+        if (cmd.length >= 6 && cmd.length <= 16) {
+          enteredPasskey = cmd;
+          print("<span class='success'>Passkey accepted. Type <b>main</b> to enter main console.</span>");
+          stage = 2;
+        } else {
+          print("<span class='fail'>Passkey must be 6-16 characters (any value). Try again:</span>");
+        }
+      } else if (stage === 2) {
+        if (cmd.toLowerCase() === 'main') {
+          print("<span class='success'>&gt;&gt; Main System Unlocked! Welcome to PromptForge.</span>");
+          print("<span class='info'>Redirecting to main system...</span>");
+          setTimeout(() => {
+            window.location.href = "main.html";
+          }, 1450);
+        } else {
+          print("<span class='fail'>Type <b>main</b> to continue.</span>");
+        }
+      }
+    }
+
+    // Input events
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        let cmd = input.value;
+        print("<span class='prompt'>&gt;</span> " + cmd);
+        input.value = '';
+        handleCmd(cmd);
+      }
+    });
+
+    // Autofocus
+    window.onload = () => {
+      bootBanner();
+      input.focus();
+    };
+
+    // Allow clicking anywhere to focus input
+    document.body.addEventListener('mousedown', () => {
+      input.focus();
+    });
+  </script>
 </body>
 </html>
