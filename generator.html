@@ -1,518 +1,4205 @@
+<!-- CHUNK 1 START -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Monster Generator | Build Forbidden Prompts</title>
-  <meta name="description" content="The most advanced AI prompt generator for NSFW and photorealistic art. Instantly remix, copy, and create with Monster Logic.">
-  <meta name="keywords" content="AI prompt generator, NSFW prompts, monster prompt tool, photorealistic prompts, text to image, PromptForge, Gore and Giggles, j1nx bot">
-  <meta property="og:title" content="PromptForge Monster Generator | Forbidden AI Prompts" />
-  <meta property="og:description" content="Remix, copy, and create unstoppable AI prompts for art and NSFW." />
-  <meta property="og:image" content="/assets/media/og-banner.png" />
-  <meta property="og:url" content="https://promptforge.online/generator.html" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="PromptForge Monster Generator | Forbidden AI Prompts" />
-  <meta name="twitter:description" content="The best AI prompt generator for creative and forbidden art." />
-  <meta name="twitter:image" content="/assets/media/og-banner.png" />
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/assets/css/boot.css" />
-  <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono:400,700&display=swap" rel="stylesheet">
+  <title>PromptForge: AI Prompt Monster Generator</title>
+  <meta name="description" content="Create the most powerful image and movie prompts on the internet. Use advanced controls, randomizers, negatives, and genre mixing for epic results.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    :root {
-      --synth-blue: #09f;
-      --synth-red: #d02;
-      --main-bg: #14131b;
-    }
     body {
-      background: var(--main-bg);
-      color: #fffbe9;
-      font-family: 'Share Tech Mono', monospace, sans-serif;
+      background: #14161b;
+      color: #f7f7f7;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    .top-bar {
-      width: 100%;
-      background: linear-gradient(90deg,#181830 60%,#2a0e16 100%);
-      box-shadow: 0 3px 28px #09f5;
+    header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.6em 1.8em 0.6em 1.8em;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      padding: 2em 2.7em 1em 2em;
+      background: #171922;
+      border-bottom: 2px solid #20242d;
+      box-shadow: 0 2px 24px #1414142a;
     }
-    .logo-title {
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--synth-blue);
-      font-weight: bold;
-      font-size: 1.65em;
-      letter-spacing: 0.05em;
+    .logo-area {
       display: flex;
       align-items: center;
-      gap: 0.5em;
     }
-    .top-bar-socials {
-      display: flex;
-      gap: 1.25em;
-      align-items: center;
+    .logo-area img {
+      height: 2.5em;
+      margin-right: 0.85em;
     }
-    .social-btn {
+    .main-nav {
       display: flex;
-      align-items: center;
-      gap: 0.39em;
-      font-size: 1.1em;
+      gap: 1.7em;
+    }
+    .main-nav a {
+      color: #bffcff;
+      text-decoration: none;
       font-weight: 600;
-      color: #fff;
-      background: linear-gradient(110deg,var(--synth-blue) 55%,var(--synth-red) 100%);
-      border-radius: 1.6em;
-      box-shadow: 0 2px 9px #09f6, 0 0 6px #d026;
-      border: none;
-      padding: 0.31em 1.15em;
-      text-decoration: none;
-      transition: box-shadow .2s, background .13s, transform .09s;
-      outline: none;
-      margin: 0;
-      position: relative;
-      z-index: 10;
-    }
-    .social-btn:hover, .social-btn:focus {
-      background: linear-gradient(120deg,var(--synth-red) 30%,var(--synth-blue) 90%);
-      box-shadow: 0 0 18px #d02c, 0 0 18px #09f7;
-      color: #fffbe9;
-      transform: scale(1.04) rotate(-1deg);
-    }
-    .coffee-btn {
-      background: linear-gradient(120deg,#ffe46d 80%,#d02 100%);
-      color: #2c2013;
-      border: 2px solid #ffd900;
-      font-size: 1.1em;
-      box-shadow: 0 0 11px #ffd90044;
-      font-family: 'Share Tech Mono', monospace;
-      font-weight: 900;
-      letter-spacing: 0.01em;
-      margin-left: 1.5em;
-      margin-right: 0.5em;
-      transition: filter .13s, box-shadow .17s;
-      outline: none;
-      border-radius: 1.7em;
-      padding: 0.41em 1.3em;
-    }
-    .coffee-btn:hover, .coffee-btn:focus {
-      filter: brightness(1.13) drop-shadow(0 0 8px #ffd900bb);
-      background: linear-gradient(100deg,#fff8ca 80%,#d02 100%);
-      color: #d02;
-      text-decoration: none;
-    }
-    .nav-row {
-      display: flex;
-      gap: 1em;
-      justify-content: center;
-      margin: 1.7em 0 2em 0;
-      flex-wrap: wrap;
-    }
-    .nav-btn {
-      font-size: 1.08em;
-      font-weight: 600;
-      background: linear-gradient(90deg,var(--synth-blue) 50%,var(--synth-red) 100%);
-      color: #fff;
-      border-radius: 1.3em;
-      box-shadow: 0 1px 9px #09f3;
-      border: none;
-      padding: 0.4em 1.3em;
-      text-decoration: none;
-      transition: box-shadow .2s, background .13s;
-      margin-bottom: 0.2em;
-      display: flex;
-      align-items: center;
-      gap: 0.4em;
-    }
-    .nav-btn:hover, .nav-btn:focus {
-      background: linear-gradient(100deg,var(--synth-red) 30%,var(--synth-blue) 90%);
-      color: #fffbe9;
-      box-shadow: 0 0 11px #d02c, 0 0 14px #09f7;
-    }
-    .generator-card {
-      background: linear-gradient(125deg,#221d2a 80%,#09011c 100%);
-      border-radius: 2.1em;
-      box-shadow: 0 6px 48px #09f6, 0 2px 20px #d021;
-      padding: 2.2em 2.5em 2em 2.5em;
-      max-width: 820px;
-      width: 98vw;
-      margin: 2.2em auto 0 auto;
-      color: #fffbe9;
-      text-align: left;
-      position: relative;
-    }
-    .generator-card h1 {
-      color: var(--synth-blue);
-      text-shadow: 0 3px 18px #09f7, 0 0 1px #d02b;
-      font-size: 2.1em;
-      margin-bottom: 0.15em;
-      letter-spacing: 0.03em;
-      font-family: 'Share Tech Mono', monospace;
-      text-align: center;
-    }
-    .generator-card label {
-      color: #ffe46d;
-      font-weight: bold;
-      letter-spacing: 0.02em;
-      margin-bottom: 0.3em;
-      display: inline-block;
-      font-size: 1.03em;
-    }
-    .prompt-input-row {
-      display: flex;
-      gap: 0.7em;
-      margin-bottom: 1.3em;
-    }
-    .prompt-input {
-      flex: 1;
-      border-radius: 1.1em;
-      font-size: 1.08em;
-      border: 1.2px solid #35344a;
-      background: #14131b;
-      color: #fffbe9;
-      padding: 0.7em 1.1em;
-      box-sizing: border-box;
-      margin-right: 0.7em;
-    }
-    .gen-btn, .copy-btn, .reroll-btn {
-      font-weight: 700;
-      font-size: 1.05em;
-      border-radius: 1.1em;
-      padding: 0.55em 1.2em;
-      margin-right: 0.17em;
-      border: none;
-      box-shadow: 0 1px 8px #09f3;
-      background: linear-gradient(90deg,#f1c 50%,#ffd900 100%);
-      color: #222;
-      cursor: pointer;
-      transition: background .13s, box-shadow .13s, color .13s;
-    }
-    .gen-btn:hover, .reroll-btn:hover {
-      background: linear-gradient(90deg,#d02 50%,#09f 100%);
-      color: #fff;
-    }
-    .prompt-block {
-      position: relative;
-      margin-bottom: 2em;
-    }
-    .prompt-label {
-      color: var(--synth-blue);
-      font-weight: bold;
-      font-size: 1.1em;
-      margin-bottom: 0.12em;
-      display: flex;
-      align-items: center;
-    }
-    .prompt-output {
-      width: 100%;
-      min-height: 62px;
-      background: #1c1c29;
-      border-radius: 1em;
-      font-size: 0.96em;
-      line-height: 1.48;
-      color: #ffe46d;
-      border: 1.5px solid #35344a;
-      padding: 1.1em 3.6em 1.1em 1.1em;
-      font-family: 'Share Tech Mono', monospace;
-      resize: none;
-      margin-bottom: 0.3em;
-      box-sizing: border-box;
-      transition: box-shadow 0.12s;
-      overflow-x: auto;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 50%;
-      right: 1.1em;
-      transform: translateY(-50%);
-      font-size: 1.08em;
-      color: var(--synth-blue);
-      background: #fffbe9;
+      letter-spacing: 0.07em;
+      padding: 0.15em 1.05em;
       border-radius: 2em;
-      border: 2px solid var(--synth-blue);
-      box-shadow: 0 2px 7px #09f3;
-      padding: 0.21em 1em;
-      cursor: pointer;
-      z-index: 8;
-      font-weight: bold;
-      transition: background .15s, color .15s, border .15s;
+      transition: background 0.13s;
     }
-    .copy-btn:hover {
-      background: var(--synth-blue);
-      color: #fffbe9;
-      border: 2px solid #fffbe9;
+    .main-nav a:hover,
+    .main-nav a.active {
+      background: #262b37;
+      color: #fff;
     }
-    .prompt-output::-webkit-scrollbar {height: 7px;}
-    .prompt-output::-webkit-scrollbar-thumb {background: #35344a;border-radius:9px;}
-    .prompt-output::-webkit-scrollbar-track {background: transparent;}
-    .explain-box {
-      background: linear-gradient(90deg,#190e12 70%,#1b1829 100%);
-      color: #bfbcae;
-      border: 1px solid #393258;
-      border-radius: 1.2em;
-      font-size: 0.98em;
-      padding: 1em 1.5em;
-      margin: 0.6em 0 1.4em 0;
-      box-shadow: 0 1px 11px #09f3;
+    @media (max-width: 700px) {
+      header { flex-direction: column; align-items: flex-start; padding: 1em 1em 0.5em 1em; }
+      .main-nav { flex-wrap: wrap; gap: 0.8em; margin-top: 1em; }
     }
-    .neg-tags {
-      margin-bottom: 0.5em;
+    .generator-wrapper {
       display: flex;
-      gap: 0.4em;
-      flex-wrap: wrap;
+      flex-direction: row;
+      margin: 3.3em 0 0 0;
+      gap: 2.2em;
+      justify-content: flex-start;
+      align-items: flex-start;
     }
-    .neg-tag {
-      display: inline-block;
-      padding: 0.18em 0.8em;
-      border-radius: 1.1em;
-      background: linear-gradient(90deg,#ffd900 60%,#09f 100%);
-      color: #1c1c29;
-      font-size: 0.99em;
-      font-weight: 700;
-      box-shadow: 0 1px 6px #ffd90044;
-      margin-right: 0.1em;
-      margin-bottom: 0.18em;
+    @media (max-width: 1000px) {
+      .generator-wrapper { flex-direction: column; gap: 1.4em; }
+    }
+    .gen-controls {
+      background: #20222a;
+      padding: 2.2em 2.5em;
+      border-radius: 1.25em;
+      min-width: 375px;
+      max-width: 460px;
+      box-shadow: 0 8px 40px #0003;
+      border: 1px solid #23272e;
+      margin-bottom: 3em;
+    }
+    .gen-controls label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.7em;
+      color: #e0fdff;
+      font-size: 1.13em;
+    }
+    .gen-controls input[type="text"], .gen-controls textarea, .gen-controls select {
+      width: 100%;
       border: none;
-      cursor: pointer;
-      transition: filter .13s;
-    }
-    .neg-tag:hover {
-      filter: brightness(1.08);
-      color: #d02;
-    }
-    /* J1NX chat styles */
-    .j1nx-card {
-      background: #17162a;
-      border-radius: 1.5em;
-      box-shadow: 0 2px 19px #1e21cc44;
-      padding: 1.7em 1.3em 2em 1.3em;
-      margin: 2.4em auto 2em auto;
-      max-width: 570px;
-      width: 96vw;
-      color: #ffe46d;
+      background: #191a1e;
+      color: #f3f3f3;
+      padding: 0.95em 1em;
+      margin-bottom: 1.2em;
+      border-radius: 0.7em;
+      font-size: 1.11em;
       font-family: inherit;
-      text-align: left;
+      resize: vertical;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px #1113 0 0 0 1px #2332;
     }
-    .j1nx-title { font-size: 1.13em; color: #49d1ff; font-weight: bold; margin-bottom: 1.1em; letter-spacing: 0.015em;}
-    .j1nx-log { background: #221e38; border-radius: 1em; min-height: 80px; max-height: 220px; overflow-y: auto; margin-bottom: 1em; font-size: 1.02em; color: #fffbe9; padding: 1em 0.9em; box-shadow: 0 0 8px #4ed3f338;}
-    .j1nx-user { color: #64afff; margin: .3em 0;}
-    .j1nx-j1nx { color: #ffe46d; margin: .3em 0;}
-    .j1nx-form { display: flex; gap: 0.7em; }
-    .j1nx-input { flex: 1; padding: .7em 1em; border-radius: 0.9em; border: 1px solid #35344a; background: #181932; color: #64afff; font-size: 1.1em; font-family: inherit; outline: none; margin-right: .2em;}
-    .j1nx-btn { background: #49d1ff; color: #181932; font-weight: bold; border: none; border-radius: 0.7em; padding: .67em 1.55em; font-size: 1.1em; cursor: pointer; transition: background .14s, color .12s;}
-    .j1nx-btn:hover { background: #ffe46d; color: #331e49;}
-    .blinking-cursor { font-weight: bold; color: #49d1ff; animation: blink 1s steps(1) infinite;}
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
-    @media (max-width:900px) {
-      .generator-card { padding: 1.3em 0.2em 1.1em 0.2em; }
-      .prompt-output { font-size: 0.87em; }
-      .prompt-block { margin-bottom: 1em;}
-      .j1nx-card { padding: 1em .5em 1.4em .5em;}
+    .gen-controls textarea { min-height: 3.5em; }
+    .gen-controls button {
+      background: #25d7f7;
+      color: #042e34;
+      font-weight: bold;
+      border: none;
+      border-radius: 1.5em;
+      padding: 0.78em 2.8em;
+      font-size: 1.14em;
+      margin-top: 0.7em;
+      margin-bottom: 0.2em;
+      letter-spacing: 0.06em;
+      box-shadow: 0 2px 10px #1be3ff45;
+      transition: background 0.13s;
+      cursor: pointer;
     }
-    @media (max-width:700px) {
-      .top-bar { flex-direction: column; align-items: flex-start; gap: 0.9em; padding: 0.4em 0.6em;}
-      .logo-title { font-size: 1.17em;}
-      .nav-row { gap: 0.3em; }
-      .generator-card { margin: 1.2em 0 0 0; }
-      .prompt-label { font-size: 1em;}
-      .j1nx-card { max-width: 99vw; }
+    .gen-controls button:hover {
+      background: #19b3c9;
+      color: #fff;
     }
+    .output-block {
+      background: #191a1e;
+      border-radius: 1.1em;
+      padding: 2em 2.3em;
+      color: #c0ffe6;
+      font-size: 1.1em;
+      min-width: 340px;
+      min-height: 180px;
+      margin-top: 0.5em;
+      margin-bottom: 2.3em;
+      box-shadow: 0 2px 14px #0008;
+      word-break: break-all;
+      white-space: pre-wrap;
+      line-height: 1.44;
+      font-family: 'Fira Mono', 'Menlo', 'Consolas', monospace;
+    }
+    @media (max-width: 700px) {
+      .gen-controls, .output-block { min-width: 99vw; max-width: 99vw; border-radius: 0.5em; padding: 1.1em 1em; }
+      .generator-wrapper { gap: 0.4em; }
+    }
+    .side-features {
+      min-width: 230px;
+      margin-left: 2em;
+      margin-top: 0.5em;
+      flex: 1;
+    }
+    @media (max-width: 900px) {
+      .side-features { margin: 0; min-width: 100vw; }
+    }
+    .side-card {
+      background: #20222a;
+      border-radius: 1.3em;
+      margin-bottom: 1.2em;
+      padding: 1.2em 1.5em 1em 1.5em;
+      box-shadow: 0 2px 12px #0003;
+    }
+    .side-card h3 {
+      font-size: 1.08em;
+      color: #7effe5;
+      margin: 0 0 0.7em 0;
+      font-weight: bold;
+    }
+    .side-card ul {
+      margin: 0.2em 0 0.5em 1.1em;
+      padding: 0;
+      color: #bffcff;
+      font-size: 1em;
+    }
+    .side-card li { margin-bottom: 0.3em; }
+    .donate-btn {
+      display: inline-block;
+      background: #ffdc47;
+      color: #2d1800;
+      font-weight: bold;
+      border-radius: 2em;
+      padding: 0.7em 1.5em;
+      text-decoration: none;
+      font-size: 1.08em;
+      margin-top: 0.4em;
+      margin-bottom: 0.9em;
+      box-shadow: 0 1px 7px #fa0;
+      transition: background 0.15s;
+    }
+    .donate-btn:hover { background: #ffe772; }
+    .ad-box {
+      background: #121216;
+      border-radius: 0.85em;
+      min-height: 70px;
+      padding: 0.7em 1.2em;
+      margin-bottom: 1.4em;
+      box-shadow: 0 1px 6px #0004;
+      color: #50e1f8c8;
+      text-align: center;
+      font-size: 1.08em;
+      font-family: 'Fira Mono', monospace;
+      letter-spacing: 0.01em;
+    }
+    .j1nx-cutout {
+      display: block;
+      position: fixed;
+      right: 1.1em;
+      bottom: 1.4em;
+      width: 106px;
+      z-index: 9;
+      pointer-events: auto;
+      filter: drop-shadow(0 2px 8px #00ffea60);
+      transition: transform 0.1s;
+    }
+    .j1nx-cutout:hover {
+      transform: scale(1.05) rotate(-1deg);
+      filter: drop-shadow(0 6px 20px #12ffe855);
+    }
+    .j1nx-bubble {
+      position: fixed;
+      right: 115px;
+      bottom: 2.6em;
+      max-width: 295px;
+      background: #222f33e8;
+      color: #e1ffe6;
+      border-radius: 1em 1.2em 1.6em 1.1em;
+      font-size: 1.03em;
+      padding: 1.1em 1.3em;
+      z-index: 15;
+      font-family: inherit;
+      box-shadow: 0 4px 36px #01eac855, 0 1px 4px #111a;
+      border: 1.5px solid #00ffd744;
+      display: none;
+      animation: pop-bubble 0.34s cubic-bezier(.74,-0.1,.46,1.6);
+    }
+    @keyframes pop-bubble { 0%{transform:scale(0.8);} 100%{transform:scale(1);} }
   </style>
 </head>
 <body>
-  <!-- Top Social + Coffee Bar -->
-  <div class="top-bar">
-    <span class="logo-title">
-      <img src="/favicon.svg" width="28" height="28" style="vertical-align:-6px;" alt="PromptForge Logo">
-      PromptForge
-    </span>
-    <div class="top-bar-socials">
-      <a href="https://www.buymeacoffee.com/tysonsawchuk" class="coffee-btn" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" class="social-btn" target="_blank" rel="noopener" title="Bluesky">
-        <svg width="18" height="18" fill="none" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="#1C62F2"/><path d="M13.1 23.7l8.8-11.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M22.9 23.7l-8.8-11.4" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>
-      </a>
-      <a href="https://x.com/GoreandGiggles" class="social-btn" target="_blank" rel="noopener" title="X / Twitter">
-        <svg width="18" height="18" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#191919"/><path d="M9 9l14 14M23 9L9 23" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
-      </a>
-      <a href="https://www.facebook.com/groups/393971833395749" class="social-btn" target="_blank" rel="noopener" title="Facebook Group">
-        <svg width="18" height="18" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#1777F3"/><path d="M18 17h3.5l.5-4H18v-1.5c0-.8.1-1.5 1.2-1.5h2.3V7.5A26.8 26.8 0 0 0 18.8 7c-2.7 0-4 1.7-4 4.5V13H11v4h3.7v8h3.3v-8z" fill="#fff"/></svg>
-      </a>
+  <header>
+    <div class="logo-area">
+      <img src="favicon.png" alt="PromptForge logo">
+      <span style="font-weight:700;font-size:1.7em;color:#e7ffff;letter-spacing:0.01em;">PromptForge</span>
     </div>
-  </div>
-  <!-- Navigation -->
-  <div class="nav-row">
-    <a href="/main.html" class="nav-btn">🏠 Home</a>
-    <a href="/monster.html" class="nav-btn">💀 Monster Generator</a>
-    <a href="/pages/watermark.html" class="nav-btn">🖋️ Watermark Studio</a>
-    <a href="/about.html" class="nav-btn">❓ About</a>
-  </div>
-  <div class="generator-card">
-    <h1>What do you want to see?</h1>
-    <form id="prompt-form" autocomplete="off">
-      <div class="prompt-input-row">
-        <input type="text" class="prompt-input" id="user-input" placeholder="Describe your forbidden fantasy, style, or subject..." maxlength="180" autofocus>
-        <button type="submit" class="gen-btn">Generate Prompt</button>
-        <button type="button" class="reroll-btn" id="reroll-btn">Reroll</button>
-      </div>
-    </form>
-    <div class="explain-box">
-      <b>How it works:</b> The Monster Brain blends your input with powerful AI prompt recipes and forbidden styles. Reroll for fresh remixes. <span style="color:#09f;">More custom logic coming soon!</span>
+    <nav class="main-nav">
+      <a href="main.html" class="active">Main</a>
+      <a href="picture-prompt.html">Picture Prompt</a>
+      <a href="movie-prompt.html">Movie Prompt</a>
+      <a href="watermark-tool.html">Watermark Tool</a>
+      <a href="j1nx.html">J1nx</a>
+      <a href="legal.html">Legal</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+  <main>
+    <div class="generator-wrapper">
+      <section class="gen-controls">
+        <label for="promptKeywords">Enter your theme or keywords:</label>
+        <input type="text" id="promptKeywords" placeholder="E.g. neon cyberpunk girl, city, rain, glowing eyes" autocomplete="off">
+        <label for="genreSelect">Select genre:</label>
+        <select id="genreSelect">
+          <option>Photorealistic</option>
+          <option>Anime</option>
+          <option>Fantasy</option>
+          <option>Surreal</option>
+          <option>Vintage</option>
+          <option>Sci-Fi</option>
+          <option>Erotic (hidden)</option>
+          <option>Cinematic</option>
+          <option>Gritty</option>
+        </select>
+        <label for="styleSelect">Choose style or camera:</label>
+        <select id="styleSelect">
+          <option>DSLR 35mm</option>
+          <option>Ultra wide angle</option>
+          <option>Macro closeup</option>
+          <option>Soft dreamscape</option>
+          <option>Fisheye lens</option>
+          <option>Monochrome</option>
+          <option>Painterly brush</option>
+          <option>Hyperreal</option>
+          <option>Vintage grain</option>
+        </select>
+        <label for="verbsSelect">Add extra descriptive flavor:</label>
+        <select id="verbsSelect" multiple size="3" style="min-height:4em;">
+          <option>glowing</option>
+          <option>dramatic</option>
+          <option>haunting</option>
+          <option>shimmering</option>
+          <option>intimate</option>
+          <option>playful</option>
+          <option>forbidden</option>
+          <option>hypnotic</option>
+          <option>stormy</option>
+          <option>vivid</option>
+          <option>raw</option>
+          <option>soft</option>
+          <option>lush</option>
+          <option>gritty</option>
+        </select>
+        <label for="negativesInput">Negative prompts:</label>
+        <input type="text" id="negativesInput" placeholder="E.g. blurry, bad anatomy, extra limbs" autocomplete="off">
+        <button id="generateBtn">Generate Prompt</button>
+      </section>
+      <section class="output-block" id="promptOutput">
+        <span style="color:#53ffe8c4;">Prompt output will appear here...</span>
+      </section>
+      <aside class="side-features">
+        <div class="side-card">
+          <h3>Pro Tip</h3>
+          <ul>
+            <li>Mix genres for wild results</li>
+            <li>Try "macro", "rain", "neon" for dreamy vibes</li>
+            <li>Use negative prompts to filter out unwanted things</li>
+          </ul>
+        </div>
+        <div class="side-card">
+          <h3>Randomizer</h3>
+          <button onclick="randomizePrompt()" style="margin-bottom:0.7em;">Randomize</button>
+        </div>
+        <div class="side-card ad-box">
+          <!-- Google AdSense or fallback ad code goes here -->
+          <span style="font-size:1.04em;">Ad space. Upgrade to Pro for ad-free!</span>
+        </div>
+        <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" class="donate-btn" title="Support with a coffee!">☕ Buy Me a Coffee</a>
+      </aside>
+      <img src="img/j1nx-cutout-psy.png" class="j1nx-cutout" alt="J1nx Mascot" id="j1nxCutout" style="display:none;">
+      <div class="j1nx-bubble" id="j1nxBubble"></div>
     </div>
-    <div class="prompt-block">
-      <label class="prompt-label" for="main-prompt">Main Prompt:</label>
-      <textarea class="prompt-output" id="main-prompt" rows="3" readonly></textarea>
-      <button class="copy-btn" data-copy="main-prompt" title="Copy Prompt">Copy</button>
-    </div>
-    <div class="prompt-block">
-      <label class="prompt-label" for="summary-prompt">Summary:</label>
-      <textarea class="prompt-output" id="summary-prompt" rows="2" readonly></textarea>
-      <button class="copy-btn" data-copy="summary-prompt" title="Copy Summary">Copy</button>
-    </div>
-    <div class="prompt-block">
-      <label class="prompt-label" for="negative-prompt">Negative Prompt:</label>
-      <div class="neg-tags">
-        <button class="neg-tag" type="button">Common</button>
-        <button class="neg-tag" type="button">Human</button>
-        <button class="neg-tag" type="button">SFW</button>
-        <button class="neg-tag" type="button">Experimental</button>
-        <button class="neg-tag" type="button">Help</button>
-      </div>
-      <textarea class="prompt-output" id="negative-prompt" rows="2" readonly>bad anatomy, blurry, watermark, lowres, cropped, out of frame, text, nsfw, error, bad hands</textarea>
-      <button class="copy-btn" data-copy="negative-prompt" title="Copy Negative Prompt">Copy</button>
-    </div>
-  </div>
-  <!-- J1NX LIVE CHAT CARD -->
-  <div class="j1nx-card">
-    <div class="j1nx-title">💬 J1NX: Unfiltered AI Chat (Experimental / NSFW / No Login)
-      <span id="j1nx-status" style="font-size:0.91em; margin-left:1em; color:#ffd900;">[Idle]</span>
-    </div>
-    <div id="j1nx-log" class="j1nx-log">
-      <div class="j1nx-j1nx">J1NX: What's on your filthy mind? (Beta. Unfiltered. Say anything.)</div>
-    </div>
-    <form id="j1nx-form" class="j1nx-form" autocomplete="off">
-      <input type="text" id="j1nx-input" class="j1nx-input" placeholder="Type to chat with J1NX..." maxlength="220" autocomplete="off">
-      <button type="submit" class="j1nx-btn">Send</button>
-    </form>
-    <div style="font-size:0.95em; color:#888; margin-top:1.2em;">* Chat is powered by <a href="https://sillytavern.com/" target="_blank" style="color:#49d1ff;text-decoration:underline;">public SillyTavern backends</a>.<br>* Content is unfiltered & NSFW. You must be 18+ to use.</div>
-  </div>
-  <footer style="text-align:center;margin:2.2em 0 1em 0;opacity:0.92;">
-    <span style="font-size:1.07em;color:#09f;font-weight:bold;">PromptForge</span> — A <span style="color:#d02;">Gore and Giggles</span> project.<br>
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#09f;margin-left:0.8em;" target="_blank">Bluesky</a>
-    <a href="https://x.com/GoreandGiggles" style="color:#09f;margin-left:0.8em;" target="_blank">X</a>
-    <a href="https://www.facebook.com/groups/393971833395749" style="color:#09f;margin-left:0.8em;" target="_blank">FB Group</a>
-  </footer>
-  <script>
-    // MONSTER PROMPT LOGIC
-    function remixPrompt(input) {
-      if (!input || input.trim() === '') return "Enter a fantasy, style, or subject to generate a prompt!";
-      let styles = [
-        "photoreal", "cinematic", "ultra-detailed", "surreal", "dynamic lighting", "soft bokeh", "neon glow",
-        "deep shadows", "epic background", "POV", "sensual", "city at night", "rain-soaked", "dramatic pose"
-      ];
-      let base = input.trim();
-      let pick = [];
-      while (pick.length < 2) {
-        let rand = styles[Math.floor(Math.random() * styles.length)];
-        if (!pick.includes(rand)) pick.push(rand);
-      }
-      return `${base}, ${pick[0]}, ${pick[1]}`;
-    }
-    function remixSummary(input) {
-      if (!input || input.trim() === '') return "";
-      let summaryStyles = ["portrait", "scene", "moment", "vibe", "fantasy", "expression"];
-      let pick = summaryStyles[Math.floor(Math.random() * summaryStyles.length)];
-      return `A ${pick} of ${input.split(',')[0].replace(/^(a|the)\s/i,'')}`;
-    }
-    document.getElementById('prompt-form').addEventListener('submit', function(e){
-      e.preventDefault();
-      let inp = document.getElementById('user-input').value;
-      document.getElementById('main-prompt').value = remixPrompt(inp);
-      document.getElementById('summary-prompt').value = remixSummary(inp);
-    });
-    document.getElementById('reroll-btn').addEventListener('click', function(){
-      let inp = document.getElementById('user-input').value;
-      document.getElementById('main-prompt').value = remixPrompt(inp);
-      document.getElementById('summary-prompt').value = remixSummary(inp);
-    });
-    // Copy buttons
-    document.querySelectorAll('.copy-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        let id = btn.getAttribute('data-copy');
-        let el = document.getElementById(id);
-        if(el) {
-          el.select();
-          document.execCommand('copy');
-          btn.textContent = "✓ Copied!";
-          setTimeout(()=>{btn.textContent = "Copy";}, 1200);
-        }
-      });
-    });
-    // Negative prompt tags
-    document.querySelectorAll('.neg-tag').forEach(function(tag){
-      tag.addEventListener('click', function(){
-        alert("Category filters will be available soon! This is a demo.");
-      });
-    });
+  </main>
+<!-- CHUNK 1 END -->
+<!-- CHUNK 2 START -->
+<script>
+/* === PROMPT GEN LOGIC === */
 
-    // --- J1NX Free Public Chat (no API/login) ---
-    const j1nxLog = document.getElementById('j1nx-log');
-    const j1nxForm = document.getElementById('j1nx-form');
-    const j1nxInput = document.getElementById('j1nx-input');
-    const j1nxStatus = document.getElementById('j1nx-status');
-    let j1nxBusy = false;
+function getSelectedVerbs() {
+  const select = document.getElementById("verbsSelect");
+  return Array.from(select.selectedOptions).map(o => o.value).join(', ');
+}
 
-    j1nxForm.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const userMsg = j1nxInput.value.trim();
-      if (!userMsg || j1nxBusy) return;
-      addJ1nxLine('user', userMsg);
-      j1nxInput.value = '';
-      j1nxBusy = true;
-      j1nxStatus.textContent = "[Thinking…]";
-      addJ1nxLine('j1nx', '<span class="blinking-cursor">J1NX is thinking…</span>');
+function getGenre() {
+  return document.getElementById("genreSelect").value;
+}
 
-      // You can change the backend endpoint if a better free one is found.
-      const endpoint = 'https://api.sillytavern.app/api/free/gpt3';
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            prompt: userMsg,
-            max_length: 180,
-            temperature: 0.88
-          })
-        });
-        let data = await res.json();
-        let reply = data && data.reply ? data.reply : "Sorry, the J1NX server is tired. Try again!";
-        // Remove blinking-cursor
-        let waiting = j1nxLog.querySelector('.blinking-cursor');
-        if (waiting) waiting.parentElement.remove();
-        addJ1nxLine('j1nx', reply);
-        j1nxStatus.textContent = "[Idle]";
-      } catch (e) {
-        let waiting = j1nxLog.querySelector('.blinking-cursor');
-        if (waiting) waiting.parentElement.remove();
-        addJ1nxLine('j1nx', "Error connecting to the public chat server! (Try again in a minute.)");
-        j1nxStatus.textContent = "[Offline]";
-      }
-      j1nxBusy = false;
-    });
+function getStyle() {
+  return document.getElementById("styleSelect").value;
+}
 
-    function addJ1nxLine(type, text) {
-      let line = document.createElement('div');
-      line.className = type === 'user' ? 'j1nx-user' : 'j1nx-j1nx';
-      line.innerHTML = (type === 'user' ? 'You: ' : 'J1NX: ') + text;
-      j1nxLog.appendChild(line);
-      j1nxLog.scrollTop = j1nxLog.scrollHeight;
-      // Limit to last 20 lines for performance
-      if (j1nxLog.children.length > 20) j1nxLog.removeChild(j1nxLog.children[0]);
-    }
-    // Autofocus on main prompt
-    window.onload = function() {
-      document.getElementById('user-input').focus();
-    }
-  </script>
+function buildPrompt() {
+  let keywords = document.getElementById("promptKeywords").value.trim();
+  let genre = getGenre();
+  let style = getStyle();
+  let verbs = getSelectedVerbs();
+  let negatives = document.getElementById("negativesInput").value.trim();
+
+  let out = "";
+  if (!keywords) {
+    out += "⚠️ <b>Please enter your keywords or theme first!</b>";
+    return out;
+  }
+  out += `<span style="color:#77ffd9">[${genre}]</span> `;
+  out += `<span style="color:#6ff;">${keywords}</span>`;
+  if (verbs) out += ", <span style='color:#58b6f7'>"+verbs+"</span>";
+  out += `, <span style="color:#ffd780">${style}</span>`;
+  out += ". ";
+  out += `<br><b>Summary:</b> ${genre} / ${style} / ${verbs ? verbs : "No extra flavor"}.<br>`;
+  if (negatives) {
+    out += `<b>Negatives:</b> <span style="color:#f58">${negatives}</span><br>`;
+  }
+  // If 'Erotic (hidden)' is chosen, subtle hint for advanced users
+  if (genre.toLowerCase().includes('erotic')) {
+    out += "<span style='color:#fa8; font-size:0.97em;'>* Pro mode: Enable NSFW settings in your generator for this prompt.</span><br>";
+  }
+  return out;
+}
+
+function updateOutput() {
+  document.getElementById("promptOutput").innerHTML = buildPrompt();
+}
+
+document.getElementById("generateBtn").onclick = updateOutput;
+document.getElementById("promptKeywords").addEventListener('keydown', e => { if(e.key==="Enter") updateOutput(); });
+
+function randomizePrompt() {
+  const genres = ["Photorealistic","Anime","Fantasy","Surreal","Vintage","Sci-Fi","Cinematic","Gritty"];
+  const styles = ["DSLR 35mm","Ultra wide angle","Macro closeup","Soft dreamscape","Fisheye lens","Monochrome","Painterly brush","Hyperreal","Vintage grain"];
+  const verbs = ["glowing","dramatic","haunting","shimmering","intimate","playful","forbidden","hypnotic","stormy","vivid","raw","soft","lush","gritty"];
+  const objects = ["cyberpunk cityscape","ancient ruins","futuristic samurai","masked hacker","mermaid in storm","jungle temple","dystopian alley","chessboard battle","glowing forest","midnight train"];
+  document.getElementById("genreSelect").value = genres[Math.floor(Math.random()*genres.length)];
+  document.getElementById("styleSelect").value = styles[Math.floor(Math.random()*styles.length)];
+  // Select 2-4 random verbs
+  let chosenVerbs = [];
+  while(chosenVerbs.length < Math.floor(Math.random()*3)+2) {
+    let v = verbs[Math.floor(Math.random()*verbs.length)];
+    if (!chosenVerbs.includes(v)) chosenVerbs.push(v);
+  }
+  for (let o of document.getElementById("verbsSelect").options) o.selected = chosenVerbs.includes(o.value);
+  document.getElementById("promptKeywords").value = objects[Math.floor(Math.random()*objects.length)];
+  // Fun: random negatives
+  let negs = ["blurry","lowres","extra limbs","bad hands","oversaturated","watermark","cropped","text","error"];
+  document.getElementById("negativesInput").value = Math.random() > 0.7 ? negs.slice(0,Math.floor(Math.random()*5)+1).join(", ") : "";
+  updateOutput();
+}
+
+/* === J1NX ASSISTANT === */
+
+const j1nxCutout = document.getElementById('j1nxCutout');
+const j1nxBubble = document.getElementById('j1nxBubble');
+
+function showJ1nxBubble(msg, delay=0) {
+  if (!msg) return j1nxBubble.style.display='none';
+  j1nxBubble.innerHTML = msg;
+  j1nxBubble.style.display = 'block';
+  setTimeout(() => { j1nxBubble.style.display = 'none'; }, delay>0?delay:6500);
+}
+
+// J1nx cutout image loads
+window.addEventListener("DOMContentLoaded",()=>{
+  j1nxCutout.src = "img/j1nx-cutout-psy.png";
+  j1nxCutout.style.display = "block";
+  j1nxCutout.addEventListener("click", () => {
+    showJ1nxBubble("👾 <b>Hi, I’m J1nx!</b> Need a random prompt? Click 'Randomize' or ask me for a prompt idea in future updates.");
+  });
+  // Optionally, J1nx greets on first load
+  setTimeout(()=>{
+    showJ1nxBubble("👾 Welcome! Start by entering keywords or hit Randomize.<br>Tip: Add negatives to control output quality.");
+  }, 800);
+});
+
+/* ==== END GENERATOR LOGIC ==== */
+</script>
+<!-- CHUNK 2 END -->
 </body>
 </html>
+// === CHUNK 3: ULTRA WORD BANKS & ADVANCED COMBINATOR ===
+
+// --- Descriptor Word Banks ---
+
+const subjectTypes = [
+  "woman", "man", "girl", "boy", "androgynous figure", "monster", "alien", "robot",
+  "android", "couple", "group", "adult", "teenager", "elder", "elf", "demon", "angel", "cyborg",
+  "mermaid", "faerie", "witch", "warrior", "soldier", "nurse", "doctor", "student", "teacher", "scientist",
+  "athlete", "dancer", "musician", "gamer", "model", "idol", "celebrity", "stranger", "friend", "lover",
+  "vampire", "werewolf", "creature", "ghost", "spirit", "zombie", "mutant", "goddess", "god", "deity"
+];
+
+const bodyDescriptors = [
+  "slim", "athletic", "curvy", "muscular", "petite", "tall", "short", "voluptuous", "chiseled", "delicate",
+  "broad-shouldered", "narrow-waisted", "tattooed", "pierced", "freckled", "pale-skinned", "tanned",
+  "dark-skinned", "alabaster", "bronzed", "porcelain", "sunkissed", "scarred", "glowing", "veined"
+];
+
+const faceDescriptors = [
+  "soft features", "sharp jawline", "big eyes", "almond eyes", "blue eyes", "green eyes", "hazel eyes", "brown eyes",
+  "long lashes", "arched brows", "full lips", "pouty lips", "smiling", "smirk", "open mouth", "biting lip",
+  "wink", "serious gaze", "piercing stare", "blush", "flushed cheeks", "teary eyes", "focused expression"
+];
+
+const hairDescriptors = [
+  "long hair", "short hair", "messy hair", "braided", "ponytail", "pigtails", "wavy", "curly", "straight", "bob cut",
+  "shaved", "undercut", "side-part", "fringe", "bangs", "dyed pink", "dyed blue", "dyed blonde", "auburn", "silver",
+  "platinum", "jet black", "white", "pastel", "gradient hair"
+];
+
+const clothingDescriptors = [
+  "school uniform", "business suit", "casual wear", "streetwear", "gothic", "punk", "cyberpunk", "steampunk",
+  "dress", "skirt", "jeans", "leather jacket", "oversized hoodie", "lingerie", "swimsuit", "armor", "kimono",
+  "t-shirt", "tank top", "crop top", "latex", "fishnets", "boots", "heels", "barefoot"
+];
+
+const locationDescriptors = [
+  "urban rooftop at night", "neon-lit alleyway", "gritty subway", "abandoned warehouse", "futuristic cityscape",
+  "moonlit forest", "enchanted garden", "stormy beach", "motel room", "luxury penthouse", "dilapidated room",
+  "vintage diner", "underground club", "cybernetic laboratory", "castle ruins", "rain-soaked street",
+  "fairy circle", "foggy graveyard", "sunset balcony", "hidden bunker", "industrial complex", "train station"
+];
+
+const poseDescriptors = [
+  "leaning against wall", "standing tall", "crouched", "on knees", "sitting on edge", "lying on back", "reclining",
+  "arched back", "crossed arms", "one hand in pocket", "head tilted", "looking over shoulder", "arms outstretched",
+  "hands behind head", "kneeling", "reaching forward", "jumping", "mid-dance", "caught in motion", "relaxed pose"
+];
+
+const moodDescriptors = [
+  "moody", "melancholic", "sensual", "playful", "powerful", "mysterious", "dreamy", "seductive", "innocent",
+  "intense", "defiant", "shy", "bold", "confident", "curious", "lonely", "hopeful", "yearning", "vulnerable"
+];
+
+const lightingDescriptors = [
+  "dramatic lighting", "soft glow", "backlit", "rim light", "harsh shadow", "overexposed", "golden hour",
+  "sunbeams", "blue neon", "red neon", "spotlight", "moonlight", "colored gels", "studio strobe", "ambient"
+];
+
+const effectDescriptors = [
+  "film grain", "chromatic aberration", "lens flare", "motion blur", "depth of field", "dreamlike haze", "bokeh",
+  "glare", "smoke", "rain", "snowfall", "reflections", "steamy glass", "splashes", "rainbow light"
+];
+
+const artistStyleDescriptors = [
+  "photorealistic", "hyperrealistic", "anime", "manga", "comic book", "watercolor", "digital painting",
+  "oil painting", "sketch", "noir", "cinematic", "surreal", "fantasy", "cyberpunk", "retro", "vaporwave"
+];
+
+// --- Advanced Negative Prompts ---
+const negativePromptBase = [
+  "blurry", "lowres", "bad anatomy", "text watermark", "signature", "cropped", "extra limbs", "missing fingers",
+  "fused fingers", "out of frame", "mutated hands", "bad hands", "bad feet", "low quality", "deformed", "grainy",
+  "nsfw watermark", "jpeg artifacts", "monochrome", "duplicate face", "ugly", "bad proportions", "overexposed"
+];
+
+// Allow custom negatives and model-specific ones:
+const negativePromptExtra = [
+  "out of focus", "oversaturated", "distorted perspective", "weird eyes", "flat colors", "dull", "unrealistic skin",
+  "weird shadow", "bad mouth", "clipping", "framed badly", "messed up background"
+];
+
+// --- THE PROMPT COMBINATOR ENGINE ---
+
+function random(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomN(arr, n) {
+  const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, n);
+}
+
+function smartPrompt({
+  subject="woman",
+  style="photorealistic",
+  mood="moody",
+  location="urban rooftop at night",
+  bodyWords=[],
+  faceWords=[],
+  hairWords=[],
+  clothingWords=[],
+  poseWords=[],
+  lightWords=[],
+  effectWords=[],
+  extraWords=[]
+} = {}) {
+  let s = [
+    randomN(bodyWords.length ? bodyWords : bodyDescriptors, 2).join(", "),
+    randomN(faceWords.length ? faceWords : faceDescriptors, 1).join(", "),
+    randomN(hairWords.length ? hairWords : hairDescriptors, 1).join(", "),
+    randomN(clothingWords.length ? clothingWords : clothingDescriptors, 1).join(", "),
+    randomN(poseWords.length ? poseWords : poseDescriptors, 1).join(", "),
+    randomN(lightWords.length ? lightWords : lightingDescriptors, 1).join(", "),
+    randomN(effectWords.length ? effectWords : effectDescriptors, 1).join(", "),
+    randomN(extraWords.length ? extraWords : artistStyleDescriptors, 1).join(", "),
+  ].filter(Boolean).join(", ");
+
+  // Join with subject, mood, style, location
+  return `${random(subjectTypes)}, ${s}, in a ${location}, mood: ${random(moodDescriptors)}, style: ${random(artistStyleDescriptors)}`;
+}
+
+// --- UI INTERACTIONS ---
+
+// Add main generation trigger (connect this to your UI button, or call in console for testing)
+window.generatePrompt = function(userConfig = {}) {
+  const prompt = smartPrompt(userConfig);
+  document.getElementById('promptOutput').value = prompt;
+  // Negative prompt (random base + extra, add custom if needed)
+  const negative = randomN(negativePromptBase.concat(negativePromptExtra), 10).join(", ");
+  document.getElementById('negativeOutput').value = negative;
+  // Mini summary
+  document.getElementById('summaryOutput').value = prompt.split(",").slice(0,4).join(", ");
+  // (You can expand: add more UI, save, copy, export, etc.)
+}
+
+// Fill default on load (example)
+window.addEventListener('DOMContentLoaded', ()=>{
+  if (document.getElementById('promptOutput')) window.generatePrompt();
+});
+
+// For big upgrades: just keep stacking more descriptor banks, more smart logics, more UI hooks, etc. 
+// Next chunk = massive preset/genre/theme system, randomizer, and enhanced UI helpers.
+// === CHUNK 4: GENRE PRESETS, ULTRA THEMES, RANDOMIZER, UI BLAST ===
+
+// ----- GENRE & STYLE PRESETS -----
+const genrePresets = {
+  "Realistic": {
+    style: "photorealistic",
+    artistStyle: "photorealistic",
+    locationList: ["luxury penthouse", "modern studio", "sunset balcony", "suburban park"],
+    body: ["natural", "soft lighting", "subtle freckles", "realistic skin"],
+    face: ["gentle expression", "warm eyes", "smiling"],
+    clothing: ["jeans", "t-shirt", "casual dress", "sportswear"]
+  },
+  "Anime": {
+    style: "anime",
+    artistStyle: "anime, manga, high contrast, vivid colors",
+    locationList: ["city rooftop at dusk", "school courtyard", "spring field"],
+    body: ["slender", "exaggerated proportions", "smooth skin"],
+    face: ["huge sparkling eyes", "tiny nose", "cute smile"],
+    clothing: ["sailor uniform", "idol outfit", "cosplay", "kimono"]
+  },
+  "Cyberpunk": {
+    style: "cyberpunk",
+    artistStyle: "cyberpunk, digital painting, neon, synthwave",
+    locationList: ["neon-lit alleyway", "hacker's den", "futuristic cityscape"],
+    body: ["augmented", "cybernetic arms", "tattoos", "bioluminescent"],
+    face: ["glowing eyes", "faceplate", "circuit patterns"],
+    clothing: ["holo-jacket", "tech armor", "street fashion", "neon trim"]
+  },
+  "Fantasy": {
+    style: "fantasy",
+    artistStyle: "fantasy, oil painting, ethereal, high detail",
+    locationList: ["enchanted forest", "castle ruins", "floating island"],
+    body: ["elven", "mystical", "ornate tattoos"],
+    face: ["glowing eyes", "otherworldly beauty"],
+    clothing: ["flowing robes", "enchanted armor", "gossamer gown"]
+  },
+  "NSFW": {
+    style: "hyperrealistic",
+    artistStyle: "hyperrealistic, studio photography, sensual",
+    locationList: ["bedroom", "shower", "steamy glass", "moody boudoir"],
+    body: ["curvy", "athletic", "soft skin", "damp"],
+    face: ["bedroom eyes", "biting lip", "flushed cheeks"],
+    clothing: ["lingerie", "bare skin", "wet shirt", "towel"]
+  },
+  "Surreal": {
+    style: "surreal",
+    artistStyle: "surreal, glitch, vaporwave, fantasy, dreamy",
+    locationList: ["dreamscape", "floating void", "melting city"],
+    body: ["fragmented", "liquid", "crystalline"],
+    face: ["multiplying eyes", "fractured features"],
+    clothing: ["impossible garment", "melting dress"]
+  }
+  // Add more genre presets as needed!
+};
+
+// ----- THEME SWITCHER (light/hacker/dark) -----
+const siteThemes = {
+  dark: {
+    '--bg': '#10141a', '--fg': '#f8ffe8', '--primary': '#22ffe7', '--secondary': '#0be', '--link': '#38ffe2'
+  },
+  hacker: {
+    '--bg': '#010b0b', '--fg': '#8affc1', '--primary': '#2bff5a', '--secondary': '#00dd44', '--link': '#bfff44'
+  },
+  light: {
+    '--bg': '#fcfcfd', '--fg': '#263445', '--primary': '#008e83', '--secondary': '#7ac1b5', '--link': '#0bb'
+  }
+};
+window.setSiteTheme = (name) => {
+  if (!siteThemes[name]) return;
+  Object.entries(siteThemes[name]).forEach(([k, v]) =>
+    document.documentElement.style.setProperty(k, v)
+  );
+  localStorage.setItem('theme', name);
+};
+// Init theme
+window.addEventListener('DOMContentLoaded', ()=>{
+  const t = localStorage.getItem('theme') || 'dark';
+  setSiteTheme(t);
+});
+
+// ----- UI: Genre Selector & Controls -----
+function buildGeneratorUI() {
+  const wrap = document.getElementById('generatorWrap');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="prompt-header">
+      <h1>PromptForge Generator <span style="font-size:0.57em;color:var(--secondary);">V4 ULTRA</span></h1>
+      <select id="genreSelect"></select>
+      <button onclick="window.generatePromptWithGenre()" title="Random prompt in genre">🎲 Inspire Me</button>
+      <button onclick="window.copyPrompt()" title="Copy prompt">📋 Copy</button>
+      <button onclick="window.showThemeMenu()" title="Change theme">🎨 Theme</button>
+      <span class="prompt-mini-link"><a href="main.html">Main</a></span>
+    </div>
+    <div class="generator-panels">
+      <div class="prompt-col">
+        <label>Prompt:</label>
+        <textarea id="promptOutput" rows="6"></textarea>
+        <label>Summary:</label>
+        <input id="summaryOutput" readonly/>
+        <label>Negative Prompt:</label>
+        <textarea id="negativeOutput" rows="3"></textarea>
+      </div>
+      <div class="prompt-col">
+        <label>Keywords (comma separated, optional):</label>
+        <input id="keywordsInput" placeholder="e.g. angry, blue, cybernetic, rainy, sword"/>
+        <button onclick="window.generatePromptWithGenre()">Generate</button>
+        <div id="promptPreview"></div>
+      </div>
+    </div>
+    <div id="promptLog"></div>
+    <div id="themeMenu" style="display:none;">
+      <b>Theme:</b>
+      <button onclick="setSiteTheme('dark')">Dark</button>
+      <button onclick="setSiteTheme('hacker')">Hacker</button>
+      <button onclick="setSiteTheme('light')">Light</button>
+      <button onclick="document.getElementById('themeMenu').style.display='none'">Close</button>
+    </div>
+    <div class="byme-coffee" style="margin-top:2em;text-align:center;">
+      <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" rel="noopener" title="Buy Me a Coffee">
+        <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" width="180" alt="Buy Me a Coffee">
+      </a>
+    </div>
+  `;
+  // Populate genre select
+  const genreSel = document.getElementById('genreSelect');
+  for (let g in genrePresets) {
+    const opt = document.createElement('option');
+    opt.value = g;
+    opt.textContent = g;
+    genreSel.appendChild(opt);
+  }
+}
+
+// ----- GENERATE PROMPT WITH GENRE -----
+window.generatePromptWithGenre = function() {
+  const genre = document.getElementById('genreSelect')?.value || "Realistic";
+  const preset = genrePresets[genre] || {};
+  const userWords = (document.getElementById('keywordsInput')?.value || "").split(",").map(w=>w.trim()).filter(Boolean);
+
+  // Combine preset and user words into generator config
+  const userConfig = {
+    subject: random(subjectTypes),
+    style: preset.style || random(artistStyleDescriptors),
+    mood: random(moodDescriptors),
+    location: random(preset.locationList || locationDescriptors),
+    bodyWords: userWords.concat(preset.body || []),
+    faceWords: preset.face || [],
+    hairWords: [],
+    clothingWords: preset.clothing || [],
+    poseWords: [],
+    lightWords: [],
+    effectWords: [],
+    extraWords: (userWords.length > 0 ? userWords : []).concat(preset.artistStyle || "")
+  };
+
+  window.generatePrompt(userConfig);
+
+  // Logging
+  const log = document.getElementById('promptLog');
+  if (log) {
+    log.innerHTML = `<b>Last Generated Prompt:</b><br>${document.getElementById('promptOutput').value}`;
+  }
+  // Live preview
+  document.getElementById('promptPreview').textContent = document.getElementById('promptOutput').value;
+};
+
+// ----- UI HELPER FUNCTIONS -----
+window.copyPrompt = function() {
+  const val = document.getElementById('promptOutput')?.value || "";
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(val);
+    alert("Prompt copied!");
+  } else {
+    // fallback
+    document.getElementById('promptOutput').select();
+    document.execCommand('copy');
+    alert("Prompt copied (legacy)!");
+  }
+};
+
+window.showThemeMenu = function() {
+  document.getElementById('themeMenu').style.display = 'block';
+};
+
+// ---- UI INIT -----
+window.addEventListener('DOMContentLoaded', ()=>{
+  buildGeneratorUI();
+});
+
+// ----- AUTO-RANDOMIZE EVERY 60S FOR FUN -----
+setInterval(()=>{
+  if (document.activeElement && ['promptOutput','keywordsInput'].includes(document.activeElement.id)) return;
+  window.generatePromptWithGenre();
+}, 60000);
+
+// --- CSS: Smart Professional Styling (add to your page or HEAD) ---
+if (!document.getElementById("promptforge-v4-css")) {
+  const style = document.createElement('style');
+  style.id = "promptforge-v4-css";
+  style.innerHTML = `
+:root {
+  --bg: #10141a; --fg: #f8ffe8; --primary: #22ffe7; --secondary: #0be; --link: #38ffe2;
+}
+body { background: var(--bg); color: var(--fg); font-family: 'Fira Mono', monospace; margin:0; }
+#generatorWrap { max-width:920px; margin:3vw auto; background:rgba(9,14,22,0.97); border-radius:18px; box-shadow:0 3px 24px #010d1240; padding:2.2vw 2.7vw; }
+.prompt-header { display:flex; align-items:center; gap:1em; }
+.prompt-header h1 { flex:1; margin:0; font-size:2.1em; color:var(--primary);}
+.generator-panels { display:flex; gap:2em; margin-top:1.4em; }
+.prompt-col { flex:1; min-width:250px;}
+label { font-size:1.1em; font-weight:bold; margin-top:0.7em; display:block;}
+textarea,input { width:100%; margin:0.4em 0 1em 0; background:rgba(25,35,50,0.92); color:var(--fg); border:1px solid #222; border-radius:9px; font-family:inherit; font-size:1em; padding:0.6em 0.7em;}
+textarea:focus,input:focus { outline: 2px solid var(--primary); }
+button { background:var(--primary); color:#0c1720; border:none; border-radius:7px; padding:0.48em 1.25em; font-size:1.07em; margin-right:0.7em; cursor:pointer; box-shadow:0 2px 9px #19a19935;}
+button:hover { background:var(--secondary); }
+.prompt-mini-link { margin-left:auto;}
+#promptPreview { font-family:'Fira Mono',monospace;font-size:1em;background:rgba(32,46,55,0.16);padding:0.4em 0.7em;border-radius:5px;color:var(--primary);min-height:1.8em;}
+#promptLog { margin-top:1em; color:#11ffb8; font-size:1.01em;}
+.byme-coffee img { border-radius:7px; box-shadow:0 2px 6px #d6ae2d31;}
+#themeMenu { background:var(--bg); color:var(--fg); border-radius:13px; box-shadow:0 5px 18px #080f1133; padding:2em; position:fixed; top:14vw; left:50vw; transform:translate(-50%,0); z-index:9999;}
+@media (max-width:600px) {
+  #generatorWrap { padding:1vw 2vw; }
+  .generator-panels { flex-direction:column; gap:1.2em;}
+}
+  `;
+  document.head.appendChild(style);
+}
+// ====== CHUNK 5: FINAL POLISH, MIXER, EXPORT, SAFE/NSFW SWITCH, EASTER EGGS =====
+
+// -- MIXER: Mashup random genres/keywords for inspiration --
+window.promptMixer = function() {
+  // Grab 2 genres at random, merge with user's keywords
+  const genres = Object.keys(genrePresets);
+  const g1 = genrePresets[random(genres)];
+  let g2 = g1;
+  while(g2 === g1) g2 = genrePresets[random(genres)];
+  const userWords = (document.getElementById('keywordsInput')?.value || "").split(",").map(w=>w.trim()).filter(Boolean);
+
+  const mixedConfig = {
+    subject: random(subjectTypes),
+    style: g1.style + ", " + g2.style,
+    mood: random(moodDescriptors),
+    location: random(g1.locationList.concat(g2.locationList)),
+    bodyWords: (g1.body.concat(g2.body)).concat(userWords),
+    faceWords: (g1.face.concat(g2.face)),
+    hairWords: [],
+    clothingWords: (g1.clothing.concat(g2.clothing)),
+    poseWords: [],
+    lightWords: [],
+    effectWords: [],
+    extraWords: [g1.artistStyle, g2.artistStyle]
+  };
+  window.generatePrompt(mixedConfig);
+
+  // Show a fun message
+  document.getElementById('promptLog').innerHTML = `<span style="color:#ffeb49">Prompt Mixer: <b>${g1.style}</b> + <b>${g2.style}</b> = <b>🔥</b></span>`;
+};
+
+// -- UI: Add mixer and Safe/NSFW toggle button
+(function addFinalUIbits() {
+  if (!document.getElementById('promptMixerBtn')) {
+    const header = document.querySelector('.prompt-header');
+    if (header) {
+      const mixerBtn = document.createElement('button');
+      mixerBtn.id = 'promptMixerBtn';
+      mixerBtn.innerText = '🧪 Mixer';
+      mixerBtn.title = 'Mashup two genres/styles for inspiration';
+      mixerBtn.onclick = window.promptMixer;
+      header.appendChild(mixerBtn);
+
+      // Safe/NSFW toggle
+      const safeToggle = document.createElement('button');
+      safeToggle.id = 'safeToggleBtn';
+      safeToggle.innerText = '🔓 NSFW';
+      safeToggle.title = 'Toggle Safe/NSFW mode (Google safe by default)';
+      safeToggle.onclick = function() {
+        window.isNSFW = !window.isNSFW;
+        this.innerText = window.isNSFW ? '🔒 Safe' : '🔓 NSFW';
+        document.getElementById('promptLog').innerHTML = `Mode: <b>${window.isNSFW ? "Safe (Google OK)" : "NSFW"}</b>`;
+        window.generatePromptWithGenre();
+      };
+      header.appendChild(safeToggle);
+      window.isNSFW = false; // start Google safe
+
+      // Show mixer on mobile under controls
+      if(window.innerWidth < 700) {
+        const mobMixer = document.createElement('button');
+        mobMixer.innerText = '🧪 Mixer';
+        mobMixer.onclick = window.promptMixer;
+        document.querySelector('.generator-panels').appendChild(mobMixer);
+      }
+    }
+  }
+})();
+
+// -- Prompt Filtering Logic for Safe/NSFW toggle --
+const nsfwWords = [
+  "nipple","labia","vulva","penis","erect","spread","open leg","cum",
+  "clitoris","anus","cock","dildo","pussy","cum","anal","naked","bare","cumshot","ejaculation","masturbation"
+  // Expand this list with more risky terms as needed
+];
+
+// Filter for safe prompts (if Safe Mode on)
+function filterPromptSafe(text) {
+  if (!window.isNSFW) {
+    // Remove NSFW terms or replace with safe terms
+    nsfwWords.forEach(word => {
+      const re = new RegExp(word, "gi");
+      text = text.replace(re, '[filtered]');
+    });
+  }
+  return text;
+}
+
+// Wrap generatePrompt to auto-filter
+const realGenPrompt = window.generatePrompt;
+window.generatePrompt = function(config) {
+  realGenPrompt(config);
+  // Post-process output for Safe/NSFW
+  const outputBox = document.getElementById('promptOutput');
+  if (outputBox) outputBox.value = filterPromptSafe(outputBox.value);
+  // Negative prompt too
+  const negBox = document.getElementById('negativeOutput');
+  if (negBox) negBox.value = filterPromptSafe(negBox.value);
+  // Live preview also
+  const preview = document.getElementById('promptPreview');
+  if (preview) preview.textContent = filterPromptSafe(preview.textContent);
+};
+
+// -- EASTER EGGS & POWER USER TRICKS --
+window.addEventListener('keydown', function(ev){
+  if(ev.ctrlKey && ev.altKey && ev.key === 'j'){ // Open J1nx page
+    window.open('j1nx.html','_blank');
+  }
+  if(ev.key === '?' && ev.shiftKey){
+    alert("Power user mode:\n- Ctrl+Alt+J: Open J1nx AI page\n- Ctrl+Alt+G: Google safe mode\n- Ctrl+Alt+N: NSFW mode\n- 'Mixer' button: mash up genres\n- 'Theme': try hacker mode\n- Have fun!");
+  }
+  if(ev.ctrlKey && ev.altKey && ev.key === 'g'){ // Safe
+    window.isNSFW = false; document.getElementById('safeToggleBtn').innerText='🔓 NSFW'; window.generatePromptWithGenre();
+  }
+  if(ev.ctrlKey && ev.altKey && ev.key === 'n'){ // NSFW
+    window.isNSFW = true; document.getElementById('safeToggleBtn').innerText='🔒 Safe'; window.generatePromptWithGenre();
+  }
+});
+
+// -- EXPORT BUTTON (for downloading prompt as .txt) --
+(function(){
+  if (!document.getElementById('exportPromptBtn')) {
+    const header = document.querySelector('.prompt-header');
+    if (header) {
+      const exportBtn = document.createElement('button');
+      exportBtn.id = 'exportPromptBtn';
+      exportBtn.innerText = '⬇️ Export';
+      exportBtn.title = 'Download prompt as .txt';
+      exportBtn.onclick = function() {
+        const prompt = document.getElementById('promptOutput').value;
+        const blob = new Blob([prompt], {type:"text/plain"});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = "prompt.txt";
+        a.click();
+      };
+      header.appendChild(exportBtn);
+    }
+  }
+})();
+
+// -- AUTO-FOCUS & UX POLISH --
+setTimeout(()=>{
+  if (document.getElementById('keywordsInput')) document.getElementById('keywordsInput').focus();
+}, 300);
+
+// -- GOOGLE/SEO POLISH (add meta tags, etc in <head> of your page) --
+/*
+  <meta name="description" content="PromptForge: The most advanced AI prompt generator. Genre presets, NSFW/SFW toggle, randomizer, negative prompts, and more for Stable Diffusion, SDXL, Midjourney, Dall-E, and other AI image models.">
+  <meta name="keywords" content="ai prompt generator, stable diffusion prompts, midjourney, sdxl, dall-e, nsfw prompts, photo prompts, art generator, ai art, image generation, prompt engineering, prompt mixer">
+  <meta name="author" content="Gore and Giggles, Tyson Sawchuk">
+*/
+
+console.log('%c PromptForge Ultra Generator loaded! ', 'background:#22ffe7;color:#10141a;font-size:1.4em;border-radius:8px;padding:4px 15px;');
+
+// ====== CHUNK 6: ADVANCED PRESETS, LORA, COMMUNITY MIX, POWER SLIDERS =====
+
+// -- MASSIVE GENRE/STYLES PRESET LIBRARY --
+const extraGenres = {
+  "Anime Dream": {
+    style: "anime, high detail, vivid color, ultra smooth lines",
+    locationList: ["Tokyo street", "cherry blossom park", "digital city", "fantasy cafe"],
+    body: ["delicate build", "big expressive eyes"],
+    face: ["cute blush", "emotion-rich"],
+    clothing: ["cosplay", "school uniform", "samurai outfit", "casual kawaii"],
+    artistStyle: "Makoto Shinkai, CLAMP, KyoAni"
+  },
+  "Retro Cyberpunk": {
+    style: "cyberpunk, neon, tech noir, 80s scanlines, cityscape, glowing rain",
+    locationList: ["rainy night street", "arcade", "highrise roof", "neon market"],
+    body: ["wired implants", "chrome skin"],
+    face: ["hacker goggles", "half-lit face"],
+    clothing: ["leather jacket", "neon accents", "LED mask"],
+    artistStyle: "Hajime Sorayama, Katsuhiro Otomo, synthwave"
+  },
+  "Classic Fine Art": {
+    style: "oil painting, classic master, soft brush, natural skin",
+    locationList: ["museum", "Victorian room", "pastoral field"],
+    body: ["voluptuous", "realistic"],
+    face: ["Renaissance", "Baroque smile"],
+    clothing: ["draped linen", "corset", "tunic"],
+    artistStyle: "Rembrandt, Bouguereau, Ingres"
+  },
+  "Monochrome Noir": {
+    style: "black and white, noir, hard shadow, moody light, mystery",
+    locationList: ["foggy alley", "rainy window", "city night"],
+    body: ["lean", "enigmatic"],
+    face: ["smoldering gaze", "hat shadow"],
+    clothing: ["trench coat", "fedora"],
+    artistStyle: "Edward Hopper, Film Noir"
+  },
+  "Surreal Fantasy": {
+    style: "surreal, dreamlike, floating elements, impossible colors",
+    locationList: ["endless desert", "floating island", "star bridge"],
+    body: ["elongated limbs", "translucent skin"],
+    face: ["third eye", "double pupils"],
+    clothing: ["shifting robes", "crystal jewelry"],
+    artistStyle: "Dali, Magritte, Giger"
+  }
+  // ... (Expand with 25+ more! You can keep stacking this object for wild variety.)
+};
+Object.assign(genrePresets, extraGenres);
+
+// -- LORA/EMBEDDINGS & MODEL OPTIONS --
+const loraLibrary = [
+  { name: "EpicRealism", tag: "<lora:epicrealism:1.0>", desc: "Photorealism LoRA for epic details." },
+  { name: "AnimeMegaXL", tag: "<lora:animeMegaXL:0.9>", desc: "Anime LoRA XL, best for crisp lines." },
+  { name: "CyberGirls", tag: "<lora:cyberGirlsXL:1.2>", desc: "Cyberpunk female style." },
+  { name: "PortraitMaster", tag: "<lora:portraitMaster:1.1>", desc: "Advanced portrait realism." }
+  // Expand this as you find more LoRA for your backend!
+];
+const modelLibrary = [
+  { name: "RealVis XL", tag: "realvisXL", desc: "Photo, ultra detail" },
+  { name: "Juggernaut XL", tag: "juggernautXL", desc: "Fantasy, realism" },
+  { name: "CyberRealistic", tag: "cyberrealistic", desc: "Best for body detail" },
+  { name: "DreamShaper", tag: "dreamshaper", desc: "General, painterly" }
+];
+
+// -- UI for selecting LoRA/Model --
+(function loraUI() {
+  if(!document.getElementById('loraSelect')){
+    const header = document.querySelector('.prompt-header');
+    if(header){
+      // LoRA
+      const loraSelect = document.createElement('select');
+      loraSelect.id = "loraSelect";
+      loraSelect.title = "Attach a LoRA for advanced style";
+      loraLibrary.forEach(lora => {
+        let opt = document.createElement('option');
+        opt.value = lora.tag;
+        opt.innerText = lora.name + " – " + lora.desc;
+        loraSelect.appendChild(opt);
+      });
+      header.appendChild(loraSelect);
+      // Model
+      const modelSelect = document.createElement('select');
+      modelSelect.id = "modelSelect";
+      modelSelect.title = "Choose output model for prompt";
+      modelLibrary.forEach(mod => {
+        let opt = document.createElement('option');
+        opt.value = mod.tag;
+        opt.innerText = mod.name + " – " + mod.desc;
+        modelSelect.appendChild(opt);
+      });
+      header.appendChild(modelSelect);
+    }
+  }
+})();
+
+// -- INJECT LORA/MODEL TO PROMPT ON GENERATION --
+const originalGenPrompt = window.generatePromptWithGenre;
+window.generatePromptWithGenre = function(){
+  originalGenPrompt();
+  // Postprocess
+  const lora = document.getElementById('loraSelect')?.value || "";
+  const model = document.getElementById('modelSelect')?.value || "";
+  let promptBox = document.getElementById('promptOutput');
+  if (promptBox && (lora||model)) {
+    let val = promptBox.value;
+    if (lora) val = lora+" "+val;
+    if (model) val = `[${model}] `+val;
+    promptBox.value = val;
+    document.getElementById('promptPreview').textContent = promptBox.value;
+  }
+};
+
+// -- COMMUNITY REMIX MODE (randomizes settings for fun, can expand to allow public presets) --
+window.communityRemix = function() {
+  const allGenres = Object.keys(genrePresets);
+  const genre = genrePresets[random(allGenres)];
+  const lora = loraLibrary[random(loraLibrary)];
+  const model = modelLibrary[random(modelLibrary)];
+  document.getElementById('loraSelect').value = lora.tag;
+  document.getElementById('modelSelect').value = model.tag;
+  document.getElementById('keywordsInput').value = random([
+    ...genre.body, ...genre.face, ...genre.clothing, ...genre.locationList
+  ]);
+  window.generatePromptWithGenre();
+  document.getElementById('promptLog').innerHTML = `<span style="color:#e8f563">Community Remix: <b>${genre.style}</b> + <b>${lora.name}</b> + <b>${model.name}</b></span>`;
+};
+
+// Add button for community remix
+(function remixUI() {
+  if (!document.getElementById('remixBtn')) {
+    const header = document.querySelector('.prompt-header');
+    if (header) {
+      const remixBtn = document.createElement('button');
+      remixBtn.id = 'remixBtn';
+      remixBtn.innerText = '🌐 Remix';
+      remixBtn.title = 'Randomize everything (public remix)';
+      remixBtn.onclick = window.communityRemix;
+      header.appendChild(remixBtn);
+    }
+  }
+})();
+
+// -- PRO-LEVEL SLIDERS: (Weight, CFG, Steps, Sampler, Seed) --
+(function addSliders() {
+  if(!document.getElementById('cfgSlider')){
+    const panel = document.querySelector('.generator-panels');
+    if(panel){
+      // CFG
+      let cfgLabel = document.createElement('label');
+      cfgLabel.innerText = "CFG:";
+      let cfgSlider = document.createElement('input');
+      cfgSlider.type = 'range';
+      cfgSlider.id = "cfgSlider";
+      cfgSlider.min = 1; cfgSlider.max = 30; cfgSlider.value = 8;
+      let cfgVal = document.createElement('span'); cfgVal.id = 'cfgVal'; cfgVal.innerText = '8';
+      cfgSlider.oninput = ()=>{ cfgVal.innerText=cfgSlider.value; };
+      panel.appendChild(cfgLabel); panel.appendChild(cfgSlider); panel.appendChild(cfgVal);
+
+      // Steps
+      let stepsLabel = document.createElement('label');
+      stepsLabel.innerText = "  Steps:";
+      let stepsSlider = document.createElement('input');
+      stepsSlider.type = 'range'; stepsSlider.id = "stepsSlider";
+      stepsSlider.min = 8; stepsSlider.max = 70; stepsSlider.value = 28;
+      let stepsVal = document.createElement('span'); stepsVal.id = 'stepsVal'; stepsVal.innerText='28';
+      stepsSlider.oninput = ()=>{ stepsVal.innerText=stepsSlider.value; };
+      panel.appendChild(stepsLabel); panel.appendChild(stepsSlider); panel.appendChild(stepsVal);
+
+      // Sampler
+      let samplerLabel = document.createElement('label');
+      samplerLabel.innerText = "  Sampler:";
+      let samplerSelect = document.createElement('select');
+      samplerSelect.id = 'samplerSelect';
+      ["DPM++", "Euler", "Euler a", "Heun", "LMS", "DDIM"].forEach(s=>{
+        let o = document.createElement('option'); o.value=s; o.innerText=s; samplerSelect.appendChild(o);
+      });
+      panel.appendChild(samplerLabel); panel.appendChild(samplerSelect);
+
+      // Seed
+      let seedLabel = document.createElement('label');
+      seedLabel.innerText = "  Seed:";
+      let seedInput = document.createElement('input');
+      seedInput.type = "number"; seedInput.id = "seedInput"; seedInput.value = Math.floor(Math.random()*1e7);
+      seedInput.style.width='7ch';
+      panel.appendChild(seedLabel); panel.appendChild(seedInput);
+    }
+  }
+})();
+// ====== CHUNK 7: LIVE PROMPT PREVIEW, SMART NEGATIVES, NSFW SHROUD, PRESET SAVE/LOAD, INSPECTOR =====
+
+// --- Live Prompt Preview & Real-Time Controls ---
+(function livePromptUI() {
+  if (!document.getElementById('promptPreview')) {
+    const preview = document.createElement('textarea');
+    preview.id = 'promptPreview';
+    preview.readOnly = true;
+    preview.rows = 5;
+    preview.style.cssText = `
+      width:98%;margin:0.5em 0;background:#131619;color:#9ff;
+      border-radius:8px;border:1px solid #2ff3;resize:vertical;font-size:1em;
+      box-shadow:0 2px 9px #091e26a6 inset;
+    `;
+    preview.title = "Your full prompt will appear here with live updates";
+    document.querySelector('.generator-panels')?.appendChild(preview);
+
+    // Copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.innerText = "📋 Copy Prompt";
+    copyBtn.onclick = function(){
+      preview.select(); document.execCommand('copy');
+      copyBtn.innerText = "✅ Copied!";
+      setTimeout(()=>{copyBtn.innerText="📋 Copy Prompt";}, 1200);
+    };
+    document.querySelector('.generator-panels')?.appendChild(copyBtn);
+
+    // Reroll button
+    const rerollBtn = document.createElement('button');
+    rerollBtn.innerText = "🔄 Reroll";
+    rerollBtn.onclick = window.generatePromptWithGenre;
+    document.querySelector('.generator-panels')?.appendChild(rerollBtn);
+
+    // Prompt length meter
+    const lenLabel = document.createElement('span');
+    lenLabel.id = 'promptLenMeter';
+    lenLabel.style.marginLeft = '1em';
+    document.querySelector('.generator-panels')?.appendChild(lenLabel);
+
+    // Vibe meter
+    const vibeLabel = document.createElement('span');
+    vibeLabel.id = 'promptVibeMeter';
+    vibeLabel.style.marginLeft = '1.5em';
+    document.querySelector('.generator-panels')?.appendChild(vibeLabel);
+  }
+})();
+
+// Update preview with every generation
+const originalGenPrompt2 = window.generatePromptWithGenre;
+window.generatePromptWithGenre = function(){
+  originalGenPrompt2();
+  const out = document.getElementById('promptOutput');
+  const preview = document.getElementById('promptPreview');
+  if (out && preview) {
+    preview.value = out.value;
+    // Update length
+    const len = out.value.length;
+    document.getElementById('promptLenMeter').innerText = `Length: ${len} chars`;
+    // Update vibe
+    const moods = ["cinematic", "moody", "playful", "erotic", "mysterious", "dreamy", "hyperreal", "fantasy", "urban"];
+    let mood = "";
+    for (const m of moods) if (out.value.includes(m)) mood = m;
+    document.getElementById('promptVibeMeter').innerText = mood ? `Vibe: ${mood}` : "";
+  }
+};
+
+// --- Mood/Vibe Randomizer ---
+(function vibeRandomizer() {
+  if (!document.getElementById('vibeBtn')) {
+    const btn = document.createElement('button');
+    btn.id = "vibeBtn";
+    btn.innerText = "🎲 Random Vibe";
+    btn.onclick = function(){
+      const moods = [
+        "cinematic", "gloomy", "playful", "erotic", "moody", "happy", "sinister", "intense", "ethereal", "urban", "surreal", "nostalgic", "futuristic"
+      ];
+      const mood = moods[Math.floor(Math.random()*moods.length)];
+      let box = document.getElementById('keywordsInput');
+      if(box) box.value += (box.value.length?", ":"") + mood;
+      window.generatePromptWithGenre();
+    };
+    document.querySelector('.generator-panels')?.appendChild(btn);
+  }
+})();
+
+// --- Smart Negative Prompt Builder ---
+const negativeMasterList = [
+  "extra limbs", "bad anatomy", "missing fingers", "blurry", "lowres", "mutated hands", "text watermark", "crooked eyes",
+  "oversaturated", "out of frame", "deformed", "jpeg artifacts", "monochrome background", "double torso", "low contrast",
+  "cloned face", "twisted pose", "worst quality", "logo", "signature", "ugly", "unnatural skin", "grainy", "poor lighting"
+];
+// Neg prompt suggestions (scan output, then fill box)
+function suggestNegatives(promptText) {
+  const out = [];
+  if(/hand|fingers|grip|grasp/.test(promptText)) out.push("bad hands", "missing fingers", "extra digits");
+  if(/face|portrait|close-up/.test(promptText)) out.push("cloned face", "crooked eyes", "double head");
+  if(/group|trio|multiple/.test(promptText)) out.push("duplicate people", "merged bodies");
+  if(/detailed|realistic|hyperreal/.test(promptText)) out.push("jpeg artifacts", "blurred");
+  return out.concat(negativeMasterList.slice(0,6)).join(", ");
+}
+(function negPromptUI(){
+  if(!document.getElementById('negPromptAuto')){
+    let negLabel = document.createElement('label');
+    negLabel.innerText = "Negatives:";
+    let negBox = document.createElement('input');
+    negBox.type = 'text'; negBox.id = 'negPromptAuto';
+    negBox.placeholder = "auto-suggested negatives";
+    negBox.style.width = "66%";
+    let fillBtn = document.createElement('button');
+    fillBtn.innerText = "Suggest Negs";
+    fillBtn.onclick = function(){
+      let prompt = document.getElementById('promptPreview')?.value || "";
+      negBox.value = suggestNegatives(prompt);
+    };
+    document.querySelector('.generator-panels')?.appendChild(negLabel);
+    document.querySelector('.generator-panels')?.appendChild(negBox);
+    document.querySelector('.generator-panels')?.appendChild(fillBtn);
+  }
+})();
+
+// --- NSFW Cloaking / Reveal on Copy ---
+(function nsfwShroud(){
+  // Words to cloak in UI (not in final prompt)
+  const cloakWords = {
+    "nude": "night beach",
+    "sensual": "moonlit",
+    "intimate": "whispering",
+    "orgasmic": "cliffside",
+    "spread": "open sky",
+    "penetration": "dewdrop",
+    "labia": "orchid",
+    "erection": "lightning",
+    "cum": "rain",
+    "pussy": "kitten"
+  };
+  // When updating preview, cloak NSFW
+  const origGen = window.generatePromptWithGenre;
+  window.generatePromptWithGenre = function(){
+    origGen();
+    let preview = document.getElementById('promptPreview');
+    if(!preview) return;
+    let v = preview.value;
+    for(const bad in cloakWords){
+      v = v.replaceAll(bad, cloakWords[bad]);
+    }
+    preview.value = v;
+    // On copy, reveal real
+    const copyBtn = [...document.querySelectorAll('button')].find(b=>b.innerText.match(/Copy Prompt/));
+    if(copyBtn){
+      copyBtn.onclick = function(){
+        let raw = document.getElementById('promptOutput')?.value || "";
+        navigator.clipboard.writeText(raw);
+        copyBtn.innerText = "✅ Copied!";
+        setTimeout(()=>{copyBtn.innerText="📋 Copy Prompt";},1200);
+      };
+    }
+  };
+})();
+
+// --- Prompt Inspector: Color-coded Tokens, Real-Time Stats ---
+(function promptInspector() {
+  if (!document.getElementById('promptInspector')) {
+    let inspDiv = document.createElement('div');
+    inspDiv.id = "promptInspector";
+    inspDiv.style.cssText = "margin:1em 0;padding:0.8em 1em;background:#15161d;border-radius:7px;font-size:0.97em;color:#aad6f3;";
+    inspDiv.innerHTML = "<b>Prompt Inspector:</b><br><span id='tokensBar'></span>";
+    document.querySelector('.generator-panels')?.appendChild(inspDiv);
+
+    // Live update
+    setInterval(() => {
+      let txt = document.getElementById('promptOutput')?.value || "";
+      let tokens = txt.split(/[, ]+/).filter(x=>x.length);
+      let html = "";
+      tokens.forEach(t=>{
+        let c = "#89f"; // keyword
+        if(t.match(/(lora|epicreal|realvis|cyber|hyperreal|anime)/i)) c="#fd0";
+        else if(t.match(/nude|nsfw|intimate|erotic|cum|pussy|labia/i)) c="#f69";
+        else if(t.match(/fantasy|moody|dreamy|cinematic/i)) c="#8ff";
+        html += `<span style="color:${c};margin-right:0.5em">${t}</span>`;
+      });
+      document.getElementById('tokensBar').innerHTML = html + `<br><small>${tokens.length} tokens</small>`;
+    }, 900);
+  }
+})();
+
+// --- Prompt Save/Load (LocalStorage Presets) ---
+(function presetStorage() {
+  if(!window.savePromptPreset){
+    window.savePromptPreset = function(){
+      let p = document.getElementById('promptOutput')?.value || "";
+      let name = prompt("Name for this preset?");
+      if(name) localStorage.setItem("promptPreset_"+name, p);
+      alert("Saved!");
+    };
+    window.loadPromptPreset = function(){
+      let keys = Object.keys(localStorage).filter(k=>k.startsWith("promptPreset_"));
+      if(!keys.length) return alert("No presets!");
+      let name = prompt("Preset name? ("+keys.map(k=>k.replace("promptPreset_","")).join(", ")+")");
+      if(name && localStorage.getItem("promptPreset_"+name)){
+        document.getElementById('promptOutput').value = localStorage.getItem("promptPreset_"+name);
+        document.getElementById('promptPreview').value = localStorage.getItem("promptPreset_"+name);
+      } else alert("Not found.");
+    };
+    let btnSave = document.createElement('button');
+    btnSave.innerText = "💾 Save Preset";
+    btnSave.onclick = window.savePromptPreset;
+    let btnLoad = document.createElement('button');
+    btnLoad.innerText = "📂 Load Preset";
+    btnLoad.onclick = window.loadPromptPreset;
+    document.querySelector('.generator-panels')?.appendChild(btnSave);
+    document.querySelector('.generator-panels')?.appendChild(btnLoad);
+  }
+})();
+<!-- =========== GENERATOR MEGA CHUNK 3/∞ =========== -->
+<!-- ==== Prompt Mixing, Presets, Advanced Negative Logic, Session Tools ==== -->
+<script>
+// ====== Prompt Presets & Themes ======
+const promptThemes = [
+  { name: "Cinematic",  example: "ultra-realistic, film grain, moody lighting, 35mm, Oscar-worthy composition" },
+  { name: "Surreal",    example: "melting clocks, impossible geometry, dreamlike colors, double exposure" },
+  { name: "Classic NSFW", example: "glamorous, soft skin, dramatic shadows, suggestive, magazine style" },
+  { name: "Vaporwave",  example: "retro 80s, neon grid, palm trees, Japanese text, digital sunset" },
+  { name: "ArtStation", example: "concept art, hyper-detailed, trending on ArtStation, professional lighting" },
+  // ...add more themes as you wish!
+];
+
+// ====== Smart Negative Prompt System ======
+const negativePromptPresets = [
+  "bad anatomy, cloned face, extra limbs, poorly drawn hands, watermark, text, signature, distortion, cropped",
+  "lowres, jpeg artifacts, blurry, deformed, mutated, duplicated, artifact, bad proportions, ugly, gross, out of frame",
+  // Custom lists can be added here
+];
+
+// User can select a base, or “Smart Negatives” can auto-assemble based on tags
+function getSmartNegatives(prompt) {
+  let neg = [];
+  if (/hands?/i.test(prompt))       neg.push("poorly drawn hands, bad fingers, extra fingers");
+  if (/group|multiple/i.test(prompt)) neg.push("cloned face, fused limbs, duplicate");
+  if (/realistic|photo/i.test(prompt)) neg.push("blurry, lowres, artifact, jpeg artifacts");
+  // ... add more smart rules here
+  return neg.concat(negativePromptPresets[0]).join(", ");
+}
+
+// ====== Prompt Mixer / Randomizer ======
+function mixPromptParts(base, extras, theme) {
+  let result = [];
+  if (base)   result.push(base);
+  if (extras) result = result.concat(extras.split(",").map(s=>s.trim()));
+  if (theme && theme.example) result.push(theme.example);
+  return result.join(", ");
+}
+
+// ====== Save/Load Session Tools ======
+function savePromptSession() {
+  let obj = {
+    main: document.getElementById('mainPrompt').value,
+    extra: document.getElementById('extraPrompt').value,
+    theme: document.getElementById('promptTheme').value,
+    negative: document.getElementById('negPrompt').value,
+  };
+  localStorage.setItem("promptForgeSession", JSON.stringify(obj));
+  alert("Session saved!");
+}
+function loadPromptSession() {
+  let obj = JSON.parse(localStorage.getItem("promptForgeSession") || '{}');
+  if(obj.main) document.getElementById('mainPrompt').value = obj.main;
+  if(obj.extra) document.getElementById('extraPrompt').value = obj.extra;
+  if(obj.theme) document.getElementById('promptTheme').value = obj.theme;
+  if(obj.negative) document.getElementById('negPrompt').value = obj.negative;
+}
+
+// ====== Live Stats & Tips ======
+function updateStats() {
+  let prompt = document.getElementById('mainPrompt').value + " " +
+               document.getElementById('extraPrompt').value + " " +
+               promptThemes[document.getElementById('promptTheme').selectedIndex].example;
+  let tokenCount = prompt.split(/\s+/).length;
+  let tip = "";
+  if(tokenCount > 77) tip = "⚠️ Prompt is long—consider trimming for best AI results.";
+  else if(tokenCount < 15) tip = "💡 Add more details for better generations!";
+  else tip = "✅ Good length for most models.";
+  document.getElementById('statsLine').innerHTML = 
+    `Tokens: <b>${tokenCount}</b> &nbsp;|&nbsp; ${tip}`;
+}
+
+// ====== UI: Nav for Monster File ======
+function jumpTo(sectionId) {
+  let el = document.getElementById(sectionId);
+  if(el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// ====== Generator HTML ======
+document.write(`
+  <div style="max-width:900px;margin:2.8em auto 2em auto;padding:2.1em 2.5em 2.4em 2.5em;background:#111214;box-shadow:0 0 48px #021a1a60;border-radius:2em">
+    <h1 style="font-size:2.2em;margin-bottom:0.2em;color:#2dffe5;letter-spacing:0.05em">
+      <img src="favicon.png" alt="" style="height:1.2em;vertical-align:-0.15em;margin-right:0.3em;">
+      PromptForge Generator
+    </h1>
+    <div style="margin-bottom:1.1em;">
+      <button onclick="jumpTo('section-main')" style="margin-right:0.5em;">Main Prompt</button>
+      <button onclick="jumpTo('section-theme')" style="margin-right:0.5em;">Themes</button>
+      <button onclick="jumpTo('section-mixer')" style="margin-right:0.5em;">Prompt Mixer</button>
+      <button onclick="jumpTo('section-neg')" style="margin-right:0.5em;">Negative</button>
+      <button onclick="jumpTo('section-tools')" style="margin-right:0.5em;">Session Tools</button>
+    </div>
+    <div id="statsLine" style="margin-bottom:0.8em;color:#16ffe3"></div>
+    <!-- MAIN PROMPT -->
+    <section id="section-main" style="margin-bottom:2em">
+      <label style="font-size:1.18em;color:#1affd1;">Prompt:</label>
+      <textarea id="mainPrompt" rows="2" style="width:99%;font-size:1.09em;margin-bottom:0.4em"></textarea>
+      <br>
+      <label style="font-size:1.1em;color:#1ac8b6;">Extra Details:</label>
+      <input id="extraPrompt" style="width:80%;font-size:1em;margin-bottom:0.7em">
+    </section>
+    <!-- THEMES -->
+    <section id="section-theme" style="margin-bottom:2em">
+      <label for="promptTheme" style="font-size:1.08em;color:#22ffa6">Select a theme:</label>
+      <select id="promptTheme" style="margin-left:0.5em;font-size:1em">
+        ${promptThemes.map((th,i)=>`<option value="${i}">${th.name}</option>`).join('')}
+      </select>
+      <span id="themeExample" style="margin-left:1em;color:#44ffd1;font-size:0.97em"></span>
+      <script>
+        document.getElementById('promptTheme').addEventListener('change',function(){
+          document.getElementById('themeExample').innerText = promptThemes[this.selectedIndex].example;
+        });
+      </script>
+    </section>
+    <!-- PROMPT MIXER -->
+    <section id="section-mixer" style="margin-bottom:2em">
+      <label style="font-size:1.08em;color:#23ffb1">Prompt Mixer:</label>
+      <button onclick="
+        let mixed = mixPromptParts(
+          document.getElementById('mainPrompt').value,
+          document.getElementById('extraPrompt').value,
+          promptThemes[document.getElementById('promptTheme').selectedIndex]
+        );
+        document.getElementById('mainPrompt').value = mixed;
+        updateStats();
+      ">Mix!</button>
+    </section>
+    <!-- NEGATIVE PROMPT -->
+    <section id="section-neg" style="margin-bottom:2em">
+      <label style="font-size:1.05em;color:#23d9a9">Negative Prompt:</label>
+      <textarea id="negPrompt" rows="2" style="width:97%;font-size:1.05em"></textarea>
+      <button onclick="
+        document.getElementById('negPrompt').value = getSmartNegatives(document.getElementById('mainPrompt').value);
+      ">Smart Negatives</button>
+      <button onclick="
+        document.getElementById('negPrompt').value = negativePromptPresets[0];
+      ">Reset</button>
+    </section>
+    <!-- SESSION TOOLS -->
+    <section id="section-tools">
+      <button onclick='savePromptSession()'>Save Session</button>
+      <button onclick='loadPromptSession()'>Load Session</button>
+      <button onclick='
+        document.getElementById(\"mainPrompt\").value = \"\";
+        document.getElementById(\"extraPrompt\").value = \"\";
+        document.getElementById(\"negPrompt\").value = \"\";
+        updateStats();
+      '>Clear All</button>
+      <button onclick='
+        let txt = [
+          \"Prompt:\", document.getElementById(\"mainPrompt\").value,
+          \"Theme:\", promptThemes[document.getElementById(\"promptTheme\").selectedIndex].name,
+          \"Negative:\", document.getElementById(\"negPrompt\").value
+        ].join(\"\\n\\n\");
+        navigator.clipboard.writeText(txt);
+        alert(\"Prompt copied to clipboard!\");
+      '>Copy Prompt</button>
+      <button onclick='jumpTo(\"section-main\")'>Back to Top</button>
+    </section>
+  </div>
+`);
+// ====== Stats Updater ======
+setInterval(updateStats, 750);
+// =========== END MEGA CHUNK 3/∞ ===========
+</script>
+<!-- =========== GENERATOR MONSTER CHUNK 4/∞ =========== -->
+<script>
+// ========== Context-Aware Autofill ==========
+const contextTags = [
+  { keyword: "girl", suggests: ["cute", "detailed face", "soft lighting", "bokeh", "natural skin"] },
+  { keyword: "fantasy", suggests: ["elf", "glowing runes", "enchanted forest", "mystical fog"] },
+  { keyword: "cinematic", suggests: ["shallow depth of field", "anamorphic lens", "epic scale"] },
+  { keyword: "globe", suggests: ["spinning", "wireframe", "network nodes", "digital tracking"] },
+  // ...expand with hundreds of mappings!
+];
+function suggestTags(val) {
+  let tags = [];
+  for (let c of contextTags) {
+    if (val.toLowerCase().includes(c.keyword)) tags = tags.concat(c.suggests);
+  }
+  return [...new Set(tags)];
+}
+document.getElementById('mainPrompt').addEventListener('input', function() {
+  let sug = suggestTags(this.value);
+  document.getElementById('extraPrompt').placeholder = sug.length ? "Try: " + sug.join(', ') : "";
+});
+
+// ========== Multi-Prompt Playlist ==========
+let promptPlaylist = [];
+function addPromptToPlaylist() {
+  let obj = {
+    main: document.getElementById('mainPrompt').value,
+    theme: promptThemes[document.getElementById('promptTheme').selectedIndex].name,
+    negative: document.getElementById('negPrompt').value,
+  };
+  promptPlaylist.push(obj);
+  updatePlaylistUI();
+}
+function updatePlaylistUI() {
+  let out = "<b>Prompt Playlist:</b><ul>";
+  for(let i=0;i<promptPlaylist.length;i++) {
+    out += `<li><b>${promptPlaylist[i].theme}</b>: ${promptPlaylist[i].main} <span style="color:#fa5" onclick="removePromptFromPlaylist(${i})">[remove]</span></li>`;
+  }
+  out += "</ul>";
+  document.getElementById('playlistBox').innerHTML = out;
+}
+function removePromptFromPlaylist(idx) {
+  promptPlaylist.splice(idx,1); updatePlaylistUI();
+}
+function exportPlaylist() {
+  let data = JSON.stringify(promptPlaylist);
+  navigator.clipboard.writeText(data); alert("Prompt playlist copied to clipboard!");
+}
+function importPlaylist() {
+  let data = prompt("Paste prompt playlist JSON:");
+  try { promptPlaylist = JSON.parse(data||"[]"); updatePlaylistUI(); } catch(e) { alert("Import failed!"); }
+}
+
+// ========== AI Writing Tips ==========
+const promptTips = [
+  "Try using fewer commas. Short, direct phrases work best.",
+  "Describe what *not* to include in the negative prompt!",
+  "For faces: try 'sharp eyes, perfect lips, natural hair, slight smile'.",
+  "If outputs are blurry: add 'high detail', 'award winning', or 'DSLR'.",
+  "For action: use verbs! 'leaping', 'striking', 'cowering', 'reaching'.",
+  "Use colors: 'soft warm light', 'icy blue shadows', 'golden hour'.",
+  "Try 'shot from below', 'POV', 'intimate angle', 'side profile'.",
+  "If you want SFW, add 'clothed', 'PG', or 'family friendly'.",
+  // ...add dozens more!
+];
+function showRandomTip() {
+  let tip = promptTips[Math.floor(Math.random()*promptTips.length)];
+  document.getElementById('tipBox').innerHTML = `<b>AI Prompt Tip:</b> <span style="color:#7dffe0">${tip}</span>`;
+}
+setInterval(showRandomTip, 6500);
+
+// ========== Export/Import Session Data ==========
+function exportSessionAll() {
+  let obj = {
+    session: JSON.parse(localStorage.getItem("promptForgeSession")||"{}"),
+    playlist: promptPlaylist,
+  };
+  let blob = new Blob([JSON.stringify(obj)],{type:"application/json"});
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement('a');
+  a.href = url; a.download = "promptforge-session.json";
+  a.click();
+}
+function importSessionAll() {
+  let inp = document.createElement('input');
+  inp.type = 'file';
+  inp.onchange = function(e){
+    let file = e.target.files[0];
+    let reader = new FileReader();
+    reader.onload = function(ev) {
+      let obj = JSON.parse(ev.target.result||"{}");
+      if(obj.session) localStorage.setItem("promptForgeSession", JSON.stringify(obj.session));
+      if(obj.playlist) promptPlaylist = obj.playlist; updatePlaylistUI();
+      alert("Session imported!");
+      loadPromptSession();
+    };
+    reader.readAsText(file);
+  };
+  inp.click();
+}
+
+// ========== Prompt Audit ==========
+function auditPrompt() {
+  let main = document.getElementById('mainPrompt').value;
+  let warns = [];
+  if(main.split(",").length > 12) warns.push("🚩 *Maybe too many commas. AI likes focused prompts.*");
+  if(/nsfw|nude|explicit|sex|xxx/i.test(main)) warns.push("⚠️ *Are you sure? Some models will filter this!*");
+  if(main.length < 10) warns.push("⚠️ *Prompt looks very short—try adding more!*");
+  if(/(ugly|gross|bad)/i.test(main)) warns.push("💡 Consider putting negative terms in the negative prompt instead.");
+  if(warns.length === 0) warns.push("✅ Prompt looks good!");
+  document.getElementById('auditBox').innerHTML = warns.map(w=>`<li>${w}</li>`).join("");
+}
+
+// ========== Custom Negative Builder ==========
+const negativeOptions = [
+  {label:"bad anatomy", def:true}, {label:"blurry", def:true}, {label:"extra limbs", def:true},
+  {label:"text", def:true}, {label:"watermark", def:true}, {label:"signature", def:true},
+  {label:"cropped", def:true}, {label:"jpeg artifacts", def:true}, {label:"deformed", def:true},
+  {label:"duplicate", def:false}, {label:"bad proportions", def:true},
+  // ...expand with more as needed
+];
+function buildNegUI() {
+  let html = negativeOptions.map((n,i)=>`<label style="margin-right:1.5em;"><input type="checkbox" id="neg_${i}" ${n.def?"checked":""} onchange="rebuildNegPrompt()"> ${n.label}</label>`).join(" ");
+  document.getElementById('negBuilder').innerHTML = html;
+}
+function rebuildNegPrompt() {
+  let neg = [];
+  for(let i=0;i<negativeOptions.length;i++) if(document.getElementById(`neg_${i}`).checked) neg.push(negativeOptions[i].label);
+  document.getElementById('negPrompt').value = neg.join(", ");
+}
+setTimeout(buildNegUI,500);
+
+// ========== J1nx Cameo (Tips/Bubble) ==========
+const j1nxLines = [
+  "Hey, try mixing two themes for wild results!",
+  "You can import/export your whole session, like a real hacker.",
+  "Click 'Prompt Audit' to check for rookie mistakes!",
+  "Did you know? 'Vaporwave' theme looks amazing on city scenes.",
+  "For best prompts: Be bold, but specific.",
+  "Type what you *don’t* want in 'Negative'!",
+  "Stuck? Click 'Random Tip' below for inspiration.",
+];
+function j1nxBubble() {
+  if(document.getElementById('j1nx-bubble')) {
+    document.getElementById('j1nx-bubble').innerHTML = j1nxLines[Math.floor(Math.random()*j1nxLines.length)];
+    setTimeout(j1nxBubble, 9000);
+  }
+}
+
+// ======= Add-ons for Generator UI =======
+document.write(`
+  <div style="background:#141517;padding:1.3em 2.3em;border-radius:1.1em;box-shadow:0 0 28px #071b1b70;margin-bottom:2.2em;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <button onclick="addPromptToPlaylist()" style="margin-right:1em;">Add to Playlist</button>
+        <button onclick="exportPlaylist()" style="margin-right:1em;">Export Playlist</button>
+        <button onclick="importPlaylist()" style="margin-right:1em;">Import Playlist</button>
+      </div>
+      <div id="playlistBox" style="color:#15f7e2;font-size:0.97em"></div>
+    </div>
+    <div style="margin:0.7em 0 0.6em 0">
+      <button onclick="showRandomTip()" style="margin-right:1em;">Random Tip</button>
+      <span id="tipBox"></span>
+    </div>
+    <div style="margin-bottom:0.5em;">
+      <button onclick="auditPrompt()" style="margin-right:1em;">Prompt Audit</button>
+      <ul id="auditBox" style="margin-top:0.2em;color:#ffff8b;font-size:1em"></ul>
+    </div>
+    <div>
+      <b>Negative Prompt Builder:</b>
+      <div id="negBuilder" style="margin-top:0.4em"></div>
+    </div>
+    <div style="margin-top:1.2em">
+      <button onclick="exportSessionAll()" style="margin-right:1em;">Export All</button>
+      <button onclick="importSessionAll()" style="margin-right:1em;">Import All</button>
+    </div>
+    <div id="j1nx-bubble" style="margin-top:1.2em;padding:0.7em 1em;border-radius:1em;background:#111a1e;color:#97ffe2;max-width:350px;box-shadow:0 0 10px #00ffee38;font-size:1.09em;font-style:italic"></div>
+  </div>
+  <script>j1nxBubble();</script>
+`);
+// =========== END CHUNK 4/∞ ===========
+
+</script>
+<!-- =========== GENERATOR MONSTER CHUNK 5/∞ =========== -->
+<script>
+// ========== Prompt Mixer / Mutator ==========
+const themeEngines = [
+  { name: "Hyperreal", adds: ["detailed texture", "perfect lighting", "cinematic realism"] },
+  { name: "Cyberpunk", adds: ["neon glow", "rainy night", "chrome surfaces", "urban sprawl"] },
+  { name: "Vaporwave", adds: ["retro grid", "magenta sky", "statues", "scanlines"] },
+  { name: "Nature Dream", adds: ["lush foliage", "dewdrops", "golden sunlight", "misty background"] },
+  { name: "Dark Art", adds: ["shadows", "ominous mood", "smoke", "deep contrast"] },
+  // ...add many more!
+];
+function mixPrompt() {
+  let base = document.getElementById('mainPrompt').value;
+  let themeIdx = Math.floor(Math.random() * themeEngines.length);
+  let mixer = themeEngines[themeIdx];
+  let extra = mixer.adds[Math.floor(Math.random() * mixer.adds.length)];
+  let out = `${base}, ${mixer.name.toLowerCase()}, ${extra}`;
+  document.getElementById('mainPrompt').value = out;
+  showPromptTags(out);
+}
+function showPromptTags(prompt) {
+  let tags = prompt.split(",").map(x=>x.trim()).filter(Boolean);
+  let html = tags.map(t=>`<span class="tag-chip" onclick="insertTag('${t}')">${t}</span>`).join(" ");
+  document.getElementById('tagExplorer').innerHTML = html;
+}
+function insertTag(tag) {
+  let inp = document.getElementById('mainPrompt');
+  inp.value = inp.value ? inp.value + ", " + tag : tag;
+  showPromptTags(inp.value);
+}
+
+// ========== Smart Input Popups ==========
+const tagSuggestions = [
+  "ultra-detailed", "backlit", "soft focus", "low angle", "warm tones", "stormy", "studio light",
+  "action pose", "lens flare", "vivid color", "dreamlike", "volumetric light", "wide shot"
+];
+function showInputSuggestions(val) {
+  if (!val) { document.getElementById('inputPopup').style.display = 'none'; return; }
+  let filtered = tagSuggestions.filter(t => t.includes(val.toLowerCase()));
+  let box = document.getElementById('inputPopup');
+  box.innerHTML = filtered.map(f=>`<div onclick="selectInputSuggestion('${f}')">${f}</div>`).join("");
+  box.style.display = filtered.length ? 'block' : 'none';
+}
+function selectInputSuggestion(val) {
+  let inp = document.getElementById('mainPrompt');
+  inp.value += (inp.value ? ", " : "") + val;
+  showPromptTags(inp.value);
+  document.getElementById('inputPopup').style.display = 'none';
+}
+document.getElementById('mainPrompt').addEventListener('input', function() {
+  let v = this.value.split(',').pop().trim();
+  showInputSuggestions(v);
+  showPromptTags(this.value);
+});
+
+// ========== History, Undo/Redo ==========
+let promptHistory = [], historyIdx = -1;
+function saveHistory() {
+  promptHistory = promptHistory.slice(0, historyIdx + 1);
+  promptHistory.push(document.getElementById('mainPrompt').value);
+  historyIdx = promptHistory.length - 1;
+}
+function undoPrompt() {
+  if(historyIdx > 0) {
+    historyIdx--;
+    document.getElementById('mainPrompt').value = promptHistory[historyIdx];
+    showPromptTags(promptHistory[historyIdx]);
+  }
+}
+function redoPrompt() {
+  if(historyIdx < promptHistory.length - 1) {
+    historyIdx++;
+    document.getElementById('mainPrompt').value = promptHistory[historyIdx];
+    showPromptTags(promptHistory[historyIdx]);
+  }
+}
+document.getElementById('mainPrompt').addEventListener('change', saveHistory);
+
+// ========== Voice Input ==========
+let recognition;
+function startVoiceInput() {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert('Voice input not supported in this browser.');
+    return;
+  }
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-US';
+  recognition.onresult = function(event) {
+    let text = event.results[0][0].transcript;
+    document.getElementById('mainPrompt').value += (document.getElementById('mainPrompt').value ? ', ' : '') + text;
+    showPromptTags(document.getElementById('mainPrompt').value);
+  };
+  recognition.onerror = function() { alert('Voice input error!'); };
+  recognition.start();
+}
+
+// ========== Bulk Export ==========
+function exportPromptsTxt() {
+  let txt = promptPlaylist.map(p => `${p.theme}: ${p.main} [Neg: ${p.negative}]`).join('\n');
+  let blob = new Blob([txt], { type: "text/plain" });
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = "prompts.txt"; a.click();
+}
+function exportPromptsCSV() {
+  let csv = promptPlaylist.map(p =>
+    `"${p.theme.replace(/"/g,'""')}","${p.main.replace(/"/g,'""')}","${p.negative.replace(/"/g,'""')}"`).join('\n');
+  let blob = new Blob([csv], { type: "text/csv" });
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = "prompts.csv"; a.click();
+}
+
+// ========== Accessibility/Responsive ==========
+document.addEventListener('keydown', function(e){
+  if(e.ctrlKey && e.key==='z') undoPrompt();
+  if(e.ctrlKey && e.key==='y') redoPrompt();
+});
+document.getElementById('mainPrompt').setAttribute('aria-label', 'Prompt input');
+document.getElementById('mainPrompt').setAttribute('tabindex', '0');
+document.getElementById('mainPrompt').style.outline = "2px solid #333";
+document.getElementById('mainPrompt').onfocus = function(){ this.style.outline = "2px solid #09ffe6"; }
+document.getElementById('mainPrompt').onblur = function(){ this.style.outline = "2px solid #333"; }
+
+// ========== UI Buttons/Extras ==========
+document.write(`
+  <div style="background:#181b20;padding:1em 2em;border-radius:1em;margin-bottom:2em;box-shadow:0 0 22px #022b3a40;">
+    <div style="display:flex;flex-wrap:wrap;gap:1em;align-items:center;">
+      <button onclick="mixPrompt()">Prompt Mixer</button>
+      <button onclick="undoPrompt()">Undo</button>
+      <button onclick="redoPrompt()">Redo</button>
+      <button onclick="startVoiceInput()">🎤 Voice Input</button>
+      <button onclick="exportPromptsTxt()">Export as .txt</button>
+      <button onclick="exportPromptsCSV()">Export as .csv</button>
+      <span id="tagExplorer" style="margin-left:1.7em;"></span>
+    </div>
+    <div id="inputPopup" style="position:absolute;z-index:10;background:#141a23;border-radius:0.8em;box-shadow:0 0 8px #00ffd2;padding:0.8em 1.4em;display:none;top:11em;left:8vw;color:#23e0b9;font-size:1.1em;"></div>
+  </div>
+`);
+// =========== END MONSTER CHUNK 5/∞ ===========
+
+</script>
+<!-- =========== GENERATOR MONSTER CHUNK 6/∞ =========== -->
+<script>
+// ==== Smart Negative Prompt Generator ====
+const badTags = [
+  "deformed", "blurry", "bad anatomy", "extra limbs", "missing fingers", "cropped", "watermark", "signature", "text", "logo", "duplicate", "long neck", "mutation", "out of frame", "poorly drawn", "fused fingers", "bad proportions", "gross", "malformed", "bad hands"
+];
+function buildNegativePrompt(custom = "") {
+  let baseNeg = badTags.join(", ");
+  if(custom && custom.length) baseNeg += ", " + custom;
+  return baseNeg.replace(/\s+/g, " ").trim();
+}
+
+// ==== Auto-Save to LocalStorage ====
+function autoSaveAll() {
+  localStorage.setItem("PFGEN_PROMPT", document.getElementById('mainPrompt').value);
+  localStorage.setItem("PFGEN_NEG", document.getElementById('negPrompt').value);
+  localStorage.setItem("PFGEN_PLAYLIST", JSON.stringify(promptPlaylist));
+}
+function autoLoadAll() {
+  let mp = localStorage.getItem("PFGEN_PROMPT");
+  let np = localStorage.getItem("PFGEN_NEG");
+  let pl = localStorage.getItem("PFGEN_PLAYLIST");
+  if(mp) document.getElementById('mainPrompt').value = mp;
+  if(np) document.getElementById('negPrompt').value = np;
+  if(pl) {
+    try { promptPlaylist = JSON.parse(pl); renderPromptPlaylist(); } catch {}
+  }
+}
+["mainPrompt", "negPrompt"].forEach(id=>{
+  document.getElementById(id).addEventListener('input', autoSaveAll);
+});
+window.addEventListener('DOMContentLoaded', autoLoadAll);
+
+// ==== Prompt Playlist (“Cart”) System ====
+let promptPlaylist = [];
+function addToPlaylist() {
+  let mp = document.getElementById('mainPrompt').value.trim();
+  let np = document.getElementById('negPrompt').value.trim() || buildNegativePrompt();
+  if(!mp) return alert('Enter a prompt first!');
+  promptPlaylist.push({
+    theme: autoDetectTheme(mp),
+    main: mp,
+    negative: np,
+    time: Date.now()
+  });
+  renderPromptPlaylist();
+  autoSaveAll();
+}
+function removeFromPlaylist(idx) {
+  promptPlaylist.splice(idx, 1);
+  renderPromptPlaylist();
+  autoSaveAll();
+}
+function editFromPlaylist(idx) {
+  let p = promptPlaylist[idx];
+  document.getElementById('mainPrompt').value = p.main;
+  document.getElementById('negPrompt').value = p.negative;
+}
+function renderPromptPlaylist() {
+  let box = document.getElementById('playlistBox');
+  if(!box) return;
+  if(!promptPlaylist.length) { box.innerHTML = "<i>No prompts in your cart yet!</i>"; return; }
+  box.innerHTML = promptPlaylist.map((p,i)=>`
+    <div class="prompt-card" tabindex="0">
+      <b>[${p.theme}]</b> <span class="playlist-title">${shortTitle(p.main)}</span><br>
+      <span class="playlist-main">${p.main}</span>
+      <br><span class="playlist-neg">Neg: <span>${p.negative}</span></span>
+      <div style="margin-top:0.2em">
+        <button onclick="editFromPlaylist(${i})">Edit</button>
+        <button onclick="removeFromPlaylist(${i})">Remove</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+// ==== Prompt Summarizer/Title ====
+function shortTitle(prompt) {
+  let words = prompt.split(" ").filter(Boolean);
+  if(words.length <= 4) return prompt;
+  return words.slice(0, 4).join(" ") + "...";
+}
+function autoDetectTheme(prompt) {
+  let lower = prompt.toLowerCase();
+  if(lower.includes("cyber") || lower.includes("glow")) return "Cyberpunk";
+  if(lower.includes("fantasy") || lower.includes("dragon")) return "Fantasy";
+  if(lower.includes("portrait") || lower.includes("face")) return "Portrait";
+  if(lower.includes("nature") || lower.includes("forest")) return "Nature";
+  if(lower.includes("city") || lower.includes("urban")) return "City";
+  if(lower.includes("nsfw")) return "NSFW";
+  return "General";
+}
+
+// ==== Prompt Templates (Best Practice Library) ====
+const promptTemplates = {
+  "Portrait": [
+    "hyper-realistic portrait, cinematic lighting, detailed skin texture, shallow depth of field, studio background",
+    "close-up portrait, soft focus, gentle light, intense eye contact, freckles, natural color"
+  ],
+  "Nature": [
+    "lush forest, sunbeams through leaves, mist, mossy rocks, photorealism, vivid color",
+    "mountain lake, perfect reflection, morning fog, pine trees, sharp focus, 35mm"
+  ],
+  "Fantasy": [
+    "ancient dragon, swirling mist, ruined castle, epic scale, intricate detail, glowing eyes",
+    "elven city, golden sunset, crystal towers, lush gardens, magical ambiance, ultra-HD"
+  ],
+  "Cyberpunk": [
+    "neon-lit alley, rain-soaked street, reflections, futuristic tech, chrome, Tokyo at night",
+    "android girl, holograms, glitch effect, city skyline, purple blue palette, dark"
+  ],
+  "General": [
+    "high detail, perfect lighting, sharp focus, beautiful composition",
+    "cinematic wide shot, vibrant colors, moody atmosphere, dynamic pose"
+  ]
+  // ...add more categories and templates as needed
+};
+function showTemplateMenu() {
+  let html = "<div><b>Prompt Templates:</b><br>";
+  for(let cat in promptTemplates) {
+    html += `<div class="tmplcat">${cat}</div>`;
+    promptTemplates[cat].forEach(t=>{
+      html += `<div class="tmplrow" onclick="loadTemplate('${cat}','${t.replace(/'/g,"\\'")}')">${t}</div>`;
+    });
+  }
+  html += "</div>";
+  document.getElementById('templateMenu').innerHTML = html;
+  document.getElementById('templateMenu').style.display = 'block';
+}
+function loadTemplate(cat, t) {
+  document.getElementById('mainPrompt').value = t;
+  showPromptTags(t);
+  document.getElementById('templateMenu').style.display = 'none';
+}
+document.addEventListener('click', function(e){
+  if(!e.target.classList.contains('tmplrow')) document.getElementById('templateMenu').style.display = 'none';
+});
+</script>
+<div id="playlistBox" style="margin-bottom:1.7em;"></div>
+<div id="templateMenu" class="tmplmenu" style="display:none;position:absolute;z-index:1001;background:#15161a;color:#d0fff9;padding:1.7em 2em;border-radius:1em;box-shadow:0 0 22px #054d6c70;max-width:80vw;top:12em;left:15vw"></div>
+<!-- =========== END CHUNK 6/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 7/∞ =========== -->
+<script>
+// ==== Bulk Prompt Export ====
+function exportAllPrompts(format = "sd") {
+  if(!promptPlaylist.length) return alert("Your cart is empty!");
+  let txt = "";
+  promptPlaylist.forEach((p,i)=>{
+    let neg = p.negative || buildNegativePrompt();
+    let head = `#${i+1}: [${p.theme}] ${shortTitle(p.main)}\n`;
+    if(format === "sd") {
+      txt += `${head}Prompt: ${p.main}\nNegative: ${neg}\n\n`;
+    } else if(format === "openart") {
+      txt += `${head}Positive: ${p.main}\nNegative: ${neg}\n\n`;
+    } else if(format === "bluewillow") {
+      txt += `${head}/imagine ${p.main} --no ${neg}\n\n`;
+    }
+  });
+  navigator.clipboard.writeText(txt);
+  alert("Copied all prompts to clipboard in " + format.toUpperCase() + " format!");
+}
+
+// ==== Built-in Prompt Inspector ====
+function inspectPrompt(str) {
+  let minLen = 50, maxLen = 320;
+  let len = str.length;
+  let grade = "ok", msg = "";
+  if(len < minLen) { grade = "weak"; msg += "Prompt is too short. "; }
+  if(len > maxLen) { grade = "long"; msg += "Prompt is long (but some models like this!). "; }
+  if(!/[a-zA-Z]/.test(str)) { grade = "bad"; msg += "Not enough detail. "; }
+  if(str.split(",").length < 4) { msg += "Add more descriptive tags for better results. "; }
+  return {grade, msg: msg.trim()};
+}
+function runPromptInspector() {
+  let prompt = document.getElementById('mainPrompt').value.trim();
+  let res = inspectPrompt(prompt);
+  let msg = "";
+  if(res.grade === "ok") msg = "<span style='color:#9effb6'>Looks good!</span>";
+  if(res.grade === "weak") msg = "<span style='color:#ffe164'>Prompt is a bit weak—try adding more description.</span>";
+  if(res.grade === "long") msg = "<span style='color:#70e1ff'>Prompt is long—double check for repeated/contradictory tags.</span>";
+  if(res.grade === "bad") msg = "<span style='color:#ff8585'>Prompt needs more detail or tags.</span>";
+  document.getElementById('promptInspector').innerHTML = msg;
+}
+document.getElementById('mainPrompt').addEventListener('input', runPromptInspector);
+
+// ==== Prompt Mixer/Mutate ====
+function mixPrompts(idx1, idx2, strength=0.5) {
+  let p1 = promptPlaylist[idx1]?.main || "";
+  let p2 = promptPlaylist[idx2]?.main || "";
+  let mix = [];
+  let w1 = Math.max(1, Math.floor((1-strength)*4));
+  let w2 = Math.max(1, Math.floor(strength*4));
+  let arr1 = p1.split(",").map(s=>s.trim());
+  let arr2 = p2.split(",").map(s=>s.trim());
+  for(let i=0; i<w1 && i<arr1.length; ++i) mix.push(arr1[i]);
+  for(let i=0; i<w2 && i<arr2.length; ++i) mix.push(arr2[i]);
+  return mix.join(", ");
+}
+function showMixerMenu() {
+  if(promptPlaylist.length<2) return alert("Need at least 2 prompts in your cart to mix!");
+  let html = `<div><b>Prompt Mixer:</b><br>
+    <label>Source A:</label> <select id="mixA">${promptPlaylist.map((p,i)=>`<option value="${i}">${shortTitle(p.main)}</option>`)}</select><br>
+    <label>Source B:</label> <select id="mixB">${promptPlaylist.map((p,i)=>`<option value="${i}">${shortTitle(p.main)}</option>`)}</select><br>
+    <label>Blend:</label> <input id="mixSlider" type="range" min="0" max="1" step="0.05" value="0.5"><br>
+    <button onclick="doPromptMix()">Mix & Insert</button>
+    </div>`;
+  let el = document.getElementById('mixerMenu');
+  el.innerHTML = html; el.style.display = "block";
+}
+function doPromptMix() {
+  let a = +document.getElementById('mixA').value;
+  let b = +document.getElementById('mixB').value;
+  let s = +document.getElementById('mixSlider').value;
+  let mixed = mixPrompts(a, b, s);
+  document.getElementById('mainPrompt').value = mixed;
+  showPromptTags(mixed);
+  document.getElementById('mixerMenu').style.display = "none";
+  runPromptInspector();
+}
+document.addEventListener('click', function(e){
+  if(!e.target.closest('#mixerMenu')) document.getElementById('mixerMenu').style.display = 'none';
+});
+
+// ==== Prompt Notes & Tag Manager ====
+function setPromptNote(idx, txt) {
+  if(promptPlaylist[idx]) {
+    promptPlaylist[idx].note = txt.trim();
+    autoSaveAll();
+  }
+  renderPromptPlaylist();
+}
+function tagPrompt(idx, tag) {
+  if(promptPlaylist[idx]) {
+    promptPlaylist[idx].tags = promptPlaylist[idx].tags || [];
+    if(!promptPlaylist[idx].tags.includes(tag)) promptPlaylist[idx].tags.push(tag);
+    autoSaveAll();
+  }
+  renderPromptPlaylist();
+}
+function renderPromptPlaylist() {
+  let box = document.getElementById('playlistBox');
+  if(!box) return;
+  if(!promptPlaylist.length) { box.innerHTML = "<i>No prompts in your cart yet!</i>"; return; }
+  box.innerHTML = promptPlaylist.map((p,i)=>`
+    <div class="prompt-card" tabindex="0">
+      <b>[${p.theme}]</b> <span class="playlist-title">${shortTitle(p.main)}</span><br>
+      <span class="playlist-main">${p.main}</span>
+      <br><span class="playlist-neg">Neg: <span>${p.negative}</span></span>
+      <div style="margin-top:0.2em">
+        <button onclick="editFromPlaylist(${i})">Edit</button>
+        <button onclick="removeFromPlaylist(${i})">Remove</button>
+        <button onclick="setPromptNote(${i}, prompt('Enter note for this prompt:', '${p.note||""}'))">Note</button>
+        <button onclick="tagPrompt(${i}, prompt('Enter tag for this prompt:', ''))">Tag</button>
+      </div>
+      ${p.note ? `<div class="prompt-note"><b>Note:</b> ${p.note}</div>` : ""}
+      ${p.tags && p.tags.length ? `<div class="prompt-tags"><b>Tags:</b> ${p.tags.map(t=>`<span class="tag">${t}</span>`).join(" ")}</div>` : ""}
+    </div>
+  `).join("");
+}
+
+// ==== Accessibility & Keyboard Navigation ====
+document.getElementById('mainPrompt').setAttribute('aria-label','Main image prompt (comma-separated tags)');
+document.getElementById('negPrompt').setAttribute('aria-label','Negative prompt (discouraged tags)');
+document.getElementById('mainPrompt').addEventListener('keydown', e=>{
+  if(e.ctrlKey && e.key === "s") { addToPlaylist(); e.preventDefault(); }
+});
+document.getElementById('negPrompt').addEventListener('keydown', e=>{
+  if(e.ctrlKey && e.key === "s") { addToPlaylist(); e.preventDefault(); }
+});
+
+</script>
+<div id="mixerMenu" style="display:none;position:absolute;z-index:1100;background:#101a23;color:#fff;padding:2em 3em;border-radius:1em;box-shadow:0 0 33px #0ff8;max-width:90vw;top:9em;left:8vw"></div>
+<div id="promptInspector" style="margin:0.7em 0 1em 0; font-size:1.09em"></div>
+<!-- =========== END CHUNK 7/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 8/∞ =========== -->
+<script>
+// ==== Built-in AI Prompt Assistant (Local "Muse" AI Coach) ====
+async function runMuseSuggest() {
+  let input = document.getElementById('mainPrompt').value.trim();
+  if(!input) return showMuse("Type a style or subject to get ideas...");
+  // For demo: simulate AI suggestions using curated, context-aware logic
+  let museIdeas = [
+    "Add scene mood: 'rainy night', 'sunlit alley', 'moonlit forest'",
+    "Try lens/camera: 'bokeh, shallow depth of field', '35mm, f/1.8'",
+    "Enhance subject: 'freckles', 'windblown hair', 'glistening skin'",
+    "Lighting: 'neon lights', 'backlit', 'cinematic rim light'",
+    "Composition: 'close-up', 'from behind', 'wide shot, high angle'",
+    "Try an emotion: 'melancholy', 'ecstasy', 'mischievous smile'",
+    "Background: 'gritty city street', 'lush jungle', 'digital matrix'",
+    "Special FX: 'film grain', 'dust motes', 'electric sparks'"
+  ];
+  let out = "<b>Muse:</b> ";
+  museIdeas.sort(()=>Math.random()-.5);
+  out += museIdeas.slice(0, 3).join(" &bull; ");
+  showMuse(out);
+}
+function showMuse(msg) {
+  document.getElementById('aiMuse').innerHTML = msg;
+}
+document.getElementById('mainPrompt').addEventListener('blur', runMuseSuggest);
+
+// ==== Style Randomizer ("Vibe Dice") ====
+function rollVibeDice() {
+  const moods = ["moody", "dreamlike", "hyperreal", "noir", "sunny", "cyberpunk", "vintage", "euphoric"];
+  const genres = ["portrait", "cityscape", "fantasy landscape", "fashion", "creature design", "retro-futurism"];
+  const details = ["neon glow", "misty", "ultra detailed", "soft focus", "dramatic lighting", "dynamic pose"];
+  let mood = moods[Math.floor(Math.random()*moods.length)];
+  let genre = genres[Math.floor(Math.random()*genres.length)];
+  let detail = details[Math.floor(Math.random()*details.length)];
+  let newPrompt = `${mood}, ${genre}, ${detail}`;
+  document.getElementById('mainPrompt').value = newPrompt;
+  runMuseSuggest();
+  runPromptInspector();
+  showPromptTags(newPrompt);
+}
+
+// ==== Download Prompt as TXT or JSON ====
+function downloadPrompt(format="txt") {
+  let p = document.getElementById('mainPrompt').value.trim();
+  let n = document.getElementById('negPrompt').value.trim();
+  let out = "";
+  if(format==="txt") out = `Prompt: ${p}\nNegative: ${n}\n`;
+  if(format==="json") out = JSON.stringify({prompt:p, negative:n}, null, 2);
+  let blob = new Blob([out], {type:"text/plain"});
+  let link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `prompt-${Date.now()}.${format}`;
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(()=>{document.body.removeChild(link);}, 500);
+}
+
+// ==== Clipboard Copy Button Feedback ====
+function copyPromptField(id) {
+  let el = document.getElementById(id);
+  if(!el) return;
+  navigator.clipboard.writeText(el.value);
+  el.classList.add("copied-pulse");
+  setTimeout(()=>el.classList.remove("copied-pulse"),400);
+}
+
+// ==== UX Polish: Pulse animation for Copy buttons ====
+const stylePulse = document.createElement('style');
+stylePulse.textContent = `.copied-pulse { box-shadow: 0 0 0 3px #2fffcecc !important; transition: box-shadow 0.2s; }`;
+document.head.appendChild(stylePulse);
+
+// ==== Optional: Prompt "Bookmark Star" (save favs even if not in playlist) ====
+function bookmarkPrompt() {
+  let p = document.getElementById('mainPrompt').value.trim();
+  if(!p) return alert("Nothing to bookmark!");
+  let arr = JSON.parse(localStorage.getItem('bookmarkedPrompts')||"[]");
+  if(!arr.includes(p)) arr.push(p);
+  localStorage.setItem('bookmarkedPrompts', JSON.stringify(arr));
+  alert("Prompt bookmarked for later!");
+}
+
+// ==== Fun: Show recent prompts on page load ====
+window.addEventListener('DOMContentLoaded',()=>{
+  let arr = JSON.parse(localStorage.getItem('bookmarkedPrompts')||"[]");
+  if(arr.length) {
+    document.getElementById('recentPrompts').innerHTML =
+      "<b>Your recent prompts:</b><br>" + arr.slice(-5).map(s=>"<code>"+s+"</code>").join("<br>");
+  }
+});
+</script>
+
+<div style="margin:2em 0 1em 0">
+  <button onclick="rollVibeDice()" title="Randomize style (vibe dice)">🎲 Style Dice</button>
+  <button onclick="downloadPrompt('txt')" title="Download prompt as TXT">⬇️ TXT</button>
+  <button onclick="downloadPrompt('json')" title="Download prompt as JSON">⬇️ JSON</button>
+  <button onclick="copyPromptField('mainPrompt')" title="Copy main prompt">📋 Main</button>
+  <button onclick="copyPromptField('negPrompt')" title="Copy negative prompt">📋 Neg</button>
+  <button onclick="bookmarkPrompt()" title="Bookmark this prompt">⭐️ Fav</button>
+</div>
+<div id="aiMuse" style="margin:1em 0; color:#e2ff8d; font-size:1.04em;"></div>
+<div id="recentPrompts" style="font-size:0.97em; color:#55e4e4"></div>
+<!-- =========== END CHUNK 8/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 9/∞ =========== -->
+<script>
+// ========== NSFW Stealth Cloaking / Anti-Filter Strategy ==========
+function nsfwCloak(prompt) {
+  // Encode known redflag words using zero-width/non-ASCII, or playful hints
+  // (For real production, use more sophisticated logic and keep updating dictionary)
+  let badWords = {
+    "nude": "n🩷de",
+    "sex": "s🩷x",
+    "naked": "n🩷ked",
+    "pussy": "p🩷ssy",
+    "cock": "c🩷ck",
+    "breast": "br🩷ast",
+    "vagina": "v🩷gina",
+    "penis": "p🩷nis",
+    "cum": "c🩷m",
+    "orgasm": "org🩷sm",
+    "anal": "an🩷l",
+    "penetration": "penet🩷ation",
+    "hardcore": "h🩷rdcore"
+    // ...add as many as you want
+  };
+  for (let k in badWords) {
+    let reg = new RegExp(k, "gi");
+    prompt = prompt.replace(reg, badWords[k]);
+  }
+  return prompt;
+}
+// Live mask field and preview as user types
+function maskNSFW(id) {
+  let el = document.getElementById(id);
+  let val = el.value;
+  el.value = nsfwCloak(val);
+}
+
+// ========== Dynamic Category Dropdowns (Scene, Style, Emotion, Genre, Camera) ==========
+const dropdownData = {
+  scene: ["bedroom", "forest", "studio", "beach", "rooftop", "cyberspace", "car interior", "poolside", "dark alley", "grand library", "garden", "abandoned warehouse"],
+  genre: ["portrait", "group shot", "fantasy", "sci-fi", "slice of life", "fetish", "dreamscape", "action", "pin-up", "romantic", "erotic", "surreal"],
+  mood: ["playful", "submissive", "dominant", "mischievous", "innocent", "smoldering", "lost in thought", "ecstatic", "blissful", "haunted", "coy", "adventurous"],
+  camera: ["close-up", "wide shot", "over-shoulder", "extreme close", "dutch angle", "bird's-eye", "POV", "upskirt", "candid", "frontal", "side view", "from below"],
+  lighting: ["soft diffuse", "dramatic rim", "neon", "sunset glow", "moonlight", "spotlight", "film noir", "candles", "backlit", "rainy day", "flash", "tv glow"]
+};
+// Render dropdowns with category labels
+function renderDropdowns() {
+  let out = '';
+  for(let cat in dropdownData) {
+    out += `<label style="margin-right:0.8em;">
+      <b>${cat.charAt(0).toUpperCase()+cat.slice(1)}:</b>
+      <select id="drop_${cat}" onchange="updatePromptFromDropdowns()">
+        <option value="">---</option>
+        ${dropdownData[cat].map(val=>`<option value="${val}">${val}</option>`).join("")}
+      </select>
+    </label>`;
+  }
+  document.getElementById('categoryDropdowns').innerHTML = out;
+}
+function updatePromptFromDropdowns() {
+  let vals = [];
+  for(let cat in dropdownData) {
+    let sel = document.getElementById('drop_'+cat);
+    if(sel && sel.value) vals.push(sel.value);
+  }
+  let base = document.getElementById('mainPrompt').value.split(' | ').filter(Boolean)[0]||"";
+  document.getElementById('mainPrompt').value = (base ? base + ' | ' : '') + vals.join(", ");
+  runMuseSuggest();
+  runPromptInspector();
+  showPromptTags(document.getElementById('mainPrompt').value);
+}
+window.addEventListener('DOMContentLoaded', renderDropdowns);
+
+// ========== Smart Live NSFW Masking (Input Events) ==========
+document.getElementById('mainPrompt').addEventListener('input', function(){ maskNSFW('mainPrompt'); });
+document.getElementById('negPrompt').addEventListener('input', function(){ maskNSFW('negPrompt'); });
+
+</script>
+<div id="categoryDropdowns" style="margin:1.3em 0 1.1em 0; font-size:1.01em;"></div>
+<!-- =========== END CHUNK 9/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 10/∞ =========== -->
+<style>
+  .ai-assist-panel {
+    position: fixed;
+    bottom: 2.5em;
+    right: 1.4em;
+    z-index: 1200;
+    width: 310px;
+    background: #151b22f2;
+    border-radius: 18px 18px 12px 12px;
+    box-shadow: 0 3px 38px #04ffd850, 0 1.5px 0 #41e2b73c;
+    color: #21ffd9;
+    font-family: inherit;
+    font-size: 1.04em;
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    transition: box-shadow 0.18s;
+  }
+  .ai-assist-panel .ai-header {
+    display: flex;
+    align-items: center;
+    padding: 0.8em 1em 0.2em 0.8em;
+    font-size: 1.05em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .ai-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    margin-right: 0.7em;
+    border: 2px solid #2affe5;
+    box-shadow: 0 0 8px #3cfffc3d;
+    background: #11201c;
+    object-fit: cover;
+  }
+  .ai-chatbox {
+    margin: 0 0.7em 0.6em 0.9em;
+    padding: 0.8em 1em 0.8em 1.1em;
+    background: #0e1817e7;
+    border-radius: 10px;
+    min-height: 36px;
+    font-size: 1em;
+    color: #e7fff7;
+    box-shadow: 0 0 8px #10ffe81a;
+    font-family: inherit;
+  }
+  .ai-btns {
+    display: flex;
+    gap: 1em;
+    justify-content: flex-end;
+    margin: 0.2em 0.8em 0.8em 0.8em;
+  }
+  .ai-btn {
+    background: #2affe533;
+    color: #11fff4;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4em 1.1em;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 16px #38ffe525;
+    transition: background 0.2s, color 0.2s;
+  }
+  .ai-btn:hover {
+    background: #22fff8b0;
+    color: #222;
+  }
+  @media (max-width: 800px) {
+    .ai-assist-panel { width: 97vw; left:0; right:0; bottom: 0.6em; border-radius: 15px;}
+  }
+  /* Feature teaser strip */
+  .feature-strip {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    width: 100vw;
+    background: linear-gradient(90deg,#161b18 80%,#253234 100%);
+    color: #47ffe6;
+    font-size: 0.96em;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: 1.2em;
+    padding: 0.34em 1.3em 0.24em 0.9em;
+    border-top: 1.5px solid #08ffe3a8;
+    box-shadow: 0 -4px 28px #08ffeb18;
+    z-index: 1999;
+    overflow-x: auto;
+    font-family: inherit;
+  }
+  .feature-strip span {
+    margin-right: 1.3em;
+    white-space: nowrap;
+    opacity: 0.95;
+    font-weight: 500;
+    font-family: inherit;
+  }
+</style>
+
+<div class="ai-assist-panel" id="aiAssistPanel">
+  <div class="ai-header">
+    <img src="j1nx-cutout.png" class="ai-avatar" alt="J1nx Avatar">
+    J1nx <span style="font-size:0.86em;font-weight:400;margin-left:0.6em;color:#60ffe8">NSFW Muse</span>
+  </div>
+  <div class="ai-chatbox" id="aiChatbox">Hey, want a pro prompt? Hit <b>Random</b> or enter your idea and I'll help optimize it…</div>
+  <div class="ai-btns">
+    <button class="ai-btn" onclick="randomizePrompt()">Random</button>
+    <button class="ai-btn" onclick="autofillExample()">Autofill</button>
+    <button class="ai-btn" onclick="clearPrompts()">Clear</button>
+    <button class="ai-btn" onclick="savePrompt()">Save</button>
+  </div>
+</div>
+<div class="feature-strip" id="featureStrip">
+  <span>💎 Generate cinematic AI prompts</span>
+  <span>🎨 NSFW/vanilla blend — stealth, legal & safe</span>
+  <span>🎲 Smart randomizer, percentage builder</span>
+  <span>🔍 Prompt inspector & tag preview</span>
+  <span>📦 Export, save, remix — no login required</span>
+  <span>🤖 Built-in DirtyMuse assistant (J1nx)</span>
+  <span>🚀 Google/AdSense friendly</span>
+</div>
+
+<script>
+// -------- J1nx panel assistant logic (no server chat, but smart messages) -------
+function randomizePrompt() {
+  let cats = Object.keys(dropdownData);
+  let vals = cats.map(cat => {
+    let arr = dropdownData[cat];
+    let pick = arr[Math.floor(Math.random()*arr.length)];
+    let el = document.getElementById('drop_'+cat);
+    if(el) el.value = pick;
+    return pick;
+  });
+  document.getElementById('mainPrompt').value = "Random scene: " + vals.join(", ");
+  runMuseSuggest();
+  runPromptInspector();
+  showPromptTags(document.getElementById('mainPrompt').value);
+  updateJ1nxChat("That one's spicy! Try clicking <b>Save</b> or remixing the details.");
+}
+function autofillExample() {
+  let example = "soft glowing light, dreamy forest, two lovers, rain on glass, 8k, pov, cinematic, eye contact";
+  document.getElementById('mainPrompt').value = example;
+  runMuseSuggest();
+  runPromptInspector();
+  showPromptTags(example);
+  updateJ1nxChat("Here's a gorgeous example. Edit it or randomize for more ideas!");
+}
+function clearPrompts() {
+  document.getElementById('mainPrompt').value = "";
+  document.getElementById('negPrompt').value = "";
+  showPromptTags("");
+  runMuseSuggest();
+  runPromptInspector();
+  updateJ1nxChat("Prompts cleared. Start typing — or <b>Random</b> for inspiration.");
+}
+function savePrompt() {
+  let txt = document.getElementById('mainPrompt').value;
+  if(!txt.trim()) { updateJ1nxChat("Type or randomize a prompt first!"); return; }
+  let n = "prompt-" + (new Date().toISOString().replace(/[:.T\-]/g,'').slice(8,14));
+  let blob = new Blob([txt], {type: 'text/plain'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = n + ".txt";
+  a.click();
+  updateJ1nxChat("Saved as <b>"+n+".txt</b> to your device.");
+}
+function updateJ1nxChat(msg) {
+  document.getElementById('aiChatbox').innerHTML = msg;
+}
+</script>
+<!-- =========== END CHUNK 10/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 11/∞ =========== -->
+<style>
+  /* Tag visualizer styles */
+  .tag-visualizer {
+    margin: 1.2em 0 0.2em 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.42em 0.36em;
+    align-items: center;
+    min-height: 32px;
+  }
+  .prompt-tag {
+    background: #131a1a;
+    color: #22ffe7;
+    border-radius: 6px;
+    padding: 0.2em 0.85em;
+    font-size: 0.97em;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    box-shadow: 0 2px 12px #16ffe216;
+    border: 1.5px solid #1e2d2b;
+    margin-right: 0.18em;
+    margin-bottom: 0.15em;
+    transition: background 0.13s, color 0.13s;
+    cursor: pointer;
+    user-select: text;
+  }
+  .prompt-tag:hover {
+    background: #16fff24b;
+    color: #222;
+  }
+  .inspector-block {
+    background: #171d1db5;
+    border-radius: 9px;
+    padding: 0.76em 1.1em 0.62em 1.2em;
+    margin: 0.4em 0 0.8em 0;
+    color: #f5ffe6;
+    font-size: 0.99em;
+    box-shadow: 0 2px 16px #12ffd718;
+  }
+  .inspector-title {
+    color: #25ffd0;
+    font-size: 1.08em;
+    font-weight: 600;
+    margin-bottom: 0.22em;
+  }
+  .inspector-list {
+    margin-left: 1.5em;
+    margin-top: 0.24em;
+    font-size: 0.98em;
+    color: #bbfff3;
+    line-height: 1.38;
+  }
+  .export-remix-bar {
+    display: flex;
+    gap: 1.1em;
+    margin-top: 1.3em;
+    margin-bottom: 0.6em;
+    align-items: center;
+  }
+  .export-btn {
+    background: #23ffd7;
+    color: #033b37;
+    border-radius: 5px;
+    padding: 0.33em 1.1em;
+    font-size: 1em;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.14s, color 0.14s;
+    box-shadow: 0 2px 18px #09ffed18;
+    margin-right: 0.2em;
+  }
+  .export-btn:hover {
+    background: #09ffd1;
+    color: #101a18;
+  }
+  .remix-btn {
+    background: #1e2532;
+    color: #38ffe6;
+    border: 1.2px solid #2af7e3;
+    border-radius: 5px;
+    font-weight: 700;
+    padding: 0.34em 1.12em;
+    cursor: pointer;
+    box-shadow: 0 2px 16px #1afffb23;
+    margin-right: 0.18em;
+    transition: background 0.13s, color 0.13s;
+  }
+  .remix-btn:hover {
+    background: #14ffe248;
+    color: #0b1817;
+  }
+</style>
+
+<div class="tag-visualizer" id="tagVisualizer"></div>
+<div class="inspector-block" id="promptInspector">
+  <div class="inspector-title">Prompt Inspector</div>
+  <div class="inspector-list" id="inspectorList"></div>
+</div>
+<div class="export-remix-bar">
+  <button class="export-btn" onclick="exportPrompt()">Export</button>
+  <button class="remix-btn" onclick="remixPrompt()">Remix</button>
+  <span style="color:#27ffe2c5; font-size:0.96em;">(Tap tags to edit, remix for new combos!)</span>
+</div>
+
+<script>
+/* --- PROMPT TAG VISUALIZER --- */
+function showPromptTags(prompt) {
+  const tagWrap = document.getElementById('tagVisualizer');
+  tagWrap.innerHTML = "";
+  let tags = prompt.split(/[,\n]+/).map(t=>t.trim()).filter(t=>t.length>0);
+  if(!tags.length) { tagWrap.innerHTML = "<span style='color:#344a4a'>No tags to show yet.</span>"; return; }
+  tags.forEach(tag=>{
+    let span = document.createElement('span');
+    span.className = "prompt-tag";
+    span.innerText = tag;
+    span.onclick = ()=>{ document.getElementById('mainPrompt').value = tag; runPromptInspector(); showPromptTags(tag); };
+    tagWrap.appendChild(span);
+  });
+}
+
+/* --- PROMPT INSPECTOR --- */
+function runPromptInspector() {
+  const inspector = document.getElementById('inspectorList');
+  let prompt = document.getElementById('mainPrompt').value;
+  if(!prompt.trim()) { inspector.innerHTML = "<span style='color:#3dd8c8ad'>Nothing to inspect yet.</span>"; return; }
+  let tags = prompt.split(/[,\n]+/).map(t=>t.trim()).filter(t=>t.length>0);
+  let adv = [], moods = [], lenses = [], extras = [];
+  tags.forEach(t=>{
+    if(/(dream|fantasy|nightmare|ethereal|vivid|trippy|psychedelic)/i.test(t)) moods.push(t);
+    else if(/(35mm|bokeh|macro|anamorphic|pov|wide|portrait|dslr|cinematic)/i.test(t)) lenses.push(t);
+    else if(/(high|soft|ultra|sharp|realistic|hyper|detail)/i.test(t)) adv.push(t);
+    else extras.push(t);
+  });
+  inspector.innerHTML =
+    "<b>Mood/Theme:</b> "+(moods.length?moods.join(', '):'—')+"<br>"+
+    "<b>Camera/Style:</b> "+(lenses.length?lenses.join(', '):'—')+"<br>"+
+    "<b>Technical:</b> "+(adv.length?adv.join(', '):'—')+"<br>"+
+    "<b>Other:</b> "+(extras.length?extras.join(', '):'—');
+}
+
+/* --- EXPORT & REMIX ENGINE --- */
+function exportPrompt() {
+  let txt = document.getElementById('mainPrompt').value;
+  if(!txt.trim()) { updateJ1nxChat("Nothing to export. Try a prompt first!"); return; }
+  let blob = new Blob([txt], {type:'text/plain'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = "prompt-"+Date.now()+".txt";
+  a.click();
+  updateJ1nxChat("Prompt exported as .txt file!");
+}
+function remixPrompt() {
+  let prompt = document.getElementById('mainPrompt').value;
+  let tags = prompt.split(/[,\n]+/).map(t=>t.trim()).filter(t=>t.length>0);
+  // Shuffle and re-randomize some tags
+  let remix = tags.sort(()=>0.5-Math.random()).slice(0,Math.max(4,Math.floor(tags.length*0.7)));
+  document.getElementById('mainPrompt').value = remix.join(", ");
+  showPromptTags(remix.join(", "));
+  runPromptInspector();
+  updateJ1nxChat("Remixed! You can refine or randomize again.");
+}
+</script>
+<!-- =========== END CHUNK 11/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 12/∞ =========== -->
+<style>
+  .wordbank-group {
+    margin: 1.2em 0 0.9em 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 1.6em;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .wordbank-block {
+    background: #0d1314;
+    border-radius: 8px;
+    padding: 0.7em 1.2em 0.5em 1.2em;
+    color: #26fff1;
+    min-width: 185px;
+    margin-right: 0.4em;
+    margin-bottom: 0.6em;
+    box-shadow: 0 2px 12px #11ffd920;
+    font-size: 0.99em;
+    line-height: 1.38;
+  }
+  .wordbank-title {
+    font-weight: 600;
+    margin-bottom: 0.4em;
+    color: #36ffe0;
+    font-size: 1.04em;
+    letter-spacing: 0.04em;
+  }
+  .wordbank-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.23em 0.22em;
+  }
+  .wordbank-word {
+    background: #1d2a28;
+    color: #25ffd8;
+    border-radius: 5px;
+    padding: 0.15em 0.8em;
+    margin: 0.07em 0.13em;
+    font-size: 0.99em;
+    cursor: pointer;
+    user-select: text;
+    border: 1.2px solid #16fff2;
+    transition: background 0.12s, color 0.13s;
+  }
+  .wordbank-word:hover {
+    background: #25ffd85a;
+    color: #121b1a;
+  }
+  .mixer-bar {
+    margin: 1.0em 0 0.7em 0;
+    display: flex;
+    gap: 2.2em;
+    align-items: center;
+  }
+  .mixer-slider {
+    width: 260px;
+    accent-color: #24ffe3;
+    margin: 0 1.1em 0 0.5em;
+  }
+  .mixer-ctrl-btn {
+    background: #232b31;
+    color: #36ffd8;
+    border: 1.1px solid #25ffe0;
+    border-radius: 4px;
+    font-weight: 700;
+    padding: 0.28em 1.13em;
+    cursor: pointer;
+    margin-right: 0.18em;
+    box-shadow: 0 1px 8px #16fff250;
+    font-size: 0.99em;
+    transition: background 0.13s, color 0.13s;
+  }
+  .mixer-ctrl-btn:hover {
+    background: #1cfff273;
+    color: #001613;
+  }
+  .word-count-bar {
+    font-size: 0.96em;
+    color: #19ffd7d2;
+    margin-left: 0.7em;
+    min-width: 86px;
+  }
+</style>
+
+<div class="mixer-bar">
+  <button class="mixer-ctrl-btn" onclick="mixPrompt()">Mix / Inspire</button>
+  <input type="range" class="mixer-slider" min="4" max="24" value="9" id="mixerSlider" oninput="updateMixerLabel()">
+  <span class="word-count-bar" id="mixerLabel">Prompt Length: 9</span>
+  <button class="mixer-ctrl-btn" onclick="addNSFWWord()">Toggle NSFW</button>
+</div>
+
+<div class="wordbank-group" id="wordbankZone"></div>
+
+<script>
+/* --------- MEGA-WORDBANK --------- */
+const megaWordbank = {
+  mood: ["dreamy","vivid","noir","euphoric","surreal","cinematic","moody","vaporwave","gritty","dark","colorful","neon","erotic","melancholy","eerie","hopeful","serene","epic","ominous"],
+  genre: ["fantasy","scifi","dystopian","historical","steampunk","cyberpunk","slice of life","post-apocalypse","romance","thriller","action","mystery","horror","comedy","saga"],
+  lighting: ["soft light","harsh light","dramatic shadow","sunset glow","golden hour","studio","neon glow","backlit","rim lighting","spotlit","volumetric","candlelight","moonlit","rainy"],
+  camera: ["dslr","35mm","fisheye","cinematic","pov","overhead","macro","wide angle","tilt-shift","telephoto","anamorphic"],
+  detail: ["hyperrealistic","high detail","sharp focus","soft focus","grainy","film look","vivid color","washed out","minimalist","maximalist","textured","painterly","ultra HD","8k"],
+  nsfw: ["suggestive","provocative","lingerie","boudoir","teasing","sensual","nude","risqué","explicit","softcore","steamy","revealing","fetish","kinky","intimate"],
+  objects: ["girl","man","face","body","forest","cityscape","bedroom","street","pool","beach","window","mirror","mask","shadow","animal","hand","eyes","hair","lips"],
+  emotion: ["blissful","shy","ecstatic","sultry","innocent","fearful","defiant","confident","playful","awkward","intense","apathetic","sad","joyful","angry","lonely"]
+};
+
+/* ---- RENDER WORDBANK ---- */
+function renderWordbank() {
+  const banks = {
+    "Mood": megaWordbank.mood,
+    "Genre": megaWordbank.genre,
+    "Lighting": megaWordbank.lighting,
+    "Camera/Angle": megaWordbank.camera,
+    "Detail/Finish": megaWordbank.detail,
+    "Emotion": megaWordbank.emotion,
+    "Objects": megaWordbank.objects,
+    "NSFW": megaWordbank.nsfw
+  };
+  const wb = document.getElementById('wordbankZone');
+  wb.innerHTML = "";
+  Object.entries(banks).forEach(([title, arr])=>{
+    let block = document.createElement('div');
+    block.className = "wordbank-block";
+    block.innerHTML = `<div class="wordbank-title">${title}</div><div class="wordbank-list"></div>`;
+    let list = block.querySelector('.wordbank-list');
+    arr.forEach(word=>{
+      let span = document.createElement('span');
+      span.className = "wordbank-word";
+      span.innerText = word;
+      span.onclick = ()=>addWordToPrompt(word);
+      list.appendChild(span);
+    });
+    block.appendChild(list);
+    wb.appendChild(block);
+  });
+}
+
+/* -- Add to Prompt -- */
+function addWordToPrompt(word) {
+  let mp = document.getElementById('mainPrompt');
+  let current = mp.value;
+  if(current.trim().length) mp.value = current.trim() + ", " + word;
+  else mp.value = word;
+  showPromptTags(mp.value);
+  runPromptInspector();
+}
+
+/* -- Smart Mixer -- */
+function mixPrompt() {
+  let slider = document.getElementById('mixerSlider');
+  let count = parseInt(slider.value);
+  // Build a balanced random mix: Mood + Genre + Lighting + Camera + Detail + Objects + NSFW
+  let pick = arr=>arr[Math.floor(Math.random()*arr.length)];
+  let result = [];
+  // Ensure a bit of everything
+  if(count>=7) {
+    result.push(pick(megaWordbank.mood));
+    result.push(pick(megaWordbank.genre));
+    result.push(pick(megaWordbank.lighting));
+    result.push(pick(megaWordbank.camera));
+    result.push(pick(megaWordbank.detail));
+    result.push(pick(megaWordbank.objects));
+    result.push(pick(megaWordbank.emotion));
+    count -= 7;
+  }
+  // Fill rest
+  let pools = Object.values(megaWordbank).flat();
+  for(let i=0; i<count; ++i) result.push(pick(pools));
+  // Avoid direct dupes
+  result = Array.from(new Set(result));
+  document.getElementById('mainPrompt').value = result.join(", ");
+  showPromptTags(result.join(", "));
+  runPromptInspector();
+  updateJ1nxChat("Prompt inspired! Click more, or edit.");
+}
+
+/* -- Toggle NSFW -- */
+let nsfwOn = false;
+function addNSFWWord() {
+  nsfwOn = !nsfwOn;
+  if(nsfwOn) addWordToPrompt(pick(megaWordbank.nsfw));
+  else updateJ1nxChat("NSFW mode OFF.");
+}
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+/* -- Mixer slider label -- */
+function updateMixerLabel() {
+  let val = document.getElementById('mixerSlider').value;
+  document.getElementById('mixerLabel').textContent = "Prompt Length: "+val;
+}
+
+renderWordbank();
+updateMixerLabel();
+</script>
+<!-- =========== END CHUNK 12/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 13/∞ =========== -->
+<style>
+  /* Advanced User Tools */
+  .preset-tool {
+    margin-top: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #1f272a;
+    padding: 1.2em;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+  }
+  .preset-tool label {
+    color: #44ffe4;
+    font-size: 1.1em;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+  .preset-tool input {
+    background-color: #1d262b;
+    color: #40ffe8;
+    border: 1px solid #16f2f7;
+    border-radius: 5px;
+    padding: 0.6em 1.2em;
+    font-size: 1.05em;
+    width: 60%;
+    max-width: 400px;
+  }
+  .preset-tool-btn {
+    background: #16f2f7;
+    color: #1b1f21;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 0.6em 2.3em;
+    border: 1px solid #0cc9c0;
+    cursor: pointer;
+    margin-left: 2em;
+    box-shadow: 0 1px 10px #16f2f750;
+    transition: background-color 0.15s ease-in-out;
+  }
+  .preset-tool-btn:hover {
+    background-color: #14d9d0;
+  }
+  .prompt-summary {
+    color: #26ffd8;
+    font-size: 1.08em;
+    margin-top: 1.3em;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .generated-prompt {
+    color: #00f0a0;
+    font-size: 1.2em;
+    font-weight: 400;
+    background-color: #0b1313;
+    border-radius: 6px;
+    padding: 1.2em;
+    margin-top: 1.4em;
+    word-wrap: break-word;
+    max-width: 95%;
+    line-height: 1.6;
+  }
+  .generated-prompt span {
+    display: inline-block;
+    margin-top: 0.5em;
+    font-size: 0.9em;
+    color: #58ff80;
+  }
+</style>
+
+<div class="preset-tool">
+  <label for="promptNameInput">Preset Name:</label>
+  <input type="text" id="promptNameInput" placeholder="Enter Preset Name...">
+  <button class="preset-tool-btn" onclick="savePreset()">Save Preset</button>
+</div>
+
+<div class="prompt-summary">
+  <span>Summary:</span>
+  <div id="summaryOutput">Once you build a prompt, we’ll summarize it here...</div>
+</div>
+
+<div class="generated-prompt" id="generatedPrompt">
+  Generated prompt will appear here after you mix and inspire.
+</div>
+
+<script>
+  let userPresets = JSON.parse(localStorage.getItem('userPresets')) || {};
+
+  // Handle preset saving
+  function savePreset() {
+    const presetName = document.getElementById('promptNameInput').value.trim();
+    if (presetName) {
+      const promptContent = document.getElementById('mainPrompt').value;
+      if (promptContent) {
+        userPresets[presetName] = promptContent;
+        localStorage.setItem('userPresets', JSON.stringify(userPresets));
+        alert('Preset saved successfully!');
+      } else {
+        alert('No prompt generated to save!');
+      }
+    } else {
+      alert('Please enter a preset name!');
+    }
+  }
+
+  // Generate prompt summary
+  function generateSummary(prompt) {
+    if (prompt.length) {
+      let summary = `${prompt.split(",").slice(0, 6).join(", ")}...`;
+      document.getElementById('summaryOutput').textContent = summary;
+    } else {
+      document.getElementById('summaryOutput').textContent = "No prompt generated.";
+    }
+  }
+
+  // Display the generated prompt
+  function displayGeneratedPrompt() {
+    const prompt = document.getElementById('mainPrompt').value;
+    if (prompt.length) {
+      document.getElementById('generatedPrompt').innerHTML = `
+        <span>Generated Prompt:</span>
+        <div>${prompt}</div>
+      `;
+    }
+  }
+
+  // Run after mixing or modifying the prompt
+  function updatePromptDisplay() {
+    const prompt = document.getElementById('mainPrompt').value;
+    generateSummary(prompt);
+    displayGeneratedPrompt();
+  }
+
+  // You can trigger this manually or with your mixer code
+  function mixPrompt() {
+    // Here you trigger your normal logic to mix, then update prompt
+    updatePromptDisplay();
+  }
+</script>
+
+<!-- =========== END CHUNK 13/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 14/∞ =========== -->
+<style>
+  /* Advanced Randomization & Mixing */
+  .randomization-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.2em;
+    margin-top: 1.5em;
+    background-color: #0e1515;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+  }
+  .randomization-btn {
+    background-color: #16f2f7;
+    color: #1f1f1f;
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 0.8em 1.6em;
+    border: 1px solid #0cc9c0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  .randomization-btn:hover {
+    background-color: #14d9d0;
+  }
+  .random-output {
+    color: #00ff90;
+    background-color: #131a1a;
+    padding: 1em;
+    border-radius: 6px;
+    margin-top: 2em;
+    font-size: 1.2em;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+  .random-output span {
+    font-size: 0.9em;
+    color: #38ff80;
+  }
+</style>
+
+<div class="randomization-panel">
+  <div>
+    <button class="randomization-btn" onclick="randomizePrompt()">Randomize Prompt</button>
+  </div>
+  <div>
+    <button class="randomization-btn" onclick="generateNewPrompt()">New Prompt</button>
+  </div>
+</div>
+
+<div class="random-output" id="randomOutput">
+  Randomly generated prompt will appear here.
+</div>
+
+<script>
+  // Randomization function: Creates a variation on the current prompt using random words and elements.
+  function randomizePrompt() {
+    const originalPrompt = document.getElementById('mainPrompt').value;
+    if (originalPrompt) {
+      let randomWords = [
+        "glowing", "majestic", "futuristic", "cyberpunk", "alien", "surreal", "vibrant", "holographic", "dreamlike",
+        "elegant", "steampunk", "minimalist", "mystical", "neon", "intense", "ethereal", "timeless", "abstract"
+      ];
+      let randomizedPrompt = originalPrompt.split(" ").map(word => {
+        if (Math.random() > 0.6 && randomWords.length > 0) {
+          return randomWords[Math.floor(Math.random() * randomWords.length)];
+        }
+        return word;
+      }).join(" ");
+      document.getElementById('mainPrompt').value = randomizedPrompt;
+      updatePromptDisplay();
+    } else {
+      alert("Please enter a base prompt first.");
+    }
+  }
+
+  // Function to generate an entirely new prompt based on new user input
+  function generateNewPrompt() {
+    const newPrompt = prompt("Enter your new prompt base:", "Enter something creative...");
+    if (newPrompt && newPrompt.trim() !== "") {
+      document.getElementById('mainPrompt').value = newPrompt;
+      updatePromptDisplay();
+    } else {
+      alert("Prompt input cannot be empty.");
+    }
+  }
+
+  // Call updatePromptDisplay() to refresh summary and generated output
+  function updatePromptDisplay() {
+    const prompt = document.getElementById('mainPrompt').value;
+    generateSummary(prompt);
+    displayGeneratedPrompt();
+  }
+</script>
+
+<!-- =========== END CHUNK 14/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 15/∞ =========== -->
+<style>
+  /* Prompt customization settings */
+  .settings-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 1.2em;
+    margin-top: 1.5em;
+    background-color: #0e1515;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+  }
+  .settings-panel label {
+    color: #38ff80;
+    font-size: 1.1em;
+  }
+  .settings-panel input[type="range"] {
+    width: 100%;
+    margin: 0.5em 0;
+    border-radius: 5px;
+    background-color: #1c2626;
+    cursor: pointer;
+  }
+  .settings-panel input[type="number"] {
+    width: 60px;
+    padding: 0.5em;
+    border-radius: 4px;
+    background-color: #1c2626;
+    border: 1px solid #38ff80;
+    color: #38ff80;
+  }
+  .settings-panel input[type="range"]:focus {
+    outline: none;
+  }
+</style>
+
+<div class="settings-panel">
+  <div>
+    <label for="complexity">Prompt Complexity</label>
+    <input type="range" id="complexity" min="1" max="10" step="1" value="5" onchange="adjustSettings()">
+    <span id="complexityValue">5</span>
+  </div>
+  <div>
+    <label for="mood">Mood Level</label>
+    <input type="range" id="mood" min="1" max="10" step="1" value="5" onchange="adjustSettings()">
+    <span id="moodValue">5</span>
+  </div>
+  <div>
+    <label for="detail">Detail Level</label>
+    <input type="range" id="detail" min="1" max="10" step="1" value="5" onchange="adjustSettings()">
+    <span id="detailValue">5</span>
+  </div>
+</div>
+
+<script>
+  // Adjust settings based on user input
+  function adjustSettings() {
+    const complexity = document.getElementById('complexity').value;
+    const mood = document.getElementById('mood').value;
+    const detail = document.getElementById('detail').value;
+
+    document.getElementById('complexityValue').textContent = complexity;
+    document.getElementById('moodValue').textContent = mood;
+    document.getElementById('detailValue').textContent = detail;
+
+    // Here, the complexity, mood, and detail values would adjust how the prompt is generated
+    // This could be implemented by changing the prompt generation logic (randomization, etc.)
+    updatePromptDisplay();
+  }
+
+  // Function to dynamically generate prompts based on settings
+  function generateCustomPrompt() {
+    const complexity = document.getElementById('complexity').value;
+    const mood = document.getElementById('mood').value;
+    const detail = document.getElementById('detail').value;
+
+    let customPrompt = "Create a " + mood + " scene with ";
+    if (complexity > 5) customPrompt += "a high level of detail, ";
+    if (detail > 5) customPrompt += "intense colors and textures, ";
+    customPrompt += "and complexity level " + complexity + ".";
+
+    document.getElementById('mainPrompt').value = customPrompt;
+    updatePromptDisplay();
+  }
+
+  // Initialize the custom prompt on page load
+  window.onload = function() {
+    generateCustomPrompt();
+  };
+</script>
+
+<!-- =========== END CHUNK 15/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 16/∞ =========== -->
+<style>
+  /* Enhanced Prompt Feedback */
+  .feedback-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 2em;
+    background-color: #1c2626;
+    padding: 1.5em;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+    color: #fff;
+  }
+
+  .feedback-panel h3 {
+    margin-bottom: 1em;
+    color: #38ff80;
+  }
+
+  .feedback-text {
+    font-size: 1.1em;
+    margin: 0.8em;
+    color: #20ffe0;
+  }
+
+  .feedback-text p {
+    margin-bottom: 1em;
+  }
+
+  .feedback-button {
+    background-color: #13f9d6;
+    color: #090b10;
+    padding: 0.8em 2em;
+    font-size: 1em;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+    margin-top: 1em;
+  }
+
+  .feedback-button:hover {
+    background-color: #2efcd7;
+    box-shadow: 0 7px 18px rgba(0, 255, 255, 0.5);
+  }
+</style>
+
+<div class="feedback-panel">
+  <h3>Prompt Preview & Customization Feedback</h3>
+  <div class="feedback-text" id="feedbackDisplay">
+    <!-- This section will display dynamic feedback based on the generated prompt -->
+    <p>Your prompt is being generated. Once complete, the preview will show here.</p>
+  </div>
+  <button class="feedback-button" onclick="reGeneratePrompt()">Generate New Prompt</button>
+</div>
+
+<script>
+  // Function to dynamically update the prompt and give feedback to the user
+  function updatePromptDisplay() {
+    const prompt = document.getElementById('mainPrompt').value;
+    document.getElementById('feedbackDisplay').innerHTML = `
+      <p>Your prompt is: <span style="color:#38ff80;">"${prompt}"</span></p>
+      <p>Adjust the settings if needed to refine your results further.</p>
+    `;
+  }
+
+  // Function to regenerate the prompt and give new feedback
+  function reGeneratePrompt() {
+    generateCustomPrompt();
+    document.getElementById('feedbackDisplay').innerHTML = `
+      <p>New prompt generated: <span style="color:#38ff80;">"${document.getElementById('mainPrompt').value}"</span></p>
+    `;
+  }
+
+  // Initialize feedback display on page load
+  window.onload = function() {
+    updatePromptDisplay();
+  };
+</script>
+
+<!-- =========== END CHUNK 16/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 17/∞ =========== -->
+<style>
+  /* Improved Layout for Prompt Fields */
+  .prompt-field-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2em;
+    justify-content: center;
+    margin-top: 3em;
+  }
+
+  .prompt-field {
+    background-color: #1f2c2c;
+    padding: 1em;
+    border-radius: 6px;
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+    width: 45%;
+  }
+
+  .prompt-field label {
+    font-size: 1.1em;
+    color: #38ff80;
+    margin-bottom: 0.5em;
+    display: block;
+  }
+
+  .prompt-field input {
+    width: 100%;
+    padding: 0.8em;
+    font-size: 1em;
+    border: 2px solid #38ff80;
+    background-color: transparent;
+    color: #20ffe0;
+    border-radius: 5px;
+    box-shadow: 0 3px 6px rgba(0, 255, 255, 0.3);
+  }
+
+  .prompt-field input:focus {
+    border-color: #13f9d6;
+    outline: none;
+    box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+  }
+
+  .prompt-field input::placeholder {
+    color: #38ff80;
+    opacity: 0.5;
+  }
+</style>
+
+<div class="prompt-field-container">
+  <div class="prompt-field">
+    <label for="promptKeywords">Enter your keywords:</label>
+    <input type="text" id="promptKeywords" placeholder="e.g., sunset, beach, fantasy" oninput="updatePromptDisplay()">
+  </div>
+
+  <div class="prompt-field">
+    <label for="promptDescription">Describe your image:</label>
+    <input type="text" id="promptDescription" placeholder="e.g., A breathtaking view of a sunset over the beach..." oninput="updatePromptDisplay()">
+  </div>
+</div>
+
+<!-- Updated JavaScript Logic to handle user inputs and dynamic preview -->
+<script>
+  // Function to update the prompt display based on user inputs
+  function updatePromptDisplay() {
+    const keywords = document.getElementById('promptKeywords').value;
+    const description = document.getElementById('promptDescription').value;
+
+    // Update the feedback display
+    const generatedPrompt = `Prompt: ${keywords}, Description: ${description}`;
+    document.getElementById('feedbackDisplay').innerHTML = `
+      <p><strong>Generated Prompt:</strong> ${generatedPrompt}</p>
+      <p>Click the "Generate New Prompt" button to create the image with this prompt!</p>
+    `;
+  }
+
+  // Function to handle prompt generation
+  function generateCustomPrompt() {
+    const keywords = document.getElementById('promptKeywords').value;
+    const description = document.getElementById('promptDescription').value;
+
+    if (keywords && description) {
+      const finalPrompt = `Generate an image with these keywords: ${keywords}, Description: ${description}`;
+      document.getElementById('feedbackDisplay').innerHTML = `
+        <p><strong>Final Generated Prompt:</strong> ${finalPrompt}</p>
+        <p>Your custom prompt is ready!</p>
+      `;
+    } else {
+      alert("Please fill out both fields to generate a prompt.");
+    }
+  }
+
+  // Initialize prompt display and setup
+  document.addEventListener('DOMContentLoaded', () => {
+    updatePromptDisplay();
+  });
+</script>
+
+<!-- =========== END CHUNK 17/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 18/∞ =========== -->
+<style>
+  .generated-prompt-container {
+    margin-top: 2em;
+    padding: 2em;
+    background-color: #132f33;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+    text-align: center;
+    color: #e6f9f1;
+  }
+
+  .generated-prompt-container p {
+    font-size: 1.1em;
+    margin: 1em 0;
+  }
+
+  .generated-prompt-container .button {
+    background-color: #20ffe0;
+    border: none;
+    padding: 1em 2em;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 8px;
+    color: #0b0f0e;
+    box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .generated-prompt-container .button:hover {
+    background-color: #13f9d6;
+    box-shadow: 0 6px 20px rgba(0, 255, 255, 0.4);
+  }
+
+  .generated-prompt-container .button:active {
+    background-color: #00e5a3;
+  }
+</style>
+
+<div class="generated-prompt-container">
+  <p><strong>Final Prompt:</strong></p>
+  <p id="generatedPromptDisplay">Here will be the generated prompt based on your inputs...</p>
+  <button class="button" onclick="copyPromptToClipboard()">Copy Prompt</button>
+  <button class="button" onclick="generateImage()">Generate Image</button>
+</div>
+
+<script>
+  // Copy the generated prompt to the clipboard
+  function copyPromptToClipboard() {
+    const promptText = document.getElementById('generatedPromptDisplay').innerText;
+    if (promptText) {
+      navigator.clipboard.writeText(promptText).then(() => {
+        alert("Prompt copied to clipboard!");
+      }).catch(err => {
+        console.error("Error copying to clipboard:", err);
+      });
+    }
+  }
+
+  // This function would be responsible for integrating with your AI image generator.
+  function generateImage() {
+    const promptText = document.getElementById('generatedPromptDisplay').innerText;
+    if (promptText && promptText !== "Here will be the generated prompt based on your inputs...") {
+      alert("Generating image with the following prompt: " + promptText);
+      // Logic to trigger image generation API would go here...
+    } else {
+      alert("Please make sure you have entered a prompt first!");
+    }
+  }
+
+  // Function to update the displayed prompt dynamically as the user edits the fields
+  function updateGeneratedPromptDisplay() {
+    const keywords = document.getElementById('promptKeywords').value;
+    const description = document.getElementById('promptDescription').value;
+    const generatedPrompt = `Keywords: ${keywords}, Description: ${description}`;
+    document.getElementById('generatedPromptDisplay').innerText = generatedPrompt;
+  }
+</script>
+<!-- =========== END CHUNK 18/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 19/∞ =========== -->
+<style>
+  .prompt-explanation {
+    margin-top: 3em;
+    padding: 1.5em;
+    background-color: #0a1719;
+    border-radius: 12px;
+    color: #f3f3f3;
+    font-size: 1.15em;
+    line-height: 1.6;
+  }
+
+  .prompt-explanation p {
+    font-size: 1.1em;
+  }
+
+  .prompt-header {
+    font-size: 1.5em;
+    margin-bottom: 1.2em;
+    font-weight: bold;
+    color: #20ffe0;
+  }
+
+  .explanation-detail {
+    color: #d1f8f0;
+    margin-bottom: 1em;
+  }
+
+  .generation-status {
+    font-size: 1.1em;
+    color: #b6c4c4;
+  }
+</style>
+
+<div class="prompt-explanation">
+  <div class="prompt-header">What This Prompt Does:</div>
+  <div class="explanation-detail">
+    <p>The following prompt has been crafted using the keywords and descriptions you provided. It is designed to help the AI understand exactly what you want to generate. Think of it as a customized instruction set that’s fine-tuned for your vision.</p>
+    <p>The prompt includes everything necessary to get the best possible result from the AI generator. If you have any suggestions or adjustments, you can change the keywords or description, and this will adjust the output accordingly.</p>
+  </div>
+  <div class="generation-status">
+    <p>Generation Status: <span style="color:#13f9d6">Ready to use!</span></p>
+  </div>
+</div>
+
+<script>
+  // Dynamically update the explanation panel based on user input
+  function updateExplanation() {
+    const keywords = document.getElementById('promptKeywords').value;
+    const description = document.getElementById('promptDescription').value;
+    const updatedText = `This prompt uses the keywords: ${keywords}, along with the description: "${description}".`;
+    document.querySelector('.explanation-detail').innerHTML = updatedText;
+  }
+</script>
+<!-- =========== END CHUNK 19/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 20/∞ =========== -->
+<style>
+  .prompt-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2em;
+    background-color: #0d1d23;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #f3f3f3;
+  }
+
+  .prompt-output {
+    flex: 1;
+    padding: 1em;
+    font-size: 1.1em;
+    background-color: #0a1519;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+    overflow-wrap: break-word;
+  }
+
+  .copy-button {
+    background-color: #13f9d6;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+  }
+
+  .copy-button:hover {
+    background-color: #01f0ff;
+  }
+
+  .copy-button:active {
+    background-color: #00c1b4;
+  }
+
+  .generated-result {
+    font-weight: bold;
+    color: #13f9d6;
+  }
+
+  .footer-note {
+    color: #7b8c8e;
+    font-size: 0.95em;
+    margin-top: 20px;
+    text-align: center;
+  }
+</style>
+
+<div class="prompt-section">
+  <div class="prompt-output" id="promptOutput">Your generated prompt will appear here after submission.</div>
+  <button class="copy-button" id="copyButton">Copy Prompt</button>
+</div>
+
+<div class="footer-note">
+  <p>Tip: Once you’ve generated your prompt, feel free to copy it and input it into the AI generator of your choice.</p>
+</div>
+
+<script>
+  // Handle the copying of prompt to clipboard
+  const copyButton = document.getElementById('copyButton');
+  const promptOutput = document.getElementById('promptOutput');
+
+  copyButton.addEventListener('click', function() {
+    const textToCopy = promptOutput.innerText;
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        alert('Prompt copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Error copying text: ', err);
+        alert('Failed to copy prompt.');
+      });
+  });
+
+  // Function to dynamically display the generated prompt
+  function updateGeneratedPrompt(promptText) {
+    promptOutput.innerText = promptText;
+  }
+
+  // Example of dynamically updating the prompt
+  setTimeout(() => {
+    updateGeneratedPrompt("This is your generated prompt: [add your descriptive prompt here]");
+  }, 1500); // Just a delay for demonstration purposes
+</script>
+<!-- =========== END CHUNK 20/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 21/∞ =========== -->
+<style>
+  .advanced-options {
+    margin-top: 2em;
+    background-color: #1a2a34;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .option-toggle {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    color: #f3f3f3;
+    font-size: 1.1em;
+  }
+
+  .option-label {
+    color: #20ffe0;
+  }
+
+  .toggle-button {
+    background-color: #00ffd0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .toggle-button.active {
+    background-color: #00c1b4;
+  }
+
+  .negative-prompt {
+    margin-top: 1.5em;
+    padding: 15px;
+    background-color: #0e161f;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+    color: #f3f3f3;
+  }
+
+  .input-row {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #negativePromptInput {
+    background-color: #0a1519;
+    color: #fff;
+    border: 1px solid #20ffe0;
+    padding: 10px;
+    font-size: 1em;
+    font-family: monospace;
+    width: 100%;
+    height: 120px;
+    border-radius: 5px;
+  }
+
+  .output-section {
+    margin-top: 1em;
+    color: #20ffe0;
+    font-size: 1.1em;
+    word-wrap: break-word;
+  }
+</style>
+
+<div class="advanced-options">
+  <div class="option-toggle">
+    <span class="option-label">Enable Advanced Options</span>
+    <button class="toggle-button" id="toggleAdvancedOptions">Enable</button>
+  </div>
+
+  <div class="option-toggle">
+    <span class="option-label">Enable Randomizer</span>
+    <button class="toggle-button" id="toggleRandomizer">Enable</button>
+  </div>
+
+  <div class="negative-prompt" id="negativePromptSection" style="display:none;">
+    <strong>Custom Negative Prompt (Optional):</strong>
+    <textarea id="negativePromptInput" placeholder="Enter negative prompt ideas..."></textarea>
+  </div>
+</div>
+
+<div class="output-section" id="outputSection">
+  <strong>Generated Prompt Output:</strong>
+  <p id="generatedPrompt">Generated prompts will appear here.</p>
+</div>
+
+<script>
+  // Toggle advanced options visibility
+  const toggleAdvancedOptionsButton = document.getElementById('toggleAdvancedOptions');
+  const toggleRandomizerButton = document.getElementById('toggleRandomizer');
+  const negativePromptSection = document.getElementById('negativePromptSection');
+
+  toggleAdvancedOptionsButton.addEventListener('click', function () {
+    const isActive = toggleAdvancedOptionsButton.classList.contains('active');
+    if (isActive) {
+      toggleAdvancedOptionsButton.classList.remove('active');
+      toggleAdvancedOptionsButton.innerText = 'Enable';
+      negativePromptSection.style.display = 'none';
+    } else {
+      toggleAdvancedOptionsButton.classList.add('active');
+      toggleAdvancedOptionsButton.innerText = 'Disable';
+      negativePromptSection.style.display = 'block';
+    }
+  });
+
+  toggleRandomizerButton.addEventListener('click', function () {
+    // Implement randomizer logic if needed
+    alert("Randomizer functionality coming soon!");
+  });
+
+  // Handle negative prompt input and prompt generation
+  const negativePromptInput = document.getElementById('negativePromptInput');
+  const generatedPromptElement = document.getElementById('generatedPrompt');
+
+  function generatePrompt() {
+    const negativePrompt = negativePromptInput.value.trim();
+    const prompt = `Generated Prompt: ${negativePrompt}`;
+    generatedPromptElement.innerText = prompt;
+  }
+
+  // Example of integrating a randomizer
+  function randomizePrompt() {
+    const randomDescriptors = ["futuristic", "psychedelic", "dreamy", "mysterious", "robotic"];
+    const randomStyle = randomDescriptors[Math.floor(Math.random() * randomDescriptors.length)];
+    generatePrompt(randomStyle);
+  }
+
+  // Add event listener to generate prompt on change
+  negativePromptInput.addEventListener('input', generatePrompt);
+</script>
+<!-- =========== END CHUNK 21/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 22/∞ =========== -->
+<style>
+  /* Advanced prompt options styling */
+  .advanced-prompt-options {
+    background-color: #131c23;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .option-toggle {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    color: #20ffe0;
+    font-size: 1.1em;
+  }
+
+  .toggle-button {
+    background-color: #00ffd0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .toggle-button.active {
+    background-color: #00c1b4;
+  }
+
+  .prompt-description {
+    font-size: 0.95em;
+    color: #38b29f;
+    margin-top: 1em;
+    padding: 10px;
+    background-color: #0e161f;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+  }
+
+  #promptExample {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #1a2a34;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+    font-size: 1.1em;
+    color: #f3f3f3;
+  }
+
+  .output-section {
+    margin-top: 1.5em;
+    color: #20ffe0;
+    font-size: 1.1em;
+    word-wrap: break-word;
+  }
+</style>
+
+<div class="advanced-prompt-options">
+  <div class="option-toggle">
+    <span>Advanced Prompt Settings</span>
+    <button class="toggle-button" id="toggleAdvancedOptions">Enable</button>
+  </div>
+  <div class="prompt-description">
+    <p>This tool helps you create fully customized prompts for AI image generation. You can control various aspects of your generated image by specifying descriptive and negative prompts.</p>
+    <p>Use the 'Advanced Options' to fine-tune your prompt and filter out unwanted attributes.</p>
+  </div>
+
+  <div class="option-toggle">
+    <span>Example Prompt</span>
+    <div id="promptExample">"A futuristic city with neon lights, flying cars, and a cyberpunk atmosphere, very detailed, sharp, and realistic." </div>
+  </div>
+</div>
+
+<div class="output-section" id="generatedPromptOutput">
+  <strong>Generated Prompt Output:</strong>
+  <p id="generatedPrompt">Your generated prompt will appear here.</p>
+</div>
+
+<script>
+  // Toggle advanced options visibility
+  const toggleAdvancedOptionsButton = document.getElementById('toggleAdvancedOptions');
+  const advancedPromptSection = document.querySelector('.advanced-prompt-options');
+
+  toggleAdvancedOptionsButton.addEventListener('click', function () {
+    const isActive = toggleAdvancedOptionsButton.classList.contains('active');
+    if (isActive) {
+      toggleAdvancedOptionsButton.classList.remove('active');
+      toggleAdvancedOptionsButton.innerText = 'Enable';
+      advancedPromptSection.style.display = 'none';
+    } else {
+      toggleAdvancedOptionsButton.classList.add('active');
+      toggleAdvancedOptionsButton.innerText = 'Disable';
+      advancedPromptSection.style.display = 'block';
+    }
+  });
+
+  // Function to generate a prompt
+  function generatePrompt() {
+    const promptText = "futuristic city with neon lights, flying cars, and a cyberpunk atmosphere";
+    const negativePrompt = "no animals, no plants, no people";
+    const fullPrompt = `${promptText}, ${negativePrompt}`;
+    document.getElementById('generatedPrompt').innerText = fullPrompt;
+  }
+
+  // Example randomizer logic for the prompt
+  function randomizePrompt() {
+    const randomDescriptors = ["futuristic", "psychedelic", "dreamy", "mysterious", "robotic"];
+    const randomStyle = randomDescriptors[Math.floor(Math.random() * randomDescriptors.length)];
+    generatePrompt(randomStyle);
+  }
+
+  // Automatically generate a prompt on load
+  window.onload = function() {
+    generatePrompt();
+  }
+</script>
+<!-- =========== END CHUNK 22/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 23/∞ =========== -->
+<style>
+  .input-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .input-container input,
+  .input-container textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+    background-color: #131c23;
+    color: #f3f3f3;
+    font-size: 1em;
+    outline: none;
+  }
+
+  .input-container textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .input-container label {
+    color: #20ffe0;
+    font-size: 1.1em;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .generate-button {
+    background-color: #00ffd0;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: #131c23;
+    font-size: 1.1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .generate-button:hover {
+    background-color: #00c1b4;
+  }
+
+  .clear-button {
+    background-color: #d83a3a;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: #f3f3f3;
+    font-size: 1.1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .clear-button:hover {
+    background-color: #c62e2e;
+  }
+
+  .action-button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+  }
+</style>
+
+<div class="input-container">
+  <label for="descriptionInput">Enter Descriptive Keywords</label>
+  <input type="text" id="descriptionInput" placeholder="e.g., futuristic city, neon lights, sci-fi atmosphere">
+
+  <label for="negativeInput">Enter Negative Keywords</label>
+  <textarea id="negativeInput" placeholder="e.g., no animals, no blurry, no people"></textarea>
+</div>
+
+<div class="button-container">
+  <button class="generate-button" id="generateButton">Generate Prompt</button>
+  <button class="clear-button" id="clearButton">Clear</button>
+</div>
+
+<div class="output-section" id="generatedPromptContainer">
+  <h3>Generated Prompt:</h3>
+  <p id="generatedPrompt">Your generated prompt will appear here.</p>
+</div>
+
+<script>
+  // Handles the generation of the prompt
+  document.getElementById("generateButton").addEventListener("click", function() {
+    const descriptionInput = document.getElementById("descriptionInput").value.trim();
+    const negativeInput = document.getElementById("negativeInput").value.trim();
+    
+    if (descriptionInput === "" || negativeInput === "") {
+      alert("Please fill in both the descriptive and negative prompt fields.");
+      return;
+    }
+
+    const fullPrompt = `${descriptionInput}, ${negativeInput}`;
+    document.getElementById("generatedPrompt").innerText = fullPrompt;
+    document.getElementById("generatedPromptContainer").style.display = "block";
+  });
+
+  // Clears the input fields and generated prompt
+  document.getElementById("clearButton").addEventListener("click", function() {
+    document.getElementById("descriptionInput").value = "";
+    document.getElementById("negativeInput").value = "";
+    document.getElementById("generatedPrompt").innerText = "Your generated prompt will appear here.";
+    document.getElementById("generatedPromptContainer").style.display = "none";
+  });
+
+  // Randomize button (triggered to add fun randomness)
+  function randomizeInputs() {
+    const randomDescriptors = ["futuristic", "psychedelic", "dreamlike", "cyberpunk", "surreal"];
+    const randomNegative = ["no animals", "no water", "no background", "no abstract", "no humans"];
+    document.getElementById("descriptionInput").value = randomDescriptors[Math.floor(Math.random() * randomDescriptors.length)];
+    document.getElementById("negativeInput").value = randomNegative[Math.floor(Math.random() * randomNegative.length)];
+    document.getElementById("generateButton").click();
+  }
+
+  // Add randomize button for fun
+  const randomizeButton = document.createElement("button");
+  randomizeButton.classList.add("action-button");
+  randomizeButton.innerText = "Randomize Prompt";
+  randomizeButton.addEventListener("click", randomizeInputs);
+  document.querySelector(".button-container").appendChild(randomizeButton);
+</script>
+<!-- =========== END CHUNK 23/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 24/∞ =========== -->
+
+<style>
+  .suggestions-container {
+    background-color: #1a2b33;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+  }
+
+  .suggestion-item {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #262f38;
+    margin-bottom: 12px;
+    cursor: pointer;
+    color: #f1f1f1;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  .suggestion-item:hover {
+    background-color: #3b4c56;
+  }
+
+  .suggestion-item:active {
+    background-color: #00ffd0;
+  }
+
+  .clear-all-button {
+    background-color: #e92b3b;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+  }
+
+  .clear-all-button:hover {
+    background-color: #d82b31;
+  }
+
+  .generated-output-container {
+    background-color: #131c23;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+  }
+
+  .generated-output {
+    color: #f3f3f3;
+    font-size: 1.1em;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+</style>
+
+<!-- Suggestions Container -->
+<div class="suggestions-container">
+  <h3>Suggested Descriptions</h3>
+  <div class="suggestion-item" data-suggestion="futuristic city skyline">Futuristic City Skyline</div>
+  <div class="suggestion-item" data-suggestion="alien jungle with bioluminescent plants">Alien Jungle with Bioluminescent Plants</div>
+  <div class="suggestion-item" data-suggestion="neon lights and cyberpunk architecture">Neon Lights and Cyberpunk Architecture</div>
+  <div class="suggestion-item" data-suggestion="dreamlike surrealistic landscapes">Dreamlike Surrealistic Landscapes</div>
+  <div class="suggestion-item" data-suggestion="underwater city with glowing fish">Underwater City with Glowing Fish</div>
+  <button class="clear-all-button" id="clearSuggestions">Clear All Suggestions</button>
+</div>
+
+<!-- Generated Output Container -->
+<div class="generated-output-container">
+  <h3>Generated Prompt:</h3>
+  <p id="generatedOutput" class="generated-output">Your generated prompt will appear here.</p>
+</div>
+
+<script>
+  // Handling suggestion clicks
+  document.querySelectorAll('.suggestion-item').forEach(item => {
+    item.addEventListener('click', function () {
+      const suggestionText = this.getAttribute('data-suggestion');
+      document.getElementById('descriptionInput').value = suggestionText;
+    });
+  });
+
+  // Clear all suggestions button functionality
+  document.getElementById('clearSuggestions').addEventListener('click', function () {
+    document.querySelectorAll('.suggestion-item').forEach(item => {
+      item.style.display = 'none';
+    });
+    document.getElementById('generatedOutput').innerText = 'No suggestions available.';
+  });
+
+  // Display the generated prompt output when user generates a prompt
+  document.getElementById("generateButton").addEventListener("click", function() {
+    const descriptionInput = document.getElementById("descriptionInput").value.trim();
+    const negativeInput = document.getElementById("negativeInput").value.trim();
+    
+    if (descriptionInput === "" || negativeInput === "") {
+      alert("Please fill in both the descriptive and negative prompt fields.");
+      return;
+    }
+
+    const fullPrompt = `${descriptionInput}, ${negativeInput}`;
+    document.getElementById("generatedOutput").innerText = fullPrompt;
+    document.getElementById("generatedOutputContainer").style.display = "block";
+  });
+</script>
+
+<!-- =========== END CHUNK 24/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 25/∞ =========== -->
+
+<!-- Adding more interactivity and features -->
+<style>
+  /* Custom slider styles for advanced customization */
+  .slider-container {
+    margin-top: 20px;
+  }
+
+  .slider {
+    width: 100%;
+    height: 15px;
+    background: #444;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .slider-value {
+    color: #f3f3f3;
+    font-size: 1.1em;
+    margin-top: 5px;
+  }
+
+  .filter-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .filter-checkbox {
+    color: #f1f1f1;
+    font-size: 1.1em;
+  }
+
+  .filter-checkbox input {
+    margin-right: 10px;
+  }
+
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  .tag {
+    background-color: #272f38;
+    color: #00ffd0;
+    padding: 8px 12px;
+    margin: 5px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+</style>
+
+<!-- Slider Section for Advanced Customization -->
+<div class="slider-container">
+  <label for="complexitySlider" style="color: #00ffd0;">Set Complexity</label>
+  <input id="complexitySlider" class="slider" type="range" min="1" max="100" value="50">
+  <div id="complexityValue" class="slider-value">Complexity: 50</div>
+</div>
+
+<!-- Filter Options for User Input -->
+<div class="filter-options">
+  <div class="filter-checkbox">
+    <input type="checkbox" id="negativeFilter" />
+    <label for="negativeFilter">Include Negative Prompts</label>
+  </div>
+  <div class="filter-checkbox">
+    <input type="checkbox" id="positiveFilter" />
+    <label for="positiveFilter">Include Positive Descriptors</label>
+  </div>
+</div>
+
+<!-- Tags for Quick Customization -->
+<div class="tags-container">
+  <div class="tag" data-tag="abstract">Abstract</div>
+  <div class="tag" data-tag="futuristic">Futuristic</div>
+  <div class="tag" data-tag="ethereal">Ethereal</div>
+  <div class="tag" data-tag="cyberpunk">Cyberpunk</div>
+  <div class="tag" data-tag="surreal">Surreal</div>
+  <div class="tag" data-tag="vintage">Vintage</div>
+</div>
+
+<script>
+  // Slider functionality to update complexity value
+  document.getElementById('complexitySlider').addEventListener('input', function () {
+    const complexity = this.value;
+    document.getElementById('complexityValue').innerText = `Complexity: ${complexity}`;
+  });
+
+  // Tag selection functionality
+  document.querySelectorAll('.tag').forEach(tag => {
+    tag.addEventListener('click', function () {
+      const selectedTag = this.getAttribute('data-tag');
+      document.getElementById('descriptionInput').value += ` ${selectedTag}`;
+    });
+  });
+
+  // Checkbox filter functionality
+  document.getElementById('negativeFilter').addEventListener('change', function () {
+    if (this.checked) {
+      document.getElementById('negativeInput').value += " -negative";
+    } else {
+      document.getElementById('negativeInput').value = document.getElementById('negativeInput').value.replace(" -negative", "");
+    }
+  });
+
+  document.getElementById('positiveFilter').addEventListener('change', function () {
+    if (this.checked) {
+      document.getElementById('descriptionInput').value += " positive";
+    } else {
+      document.getElementById('descriptionInput').value = document.getElementById('descriptionInput').value.replace(" positive", "");
+    }
+  });
+
+  // Generate the final prompt with sliders and tags incorporated
+  document.getElementById("generateButton").addEventListener("click", function() {
+    const descriptionInput = document.getElementById("descriptionInput").value.trim();
+    const negativeInput = document.getElementById("negativeInput").value.trim();
+
+    if (descriptionInput === "" || negativeInput === "") {
+      alert("Please fill in both the descriptive and negative prompt fields.");
+      return;
+    }
+
+    const complexity = document.getElementById('complexitySlider').value;
+    const fullPrompt = `${descriptionInput} with complexity ${complexity}, ${negativeInput}`;
+    document.getElementById("generatedOutput").innerText = fullPrompt;
+    document.getElementById("generatedOutputContainer").style.display = "block";
+  });
+</script>
+
+<!-- =========== END CHUNK 25/∞ =========== -->
