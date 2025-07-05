@@ -1,108 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>J1NX Muse Bot | PromptForge</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Meet J1NX, your AI muse and prompt buddy. Inspiring, roasting, and keeping your creativity weird.">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <meta charset="UTF-8">
+  <title>J1NX & Tools – PromptForge</title>
+  <meta name="description" content="Secret J1NX chatbot, prompt exploit utilities, and more. Enhance prompt engineering, automate workflows, and unlock forbidden AI features.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta property="og:image" content="/fuckwith/assets/j1nx-cutout.png" />
+  <meta name="twitter:image" content="/fuckwith/assets/j1nx-cutout.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      min-width: 100vw;
-      overflow: hidden;
-      font-family: 'Share Tech Mono', monospace, sans-serif;
-      background: #101018;
+    html,body { background:#10101b url('/fuckwith/assets/bg-roulette.jpg') center/cover no-repeat; color:#fff; font-family:'Share Tech Mono',monospace; margin:0; padding:0; min-height:100vh;}
+    .container { max-width:900px; margin:0 auto; padding:44px 10px 60px 10px; background:#10101bdd; border-radius:1.4em; box-shadow:0 8px 48px #080813b0;}
+    h1 { font-size:2.1em; color:#5cfffd; margin-bottom:11px;}
+    .desc {font-size:1.13em; color:#eaf9f9b0; margin-bottom:28px; line-height:1.55;}
+    .j1nx-mascot { width:148px; display:block; margin:21px auto 10px auto; border-radius:50%; box-shadow:0 0 18px #2af8;}
+    .footer {text-align:center;font-size:.99em;margin-top:80px;color:#b2dafb70;}
+    .footer a {color:#7af;}
+    .nav-card-row {display:flex;flex-wrap:wrap;gap:19px;justify-content:center;}
+    .nav-card {
+      flex:1 1 190px; min-width:175px; max-width:320px; background:#16182b; border-radius:2em;
+      box-shadow:0 4px 16px #5af4; padding:28px 21px; margin-bottom:14px;
+      color:#fafaff; text-decoration:none; font-size:1.02em; transition:.17s;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
     }
-    .j1nx-bg {
-      background: url('/j1nx/j1nx_background.png') no-repeat center center fixed;
-      background-size: cover;
-      position: fixed;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      z-index: 0;
-      opacity: 0.85;
-    }
-    .j1nx-content {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      color: #ffeaea;
-      text-shadow: 0 2px 20px #000a;
-    }
-    .j1nx-cutout {
-      width: 350px;
-      max-width: 80vw;
-      margin-bottom: 32px;
-      filter: drop-shadow(0 0 45px #000c);
-      border-radius: 2.5em;
-      background: rgba(10,8,15,0.09);
-      box-shadow: 0 0 0 8px rgba(10,8,15,0.08);
-    }
-    .j1nx-title {
-      font-size: 2.6rem;
-      font-weight: bold;
-      margin-bottom: 18px;
-      letter-spacing: 0.05em;
-      color: #fff560;
-    }
-    .j1nx-saying {
-      font-size: 1.5rem;
-      max-width: 520px;
-      margin-bottom: 16px;
-      background: rgba(10,8,15,0.65);
-      padding: 18px 30px;
-      border-radius: 1.6em;
-      box-shadow: 0 1px 8px #0008;
-    }
-    .j1nx-footer {
-      margin-top: 22px;
-      font-size: 1.1em;
-      opacity: 0.7;
-    }
-    @media (max-width: 700px) {
-      .j1nx-cutout { width: 85vw; }
-      .j1nx-title { font-size: 1.5rem; }
-      .j1nx-saying { font-size: 1.2rem; padding: 11px 8vw; }
-    }
+    .nav-card:hover { background:#212c4a; color:#c1ffff;}
+    .nav-card .emoji {font-size:2.25em; margin-bottom:8px;}
+    .inception-placeholder {text-align:center; margin:33px 0 28px 0; font-size:1.05em; color:#f7e377; background:#11161d; padding:15px 13px; border-radius:1em;}
+    @media(max-width:700px){ .container{padding:22px 1vw 30px 1vw;} .nav-card-row{gap:8px;}}
   </style>
+  <link rel="canonical" href="https://promptforge.online/j1nx.html">
 </head>
 <body>
-  <div class="j1nx-bg"></div>
-  <div class="j1nx-content">
-    <img src="/j1nx/j1nx_cutout.png" alt="J1NX Bot" class="j1nx-cutout" />
-    <div class="j1nx-title">J1NX Muse Bot</div>
-    <div class="j1nx-saying" id="j1nxSaying">"I'm here to mess with your creativity. Hit refresh for a new roast or idea."</div>
-    <div class="j1nx-footer">
-      <a href="/index.html" style="color:#fff560;text-decoration:underline;">&larr; Back to PromptForge</a>
+  <!-- STICKY UNIFIED NAV -->
+  <nav class="sticky-nav" style="width:100%;background:#10101a;display:flex;gap:2vw;justify-content:center;align-items:center;padding:13px 0 5px 0;position:sticky;top:0;z-index:20;box-shadow:0 2px 14px #1f192f88;">
+    <a href="/main.html">🏠 Main</a>
+    <a href="/picture.html">Picture</a>
+    <a href="/movie.html">Movie</a>
+    <a href="/j1nx.html">J1NX</a>
+    <a href="/fuckwith/ai-experiment-zone/index.html">AI Experiment Zone</a>
+    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">☕ Coffee</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
+    <a href="https://www.reddit.com/r/promptforge" target="_blank">Reddit</a>
+    <a href="/changelog.html">Changelog</a>
+    <a href="/help.html">Help/FAQ</a>
+  </nav>
+  <div class="container">
+    <img class="j1nx-mascot" src="/fuckwith/assets/j1nx-cutout.png" alt="J1NX the forbidden mascot">
+    <h1>J1NX & Tools <span style="font-size:.7em;">— Secret Chatbot & Utilities</span></h1>
+    <div class="desc">
+      Unlock exclusive tools: J1NX chatbot, prompt exploit utilities, hacky automation features, and advanced AI shortcuts.<br>
+      <b>Build, break, and own your AI workflows here.</b>
+    </div>
+    <!-- J1NX LOGIC -->
+    <script src="/js/j1nx.js"></script>
+    <div id="j1nx-root">
+      <!-- j1nx.js will render chatbot and tools here -->
+    </div>
+    <div class="nav-card-row">
+      <a class="nav-card" href="/picture.html"><span class="emoji">🖼️</span>Picture Prompt Generator<br><span style="font-size:.92em;color:#aff;">Photoreal, NSFW-safe, art prompt engineering</span></a>
+      <a class="nav-card" href="/movie.html"><span class="emoji">🎬</span>Movie Prompt Generator<br><span style="font-size:.92em;color:#aff;">Film, TV, comic, and animation scene prompts</span></a>
+      <a class="nav-card" href="/fuckwith/ai-experiment-zone/index.html"><span class="emoji">🧪</span>AI Experiment Zone<br><span style="font-size:.92em;color:#aff;">Pranks, hacks, TTS and more for Alexa, Google, Siri</span></a>
+    </div>
+    <div class="inception-placeholder">
+      <b>Inception Placeholder:</b> (This box stays forever.)  
+      For future superuser controls, secret roadmap, and meta upgrades.<br>
+      <i>Do not delete this box.</i>
+    </div>
+    <div class="footer">
+      &copy; 2025 Gore & Giggles | <a href="https://promptforge.online">promptforge.online</a>
+      <br>
+      <span style="font-size:.94em;color:#c9e9;">Join us: <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> · <a href="https://x.com/GoreandGiggles">X</a> · <a href="https://www.reddit.com/r/promptforge">Reddit</a></span>
     </div>
   </div>
-  <script>
-    // Example sayings list, replace or connect to your sayings DB
-    const sayings = [
-      "Creativity loading... Please insert more coffee.",
-      "Nice try. Your next idea will be even weirder.",
-      "Out of ideas? Have you tried touching grass?",
-      "J1NX: More unpredictable than your ex.",
-      "Prompt me, but don't blame me for the results.",
-      "Muse mode: Sassy, bratty, chaotic.",
-      "Need a prompt? Or just a hug?",
-      "The best ideas come after 3am.",
-      "Refresh for more brain static."
-    ];
-    function pickSaying() {
-      const n = Math.floor(Math.random() * sayings.length);
-      document.getElementById("j1nxSaying").textContent = sayings[n];
-    }
-    // Pick a random saying on load & on click
-    document.getElementById("j1nxSaying").onclick = pickSaying;
-    window.onload = pickSaying;
-  </script>
 </body>
 </html>
