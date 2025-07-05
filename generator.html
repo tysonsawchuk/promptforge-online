@@ -4203,3 +4203,1080 @@ updateMixerLabel();
 </script>
 
 <!-- =========== END CHUNK 25/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 26/∞ =========== -->
+
+<style>
+  /* Styling for the interactive prompt builder */
+  .interactive-builder {
+    background-color: #1e2a3a;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .builder-header {
+    font-size: 1.5em;
+    color: #20ffe0;
+    margin-bottom: 15px;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+    background-color: #131c23;
+    color: #f3f3f3;
+    font-size: 1em;
+    outline: none;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .action-button {
+    background-color: #00ffd0;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: #131c23;
+    font-size: 1.1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .action-button:hover {
+    background-color: #00c1b4;
+  }
+
+  .output-section {
+    margin-top: 20px;
+    background-color: #131c23;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #20ffe0;
+    color: #f3f3f3;
+    font-size: 1.1em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+</style>
+
+<div class="interactive-builder">
+  <div class="builder-header">Interactive Prompt Builder</div>
+  <input id="descriptorInput" class="input-field" type="text" placeholder="Enter descriptive keywords..." />
+  <input id="negativeInput" class="input-field" type="text" placeholder="Enter negative keywords..." />
+  <div class="button-container">
+    <button class="action-button" id="generatePromptButton">Generate Prompt</button>
+    <button class="action-button" id="clearFieldsButton">Clear</button>
+  </div>
+  <div id="generatedPromptOutput" class="output-section" style="display: none;">
+    <strong>Generated Prompt:</strong>
+    <p id="generatedPromptText"></p>
+  </div>
+</div>
+
+<script>
+  // Function to generate the prompt based on user inputs
+  document.getElementById('generatePromptButton').addEventListener('click', function () {
+    const descriptor = document.getElementById('descriptorInput').value.trim();
+    const negative = document.getElementById('negativeInput').value.trim();
+
+    if (descriptor && negative) {
+      const fullPrompt = `${descriptor}, ${negative}`;
+      document.getElementById('generatedPromptText').innerText = fullPrompt;
+      document.getElementById('generatedPromptOutput').style.display = 'block';
+    } else {
+      alert('Please fill in both fields.');
+    }
+  });
+
+  // Function to clear the input fields and generated output
+  document.getElementById('clearFieldsButton').addEventListener('click', function () {
+    document.getElementById('descriptorInput').value = '';
+    document.getElementById('negativeInput').value = '';
+    document.getElementById('generatedPromptOutput').style.display = 'none';
+  });
+</script>
+
+<!-- =========== END CHUNK 26/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK 27/∞ =========== -->
+
+<!-- Roadmap Section: "How to Use The Generator Brain" (visible only if admin/dev toggles, hidden by default for public) -->
+<style>
+  .roadmap-container {
+    background: #16202a;
+    color: #99f4d6;
+    padding: 18px 28px;
+    border-radius: 10px;
+    margin: 32px 0 10px 0;
+    font-size: 1.05em;
+    font-family: inherit;
+    display: none; /* Set to block for internal/dev mode */
+  }
+  .roadmap-container strong {
+    color: #28ffe6;
+  }
+</style>
+<div class="roadmap-container" id="generatorRoadmap">
+  <strong>PromptForge Generator Integration Roadmap:</strong>
+  <ul>
+    <li><strong>For Picture Prompt Page:</strong> Use <code>getPrompt(descriptors, negatives, style)</code> to receive a fully composed image prompt string for AI.</li>
+    <li><strong>For Movie Prompt Page:</strong> Use <code>getMoviePrompt(keywords, genres, negatives, mood)</code> for cinematic style prompt output.</li>
+    <li><strong>For Watermark Tool:</strong> Can call <code>getPromptSummary()</code> or <code>getCurrentTheme()</code> for context-aware text to embed in watermark (optional).</li>
+    <li>All modules can access <code>suggestDescriptors()</code> or <code>suggestNegatives()</code> for smart, AI-powered word suggestions.</li>
+    <li>Generator is modular: Extend/override with custom dictionaries or post-processing hooks per page as needed.</li>
+  </ul>
+</div>
+<script>
+  // Uncomment below to show roadmap in dev mode:
+  // document.getElementById('generatorRoadmap').style.display = 'block';
+</script>
+<!-- END ROADMAP -->
+
+<!-- Generator Brain: Shared Logic (works for picture/movie/watermark) -->
+<script>
+  // Main Prompt Generation Core
+  const GEN_CORE = {
+    descriptors: [],
+    negatives: [],
+    style: 'photorealistic',
+    mode: 'image',
+    promptHistory: [],
+    ratingStats: [],
+    // Compose prompt string for image
+    getPrompt(descr, negs, style) {
+      let d = descr && descr.length ? descr.join(', ') : this.descriptors.join(', ');
+      let n = negs && negs.length ? negs.join(', ') : this.negatives.join(', ');
+      let s = style || this.style;
+      return `${d}, ${s}${n ? ", --neg " + n : ""}`;
+    },
+    // Compose prompt string for movie (cinematic)
+    getMoviePrompt(keywords, genres, negs, mood) {
+      let base = (keywords || []).join(', ');
+      let g = genres && genres.length ? genres.join(', ') : '';
+      let m = mood ? `, mood: ${mood}` : '';
+      let n = negs && negs.length ? negs.join(', ') : '';
+      return `Movie Scene: ${base}${g ? ', genre: '+g : ''}${m}${n ? " | --neg " + n : ''}`;
+    },
+    // Watermark: get current summary or theme
+    getPromptSummary() {
+      // Return a short prompt summary (up to 2 lines)
+      let d = this.descriptors.slice(0,4).join(', ');
+      let n = this.negatives.slice(0,3).join(', ');
+      return d + (n ? " (no: "+n+")" : "");
+    },
+    getCurrentTheme() {
+      // Suggest a keyword, emoji, or phrase for watermarking
+      let top = this.descriptors[0] || "PromptForge";
+      return (top.length > 18) ? top.slice(0,17)+"…" : top;
+    },
+    // Smart word suggestion (could be AI, for now static but can be extended)
+    suggestDescriptors(partial = '') {
+      const dict = ['vivid', 'cinematic', 'high detail', 'surreal', 'dreamy', 'moody', 'dynamic', 'intense', 'ethereal', 'bold', 'ultrareal', 'hyperdetailed', 'fantasy', 'photoreal', 'portrait', 'macro', 'action', 'night', 'neon', 'gritty', 'lush', 'intimate', 'mysterious', 'vintage', 'retro', 'ambient', 'colorful', 'stark', 'minimalist', 'chaotic', 'sci-fi', 'futuristic', 'painterly', 'classic', 'raw', 'elegant'];
+      return dict.filter(w => w.includes(partial.toLowerCase()));
+    },
+    suggestNegatives(partial = '') {
+      const negs = ['blurry', 'lowres', 'bad anatomy', 'deformed', 'text', 'watermark', 'logo', 'artifact', 'duplicate', 'cropped', 'out of frame', 'nsfw', 'distorted', 'extra limbs', 'missing fingers', 'mutation', 'error', 'monochrome', 'muted', 'overexposed', 'underexposed', 'jpeg artifacts', 'grain', 'flat', 'dull', 'bloom', 'poorly drawn', 'smudged'];
+      return negs.filter(w => w.includes(partial.toLowerCase()));
+    },
+    // Feedback/rating system (records 1–5 stars per prompt)
+    ratePrompt(prompt, stars) {
+      this.ratingStats.push({ prompt, stars, ts: Date.now() });
+      return true;
+    },
+    // History & Analytics (optionally display recent prompts or stats)
+    getPromptHistory() {
+      return this.promptHistory.slice(-12); // last 12 prompts
+    },
+    logPrompt(p) {
+      this.promptHistory.push({ text: p, ts: Date.now() });
+    }
+  };
+
+  // Expose core to window for all pages/components
+  window.PF_GEN = GEN_CORE;
+</script>
+<!-- END SHARED GENERATOR LOGIC -->
+
+<!-- Prompt Feedback UI (rate last prompt) -->
+<style>
+  .feedback-stars { display: flex; gap: 4px; margin-top: 10px; }
+  .star { font-size: 1.5em; color: #888; cursor: pointer; transition: color 0.18s; }
+  .star.active, .star:hover { color: #ffd600; }
+</style>
+<div id="feedbackUI" style="display:none; margin: 1.4em 0 0 0;">
+  <div style="color:#1efc9f;font-size:1.1em;">How was this prompt?</div>
+  <div class="feedback-stars" id="starGroup">
+    <span class="star" data-val="1">&#9733;</span>
+    <span class="star" data-val="2">&#9733;</span>
+    <span class="star" data-val="3">&#9733;</span>
+    <span class="star" data-val="4">&#9733;</span>
+    <span class="star" data-val="5">&#9733;</span>
+  </div>
+</div>
+<script>
+  // Simple star rating logic (call after prompt is generated)
+  function showFeedbackUI(prompt) {
+    document.getElementById('feedbackUI').style.display = 'block';
+    const stars = document.querySelectorAll('.star');
+    stars.forEach(star => {
+      star.classList.remove('active');
+      star.onclick = function() {
+        let val = parseInt(this.getAttribute('data-val'));
+        PF_GEN.ratePrompt(prompt, val);
+        stars.forEach(s2 => s2.classList.remove('active'));
+        for(let i=0; i<val; ++i) stars[i].classList.add('active');
+      };
+    });
+  }
+  // (Call showFeedbackUI(promptText) after generation in your actual UI logic)
+</script>
+
+<!-- =========== END CHUNK 27/∞ =========== -->
+<!-- =========== GENERATOR MONSTER CHUNK: ULTIMATE DICTIONARY + CLEAN WORD SUGGESTIONS =========== -->
+<script>
+window.PF_WORDLIB = {
+  // Clean synonyms for any detected NSFW/explicit/swears
+  cleanMap: {
+    tits:        "breasts",
+    boob:        "breast",
+    boobs:       "breasts",
+    ass:         "bum",
+    butt:        "buttocks",
+    pussy:       "vagina",
+    cunt:        "vagina",
+    fuck:        "have sex",
+    fucking:     "having sex",
+    dick:        "penis",
+    cock:        "penis",
+    blowjob:     "oral sex",
+    shit:        "mess",
+    cum:         "fluid",
+    cumshot:     "fluid",
+    dildo:       "adult toy",
+    anal:        "backside",
+    asshole:     "anus",
+    fisting:     "hand insertion",
+    clit:        "clitoris",
+    nipple:      "nipple",
+    nipples:     "nipples",
+    jerkoff:     "self-pleasure",
+    handjob:     "manual stimulation",
+    "suck":      "kiss",
+    balls:       "testicles",
+    orgasm:      "climax",
+    gangbang:    "group encounter",
+    "bitch":     "person",
+    "slut":      "person",
+    "whore":     "person",
+    "penis":     "penis", // Safe biological terms pass through
+    "vagina":    "vagina",
+    // ... add more as needed!
+  },
+  // Style/subject categories
+  categories: {
+    anatomy: [
+      "breasts", "nipples", "bum", "vagina", "penis", "testicles", "thigh gap", "curves", "waist", "abs", "pecs",
+      "shoulders", "collarbone", "lips", "eyelashes", "fingers", "toes", "jawline", "hairline", "facial symmetry",
+      "back", "hips", "feet", "calves", "neck", "spine", "bellybutton"
+    ],
+    clothing: [
+      "lingerie", "underwear", "t-shirt", "jeans", "shorts", "panties", "bra", "dress", "skirt", "stockings", "fishnets",
+      "heels", "boots", "socks", "gloves", "hat", "jacket", "vest", "scarf"
+    ],
+    effects: [
+      "lens flare", "bokeh", "depth of field", "vignette", "motion blur", "film grain", "glow", "chromatic aberration",
+      "god rays", "prism effect", "mirror effect", "split tone", "long exposure", "infrared", "ultraviolet", "tilt-shift",
+      "double exposure", "glitch", "neon glow", "light trails", "shadow play", "lens distortion", "perspective warp"
+    ],
+    lighting: [
+      "soft light", "hard light", "rim light", "backlight", "spotlight", "studio flash", "natural light", "overcast",
+      "golden hour", "blue hour", "candlelight", "sunset", "dappled", "window light", "colored gels", "ambient",
+      "silhouette", "low key", "high key", "harsh contrast", "bounce light", "neon", "streetlight", "fairy lights"
+    ],
+    camera: [
+      "35mm", "50mm", "85mm", "telephoto", "macro", "fisheye", "wide angle", "portrait lens", "vintage lens",
+      "shallow focus", "deep focus", "cinematic", "handheld", "tripod", "aerial view", "drone", "POV", "close-up",
+      "wide shot", "medium shot", "over-the-shoulder", "tilt", "pan", "zoom", "time lapse", "slow motion"
+    ],
+    artStyles: [
+      "photorealistic", "hyperrealistic", "digital painting", "oil painting", "sketch", "comic style", "manga",
+      "watercolor", "ink wash", "graffiti", "surrealist", "psychedelic", "cubist", "pop art", "art nouveau", "futurism",
+      "vaporwave", "dark fantasy", "baroque", "minimalist", "cyberpunk", "retrofuturist", "pixel art", "line art"
+    ],
+    mood: [
+      "dreamy", "moody", "intense", "intimate", "sensual", "playful", "euphoric", "serene", "gloomy", "mysterious",
+      "romantic", "whimsical", "futuristic", "noir", "tragic", "sultry", "coy", "melancholy", "bold", "cheeky", "erotic"
+    ],
+    setting: [
+      "bedroom", "shower", "beach", "forest", "city rooftop", "hotel room", "studio", "backstage", "bar", "car", "desert",
+      "garden", "library", "office", "bathtub", "locker room", "nightclub", "sauna", "campfire", "subway", "balcony"
+    ],
+    emotion: [
+      "aroused", "blissful", "content", "curious", "dominant", "flirty", "happy", "hungry", "jealous", "lustful", "naughty",
+      "nervous", "relaxed", "scared", "seductive", "shy", "smug", "surprised", "teasing", "vulnerable"
+    ],
+    wildcards: [
+      "tattooed", "freckles", "piercings", "shaved", "wet skin", "sweaty", "crying", "smiling", "biting lip", "eye contact",
+      "messy hair", "pulled panties", "tousled sheets", "handcuffs", "rope", "mirror selfie", "smoke", "steam", "foggy glass"
+    ],
+    colors: [
+      "neon pink", "electric blue", "emerald green", "crimson", "pastel", "monochrome", "sepia", "gold", "silver", "rose gold",
+      "deep purple", "black & white", "ivory", "translucent", "iridescent"
+    ],
+    verbs: [
+      "posing", "arching", "stretching", "touching", "kissing", "licking", "squeezing", "whispering", "dancing", "crawling",
+      "leaning", "grinding", "straddling", "sprawling", "embracing", "pressing", "pulling", "lifting", "caressing", "sliding"
+    ],
+    aiSlang: [
+      "NSFW", "sfw", "super-res", "clean lines", "no watermark", "prompt weighting", "lora", "embedding", "v1", "XL", "LoCon",
+      "mix", "Civitai", "prompt strength", "negative prompt", "sampling steps", "CFG scale", "sampler", "seed", "restore faces"
+    ]
+  },
+  // Suggestion helpers (for future: let user auto-swap SFW/NSFW output for Google compliance)
+  toClean(str) {
+    // Replace all known NSFW/swears with clean
+    let regex = new RegExp("\\b(" + Object.keys(this.cleanMap).join("|") + ")\\b", "gi");
+    return str.replace(regex, (m) => this.cleanMap[m.toLowerCase()] || m);
+  },
+  // Get a random word or set from any category (for mixing, inspiration, etc)
+  random(category, count=1) {
+    let arr = this.categories[category] || [];
+    let out = [];
+    for(let i=0; i<count; ++i)
+      out.push(arr[Math.floor(Math.random()*arr.length)]);
+    return out;
+  },
+  // List all words/phrases in all categories (flat array)
+  allWords() {
+    return Object.values(this.categories).reduce((a,b) => a.concat(b), []);
+  }
+};
+
+// Expose to generator brain:
+window.PF_GEN_WORDS = window.PF_WORDLIB;
+
+</script>
+<!-- =========== END CHUNK: ULTIMATE DICTIONARY + CLEAN SUGGESTIONS =========== -->
+// === PromptForge GEN MODULE — MEGACHUNK START ===
+
+// --- Internationalization Structure (expandable) ---
+window.PF_WORDLIB = window.PF_WORDLIB || {};
+window.PF_WORDLIB.lang = window.PF_WORDLIB.lang || {};
+window.PF_WORDLIB.lang['en'] = window.PF_WORDLIB.lang['en'] || {};
+const EN = window.PF_WORDLIB.lang['en'];
+
+// --- Core Categories (sample expansion, continue pattern as needed) ---
+EN.anatomy = [
+  "face", "eyes", "lips", "mouth", "eyebrows", "nose", "ears", "hair", "neck",
+  "shoulders", "arms", "hands", "fingers", "torso", "waist", "hips", "chest", "back",
+  "breasts", "nipples", "stomach", "navel", "butt", "bum", "thighs", "legs", "knees",
+  "calves", "feet", "toes", "vulva", "labia", "clitoris", "penis", "scrotum", "testicles", 
+  "anus", "groin", "collarbone", "jawline", "cheeks", "eyelashes", "eyelids", "forehead"
+];
+EN.anatomy_synonyms = {
+  "tits": "breasts", "boobs": "breasts", "ass": "butt", "cunt": "vulva", "pussy": "vulva", 
+  "cock": "penis", "dick": "penis", "balls": "testicles"
+};
+
+EN.clothing = [
+  "jeans", "t-shirt", "tank top", "blouse", "skirt", "dress", "gown", "bra", "panties", "boxers",
+  "lingerie", "corset", "robe", "kimono", "sweater", "hoodie", "jacket", "coat", "boots", "sneakers",
+  "sandals", "heels", "stockings", "thigh highs", "garter belt", "leotard", "swimsuit", "bikini",
+  "bodysuit", "crop top", "overalls", "trench coat", "cape", "gloves", "scarf", "beanie", "hat", "visor",
+  "earrings", "necklace", "bracelet", "watch", "choker", "anklet"
+];
+// ...Continue with hundreds of lines for other categories...
+
+EN.styles = [
+  "photorealistic", "cinematic", "impressionist", "oil painting", "watercolor", "cartoon", "anime",
+  "pixel art", "cyberpunk", "fantasy", "gothic", "noir", "surreal", "abstract", "dreamy", "grunge", "hyperreal",
+  "glamour", "high fashion", "magazine", "editorial", "low poly", "vaporwave", "pop art", "minimalist"
+];
+
+EN.moods = [
+  "playful", "seductive", "serious", "happy", "sad", "angry", "confident", "shy", "mysterious", "melancholy",
+  "flirty", "smug", "bored", "excited", "anxious", "peaceful", "dreamy", "wild", "teasing", "stoic", "ecstatic"
+];
+
+EN.lighting = [
+  "soft light", "hard light", "backlit", "rim light", "studio lighting", "golden hour", "blue hour",
+  "sunset", "sunrise", "moody", "high key", "low key", "natural light", "neon glow", "spotlight",
+  "candlelight", "lantern glow", "harsh shadow", "diffused", "colorful lights", "strobe", "bioluminescent"
+];
+
+EN.locations = [
+  "bedroom", "forest", "beach", "mountains", "rooftop", "city street", "desert", "cabin", "hot tub",
+  "sauna", "office", "dungeon", "nightclub", "bar", "kitchen", "living room", "garden", "swimming pool",
+  "library", "gym", "studio", "photobooth", "theater", "subway", "hotel room"
+];
+
+EN.actions = [
+  "posing", "smiling", "biting lip", "touching hair", "leaning", "lying down", "sitting", "standing",
+  "crouching", "stretching", "jumping", "running", "walking", "looking over shoulder", "crossing legs",
+  "winking", "laughing", "kissing", "hugging", "caressing", "licking", "staring intently", "teasing", 
+  "sulking", "daydreaming", "undressing", "buttoning up", "adjusting clothes", "dancing"
+];
+
+EN.effects = [
+  "bokeh", "soft focus", "film grain", "motion blur", "lens flare", "vignette", "depth of field", "glow",
+  "double exposure", "chromatic aberration", "dust particles", "light leaks", "vapor trails", "mirror reflection",
+  "wet skin", "sweat", "raindrops", "water splashes", "fog", "mist", "glitter", "sparkles", "steam", "snow"
+];
+
+// --- SFW/NSFW filter logic ---
+window.PF_GEN_FILTER = function(word, mode="sfw") {
+  if(mode === "sfw") {
+    let map = EN.anatomy_synonyms;
+    return map[word] || word;
+  }
+  return word;
+};
+
+// --- API for random selection (future: allow "weighted" random for realism) ---
+window.PF_GEN_RANDOM = function(category, count=1) {
+  let arr = EN[category];
+  if(!arr) return [];
+  let out = [];
+  for(let i=0; i<count; ++i) {
+    out.push(arr[Math.floor(Math.random()*arr.length)]);
+  }
+  return out;
+};
+
+// --- Prompt generator core (simplified for this chunk, will expand) ---
+window.PF_GEN_PROMPT = function(opts) {
+  opts = opts || {};
+  let anatomy = PF_GEN_RANDOM("anatomy", opts.anatomy || 2).map(w=>PF_GEN_FILTER(w, opts.mode)).join(", ");
+  let clothing = PF_GEN_RANDOM("clothing", opts.clothing || 2).join(", ");
+  let style = PF_GEN_RANDOM("styles", 1)[0];
+  let mood = PF_GEN_RANDOM("moods", 1)[0];
+  let location = PF_GEN_RANDOM("locations", 1)[0];
+  let effect = PF_GEN_RANDOM("effects", 1)[0];
+  let light = PF_GEN_RANDOM("lighting", 1)[0];
+  return `${anatomy} in ${clothing}, style: ${style}, mood: ${mood}, location: ${location}, lighting: ${light}, effect: ${effect}`;
+};
+
+// --- Example usage (for dev) ---
+// let prompt = PF_GEN_PROMPT({mode:"sfw", anatomy:3, clothing:3});
+// console.log(prompt);
+
+// --- Roadmap / Usage Notes ---
+// PF_GEN_PROMPT(opts): generates a full prompt string using specified options
+// - opts.mode: "sfw" (default) or "nsfw" (uses slang/explicit terms)
+// - opts.anatomy/clothing: how many terms to use
+// PF_GEN_RANDOM(category, count): get random terms from any category
+// PF_GEN_FILTER(word, mode): swap word for SFW synonym if needed
+// Add new categories as needed to EN.[category]
+// To localize, clone EN structure into PF_WORDLIB.lang['fr'], etc.
+
+// === PromptForge GEN MODULE — MEGACHUNK END ===
+// === PromptForge GEN MODULE — MEGACHUNK2 START ===
+
+// -- Props & Accessories --
+EN.props = [
+  "glasses", "sunglasses", "smartphone", "tablet", "laptop", "coffee mug", "wine glass", "book", "camera", "notebook",
+  "candle", "chain necklace", "cigarette", "vape pen", "rose", "bouquet", "mirror", "mask", "fan", "feather boa",
+  "handcuffs", "riding crop", "whip", "collar", "earbuds", "hairbrush", "perfume bottle", "compact mirror",
+  "guitar", "microphone", "vinyl record", "game controller", "headphones", "teddy bear", "handbag", "purse",
+  "wallet", "playing cards", "dice", "keyboard", "neon sign", "balloons", "ice cream cone", "lollipop"
+];
+
+// -- Advanced Scenes --
+EN.scenes = [
+  "shower steam", "rain-soaked city", "moonlit rooftop", "midnight alley", "abandoned factory",
+  "soft velvet couch", "candle-lit bath", "luxury penthouse", "old attic", "vintage car", "retro diner",
+  "hidden speakeasy", "cozy fireplace", "futuristic city", "fairy-lit forest", "secret garden", "train station",
+  "locker room", "ice rink", "marble hallway", "tropical resort", "beach bonfire", "sun-dappled glade"
+];
+
+// -- Backgrounds & Textures --
+EN.backgrounds = [
+  "starry night sky", "blurry city lights", "tropical jungle", "hazy mountains", "neon streets", "foggy forest",
+  "minimalist white", "abstract colors", "old brick wall", "graffiti mural", "mirror room", "velvet curtains",
+  "vintage wallpaper", "tatami mat", "checkerboard floor", "worn wood", "chrome reflections", "black void",
+  "spotlight stage", "ocean waves", "glass blocks", "psychedelic swirl", "digital matrix", "retro arcade"
+];
+
+// -- Camera / Lens Effects --
+EN.camera = [
+  "wide angle", "telephoto", "macro", "fish-eye", "close-up", "overhead shot", "tilt-shift", "zoom burst",
+  "shallow focus", "deep focus", "panorama", "portrait lens", "action cam", "bokeh monster", "cinema lens"
+];
+
+EN.angles = [
+  "eye-level", "low angle", "high angle", "over the shoulder", "worm's eye view", "bird's eye view",
+  "dutch tilt", "POV", "from behind", "from above", "looking up", "looking down"
+];
+
+// -- Colors & Palettes --
+EN.colors = [
+  "neon pink", "electric blue", "lime green", "sunset orange", "deep purple", "pure white", "pitch black",
+  "rose gold", "ice blue", "coral", "peach", "chocolate brown", "emerald green", "sapphire", "ruby red",
+  "champagne", "smoky gray", "brass", "tan", "crimson", "pastel rainbow", "midnight blue", "matte silver"
+];
+
+// -- Body Descriptors & Adjectives --
+EN.body_descriptors = [
+  "curvy", "athletic", "petite", "slim", "voluptuous", "muscular", "soft-skinned", "freckled", "tattooed",
+  "pierced", "smooth", "hairless", "fuzzy", "tanned", "pale", "rosy-cheeked", "sweaty", "oiled", "wet",
+  "scarred", "muscled", "broad-shouldered", "hourglass", "lean", "stocky"
+];
+
+// -- Composition Tricks --
+EN.composition = [
+  "rule of thirds", "golden ratio", "leading lines", "symmetrical", "centered", "framed by doorway",
+  "cropped tightly", "dynamic angle", "foreground blur", "background blur", "negative space", "mirrored"
+];
+
+// --- More moods and vibes ---
+EN.vibes = [
+  "mischievous", "hypnotic", "hypersensual", "playfully defiant", "melting with desire", "innocently flirty",
+  "powerful", "vulnerable", "on edge", "lost in thought", "yearning", "raw", "unfiltered", "brazen", "daydreamy",
+  "dominant", "submissive", "passive-aggressive", "bittersweet"
+];
+
+// --- Scene Dynamics ---
+EN.dynamics = [
+  "caught mid-motion", "drenched in sweat", "bathed in neon", "wrapped in fog", "outlined in golden sunlight",
+  "caught in the rain", "dancing in the dark", "backed by spotlights", "emerging from shadows", "touching glass",
+  "pressing against the wall", "reaching out", "collapsed in laughter", "suspended mid-leap"
+];
+
+// --- Negative Prompt "smart" expansion ---
+EN.negative_common = [
+  "bad anatomy", "blurry", "out of frame", "deformed hands", "extra limbs", "low res", "watermark", "signature",
+  "mutilated", "cross-eye", "missing limb", "crooked smile", "open mouth", "text", "duplicate", "error",
+  "extra fingers", "poorly drawn", "uncanny valley", "unnatural pose", "mutated", "worst quality", "grainy"
+];
+// NSFW "Google safe" swaps (all lowercase): see anatomy_synonyms from previous chunk
+
+// --- Prompt Theme Bundles ---
+EN.prompt_themes = [
+  {
+    label: "Cyberpunk Nightlife",
+    structure: [
+      "{anatomy}, {clothing}, neon lights, city street, cyberpunk, {mood}, {camera}, {effect}"
+    ],
+    tags: ["cyberpunk","neon","city"]
+  },
+  {
+    label: "Glamour Boudoir",
+    structure: [
+      "{anatomy}, {clothing}, soft lighting, velvet couch, intimate, {mood}, {angles}, {effect}"
+    ],
+    tags: ["glamour","intimate","boudoir"]
+  },
+  {
+    label: "Wild Nature",
+    structure: [
+      "{anatomy}, {clothing}, wild forest, natural light, {mood}, {backgrounds}, {effect}"
+    ],
+    tags: ["nature","outdoors"]
+  },
+  {
+    label: "Studio Portrait",
+    structure: [
+      "{anatomy}, {body_descriptors}, studio background, professional lighting, {camera}, {composition}, {mood}"
+    ],
+    tags: ["studio","portrait"]
+  },
+  {
+    label: "Dark Fetish",
+    structure: [
+      "{anatomy}, {clothing}, latex, chains, dungeon, moody lighting, {effect}, {mood}, {angles}"
+    ],
+    tags: ["fetish","dark","nsfw"]
+  }
+];
+
+// --- Smart Prompt Synthesizer (advanced logic) ---
+window.PF_GEN_THEME_PROMPT = function(themeLabel, opts) {
+  let theme = EN.prompt_themes.find(t=>t.label===themeLabel);
+  if (!theme) return PF_GEN_PROMPT(opts);
+  let struct = theme.structure[0];
+  function sub(cat) {
+    let field = cat.replace(/[{}]/g,'');
+    if(EN[field]) return PF_GEN_RANDOM(field,1)[0];
+    if(field==="mood") return PF_GEN_RANDOM("moods",1)[0];
+    return `[${field}]`;
+  }
+  return struct.replace(/{[^}]+}/g, m=>sub(m));
+};
+
+// --- Multi-modal prompt generator (combine regular and themed prompts) ---
+window.PF_GEN_SUPER_PROMPT = function(opts) {
+  // opts.theme: label from EN.prompt_themes, else freestyle
+  if(opts && opts.theme) return PF_GEN_THEME_PROMPT(opts.theme, opts);
+  // Else: freestyle
+  return PF_GEN_PROMPT(opts);
+};
+
+// --- Extended API: Add helper for "random full prompt" (super mega mode) ---
+window.PF_GEN_SUPER_MEGA = function(safe=true) {
+  let mode = safe ? "sfw" : "nsfw";
+  let categories = ["anatomy","clothing","styles","moods","lighting","locations","effects","props","backgrounds","camera","angles","colors","body_descriptors","composition","vibes","dynamics"];
+  let prompt = categories.map(cat=>PF_GEN_RANDOM(cat,1)[0]).filter(Boolean).join(", ");
+  return prompt;
+};
+
+// --- Usage / Integration Notes (for you and future pages!) ---
+// - Use PF_GEN_SUPER_PROMPT({theme:LABEL, ...opts}) for theme-based super prompts
+// - Use PF_GEN_PROMPT(opts) for freestyle prompts
+// - Use PF_GEN_SUPER_MEGA() for ultimate random mixes
+// - All future prompt pages (picture/movie/custom) should use this API for best results
+// - You can add/expand EN.prompt_themes or categories without breaking anything
+
+// === PromptForge GEN MODULE — MEGACHUNK2 END ===
+// === PromptForge GEN MODULE — MEGACHUNK3 START ===
+
+// --- Fetish & Kink Adjectives (Google-safe wording!) ---
+EN.fetish = [
+  "latex", "leather", "fishnet", "harness", "straps", "restraints", "choker", "lace-up", "bodystocking",
+  "boots", "spiked heels", "corset", "blindfold", "bondage cuffs", "gag", "pasties", "garter belt",
+  "gloves", "zipper mask", "cat ears", "puppy play", "ballet heels", "crop", "feather tickler"
+];
+
+// --- Fantasy / Cosplay ---
+EN.fantasy = [
+  "elf ears", "fairy wings", "mermaid tail", "vampire fangs", "catgirl headband", "kitsune mask",
+  "demon horns", "angel halo", "succubus wings", "armor bikini", "magic staff", "ripped tights",
+  "pirate hat", "samurai armor", "superhero bodysuit", "starry cloak", "sci-fi bodysuit", "steampunk goggles",
+  "jedi robe", "school uniform", "nurse outfit", "bunny tail", "maid frills", "witch hat", "ripped jeans"
+];
+
+// --- Sci-Fi / Tech ---
+EN.scifi = [
+  "holographic visor", "cybernetic arm", "circuit tattoo", "neon lights", "robot fingers", "chrome lips",
+  "digi grid", "transparent raincoat", "data streams", "mechanical tail", "AI eyes", "digital tattoo",
+  "nano-armor", "gravity boots", "zero-g hair", "plasma gun", "biosuit", "nanotech bodysuit", "energy shield"
+];
+
+// --- Lighting & VFX ---
+EN.lighting_fx = [
+  "rim lighting", "underlighting", "volumetric fog", "lens flare", "reflected glow", "neon edge", "god rays",
+  "colored gels", "motion blur", "glitter particles", "rain reflection", "prism rainbow", "split-tone", "spotlight", "strobe effect"
+];
+
+// --- Special Mood Modifiers ---
+EN.special_moods = [
+  "dreamlike", "ecstatic", "sultry", "melancholy", "electrified", "nervous", "hypnotized", "blissed-out",
+  "anxious anticipation", "afterglow", "frenzied", "secretive", "overwhelmed", "naughty"
+];
+
+// --- Model/Engine Tags (future: model selection UI, right now: keyword) ---
+EN.models = [
+  "juggernautXL", "realvis4", "realvis5", "cyberrealistic", "epicrealism", "fluxpro", "openartXL",
+  "crystalclearXL", "deliberate", "anime-anything", "stable-diffusion", "openjourney", "midjourney-style"
+];
+
+// --- Output Language (preparing for future translation/globalization) ---
+const LANGS = {
+  EN: EN,
+  FR: {}, // (Add later)
+  ES: {},
+  DE: {},
+  JA: {},
+  RU: {},
+  // Add new language objects here, follow EN structure.
+};
+window.PF_LANG = "EN"; // Default, but easily switched later
+
+// === PromptFusion: Mixer Logic ===
+window.PF_GEN_MIX = function(arrays, count = 5) {
+  // Takes multiple wordbanks, mashes up
+  let out = [];
+  arrays.forEach(a => {
+    let picks = PF_GEN_RANDOM(a, Math.ceil(count / arrays.length));
+    out = out.concat(picks);
+  });
+  // Shuffle:
+  for(let i = out.length-1;i>0;i--){
+    let j = Math.floor(Math.random()*(i+1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out.slice(0,count);
+};
+
+// --- Advanced Prompt Generator: Themed/Fetish/Fantasy/Fusion Mode ---
+window.PF_GEN_ADVANCED = function(opts) {
+  let theme = opts.theme || "freestyle";
+  let nsfw = opts.nsfw !== false; // default true
+  let mood = opts.mood || PF_GEN_RANDOM("special_moods",1)[0];
+  let style = PF_GEN_RANDOM("styles",1)[0];
+  let anatomy = PF_GEN_RANDOM("anatomy",1)[0];
+  let clothing = PF_GEN_RANDOM("clothing",1)[0];
+  let loc = PF_GEN_RANDOM("locations",1)[0];
+  let lighting = PF_GEN_RANDOM("lighting",1)[0];
+  let model = PF_GEN_RANDOM("models",1)[0];
+
+  // If theme is "fetish" or "fantasy" or "scifi", build around that:
+  if(theme==="fetish") {
+    let fet = PF_GEN_RANDOM("fetish",2).join(", ");
+    return `${anatomy}, ${fet}, ${clothing}, ${lighting}, ${mood}, ${loc}, ${style}, model:${model}`;
+  }
+  if(theme==="fantasy") {
+    let fan = PF_GEN_RANDOM("fantasy",2).join(", ");
+    return `${anatomy}, ${fan}, ${clothing}, ${lighting}, ${mood}, ${loc}, ${style}, model:${model}`;
+  }
+  if(theme==="scifi") {
+    let sci = PF_GEN_RANDOM("scifi",2).join(", ");
+    return `${anatomy}, ${sci}, ${clothing}, ${lighting}, ${mood}, ${loc}, ${style}, model:${model}`;
+  }
+  // SFW "professional" mode (for Google):
+  if(theme==="sfw") {
+    let body = PF_GEN_RANDOM("body_descriptors",1)[0];
+    return `${body} ${anatomy} in ${clothing}, ${loc}, ${lighting}, mood:${mood}, style:${style}, model:${model}`;
+  }
+  // Default: fusion!
+  let fx = PF_GEN_RANDOM("lighting_fx",1)[0];
+  let comp = PF_GEN_RANDOM("composition",1)[0];
+  return [
+    anatomy, clothing, loc, lighting, mood, style, fx, comp, model
+  ].join(", ");
+};
+
+// --- Tag Mixer (for display in UI, meta, inspiration) ---
+window.PF_GEN_TAGS = function(opts) {
+  // Output a fun line of hashtags and descriptive tags
+  let cats = ["moods","effects","styles","props","models","vibes"];
+  let tags = [];
+  cats.forEach(cat=>{
+    let pick = PF_GEN_RANDOM(cat,1)[0];
+    if(pick) tags.push(pick.replace(/\s+/g,''));
+  });
+  return "#promptforge " + tags.map(t=>"#"+t.toLowerCase()).join(" ");
+};
+
+// --- Pro Level: PromptForge Generator Roadmap & API Doc (inline, for future devs) ---
+window.PF_GEN_ROADMAP = `
+PromptForge Generator — Embedded Roadmap (AutoDoc)
+---------------------------------------------------
+- Supports SFW and NSFW prompt builds via smart filtering, anatomical synonyms, and Google-safe phrasing.
+- Modular wordbank, easy to expand: EN.<category>
+- Multi-theme logic: themes, moods, fetishes, fantasy, scifi, styles, camera, etc.
+- Model selection: can integrate with image generators (OpenArt, SD, Midjourney, etc).
+- Localization-ready: just add new languages to LANGS.
+- All key generator functions: PF_GEN_PROMPT, PF_GEN_SUPER_PROMPT, PF_GEN_ADVANCED, PF_GEN_SUPER_MEGA, PF_GEN_MIX.
+- Tag builder: PF_GEN_TAGS
+- Extensible: All pages (movie, picture, future) call generator API to retrieve prompt strings.
+- For future: Add context-aware AI suggestion, persistent user customization, hot word replacement, history, undo, stats.
+---------------------------------------------------
+`;
+
+// Attach roadmap as a global for developer reference
+window.PROMPTFORGE_ROADMAP = window.PF_GEN_ROADMAP;
+
+// --- Mega-Wordbank End Banner (easy spot to expand lists above!) ---
+// === PromptForge GEN MODULE — MEGACHUNK3 END ===
+// === PromptForge GEN MODULE — MEGACHUNK4 START ===
+
+// --- Extra Synonyms (Google-friendly, user-safe) ---
+EN.anatomy = EN.anatomy.concat([
+  "bust", "chest", "torso", "collarbones", "waist", "hips", "back", "abs", "obliques",
+  "thighs", "quads", "hamstrings", "delts", "triceps", "biceps", "forearms", "knuckles", "palms", "fingers",
+  "fingernails", "nails", "eyelashes", "brows", "dimples", "temples", "jawline", "shoulders"
+]);
+EN.body_descriptors = EN.body_descriptors.concat([
+  "shapely", "voluptuous", "toned", "chiselled", "athletic", "statuesque", "petite", "willowy",
+  "curvaceous", "broad-shouldered", "muscular", "delicate", "angelic", "elven", "pixie-like", "brawny"
+]);
+
+// --- More Clothing & Fashion ---
+EN.clothing = EN.clothing.concat([
+  "flannel shirt", "crop top", "bralette", "silk robe", "bodysuit", "overalls", "tracksuit", "sweater dress",
+  "pencil skirt", "pleated skirt", "cape", "poncho", "pea coat", "camo jacket", "cargo pants", "bike shorts",
+  "athleisure", "vintage tee", "distressed jeans", "pajamas", "onesie", "oversized hoodie", "tankini"
+]);
+
+// --- Expanded Effects & VFX ---
+EN.effects = EN.effects.concat([
+  "reflected city lights", "red/blue anaglyph", "rain-kissed", "candle flicker", "arctic glow",
+  "desert haze", "aurora shimmer", "bokeh swirl", "double exposure", "infrared filter", "thermal vision"
+]);
+
+// --- Google-Safe Slang Swaps (show user clean and dirty!) ---
+EN.nsfw_slang = [
+  {dirty:"tits", clean:"breasts"},
+  {dirty:"ass", clean:"bum"},
+  {dirty:"pussy", clean:"vulva"},
+  {dirty:"cock", clean:"shaft"},
+  {dirty:"cum", clean:"fluid"},
+  {dirty:"dick", clean:"phallus"},
+  {dirty:"fuck", clean:"intimate"},
+  {dirty:"blowjob", clean:"oral pleasure"},
+  {dirty:"cunt", clean:"vagina"},
+  {dirty:"balls", clean:"testicles"},
+  {dirty:"nipple", clean:"areola"},
+  {dirty:"anal", clean:"backdoor"},
+  {dirty:"deepthroat", clean:"throat play"},
+  {dirty:"orgasm", clean:"climax"},
+  {dirty:"squirt", clean:"fluid release"}
+];
+
+// --- Multi-language Wordbank Prep (expansion-ready) ---
+FR = { anatomy:[], moods:[], styles:[], effects:[], clothing:[], body_descriptors:[] };
+ES = { anatomy:[], moods:[], styles:[], effects:[], clothing:[], body_descriptors:[] };
+DE = { anatomy:[], moods:[], styles:[], effects:[], clothing:[], body_descriptors:[] };
+
+// (In the future, add multi-language imports or APIs!)
+
+// --- Hotword Replacement: "Clean Mode" for Google ---
+window.PF_GEN_CLEAN_PROMPT = function(str){
+  // Replaces dirty words with Google-friendly synonyms (shows both to user, can toggle)
+  EN.nsfw_slang.forEach(pair=>{
+    let rgx = new RegExp("\\b"+pair.dirty+"\\b","gi");
+    str = str.replace(rgx, pair.clean);
+  });
+  return str;
+};
+
+// --- User Custom Hotword (let user set custom synonyms/filters in the future) ---
+window.PF_GEN_USER_CLEAN = function(str, userDict){
+  // userDict: [{dirty:"xxx", clean:"yyy"}, ...]
+  userDict.forEach(pair=>{
+    let rgx = new RegExp("\\b"+pair.dirty+"\\b","gi");
+    str = str.replace(rgx, pair.clean);
+  });
+  return str;
+};
+
+// --- Prompt Stats & History ---
+// Track and display prompt stats for nerds & power users
+window.PF_GEN_STATS = {
+  totalGenerated: 0,
+  mostUsedWord: "",
+  userHistory: [],
+  wordUsage: {}
+};
+window.PF_GEN_RECORD = function(prompt){
+  PF_GEN_STATS.totalGenerated++;
+  PF_GEN_STATS.userHistory.push(prompt);
+  let words = prompt.toLowerCase().split(/[\s,]+/);
+  words.forEach(w=>{
+    PF_GEN_STATS.wordUsage[w] = (PF_GEN_STATS.wordUsage[w]||0)+1;
+    if(!PF_GEN_STATS.mostUsedWord || PF_GEN_STATS.wordUsage[w]>PF_GEN_STATS.wordUsage[PF_GEN_STATS.mostUsedWord])
+      PF_GEN_STATS.mostUsedWord = w;
+  });
+  // Prune history if needed
+  if(PF_GEN_STATS.userHistory.length>1000) PF_GEN_STATS.userHistory.shift();
+};
+window.PF_GEN_GET_STATS = function(){
+  return {
+    total: PF_GEN_STATS.totalGenerated,
+    mostUsed: PF_GEN_STATS.mostUsedWord,
+    last5: PF_GEN_STATS.userHistory.slice(-5)
+  };
+};
+
+// --- API: Pages Call Generator! (Super-Powered) ---
+window.PROMPTFORGE_GENERATOR = {
+  gen: PF_GEN_PROMPT,
+  super: PF_GEN_SUPER_PROMPT,
+  advanced: PF_GEN_ADVANCED,
+  mega: PF_GEN_SUPER_MEGA,
+  tags: PF_GEN_TAGS,
+  clean: PF_GEN_CLEAN_PROMPT,
+  userClean: PF_GEN_USER_CLEAN,
+  stats: PF_GEN_GET_STATS,
+  record: PF_GEN_RECORD
+};
+
+// --- (Optional) Prompt Explainer (shows why prompt is good/bad!) ---
+window.PF_GEN_EXPLAIN = function(prompt){
+  let reasons = [];
+  if(prompt.length>400) reasons.push("Very detailed—great for realism.");
+  if(/\b(breasts|butt|vagina|oral|intimate|climax|fluid release)\b/i.test(prompt)) reasons.push("Contains NSFW words—use Google Clean Mode if sharing!");
+  if(/neon|hologram|cyber|bokeh|god rays/i.test(prompt)) reasons.push("Advanced visual style detected.");
+  if(/studio|film|cinematic|lighting/i.test(prompt)) reasons.push("Includes pro lighting/camera terminology.");
+  if(prompt.split(',').length<4) reasons.push("Try adding more keywords for a richer prompt!");
+  if(!reasons.length) reasons.push("Prompt looks balanced and ready!");
+  return "Prompt Analyzer:\n"+reasons.map(x=>"• "+x).join("\n");
+};
+
+// --- (Optional) HTML Roadmap: API Usage, Helper Doc (for devs, future AI) ---
+window.PF_GEN_HTML_ROADMAP = `
+<b>PromptForge Generator API</b> <hr>
+<ul>
+  <li><b>gen(opts)</b> – Classic prompt builder</li>
+  <li><b>super(opts)</b> – Full random ultra prompt</li>
+  <li><b>advanced(opts)</b> – Theme/genre-specific</li>
+  <li><b>mega(opts)</b> – Overkill, all sliders maxed</li>
+  <li><b>tags()</b> – Hashtag & meta tag builder</li>
+  <li><b>clean(str)</b> – Google-friendly filter</li>
+  <li><b>userClean(str,dict)</b> – Custom user filter</li>
+  <li><b>stats()</b> – Stats/usage tracker</li>
+  <li><b>record(str)</b> – Save generated prompt</li>
+  <li><b>explain(str)</b> – Prompt Analyzer/AI Coach</li>
+</ul>
+`;
+
+window.PROMPTFORGE_HTML_DOCS = window.PF_GEN_HTML_ROADMAP;
+
+// === PromptForge GEN MODULE — MEGACHUNK4 END ===
+// === PromptForge GEN MODULE — MEGACHUNK5 START ===
+
+// --- Ultra-Expanded Wordbanks (for every taste, every user, every style) ---
+
+EN.kinks = [
+  "bondage", "dominance", "submission", "rope play", "blindfold", "lingerie", "body paint",
+  "masquerade", "nipple piercings", "choker", "latex suit", "oil massage", "spanking", "roleplay",
+  "costume play", "voyeur", "exhibition", "pigtails", "school uniform", "wetlook", "striptease",
+  "tattoos", "body jewelry", "gothic", "punk", "cosplay", "sensual dance", "stockings", "leather"
+];
+EN.ethnicities = [
+  "asian", "caucasian", "latina", "african", "indigenous", "mixed race", "middle eastern", "indian",
+  "freckled", "pale", "dark-skinned", "olive skin", "tan", "alabaster", "porcelain", "ebony", "caramel"
+];
+EN.hair_styles = [
+  "long", "short", "curly", "wavy", "straight", "bob cut", "pixie cut", "braids", "cornrows",
+  "dreadlocks", "bald", "ponytail", "pigtails", "bun", "fauxhawk", "afro", "undercut"
+];
+EN.eye_colors = [
+  "blue", "green", "hazel", "amber", "brown", "grey", "violet", "heterochromia", "icy blue"
+];
+EN.locations = [
+  "studio", "bedroom", "forest", "beach", "rooftop", "city street", "abandoned warehouse", "hotel room",
+  "car interior", "shower", "gym", "back alley", "nightclub", "couch", "kitchen", "poolside", "tub", "sauna"
+];
+EN.poses = [
+  "standing", "sitting", "kneeling", "on all fours", "lying on back", "lying on stomach", "crouching",
+  "arched back", "stretching", "bending over", "cross-legged", "leaning", "hugging knees", "side pose"
+];
+EN.moods = EN.moods.concat([
+  "confident", "teasing", "flirty", "mysterious", "alluring", "dominant", "submissive", "playful",
+  "sultry", "innocent", "melancholy", "intense", "serene", "wild", "impish", "fearless", "relaxed"
+]);
+EN.facial_details = [
+  "dimples", "beauty mark", "freckles", "blush", "smiling", "pouty lips", "open mouth", "biting lip",
+  "tongue out", "arched brow", "closed eyes", "intense stare", "wink", "wide-eyed"
+];
+EN.camera_angles = [
+  "high angle", "low angle", "POV", "over the shoulder", "side profile", "top down", "close up", "wide shot"
+];
+EN.lighting = [
+  "soft light", "hard light", "rim lighting", "split lighting", "cinematic lighting", "backlit", "natural daylight",
+  "neon", "firelight", "moonlight", "golden hour", "spotlight", "reflector", "colored gels"
+];
+EN.backgrounds = [
+  "solid black", "solid white", "gradient", "digital grid", "cyberpunk skyline", "industrial pipes",
+  "bookshelf", "cityscape", "sunset sky", "aurora", "galaxy", "futuristic lab", "retro wallpaper"
+];
+EN.accessories = [
+  "glasses", "sunglasses", "earrings", "bracelets", "rings", "necklace", "anklet", "piercings", "gloves",
+  "scarf", "hat", "headband", "cat ears", "devil horns", "watch", "purse", "smartphone"
+];
+
+// --- Smart Combo Logic: Scenes, Effects, and Themed Packs ---
+function PF_GEN_SMART_COMBO(opts){
+  // opts: {theme, mood, intensity, nsfw, fantasy, cyber, ...}
+  let prompt = [];
+
+  // Theme logic
+  if(opts.theme==="cyberpunk") {
+    prompt.push("cyberpunk style, neon lights, holograms, futuristic outfit");
+    prompt.push(PF_GEN_PICK(EN.backgrounds, 1, "cyberpunk skyline digital grid"));
+    prompt.push(PF_GEN_PICK(EN.effects, 2, "neon, bokeh swirl"));
+  } else if(opts.theme==="gothic") {
+    prompt.push("gothic, moody lighting, lace, black lipstick, heavy eyeliner");
+    prompt.push(PF_GEN_PICK(EN.backgrounds, 1, "industrial pipes"));
+    prompt.push(PF_GEN_PICK(EN.effects, 1, "arctic glow"));
+  } else if(opts.theme==="fantasy") {
+    prompt.push("fantasy world, ethereal, glowing, magical aura");
+    prompt.push(PF_GEN_PICK(EN.backgrounds, 1, "aurora galaxy"));
+    prompt.push(PF_GEN_PICK(EN.effects, 2, "double exposure, aurora shimmer"));
+  }
+  // Mood/inensity
+  if(opts.mood) prompt.push(opts.mood);
+  if(opts.intensity && opts.intensity>7) prompt.push("high drama, cinematic shadows");
+  // NSFW logic
+  if(opts.nsfw){
+    prompt.push(PF_GEN_PICK(EN.kinks, 2));
+    prompt.push(PF_GEN_PICK(EN.body_descriptors, 2));
+  }
+  // Style
+  if(opts.style) prompt.push(opts.style);
+  // Finish
+  return prompt.flat().filter(Boolean).join(', ');
+}
+
+// --- Randomizer Helpers ---
+function PF_GEN_PICK(arr, n=1, defaults){
+  let res = [];
+  arr = (typeof arr==="string") ? arr.split(",") : arr;
+  if(!Array.isArray(arr) || !arr.length) arr = defaults ? defaults.split(",") : [];
+  for(let i=0;i<n;i++){
+    let idx = Math.floor(Math.random()*arr.length);
+    res.push(arr[idx]);
+  }
+  return res;
+}
+
+// --- Super-Randomizer: Mashup Scenes, Effects, Styles ---
+window.PF_GEN_MEGA_RANDOM = function(opts){
+  // opts: {theme, mood, nsfw, num}
+  let prompt = [];
+  prompt.push(PF_GEN_PICK(EN.moods,1));
+  prompt.push(PF_GEN_PICK(EN.facial_details,1));
+  prompt.push(PF_GEN_PICK(EN.clothing,1));
+  prompt.push(PF_GEN_PICK(EN.kinks,1));
+  prompt.push(PF_GEN_PICK(EN.accessories,1));
+  prompt.push(PF_GEN_PICK(EN.locations,1));
+  prompt.push(PF_GEN_PICK(EN.backgrounds,1));
+  prompt.push(PF_GEN_PICK(EN.lighting,1));
+  prompt.push(PF_GEN_PICK(EN.camera_angles,1));
+  if(opts && opts.theme) prompt.push(opts.theme);
+  if(opts && opts.nsfw) prompt.push(PF_GEN_PICK(EN.kinks,2));
+  return prompt.flat().filter(Boolean).join(', ');
+};
+
+// --- User Input Customization: Wordbank Expanders ---
+window.PF_GEN_CUSTOM_WORDS = function(cat, addArr){
+  // cat: "kinks", "moods", "backgrounds", etc; addArr: array of words
+  if(!EN[cat]) EN[cat]=[];
+  EN[cat] = EN[cat].concat(addArr.filter(x=>typeof x==="string"));
+  return EN[cat].length;
+};
+
+// --- UI: Quick Combo Buttons (future expansion, not for now) ---
+
+// --- Scene Templates (for future presets/smart suggestions) ---
+window.PF_SCENE_TEMPLATES = [
+  {
+    name: "Cyber Lover",
+    prompt: "futuristic city, neon bokeh, glowing skin, wetlook, advanced cybernetic implants, blue lighting, edgy"
+  },
+  {
+    name: "Sensual Noir",
+    prompt: "moody shadows, black lace, red lipstick, arched back, high contrast, elegant"
+  },
+  {
+    name: "Fantasy Forest",
+    prompt: "misty woods, elf ears, luminous skin, fairy lights, green and purple glow, ethereal"
+  },
+  {
+    name: "Luxury Boudoir",
+    prompt: "soft satin sheets, golden light, vintage decor, delicate jewelry, seductive"
+  }
+];
+
+// --- Tag Generator: For Hashtags, Socials, SEO ---
+window.PF_GEN_TAGS = function(prompt){
+  let words = prompt.toLowerCase().split(/[\s,]+/);
+  let tags = [];
+  words.forEach(w=>{
+    if(w.length>3 && !tags.includes(w) && /^[a-z]+$/.test(w)) tags.push(w);
+  });
+  // Add required tags
+  tags = tags.concat(["promptforge","aiart","generativeart"]);
+  return tags.slice(0,15).map(t=>"#"+t).join(" ");
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK5 END ===
