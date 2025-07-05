@@ -5280,3 +5280,982 @@ window.PF_GEN_TAGS = function(prompt){
 };
 
 // === PromptForge GEN MODULE — MEGACHUNK5 END ===
+// === PromptForge GEN MODULE — MEGACHUNK6 START ===
+
+// --- Genre, Emotion, Weather, and FX Wordbanks (for the ultimate prompt power) ---
+
+EN.genres = [
+  "portrait", "fashion", "editorial", "lifestyle", "fantasy", "sci-fi", "noir", "erotic", "romantic",
+  "horror", "action", "sports", "adventure", "mystery", "comedy", "surreal", "concept art", "macro"
+];
+EN.emotions = [
+  "ecstasy", "desire", "curiosity", "fear", "anger", "jealousy", "joy", "serenity", "envy", "longing",
+  "surprise", "lust", "compassion", "tenderness", "anxiety", "courage", "rebellion", "euphoria"
+];
+EN.weather = [
+  "rain", "fog", "mist", "stormy", "clear", "snow", "sunshine", "cloudy", "windy", "light drizzle",
+  "haze", "thunder", "frosty", "tropical", "downpour", "moonlit night"
+];
+EN.effects = [
+  "bokeh", "glow", "lens flare", "reflection", "rain droplets", "prism effect", "motion blur", "soft focus",
+  "haze", "double exposure", "grain", "chromatic aberration", "film scratch", "light leaks", "radial blur",
+  "depth of field", "high key", "low key", "starburst", "anaglyph"
+];
+
+// --- Super Combo: Genre × Mood × Weather × FX ---
+window.PF_GEN_SUPER_COMBO = function(opts){
+  // opts: {genre, emotion, weather, fx, ...}
+  let prompt = [];
+  if(opts.genre) prompt.push(opts.genre);
+  if(opts.emotion) prompt.push(opts.emotion);
+  if(opts.weather) prompt.push(opts.weather);
+  if(opts.fx) prompt.push(opts.fx);
+  // More layers:
+  prompt.push(PF_GEN_PICK(EN.camera_angles,1));
+  prompt.push(PF_GEN_PICK(EN.lighting,1));
+  prompt.push(PF_GEN_PICK(EN.facial_details,1));
+  prompt.push(PF_GEN_PICK(EN.locations,1));
+  return prompt.filter(Boolean).join(', ');
+};
+
+// --- Smart Prompt Coaching: Suggests Improvements & Fills Gaps ---
+window.PF_GEN_COACH = function(userPrompt, opts={}){
+  let advice = [];
+  if(!/[a-z]/i.test(userPrompt)) advice.push("Start with a concept: portrait, scene, style, emotion...");
+  if(!/(lighting|light|shadow|sun|moon)/i.test(userPrompt)) advice.push("Try adding a lighting term (e.g., 'soft light', 'rim light').");
+  if(!/(location|studio|room|beach|forest|outdoor|indoor)/i.test(userPrompt)) advice.push("Add a location (e.g., 'studio', 'beach', 'bedroom').");
+  if(!/(emotion|mood|expression|happy|sad|confident|seductive)/i.test(userPrompt)) advice.push("Specify mood/emotion (e.g., 'confident', 'teasing').");
+  if(!/(effect|fx|bokeh|glow|blur|grain|flare)/i.test(userPrompt)) advice.push("Enhance with a visual effect ('bokeh', 'glow', etc).");
+  if(advice.length===0) advice.push("Looking good! Try clicking 'Randomize' or 'Super Combo' for inspiration.");
+  return advice.join(' ');
+};
+
+// --- Random Language Support Hooks (future proof) ---
+window.PF_LANGS = {
+  EN: EN,
+  // Add more: ES, FR, DE, CN, RU, JP, IT, ... as needed (future upgrade)
+};
+window.PF_SET_LANG = function(lang){
+  if(PF_LANGS[lang]) window.EN = PF_LANGS[lang];
+  else window.EN = PF_LANGS["EN"];
+};
+
+// --- Genre Preset Templates ---
+window.PF_GENRE_TEMPLATES = [
+  { name: "Classic Glam", prompt: "studio lighting, glamorous makeup, silk dress, red lips, soft background" },
+  { name: "Action Femme", prompt: "dynamic pose, motion blur, urban night, wet street, adrenaline" },
+  { name: "Dreamscape", prompt: "fantasy colors, surreal elements, floating objects, iridescent light" },
+  { name: "Film Noir", prompt: "black and white, cigarette smoke, hard shadows, trench coat, dramatic angle" }
+];
+
+// --- UI: Lucky Dip/Random Prompt Button (pure inspiration) ---
+window.PF_GEN_LUCKY_DIP = function(){
+  return window.PF_GEN_SUPER_COMBO({
+    genre: PF_GEN_PICK(EN.genres,1),
+    emotion: PF_GEN_PICK(EN.emotions,1),
+    weather: PF_GEN_PICK(EN.weather,1),
+    fx: PF_GEN_PICK(EN.effects,1)
+  });
+};
+
+// --- UI: Add All to Prompt (for maximalism fans!) ---
+window.PF_GEN_ALL_IN = function(){
+  // WARNING: This can make very long prompts!
+  let out = [];
+  for(let cat of [
+    "genres","emotions","weather","effects","kinks","ethnicities","hair_styles","eye_colors",
+    "locations","poses","moods","facial_details","camera_angles","lighting","backgrounds","accessories"
+  ]){
+    out.push(PF_GEN_PICK(EN[cat],2));
+  }
+  return out.flat().filter(Boolean).join(', ');
+};
+
+// --- Export for usage in all prompt pages ---
+window.PF_PROMPT_BRAIN = {
+  pick: PF_GEN_PICK,
+  superCombo: window.PF_GEN_SUPER_COMBO,
+  smartCombo: PF_GEN_SMART_COMBO,
+  coach: PF_GEN_COACH,
+  lucky: PF_GEN_LUCKY_DIP,
+  allIn: PF_GEN_ALL_IN,
+  tags: PF_GEN_TAGS,
+  scenes: window.PF_SCENE_TEMPLATES,
+  genres: window.PF_GENRE_TEMPLATES
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK6 END ===
+// === PromptForge GEN MODULE — MEGACHUNK7 START ===
+
+// --- NSFW/SFW Smart Switches & Word Filters ---
+// These enable hiding, softening, or swapping out explicit language or concepts based on user preferences.
+
+window.PF_NSFW_WORDS = [
+  // Common explicit words—used for filtering/replacement in SFW mode
+  { explicit: "tits", soft: "breasts" },
+  { explicit: "ass", soft: "butt" },
+  { explicit: "pussy", soft: "vagina" },
+  { explicit: "cock", soft: "penis" },
+  { explicit: "cum", soft: "fluid" },
+  { explicit: "cunt", soft: "vulva" },
+  { explicit: "dick", soft: "member" },
+  { explicit: "fuck", soft: "have sex" },
+  { explicit: "nipple", soft: "areola" },
+  { explicit: "orgasm", soft: "climax" },
+  { explicit: "threesome", soft: "group scene" },
+  { explicit: "spitroast", soft: "dual encounter" },
+  { explicit: "anal", soft: "backdoor" },
+  { explicit: "blowjob", soft: "oral" },
+  { explicit: "handjob", soft: "manual stimulation" }
+  // (Expand as needed for maximum flexibility)
+];
+
+// NSFW ↔ SFW Swapping Utility
+window.PF_SOFTEN_PROMPT = function(prompt, nsfw=true){
+  if (nsfw) return prompt; // NSFW on: leave as is
+  let out = prompt;
+  window.PF_NSFW_WORDS.forEach(pair=>{
+    let re = new RegExp(`\\b${pair.explicit}\\b`, 'gi');
+    out = out.replace(re, pair.soft);
+  });
+  return out;
+};
+window.PF_HARDEN_PROMPT = function(prompt, nsfw=true){
+  // Reverse: bring back explicit if allowed (basic version)
+  if (!nsfw) return prompt;
+  let out = prompt;
+  window.PF_NSFW_WORDS.forEach(pair=>{
+    let re = new RegExp(`\\b${pair.soft}\\b`, 'gi');
+    out = out.replace(re, pair.explicit);
+  });
+  return out;
+};
+
+// --- Expanding Random Banks: Genders, Groupings, Body Types ---
+EN.genders = [
+  "woman", "man", "nonbinary", "femme", "masc", "trans woman", "trans man", "androgyne", "intersex", "futanari", "futa", "hermaphrodite"
+];
+EN.groupings = [
+  "solo", "duo", "trio", "foursome", "orgy", "couple", "poly", "threesome", "friends", "rivals", "siblings", "twins"
+];
+EN.body_types = [
+  "petite", "slender", "athletic", "curvy", "plump", "muscular", "stocky", "chubby", "hourglass", "broad-shouldered", "lean", "plus-size"
+];
+
+// --- Ethnicity & Region (massive, diverse) ---
+EN.ethnicities = [
+  "caucasian", "east asian", "south asian", "african", "latina", "arab", "native american", "pacific islander", "nordic", "mediterranean",
+  "mixed race", "freckled", "albinism", "middle eastern", "tanned", "pale", "olive-skinned", "ebony", "latino", "asiatic", "afro-caribbean"
+];
+
+// --- Face/Body Feature Banks (pro-level detail) ---
+EN.facial_details = [
+  "full lips", "dimples", "sharp jawline", "high cheekbones", "button nose", "wide-set eyes", "arched brows", "mole above lip",
+  "pierced eyebrow", "scar across eyebrow", "beauty mark", "rosy cheeks", "gap tooth", "freckled nose", "cleft chin", "wrinkle lines"
+];
+EN.body_features = [
+  "six-pack abs", "broad shoulders", "long legs", "curvy hips", "hourglass figure", "defined biceps", "athletic thighs", "toned calves",
+  "tattoo sleeve", "pierced navel", "birthmark", "sculpted back", "smooth skin", "stretch marks", "strong arms", "slender waist"
+];
+
+// --- Visual Filters: Pro FX Presets (user picks, random, or combo) ---
+EN.fx_presets = [
+  "soft bokeh", "vintage film grain", "sharp HDR", "cinematic lighting", "split toning", "high contrast", "ultra-glossy", "matte finish",
+  "neon glow", "cyberpunk color", "vaporwave", "polaroid frame", "noise overlay", "light leaks", "rainbow flare", "monochrome",
+  "infrared look", "thermal imaging", "cross-processing", "color pop"
+];
+
+// --- Prompt Suggester: Auto Mix ---
+window.PF_SUGGEST_PROMPT = function(opts){
+  // Build a suggested prompt, mixing user intent & random magic
+  opts = opts || {};
+  let base = [];
+  base.push(PF_GEN_PICK(EN.genres,1));
+  base.push(PF_GEN_PICK(EN.groupings,1));
+  base.push(PF_GEN_PICK(EN.genders,1));
+  base.push(PF_GEN_PICK(EN.body_types,1));
+  base.push(PF_GEN_PICK(EN.ethnicities,1));
+  base.push(PF_GEN_PICK(EN.facial_details,1));
+  base.push(PF_GEN_PICK(EN.body_features,1));
+  base.push(PF_GEN_PICK(EN.fx_presets,1));
+  base.push(PF_GEN_PICK(EN.lighting,1));
+  base.push(PF_GEN_PICK(EN.locations,1));
+  base.push(PF_GEN_PICK(EN.poses,1));
+  return base.filter(Boolean).join(', ');
+};
+
+// --- SFW/NSFW Mode Toggle for UI ---
+window.PF_NSFW_MODE = true; // default: allow NSFW
+window.PF_TOGGLE_NSFW = function(){
+  window.PF_NSFW_MODE = !window.PF_NSFW_MODE;
+  // If UI: update switches/colors etc.
+};
+
+// --- SFW Prompt Generator ---
+window.PF_GET_SFW_PROMPT = function(userPrompt){
+  return PF_SOFTEN_PROMPT(userPrompt, false);
+};
+
+// --- NSFW Prompt Generator (power mode) ---
+window.PF_GET_NSFW_PROMPT = function(userPrompt){
+  return PF_HARDEN_PROMPT(userPrompt, true);
+};
+
+// --- Export/Update Main Brain ---
+window.PF_PROMPT_BRAIN = {
+  ...window.PF_PROMPT_BRAIN,
+  nsfwWords: window.PF_NSFW_WORDS,
+  soften: PF_SOFTEN_PROMPT,
+  harden: PF_HARDEN_PROMPT,
+  suggest: PF_SUGGEST_PROMPT,
+  sfw: PF_GET_SFW_PROMPT,
+  nsfw: PF_GET_NSFW_PROMPT,
+  toggleNsfw: PF_TOGGLE_NSFW,
+  nsfwMode: () => window.PF_NSFW_MODE
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK7 END ===
+// === PromptForge GEN MODULE — MEGACHUNK8 START ===
+
+// --- Advanced Contextual Detail Picker ---
+window.PF_CONTEXT_BOOSTERS = [
+  "cinematic rim lighting", "depth-of-field focus", "volumetric fog", "specular reflections",
+  "rim-lit highlights", "hyperdetailed pores", "moisture droplets", "neon edge-glow",
+  "shallow DOF", "rim-shadow under jaw", "silky skin texture", "wrinkle details",
+  "wisps of hair in foreground", "micro-expressions", "tears welling up", "natural skin blemishes",
+  "dynamic fabric folds", "fine eyebrow hair", "stubble shadow", "water reflections",
+  "barefoot on soft moss", "reflection in glossy surface", "rain droplets on glass",
+  "soft lens flare", "subsurface skin scatter"
+  // (extend with hundreds for full effect)
+];
+
+// Context-based details: pick N for each prompt, “inspire” the AI user
+window.PF_CONTEXT_ENHANCE = function(basePrompt, howMany = 2) {
+  let add = [];
+  while (add.length < howMany) {
+    let pick = PF_GEN_PICK(window.PF_CONTEXT_BOOSTERS, 1);
+    if (!add.includes(pick)) add.push(pick);
+  }
+  return basePrompt + ", " + add.join(', ');
+};
+
+// --- Easter Egg/Power User Codes (not advertised, not visible) ---
+window.PF_SECRET_CODES = {
+  "l33tmode": function(prompt) {
+    // Unlocked: max detail, adds 'cinema' words, disables all SFW restrictions
+    window.PF_NSFW_MODE = true;
+    let boost = "maximum cinematic realism, raw, grain, true anatomical lighting, ultra-real";
+    return PF_HARDEN_PROMPT(prompt, true) + ", " + boost;
+  },
+  "vintage": function(prompt) {
+    // Old-school retro film prompt enhancer
+    return prompt + ", kodak film, retro color palette, subtle grain, analog imperfections";
+  },
+  "dreamcore": function(prompt) {
+    // Surreal, hypnagogic vibes
+    return prompt + ", dreamcore, faded pastel, weird shadows, dreamy blurring, otherworldly";
+  }
+  // (add more for future secret features)
+};
+
+// Easter egg trigger: if user types special code in prompt, activate
+window.PF_CHECK_EASTER_EGGS = function(prompt) {
+  for (let code in window.PF_SECRET_CODES) {
+    if (prompt.toLowerCase().includes(code)) {
+      return window.PF_SECRET_CODES[code](prompt);
+    }
+  }
+  return prompt;
+};
+
+// --- Prompt Health Checker: SFW/NSFW Model Compliance ---
+window.PF_PROMPT_HEALTH = function(prompt) {
+  let lower = prompt.toLowerCase();
+  let warnings = [];
+  window.PF_NSFW_WORDS.forEach(pair=>{
+    if (lower.includes(pair.explicit)) warnings.push(`⚠️ Uses "${pair.explicit}"—flagged by many public models.`);
+  });
+  if (warnings.length === 0) return { score: 10, msg: "Prompt safe for most public models." };
+  return { score: 7-warnings.length, msg: warnings.join(" ") + " Try SFW mode for public generators." };
+};
+
+// --- Dynamic Negative Prompt Engine ---
+window.PF_NEGATIVE_BRAIN = [
+  "blurry", "grainy", "lowres", "bad hands", "bad anatomy", "crooked eyes", "missing fingers",
+  "mutated limb", "cloned face", "deformed body", "monochrome", "disfigured", "extra limb",
+  "watermark", "logo", "text", "meme", "error", "double image", "too many fingers", "long neck",
+  "distorted face", "bad proportions", "cropped", "jpeg artifacts", "noisy", "nsfw", "worst quality"
+  // ...build out for every model (see below)
+];
+
+// “Model-aware” negative generator: adds/removes as needed
+window.PF_MODEL_NEGATIVES = {
+  "juggernautXL": [
+    ...window.PF_NEGATIVE_BRAIN,
+    "wrong skin texture", "bad light reflection", "bad background", "unnatural skin color",
+    "smeared genitalia", "bizarre perspective", "AI artifact"
+  ],
+  "realvis5": [
+    ...window.PF_NEGATIVE_BRAIN,
+    "weird lips", "sunken eyes", "disconnected limbs", "strange shadows"
+  ],
+  "default": window.PF_NEGATIVE_BRAIN
+};
+
+// Dynamic Negative Prompt Builder (user picks model, engine adapts)
+window.PF_GET_NEGATIVE = function(model = "default", extra = "") {
+  let negs = (window.PF_MODEL_NEGATIVES[model] || window.PF_NEGATIVE_BRAIN).slice();
+  if (extra) negs = negs.concat(extra.split(',').map(s=>s.trim()));
+  return Array.from(new Set(negs)).join(', ');
+};
+
+// Add to brain for global access
+window.PF_PROMPT_BRAIN = {
+  ...window.PF_PROMPT_BRAIN,
+  contextEnhance: PF_CONTEXT_ENHANCE,
+  health: PF_PROMPT_HEALTH,
+  getNegative: PF_GET_NEGATIVE,
+  checkEasterEggs: PF_CHECK_EASTER_EGGS
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK8 END ===
+// === PromptForge GEN MODULE — MEGACHUNK9 START ===
+
+// -- Language Expansion & Multilingual Scaffold --
+window.PF_LANGUAGES = ["en", "es", "fr", "de", "it", "ja", "zh", "ru"]; // can expand
+window.PF_LANGUAGE_NAMES = {
+  en: "English", es: "Español", fr: "Français", de: "Deutsch", it: "Italiano",
+  ja: "日本語", zh: "中文", ru: "Русский"
+};
+// Each prompt can specify language (future: translate input/output as needed)
+window.PF_PROMPT_LANGUAGE = "en"; // Default
+
+// -- Lens/Photo FX/Camera Looks --
+window.PF_LENS_FX = [
+  "anamorphic lens", "soft focus", "bokeh background", "cinematic bloom",
+  "f1.2 lens blur", "35mm film grain", "cinestill 800T", "polaroid border",
+  "infrared", "retro vhs", "cinematic teal-orange", "cool blue shadows",
+  "hot pink rimlight", "underexposed shadow", "sun flare in frame",
+  "high dynamic range", "color grade: teal & magenta", "cross-process color",
+  "chromatic aberration", "motion blur", "glow highlights"
+];
+
+// Auto-add a random lens/camera effect for realism or mood
+window.PF_ADD_LENS_FX = function(prompt) {
+  let fx = PF_GEN_PICK(window.PF_LENS_FX, 1);
+  return prompt + ", " + fx;
+};
+
+// -- Smart Tag/Category Suggester --
+window.PF_TAGS = [
+  "portrait", "landscape", "macro", "night", "urban", "nature", "fantasy", "sci-fi",
+  "horror", "cyberpunk", "steampunk", "fashion", "beauty", "realism", "surreal",
+  "vintage", "dreamcore", "nude", "glamour", "sports", "documentary"
+];
+
+window.PF_CATEGORIZE_PROMPT = function(prompt) {
+  let tags = [];
+  let lower = prompt.toLowerCase();
+  window.PF_TAGS.forEach(tag => {
+    if (lower.includes(tag)) tags.push(tag);
+  });
+  // Add logic: if none found, pick top 1-2 most probable by keyword cluster
+  if (!tags.length) tags.push("general");
+  return tags.slice(0,3);
+};
+
+// -- Prompt Slogan/Title Generator --
+window.PF_SLOGAN_ADJ = [
+  "Unleash", "Dream", "Create", "Explore", "Imagine", "Transform", "Reveal", "Summon"
+];
+window.PF_SLOGAN_OBJ = [
+  "new worlds", "wild beauty", "cinematic moments", "hidden emotion", "surreal visions", "limitless art", "epic scenes"
+];
+window.PF_MAKE_SLOGAN = function(prompt) {
+  // Super simple—can be expanded to use AI later
+  let adj = PF_GEN_PICK(window.PF_SLOGAN_ADJ, 1);
+  let obj = PF_GEN_PICK(window.PF_SLOGAN_OBJ, 1);
+  return adj + " " + obj + ".";
+};
+
+// -- User Persona/History (Browser Only, no login needed) --
+window.PF_USER_HISTORY = JSON.parse(localStorage.getItem("PF_USER_HISTORY") || "{}");
+window.PF_SAVE_USER_SETTING = function(key, val) {
+  window.PF_USER_HISTORY[key] = val;
+  localStorage.setItem("PF_USER_HISTORY", JSON.stringify(window.PF_USER_HISTORY));
+};
+window.PF_GET_USER_SETTING = function(key, fallback) {
+  return window.PF_USER_HISTORY[key] || fallback;
+};
+
+// -- Keyword Randomizer & "Remix" Logic --
+window.PF_GEN_ADJ = [
+  "mysterious", "moody", "vivid", "hyperreal", "psychedelic", "misty", "fiery", "soft",
+  "crisp", "ethereal", "intimate", "dynamic", "bold", "melancholic", "ecstatic"
+];
+window.PF_GEN_VERB = [
+  "gaze", "embrace", "wander", "run", "float", "dream", "dance", "hide", "search", "shine"
+];
+
+window.PF_KEYWORD_REMIX = function(prompt) {
+  // Randomly insert 2 adj, 2 verbs
+  let adj = PF_GEN_PICK(window.PF_GEN_ADJ, 2);
+  let verb = PF_GEN_PICK(window.PF_GEN_VERB, 2);
+  let base = prompt.replace(/[,.]$/, "");
+  return `${adj[0]}, ${verb[0]} — ${base} — ${adj[1]}, ${verb[1]}`;
+};
+
+// Add to brain
+window.PF_PROMPT_BRAIN = {
+  ...window.PF_PROMPT_BRAIN,
+  lensFX: PF_ADD_LENS_FX,
+  categorize: PF_CATEGORIZE_PROMPT,
+  slogan: PF_MAKE_SLOGAN,
+  saveUser: PF_SAVE_USER_SETTING,
+  getUser: PF_GET_USER_SETTING,
+  remix: PF_KEYWORD_REMIX
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK9 END ===
+// === PromptForge GEN MODULE — MEGACHUNK10 START ===
+
+// -- Style/Genre Switcher --
+window.PF_STYLE_GENRES = [
+  {key:"realism", name:"Ultra Realism", desc:"Sharp, photographic, lifelike"},
+  {key:"anime", name:"Anime", desc:"Stylized, clean lines, anime aesthetic"},
+  {key:"digital", name:"Digital Art", desc:"Painterly, soft edges, digital painting"},
+  {key:"oldmaster", name:"Old Masters", desc:"Renaissance, Baroque, oil painting"},
+  {key:"pixar", name:"Pixar", desc:"Cute, round, 3D cartoon style"},
+  {key:"comic", name:"Comic", desc:"Bold lines, pop-art, halftone dots"},
+  {key:"fantasy", name:"Fantasy", desc:"Epic, magical, surreal"},
+  {key:"cyberpunk", name:"Cyberpunk", desc:"Glowing, tech, dark city"}
+];
+
+window.PF_STYLE_PHRASES = {
+  realism: "hyperrealistic, photo accurate, ultra-sharp, high detail",
+  anime: "anime style, vibrant, cel shading, clean lines",
+  digital: "digital painting, brush texture, smooth blend",
+  oldmaster: "oil on canvas, Rembrandt lighting, chiaroscuro",
+  pixar: "pixar style, 3d, cute, big eyes, soft lighting",
+  comic: "comic book, pop art, thick outlines",
+  fantasy: "fantasy art, surreal, magical realism",
+  cyberpunk: "cyberpunk, neon, rain, cityscape, dark tech"
+};
+
+window.PF_APPLY_STYLE = function(prompt, styleKey) {
+  let style = window.PF_STYLE_PHRASES[styleKey] || "";
+  return prompt + ", " + style;
+};
+
+// -- Model/LoRA/Checkpoint Picker --
+window.PF_MODEL_POOL = [
+  {name:"JuggernautXL", tags:["realism","cinematic","nude","dramatic"]},
+  {name:"RealVisXL", tags:["realism","portrait","sharp","nude"]},
+  {name:"CyberRealistic", tags:["cyberpunk","sci-fi","futuristic"]},
+  {name:"Anything 35mm", tags:["anime","cute","colorful"]},
+  {name:"Crystal Clear XL", tags:["fantasy","hyperreal"]},
+  {name:"EpicRealism_POVXL", tags:["pov","photoreal"]},
+  {name:"Pixar", tags:["pixar","cartoon","kids"]},
+  {name:"ComicDiffusion", tags:["comic","pop","halftone"]}
+  // Add more!
+];
+
+// Pick best model by genre/tags
+window.PF_PICK_MODEL = function(tags) {
+  let best = window.PF_MODEL_POOL.find(m =>
+    m.tags.some(t => tags.includes(t))
+  );
+  return best ? best.name : "JuggernautXL";
+};
+
+// -- Prompt Complexity Modes --
+window.PF_COMPLEXITY = ["simple", "normal", "advanced"];
+window.PF_COMPLEXITY_TEXT = {
+  simple: "Short, focused, easy to read",
+  normal: "Standard, balanced detail",
+  advanced: "Long, complex, technical, all modifiers"
+};
+window.PF_APPLY_COMPLEXITY = function(prompt, level) {
+  if (level === "simple") return prompt.split(",").slice(0,2).join(", ");
+  if (level === "advanced") return prompt + ", " +
+    PF_GEN_PICK(window.PF_LENS_FX,2).join(", ") + ", ultra detailed, RAW photo, high resolution";
+  return prompt;
+};
+
+// -- Negative Prompt System 2.0 --
+window.PF_NEGATIVE_BASE = [
+  "low quality", "blurry", "jpeg artifacts", "extra fingers", "extra limbs", "bad anatomy",
+  "mutated", "deformed", "crooked eyes", "long neck", "bad hands", "poor lighting"
+];
+window.PF_NEGATIVE_NUDE = [
+  "censored", "clothing", "lingerie", "lingerie", "bikini", "bra", "panties",
+  "extra limbs", "cartoon", "watermark", "signature", "ng_deepnegative_v1_75t"
+];
+window.PF_NEGATIVE_GENRE = {
+  anime: ["realistic skin", "old style", "muted color", "grain", "noise"],
+  realism: ["cartoon", "anime eyes", "painting", "posterized"],
+  fantasy: ["modern", "sci-fi", "robot", "chrome"],
+  cyberpunk: ["nature", "forest", "sunlight"],
+  pixar: ["realistic", "oil paint", "low res", "surreal"]
+};
+
+window.PF_BUILD_NEGATIVE = function(genres, isNude) {
+  let neg = [].concat(window.PF_NEGATIVE_BASE);
+  genres.forEach(g => {
+    if (window.PF_NEGATIVE_GENRE[g]) neg = neg.concat(window.PF_NEGATIVE_GENRE[g]);
+  });
+  if (isNude) neg = neg.concat(window.PF_NEGATIVE_NUDE);
+  return Array.from(new Set(neg)).join(", ");
+};
+
+// -- Inspiration/History Browser --
+window.PF_PROMPT_HISTORY = JSON.parse(localStorage.getItem("PF_PROMPT_HISTORY") || "[]");
+window.PF_SAVE_PROMPT_HISTORY = function(data) {
+  window.PF_PROMPT_HISTORY.push(data);
+  if (window.PF_PROMPT_HISTORY.length > 30) window.PF_PROMPT_HISTORY.shift();
+  localStorage.setItem("PF_PROMPT_HISTORY", JSON.stringify(window.PF_PROMPT_HISTORY));
+};
+window.PF_BROWSE_HISTORY = function(cb) {
+  window.PF_PROMPT_HISTORY.slice().reverse().forEach(cb);
+};
+
+// -- Random Inspiration / Word Pools --
+window.PF_WILDCARDS = [
+  "cosmic rays", "rain-drenched neon", "midnight carnival", "haunted playground",
+  "urban angel", "sunlit thunderstorm", "hidden alley", "electric feline",
+  "gothic ruins", "neon graffiti", "serene void", "liquid chrome", "pulsing veins of light"
+];
+
+// Remixer for random wildcards
+window.PF_INSPIRE = function() {
+  let base = PF_GEN_PICK(window.PF_WILDCARDS, 2).join(", ");
+  let adj = PF_GEN_PICK(window.PF_GEN_ADJ, 1)[0];
+  let verb = PF_GEN_PICK(window.PF_GEN_VERB, 1)[0];
+  return `${adj} ${verb}, ${base}`;
+};
+
+// Upgrade brain
+window.PF_PROMPT_BRAIN = {
+  ...window.PF_PROMPT_BRAIN,
+  styles: window.PF_STYLE_GENRES,
+  applyStyle: PF_APPLY_STYLE,
+  pickModel: PF_PICK_MODEL,
+  complexity: window.PF_COMPLEXITY,
+  applyComplexity: PF_APPLY_COMPLEXITY,
+  negatives: PF_BUILD_NEGATIVE,
+  saveHistory: PF_SAVE_PROMPT_HISTORY,
+  browseHistory: PF_BROWSE_HISTORY,
+  inspire: PF_INSPIRE
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK10 END ===
+// === PromptForge GEN MODULE — MEGACHUNK11 START ===
+
+// --- Huge Adjective/Noun/Verb/Body/Lighting Banks ---
+// (First 1000+ each, partial preview; keep going as needed)
+window.PF_GEN_ADJ = [
+  "radiant","ethereal","ominous","sleek","shimmering","decadent","noir","luminous",
+  "gritty","opulent","misty","vivid","sun-bleached","storm-lit","porcelain","velvet",
+  "subtle","high-key","dreamlike","crisp","matte","metallic","pristine","shadowed",
+  "ancient","hi-tech","sinister","painterly","cinematic","hyper-detailed","reflective",
+  "decayed","luxurious","stormy","tarnished","chrome","obsidian","sapphire","jade",
+  "fractured","molten","translucent","diffuse","rim-lit","angelic","muted","bold",
+  "pastel","feathered","hazy","washed-out","saturated","psychedelic","bokeh-rich",
+  //...extend to 1k+
+];
+window.PF_GEN_NOUN = [
+  "goddess","vampire","robot","angel","fox","nymph","siren","queen","emperor",
+  "android","shaman","oracle","warrior","sorceress","sprite","ghost","alien",
+  "huntress","pirate","detective","athlete","stranger","explorer","heroine","jester",
+  "astronaut","feline","owl","dragon","wolf","nymph","sprite","cyborg","witch",
+  "giant","mermaid","fairy","knight","monarch","sphinx","harlequin","titan","beast",
+  //...extend to 1k+
+];
+window.PF_GEN_VERB = [
+  "staring","weeping","reaching","gliding","floating","screaming","smiling","resting",
+  "dancing","running","flying","embracing","transforming","lurking","hunting",
+  "meditating","guarding","leaping","emerging","descending","rising","howling",
+  "posing","painting","creating","destroying","leading","seducing","tempting","watching",
+  //...extend to 1k+
+];
+window.PF_GEN_ENV = [
+  "neon alley","abandoned factory","cosmic storm","lush forest","frozen wasteland",
+  "haunted mansion","urban rooftop","moonlit dock","crystal cave","lava flow",
+  "cyber city","pixel sky","sunset highway","graveyard","ocean depths","mirror hall",
+  //...extend to 1k+
+];
+window.PF_GEN_LIGHTING = [
+  "rim lighting","backlit","harsh spotlight","cinematic light","soft studio glow",
+  "golden hour","neon underglow","moonlit","spotlit","caustics","diffuse light",
+  "shafts of sunlight","color gels","underexposed","overexposed","bokeh explosion",
+  //...extend to 1k+
+];
+window.PF_GEN_POSE = [
+  "standing tall","kneeling","arms crossed","on tiptoe","leaning back","arched spine",
+  "hand on chin","reclining","crouched","leaping midair","sprawled","sitting lotus",
+  "arms outstretched","shoulders back","looking over shoulder","gaze down","winking",
+  //...extend to 1k+
+];
+window.PF_GEN_EXPRESS = [
+  "defiant","playful","innocent","melancholic","ecstatic","smoldering","serene",
+  "coy","blissful","fierce","enigmatic","contemptuous","bored","shocked","dreamy",
+  "cheeky","sly","pensive","mischievous","confident",
+  //...extend to 1k+
+];
+
+// --- “Clean NSFW” SMART FILTER ---
+// Swaps explicit for “Google-happy” terms as needed.
+window.PF_NSFW_WORDS = {
+  "tits":"breasts","boobs":"chest","ass":"bum","cunt":"vagina","dick":"male anatomy","cock":"male anatomy",
+  "cum":"fluid","cumshot":"fluid","nude":"unclothed","fuck":"interact","blowjob":"oral action",
+  // etc., add as needed
+};
+window.PF_CLEAN_PROMPT = function(prompt) {
+  Object.keys(PF_NSFW_WORDS).forEach(bad=>{
+    prompt = prompt.replace(new RegExp("\\b"+bad+"\\b","gi"), PF_NSFW_WORDS[bad]);
+  });
+  return prompt;
+};
+
+// --- Multilingual Hooks (just English for now, expandable) ---
+window.PF_LANG = "en"; // Future: "es","de","fr" etc.
+// Use language-specific word banks if/when set
+
+// --- Lens & Camera Module ---
+window.PF_LENS_FX = [
+  "Canon 50mm f/1.2","Sony G Master 85mm","Leica Noctilux","Sigma Art 35mm","Zeiss Otus 100mm",
+  "Tilt-shift","Fisheye","Wide angle","Macro","Vintage lens","Infrared film","Kodak Porta 800",
+  "Ilford HP5","Color slide film","Cinematic LUT","anamorphic lens","circular bokeh","soft diffusion"
+  //...expand for true realism
+];
+
+// Lens logic for prompt
+window.PF_APPLY_LENS = function(prompt, lensList) {
+  return prompt + ", shot with " + PF_GEN_PICK(lensList,1)[0];
+};
+
+// --- Smart Compose ---
+window.PF_SMART_COMPOSE = function(opts) {
+  // Compose prompt from options + user input
+  let out = [];
+  if(opts.subject) out.push(opts.subject);
+  if(opts.pose) out.push(opts.pose);
+  if(opts.expr) out.push(opts.expr);
+  if(opts.env) out.push(opts.env);
+  if(opts.lighting) out.push(opts.lighting);
+  if(opts.style) out.push(window.PF_STYLE_PHRASES[opts.style]);
+  if(opts.lens) out.push(opts.lens);
+  if(opts.extras) out.push(opts.extras.join(", "));
+  return window.PF_CLEAN_PROMPT(out.filter(Boolean).join(", "));
+};
+
+// -- Roadmap/Docs Helper --
+window.PF_GEN_DOCS = `
+PromptForge Generator Brain — Docs
+-----------------------------------
+- Words: ${window.PF_GEN_ADJ.length}+ adjectives, ${window.PF_GEN_NOUN.length}+ nouns, ${window.PF_GEN_VERB.length}+ verbs, etc
+- Styles: ${window.PF_STYLE_GENRES.map(x=>x.name).join(", ")}
+- Languages: English (future: more)
+- NSFW: Smart-cleaner for “Google happy” terms
+- Lens: ${window.PF_LENS_FX.length} supported
+- Negatives: Genre/subject/model-based
+- Pose/Expression/Lighting: Multi-pool
+- History: Local/session, can re-inspire
+- “Inspire me”: Wildcards/random combos
+- Extensible: Just add more words/features!
+`;
+
+// ...attach to main gen brain as needed
+window.PF_PROMPT_BRAIN = {
+  ...window.PF_PROMPT_BRAIN,
+  adjectives: window.PF_GEN_ADJ,
+  nouns: window.PF_GEN_NOUN,
+  verbs: window.PF_GEN_VERB,
+  lighting: window.PF_GEN_LIGHTING,
+  pose: window.PF_GEN_POSE,
+  express: window.PF_GEN_EXPRESS,
+  env: window.PF_GEN_ENV,
+  lens: window.PF_LENS_FX,
+  docs: window.PF_GEN_DOCS,
+  smartCompose: window.PF_SMART_COMPOSE
+};
+
+// === PromptForge GEN MODULE — MEGACHUNK11 END ===
+// === CHUNK: Expanded Style, Camera, & Descriptor Pools ===
+
+PF_PROMPT_BRAIN.styles = [
+  "photorealistic", "ultra-realistic", "surreal", "hyperdetailed", "cinematic", "dreamlike",
+  "gritty", "documentary", "glamorous", "intimate", "abstract", "vintage", "retrofuturist",
+  "art nouveau", "baroque", "neo-noir", "pop art", "minimalist", "brutalist", "expressionist",
+  "vaporwave", "high fashion", "luxury", "street photography", "polaroid", "editorial",
+  "Instagram aesthetic", "color splash", "iridescent", "grainy", "bokeh", "soft focus",
+  "muted tones", "punchy contrast", "split-tone", "warm film", "cold chrome", "cross-processed",
+  "infrared", "x-ray style", "thermal", "cartoonized", "anime", "manga", "digital painting",
+  "watercolor", "oil painting", "charcoal sketch", "pencil drawing", "woodcut", "low poly",
+  "pixel art", "3D render", "claymation", "stop motion", "lo-fi", "analog tape"
+];
+
+PF_PROMPT_BRAIN.lensEffects = [
+  "cinematic bokeh", "anamorphic lens flare", "soft diffusion", "chromatic aberration",
+  "god rays", "volumetric light", "motion blur", "depth haze", "rain on glass", "glassy reflection",
+  "tilt-shift", "macro focus", "fisheye", "vignette", "long exposure streaks", "retro film grain"
+];
+
+PF_PROMPT_BRAIN.lighting = [
+  "golden hour", "soft morning sun", "harsh neon", "studio strobes", "backlit", "rim light",
+  "top-down spotlight", "side lighting", "glowing screens", "window light", "moonlit", "candlelight",
+  "flashing police lights", "disco ball", "lasers", "misty", "sunset silhouette", "overcast", "low key",
+  "high key", "rainy night", "stormy sky", "firelight", "ambient LED", "colored gels"
+];
+
+PF_PROMPT_BRAIN.facialDescriptors = [
+  "piercing gaze", "half-smile", "teary-eyed", "fierce snarl", "languid expression", "smirking",
+  "smoky eyes", "flushed cheeks", "giggling", "pursed lips", "gasping", "blushing", "open-mouthed",
+  "biting lip", "arched eyebrow", "bedroom eyes", "vulnerable", "defiant", "shocked", "lost in thought"
+];
+
+PF_PROMPT_BRAIN.bodyDescriptors = [
+  "arched back", "leaning forward", "coy posture", "outstretched hand", "crossed legs",
+  "side profile", "hip cocked", "on tiptoe", "stretched arms", "resting chin on hand",
+  "sitting", "lying down", "sprawled", "lounging", "kneeling", "curled up", "reaching",
+  "embracing", "dancing", "bouncing"
+];
+
+// Gender-neutral beauty/fashion details (safe for Google, but “coded” for NSFW)
+PF_PROMPT_BRAIN.fashion = [
+  "lace bodysuit", "oversized hoodie", "tight denim", "sheer dress", "open collar", "bare shoulders",
+  "strappy heels", "chunky boots", "torn fishnets", "cropped tee", "leather jacket", "velvet slip",
+  "slouchy sweater", "sporty bra", "gossamer robe", "mini skirt", "tube top", "bare midriff",
+  "unbuttoned shirt", "braless"
+];
+
+// Clean anatomical words, paired with “wink” in suggestions
+PF_PROMPT_BRAIN.anatomy = [
+  "long legs", "sculpted abs", "delicate hands", "broad shoulders", "shapely hips",
+  "arched feet", "smooth back", "soft skin", "deep dimples", "full lips", "mischievous smile",
+  "messy hair", "sparkling eyes", "curved waist", "bare knees"
+];
+
+// Smart negative prompt logic, huge base + context-aware add-on
+PF_PROMPT_BRAIN.baseNegatives = [
+  "blurry", "out of focus", "extra limbs", "deformed", "bad anatomy", "missing fingers", "lowres",
+  "watermark", "logo", "text", "jpeg artifacts", "duplicate", "cropped head", "mutation", "disfigured",
+  "cloned face", "out-of-frame", "bad proportions", "bad hands", "bad feet", "extra face",
+  "long neck", "disconnected limbs", "strange eyes", "bad quality", "ugly", "amputated limb"
+];
+
+// Advanced: context-driven negatives (auto-added if certain tags are present)
+PF_PROMPT_BRAIN.smartNegatives = function(prompt) {
+  let negs = [].concat(PF_PROMPT_BRAIN.baseNegatives);
+  if (prompt.includes("glass") || prompt.includes("rain on glass")) {
+    negs.push("reflections", "dirty glass", "lens smudge");
+  }
+  if (prompt.includes("face") || prompt.match(/\b(smile|expression|eyes|gaze)\b/)) {
+    negs.push("poor facial detail", "asymmetrical face");
+  }
+  if (prompt.includes("legs") || prompt.includes("feet")) {
+    negs.push("extra toes", "bad feet");
+  }
+  // Censor tripwires: If prompt contains anything Google might hate, auto-soften
+  if (prompt.match(/\b(tits?|ass|cunt|cock|pussy|dick|cum|orgasm|anal|masturbat(e|ion)|fuck|suck)\b/i)) {
+    negs.push(
+      "NSFW language", "explicit nudity", "obscene gesture", "offensive text", 
+      "pornographic", "graphic violence", "sexual fluids", "genitalia"
+    );
+  }
+  return Array.from(new Set(negs)).join(', ');
+};
+
+// Language guidance for user input: swap “dirty” for “clean” in output
+PF_PROMPT_BRAIN.cleanWordSubstitutions = {
+  "tits": "breasts",
+  "boobs": "chest",
+  "ass": "bum",
+  "cunt": "vagina",
+  "cock": "penis",
+  "dick": "penis",
+  "pussy": "vulva",
+  "cum": "fluid",
+  "orgasm": "climax",
+  "fuck": "make love",
+  "suck": "kiss"
+};
+
+// Guidance: If the user enters NSFW, auto-offer cleaner variant
+PF_PROMPT_BRAIN.sanitizeInput = function(str) {
+  let out = str;
+  Object.entries(PF_PROMPT_BRAIN.cleanWordSubstitutions).forEach(([dirty, clean])=>{
+    let re = new RegExp("\\b"+dirty+"\\b", "gi");
+    out = out.replace(re, clean);
+  });
+  return out;
+};
+
+// Mega-pool for art directions, mood, vibes (use for both picture/movie prompts)
+PF_PROMPT_BRAIN.artDirections = [
+  "ethereal atmosphere", "seductive undertones", "dangerous beauty", "mysterious glow",
+  "urban decay", "abandoned warehouse", "rainy street", "smoky jazz club", "sun-dappled forest",
+  "luminous night", "dreamy haze", "chaotic energy", "forbidden zone", "sacred geometry",
+  "psychedelic trip", "neon cyberpunk", "arcade fever", "secret rendezvous", "underground club",
+  "techno rave", "haunted mansion", "mirror maze", "twilight reverie", "apocalyptic horizon"
+];
+
+// Tag-to-style linkers: lets you say “add anime vibe if tag found” (future hooks)
+PF_PROMPT_BRAIN.tagStyleMap = {
+  "anime": "anime, crisp lines, vibrant colors, big eyes",
+  "cyberpunk": "cyberpunk, neon, urban, rain, futuristic",
+  "retro": "80s style, vaporwave, synthwave, pastel neon",
+  "horror": "dark, moody, dramatic shadows, spooky",
+  "romance": "soft light, warm tones, close embrace",
+  "sci-fi": "chrome, circuitry, tech, blue glow"
+};
+
+// Future: multi-language stub (can be expanded later)
+PF_PROMPT_BRAIN.languages = ["en", "es", "fr", "de", "it", "pt", "ru", "jp", "kr"];
+PF_PROMPT_BRAIN.translatePrompt = function(prompt, lang) {
+  // Dummy: just return for now, future: plug into translation API
+  return prompt;
+};
+
+// ========== END CHUNK ==========
+
+// Paste next chunk after this one. If you need a full word dump or more features, say next!
+// === CHUNK: Smart Prompt Generator Core ===
+
+// Utility: Choose N random from array, never repeats
+function pf_pick(arr, n=1) {
+  let pool = [...arr];
+  let picks = [];
+  for (let i=0; i<n && pool.length>0; i++) {
+    let idx = Math.floor(Math.random()*pool.length);
+    picks.push(pool[idx]);
+    pool.splice(idx,1);
+  }
+  return (n===1) ? picks[0] : picks;
+}
+
+// Utility: capitalize first letter
+function pf_cap(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+
+// Advanced user input parser
+function pf_parseUserInput(input) {
+  // Replace banned words, trim spaces, extract useful tags
+  let clean = PF_PROMPT_BRAIN.sanitizeInput(input.trim());
+  let tags = clean.toLowerCase().split(/[ ,;|]+/).filter(t=>t.length>0);
+  return {clean, tags};
+}
+
+// Prompt core: builds a monster prompt based on all fields and random pools
+function pf_generatePrompt(userInput, opts={}) {
+  // Defaults:
+  let { style, lighting, lens, mood, anatomy, fashion, facial, extras, nsfw, language } = opts;
+  let { clean, tags } = pf_parseUserInput(userInput);
+
+  // Styles and directions
+  let mainStyle = style || pf_pick(PF_PROMPT_BRAIN.styles);
+  let mainLighting = lighting || pf_pick(PF_PROMPT_BRAIN.lighting);
+  let mainLens = lens || pf_pick(PF_PROMPT_BRAIN.lensEffects);
+  let mainMood = mood || pf_pick(PF_PROMPT_BRAIN.artDirections);
+  let mainAnatomy = anatomy || pf_pick(PF_PROMPT_BRAIN.anatomy);
+  let mainFashion = fashion || pf_pick(PF_PROMPT_BRAIN.fashion);
+  let mainFacial = facial || pf_pick(PF_PROMPT_BRAIN.facialDescriptors);
+
+  // NSFW tricks (for use on Pic Prompt & Movie pages, but hidden on Google-facing outputs)
+  let nsfwFlag = false;
+  if (userInput.match(/\b(nude|nsfw|sensual|erotic|topless|lingerie|boudoir|fetish|lewd|explicit)\b/i)) {
+    nsfwFlag = true;
+  }
+  if (nsfw !== undefined) nsfwFlag = !!nsfw;
+
+  // Mix in extras if provided
+  let extraTokens = [];
+  if (extras && Array.isArray(extras)) extraTokens = extras;
+
+  // Build main description
+  let prompt = [
+    pf_cap(mainStyle),
+    mainLighting,
+    mainLens,
+    mainMood,
+    mainAnatomy,
+    mainFacial,
+    mainFashion,
+    ...extraTokens,
+    clean
+  ].filter(Boolean).join(', ');
+
+  // If a tag maps to a style (eg. “anime”), append that
+  tags.forEach(tag=>{
+    if(PF_PROMPT_BRAIN.tagStyleMap[tag]) {
+      prompt += ", " + PF_PROMPT_BRAIN.tagStyleMap[tag];
+    }
+  });
+
+  // Language support (stub for future)
+  if (language && language !== "en") {
+    prompt = PF_PROMPT_BRAIN.translatePrompt(prompt, language);
+  }
+
+  // NSFW: If flagged, “hide” spicy descriptors (to trick Google, e.g. encode with symbols)
+  if (nsfwFlag) {
+    prompt = prompt.replace(/\b(nude|naked|topless|nipple|pussy|penis|vagina|breasts|nsfw)\b/gi, (m)=>
+      m[0] + "*".repeat(m.length-2) + m.slice(-1)
+    );
+  }
+
+  // Return full prompt and all parts for debugging/advanced use
+  return {
+    prompt,
+    meta: {
+      style: mainStyle,
+      lighting: mainLighting,
+      lens: mainLens,
+      mood: mainMood,
+      anatomy: mainAnatomy,
+      facial: mainFacial,
+      fashion: mainFashion,
+      tags,
+      nsfw: nsfwFlag,
+      extras: extraTokens
+    }
+  };
+}
+
+// Advanced prompt randomizer (for mixer or inspire button)
+function pf_randomPrompt() {
+  // Optionally: let user “lock” some fields, only randomize others
+  return pf_generatePrompt("", {
+    extras: pf_pick(PF_PROMPT_BRAIN.artDirections, 2),
+    nsfw: Math.random() > 0.7
+  }).prompt;
+}
+
+// Mixer/inspire combo: returns an array of X variant prompts (great for users)
+function pf_mixerVariants(userInput, count=6) {
+  let variants = [];
+  for(let i=0;i<count;i++) {
+    let v = pf_generatePrompt(userInput, {
+      extras: pf_pick(PF_PROMPT_BRAIN.lensEffects, 2),
+      nsfw: Math.random() > 0.6
+    }).prompt;
+    variants.push(v);
+  }
+  return variants;
+}
+
+// Smart negative prompt generator (auto-applies context + base negatives)
+function pf_generateNegPrompt(userInput) {
+  return PF_PROMPT_BRAIN.smartNegatives(userInput);
+}
+
+// SHORTENED: For “summary output”/description
+function pf_summarizePrompt(fullPrompt) {
+  // Show just main features + a hook
+  let first = fullPrompt.split(",").slice(0,3).join(", ");
+  let last = fullPrompt.split(",").slice(-3).join(", ");
+  return `${first}...${last}`;
+}
+
+// ========== END CHUNK ==========
+
+// Next chunk: Add UI plumbing, example usage, future hooks, and mega-word-lists as needed!
