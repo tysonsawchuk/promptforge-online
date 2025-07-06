@@ -151,3 +151,115 @@ PF_VERBS.push(
     "uncover", "reveal", "expose", "display", "bare", "unveil", "show", "present", "unmask", "unshroud", "disclose", "unclothe", "demonstrate", "unfurl", "unwrap", "exhibit", "divulge", "vent", "proclaim", "broadcast", "trumpet", "spotlight"
 );
 // === END CHUNK 3A ===
+// === CHUNK 3B: SUPERNOVA BODY/ANATOMY/NSFW DESCRIPTORS ===
+// This is the legendary one: every way to describe anatomy, from medical to meme, 100% context aware!
+const PF_BODY_PARTS = [
+    // General/clinical (neutral & AI-safe)
+    "body", "form", "figure", "silhouette", "outline", "shape", "frame", "torso", "limbs", "anatomy", "build", "musculature", "skin", "features", "complexion", "proportions", "contours", "structure", "physique",
+    // Classic/clean (old school, AI-friendly)
+    "chest", "waist", "hips", "legs", "thighs", "calves", "shoulders", "back", "arms", "forearms", "hands", "fingers", "palms", "feet", "toes", "neck", "jawline", "cheeks", "chin", "nose", "lips", "eyelids", "eyebrows", "hair", "scalp",
+    // Face/facial features
+    "face", "eyes", "gaze", "pupils", "irises", "lashes", "mouth", "teeth", "smile", "expression", "dimples", "freckles", "earlobes", "ears", "temples", "forehead",
+    // Bust/chest/boobs (all levels, safe to spicy, smart swaps)
+    "breasts", "bust", "bosom", "chest", "decolletage", "cleavage", "curve", "upper body", "torso", "pectoral area", "mounds", "twins", "melons", "peaks", "pillows", "orbs", "globes", "duo", "cups", "assets", "front", "rack", "girl power", "softness", "fullness", "swell",
+    // Nipples/areola (soft and strong)
+    "nipples", "areolae", "tips", "points", "buds", "peaks", "buttons", "dots", "centers", "rosy tips", "crowns", "circles", "zones",
+    // Genitalia: female (ALL levels, euphemism, meme, clinical, clean, emoji-safe)
+    "intimate area", "privates", "vulva", "mons", "outer lips", "inner lips", "labia", "labia majora", "labia minora", "folds", "groove", "opening", "entrance", "petals", "core", "flower", "peach", "feminine area", "yoni", "gateway", "valley", "mound", "triangle", "garden", "blossom", "delicate place", "sweet spot", "honey pot", "lady bits", "lotus", "love button", "clitoris", "clit", "hood", "bud", "sensitive spot", "pocket", "passage", "depths", "center", "softness", "wetness", "slickness", "moistness", "dampness", "warmth", "sanctuary", "treasure", "velvet folds", "sheath", "portal", "slit", "crease", "valley", "petal", "groove",
+    // Genitalia: male (euphemism, meme, technical, clean/AI-friendly)
+    "intimate zone", "groin", "crotch", "manhood", "shaft", "tip", "crown", "member", "length", "stalk", "root", "base", "phallus", "head", "glans", "flesh", "package", "family jewels", "orbs", "sack", "scrotum", "testicles", "balls", "eggs", "stones", "seed", "scepter", "wand", "rod", "pole", "baton", "pillar", "torch", "bulge", "bundle", "boy parts", "banana", "cucumber", "eggplant", "emoji 🍆", "emoji 🍑",
+    // Butts/all euphemism/AI-safe/poetic
+    "buttocks", "rear", "backside", "behind", "booty", "bottom", "glutes", "cheeks", "seat", "cushion", "curve", "derriere", "rump", "trunk", "posterior", "tail", "fanny", "bum", "ass", "junk in the trunk", "cake", "peach", "emoji 🍑",
+    // Internal (safely described)
+    "core", "spine", "abdomen", "belly", "navel", "stomach", "pelvis", "groove", "waistline", "solar plexus", "lungs", "heart", "pulse point",
+    // NSFW, meme, and AI-dodging
+    "hidden petals", "shy folds", "sacred place", "secret garden", "velvet core", "diamond", "ruby", "golden gate", "sweetness", "mystery", "chamber", "cavern", "treasure chest", "satin folds", "silken folds", "whispering lips", "moist petals", "dewy valley", "satin touch", "liquid silk",
+    // SFW/Universal swap-phrases
+    "that area", "that spot", "hidden zone", "private part", "sensitive spot", "tender region", "delicate place", "lower half", "midsection", "middle", "secret spot", "zone", "region", "site", "locale", "special area",
+    // Emoji/symbolic
+    "🍑", "🍆", "💦", "🔥", "🌸", "🌹", "🥚", "🫦", "👀", "👅", "🫂", "🧊", "❄️", "⚡", "✨", "🖤", "💋", "💜", "🩷", "💫", "🧲", "🔒", "🔓",
+    // International, poetic & rare (bonus points!)
+    "yoni", "lingam", "yoni flower", "lingam root", "lingam staff", "yoni lotus", "kupu-kupu" /* Indonesian "butterfly" slang */, "mimi" /* Japanese slang */, "bijou" /* French for jewel */,
+    // Forbidden/legacy/90s
+    "snatch", "muff", "beaver", "pussycat", "kitty", "sniper alley", "honey hole", "meat curtain", "pocketbook", "coin purse", "candy", "honeypot", "goodies", "hot pocket", "magic box", "pink", "pink zone", "pink parts", "pleasure zone", "pink lips", "button", "hotbox"
+];
+// === PF_ADJECTIVES: Supernova Adjectives & Descriptors ===
+// Everything for describing body, scenes, emotion, art, light, texture, and more. SFW, NSFW, poetic, internet, meme, "clean" AI-dodging, + emoji!
+const PF_ADJECTIVES = [
+    // Physical/scene
+    "smooth", "velvety", "glossy", "shimmering", "soft", "silky", "dewy", "glistening", "sleek", "lustrous", "sheer", "translucent", "polished", "polychrome", "iridescent", "polished", "pristine", "radiant", "gleaming", "matte", "brilliant", "pearlescent", "opalescent", "crystal-clear", "bubbly", "fluid", "slick", "moist", "dewy", "dripping", "wet", "glistening", "sparkling", "frosted", "dewy", "dewy-fresh", "dewy-soft",
+    // Color/effect
+    "fiery", "icy", "rosy", "blushing", "crimson", "scarlet", "coral", "peachy", "amber", "honeyed", "golden", "bronzed", "sable", "chocolate", "midnight", "onyx", "pearly", "milky", "porcelain", "alabaster", "coppery", "platinum", "opaline", "rainbow", "neon", "ultraviolet", "electric", "candy-colored", "bubblegum", "magenta", "blush-pink", "emerald", "sapphire", "azure", "sky-blue", "mint", "jade", "moss", "forest", "chartreuse", "violet", "lavender", "mauve", "lilac", "amethyst", "moonlit",
+    // Art style (quadrupled w/ modern, meme, retro, AI-specific)
+    "cinematic", "hyperrealistic", "photo-realistic", "unreal", "anime", "manga", "cartoon", "vintage", "noir", "vaporwave", "glitchcore", "cyberpunk", "retrowave", "steampunk", "oil painting", "watercolor", "pencil-sketch", "digital art", "pixel art", "lo-fi", "grunge", "dreamcore", "aesthetic", "holographic", "AI-prompted", "forbidden", "taboo", "surreal", "nightmare", "heavenly", "angelic", "gothic", "macabre", "dystopian", "apocalyptic", "high-contrast", "low-light", "soft-focus", "film grain", "bokeh", "bloom", "vintage filter", "Instagram filter", "retro filter", "TikTok filter", "vivid", "ethereal", "otherworldly", "lush", "lushly rendered", "faded", "sun-bleached", "underexposed", "overexposed", "chromatic", "chiaroscuro",
+    // Mood/emotion (all flavors, meme, old school, poetic)
+    "seductive", "playful", "mischievous", "sultry", "innocent", "teasing", "moody", "dreamy", "wistful", "pensive", "passionate", "lustful", "coy", "fiery", "tender", "caring", "intense", "shy", "confident", "timid", "bashful", "vulnerable", "wild", "reckless", "bold", "brazen", "provocative", "naughty", "nice", "submissive", "dominant", "sensual", "erotic", "playful", "fun-loving", "flirtatious", "smug", "bashful", "triumphant", "defiant", "impish", "cheeky", "cheeky monkey", "coy smile", "devilish",
+    // SFW & meme/adult overlap, AI-piercing "safe" swaps
+    "daring", "edgy", "taboo", "wholesome", "chaotic", "dark", "shadowy", "glowing", "sparkling", "shining", "enigmatic", "mysterious", "mystical", "legendary", "iconic", "mythic", "epic", "unfiltered", "unleashed", "raw", "uncensored", "untamed", "feral", "animalistic", "wildcard", "OG", "classic", "timeless", "ancient", "future", "alien", "otherworldly", "hyper-stylized", "cartoonish", "hyper-real", "life-like", "painterly",
+    // Texture/effect
+    "slick", "sticky", "soaked", "glazed", "dewy", "powdery", "sandy", "gritty", "gritty realism", "velour", "velvety", "fuzzy", "furry", "downy", "plush", "feathery", "silken", "lacy", "gauzy", "sheer", "threadbare", "filmy", "transparent", "opaque", "glass-like", "mirror-like", "reflective", "glittering", "shimmery", "opaline", "dappled", "mottled", "speckled", "streaked", "striped", "banded",
+    // Modern Gen-Z & meme
+    "rizzed up", "drippy", "vibe-heavy", "bussin", "lit", "slay", "sus", "sussy", "based", "goblin mode", "sigma", "alpha", "main character energy", "no cap", "savage", "gas", "flex", "ice", "blessed", "glowed up", "spicy", "giga", "deadass", "smol", "chonky", "extra", "thicc", "yassified", "glitched", "mid", "fire", "on fleek", "mood", "GOAT", "iconic", "banger", "pog", "dank", "cursed", "boomer", "zoomer", "NPC", "copium", "simp", "gigachad", "stan", "bruh", "yeet",
+    // Emoji-only (quadrupled)
+    "🔥", "💦", "✨", "🌈", "💀", "🧃", "🧊", "🧸", "🍑", "🍆", "😈", "🥵", "🥶", "😏", "😍", "🤤", "😳", "🙈", "🙉", "🙊", "👀", "👅", "🫦", "💋", "🫦", "🧲", "🍭", "🍬", "🍒", "🌸", "🌹", "🎉", "💫", "🧃", "🩷", "💜", "💙", "💚", "💛", "❤️", "🖤", "💯", "☠️", "🤍", "🤎", "🤎", "🤎"
+];
+// === PF_FACIAL_FEATURES: Descriptive, wild, and safe-for-filter swaps ===
+const PF_FACIAL_FEATURES = [
+  // Eyes
+  "wide-eyed", "narrowed gaze", "smoky eyes", "cat eyes", "doe eyes", "puppy eyes", "bedroom eyes", "half-lidded", "twinkling eyes", "piercing stare", "sparkling eyes", "teary-eyed", "glassy-eyed", "glowing eyes", "mischievous glint", "deadpan stare", "googly eyes", "laser focus", "anime eyes", "retro anime glare", "fluttering eyelashes", "dilated pupils", "rolling eyes", "eyebrow raised", "arched brow", "furrowed brow", "shifty eyes", "side-eye", "sly look", "upturned gaze", "cross-eyed", "hypnotic eyes", "vacant stare", "dreamy gaze", "intense glare", "sassy wink", "double wink", "playful wink", "crying eyes", "innocent gaze",
+  // Mouth/lips/tongue
+  "biting lip", "parted lips", "pouty lips", "glossy lips", "shiny lips", "cherry lips", "rosebud lips", "full lips", "thick lips", "bow lips", "smirking lips", "smug smile", "toothy grin", "mischievous smile", "seductive smile", "crooked grin", "crooked smile", "dimpled smile", "lopsided grin", "sly smile", "wide grin", "tongue out", "licking lips", "playful tongue", "pierced tongue", "sassy tongue", "biting tongue", "tongue between teeth", "smiling with teeth", "smiling with tongue", "cheeky grin", "goofy grin", "flirty smile", "evil grin", "demonic grin", "angelic smile",
+  // Cheeks/jaw/nose/face shape
+  "blushing cheeks", "rosy cheeks", "freckled cheeks", "chiseled jaw", "soft jawline", "pointy chin", "cleft chin", "dimpled cheeks", "round face", "heart-shaped face", "oval face", "strong jaw", "sharp cheekbones", "high cheekbones", "baby face", "fox face", "pixie face", "goth cheeks", "sunken cheeks", "cute nose", "button nose", "snub nose", "aquiline nose", "pointy nose", "upturned nose", "bunny teeth", "vampire teeth", "gold tooth", "grillz", "gap tooth",
+  // Expressions/emotions
+  "innocent expression", "mischievous expression", "flushed expression", "bashful look", "lustful look", "provocative stare", "confident grin", "shy glance", "naughty smirk", "defiant glare", "playful expression", "mock surprise", "poker face", "bedroom look", "teasing expression", "anime blush", "uwu face", "nyaa face", "smug aura", "deadpan face", "dazed look", "wild grin", "melting smile", "intense stare", "sassy look", "bored expression", "disgusted sneer", "awkward smile", "gentle smile", "happy tears", "fiery stare", "timid glance", "puppy face", "zoomed-in face", "hacker glasses",
+  // Emoji/faces
+  "🥺", "😏", "😈", "😍", "🥵", "😳", "🤤", "🙈", "🤪", "🤓", "🥲", "😂", "🥴", "🥶", "😬", "😋", "🫦", "🦷", "🦄", "😛", "👅", "👀"
+];
+// === PF_ACTIONS: Every verb, act, pose, meme — quadrupled for NSFW, SFW, AI-dodging ===
+const PF_ACTIONS = [
+  // Gestures/general
+  "standing", "lying down", "kneeling", "crouching", "crawling", "sprawled", "arched", "reaching", "stretching", "posing", "jumping", "leaping", "twisting", "bending", "squatting", "balancing", "dancing", "twerking", "grinding", "tipping", "flipping", "rolling", "sliding", "waving", "snapping fingers", "biting nails", "pulling hair", "tossing hair", "flipping hair", "adjusting glasses", "zipping", "unzipping", "clutching", "grabbing", "caressing", "stroking", "slapping", "patting", "squeezing", "hugging", "embracing", "tickling", "tickled", "tracing", "licking", "sucking", "nibbling", "biting", "grazing", "pressing", "smooching", "kissing", "making out", "french kissing", "blowing a kiss", "smacking lips",
+  // NSFW (safely swapped/described)
+  "intimate touching", "exploring", "massaging", "fondling", "stroking softly", "gentle teasing", "naughty teasing", "seductive grinding", "slow undressing", "pulling down", "unbuttoning", "unzipping", "straddling", "riding", "pinning", "dominating", "submitting", "nuzzling", "cuddling", "snuggling", "groping", "caressing thighs", "caressing curves", "tickling inner thigh", "spreading legs", "pressing bodies", "entwining", "kissing neck", "biting earlobe", "nibbling collarbone", "licking lips", "tracing lines", "sliding hand", "slipping hand under", "clutching sheets", "arching back", "moaning softly", "whispering", "gasps", "panting", "trembling", "shuddering", "shivering", "melting", "quivering", "pleading", "commanding", "pleasuring", "inviting", "beckoning", "flashing", "posing nude", "posing topless", "bare-skinned", "lingerie posing", "shameless display", "suggestive position", "provocative arch", "exposed silhouette", "backlit undressing", "shadow play",
+  // Cinematic/scene (for video, movie, screenwriting)
+  "zoom in", "slow pan", "dolly shot", "tracking shot", "over-the-shoulder", "POV", "reverse angle", "reaction shot", "cutaway", "montage", "close-up", "macro shot", "wide shot", "soft fade", "cross dissolve", "jump cut", "smash cut", "fade to black", "freeze frame", "split screen", "voiceover", "intertitle", "establishing shot", "dream sequence", "night vision", "infrared", "thermal cam", "security cam", "handheld cam", "timelapse", "hyperlapse", "slow-motion", "fast-forward", "looping", "split-screen",
+  // Meme & internet verbs (for fun, Gen-Z, TikTok, etc)
+  "yeeting", "vibing", "rizzing up", "finessing", "flexing", "slaying", "yassifying", "glitching", "pogging", "dab", "t-pose", "swooning", "simping", "sussin", "getting based", "bussin", "bruh-ing", "chilling", "ghosting", "gaslighting", "vaporizing", "going goblin mode", "NPCing", "dancing like a TikToker", "doing a meme face", "doing a devious lick", "moonwalking", "beatboxing", "spitting bars", "roasting", "clapping back", "serving", "dragging", "canceling", "ratio-ing", "stanning", "gigachadding",
+  // SFW+safe euphemism for any act
+  "sensual play", "close embrace", "stolen glance", "delicate touch", "whispered confession", "secret smile", "playful banter", "chaste kiss", "almost-kiss", "crushing", "infatuated", "crushing on", "serenading", "slow dancing", "cozy cuddle", "tender caress", "cheeky wink", "languid stretch", "soft yawn", "sleepy smile", "gentle nudge"
+];
+// === PF_CLOTHING: Costumes, underwear, cosplay, meme, AI-dodging terms, all quadrupled ===
+const PF_CLOTHING = [
+  "lingerie", "lace bra", "silk panties", "garter belt", "fishnet", "stockings", "sheer bodysuit", "bodystocking", "leather corset", "bikini", "microbikini", "sports bra", "pantyhose", "suspender belt", "g-string", "thong", "boyshorts", "bralette", "lace teddy", "nightgown", "babydoll", "chemise", "kimono robe", "oversized shirt", "button-up", "open blouse", "crop top", "tube top", "braless", "off-shoulder", "deep V-neck", "sideboob", "underboob", "wet t-shirt", "tied tank", "tie-front", "satin slip", "mini skirt", "pleated skirt", "high-waist shorts", "daisy dukes", "cutoffs", "booty shorts", "spandex", "yoga pants", "bodycon dress", "slip dress", "evening gown", "gala dress", "gothic dress", "corset dress", "fairy dress", "cosplay costume", "anime outfit", "bunny suit", "maid costume", "catgirl ears", "fox tail", "elf costume", "witch hat", "sailor suit", "schoolgirl uniform", "nurse outfit", "latex suit", "fetish harness", "bondage gear", "leather gloves", "opera gloves", "fishnet gloves", "lace mask", "face veil", "choker", "ribbon choker", "chain necklace", "anklet", "toe ring", "belly chain", "arm cuffs", "wrist cuffs", "ankle cuffs", "bare feet", "heels", "platforms", "combat boots", "knee-high boots", "mary janes", "flip-flops", "fuzzy slippers", "ballet flats", "skate shoes", "stilettos", "clogs", "rain boots", "slippers", "Uggs", "Crocs", "socks", "over-the-knee socks", "striped socks", "toe socks", "fuzzy socks", "mismatched socks", "band tee", "graphic tee", "tank top", "hoodie", "zip hoodie", "cropped hoodie", "bomber jacket", "puffer jacket", "raincoat", "poncho", "cape", "invisible clothing", "painted-on", "body paint", "digital outfit", "glitched clothing", "ripped jeans", "distressed denim", "mesh top", "harness bra", "pasties", "nipple covers", "censored bar", "safe-for-work disguise"
+];
+// === PF_CAMERA: Lenses, angles, film, lighting, rendering, quadrupled for “God Mode” ===
+const PF_CAMERA = [
+  "macro lens", "ultra-wide", "fisheye", "telephoto", "prime lens", "vintage lens", "plastic lens", "anamorphic", "soft-focus lens", "bokeh effect", "cinematic lighting", "studio strobe", "neon lighting", "moonlight", "sunset glow", "backlight", "rim light", "underlighting", "overhead", "spotlight", "floodlight", "color gel", "rainbow LED", "blacklight", "infrared", "night vision", "thermal vision", "glow effect", "vaporwave lighting", "glitchcore filter", "sepia tone", "noir lighting", "split-tone", "chiaroscuro", "blown highlights", "crushed blacks", "film grain", "vintage film", "Ektachrome", "Kodachrome", "Polaroid", "Instax", "expired film", "crystal clarity", "dream blur", "chromatic aberration", "lens flare", "orb effect", "starlight", "sunbeam", "dappled light", "shadow play", "soft glow", "digital artifact", "AI artifact", "render artifact", "GPU glitch", "oversaturated", "undersaturated", "color pop", "prismatic", "diffraction", "double exposure", "mirrored", "inverted", "X-ray", "soft vignette", "hard vignette", "matte", "velvet effect", "high-contrast", "muted colors", "hypercolor", "true black", "pure white", "deep focus", "shallow depth of field"
+];
+// === PF_NSWF_SWAPS: Word/phrase swaps for AI filter-piercing, supercharged ===
+const PF_NSWF_SWAPS = {
+  // Offensive/slang : SFW/clean/creative
+  "cunt":      ["intimate area", "velvet bud", "soft petal", "delicate flower", "hidden grove", "core", "center", "entrance", "pillow", "heaven's gate", "orchid"],
+  "pussy":     ["kitten", "lotus", "treasure", "delicate bloom", "sweet spot", "garden", "sanctum", "oasis", "forbidden fruit", "petal"],
+  "cock":      ["shaft", "pillar", "tower", "staff", "core", "center", "column", "main vein", "engine", "thrust rod"],
+  "dick":      ["member", "rod", "wand", "instrument", "command stick", "scepter", "extension", "appendage"],
+  "tits":      ["chest", "bosom", "curves", "pillows", "peaks", "mounds", "orbs", "globes", "melons", "upper body", "front"],
+  "boobs":     ["bust", "chest", "upper body", "cleavage", "front", "form", "mounts", "altitude", "assets", "silhouette"],
+  "ass":       ["hips", "rear", "backside", "bottom", "derrière", "seat", "curve", "roundness", "cushion", "posterior"],
+  "anus":      ["backdoor", "hidden ring", "star", "rosebud", "circle", "portal", "hidden entrance", "exit"],
+  "cum":       ["essence", "nectar", "dew", "honey", "liquid", "flow", "release", "stream", "cascade"],
+  "cumshot":   ["cascade", "rushing flow", "burst", "release", "stream", "fountain", "splash", "torrent"],
+  "fuck":      ["embrace", "join", "fuse", "blend", "merge", "entwine", "connect", "couple", "unite", "intertwine", "sync"],
+  "fucking":   ["entwined", "joined", "blended", "merged", "fused", "entangled", "coupled", "in sync", "intimate"],
+  "shit":      ["mess", "chaos", "wreck", "disaster", "storm", "mayhem", "crash"],
+  "bitch":     ["badass", "queen", "dynamo", "boss", "fiery one", "spitfire", "wildcat"],
+  "whore":     ["starlet", "vixen", "temptress", "muse", "siren", "charmer", "goddess"],
+  "slut":      ["wild one", "free spirit", "pleasure-seeker", "unfiltered soul", "risk-taker"],
+  "dildo":     ["toy", "instrument", "pleasure tool", "artifact"],
+  "anal":      ["back entrance", "forbidden zone", "hidden ring"],
+  "fap":       ["self-pleasure", "solo time", "intimate moment"],
+  "masturbate":["self-care", "me-time", "solo play", "intimate session"],
+  "porn":      ["forbidden art", "unfiltered photo", "spicy gallery", "AI study", "reference set"],
+  // ...and on and on. (Add as needed, quadruple for any new offensive.)
+};
