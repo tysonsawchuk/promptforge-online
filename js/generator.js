@@ -299,3 +299,88 @@ const PF_ADJECTIVES = [
 const PF_VERBS = [
   "touch", "stroke", "caress", "tease", "kiss", "lick", "suck", "bite", "nibble", "fondle", "grope", "rub", "press", "grind", "thrust", "slide", "glide", "massage", "tickle", "pinch", "squeeze", "pull", "tug", "twist", "flip", "roll", "slap", "spank", "scratch", "claw", "dig", "grasp", "grab", "hold", "embrace", "hug", "snuggle", "cuddle", "nuzzle", "bury", "bury face", "bury tongue", "taste", "savor", "devour", "gulp", "swallow", "moan", "whisper", "sigh", "pant", "gasp", "cry out", "shout", "scream", "beg", "plead", "command", "order", "submit", "obey", "defy", "resist", "succumb", "yield", "dominate", "control", "possess", "own", "mark", "brand", "claim", "ravish", "plunder", "ravage", "violate", "ruin", "wreck", "destroy", "love", "cherish", "worship", "adore", "idolize", "praise", "admire", "envy", "lust", "crave", "desire", "need", "want", "wish", "fantasize", "dream", "imagine", "pretend", "fake", "perform", "act", "roleplay", "cosplay", "dress up", "strip", "undress", "reveal", "expose", "show off", "hide", "cover", "conceal", "mask", "disguise", "transform", "change", "become", "shift", "morph", "merge", "blend", "combine", "unite", "split", "separate", "part", "depart", "leave", "exit", "arrive", "enter", "penetrate", "invade", "occupy", "inhabit", "haunt", "possess", "curse", "bless", "protect", "guard", "defend", "attack", "fight", "battle", "struggle", "survive", "escape", "flee", "run", "chase", "hunt", "search", "seek", "find", "discover", "explore", "adventure", "travel", "journey", "wander", "roam"
 ];
+const PF_ADVERBS = [
+  "slowly", "quickly", "gently", "roughly", "eagerly", "hungrily", "sensually", "lustfully", "passionately", "tenderly", "urgently", "boldly", "timidly", "subtly", "openly", "secretly", "deliberately", "playfully", "mischievously", "quietly", "loudly", "softly", "intensely", "carefully", "recklessly", "wildly", "sweetly", "shamelessly", "naughtily", "innocently", "fearlessly", "fiercely", "desperately", "awkwardly", "gracefully", "fluidly", "rigidly", "casually", "covertly", "brazenly", "seductively", "coquettishly", "provocatively", "insistently", "obediently", "rebelliously", "obediently", "defiantly", "compliantly", "blushingly", "wetly", "slickly", "visibly", "viscerally", "palpably", "tensely", "teasingly", "expectantly", "anxiously", "hesitantly", "firmly", "demandingly", "commandingly", "smugly", "submissively", "dominantly", "masterfully", "helplessly", "shakily", "feverishly", "breathlessly", "gasplingly", "noisily", "silently", "voraciously", "rapaciously", "thirstily", "greedily", "devotedly", "aggressively", "stubbornly", "reluctantly", "relentlessly", "unapologetically", "gratefully", "gleefully", "ecstatically", "rapturously", "dreamily", "absently", "furtively", "clumsily", "sedately", "purposefully"
+];
+const PF_PREPOSITIONS = [
+  "on", "in", "at", "under", "over", "between", "beside", "behind", "in front of", "above", "below", "inside", "outside", "through", "across", "within", "against", "near", "by", "next to", "along", "around", "amid", "among", "beneath", "beyond", "upon", "around", "throughout", "alongside", "into", "out of", "from", "with", "without", "after", "before", "during", "for", "since", "until", "up", "down", "toward", "towards", "past", "off", "onto", "off of", "to", "of", "by way of", "as", "despite", "according to", "instead of", "on top of"
+];
+const PF_CONJUNCTIONS = [
+  "and", "or", "but", "yet", "so", "nor", "for", "although", "because", "since", "unless", "until", "while", "whereas", "even though", "as if", "whether", "after", "before", "though", "as long as", "as soon as", "provided that", "rather than", "not only", "but also", "either", "neither", "both", "just as", "when", "whenever"
+];
+const PF_PUNCTUATION = [
+  ".", ",", ";", ":", "-", "—", "(", ")", "[", "]", "{", "}", "<", ">", "!", "?", "…", "‽", "/", "\\", "|", "\"", "'", "`", "~", "_", "*", "**", "***", "'''", "\"\"", "''", "!!!", "???", "?!", "...", "—", "–", "•", "·", "°", "→", "←", "↑", "↓", "↔", "#", "@", "&", "$", "%", "^", "+", "=", "~"
+];
+const PF_EMPHASIS = [
+  "*", "**", "***", "_", "__", "~~", "`", "=", "()", "[]", "{}", "<>", "<b>", "</b>", "<i>", "</i>", "<u>", "</u>", "<mark>", "</mark>", "<em>", "</em>", "<strong>", "</strong>", "(( ))", "【 】", "『 』", "《 》", "❝ ❞", "【NSFW】", "⚠️", "‼️", "💥", "🔥", "✨", "🔞", "🔊", "💧", "🔴", "🟣", "💜", "💦"
+];
+const PF_PARENTHESES = [
+  "(", ")", "[", "]", "{", "}", "<", ">", "《", "》", "（", "）", "「", "」", "『", "』", "【", "】", "〚", "〛"
+];
+const PF_MARKERS = [
+  "[scene]", "[fade in]", "[fade out]", "[cut to]", "[flashback]", "[dream]", "[voiceover]", "[music]", "[silence]", "[pause]", "[laugh track]", "[applause]", "[moan]", "[pant]", "[groan]", "[gasp]", "[cry]", "[whisper]", "[shout]", "[background noise]", "[sound fx]", "[insert]", "[transition]", "[slow motion]", "[repeat]", "[POV]", "[close-up]", "[zoom]", "[pan]", "[dolly]", "[montage]", "[caption]", "[credits]", "[NSFW]", "[SFX]", "[VFX]", "[fx]", "[overlay]", "[trigger warning]", "[content warning]"
+];
+const PF_SOUND_FX = [
+  "moan", "groan", "pant", "gasp", "shudder", "whimper", "squeal", "cry", "giggle", "laugh", "sigh", "grunt", "yelp", "shout", "scream", "murmur", "whisper", "slap", "smack", "thud", "pop", "snap", "squelch", "squelch", "splash", "drip", "fizz", "buzz", "ding", "ring", "beep", "bloop", "whoosh", "bang", "crash", "clatter", "tick", "tock", "clink", "clack", "gulp", "swallow", "lick", "slurp", "suck", "spit", "blow", "sizzle", "hum", "rattle", "rumble", "roar", "thunder", "pulse", "heartbeat", "pulse", "buzz", "vibrate", "zip", "rip", "tear", "pant", "slap", "smack", "snap", "crack", "creak"
+];
+const PF_CAMERA_STYLES = [
+  "close-up", "macro", "wide shot", "overhead", "low angle", "high angle", "POV", "fisheye", "split-screen", "dutch angle", "tracking shot", "steadicam", "handheld", "shoulder cam", "tilt-shift", "slow motion", "freeze frame", "timelapse", "pan", "tilt", "zoom", "crane shot", "drone shot", "selfie", "mirror reflection", "mirror selfie", "glass reflection", "reverse shot", "reaction shot", "jump cut", "match cut", "crossfade", "montage", "dissolve", "rack focus"
+];
+const PF_SLANG = [
+  "lit", "fire", "woke", "savage", "sus", "cringe", "based", "bussin", "drip", "cap", "no cap", "salty", "yeet", "flex", "lowkey", "highkey", "squad", "fam", "shade", "stan", "simp", "thirsty", "ghost", "AF", "IRL", "slay", "goat", "slaps", "main character", "vibe", "vibing", "chill", "swole", "beef", "ship", "OTP", "go off", "periodt", "spill the tea", "tea", "fomo", "glow up", "extra", "basic", "sus", "snatched", "mood", "deadass", "bet", "fire", "fit", "iconic", "clap back", "stan", "flex", "ghosting", "shade", "glow up", "receipts", "tbh", "fr", "oop", "shook", "snatched", "boomer", "Karen", "Chad", "NPC", "rizz", "mid", "gyat", "cheugy", "tbh", "irl", "wyd", "ngl", "finna", "sus", "vibe check", "say less", "it’s giving", "ok boomer", "smh", "lol", "lmao", "rofl", "xd", "pwned", "rekt", "pog", "ez", "gg", "noob", "pro", "afk", "brb", "btw", "idk", "idc", "fml", "wtf", "bff", "jk", "jk jk", "imo", "irl", "yolo", "tfw", "ftw", "meme", "dank", "cracked", "sweaty", "meta"
+];
+const PF_NSFW_CLEAN_SWAPS = [
+  // Typical swap: [bannedWord, safeWord, ultra-safeWord]
+  ["pussy", "vulva", "intimate area"],
+  ["cunt", "privates", "feminine folds"],
+  ["dick", "shaft", "groin"],
+  ["cock", "member", "masculine area"],
+  ["tits", "breasts", "chest"],
+  ["boobs", "bosom", "upper body"],
+  ["ass", "buttocks", "backside"],
+  ["anus", "rear", "anal region"],
+  ["cum", "fluid", "essence"],
+  ["cumshot", "climax", "release"],
+  ["sperm", "seed", "life essence"],
+  ["orgasm", "peak", "ecstatic release"],
+  ["penis", "male anatomy", "groin area"],
+  ["vagina", "female anatomy", "lower region"],
+  ["nipple", "areola", "chest tip"],
+  ["clit", "sensitive spot", "front nub"],
+  ["dildo", "toy", "object"],
+  ["anal", "rear", "back door"],
+  ["fisting", "handplay", "deep massage"],
+  ["masturbate", "self pleasure", "private enjoyment"],
+  ["jerk off", "self-stimulate", "solo play"],
+  ["blowjob", "oral pleasure", "mouth embrace"],
+  ["handjob", "manual pleasure", "hand technique"],
+  ["porn", "adult art", "explicit media"],
+  ["sex", "intercourse", "intimate act"],
+  ["slut", "vixen", "tease"],
+  ["whore", "pleasure-seeker", "temptress"],
+  ["fuck", "have fun", "be with"],
+  ["fucking", "making love", "being together"],
+  ["suck", "draw in", "sip"],
+  ["spit", "drool", "saliva"],
+  ["lick", "taste", "caress"],
+  ["moan", "sound", "express pleasure"],
+  ["cum", "finish", "reach completion"],
+  ["69", "mutual", "shared pleasure"],
+  ["gag", "choke", "restrict"],
+  ["strap-on", "toy belt", "accessory"],
+  ["orgy", "group", "gathering"],
+  ["threesome", "trio", "group"],
+  ["gangbang", "multi-partner", "group event"]
+];
+const PF_EMOJI = [
+  "😏","😉","😍","😘","😈","👄","👅","💋","🍑","🍆","🍒","🌶️","🌊","💦","🔥","⚡","✨","🖤","💜","💛","💚","💙","❤️","🧡","🤍","💗","💓","💞","💕","💖","💘","💝","🫦","🫦","🥵","🥴","🥰","🤤","😮‍💨","😶‍🌫️","😜","😝","😛","🥳","🤑","😋","🤩","😻","👙","👠","👗","👡","💄","🎀","🎉","🪩","💍","👑","🦄","😇","😳","😚","🧸","🎬","📸","🎥","🛏️","🚿","🛁","🚽","🔞","🚫","✅","🆗","🏆","🏅","🥇","🎯","🔊","📢","💣","🎵","🎶"
+];
+const PF_TEXT_EMOJI = [
+  "( ͡° ͜ʖ ͡°)", "( ͡ᵔ ͜ʖ ͡ᵔ )", "(͡• ͜ʖ ͡•)", "( ͡~ ͜ʖ ͡°)", "(づ｡◕‿‿◕｡)づ", "¯\\_(ツ)_/¯", "(ʘ‿ʘ)", "(ಠ_ಠ)", "(͡° ʖ̯ ͡°)", "(¬‿¬)", "(¬_¬)", "(☞ﾟヮﾟ)☞", "ʕ•ᴥ•ʔ", "(¬‿¬)", "(ง'̀-'́)ง", "(✿◠‿◠)", "(▀̿Ĺ̯▀̿ ̿)", "ಥ_ಥ", "(ノಠ益ಠ)ノ彡┻━┻", "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "ʕʘ‿ʘʔ", "(ʘ‿ʘ)ノ✿", "(⊙ω⊙)", "(｡♥‿♥｡)", "ლ(╹◡╹ლ)", "ヽ(´▽`)/", "(⊃｡•́‿•̀｡)⊃", "(¬‿¬ )", "ʕっ• ᴥ • ʔっ"
+];
+const PF_HASHTAGS = [
+  "#NSFW", "#PromptForge", "#GodMode", "#AIPrompts", "#PromptEngineer", "#AdultArt", "#ForbiddenAI", "#ViralPrompts", "#Erotica", "#SensualArt", "#HackerArt", "#ArtHack", "#UndergroundAI", "#DarkHumor", "#AIArt", "#MemePrompt", "#BannedPrompt", "#AITricks", "#NoFilter", "#BeatTheFilter", "#Taboo", "#Edgy", "#Trending", "#FYP", "#ExplorePage", "#AIEdits", "#SexyAI", "#AIhacks", "#AIErotica", "#PromptMaster", "#GoreAndGiggles", "#UndergroundPrompting", "#PromptWizard", "#AIMagic"
+];
+const PF_INTERNET_SPEAK = [
+  "lol", "lmao", "rofl", "wtf", "idk", "brb", "afk", "smh", "tbh", "fr", "irl", "btw", "imho", "fyi", "atm", "dm", "bff", "bae", "noob", "pog", "ez", "cringe", "GG", "fail", "win", "rekt", "pwned", "sus", "ghosted", "simp", "thot", "rizz", "gyat", "fomo", "stan", "otp", "wbu", "wyd", "ngl", "ftw", "yolo", "np", "glhf", "op", "copium", "mid", "main", "npc", "bot", "giga", "cracked", "sweaty"
+];
