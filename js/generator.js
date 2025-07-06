@@ -384,3 +384,203 @@ const PF_HASHTAGS = [
 const PF_INTERNET_SPEAK = [
   "lol", "lmao", "rofl", "wtf", "idk", "brb", "afk", "smh", "tbh", "fr", "irl", "btw", "imho", "fyi", "atm", "dm", "bff", "bae", "noob", "pog", "ez", "cringe", "GG", "fail", "win", "rekt", "pwned", "sus", "ghosted", "simp", "thot", "rizz", "gyat", "fomo", "stan", "otp", "wbu", "wyd", "ngl", "ftw", "yolo", "np", "glhf", "op", "copium", "mid", "main", "npc", "bot", "giga", "cracked", "sweaty"
 ];
+const PF_BODY_PARTS = [
+  // Clean/Medical/Poetic
+  "face", "lips", "eyes", "cheeks", "chin", "forehead", "jawline", "nose", "eyebrows", "eyelashes", "smile", "teeth", "tongue",
+  "neck", "shoulders", "collarbone", "arms", "elbows", "wrists", "hands", "palms", "fingers", "nails", "thumbs",
+  "chest", "breasts", "bust", "nipples", "areola", "sternum", "torso", "abdomen", "stomach", "navel", "waist", "hips", "back", "spine", "shoulder blades",
+  "pelvis", "groin", "pubic area", "mons", "thighs", "inner thighs", "knees", "legs", "calves", "shins", "ankles", "feet", "heels", "toes", "arches",
+  // NSFW/Alt/Art
+  "butt", "buttocks", "ass", "booty", "rear", "glutes", "intimate area", "crotch", "vulva", "labia", "clitoris", "clit", "perineum", "taint", "anus", "star", "rosebud",
+  "penis", "shaft", "head", "tip", "scrotum", "balls", "testicles", "foreskin", "urethra", "meatus", "frenulum",
+  "vagina", "canal", "entrance", "g-spot", "cervix", "womb",
+  "breasts", "nipples", "areola", "underboob", "sideboob", "cleavage",
+  // Playful
+  "love button", "peach", "eggplant", "cherries", "cupcake", "cookie", "hotdog", "banana", "melons", "bazookas", "twins", "puppies", "snack", "snuggle spot",
+  // Poetic/Softcore
+  "silky skin", "supple thighs", "delicate hands", "rosy lips", "sparkling eyes", "soft curves", "ivory neck", "amber hair", "dusky nipples", "plush lips", "pouty lips", "sparkling smile"
+];
+const PF_ACTIONS = [
+  // Standard/Neutral
+  "gaze", "smile", "laugh", "whisper", "listen", "talk", "touch", "hold", "embrace", "dance", "walk", "run", "sit", "stand", "kneel", "lean", "stretch", "pose", "move", "sway", "look", "peek", "glance",
+  // Sensual/Poetic
+  "caress", "stroke", "kiss", "lick", "nibble", "tease", "trace", "tickle", "press", "rub", "massage", "grind", "squeeze", "fondle", "cup", "snuggle", "spoon", "nestle", "cling",
+  // Explicit/Alt/NSFW
+  "spread", "thrust", "penetrate", "ride", "grind", "straddle", "arch", "mount", "wrap", "slide", "suckle", "suck", "swallow", "taste", "spank", "slap", "bite", "claw", "moan", "pant", "whimper", "groan", "squirt", "explode", "twitch", "cum", "ejaculate", "orgasm", "climax",
+  // Power/Action
+  "command", "dominate", "submit", "control", "order", "obey", "resist", "challenge", "fight", "yield", "force", "persuade", "convince", "tempt", "seduce", "entice", "captivate", "enchant", "mesmerize"
+];
+const PF_MOODS = [
+  "happy", "sad", "angry", "jealous", "curious", "playful", "bored", "excited", "nervous", "confident", "shy", "anxious", "relaxed", "surprised", "ecstatic", "orgasmic", "aroused", "teasing", "mischievous", "serious", "intense", "tender", "loving", "affectionate", "moody", "cheeky", "sultry", "smitten", "hypnotized", "flirty", "stoned", "zoned", "savage", "chill", "crushing", "lowkey obsessed", "highkey horny", "vulnerable", "broken", "blissed out"
+];
+const PF_GENRES = [
+  "realism", "hyperrealism", "fantasy", "sci-fi", "cyberpunk", "dark fantasy", "noir", "vaporwave", "steampunk", "baroque", "gothic", "surrealism", "dada", "impressionism", "expressionism", "photorealism", "erotica", "horror", "thriller", "action", "romance", "mystery", "comedy", "satire", "parody", "anime", "manga", "cartoon", "comic", "graphic novel", "documentary", "cinema verite", "arthouse", "avant-garde", "dreamcore", "weirdcore", "y2k", "alt", "edgy", "subversive", "NSFW"
+];
+const PF_SCENE_TOKENS = [
+  // Locations/Settings
+  "bedroom", "hotel", "bathroom", "shower", "pool", "beach", "forest", "car", "couch", "kitchen", "dungeon", "stage", "strip club", "studio", "back alley", "penthouse", "rooftop", "gym", "locker room", "spa", "castle", "nightclub", "barn", "cabin", "loft", "tent", "forest glade",
+  // Time/Lighting
+  "golden hour", "midnight", "moonlit", "sunrise", "candlelight", "neon", "blacklight", "harsh light", "soft glow", "shadows", "backlit", "spotlight", "silhouette", "rim light", "wet look", "rainy", "misty", "steamy",
+  // Objects/Props
+  "mirror", "handcuffs", "chains", "blindfold", "rope", "whip", "mask", "leather", "feather", "chocolate", "wine", "roses", "lingerie", "heels", "stockings", "corset", "silk sheets", "plush blanket", "fur rug", "pillow", "glasses", "choker", "collar", "leash", "toy", "vibrator", "camera", "phone", "ring light"
+];
+const PF_DIALOGUE = [
+  // Playful/Soft
+  "Whisper in my ear", "Tell me your secret", "Kiss me like you mean it", "Let’s make this night unforgettable", "You’re driving me wild", "I want you so bad", "You taste so good", "I love your body", "Can’t stop thinking about you", "Make me yours", "Let’s get lost together", "You’re my fantasy",
+  // NSFW/Filthy (swappable)
+  "Bend over", "Spread your legs", "Take off your clothes", "Touch yourself for me", "I want to taste you", "Let me inside", "Ride me", "Cum for me", "Don’t stop", "Deeper", "Harder", "Scream my name", "Beg for it", "Be a good girl", "Take every inch", "So fucking wet", "You like it rough?", "Don’t you dare stop", "I’ll make you beg", "Look at me while you do it", "Use your mouth", "Swallow it all", "Make me cum", "Let’s make a mess", "Let me watch", "On your knees", "Take control", "Choke me", "Spank me", "You’re such a tease"
+];
+const PF_CLOTHING = [
+  // Everyday
+  "t-shirt", "tank top", "sweater", "hoodie", "jeans", "shorts", "skirt", "dress", "sundress", "blouse", "polo", "jacket", "windbreaker", "leggings", "sweatpants", "pajamas", "overalls", "vest", "scarf", "hat", "cap", "beanie", "gloves",
+  // Underwear & Intimates
+  "bra", "panties", "boxers", "briefs", "thong", "g-string", "bikini", "swimsuit", "one-piece", "lingerie", "corset", "bustier", "bodysuit", "garter", "stockings", "fishnets", "lace panties", "boyshorts", "sports bra", "bralette", "pasties",
+  // Fetish/Fantasy
+  "leather harness", "latex bodysuit", "bondage gear", "choker", "collar", "gag", "cuffs", "chain belt", "zipper mask", "cat ears", "bunny tail", "maid outfit", "schoolgirl skirt", "cheerleader uniform", "nurse costume", "cop uniform", "firefighter suit", "superhero cape", "sailor suit", "kimono", "robe", "toga", "cloak", "armor", "chainmail bikini", "fairy wings",
+  // Footwear
+  "sneakers", "boots", "combat boots", "heels", "stilettos", "sandals", "flip-flops", "platform shoes", "slippers", "barefoot",
+  // Accessories
+  "glasses", "sunglasses", "watch", "bracelet", "anklet", "toe ring", "belly chain", "earrings", "piercing", "tattoo", "temporary tattoo", "body paint", "glitter", "ribbons", "feather boa", "mask", "veil"
+];
+const PF_FABRICS = [
+  "silk", "satin", "velvet", "lace", "leather", "latex", "vinyl", "spandex", "denim", "cotton", "flannel", "fleece", "tulle", "mesh", "fishnet", "cashmere", "chiffon", "suede", "wool", "polyester", "nylon", "PVC", "netting", "canvas", "burlap", "velour", "plush", "sequins", "beads", "feathers", "fur", "sherpa", "terrycloth", "metal", "chains", "pearls"
+];
+const PF_TEXTURES = [
+  "smooth", "rough", "bumpy", "gritty", "polished", "slick", "matte", "glossy", "wet", "greasy", "oily", "sticky", "sweaty", "dewy", "fuzzy", "hairy", "bristly", "silky", "soft", "velvety", "grainy", "fibrous", "sheer", "transparent", "translucent", "opaque", "stiff", "pliable", "crinkled", "wrinkled", "worn", "distressed", "aged", "vintage", "fresh", "clean", "pristine"
+];
+const PF_MATERIALS = [
+  "glass", "mirror", "crystal", "ice", "smoke", "cloud", "fog", "mist", "steam", "metal", "chrome", "steel", "gold", "silver", "copper", "brass", "bronze", "rust", "plastic", "rubber", "wood", "stone", "marble", "granite", "sand", "clay", "dirt", "mud", "tar", "blood", "paint", "ink", "watercolor", "spray paint", "oil paint", "collage", "paper", "origami", "cardboard", "tape", "fabric", "netting", "feather", "fur", "bubbles", "fire", "embers", "glowstick", "LED", "fiber optic", "projection"
+];
+const PF_CAMERA = [
+  "DSLR", "mirrorless", "smartphone", "GoPro", "webcam", "security cam", "dash cam", "Polaroid", "disposable", "film camera", "35mm", "medium format", "large format", "drone cam", "360 cam", "fisheye", "wide angle", "macro", "telephoto", "superzoom", "prime lens", "zoom lens", "soft focus", "bokeh", "depth of field", "tilt-shift", "anamorphic", "lens flare", "flare", "vignette", "infrared", "night vision", "thermal", "HDR", "monochrome", "sepia", "saturation boost", "vivid", "cinematic", "framegrab", "screenshot"
+];
+const PF_VISUAL_EFFECTS = [
+  "lens flare", "bokeh", "glow", "neon", "halation", "vignette", "motion blur", "depth blur", "focus blur", "distortion", "chromatic aberration", "scanlines", "film grain", "scratches", "flicker", "glitch", "pixelation", "CRT", "ghosting", "double exposure", "mirror effect", "kaleidoscope", "radial blur", "zoom blur", "light leaks", "dust", "speckles", "starburst", "rays", "rim light", "backlight", "hard shadow", "soft shadow", "glitter", "sparkles", "particle effect", "steam", "mist", "rain", "drizzle", "fog", "haze", "smoke", "fire", "embers", "candlelight", "laser", "scan effect"
+];
+const PF_LIGHTING = [
+  "natural light", "sunlight", "golden hour", "sunrise", "sunset", "overcast", "cloudy", "rainy day", "stormy", "lightning", "neon", "LED", "candlelight", "torchlight", "firelight", "moonlight", "starlight", "backlight", "side light", "rim light", "spotlight", "stage lighting", "studio flash", "softbox", "ring light", "beauty dish", "colored gels", "RGB wash", "UV", "blacklight", "fluorescent", "incandescent", "low-key", "high-key", "hard light", "soft light", "ambient", "glowing", "harsh", "dramatic", "mood lighting"
+];
+const PF_ANGLES = [
+  "eye level", "low angle", "high angle", "bird's eye view", "worm's eye view", "over the shoulder", "POV", "close-up", "macro", "extreme close-up", "wide shot", "medium shot", "long shot", "dutch angle", "tilt", "pan", "tracking shot", "static", "zoom-in", "zoom-out", "panoramic", "aerial", "flyover", "handheld", "steadycam", "tripod", "hidden cam", "selfie", "mirror selfie"
+];
+const PF_EMOJI_BANK = [
+  // SFW
+  "😈", "🔥", "🌈", "💧", "🥵", "😏", "😉", "😍", "😘", "💋", "🫦", "🍑", "🍆", "🍒", "🍓", "🌶️", "💦", "💣", "🎉", "🕶️", "🌃", "👅", "👀", "🫣", "😳", "🥺", "🧊", "🕸️", "🦋", "🐾", "🐱", "🐶", "💍", "🎀", "🔒", "🔓", "🦄", "🌙", "⭐️", "☀️", "🌪️", "⚡️", "🫀", "💀", "👽", "🤖", "🎥", "📸", "🖤", "🤍", "💜", "🧡", "💚", "💙",
+  // NSFW-coded
+  "🍆💦", "🍑💦", "💋👅", "😈🍑", "🤫💦", "🥵🔥", "🥵💦", "🫦💦", "😏💋", "🍑👉👌", "👀🍆", "🍒🍆", "🍌🍑", "👀🫦", "🍑🕳️", "💦👅", "🍆👄", "💦💦", "🥒💦", "🫦😈", "🥵👅"
+];
+const PF_PUNCTUATION = [
+  ".", ",", ";", ":", "!", "?", "...", "-", "—", "(", ")", "[", "]", "{", "}", "<", ">", "\"", "'", "`", "~", "*", "**", "***", "_", "__", "___", "=", "+", "^", "%", "#", "@", "$", "&", "|", "\\", "/", "•", "…"
+];
+const PF_EMPHASIS = [
+  "*bold*", "**double bold**", "_italic_", "__double italic__", "`code`", "~strikethrough~", "***triple bold***", "(parenthesis)", "[brackets]", "{braces}", "<angle brackets>", "'single quote'", "\"double quote\"", "ALL CAPS", "!!!", "???", "!!!???", "?!", "!?", "!!!1!", "👀", "🔥", "💦", "💣", "‼️"
+];
+const PF_ACTIONS = [
+  // Movement
+  "walking", "running", "dancing", "spinning", "twirling", "jumping", "bouncing", "crawling", "climbing", "sliding", "skipping", "sprinting", "pacing", "tiptoeing", "floating", "levitating", "balancing", "flipping", "cartwheeling", "marching", "prowling", "creeping", "storming", "stomping", "sneaking", "galloping", "hopping", "swaying",
+  // Posture & Action
+  "standing", "sitting", "lying down", "kneeling", "sprawling", "reclining", "arching", "stretching", "crouching", "squatting", "leaning", "resting", "posing", "balancing", "perching", "spooning", "straddling", "embracing", "hugging", "wrapping around", "curled up", "folded", "tangled", "intertwined", "side by side",
+  // Touch & Sensation
+  "caressing", "stroking", "patting", "tickling", "grabbing", "squeezing", "pinching", "slapping", "scratching", "rubbing", "massaging", "petting", "brushing", "teasing", "licking", "kissing", "biting", "sucking", "nibbling", "blowing", "breathing on", "pressing", "grinding", "grazing", "tracing", "gliding", "cupping", "groping",
+  // Emotional Action
+  "moaning", "giggling", "sighing", "panting", "whimpering", "crying", "whispering", "shouting", "laughing", "screaming", "growling", "purring", "snarling", "cooing", "babbling", "singing", "humming", "chanting", "pleading", "murmuring", "cackling",
+  // Advanced NSFW-safe
+  "intimately close", "writhing", "squirming", "thrusting", "grinding hips", "arching back", "legs wrapped", "locked together", "locked gaze", "staring deep", "cheek to cheek", "noses touching", "forehead to forehead", "holding hands", "exploring", "caressing sensitive areas", "tracing lines", "whispering in ear", "nuzzling neck", "breathless", "trembling", "quivering", "shivering"
+];
+const PF_MOODS = [
+  "romantic", "sensual", "playful", "naughty", "mischievous", "innocent", "teasing", "flirtatious", "bashful", "shy", "bold", "confident", "dominant", "submissive", "tender", "caring", "protective", "adoring", "loving", "passionate", "wild", "fiery", "intense", "moody", "brooding", "wistful", "dreamy", "longing", "lustful", "desperate", "craving", "obsessed", "hypnotic", "entranced", "zoned out", "dazed", "lost in the moment", "daring", "reckless", "forbidden", "taboo", "dangerous", "mysterious", "enigmatic", "secretive", "coy", "coquettish", "cheeky", "sultry", "smoldering", "vulnerable", "blushing", "giggly", "excited", "freaky", "frenzied", "exhausted", "satisfied"
+];
+const PF_SCENES = [
+  // Real World
+  "luxury bedroom", "cheap motel", "sunlit kitchen", "messy living room", "rainy window", "night club", "back alley", "secluded forest", "hidden garden", "deserted beach", "mountain cabin", "lake dock", "hot tub", "poolside", "campfire", "rooftop", "balcony", "garage", "workshop", "locker room", "abandoned warehouse", "neon-lit city", "retro arcade", "tattoo parlor", "underground club", "speakeasy", "strip club", "spooky attic", "basement", "art studio", "photography darkroom",
+  // Surreal/Fantasy
+  "dreamlike void", "mirror maze", "infinite hallway", "floating bed", "velvet lounge", "crystal cave", "space station", "zero gravity", "cyberpunk alley", "alien landscape", "cloud kingdom", "enchanted forest", "fairy ring", "gothic cathedral", "castle dungeon", "magic circle", "steampunk lab", "vampire lair", "succubus den", "pixelated world", "neon desert", "digital grid", "underwater palace"
+];
+const PF_BODY_TYPES = [
+  "slim", "athletic", "muscular", "petite", "curvy", "thick", "hourglass", "busty", "stacked", "voluptuous", "skinny", "toned", "chubby", "soft", "plush", "plump", "lithe", "tall", "short", "long legs", "broad shoulders", "narrow waist", "wide hips", "big thighs", "flat abs", "bubble butt", "perky", "full-figured", "youthful", "mature", "milf", "daddy", "twink", "bear", "stud", "girl-next-door", "pin-up", "alt-girl", "gothic", "cyber", "elf", "fairy", "succubus", "android"
+];
+const PF_FACE_TYPES = [
+  "freckled", "pierced", "tattooed", "clear skin", "blushing", "pouting", "smiling", "smirking", "frowning", "scowling", "wide-eyed", "narrow-eyed", "hooded eyes", "bedroom eyes", "doe-eyed", "cat-eyed", "mole", "beauty mark", "rosy cheeks", "pale", "tan", "olive skin", "dark skin", "porcelain", "flushed", "bitten lip", "lip gloss", "red lipstick", "dark lipstick", "matte lips", "shiny lips", "big lips", "full lips", "thin lips", "upturned nose", "button nose", "sharp jawline", "strong chin", "dimples", "gapped teeth", "fangs", "vampire teeth", "stubble", "beard", "mustache", "eyebrow slit", "arched brows", "bushy brows", "plucked brows"
+];
+const PF_PLACES = [
+  "abandoned warehouse", "luxury hotel", "dingy bar", "subway station", "open field", "quiet library", "empty church", "rooftop pool", "hotel elevator", "elevator shaft", "janitor's closet", "attic", "garage", "van", "convertible", "private jet", "train car", "cabin in the woods", "park bench", "secret garden", "hidden cave", "beach at night", "haunted mansion", "neon-lit street", "after hours office", "laundromat", "spa", "massage room", "changing room", "spa sauna", "shower", "locker room", "movie theater", "VIP box", "luxury yacht", "dungeon", "sex club", "bathhouse", "tattoo shop"
+];
+const PF_FETISH = [
+  "shibari", "bondage", "spanking", "wax play", "knife play", "pet play", "foot worship", "femdom", "masochism", "domination", "submission", "roleplay", "ageplay", "teacher/student", "nurse/patient", "doctor/exam", "maid service", "public play", "voyeur", "exhibitionism", "pegging", "strap-on", "costume play", "mask fetish", "latex", "leather", "stockings", "heels", "pantyhose", "lingerie", "striptease", "lap dance", "pole dance", "orgy", "threesome", "group play", "cuckold", "hotwife", "swinger", "creampie", "facials", "squirting", "sensation play", "verbal humiliation", "degradation", "praise kink", "choking (consensual)", "hair pulling", "nipple play", "body worship", "anal play", "strap", "toys", "machines", "machines (safe for work term)", "rimming (tasteful description)", "edging", "denial", "overstimulation", "public display", "phone sex", "sexting", "online play", "video chat", "audio only", "ASMR play"
+];
+const PF_MEDIA_TYPE = [
+  "photograph", "selfie", "group selfie", "portrait", "candid", "close-up", "macro shot", "studio shot", "magazine cover", "snapchat", "instagram story", "tiktok", "snap", "gif", "cinemagraph", "timelapse", "slow motion", "movie still", "framegrab", "music video", "album cover", "poster", "anime frame", "manga panel", "webtoon", "webcam", "security footage", "night vision", "thermal cam", "X-ray", "ultrasound", "retro VHS", "camcorder", "Polaroid", "film reel"
+];
+const PF_TIME_ERA = [
+  "modern day", "contemporary", "futuristic", "sci-fi", "retro", "vintage", "80s", "90s", "2000s", "2010s", "medieval", "renaissance", "Victorian", "Edwardian", "roaring twenties", "50s diner", "psychedelic 60s", "punk 70s", "grunge 90s", "cyberpunk", "steampunk", "stone age", "bronze age", "ancient Greece", "ancient Egypt", "fantasy medieval", "post-apocalypse", "utopian", "dystopian", "alien future", "prehistoric", "feudal Japan", "ancient China", "viking age", "samurai era"
+];
+const PF_TROPES = [
+  "smash cut", "montage", "slow motion", "freeze frame", "split screen", "voiceover", "inner monologue", "breaking the fourth wall", "jump scare", "training montage", "flashback", "flash forward", "dream sequence", "hallucination", "mirror scene", "double exposure", "split personality", "unreliable narrator", "plot twist", "red herring", "MacGuffin", "Chekhov's gun", "cliffhanger", "mid-credits scene", "post-credits scene", "reveal", "underwater shot", "overhead drone", "found footage", "hidden cam", "night vision", "thermal vision", "POV shot", "reverse shot", "tracking shot", "360 shot", "one take", "steadycam", "handheld", "bodycam", "GoPro", "security cam", "webcam", "dashcam", "cell phone cam"
+];
+const PF_SPECIALS = [
+  "deepfake", "AI art", "glitch art", "uncanny valley", "hyperrealistic", "surreal", "hallucinogenic", "trippy", "acid", "nightmare fuel", "dreamcore", "weirdcore", "liminal space", "forbidden", "taboo", "NSFW-coded", "redacted", "censored", "blurred", "pixelated", "polaroid", "vintage filter", "aesthetic", "vaporwave", "retrowave", "lofi", "grainy", "overexposed", "high contrast", "over-saturated", "washed out", "CRT lines", "scanlines", "interlaced", "datamosh", "corrupted", "cracked", "distorted", "meme format", "shitpost", "bait", "viral", "clickbait", "hidden message", "subliminal", "Easter egg", "after dark", "late night", "forbidden fruit", "forbidden color", "glow in the dark", "impossible object"
+];
+const PF_HELP_LINKS = [
+  { name: "Troubleshooting Alexa", url: "https://www.amazon.com/gp/help/customer/display.html?nodeId=GKLDRF2L85DZWK9F" },
+  { name: "Google Assistant Help", url: "https://support.google.com/assistant/" },
+  { name: "Siri Support", url: "https://support.apple.com/siri" },
+  { name: "Download Alexa App", url: "https://www.amazon.com/alexa-app" },
+  { name: "Download Google Assistant", url: "https://assistant.google.com/platforms/phones/" },
+  { name: "Download Siri App", url: "https://apps.apple.com/app/shortcuts/id915249334" },
+  { name: "AI Safety & Ethics", url: "https://en.wikipedia.org/wiki/AI_ethics" },
+  { name: "PromptForge Discord", url: "https://discord.gg/yourdiscord" },
+  { name: "PromptForge Reddit", url: "https://reddit.com/r/promptforge" },
+  { name: "Report Bug/Request Feature", url: "mailto:support@promptforge.online" }
+];
+const PF_EXPRESSIONS = [
+  "smiling", "laughing", "giggling", "crying", "tearing up", "smirking", "winking", "pouting", "biting lip", "licking lips", "blushing", "wide-eyed", "rolling eyes", "side-eye", "deadpan", "scowling", "sneering", "sulking", "startled", "surprised", "innocent", "sinister grin", "playful", "naughty", "mischievous", "bashful", "hypnotized", "dazed", "entranced", "seductive stare", "glancing away", "intense focus", "glassy-eyed", "teasing smile", "exhausted", "dreamy", "content", "relieved", "reluctant", "embarrassed", "defiant", "bored", "annoyed", "curious", "determined", "panicked", "fearful", "in pain", "ecstatic", "euphoric", "shy", "ashamed", "cheeky", "vulnerable", "angry", "frustrated", "hopeful"
+];
+const PF_HAIR_TYPES = [
+  // Length/Type
+  "long hair", "short hair", "medium hair", "pixie cut", "buzz cut", "shaved", "bald", "ponytail", "braids", "pigtails", "space buns", "top knot", "undercut", "sidecut", "fade", "mullet", "shoulder-length", "lob", "bob cut", "pageboy", "bowl cut",
+  // Texture
+  "straight hair", "wavy hair", "curly hair", "afro", "coily hair", "frizzy", "messy", "spiky", "slicked back", "wet hair", "bedhead",
+  // Color
+  "black hair", "blonde", "platinum", "strawberry blonde", "brown hair", "auburn", "ginger", "red hair", "silver", "grey hair", "white hair", "blue", "pink", "purple", "green", "turquoise", "teal", "rainbow hair", "highlighted", "ombre", "frosted tips", "streaks", "root fade", "two-tone"
+];
+const PF_EYES = [
+  "blue eyes", "green eyes", "hazel eyes", "grey eyes", "amber eyes", "brown eyes", "violet eyes", "heterochromia", "cat eyes", "doe eyes", "almond eyes", "monolid", "big eyes", "narrow eyes", "hooded eyes", "droopy eyes", "sleepy eyes", "red eyes", "glowing eyes", "reflective eyes", "glassy eyes", "teary eyes", "sparkling eyes", "smoky eyes", "thick lashes", "false lashes", "heavy eyeliner", "natural lashes", "squinting", "side-eye", "rolling eyes", "pupil dilation", "crying", "hypnotized eyes", "dazed look"
+];
+const PF_HANDS = [
+  "open hands", "clenched fists", "peace sign", "middle finger", "rock on", "ok sign", "thumbs up", "thumbs down", "pointing", "shushing", "blowing a kiss", "cupped hands", "hands behind head", "hands on hips", "crossed arms", "covering mouth", "covering face", "scratching head", "snapping fingers", "jazz hands", "victory sign", "praying hands", "fingertips together", "index finger on lips", "palms out", "hands together", "making a heart", "salute", "finger guns", "hands in pockets", "arms folded", "hands on cheeks", "hands on knees", "hands clasped", "hands in prayer", "nail biting", "hair twirling", "palm reading", "handcuffed", "grabbing", "waving"
+];
+const PF_CLOTHING = [
+  "t-shirt", "tank top", "crop top", "tube top", "long sleeve", "hoodie", "sweater", "jacket", "leather jacket", "blazer", "suit", "button-up shirt", "dress shirt", "vest", "blouse", "dress", "sundress", "evening gown", "cocktail dress", "mini skirt", "maxi skirt", "pleated skirt", "pencil skirt", "shorts", "cargo shorts", "jeans", "skinny jeans", "bootcut", "yoga pants", "leggings", "jeggings", "joggers", "sweatpants", "overalls", "romper", "onesie", "bodysuit", "bikini", "swimsuit", "monokini", "board shorts", "speedo", "lingerie", "lace panties", "bralette", "pushup bra", "corset", "bustier", "garter belt", "stockings", "thigh highs", "knee highs", "ankle socks", "fishnets", "pantyhose", "platform boots", "sneakers", "flip-flops", "slippers", "barefoot", "combat boots", "heels", "stilettos", "wedges", "ankle boots", "riding boots", "sandals", "work boots", "rain boots", "cowboy boots", "beret", "beanie", "baseball cap", "bucket hat", "fedora", "crown", "tiara", "headband", "hair clips", "bandana", "bow tie", "tie", "scarf", "cape", "cloak", "hood", "mask", "gloves", "mittens", "arm warmers", "wristbands", "watch", "choker", "necklace", "bracelet", "anklet", "rings", "piercings", "earrings", "nose ring", "septum ring", "belly chain", "body harness"
+];
+const PF_PROPS = [
+  "smartphone", "mirror", "lipstick", "compact mirror", "wine glass", "cocktail", "beer bottle", "champagne flute", "cigarette", "vape", "candle", "book", "notebook", "pen", "pencil", "paintbrush", "palette", "easel", "camera", "Polaroid", "tripod", "selfie stick", "ring light", "microphone", "headphones", "game controller", "VR headset", "remote control", "handcuffs", "feather", "whip", "rope", "chains", "blindfold", "mask", "ball gag", "vibrator", "dildo", "butt plug", "strap-on", "bullet vibe", "magic wand", "anal beads", "clamp", "nipple clamps", "cock ring", "body oil", "lotion", "baby oil", "chocolate syrup", "whipped cream", "strawberries", "ice cubes", "rose petals", "stuffed animal", "teddy bear", "blanket", "pillow", "bean bag", "plushie", "ball", "dice", "cards", "board game", "puzzle", "key", "lock", "diary", "glasses", "sunglasses"
+];
+const PF_BACKGROUNDS = [
+  "sunset", "sunrise", "midnight", "afternoon", "rainy day", "stormy sky", "clear blue sky", "overcast", "blizzard", "snowstorm", "thunderstorm", "foggy", "misty", "smoky", "moonlit", "starry night", "northern lights", "city skyline", "urban jungle", "forest", "deep woods", "riverbank", "mountains", "meadow", "prairie", "tundra", "desert", "canyon", "cliffs", "beach", "tide pools", "coral reef", "volcano", "glacier", "island", "swamp", "marsh", "lake", "pond", "hot spring", "cave", "grotto", "mine", "sewers", "rooftop", "warehouse", "garage", "attic", "cellar", "basement", "dorm room", "studio", "art loft", "coffee shop", "library", "bookstore", "market", "mall", "arcade", "theater", "nightclub", "dance floor", "strip club", "casino", "mansion", "palace", "castle", "cathedral", "church", "temple", "shrine", "museum", "exhibit", "train station", "airport", "bus stop", "highway", "intersection", "parking garage", "playground", "park", "amusement park", "circus", "fairground", "zoo", "aquarium", "science lab", "computer lab", "server room", "VR space", "metaverse"
+];
+const PF_COLORS = [
+  "red", "scarlet", "crimson", "maroon", "burgundy", "rose", "pink", "magenta", "fuchsia", "hot pink", "coral", "peach", "orange", "apricot", "amber", "gold", "yellow", "lemon", "butter", "cream", "ivory", "white", "platinum", "silver", "grey", "charcoal", "black", "midnight", "navy", "blue", "azure", "sky blue", "teal", "aqua", "turquoise", "seafoam", "emerald", "mint", "green", "lime", "olive", "forest green", "sage", "moss", "brown", "chocolate", "bronze", "caramel", "beige", "tan", "copper", "rust", "violet", "lavender", "purple", "indigo", "plum", "mauve", "eggplant", "neon", "pastel", "rainbow", "gradient", "color splash", "iridescent", "pearlescent", "glow", "matte", "shiny", "glossy", "translucent", "opaque"
+];
+const PF_LIGHT = [
+  "soft light", "hard light", "dappled light", "backlit", "side-lit", "front-lit", "rim light", "glow", "halo", "spotlight", "candlelight", "firelight", "lantern light", "neon glow", "fluorescent", "incandescent", "LED", "strobe", "disco lights", "moonlight", "star glow", "laser light", "light leaks", "lens flare", "bokeh", "prismatic", "split lighting", "dramatic shadow", "chiaroscuro", "ambient light", "golden hour", "blue hour", "sunbeam", "god rays", "crepuscular rays", "rainbow light", "projected patterns"
+];
+const PF_WEATHER = [
+  "clear", "cloudy", "rainy", "drizzling", "thunderstorm", "snowing", "blizzard", "hailing", "foggy", "misty", "humid", "dry", "breezy", "windy", "gusty", "smoky", "hazy", "stormy", "monsoon", "tornado", "hurricane", "sandstorm", "typhoon", "eclipse", "rainbow", "double rainbow", "aurora borealis", "dust storm", "heat wave", "cold snap", "lightning storm"
+];
+const PF_LANGUAGES = [
+  "English", "French", "Spanish", "German", "Italian", "Portuguese", "Russian", "Japanese", "Mandarin", "Cantonese", "Korean", "Hindi", "Arabic", "Turkish", "Greek", "Dutch", "Swedish", "Norwegian", "Danish", "Finnish", "Czech", "Polish", "Hungarian", "Ukrainian", "Hebrew", "Thai", "Vietnamese", "Indonesian", "Tagalog", "Malay", "Romanian", "Bulgarian", "Serbian", "Croatian", "Slovak", "Slovenian", "Estonian", "Latvian", "Lithuanian", "Icelandic", "Irish", "Welsh", "Scottish Gaelic", "Esperanto", "Latin", "Klingon", "Elvish", "Dothraki"
+];
+const PF_EMOJI_BANK = [
+  // Faces/People
+  "😀","😂","😅","😈","😍","🥵","🥶","🥴","😱","🥳","🥺","😘","😚","😳","😜","😝","😏","😒","🙄","😩","😭","😇","🥰","😡","🤬","🤯","🤪","🤫","🤭",
+  // Body/Hand
+  "👍","👎","🤞","✌️","🤘","👌","🙏","👏","🙌","💪","🦵","🦶","🦷","👄","👅","👀","👁️","🧠","👂","🦻",
+  // Love/Sexy
+  "❤️","🧡","💛","💚","💙","💜","🖤","💔","💕","💞","💓","💗","💖","💘","💝","💋","👙","🍑","🍆","🌶️","💦","👠","👗","💍","👑","🦄",
+  // Objects/Other
+  "🎲","🃏","🎮","📷","📱","🎧","🎤","🎬","💡","🔥","🌈","✨","⚡","🌟","☀️","🌤️","🌥️","🌦️","⛅","☁️","🌫️","🌙","🌌","🌃","🎇","🎆","🎉","🎊","🧊","💧","🩸","🕯️","💣","🔪","🪓","🔫","🏹",
+  // Punctuation/Markup
+  "***","___","___","!!!","???","///","...","--","~~","==","<>","[]","()","{}","#","@","$","%","&","*","!","?","~","^","|","\\","/",";","'",":",",",".",
+  // Kaomoji
+  "( ͡° ͜ʖ ͡°)","(ᵔᴥᵔ)","(｡♥‿♥｡)","(✿◠‿◠)","( ͡ᵔ ͜ʖ ͡ᵔ )","(¬‿¬)","(☞ﾟヮﾟ)☞","(づ｡◕‿‿◕｡)づ","¯\\_(ツ)_/¯","ಠ_ಠ","(╯°□°）╯︵ ┻━┻","(☞ ͡° ͜ʖ ͡°)☞","ʕ•ᴥ•ʔ"
+];
