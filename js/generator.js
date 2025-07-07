@@ -2734,3 +2734,270 @@ const PF_RARE_MEME = [
   "transdimensional", "cosmic", "eldritch", "mythopoeic", "psychonautic", "blursed", "goblin mode", "sigma", "yassified", "chad", "uwu", "nyaa", "simp", "zoomie", "stank face", "hard launch", "main character energy", "malewife", "bimbo", "gigachad", "nuclear", "apocalyptic", "vaporwave", "analog horror", "uncanny", "corecore", "hyperpop", "neoncore"
 ];
 PF_TOKENS_DICTIONARY["[RARE_MEME]"] = PF_RARE_MEME;
+/* === GOD MODE: MOVIE/SCENE PROMPT GENERATOR (CORE WORD BANKS) === */
+// — Just dump at the bottom of your generator.js, or wherever your word banks start — //
+
+const PF_MOVIE_GENRES = [
+  "action", "adventure", "drama", "romance", "comedy", "dark comedy", "parody", "satire", "thriller", "horror", "slasher",
+  "psychological horror", "erotic thriller", "suspense", "noir", "neo-noir", "mystery", "detective", "crime", "heist",
+  "buddy cop", "road movie", "war", "period drama", "historical epic", "fantasy", "sci-fi", "cyberpunk", "space opera",
+  "supernatural", "urban fantasy", "high fantasy", "grindhouse", "midnight movie", "arthouse", "indie", "experimental",
+  "musical", "animation", "anime", "mockumentary", "documentary", "biopic", "coming of age", "teen drama", "tragedy",
+  "family drama", "adult film", "softcore", "hardcore", "fetish", "taboo", "cult classic", "dystopian", "post-apocalypse",
+  "slice of life", "sports", "heist", "chick flick", "bromance", "tragedy", "family drama", "erotica", "cult", "meme film"
+];
+
+const PF_MOVIE_SETTINGS = [
+  "abandoned warehouse", "luxury hotel", "dingy bar", "subway station", "open field", "quiet library", "empty church", "rooftop pool",
+  "hotel elevator", "janitor's closet", "attic", "garage", "van", "private jet", "cabin in the woods", "park bench", "secret garden",
+  "beach at night", "haunted mansion", "neon-lit street", "after hours office", "laundromat", "spa", "changing room", "movie theater",
+  "VIP box", "luxury yacht", "dungeon", "bathhouse", "tattoo shop", "art studio", "nightclub", "strip club", "rooftop", "penthouse",
+  "forest glade", "castle dungeon", "mirror maze", "dreamlike void", "infinite hallway", "velvet lounge"
+];
+
+const PF_MOVIE_TOKENS = [
+  "opening scene", "montage", "climax", "plot twist", "reveal", "flashback", "dream sequence", "cutaway", "reaction shot", "slow motion",
+  "freeze frame", "split screen", "fade to black", "soft fade", "jump cut", "smash cut", "voiceover", "establishing shot",
+  "drone shot", "macro shot", "close-up", "wide shot", "POV", "over-the-shoulder", "hidden camera", "night vision", "infrared", "timelapse"
+];
+
+const PF_MOVIE_CHARACTERS = [
+  "hero", "villain", "sidekick", "mentor", "love interest", "antagonist", "comic relief", "antihero", "detective", "mob boss",
+  "femme fatale", "vampire", "witch", "alien", "robot", "android", "clone", "superhero", "monster", "ghost", "AI", "shapeshifter",
+  "corrupt cop", "paranormal investigator", "hacker", "undercover agent", "secret admirer", "rival", "ex", "stranger", "bounty hunter"
+];
+
+const PF_MOVIE_ACTIONS = [
+  "chasing", "fighting", "kissing", "crying", "confessing", "running", "falling", "hiding", "plotting", "escaping",
+  "investigating", "seducing", "breaking in", "stealing", "hacking", "betraying", "protecting", "risking", "sacrificing", "forgiving",
+  "shooting", "exploding", "transforming", "teleporting", "mind reading", "hypnotizing", "summoning", "possessing", "body swapping",
+  "performing a ritual", "spying", "seducing", "dancing", "posing", "climaxing"
+];
+
+const PF_MOVIE_SPECIAL = [
+  "lens flare", "bokeh", "glow", "neon", "vignette", "motion blur", "depth blur", "chromatic aberration", "double exposure",
+  "mirror effect", "zoom blur", "light leaks", "backlight", "hard shadow", "sparkles", "particle effect", "rain", "fog", "smoke",
+  "fire", "candlelight", "laser", "AI artifact", "night vision", "security cam", "framegrab", "split screen", "subtitle", "freeze frame"
+];
+
+// Combine/expand with PF_GENRES, PF_SCENE_TOKENS, PF_ACTIONS, etc., for ultimate flexibility.
+// If you want, these can be merged into the master wordbanks for full cross-token logic.
+
+/* === GOD MODE: ADJECTIVES, EMOTIONS, CONNECTORS, HIGHLIGHT/SWAP POWER === */
+// — Paste directly after your last chunk, no need to edit! — //
+
+// Descriptive adjectives (expanded, no repeats)
+const PF_MOVIE_ADJECTIVES = [
+  "explosive", "tense", "vivid", "subtle", "dreamlike", "noir", "gritty", "suspenseful", "iconic", "surreal",
+  "atmospheric", "twisted", "shadowy", "breathtaking", "emotional", "deadpan", "vulnerable", "raw", "chaotic",
+  "romantic", "taboo", "risqué", "forbidden", "bold", "unfiltered", "irreverent", "hyperreal", "photorealistic",
+  "psychedelic", "trippy", "luminous", "neon-drenched", "nightmarish", "melancholic", "brooding", "whimsical",
+  "unpredictable", "parodic", "edgy", "subversive", "darkly comic", "uplifting", "bittersweet", "narrative",
+  "meta", "self-aware", "cinematic", "panoramic", "epic", "legendary", "viral", "meme-worthy"
+];
+
+// Emotional states/tones (unique, stacked for scripts and scenes)
+const PF_MOVIE_EMOTIONS = [
+  "yearning", "craving", "jealous", "starstruck", "distraught", "agonized", "unsettled", "delirious",
+  "empowered", "exhausted", "obsessed", "vindictive", "apathetic", "hopeful", "devastated", "blissful",
+  "bewildered", "shellshocked", "stoic", "playful", "giddy", "somber", "nostalgic", "triumphant", "raging",
+  "defeated", "ecstatic", "entranced", "anxious", "horrified", "entranced", "disgusted", "grateful", "lonely"
+];
+
+// Connectors (for gluing scenes, descriptions, and prompt phrases together)
+const PF_MOVIE_CONNECTORS = [
+  "while", "as", "meanwhile", "suddenly", "just as", "even as", "even though", "despite", "after", "before",
+  "until", "whenever", "as soon as", "through", "by", "amidst", "with", "because", "due to", "over", "across",
+  "beneath", "alongside", "amid", "among", "in", "into", "on top of", "against", "near", "beside"
+];
+
+// Highlight/stress tokens (for emphasis, slider, or prompt markup)
+const PF_HIGHLIGHT = [
+  "**", "__", "*", "_", "==", "`", "<b>", "</b>", "<i>", "</i>", "<mark>", "</mark>", "[", "]", "【", "】", "❝", "❞",
+  "🔥", "‼️", "💥", "⚡️", "🔊", "🔞", "💯", "👀", "🎬"
+];
+
+// SFW/NSFW swap logic (contextual, safe for filters, easily extended)
+const PF_SFW_NSFW_SWAPS = [
+  // [NSFW, SFW, Ultra-safe]
+  ["orgy",      "group scene",    "crowd event"],
+  ["cum",       "finish",         "climax"],
+  ["fucking",   "making love",    "intimate act"],
+  ["cock",      "shaft",          "center"],
+  ["pussy",     "lotus",          "sweet spot"],
+  ["nude",      "bare-skinned",   "unclothed"],
+  ["bondage",   "tie-up",         "restricted movement"],
+  ["spanking",  "playful tap",    "affectionate gesture"],
+  ["masturbate","solo play",      "self-care"],
+  ["blowjob",   "oral",           "mouth embrace"],
+  ["nipple",    "chest tip",      "upper area"],
+  ["strap-on",  "toy belt",       "accessory"],
+  ["anal",      "back entrance",  "forbidden zone"],
+  ["gangbang",  "group session",  "multi-partner event"],
+  ["slut",      "wild one",       "free spirit"]
+];
+
+// Optional: function to auto-swap by context
+function pfSwap(word, mode="sfw") {
+  for (let arr of PF_SFW_NSFW_SWAPS) {
+    if (arr[0] === word) return (mode === "sfw") ? arr[1] : arr[2] || arr[1];
+  }
+  return word;
+}
+/* === GOD MODE: PROPS, COSTUMES, FX, SCENE STARTERS, AI TOKENS === */
+// — Paste this block after your last, or wherever your wordbanks go — //
+
+// PROPS & SET PIECES (for realism, mood, or meme)
+const PF_PROPS = [
+  "champagne flute", "red solo cup", "martini glass", "cigar", "zippo lighter", "handcuffs", "blindfold", "neon sign",
+  "feather boa", "rose petals", "whipped cream can", "latex gloves", "polaroid camera", "stripper pole", "gag ball",
+  "pill bottle", "crumpled letter", "mirror compact", "fur coat", "cat mask", "shot glass", "leather whip",
+  "cigarette case", "gold coin", "striped tie", "biker helmet", "vinyl record", "security camera", "garter belt",
+  "knee pads", "bandaid", "ankle socks", "condom wrapper", "vintage camera", "aviator sunglasses"
+];
+
+// COSTUMES & CLOTHING (for scene, mood, kink, cosplay, fashion)
+const PF_COSTUMES = [
+  "bunny suit", "catgirl ears", "maid outfit", "latex bodysuit", "lace bodysuit", "satin robe", "corset", "cheerleader skirt",
+  "school uniform", "nurse dress", "cop uniform", "leather harness", "fetish mask", "opera gloves", "fishnets", "platform boots",
+  "anime wig", "kimono", "pirate hat", "vampire cape", "choker necklace", "feather mask", "tiara", "bolo tie", "pearl necklace",
+  "ripped jeans", "cropped hoodie", "oversized tee", "knee-high socks", "hoodie", "tank top", "graphic tee", "graphic hoodie"
+];
+
+// MOVIE/AI FX (special effects, render, lighting, camera, post)
+const PF_FX = [
+  "lens flare", "bokeh", "vignette", "film grain", "neon glow", "pixelated", "motion blur", "chromatic aberration",
+  "double exposure", "light leak", "distorted", "AI hallucination", "holographic", "dream blur", "split tone", "backlit",
+  "overexposed", "underexposed", "soft focus", "color pop", "monochrome", "hyperreal", "noise texture", "CRT lines", "scanline",
+  "vaporwave filter", "Instagram filter", "TikTok style", "snapshot aesthetic", "cinema wide", "anamorphic lens"
+];
+
+// MOVIE LINGO (for prompt templates, story structure, scriptwriting)
+const PF_MOVIE_TOKENS = [
+  "POV shot", "tracking shot", "jump cut", "fade to black", "freeze-frame", "montage", "voiceover", "split screen",
+  "flashback", "cutaway", "over-the-shoulder", "reaction shot", "close-up", "establishing shot", "macro shot", "dutch angle",
+  "match cut", "slow motion", "timelapse", "reverse", "scene transition", "title card", "credits roll", "caption", "subtitles"
+];
+
+// TIME & SCENE PHRASES (for intros, cut scenes, transitions, mood)
+const PF_SCENE_TIME = [
+  "at midnight", "during a thunderstorm", "under neon lights", "at golden hour", "on a rainy night", "at sunrise", "after last call",
+  "before the party", "in the dead of night", "while the city sleeps", "just before dawn", "during a blackout", "on a full moon",
+  "as the music fades", "while the crowd roars", "as the rain pours", "while lightning flashes", "in a haze of smoke"
+];
+
+// AI POWER TOKENS (for prompt hacking, art, sliders, or sliders later)
+const PF_AI_MAGIC = [
+  "CFG scale", "prompt weighting", "sampler", "negative prompt", "LoRA", "checkpoint", "img2img", "upscale", "token merge",
+  "seed lock", "noise level", "latent space", "inpainting", "embedding", "batch size", "controlnet", "face restore", "style transfer",
+  "resolution boost", "AI hallucination", "openart", "midjourney", "stablediffusion", "OpenSorceress"
+];
+
+// Optional: Utility to randomly pick, shuffle, or extend these lists
+function pfPick(arr, n=1) {
+  let pool = [...arr], out = [];
+  for (let i=0; i<n && pool.length; i++) out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  return (n===1) ? out[0] : out;
+}
+/* === GOD MODE: SCENES, LOCATIONS, BACKGROUNDS, OBJECTS, MOODS, MEMES === */
+
+// Cinematic & NSFW Scene Setups (immediately useful for movies or AI art)
+const PF_SCENES = [
+  "luxury hotel suite", "cheap motel room", "rooftop pool", "steamy sauna", "rain-soaked alley", "neon-lit club",
+  "underground parking garage", "VIP lounge", "abandoned warehouse", "mirror maze", "candle-lit bedroom",
+  "foggy bathroom", "shower stall", "crowded subway", "strip club stage", "art studio", "tattoo parlor",
+  "penthouse balcony", "science lab", "dorm room", "cyberpunk street", "forest at dusk", "moonlit glade",
+  "after-hours office", "janitor's closet", "midnight diner", "beach at sunset", "suburban kitchen", "garage loft"
+];
+
+// Detailed Locations/Backgrounds (non-repeating, art/film-friendly)
+const PF_BACKGROUNDS = [
+  "misty forest", "sun-dappled clearing", "enchanted woods", "futuristic skyline", "digital void", "urban rooftop",
+  "starship bridge", "martian desert", "dreamlike void", "psychedelic landscape", "gothic cathedral",
+  "haunted mansion", "striped wallpaper", "retro arcade", "mall food court", "swimming pool at night",
+  "car interior", "old library", "school hallway", "anime backdrop", "hacker server room", "rainy city street"
+];
+
+// Objects (props/scene detail, realistic, meme, or photoreal)
+const PF_OBJECTS = [
+  "neon sign", "mirror", "handcuffs", "stripper pole", "pill bottle", "glass of whiskey", "vinyl record", "shot glass",
+  "silk rope", "stiletto heel", "lipstick tube", "ice cube", "feather boa", "body glitter", "cigarette", "martini",
+  "love note", "security camera", "cat mask", "condom wrapper", "fur throw", "playing cards", "choker necklace"
+];
+
+// Special Moods/Atmosphere (advanced, not in earlier lists)
+const PF_MOODS_SPECIAL = [
+  "hypnotic", "zoned out", "entranced", "stormy", "volatile", "wistful", "haunted", "mysterious",
+  "forbidden", "reckless", "untamed", "glitchy", "unhinged", "crushing", "obsessed", "exposed",
+  "chaotic", "melancholy", "dissonant", "electric", "nostalgic"
+];
+
+// Meme/Internet/Meta Mashup Tokens (for viral, meta, or wild prompts)
+const PF_MEME_TOKENS = [
+  "ratio", "main character energy", "rizzed up", "simping", "based", "cringe", "deadass", "slay", "no cap",
+  "pog moment", "NPC energy", "copium", "it’s giving", "smol", "chonky", "vibe check", "hard launch", "stan-worthy",
+  "legendary", "gigachad", "sigma grindset", "uwu", "irl", "sus", "yeet", "big mood", "iconic", "gatekeep", "girlboss"
+];
+
+// Supercharged highlight and stress for prompts (slider logic, bold, etc)
+const PF_PROMPT_STRESS = [
+  "!!", "!!1!", "***", "ALL CAPS", "<b>", "</b>", "<mark>", "</mark>", "🔥", "💦", "💣", "‼️", "✨", "💯", "👀", "💜", "🩷"
+];
+
+// (Optional) function for smart bracket or stress wrapping
+function pfHighlight(str, method="**") {
+  if (method === "ALL CAPS") return str.toUpperCase();
+  if (method === "<b>") return `<b>${str}</b>`;
+  if (method === "<mark>") return `<mark>${str}</mark>`;
+  return method + str + method;
+}
+/* === GOD MODE: DIALOGUE, DIRTY TALK, INSPIRATION, NEGATIVE PROMPTS === */
+
+// DIALOGUE LINES (cinematic, meme, NSFW, SFW — multi-purpose)
+const PF_DIALOGUE = [
+  // Cinematic/neutral
+  "Don’t stop.", "You know you want this.", "Make me beg.", "Not here—someone might see.", "Do you trust me?",
+  "Shut up and kiss me.", "Say my name.", "Harder.", "I shouldn’t want this.", "Take it off.", "Bite me.",
+  "Keep your eyes on me.", "No one can hear us.", "I dare you.", "Is this what you want?", "You’re shaking.",
+  "Tell me you need it.", "You like it rough?", "Pull my hair.", "Don’t you dare stop.",
+  // NSFW/inspirational
+  "Show me how much you want it.", "Let’s get out of here.", "Make me yours.", "You taste so good.",
+  "Can you handle me?", "Keep going.", "I’m all yours.", "Do that again.", "Make me scream.", "Let’s break the rules.",
+  "Don’t hold back.", "Use me.", "You drive me crazy.", "On your knees.", "Take control.",
+  // Meme/meta
+  "Slay.", "No cap.", "Say less.", "Vibe check.", "It’s giving main character energy.", "Let him cook.", "Deadass.",
+  "Big mood.", "Don’t threaten me with a good time.", "Let’s get weird.", "Do it for the plot."
+];
+
+// NEGATIVE PROMPTS (auto-block for undesirable or common fails in AI gen)
+const PF_NEGATIVE = [
+  "deformed", "bad anatomy", "missing fingers", "extra limbs", "crooked eyes", "mutated hands", "weird face",
+  "blurry", "duplicate", "fused limbs", "extra head", "mutated face", "text", "watermark", "signature",
+  "bad proportions", "disfigured", "messed up legs", "out of frame", "bad hands", "poor contrast", "ugly", "lowres",
+  "logo", "trademark", "username", "wrong perspective", "asymmetrical face", "oversharpened", "overfiltered",
+  "overprocessed", "posterization", "blurry face", "bad feet", "uncanny", "cartoonish", "half-body", "cut-off", "cropped badly"
+];
+
+// INSPIRATION & PROMPT SEEDS (scene, movie, art, viral, meme)
+const PF_INSPIRATION = [
+  "nightclub fantasy", "mirror selfie", "rainy cityscape", "forbidden tryst", "cosmic encounter",
+  "glitchcore portrait", "vaporwave party", "fairy tale remix", "meme mashup", "post-apocalypse romance",
+  "hacker love story", "neon noir chase", "bunny suit cosplay", "witching hour ritual", "urban legend retold",
+  "taboo confession", "school crush", "motel mystery", "revenge fantasy", "after-hours office romance",
+  "strip club drama", "anime showdown", "retro arcade date", "steamy shower scene", "bedroom eyes"
+];
+
+// AUTO-NEGATIVE LOGIC (for smart prompt building, advanced users)
+function pfAutoNegative(userNeg = "") {
+  // Combines built-in negatives, user negative, and filters for duplicates
+  const baseNeg = PF_NEGATIVE.slice();
+  if (userNeg && typeof userNeg === "string") {
+    userNeg.split(",").forEach(w => { if (!baseNeg.includes(w.trim())) baseNeg.push(w.trim()); });
+  }
+  return baseNeg.join(", ");
+}
+
+// (Optional) Random dialogue picker
+function pfRandomDialogue() {
+  return PF_DIALOGUE[Math.floor(Math.random() * PF_DIALOGUE.length)];
+}
