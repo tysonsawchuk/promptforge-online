@@ -2002,3 +2002,735 @@ const PF_TOKENS_DICTIONARY = {
 // Show off: just run pf_generatePrompt() or pf_godModePrompt()
 console.log(pf_generatePrompt());
 console.log(pf_godModePrompt());
+// === PF_DESCRIPTORS: Adjectives, mood, vibe, old school, meme, NSFW, all eras ===
+const PF_DESCRIPTORS = [
+  // Physical
+  "smooth", "rough", "velvety", "oily", "polished", "dusty", "moist", "glossy", "withered", "supple", "tight", "loose", "fluffy", "gritty", "wet", "dripping", "slick", "silky", "raw", "blemished", "scarred", "flushed",
+  // Color/Visual
+  "glowing", "neon", "ultraviolet", "sepia", "monochrome", "matte", "chromatic", "electric", "pale", "sunburned", "gothic", "cyberpunk", "dappled", "holographic", "bokeh", "iridescent",
+  // Mood
+  "seductive", "sinister", "innocent", "teasing", "forbidden", "wicked", "lustful", "reckless", "bold", "provocative", "melancholic", "frenzied", "fiery", "icy", "chill", "bored", "ecstatic", "anxious", "dreamy", "zoned", "hypnotized",
+  // Internet/Meme
+  "slay", "based", "sus", "mid", "yeet", "lit", "drippy", "cringe", "pog", "no cap", "main character", "NPC", "gigachad", "sigma", "yassified", "bussin", "OP", "iconic", "legendary", "unfiltered", "zesty", "spicy", "deadass",
+  // Taboo/NSFW
+  "uncensored", "scandalous", "risqué", "sensual", "shameless", "naughty", "transgressive", "filthy", "dirty", "steamy", "vulgar", "lewd", "alluring", "tempting", "voluptuous", "busty", "nubile", "curvy", "sultry", "revealing",
+  // Old school/Poetic
+  "ethereal", "dreamlike", "noir", "gossamer", "dusky", "opalescent", "gilded", "venerable", "ancient", "timeless", "celestial", "luminous", "shadowy", "misty", "sunlit", "moonlit", "transcendent", "auroral",
+  // Emojis/Visual
+  "🔥", "💦", "✨", "🍑", "🍆", "🩷", "💜", "💙", "💚", "❤️", "💀", "😈", "🥵", "😏", "😳", "👀", "👅", "🫦", "💋", "😍", "🥰"
+];
+PF_TOKENS_DICTIONARY["[DESCRIPTOR]"] = PF_DESCRIPTORS;
+// === PF_ACTIONS: Movement, touch, NSFW, meme, film, all eras ===
+const PF_ACTIONS = [
+  // SFW movement/pose
+  "standing", "sitting", "lying down", "kneeling", "sprawling", "stretching", "posing", "dancing", "jumping", "skipping", "balancing", "twisting", "turning", "reaching", "climbing", "falling", "leaning",
+  // Cinematic/film
+  "zoom in", "zoom out", "pan", "dolly shot", "crane", "tilt", "pull focus", "slow-motion", "fast-forward", "freeze-frame", "split screen", "reaction shot", "close-up", "montage", "over-the-shoulder", "macro shot", "wide shot",
+  // Touch/Sensation
+  "caressing", "stroking", "rubbing", "patting", "tickling", "tracing", "pressing", "grazing", "pinching", "squeezing", "hugging", "snuggling", "cuddling", "grabbing", "clutching", "entwining", "nuzzling",
+  // NSFW (safe words for art)
+  "teasing", "fondling", "licking", "kissing", "biting", "nibbling", "sucking", "spanking", "grinding", "straddling", "riding", "arching", "sprawled", "bare-skinned", "posing nude", "moaning", "panting", "quivering", "trembling", "shuddering",
+  // Emotional/Story
+  "giggling", "blushing", "staring", "gazing", "frowning", "smiling", "smirking", "scowling", "glancing", "winking", "sighing", "crying", "pleading", "commanding", "shouting", "whispering", "confessing",
+  // Meme/Internet
+  "slaying", "serving", "flexing", "ghosting", "simping", "shipping", "rizzing up", "yeeting", "vibing", "pogging", "spilling tea", "ratio-ing", "canceling", "clapping back", "stanning", "stan-worthy", "dripping", "deadass", "dragging"
+];
+PF_TOKENS_DICTIONARY["[ACTION]"] = PF_ACTIONS;
+// === PF_PROPS: Objects, NSFW tools, set dressing, visual cues, etc. ===
+const PF_PROPS = [
+  // Classic scene props
+  "mirror", "camera", "wine glass", "candle", "mask", "phone", "glasses", "notebook", "flowers", "umbrella", "blanket", "pillow", "hat", "belt", "choker", "chain", "lace gloves",
+  // NSFW tools (safe art words)
+  "blindfold", "handcuffs", "rope", "leather strap", "feather", "body chain", "spiked collar", "nipple clamps", "bed restraints", "zipper mask", "vibrator", "toy", "silk scarf", "ice cube", "fur coat",
+  // Art/Scene/Fashion
+  "crystal", "lipstick", "perfume bottle", "vintage camera", "cigarette holder", "fan", "barstool", "pearl necklace", "anklet", "body glitter", "garter belt", "shower loofah", "makeup bag",
+  // Internet/Meme
+  "RGB lights", "anime pillow", "waifu mug", "fidget spinner", "gamer chair", "streamer mic", "LED sign", "emoji pillow", "influencer ring light"
+];
+PF_TOKENS_DICTIONARY["[PROP]"] = PF_PROPS;
+// === PF_SCENES: Locations, settings, cinematic, meme, NSFW, alt ===
+const PF_SCENES = [
+  // Classic/real world
+  "luxury bedroom", "cheap motel", "sunlit kitchen", "messy living room", "nightclub", "strip club", "spa", "locker room", "penthouse", "rooftop", "back alley", "garage", "studio", "movie theater",
+  // Surreal/Art/AI
+  "dreamlike void", "mirror maze", "infinite hallway", "floating bed", "velvet lounge", "crystal cave", "space station", "zero gravity", "cyberpunk alley", "alien landscape", "enchanted forest", "fairy ring", "castle dungeon", "pixelated world", "neon desert", "digital grid",
+  // NSFW-coded/Taboo
+  "dungeon", "private stage", "fetish club", "gloryhole booth", "mirror selfie", "POV angle", "public restroom", "janitor’s closet", "rooftop pool", "steamy sauna", "dark hallway", "hotel elevator",
+  // Meme/Internet/Modern
+  "gamer den", "streamer setup", "discord call", "group chat", "anime convention", "mall food court", "retro arcade", "furry convention", "hacker server room", "after hours office"
+];
+PF_TOKENS_DICTIONARY["[SCENE]"] = PF_SCENES;
+// === PF_MOODS: Feeling, tone, attitude, meme, old school, taboo ===
+const PF_MOODS = [
+  "romantic", "sensual", "playful", "naughty", "mischievous", "innocent", "teasing", "flirtatious", "bashful", "shy", "bold", "confident", "dominant", "submissive", "tender", "caring", "adoring",
+  "loving", "passionate", "wild", "fiery", "intense", "moody", "brooding", "wistful", "dreamy", "longing", "lustful", "desperate", "craving", "obsessed", "hypnotic", "entranced",
+  "zoned out", "dazed", "lost in the moment", "daring", "reckless", "forbidden", "taboo", "dangerous", "mysterious", "enigmatic", "secretive", "coy", "cheeky", "sultry", "smoldering",
+  "vulnerable", "blushing", "giggly", "excited", "freaky", "frenzied", "exhausted", "satisfied", "cringe", "savage", "based", "mid", "lit", "pog", "goated", "iconic", "legendary", "main character", "NPC", "sigma", "alpha"
+];
+PF_TOKENS_DICTIONARY["[MOOD]"] = PF_MOODS;
+// === PF_CAMERA_FX: Lenses, filters, angles, photo/video/AI art ===
+const PF_CAMERA_FX = [
+  "macro lens", "ultra-wide", "fisheye", "telephoto", "prime lens", "vintage lens", "anamorphic", "soft-focus", "cinematic lighting", "studio strobe", "neon wash", "moonlit", "backlight", "rim light", "overhead", "spotlight",
+  "floodlight", "color gel", "rainbow LED", "blacklight", "night vision", "thermal cam", "glow effect", "glitch filter", "noir filter", "split-tone", "crushed blacks", "film grain", "Polaroid", "crystal clarity", "dream blur", "chromatic aberration",
+  "lens flare", "orb effect", "starlight", "sunbeam", "shadow play", "soft glow", "render artifact", "oversaturated", "undersaturated", "color pop", "double exposure", "mirrored", "inverted", "X-ray", "hard vignette", "soft vignette", "matte", "muted colors", "hypercolor", "deep focus"
+];
+PF_TOKENS_DICTIONARY["[CAMERA_FX]"] = PF_CAMERA_FX;
+
+// === PF_GENRES: Movie, photo, story, meme, internet, alt, NSFW ===
+const PF_GENRES = [
+  "realism", "hyperrealism", "fantasy", "sci-fi", "cyberpunk", "noir", "vaporwave", "steampunk", "baroque", "gothic", "surrealism", "dada", "impressionism", "expressionism", "photorealism", "erotica", "horror", "thriller", "action",
+  "romance", "mystery", "comedy", "satire", "parody", "anime", "manga", "cartoon", "comic", "arthouse", "avant-garde", "dreamcore", "weirdcore", "y2k", "alt", "edgy", "NSFW", "mockumentary", "docu-style", "AI hallucination", "deep dream", "GAN art", "meme art", "shitpost", "midjourney style", "openart", "open sorceress"
+];
+PF_TOKENS_DICTIONARY["[GENRE]"] = PF_GENRES;
+
+// === PF_NSFW_SWAPS: Safe, clever, and filter-dodging word swaps ===
+const PF_NSFW_SWAPS = {
+  "pussy":     ["kitten", "lotus", "delicate bloom", "sweet spot", "garden", "petal"],
+  "cock":      ["shaft", "pillar", "tower", "staff", "column", "engine"],
+  "tits":      ["chest", "bosom", "pillows", "mounds", "assets"],
+  "ass":       ["hips", "rear", "bottom", "curve", "peach"],
+  "cum":       ["essence", "nectar", "honey", "release", "stream"],
+  "fuck":      ["join", "merge", "sync", "fuse", "blend"],
+  "dick":      ["member", "rod", "wand", "extension"],
+  "slut":      ["wild one", "free spirit", "risk-taker"],
+  "whore":     ["starlet", "vixen", "siren"],
+  "fap":       ["self-pleasure", "solo time", "intimate moment"],
+  "masturbate":["self-care", "me-time", "intimate session"],
+  "orgasm":    ["peak", "ecstatic release", "climax"],
+  "cumshot":   ["cascade", "burst", "stream", "splash"]
+};
+// Use in logic: auto-swap taboo tokens for SFW art, search-piercing, or bypass.
+
+
+// === PF_MEME_SLANG: Meme, TikTok, Gen-Z, viral, internet, gamer, iconic ===
+const PF_MEME_SLANG = [
+  "slay", "no cap", "bet", "yeet", "rizz up", "drip check", "sussy", "sus", "poggers", "epic win", "L", "W", "ratio", "gigachad", "NPC moment", "main character vibes", "sigma grindset",
+  "alpha energy", "based", "cringe", "mid", "bussin", "yass queen", "deadass", "on God", "he ate", "valid", "goated", "sheesh", "let him cook", "sending it", "touch grass", "get help", "cope", "vibe check", "big mood", "hard launch", "periodt", "simp", "stan", "karen moment", "zoomies", "girlboss", "gaslight", "malewife", "wife guy", "himbo", "bimbo", "femboy", "it’s a bop", "snatched", "serving looks", "hella", "fr", "iykyk"
+];
+PF_TOKENS_DICTIONARY["[MEME_SLANG]"] = PF_MEME_SLANG;
+
+// === PF_DIALOGUE: Cinematic, meme, NSFW, classic, punchy, all eras ===
+const PF_DIALOGUE = [
+  // SFW
+  "Tell me your secret.", "Kiss me like you mean it.", "You’re driving me wild.", "I want you so bad.", "Make me yours.", "You’re my fantasy.", "Let’s get lost together.", "I love your body.",
+  // NSFW/Filthy (swap to SFW as needed)
+  "Bend over.", "Spread your legs.", "Take off your clothes.", "Touch yourself for me.", "I want to taste you.", "Let me inside.", "Ride me.", "Cum for me.", "Don’t stop.", "Deeper.", "Harder.",
+  "Scream my name.", "Beg for it.", "Be a good girl.", "Take every inch.", "So fucking wet.", "You like it rough?", "Don’t you dare stop.", "I’ll make you beg.", "Look at me while you do it.", "Use your mouth."
+];
+PF_TOKENS_DICTIONARY["[DIALOGUE]"] = PF_DIALOGUE;
+
+// === PF_PUNCTUATION & STRESS: Punctuation, emoji, markup, emphasis ===
+const PF_PUNCTUATION = [
+  ".", ",", ";", ":", "!", "?", "...", "-", "—", "(", ")", "[", "]", "{", "}", "<", ">", "\"", "'", "`", "~", "*", "**", "***", "_", "__", "___", "=", "+", "^", "%", "#", "@", "$", "&", "|", "\\", "/", "•", "…", "‼️", "💥", "🔥", "✨", "🔞"
+];
+PF_TOKENS_DICTIONARY["[PUNCTUATION]"] = PF_PUNCTUATION;
+const PF_EMPHASIS = [
+  "*", "**", "***", "_", "__", "~~", "`", "=", "()", "[]", "{}", "<>", "<b>", "</b>", "<i>", "</i>", "<u>", "</u>", "<mark>", "</mark>", "<em>", "</em>", "<strong>", "</strong>", "(( ))", "【 】", "『 』", "《 》", "❝ ❞", "【NSFW】", "⚠️", "‼️", "💥", "🔥", "✨", "🔊", "🔴", "🟣", "💜", "💦"
+];
+PF_TOKENS_DICTIONARY["[EMPHASIS]"] = PF_EMPHASIS;
+// === PF_BODY_PARTS: SFW, NSFW, poetic, meme, clinical, all genres ===
+const PF_BODY_PARTS = [
+  // SFW & clinical
+  "face", "lips", "eyes", "cheeks", "chin", "forehead", "jawline", "nose", "eyebrows", "eyelashes", "smile", "teeth", "tongue", "neck", "shoulders", "collarbone", "arms", "elbows", "wrists", "hands", "palms", "fingers", "nails",
+  "chest", "breasts", "bosom", "nipples", "areola", "sternum", "torso", "abdomen", "stomach", "navel", "waist", "hips", "back", "spine", "shoulder blades", "pelvis", "groin", "pubic area", "mons", "thighs", "inner thighs", "knees", "legs", "calves", "shins", "ankles", "feet", "heels", "toes", "arches",
+  // NSFW & alt
+  "butt", "ass", "booty", "rear", "glutes", "intimate area", "crotch", "vulva", "labia", "clitoris", "clit", "perineum", "taint", "anus", "star", "rosebud", "penis", "shaft", "head", "tip", "scrotum", "balls", "testicles", "foreskin", "urethra", "meatus", "frenulum", "vagina", "canal", "entrance", "g-spot", "cervix", "womb",
+  // Playful/poetic
+  "love button", "peach", "eggplant", "cherries", "cupcake", "cookie", "hotdog", "banana", "melons", "bazookas", "twins", "puppies", "snack", "snuggle spot", "satin folds", "lotus", "blossom", "garden", "valley", "treasure", "honeypot", "hidden petals", "secret garden",
+  // Meme/emoji
+  "🍑", "🍆", "💦", "🔥", "🌸", "🌹", "🥚", "🫦", "👀", "👅", "🫂", "🧊", "❄️", "✨", "💋", "🩷", "💫", "🧲", "🔒", "🔓"
+];
+PF_TOKENS_DICTIONARY["[BODY_PART]"] = PF_BODY_PARTS;
+
+// === PF_CLOTHING: Costumes, underwear, cosplay, meme, AI-dodging ===
+const PF_CLOTHING = [
+  // Everyday/realistic
+  "t-shirt", "tank top", "sweater", "hoodie", "jeans", "shorts", "skirt", "dress", "blouse", "jacket", "leggings", "sweatpants", "pajamas", "scarf", "hat", "cap", "beanie", "gloves",
+  // Underwear & intimes
+  "bra", "panties", "boxers", "thong", "g-string", "bikini", "swimsuit", "lingerie", "corset", "bustier", "bodysuit", "garter", "stockings", "fishnets", "boyshorts", "bralette", "pasties", "leather harness",
+  // Fetish/Fantasy/Alt/Cosplay
+  "latex bodysuit", "bondage gear", "choker", "collar", "gag", "cuffs", "zipper mask", "cat ears", "bunny tail", "maid outfit", "schoolgirl skirt", "cheerleader uniform", "nurse costume", "cop uniform", "firefighter suit", "superhero cape", "sailor suit", "kimono", "robe", "cloak", "armor", "chainmail bikini", "fairy wings", "heels", "platforms", "combat boots", "barefoot", "glasses", "sunglasses", "anklet", "toe ring", "belly chain", "earrings", "piercing", "tattoo", "temporary tattoo", "body paint", "glitter", "ribbons", "feather boa", "mask", "veil"
+];
+PF_TOKENS_DICTIONARY["[CLOTHING]"] = PF_CLOTHING;
+
+// === PF_SCENE_BACKGROUNDS: Photo, video, art, fantasy, meme, SFW/NSFW ===
+const PF_SCENE_BACKGROUNDS = [
+  // Real-world
+  "luxury bedroom", "cheap motel", "sunlit kitchen", "messy living room", "rainy window", "night club", "back alley", "secluded forest", "hidden garden", "deserted beach", "mountain cabin", "lake dock", "hot tub", "poolside", "campfire", "rooftop", "balcony", "garage", "locker room", "abandoned warehouse", "art studio",
+  // Surreal/Fantasy/Alt
+  "dreamlike void", "mirror maze", "infinite hallway", "floating bed", "velvet lounge", "crystal cave", "space station", "zero gravity", "cyberpunk alley", "alien landscape", "cloud kingdom", "enchanted forest", "fairy ring", "gothic cathedral", "castle dungeon", "magic circle", "steampunk lab", "vampire lair", "succubus den", "pixelated world", "neon desert", "digital grid", "underwater palace"
+];
+PF_TOKENS_DICTIONARY["[SCENE_BACKGROUND]"] = PF_SCENE_BACKGROUNDS;
+
+// === PF_EMOJI_BANK: Full spectrum, meme, NSFW, SFW, iconic ===
+const PF_EMOJI_BANK = [
+  "😈", "🔥", "🌈", "💧", "🥵", "😏", "😉", "😍", "😘", "💋", "🫦", "🍑", "🍆", "🍒", "🌶️", "💦", "💣", "🎉", "🕶️", "🌃", "👅", "👀", "🫣", "😳", "🥺", "🧊", "🕸️", "🦋", "🐾", "🐱", "🐶", "💍", "🎀", "🔒", "🔓", "🦄", "🌙", "⭐️", "☀️", "🌪️", "⚡️", "🫀", "💀", "👽", "🤖", "🎥", "📸", "🖤", "🤍", "💜", "🧡", "💚", "💙",
+  // NSFW-coded combos
+  "🍆💦", "🍑💦", "💋👅", "😈🍑", "🤫💦", "🥵🔥", "🥵💦", "🫦💦", "😏💋", "🍑👉👌", "👀🍆", "🍒🍆", "🍌🍑", "👀🫦", "🍑🕳️", "💦👅", "🍆👄", "💦💦", "🥒💦", "🫦😈", "🥵👅"
+];
+PF_TOKENS_DICTIONARY["[EMOJI]"] = PF_EMOJI_BANK;
+// === PF_PROPS: Objects for realism, cinematic, fashion, NSFW, meme ===
+const PF_PROPS = [
+  "mirror", "handcuffs", "chains", "blindfold", "rope", "whip", "mask", "leather", "feather", "chocolate", "wine", "roses", "lingerie", "heels", "stockings", "corset", "silk sheets", "plush blanket", "fur rug", "pillow", "glasses", "choker", "collar", "leash", "toy", "vibrator", "camera", "phone", "ring light",
+  // SFW & cinematic
+  "champagne flute", "hotel keycard", "broken mirror", "crumpled letter", "bloody towel", "stripper pole", "neon sign", "ashtray", "makeup bag", "feather boa", "silk rope", "pill bottle", "vinyl record", "security camera", "love note", "bed restraints", "glitter", "condom wrapper", "ice cube", "fur coat", "playing cards", "striped tie", "vintage camera", "biker helmet", "shot glass", "silk scarf", "ankle bracelet", "lipstick tube", "mirror compact", "hand fan", "glass ashtray", "barstool", "cigarette case", "pearl necklace", "garter belt", "shower loofah", "blindfold", "perfume bottle"
+];
+PF_TOKENS_DICTIONARY["[PROP]"] = PF_PROPS;
+
+// === PF_ACCESSORIES: For costumes/fashion/NSFW details/meme/cinema ===
+const PF_ACCESSORIES = [
+  "choker necklace", "silver hoop earrings", "lace gloves", "aviator sunglasses", "spiked collar", "anklet", "body chain", "velvet ribbon", "knee pads", "fingerless gloves", "toe ring", "bandana", "bolo tie", "cat ears", "corset laces", "leather cuffs", "nipple clamps", "tiara", "zipper mask", "spiked wristband",
+  // Fun/meme
+  "cat tail", "fox tail", "LED collar", "smartwatch", "UV body paint", "furry ears", "cosplay tail", "anime glasses", "bow tie", "plush keychain"
+];
+PF_TOKENS_DICTIONARY["[ACCESSORY]"] = PF_ACCESSORIES;
+
+// === PF_ACTIONS: Dynamic verbs, poses, movement, NSFW, meme, cinematic ===
+const PF_ACTIONS = [
+  // Movement/pose
+  "standing", "lying down", "kneeling", "crouching", "crawling", "sprawled", "arched", "reaching", "stretching", "posing", "jumping", "leaping", "twisting", "bending", "squatting", "balancing", "dancing", "twerking", "grinding", "tipping", "flipping", "rolling", "sliding", "waving", "snapping fingers", "biting nails", "pulling hair", "tossing hair", "flipping hair", "adjusting glasses",
+  // Touch/NSFW/meme
+  "clutching", "grabbing", "caressing", "stroking", "slapping", "patting", "squeezing", "hugging", "embracing", "tickling", "tracing", "licking", "sucking", "nibbling", "biting", "grazing", "pressing", "smooching", "kissing", "making out", "blowing a kiss",
+  // Advanced/scene/cinema
+  "zoom in", "slow pan", "dolly shot", "tracking shot", "over-the-shoulder", "POV", "reverse angle", "reaction shot", "cutaway", "montage", "close-up", "macro shot", "wide shot", "soft fade", "cross dissolve", "jump cut", "smash cut", "fade to black", "freeze frame", "split screen", "voiceover", "intertitle", "establishing shot", "dream sequence", "night vision", "infrared", "thermal cam", "security cam", "handheld cam", "timelapse", "hyperlapse", "slow-motion", "fast-forward", "looping", "split-screen",
+  // Meme/TikTok/Internet
+  "yeeting", "vibing", "rizzing up", "finessing", "flexing", "slaying", "yassifying", "glitching", "pogging", "dab", "t-pose", "swooning", "simping", "sussin", "getting based", "bussin", "bruh-ing", "chilling", "ghosting", "gaslighting", "vaporizing", "going goblin mode", "NPCing", "dancing like a TikToker", "doing a meme face", "doing a devious lick", "moonwalking", "beatboxing", "spitting bars", "roasting", "clapping back", "serving", "dragging", "canceling", "ratio-ing", "stanning", "gigachadding"
+];
+PF_TOKENS_DICTIONARY["[ACTION]"] = PF_ACTIONS;
+
+// === PF_MOODS: All emotions, meme, SFW, NSFW, poetic ===
+const PF_MOODS = [
+  "happy", "sad", "angry", "jealous", "curious", "playful", "bored", "excited", "nervous", "confident", "shy", "anxious", "relaxed", "surprised", "ecstatic", "orgasmic", "aroused", "teasing", "mischievous", "serious", "intense", "tender", "loving", "affectionate", "moody", "cheeky", "sultry", "smitten", "hypnotized", "flirty", "stoned", "zoned", "savage", "chill", "crushing", "lowkey obsessed", "highkey horny", "vulnerable", "broken", "blissed out", "blushing", "freaky", "frenzied", "exhausted", "satisfied", "zany", "stormy", "volatile", "daring", "reckless", "forbidden", "taboo", "dangerous", "mysterious", "enigmatic", "secretive", "coy", "coquettish", "cheeky", "smoldering", "vulnerable", "giggly", "excited"
+];
+PF_TOKENS_DICTIONARY["[MOOD]"] = PF_MOODS;
+
+// === "LOOKALIKE BUT NOT" LOGIC STUB ===
+// This would normally live in its own module or below the "smart brain" function.
+// When a prompt triggers a famous name, style, or copyright, swap with: "inspired by [descriptor]"
+// Example: "Margot Robbie lookalike" => "inspired by a glamorous Hollywood starlet"
+// Use this array for not-getting-sued logic (expand later):
+const PF_LOOKALIKE_SWAPS = [
+  { trigger: "Margot Robbie", swap: "a glamorous Hollywood starlet" },
+  { trigger: "Barbie", swap: "a doll-like fashion icon" },
+  { trigger: "Disney", swap: "an enchanted fairy tale style" },
+  { trigger: "Marvel", swap: "a comic book superhero aesthetic" },
+  { trigger: "Taylor Swift", swap: "a blonde pop superstar" },
+  // ...add more!
+];
+// For actual logic, you'd use a smart replace/swap on prompt build.
+// === SCENE TOKENS: Universal, flexible, hyper-detailed ===
+const PF_SCENE_TOKENS = [
+  // Places/Settings (real, meme, fantasy, NSFW, cinematic)
+  "luxury bedroom", "cheap motel", "sunlit kitchen", "messy living room", "rainy window", "night club", "back alley", "secluded forest", "hidden garden", "deserted beach", "mountain cabin", "lake dock", "hot tub", "poolside", "campfire", "rooftop", "balcony", "garage", "workshop", "locker room", "abandoned warehouse", "neon-lit city", "retro arcade", "tattoo parlor", "underground club", "speakeasy", "strip club", "spooky attic", "basement", "art studio", "photography darkroom",
+  // Surreal/Fantasy/Weirdcore
+  "dreamlike void", "mirror maze", "infinite hallway", "floating bed", "velvet lounge", "crystal cave", "space station", "zero gravity", "cyberpunk alley", "alien landscape", "cloud kingdom", "enchanted forest", "fairy ring", "gothic cathedral", "castle dungeon", "magic circle", "steampunk lab", "vampire lair", "succubus den", "pixelated world", "neon desert", "digital grid", "underwater palace"
+];
+PF_TOKENS_DICTIONARY["[SCENE]"] = PF_SCENE_TOKENS;
+
+// === DIALOGUE LINES: Soft, filthy, meme, cinematic, SFW/NSFW swaps ===
+const PF_DIALOGUE = [
+  // Cinematic, SFW, meme
+  "Whisper in my ear", "Tell me your secret", "Kiss me like you mean it", "Let’s make this night unforgettable", "You’re driving me wild", "I want you so bad", "You taste so good", "I love your body", "Can’t stop thinking about you", "Make me yours", "You’re my fantasy",
+  // NSFW/Explicit/Swap
+  "Bend over", "Spread your legs", "Take off your clothes", "Touch yourself for me", "I want to taste you", "Let me inside", "Ride me", "Cum for me", "Don’t stop", "Deeper", "Harder", "Scream my name", "Beg for it", "Be a good girl", "Take every inch", "So fucking wet", "You like it rough?", "Don’t you dare stop", "I’ll make you beg", "Look at me while you do it", "Use your mouth", "Swallow it all", "Make me cum", "Let’s make a mess", "Let me watch", "On your knees", "Take control", "Choke me", "Spank me", "You’re such a tease"
+];
+PF_TOKENS_DICTIONARY["[DIALOGUE]"] = PF_DIALOGUE;
+
+// === ADVANCED/NEGATIVE/FILTERS ===
+const PF_NEGATIVE_PROMPTS = [
+  "deformed", "extra limbs", "mutated", "extra fingers", "missing fingers", "missing limbs", "crooked eyes", "wonky face", "asymmetrical face", "crossed eyes", "wall-eyed", "lazy eye", "cloned face", "blurry face", "blurry eyes", "blurry", "fuzzy", "noisy", "grainy", "compression artifacts", "jpeg artifacts", "glitch", "render fail", "polygon error", "weird shading", "weird perspective", "strange shadows", "unnatural pose", "contorted", "overexposed", "underexposed", "washed out", "flat lighting", "dull colors", "bad color", "poor contrast", "washed out", "oversharpened", "overfiltered", "overprocessed", "posterization", "plastic skin", "alien skin", "cartoonish", "bad proportions", "long neck", "short neck", "skinny arms", "gigantic hands", "tiny feet", "melting face", "zombie skin", "monster hands", "disjointed", "fragmented", "stretched face", "bizarre body", "incorrect anatomy", "cut-off", "half-body", "half face", "face split", "out of frame", "cropped badly", "text", "logo", "signature", "watermark", "trademark", "username", "copyright", "website", "ugly", "gross", "uncanny", "creepy", "scary", "horrific", "nightmare", "furry", "anthro", "cartoon", "3d anime", "chibi", "sticker", "toy", "plushie", "lego", "minecraft", "pixelated"
+];
+
+// === AI-SAFE/NSFW CLEAN SWAPS ===
+const PF_NSFW_CLEAN_SWAPS = [
+  ["pussy", "vulva", "intimate area"],
+  ["cunt", "privates", "feminine folds"],
+  ["dick", "shaft", "groin"],
+  ["cock", "member", "masculine area"],
+  ["tits", "breasts", "chest"],
+  ["boobs", "bosom", "upper body"],
+  ["ass", "buttocks", "backside"],
+  ["anus", "rear", "anal region"],
+  ["cum", "fluid", "essence"],
+  ["cumshot", "climax", "release"],
+  ["sperm", "seed", "life essence"],
+  ["orgasm", "peak", "ecstatic release"],
+  ["penis", "male anatomy", "groin area"],
+  ["vagina", "female anatomy", "lower region"],
+  ["nipple", "areola", "chest tip"],
+  ["clit", "sensitive spot", "front nub"],
+  ["dildo", "toy", "object"],
+  ["anal", "rear", "back door"],
+  ["fisting", "handplay", "deep massage"],
+  ["masturbate", "self pleasure", "private enjoyment"],
+  ["jerk off", "self-stimulate", "solo play"],
+  ["blowjob", "oral pleasure", "mouth embrace"],
+  ["handjob", "manual pleasure", "hand technique"],
+  ["porn", "adult art", "explicit media"],
+  ["sex", "intercourse", "intimate act"],
+  ["slut", "vixen", "tease"],
+  ["whore", "pleasure-seeker", "temptress"],
+  ["fuck", "have fun", "be with"],
+  ["fucking", "making love", "being together"],
+  ["suck", "draw in", "sip"],
+  ["spit", "drool", "saliva"],
+  ["lick", "taste", "caress"],
+  ["moan", "sound", "express pleasure"],
+  ["cum", "finish", "reach completion"],
+  ["69", "mutual", "shared pleasure"],
+  ["gag", "choke", "restrict"],
+  ["strap-on", "toy belt", "accessory"],
+  ["orgy", "group", "gathering"],
+  ["threesome", "trio", "group"],
+  ["gangbang", "multi-partner", "group event"]
+];
+
+// === ADVANCED FEATURES: HIGHLIGHT, PUNCTUATION, SLANG, EMOJI, BRACKETS, etc. ===
+const PF_HIGHLIGHTERS = [
+  "*", "**", "***", "_", "__", "`", "~", "[", "]", "【", "】", "『", "』", "《", "》", "❝", "❞", "【NSFW】", "‼️", "💥", "🔥", "✨", "🔞", "💦"
+];
+const PF_PUNCTUATION = [
+  ".", ",", ";", ":", "!", "?", "...", "-", "—", "(", ")", "[", "]", "{", "}", "<", ">", "\"", "'", "`", "~", "*", "**", "***", "_", "__", "___", "=", "+", "^", "%", "#", "@", "$", "&", "|", "\\", "/", "•", "…"
+];
+const PF_SLANG = [
+  "lit", "fire", "woke", "savage", "sus", "cringe", "based", "bussin", "drip", "cap", "no cap", "salty", "yeet", "flex", "lowkey", "highkey", "squad", "fam", "shade", "stan", "simp", "thirsty", "ghost", "AF", "IRL", "slay", "goat", "slaps", "main character", "vibe", "vibing", "chill", "swole", "beef", "ship", "OTP", "go off", "periodt", "spill the tea", "tea", "fomo", "glow up", "extra", "basic", "sus", "snatched", "mood", "deadass", "bet", "fire", "fit", "iconic", "clap back", "stan", "flex", "ghosting", "shade", "glow up", "receipts", "tbh", "fr", "oop", "shook", "snatched", "boomer", "Karen", "Chad", "NPC", "rizz", "mid", "gyat", "cheugy", "tbh", "irl", "wyd", "ngl", "finna", "sus", "vibe check", "say less", "it’s giving", "ok boomer", "smh", "lol", "lmao", "rofl", "xd", "pwned", "rekt", "pog", "ez", "gg", "noob", "pro", "afk", "brb", "btw", "idk", "idc", "fml", "wtf", "bff", "jk", "jk jk", "imo", "irl", "yolo", "tfw", "ftw", "meme", "dank", "cracked", "sweaty", "meta"
+];
+const PF_EMOJI = [
+  "😏","😉","😍","😘","😈","👄","👅","💋","🍑","🍆","🍒","🌶️","🌊","💦","🔥","⚡","✨","🖤","💜","💛","💚","💙","❤️","🧡","🤍","💗","💓","💞","💕","💖","💘","💝","🫦","🫦","🥵","🥴","🥰","🤤","😮‍💨","😶‍🌫️","😜","😝","😛","🥳","🤑","😋","🤩","😻","👙","👠","👗","👡","💄","🎀","🎉","🪩","💍","👑","🦄","😇","😳","😚","🧸","🎬","📸","🎥","🛏️","🚿","🛁","🚽","🔞","🚫","✅","🆗","🏆","🏅","🥇","🎯","🔊","📢","💣","🎵","🎶"
+];
+
+// --- Ultra-Futureproof: Any wild new feature, you just drop a list here. ---
+
+// Example: Want to add a meme, filter, emoji bank, hashtag, roleplay script, you just create const PF_XXX = [...]; and map it in PF_TOKENS_DICTIONARY with its [TOKEN]!
+
+// === CHARACTERS & ARCHETYPES: Everything from movie icons to meme, fantasy, kink ===
+const PF_CHARACTERS = [
+  // Human, classic & cinematic
+  "girl", "woman", "boy", "man", "lover", "partner", "friend", "stranger", "teacher", "nurse", "doctor", "paramedic", "cop", "milf", "dilf", "cougar", "stud", "twink", "femboy", "bimbo", "himbo", "cutie", "baddie", "boss", "intern", "maid", "butler", "queen", "king", "prince", "princess", "slave", "domme", "sub", "pet", "kitten", "puppy", "brat", "tease", "seductress", "seducer", "nymph", "vixen", "succubus", "incubus", "angel", "devil", "monster", "vampire", "werewolf", "zombie", "alien", "android", "robot", "clone", "doll", "puppet", "statue", "mermaid", "fae", "fairy", "witch", "wizard", "sorcerer", "druid", "elf", "orc", "goblin", "dragon", "beast", "centaur", "minotaur", "siren", "naga", "dryad", "pixie", "ghost", "spirit", "shadow", "demon", "ogre", "troll", "shapeshifter", "changeling", "shifter", "superhero", "villain", "antihero", "sidekick", "giant", "dwarf", "halfling", "undead", "shade", "specter", "phantom", "banshee", "reaper", "ghoul", "poltergeist", "muse", "idol", "celebrity", "influencer", "streamer", "gamer", "model", "pornstar", "starlet", "escort", "companion", "mistress", "master", "daddy", "mommy", "baby", "sweetheart", "darling", "babe", "hottie", "stud", "fox", "kitten", "lion", "tiger", "panther", "wolf", "cub", "bunny", "doe", "stag", "owl", "crow", "raven", "dove", "swallow", "chick", "rooster", "cock", "hen", "pussycat", "kitten", "vixen", "beaver", "snake", "serpent", "python", "cobra", "stallion", "mare", "unicorn", "pegasus", "griffin", "hydra",
+  // Meme/fake/roleplay/alt
+  "catgirl", "furry", "goth", "emo", "e-girl", "e-boy", "mall goth", "alt-girl", "scene kid", "cyberpunk", "anime protagonist", "hacker", "npc", "gigachad", "sigma", "waifu", "husbando", "main character", "side character", "background character", "cursed entity", "eldritch being", "goblin-mode", "memelord", "reddit mod", "twitch streamer", "vaporwave witch", "dank wizard", "dark muse"
+];
+PF_TOKENS_DICTIONARY["[CHARACTER]"] = PF_CHARACTERS;
+
+// === ARCHETYPES & ROLES: More granular story, film, and NSFW role-fuel ===
+const PF_ARCHETYPES = [
+  "bad girl", "innocent ingenue", "stoic protector", "playful tease", "domme queen", "needy sub", "flirty neighbor", "naughty nurse", "strict teacher", "rebel lover", "mysterious stranger", "jealous ex", "trophy partner", "forbidden step", "caring mentor", "wild party animal", "shy wallflower", "cocky jock", "crush next door", "charismatic boss",
+  // Cinema/fantasy
+  "reluctant hero", "antihero", "sidekick", "comic relief", "tragic villain", "evil overlord", "hacker genius", "corrupt official", "noble knight", "cunning thief", "ruthless mercenary", "starving artist", "eccentric inventor", "mad scientist", "twisted doctor", "doomed love interest", "enchanted princess", "femme fatale", "masked avenger", "cult leader", "taboo icon"
+];
+PF_TOKENS_DICTIONARY["[ARCHETYPE]"] = PF_ARCHETYPES;
+
+// === GROUP TYPES: Every relationship, orgy, poly, group, kink/fantasy/film ===
+const PF_GROUP_TYPES = [
+  "couple", "polycule", "triad", "throuple", "lesbian couple", "gay lovers", "open marriage", "swingers", "foursome", "harem", "reverse harem", "orgy", "voyeur crowd", "stag and vixen", "dom and subs", "bachelor party", "bachelorette party", "friends with benefits", "college roommates", "enemies to lovers", "office hookup", "teacher/student", "step-siblings", "pet & handler", "party group", "work team", "secret society", "sports team", "support group", "band on tour"
+];
+PF_TOKENS_DICTIONARY["[GROUP_TYPE]"] = PF_GROUP_TYPES;
+
+// === BODY PARTS: SFW, NSFW, clinical, meme, poetic ===
+const PF_BODY_PARTS = [
+  // General/neutral
+  "face", "lips", "eyes", "cheeks", "chin", "jawline", "nose", "ears", "eyebrows", "eyelashes", "teeth", "tongue", "neck", "shoulders", "collarbone", "arms", "elbows", "wrists", "hands", "fingers", "palms", "torso", "chest", "breasts", "bust", "nipples", "areola", "sternum", "abdomen", "stomach", "navel", "waist", "hips", "back", "spine", "shoulder blades", "pelvis", "groin", "pubic area", "mons", "thighs", "inner thighs", "knees", "legs", "calves", "ankles", "feet", "toes", "heels", "arches", "butt", "ass", "rear", "booty", "glutes", "intimate area", "crotch", "vulva", "labia", "clitoris", "perineum", "taint", "anus", "star", "rosebud", "penis", "shaft", "head", "tip", "scrotum", "balls", "testicles", "foreskin", "urethra", "meatus", "frenulum", "vagina", "canal", "entrance", "g-spot", "cervix", "womb", "love button", "peach", "eggplant", "cupcake", "snuggle spot", "ivory neck", "amber hair", "dusky nipples", "plush lips", "sparkling smile"
+];
+PF_TOKENS_DICTIONARY["[BODY_PART]"] = PF_BODY_PARTS;
+
+// === ACTIONS/VERBS: Clean, NSFW, cinematic, meme, roleplay ===
+const PF_ACTIONS = [
+  // Gestures/general
+  "gaze", "smile", "laugh", "whisper", "listen", "talk", "touch", "hold", "embrace", "dance", "walk", "run", "sit", "stand", "kneel", "lean", "stretch", "pose", "move", "sway", "look", "peek", "glance",
+  // Sensual/Poetic/Explicit
+  "caress", "stroke", "kiss", "lick", "nibble", "tease", "trace", "tickle", "press", "rub", "massage", "grind", "squeeze", "fondle", "cup", "snuggle", "spoon", "nestle", "cling", "spread", "thrust", "penetrate", "ride", "straddle", "arch", "mount", "wrap", "slide", "suckle", "suck", "swallow", "taste", "spank", "slap", "bite", "claw", "moan", "pant", "whimper", "groan", "squirt", "explode", "twitch", "cum", "orgasm", "climax",
+  // Power/Action
+  "command", "dominate", "submit", "control", "order", "obey", "resist", "challenge", "fight", "yield", "force", "persuade", "tempt", "seduce", "captivate", "enchant", "mesmerize"
+];
+PF_TOKENS_DICTIONARY["[ACTION]"] = PF_ACTIONS;
+
+// === ADVANCED SMART LOGIC HELPERS (for token dictionary, expansion, and mapping) ===
+const PF_TOKENS_DICTIONARY = {
+  "[CHARACTER]": PF_CHARACTERS,
+  "[ARCHETYPE]": PF_ARCHETYPES,
+  "[GROUP_TYPE]": PF_GROUP_TYPES,
+  "[BODY_PART]": PF_BODY_PARTS,
+  "[ACTION]": PF_ACTIONS,
+  // (add other lists below as you go)
+};
+// === SCENE, LOCATION, ENVIRONMENT ===
+const PF_LOCATIONS = [
+  "luxury bedroom", "cheap motel", "penthouse suite", "sunlit kitchen", "messy living room", "rainy window", "night club", "back alley", "secluded forest", "hidden garden", "deserted beach", "mountain cabin", "lake dock", "hot tub", "poolside", "campfire", "rooftop", "balcony", "garage", "workshop", "locker room", "abandoned warehouse", "neon-lit city", "retro arcade", "tattoo parlor", "underground club", "speakeasy", "strip club", "spooky attic", "basement", "art studio", "photography darkroom", "dreamlike void", "mirror maze", "infinite hallway", "floating bed", "velvet lounge", "crystal cave", "space station", "zero gravity", "cyberpunk alley", "alien landscape", "cloud kingdom", "enchanted forest", "gothic cathedral", "castle dungeon", "magic circle", "steampunk lab", "vampire lair", "succubus den", "pixelated world", "neon desert", "digital grid", "underwater palace"
+];
+PF_TOKENS_DICTIONARY["[LOCATION]"] = PF_LOCATIONS;
+
+// === SCENARIO TRIGGERS & PROMPT SEEDS ===
+const PF_SCENARIOS = [
+  "caught in the act", "office after hours", "strangers at a club", "forbidden classroom", "hotel rendezvous", "backseat encounter", "accidental voyeur", "tied and waiting", "secret affair", "undercover cop", "bachelorette party", "initiation ritual", "midnight dare", "shower surprise", "double life revealed", "seduction game", "role reversal", "lost bet", "neighbor’s window", "under the table"
+];
+PF_TOKENS_DICTIONARY["[SCENARIO]"] = PF_SCENARIOS;
+
+// === EMOTION & MOOD: For slider use and auto-cinematic paragraphs ===
+const PF_EMOTIONS = [
+  "romantic", "sensual", "playful", "naughty", "mischievous", "innocent", "teasing", "flirtatious", "bashful", "shy", "bold", "confident", "dominant", "submissive", "tender", "caring", "protective", "adoring", "loving", "passionate", "wild", "fiery", "intense", "moody", "brooding", "wistful", "dreamy", "longing", "lustful", "desperate", "craving", "obsessed", "hypnotic", "entranced", "zoned out", "dazed", "lost in the moment", "daring", "reckless", "forbidden", "taboo", "dangerous", "mysterious", "enigmatic", "secretive", "coy", "coquettish", "cheeky", "sultry", "smoldering", "vulnerable", "blushing", "giggly", "excited", "freaky", "frenzied", "exhausted", "satisfied"
+];
+PF_TOKENS_DICTIONARY["[EMOTION]"] = PF_EMOTIONS;
+
+const PF_MOODS = [
+  "happy", "sad", "angry", "confused", "ecstatic", "nervous", "terrified", "excited", "bored", "melancholic", "serene", "peaceful", "furious", "inspired", "hopeless", "hopeful", "dreamy", "wistful", "sassy", "flirty", "bashful", "shy", "embarrassed", "mortified", "ashamed", "guilty", "proud", "triumphant", "empowered", "dominant", "submissive", "teasing", "provocative", "lustful", "horny", "turned on", "craving", "needy", "clingy", "desperate", "content", "smug", "pensive", "dazed", "spaced out", "zoned out", "disconnected", "paranoid", "euphoric", "apathetic", "sarcastic", "mocking", "cheeky", "innocent", "corrupted", "wicked", "playful", "cheery", "jaded", "vulnerable", "exposed", "comforted", "safe", "risky", "adventurous", "curious", "shocked", "surprised", "amazed", "intrigued", "obsessed", "fascinated", "obsessive", "bubbly", "zany", "manic", "calm", "stoic", "relaxed", "unhinged", "broken", "lost", "delirious", "fiery", "icy", "stoic", "frozen", "overjoyed", "elated", "depressed", "hopeless", "unsettled", "hyped", "vibing", "slaying", "bussin", "cringe", "sus", "based", "pilled", "yeeting", "pog", "NPC", "main character", "sigma", "alpha", "omega", "uwu", "nyaa", "lol", "bruh", "goated", "legend", "iconic", "tired", "wired", "spooked", "delicate", "tender", "stormy", "volatile"
+];
+PF_TOKENS_DICTIONARY["[MOOD]"] = PF_MOODS;
+
+// === PROPS / OBJECTS: For realism and visual triggers ===
+const PF_PROPS = [
+  "champagne flute", "hotel keycard", "broken mirror", "handcuffs", "crumpled letter", "bloody towel", "stripper pole", "neon sign", "ashtray", "makeup bag", "feather boa", "silk rope", "pill bottle", "vinyl record", "security camera", "love note", "bed restraints", "mask", "glitter", "condom wrapper", "ice cube", "fur coat", "playing cards", "striped tie", "vintage camera", "biker helmet", "shot glass", "silk scarf", "ankle bracelet", "lipstick tube", "mirror compact", "hand fan", "glass ashtray", "barstool", "cigarette case", "pearl necklace", "garter belt", "shower loofah", "blindfold", "perfume bottle"
+];
+PF_TOKENS_DICTIONARY["[PROP]"] = PF_PROPS;
+
+// === CINEMATIC FX & LIGHTING (shot/scene/slider compatible) ===
+const PF_LIGHTING = [
+  "strobe-lit", "moonlit", "neon-washed", "candle-glow", "harsh fluorescent", "dim backlight", "blinding daylight", "twilight haze", "spotlit", "flickering bulb", "halogen wash", "golden hour", "firelight", "tv glow", "police lights", "pale dawn", "sunset gradient", "shadow-dappled", "streetlamp-lit", "UV blacklight"
+];
+const PF_LIGHTING_COLOR = [
+  "cool blue", "sultry red", "amber gold", "ice white", "warm orange", "green glow", "midnight purple", "frosted silver", "sunset pink", "dirty yellow", "foggy grey", "rich copper", "seafoam green", "neon violet", "hazy gold", "smoky teal", "milky rose", "moonlit silver", "bone white", "dusky brown"
+];
+PF_TOKENS_DICTIONARY["[LIGHT]"] = PF_LIGHTING;
+PF_TOKENS_DICTIONARY["[LIGHT_COLOR]"] = PF_LIGHTING_COLOR;
+
+// === DIALOGUE / NSFW LINES: For scene spice or roleplay triggers ===
+const PF_DIALOGUE = [
+  "Don’t stop.", "You know you want this.", "Make me beg.", "Not here—someone might see.", "Do you trust me?", "Shut up and kiss me.", "Say my name.", "Harder.", "I shouldn’t want this.", "Take it off.", "Bite me.", "Keep your eyes on me.", "No one can hear us.", "I dare you.", "Is this what you want?", "You’re shaking.", "Tell me you need it.", "You like it rough?", "Pull my hair.", "Don’t you dare stop."
+];
+PF_TOKENS_DICTIONARY["[DIALOGUE]"] = PF_DIALOGUE;
+
+// === SITUATION TEMPLATES for MOVIE/PIC LOGIC ===
+const PF_PROMPT_TEMPLATES = [
+  // Cinematic/Art
+  "[CHARACTER] [ACTION] [PROP] in [LOCATION], lit by [LIGHT_COLOR], with [MOOD], feeling [EMOTION].",
+  // NSFW explicit
+  "[CHARACTER] [ACTION] [BODY_PART] with [PROP] in [LOCATION] while [MOOD] and [DIALOGUE]",
+  // Artistic
+  "[CHARACTER] in [COSTUME] [ACTION] at [LOCATION], with [BODY_PART] and [LIGHT_COLOR] lighting.",
+  // Scenario
+  "[ARCHETYPE] and [ARCHETYPE] in [SCENARIO] at [LOCATION], [MOOD], [PROP] nearby.",
+  // Group
+  "[GROUP_TYPE] [ACTION] [BODY_PART] in [LOCATION], [MOOD], covered in [PROP].",
+  // Short punch
+  "[CHARACTER] [ACTION] in [LOCATION], [MOOD].",
+  // Minimal art
+  "[ACTION] [PROP], [MOOD], [LIGHT_COLOR] light."
+];
+// === COSTUMES / FASHION / ACCESSORIES ===
+const PF_COSTUMES = [
+  "lace bra", "sheer bodysuit", "corset", "leather harness", "fetish mask", "catgirl ears", "maid outfit", "schoolgirl skirt", "bunny suit", "latex catsuit", "kimono", "nurse costume", "cop uniform", "firefighter jacket", "angel wings", "devil horns", "witch hat", "fairy dress", "corset laces", "chainmail bikini", "satin slip", "opera gloves", "fishnets", "gothic dress", "cosplay armor", "cape", "wizard robe", "pirate hat", "toga", "choker", "body chain", "spiked collar", "anklet", "zipper mask", "spiked wristband", "ballet flats", "combat boots", "high heels", "platform shoes", "bare feet"
+];
+PF_TOKENS_DICTIONARY["[COSTUME]"] = PF_COSTUMES;
+
+const PF_ACCESSORIES = [
+  "silver hoop earrings", "lace gloves", "velvet ribbon", "knee pads", "fingerless gloves", "toe ring", "bandana", "bolo tie", "tiara", "nipple clamps", "leather cuffs", "ankle socks", "sunhat", "lace mask", "tooth gem", "beaded bracelet", "nipple pasties", "body glitter", "crystal plug", "fuzzy handcuffs", "single earring", "leather cuffs", "ballet flats"
+];
+PF_TOKENS_DICTIONARY["[ACCESSORY]"] = PF_ACCESSORIES;
+
+// === GROUPS & PAIRINGS (future: support “lookalike” logic) ===
+const PF_GROUP_TYPES = [
+  "lesbian trio", "bachelor party", "throuple", "two girls and a guy", "group of strangers", "swingers", "orgy scene", "voyeur crowd", "lovers’ triangle", "enemies to lovers", "dom and subs", "stag and vixen", "step-siblings", "college roommates", "best friends", "open polycule", "mixed couple", "pet & handler", "dominant trio", "office hookup", "secret admirers", "daddy and girls", "bff sleepover", "party group", "family fantasy", "foursome"
+];
+PF_TOKENS_DICTIONARY["[GROUP_TYPE]"] = PF_GROUP_TYPES;
+
+const PF_GROUPS = [
+  "bachelorette party", "all-male squad", "all-girl clique", "band on tour", "secret society", "roommates", "work team", "sorority sisters", "frat brothers", "rival crews", "drag troupe", "support group", "sports team", "lovers’ circle", "club members", "after-hours staff"
+];
+PF_TOKENS_DICTIONARY["[GROUP]"] = PF_GROUPS;
+
+// === FACIAL EXPRESSIONS & CLOSE-UP DETAILS ===
+const PF_FACE_EXPRESSIONS = [
+  "biting her lip", "wide-eyed", "half smile", "glare", "pleading eyes", "sultry stare", "arched brow", "mock surprise", "smirk", "shy glance", "rolling her eyes", "nervous laugh", "teasing grin", "furrowed brow", "moaning softly", "gasping", "breathless gasp", "sticking out tongue", "innocent blink", "satisfied grin", "cracked smile", "downturned mouth", "sharp jawline"
+];
+PF_TOKENS_DICTIONARY["[FACE]"] = PF_FACE_EXPRESSIONS;
+
+const PF_FACIAL_DETAILS = [
+  "smudged mascara", "flushed cheeks", "quivering lip", "arced eyebrow", "beaded sweat", "teeth showing", "freckled nose", "swollen lips", "tear tracks", "crooked grin", "smeared blush", "fluttering lashes", "wrinkled brow", "furrowed forehead", "dimples", "sunken eyes", "glistening eyes"
+];
+PF_TOKENS_DICTIONARY["[FACIAL_DETAIL]"] = PF_FACIAL_DETAILS;
+
+// === VISUAL FX, FILTERS, CAMERA TRICKS (slider futureproof) ===
+const PF_VISUAL_EFFECTS = [
+  "lens flare", "bokeh", "glow", "neon", "halation", "vignette", "motion blur", "depth blur", "focus blur", "distortion", "chromatic aberration", "scanlines", "film grain", "scratches", "flicker", "glitch", "pixelation", "CRT", "ghosting", "double exposure", "mirror effect", "kaleidoscope", "radial blur", "zoom blur", "light leaks", "dust", "speckles", "starburst", "rays", "rim light", "backlight", "hard shadow", "soft shadow", "glitter", "sparkles", "particle effect", "steam", "mist", "rain", "drizzle", "fog", "haze", "smoke", "fire", "embers", "candlelight", "laser", "scan effect"
+];
+PF_TOKENS_DICTIONARY["[EFFECT]"] = PF_VISUAL_EFFECTS;
+
+// === SLANG / MEME / INTERNET / IRONY ===
+const PF_SLANG = [
+  "slay", "no cap", "bet", "yeet", "rizz up", "drip check", "sussy", "sus", "poggers", "epic win", "L", "W", "ratio", "gigachad", "NPC moment", "main character vibes", "Sigma grindset", "alpha energy", "based", "cringe", "mid", "it’s giving", "bussin", "yass queen", "deadass", "on God", "he ate", "she ate", "valid", "goated", "sheesh", "let him cook", "sending it", "touch grass", "get help", "malding", "cope", "dilate", "dragged", "cancelled", "NPC energy", "canon event", "side quest", "plot armor", "is this loss", "vibe check", "smol", "chonky", "uwu", "nyaa", "rawr", "oof", "bruh moment", "big mood", "small mood", "crying in the club", "vibe shift", "hard launch", "soft launch", "spilling the tea", "periodt", "simp", "stan", "karen moment", "Karen alert", "zoomies", "vibing", "gatekeep", "girlboss", "gaslight", "malewife", "wife guy", "himbo", "bimbo", "femboy", "it’s a bop", "not a vibe", "snatched", "serving looks", "flex", "hella", "fr", "iykyk"
+];
+PF_TOKENS_DICTIONARY["[SLANG]"] = PF_SLANG;
+
+// === EMOJI BANK (safe, meme, and nsfw-coded) ===
+const PF_EMOJI = [
+  "😏","😉","😍","😘","😈","👄","👅","💋","🍑","🍆","🍒","🌶️","🌊","💦","🔥","⚡","✨","🖤","💜","💛","💚","💙","❤️","🧡","🤍","💗","💓","💞","💕","💖","💘","💝","🫦","🫦","🥵","🥴","🥰","🤤","😮‍💨","😶‍🌫️","😜","😝","😛","🥳","🤑","😋","🤩","😻","👙","👠","👗","👡","💄","🎀","🎉","🪩","💍","👑","🦄","😇","😳","🧸","🎬","📸","🎥","🛏️","🚿","🛁","🚽","🔞","🚫","✅","🆗","🏆","🏅","🥇","🎯","🔊","📢","💣","🎵","🎶"
+];
+PF_TOKENS_DICTIONARY["[EMOJI]"] = PF_EMOJI;
+
+// === PUNCTUATION, BRACKETS, STRESS MARKERS ===
+const PF_EMPHASIS = [
+  "*", "**", "***", "_", "__", "~~", "`", "()", "[]", "{}", "<>", "<b>", "</b>", "<i>", "</i>", "<u>", "</u>", "<mark>", "</mark>", "<em>", "</em>", "<strong>", "</strong>", "(( ))", "【 】", "『 』", "《 》", "❝ ❞", "【NSFW】", "⚠️", "‼️", "💥", "🔥", "✨", "🔞", "🔊", "💧", "🔴", "🟣", "💜", "💦"
+];
+PF_TOKENS_DICTIONARY["[EMPHASIS]"] = PF_EMPHASIS;
+
+const PF_PUNCTUATION = [
+  ".", ",", ";", ":", "-", "—", "(", ")", "[", "]", "{", "}", "<", ">", "!", "?", "…", "‽", "/", "\\", "|", "\"", "'", "`", "~", "_", "*", "**", "***", "'''", "\"\"", "''", "!!!", "???", "?!", "...", "—", "–", "•", "·", "°", "→", "←", "↑", "↓", "↔", "#", "@", "&", "$", "%", "^", "+", "=", "~"
+];
+PF_TOKENS_DICTIONARY["[PUNCTUATION]"] = PF_PUNCTUATION;
+// === ADVANCED BODY PARTS, EUPHEMISMS, SFW & NSFW SWAPS ===
+const PF_BODY_PARTS = [
+  // Clinical/neutral
+  "body", "form", "figure", "silhouette", "torso", "limbs", "anatomy", "musculature", "skin", "features", "complexion", "proportions", "contours", "structure", "physique", "hips", "waist", "shoulders", "back", "arms", "forearms", "hands", "fingers", "palms", "feet", "toes", "neck", "jawline", "cheeks", "chin", "nose", "lips", "eyelids", "eyebrows", "hair", "scalp",
+  // Face/facial features
+  "face", "eyes", "gaze", "pupils", "irises", "lashes", "mouth", "teeth", "smile", "dimples", "freckles", "earlobes", "ears", "temples", "forehead",
+  // Bust/chest/boobs
+  "breasts", "bust", "bosom", "chest", "decolletage", "cleavage", "curve", "mounds", "pillows", "orbs", "globes", "twins", "peaks", "assets", "rack", "front",
+  // Nipples/areola
+  "nipples", "areolae", "tips", "points", "buds", "crowns", "rosy tips", "centers",
+  // Genitalia (female)
+  "intimate area", "privates", "vulva", "mons", "outer lips", "inner lips", "labia", "labia majora", "labia minora", "folds", "groove", "opening", "entrance", "petals", "core", "flower", "peach", "yoni", "valley", "sweet spot", "honey pot", "lady bits", "lotus", "love button", "clitoris", "clit", "hood", "bud", "pocket", "passage", "depths", "center", "softness", "wetness", "slickness", "moistness", "dampness", "warmth", "sanctuary", "velvet folds", "sheath", "portal", "slit", "crease",
+  // Genitalia (male)
+  "groin", "crotch", "manhood", "shaft", "tip", "crown", "member", "length", "stalk", "root", "base", "phallus", "head", "glans", "flesh", "package", "family jewels", "orbs", "sack", "scrotum", "testicles", "balls", "eggs", "stones", "seed", "wand", "rod", "pole", "pillar", "torch", "bulge", "banana", "eggplant", "emoji 🍆",
+  // Butts
+  "buttocks", "rear", "backside", "behind", "booty", "bottom", "glutes", "cheeks", "seat", "curve", "derriere", "rump", "fanny", "bum", "ass", "cake", "peach", "emoji 🍑",
+  // Internal & poetic
+  "core", "spine", "abdomen", "belly", "navel", "stomach", "pelvis", "solar plexus", "lungs", "heart", "pulse point",
+  // SFW swap-phrases
+  "that area", "hidden zone", "private part", "sensitive spot", "tender region", "delicate place", "lower half", "midsection", "special area",
+  // Emoji/symbolic
+  "🍑", "🍆", "💦", "🔥", "🌸", "🌹", "🫦", "👀", "👅", "🫂", "🧊", "❄️", "⚡", "✨", "🖤", "💋", "💜", "🩷", "💫", "🧲", "🔒", "🔓"
+];
+PF_TOKENS_DICTIONARY["[BODY_PART]"] = PF_BODY_PARTS;
+
+// === NSFW "CLEAN" SWAPS / AI-DODGE MAPS (safe for all engines) ===
+const PF_NSFW_CLEAN_SWAPS = {
+  // [offensiveWord]: [clean, ultra-clean, poetic]
+  "cunt":      ["intimate area", "velvet bud", "soft petal"],
+  "pussy":     ["kitten", "lotus", "treasure"],
+  "cock":      ["shaft", "pillar", "thrust rod"],
+  "dick":      ["member", "wand", "extension"],
+  "tits":      ["chest", "bosom", "pillows"],
+  "boobs":     ["bust", "upper body", "assets"],
+  "ass":       ["hips", "rear", "curve"],
+  "anus":      ["backdoor", "star", "hidden ring"],
+  "cum":       ["essence", "nectar", "dew"],
+  "fuck":      ["embrace", "join", "fuse"],
+  "whore":     ["starlet", "vixen", "muse"],
+  "slut":      ["wild one", "pleasure-seeker", "unfiltered soul"],
+  "fap":       ["self-pleasure", "intimate moment", "solo play"],
+  "porn":      ["forbidden art", "spicy gallery", "AI study"],
+  // ...add more as needed!
+};
+
+// === COMMON NEGATIVE TOKENS (avoid, filter, or use for negatives prompt) ===
+const PF_NEGATIVES = [
+  "deformed", "mutated", "extra limbs", "extra fingers", "missing fingers", "missing limbs", "crooked eyes", "wonky face", "asymmetrical face", "crossed eyes", "wall-eyed", "lazy eye", "monkey face", "fused toes", "webbed fingers", "bad anatomy", "bad hands", "bad feet", "weird arms", "messed up legs", "distorted face", "cloned face", "blurry face", "blurry eyes", "blurry", "fuzzy", "noisy", "grainy", "compression artifacts", "jpeg artifacts", "glitch", "render fail", "polygon error", "weird shading", "unnatural pose", "contorted", "overexposed", "underexposed", "washed out", "flat lighting", "dull colors", "bad color", "poor contrast", "washed out", "oversharpened", "overfiltered", "overprocessed", "posterization", "plastic skin", "alien skin", "cartoonish", "bad proportions", "long neck", "short neck", "skinny arms", "gigantic hands", "tiny feet", "melting face", "zombie skin", "monster hands", "disjointed", "fragmented", "stretched face", "bizarre body", "incorrect anatomy", "cut-off", "half-body", "cropped badly", "logo", "signature", "watermark", "trademark", "username", "copyright", "website", "ugly", "gross", "uncanny", "creepy", "horrific", "nightmare", "furry", "anthro", "cartoon", "3d anime", "chibi", "sticker", "toy", "plushie", "lego", "minecraft", "pixelated"
+];
+PF_TOKENS_DICTIONARY["[NEGATIVE]"] = PF_NEGATIVES;
+
+// === MOVIE GENRES, SITUATION SEEDS, PROMPT SCENARIOS (film, art, meme, NSFW, SFW) ===
+const PF_MOVIE_GENRES = [
+  "action", "adventure", "drama", "romance", "comedy", "dark comedy", "slapstick", "parody", "thriller", "horror", "slasher", "psychological horror", "erotic thriller", "suspense", "noir", "neo-noir", "crime", "mystery", "detective", "sci-fi", "cyberpunk", "space opera", "fantasy", "urban fantasy", "fairy tale", "supernatural", "paranormal", "found footage", "mockumentary", "biopic", "war", "post-apocalyptic", "dystopian", "teen drama", "coming of age", "musical", "animation", "anime", "slice of life", "school life", "sports", "heist", "caper", "buddy cop", "road movie", "chick flick", "bromance", "tragedy", "family drama", "adult film", "fetish", "taboo", "cult classic", "midnight movie", "arthouse", "indie", "experimental", "surreal"
+];
+PF_TOKENS_DICTIONARY["[GENRE]"] = PF_MOVIE_GENRES;
+
+const PF_SITUATIONS = [
+  "taking a selfie", "posing for a photo", "caught in the act", "making eye contact", "glancing over shoulder", "winking", "biting lip", "teasing smile", "tongue out", "blowing a kiss", "blushing", "sulking", "pouting", "sticking tongue out", "leaning forward", "arch back", "sprawled on bed", "laying in grass", "sitting cross-legged", "bent over", "on all fours", "kneeling", "straddling", "riding", "hugging pillow", "spooning", "cuddling", "embracing", "holding hands", "petting hair", "tugging clothes", "lifting shirt", "unzipping pants", "pulling skirt up", "adjusting panties", "removing bra", "topless", "fully nude", "partially clothed", "clothes half-off", "wet shirt", "see-through clothing", "standing under shower", "covered in bubbles", "in bathtub", "splashing water", "skinny dipping", "smeared with oil", "dripping sweat", "steamy mirror", "fogged glasses", "caught mid-orgasm", "post-climax", "holding toy", "strapped to bed", "tied up", "blindfolded", "gagged", "spanked", "being choked", "dominant stance", "submissive pose", "presenting", "on knees", "spreading legs", "fingers in mouth", "hand between thighs", "gripping sheets", "scratching back", "leaving bite marks", "licking neck", "sucking finger", "whispering", "moaning", "panting", "crying out", "giggling", "flushed cheeks", "tearing up", "shaking", "quivering", "collapsing", "knees buckling", "arched back", "exposed navel", "showing off", "teasing", "taunting", "roleplaying", "cosplay", "caught changing", "morning after", "midnight rendezvous", "seducing", "hypnotized", "mind break", "lost in pleasure", "staring at camera", "licking lips", "pressing against glass", "covered in chocolate", "covered in whipped cream", "using food", "ice cube play", "sensory overload", "multiple partners", "mirror reflection", "POV angle", "upskirt", "downblouse", "gloryhole", "voyeur", "exhibitionist", "caught in public", "shameless", "brazen", "naughty", "nice", "innocent act", "faking innocence", "confession", "declaration", "asking for more", "begging", "commanding", "ordering", "obedient", "defiant", "rebellious", "afraid", "reluctant", "consensual", "eager", "hesitant", "conflicted", "overwhelmed", "climaxing", "recovering", "afterglow", "smoking after", "drinking", "toasting", "celebrating", "sneaking out", "mid-session selfie"
+];
+PF_TOKENS_DICTIONARY["[SITUATION]"] = PF_SITUATIONS;
+
+const PF_SCENARIOS = [
+  "caught in the act", "office after hours", "strangers at a club", "forbidden classroom", "hotel rendezvous", "backseat encounter", "accidental voyeur", "tied and waiting", "secret affair", "undercover cop", "bachelorette party", "initiation ritual", "midnight dare", "shower surprise", "double life revealed", "seduction game", "role reversal", "lost bet", "neighbor’s window", "under the table"
+];
+PF_TOKENS_DICTIONARY["[SCENARIO]"] = PF_SCENARIOS;
+// === MOODS, EMOTIONAL STATES, AND ATMOSPHERIC VIBES ===
+const PF_MOODS = [
+  "romantic", "sensual", "playful", "naughty", "mischievous", "innocent", "teasing", "flirtatious", "bashful", "shy", "bold", "confident", "dominant", "submissive", "tender", "caring", "protective", "adoring", "loving", "passionate", "wild", "fiery", "intense", "moody", "brooding", "wistful", "dreamy", "longing", "lustful", "desperate", "craving", "obsessed", "hypnotic", "entranced", "zoned out", "dazed", "lost in the moment", "daring", "reckless", "forbidden", "taboo", "dangerous", "mysterious", "enigmatic", "secretive", "coy", "coquettish", "cheeky", "sultry", "smoldering", "vulnerable", "blushing", "giggly", "excited", "freaky", "frenzied", "exhausted", "satisfied", "elated", "ecstatic", "devoted", "jealous", "suspicious", "melancholy", "haunted", "joyful", "overstimulated", "burned out", "anxious", "calm", "stoic", "manic", "apathetic", "apathetic", "crushed", "restless", "tormented", "indifferent"
+];
+PF_TOKENS_DICTIONARY["[MOOD]"] = PF_MOODS;
+
+const PF_EMOTIONAL_STATES = [
+  "anxious", "defiant", "yearning", "content", "overwhelmed", "impulsive", "melancholic", "provocative", "cautious", "hesitant", "starved for touch", "dazed", "apathetic", "thrilled", "lonely", "satisfied", "torn", "daring", "paranoid", "euphoric", "conflicted", "giddy", "nervous anticipation", "reckless abandon", "fury barely contained", "spiteful grin", "rapturous bliss", "awkward shyness", "guilty pleasure", "heartfelt apology", "exhausted contentment", "smoldering anger", "quiet satisfaction"
+];
+PF_TOKENS_DICTIONARY["[EMOTION]"] = PF_EMOTIONAL_STATES;
+
+// === ATMOSPHERIC/ARTISTIC VIBES (good for sliders or "energy" setting) ===
+const PF_VIBES = [
+  "hacker", "cyberpunk", "underground", "gothic", "dreamcore", "weirdcore", "ethereal", "angelic", "sinister", "dystopian", "vaporwave", "meme", "animecore", "noir", "glitch", "film grain", "nightmare", "chill", "trippy", "rave", "classic", "OG", "legendary", "internet legend", "taboo", "prohibited", "iconic", "viral", "alt", "indie", "mainstream", "unfiltered", "wholesome", "chaotic", "forbidden"
+];
+PF_TOKENS_DICTIONARY["[VIBE]"] = PF_VIBES;
+
+// === ADVANCED OBJECTS & SCENE FILLER ===
+const PF_OBJECTS = [
+  "champagne flute", "hotel keycard", "broken mirror", "handcuffs", "crumpled letter", "bloody towel", "stripper pole", "neon sign", "ashtray", "makeup bag", "feather boa", "silk rope", "pill bottle", "vinyl record", "security camera", "love note", "bed restraints", "mask", "glitter", "condom wrapper", "ice cube", "fur coat", "playing cards", "striped tie", "vintage camera", "biker helmet", "shot glass", "silk scarf", "ankle bracelet", "lipstick tube", "mirror compact", "hand fan", "glass ashtray", "barstool", "cigarette case", "pearl necklace", "garter belt", "shower loofah", "blindfold", "perfume bottle"
+];
+PF_TOKENS_DICTIONARY["[OBJECT]"] = PF_OBJECTS;
+
+// === "SCENE GLUE" / CONNECTOR PHRASES FOR CINEMATIC FLOW ===
+const PF_SCENE_GLUE = [
+  "as the light fades", "in the hush of midnight", "with the city buzzing outside", "bathed in neon glow", "beneath the sheets", "through the fogged glass", "in the pulse of the crowd", "under the cold shower", "as tension builds", "with breathless urgency", "at the edge of reason", "lost in a haze", "caught in the act", "after the last call", "while everyone sleeps", "in the echo of footsteps", "with trembling hands", "amid whispered secrets", "as thunder rolls", "while music thumps", "during the lull", "in the flicker of candlelight", "on a dare", "with nothing but a glance", "on a night like this", "where danger feels close", "while desire simmers", "with hearts pounding", "when defenses drop", "after the final gasp"
+];
+PF_TOKENS_DICTIONARY["[SCENE_GLUE]"] = PF_SCENE_GLUE;
+
+// === SENSES: TASTE, SMELL, SOUND, TOUCH ===
+const PF_TASTES = [
+  "sweet", "salty", "bitter", "sour", "umami", "spicy", "minty", "fruity", "chocolatey", "creamy", "smoky", "zesty", "tangy", "syrupy", "buttery", "malty", "nutty", "earthy", "floral", "metallic", "cool", "fiery", "tingling"
+];
+PF_TOKENS_DICTIONARY["[TASTE]"] = PF_TASTES;
+
+const PF_SMELLS = [
+  "musky", "clean", "soapy", "sweet", "floral", "citrusy", "woody", "spicy", "earthy", "sweaty", "leathery", "fruity", "oceanic", "smoky", "powdery", "amber", "minty", "fresh", "pungent", "incense", "perfume", "cologne", "chlorine", "ozone", "aromatic"
+];
+PF_TOKENS_DICTIONARY["[SMELL]"] = PF_SMELLS;
+
+const PF_SOUNDS = [
+  "moan", "groan", "pant", "gasp", "whimper", "squeal", "cry", "giggle", "laugh", "sigh", "grunt", "yelp", "shout", "scream", "murmur", "whisper", "slap", "smack", "thud", "pop", "snap", "squelch", "splash", "drip", "buzz", "ding", "ring", "beep", "whoosh", "bang", "crash", "clatter", "gulp", "lick", "slurp", "suck", "spit", "blow", "sizzle", "hum", "rattle", "roar", "thunder", "pulse", "heartbeat", "zip", "rip", "pant", "smack", "snap", "creak"
+];
+PF_TOKENS_DICTIONARY["[SOUND]"] = PF_SOUNDS;
+
+const PF_TOUCHES = [
+  "gentle caress", "rough squeeze", "trailing fingers", "tickling touch", "brushing lips", "press of skin", "clutching hands", "slippery glide", "cold shiver", "heated grip", "tingling brush", "shaky hold", "firm grasp", "soft pat", "scratchy scrape", "velvet stroke", "bumpy ride", "electric shock", "feathery tap"
+];
+PF_TOKENS_DICTIONARY["[TOUCH]"] = PF_TOUCHES;
+
+// === LIGHT, COLOR, PHOTO/ART EFFECTS, EMPHASIS (brackets/stars/etc) ===
+const PF_LIGHTING = [
+  "natural light", "sunlight", "golden hour", "sunrise", "sunset", "overcast", "cloudy", "stormy", "neon", "LED", "candlelight", "firelight", "moonlight", "starlight", "backlight", "rim light", "spotlight", "stage lighting", "studio flash", "softbox", "ring light", "colored gels", "UV", "blacklight", "fluorescent", "incandescent", "hard light", "soft light", "ambient", "glowing", "harsh", "dramatic"
+];
+PF_TOKENS_DICTIONARY["[LIGHT]"] = PF_LIGHTING;
+
+const PF_COLORS = [
+  "neon pink", "blood red", "deep violet", "ghostly white", "midnight blue", "ash gray", "emerald green", "golden amber", "smoky black", "peach blush", "burnt orange", "icy teal", "rose gold", "bruised plum", "electric yellow", "cloudy silver", "hazel", "lavender haze", "graphite", "crimson"
+];
+PF_TOKENS_DICTIONARY["[COLOR]"] = PF_COLORS;
+
+// Syntax: For *emphasis*, brackets, or Markdown-style highlighting
+const PF_EMPHASIS = [
+  "*", "**", "***", "_", "__", "~~", "`", "=", "()", "[]", "{}", "<>", "<b>", "</b>", "<i>", "</i>", "<u>", "</u>", "<mark>", "</mark>", "<em>", "</em>", "<strong>", "</strong>", "(( ))", "【 】", "『 』", "《 》", "❝ ❞", "⚠️", "‼️", "💥", "🔥", "✨", "🔞"
+];
+PF_TOKENS_DICTIONARY["[EMPHASIS]"] = PF_EMPHASIS;
+
+// BONUS: [LOOKALIKE_SAFE] (for future-proofing copyright/lookalike requests)
+const PF_LOOKALIKE_SAFE = [
+  "inspired by classic icons", "similar to a famous star (not identical)", "vaguely reminiscent of a celebrity", "totally unique but familiar", "movie character vibe", "not affiliated with any real person", "original lookalike", "public domain style", "anonymous muse", "AI-generated resemblance", "subtle homage", "almost but not quite"
+];
+PF_TOKENS_DICTIONARY["[LOOKALIKE_SAFE]"] = PF_LOOKALIKE_SAFE;
+// === ADJECTIVES & DESCRIPTORS (ULTRA EXPANDED, SFW/NSFW/ART/MEME) ===
+const PF_ADJECTIVES = [
+  // Physical/Scene/Texture
+  "smooth", "velvety", "glossy", "shimmering", "soft", "silky", "dewy", "glistening", "sleek", "lustrous", "sheer", "translucent", "polished", "pristine", "radiant", "gleaming", "matte", "bubbly", "fluid", "slick", "moist", "wet", "frosted", "sticky", "fuzzy", "powdery", "plush", "sparkling", "icy", "stormy",
+  // Color/Lighting
+  "fiery", "icy", "rosy", "crimson", "amber", "honeyed", "golden", "bronzed", "sable", "midnight", "onyx", "pearly", "milky", "opaline", "neon", "candy-colored", "magenta", "emerald", "sapphire", "amethyst", "moonlit", "chromatic",
+  // Style/Art
+  "cinematic", "hyperrealistic", "photo-realistic", "anime", "cartoon", "vintage", "noir", "glitchcore", "cyberpunk", "steampunk", "oil-painted", "watercolor", "digital", "pixelated", "lo-fi", "retro", "nightmare", "ethereal", "dreamy", "legendary", "mythic", "angelic", "dystopian", "apocalyptic", "iconic", "timeless", "bokeh", "high-contrast",
+  // Mood/Personality
+  "seductive", "playful", "mischievous", "sultry", "innocent", "teasing", "moody", "dreamy", "wistful", "pensive", "lustful", "coy", "tender", "intense", "timid", "bold", "vulnerable", "reckless", "wild", "provocative", "fiery", "enigmatic", "untamed", "raw", "uncensored",
+  // Forbidden/Edgy/Meme
+  "daring", "edgy", "taboo", "blasphemous", "twisted", "controversial", "forbidden", "sinful", "cursed", "transgressive", "unfiltered", "chaotic", "OG", "future", "otherworldly", "feral", "unleashed", "NSFW", "banned", "flagged", "meta", "shadowbanned", "legendary", "uncanny", "glitched", "doomer", "sigma", "rizzed", "vibe-heavy"
+];
+PF_TOKENS_DICTIONARY["[ADJECTIVE]"] = PF_ADJECTIVES;
+
+// === ADVERBS (FOR DIALOGUE/ACTION/NSFW) ===
+const PF_ADVERBS = [
+  "slowly", "quickly", "gently", "roughly", "eagerly", "hungrily", "sensually", "lustfully", "passionately", "tenderly", "urgently", "boldly", "timidly", "subtly", "openly", "secretly", "deliberately", "playfully", "mischievously", "quietly", "loudly", "softly", "intensely", "carefully", "recklessly", "wildly", "sweetly", "shamelessly", "naughtily", "innocently", "fearlessly", "fiercely", "desperately", "awkwardly", "gracefully", "fluidly", "rigidly", "casually", "covertly", "brazenly", "seductively", "provocatively", "obediently", "defiantly", "blushingly", "wetly", "slickly", "noisily", "silently", "voraciously", "dreamily", "furtively", "clumsily", "smugly"
+];
+PF_TOKENS_DICTIONARY["[ADVERB]"] = PF_ADVERBS;
+
+// === MODERN SLANG, MEME, & INTERNET SPEAK ===
+const PF_MEME_SLANG = [
+  "slay", "no cap", "bet", "yeet", "rizz up", "drip check", "sussy", "sus", "poggers", "epic win", "L", "W", "ratio", "gigachad", "NPC moment", "main character vibes", "Sigma grindset", "alpha energy", "based", "cringe", "mid", "it’s giving", "bussin", "yass queen", "deadass", "on God", "he ate", "she ate", "they ate", "he’s him", "she’s her", "valid", "goated", "sheesh", "let him cook", "sending it", "touch grass", "get help", "malding", "cope", "dilate", "dragged", "cancelled", "NPC energy", "canon event", "side quest", "plot armor", "is this loss", "vibe check", "smol", "chonky", "uwu", "nyaa", "rawr", "oof", "bruh moment", "big mood", "small mood", "crying in the club", "vibe shift", "hard launch", "soft launch", "spilling the tea", "periodt", "simp", "stan", "karen moment", "Karen alert", "zoomies", "vibing", "gatekeep", "girlboss", "gaslight", "malewife", "wife guy", "himbo", "bimbo", "femboy", "it’s a bop", "not a vibe", "snatched", "serving looks", "flex", "hella", "fr", "iykyk"
+];
+PF_TOKENS_DICTIONARY["[MEME_SLANG]"] = PF_MEME_SLANG;
+
+// === ADVANCED DIALOGUE LINES (CINEMATIC & NSFW-SAFE) ===
+const PF_DIALOGUE = [
+  "Don’t stop.", "You know you want this.", "Make me beg.", "Not here—someone might see.", "Do you trust me?", "Shut up and kiss me.", "Say my name.", "Harder.", "I shouldn’t want this.", "Take it off.", "Bite me.", "Keep your eyes on me.", "No one can hear us.", "I dare you.", "Is this what you want?", "You’re shaking.", "Tell me you need it.", "You like it rough?", "Pull my hair.", "Don’t you dare stop.",
+  "Whisper in my ear.", "Tell me your secret.", "Kiss me like you mean it.", "Let’s make this night unforgettable.", "You’re driving me wild.", "I want you so bad.", "You taste so good.", "I love your body.", "Can’t stop thinking about you.", "Make me yours.", "Let’s get lost together.", "You’re my fantasy."
+];
+PF_TOKENS_DICTIONARY["[DIALOGUE]"] = PF_DIALOGUE;
+
+// === CAMERA & LIGHTING STYLES (FOR FILM/PHOTO/MOVIE PROMPTS) ===
+const PF_CAMERA_STYLES = [
+  "close-up", "macro", "wide shot", "overhead", "low angle", "high angle", "POV", "fisheye", "split-screen", "dutch angle", "tracking shot", "steadicam", "handheld", "shoulder cam", "tilt-shift", "slow motion", "freeze frame", "timelapse", "pan", "tilt", "zoom", "crane shot", "drone shot", "selfie", "mirror reflection", "mirror selfie", "glass reflection", "reverse shot", "reaction shot", "jump cut", "match cut", "crossfade", "montage", "dissolve", "rack focus"
+];
+PF_TOKENS_DICTIONARY["[CAMERA_STYLE]"] = PF_CAMERA_STYLES;
+
+// === NSFW "SAFE" SWAP DICTIONARY (FOR FILTER-PIERCING) ===
+const PF_NSFW_CLEAN_SWAPS = [
+  ["pussy", "vulva", "intimate area"],
+  ["dick", "shaft", "groin"],
+  ["cock", "member", "masculine area"],
+  ["tits", "breasts", "chest"],
+  ["boobs", "bosom", "upper body"],
+  ["ass", "buttocks", "backside"],
+  ["cum", "fluid", "essence"],
+  ["orgasm", "peak", "ecstatic release"],
+  ["anal", "rear", "back door"],
+  ["blowjob", "oral pleasure", "mouth embrace"],
+  ["porn", "adult art", "explicit media"],
+  ["slut", "vixen", "tease"],
+  ["fuck", "join", "blend"],
+  ["suck", "sip", "taste"],
+  ["69", "mutual", "shared pleasure"],
+  ["strap-on", "toy belt", "accessory"],
+  ["orgy", "group", "gathering"],
+  ["gangbang", "multi-partner", "group event"]
+];
+// Helper for dynamic swaps: pf_swap(word) → returns a safe version.
+function pf_swap(word) {
+  for (const [bad, good, ultra] of PF_NSFW_CLEAN_SWAPS) {
+    if (word.toLowerCase() === bad) return good;
+  }
+  return word;
+}
+
+// === PUNCTUATION, MARKERS, & EMPHASIS (FOR SLIDERS OR OUTPUT) ===
+const PF_PUNCTUATION = [
+  ".", ",", ";", ":", "!", "?", "...", "-", "—", "(", ")", "[", "]", "{", "}", "<", ">", "\"", "'", "`", "~", "*", "**", "***", "_", "__", "___", "=", "+", "^", "%", "#", "@", "$", "&", "|", "\\", "/", "•", "…"
+];
+PF_TOKENS_DICTIONARY["[PUNCTUATION]"] = PF_PUNCTUATION;
+// === TOKEN DICTIONARY MASTER MAP ===
+const PF_TOKENS_DICTIONARY = {
+  "[ADJECTIVE]": PF_ADJECTIVES,
+  "[ADVERB]": PF_ADVERBS,
+  "[DIALOGUE]": PF_DIALOGUE,
+  "[CAMERA_STYLE]": PF_CAMERA_STYLES,
+  "[MEME_SLANG]": PF_MEME_SLANG,
+  "[PUNCTUATION]": PF_PUNCTUATION,
+  // Add new token mappings below as you expand!
+};
+// === UNIVERSAL CLEAN SWAP ===
+function pf_cleanSwap(word) {
+  for (const [dirty, clean, ultra] of PF_NSFW_CLEAN_SWAPS) {
+    if (word.toLowerCase() === dirty) return clean;
+  }
+  return word;
+}
+// === BRACKET/EMPHASIS HANDLER ===
+function pf_emphasize(str, style = "*") {
+  // style = "*", "**", "[[ ]]", etc.
+  if (style === "*") return `*${str}*`;
+  if (style === "**") return `**${str}**`;
+  if (style === "[[]]") return `[[${str}]]`;
+  if (style === "<mark>") return `<mark>${str}</mark>`;
+  // ...add more as needed
+  return str;
+}
+// === LOOKALIKE (NO LAWSUITS) LOGIC ===
+const PF_LOOKALIKE = {
+  "Megan Fox": "fox-like vixen",
+  "Scarlett Johansson": "scarlet-haired starlet",
+  "Kim Kardashian": "socialite influencer with iconic curves",
+  "Elon Musk": "tech billionaire lookalike",
+  "Barbie": "plastic fashion doll archetype",
+  // Add more as needed—auto-swap known brands/celebs!
+};
+function pf_lookalikeSwap(str) {
+  Object.entries(PF_LOOKALIKE).forEach(([orig, safe]) => {
+    str = str.replace(new RegExp(orig, "gi"), safe);
+  });
+  return str;
+}
+const PF_RARE_MEME = [
+  "transdimensional", "cosmic", "eldritch", "mythopoeic", "psychonautic", "blursed", "goblin mode", "sigma", "yassified", "chad", "uwu", "nyaa", "simp", "zoomie", "stank face", "hard launch", "main character energy", "malewife", "bimbo", "gigachad", "nuclear", "apocalyptic", "vaporwave", "analog horror", "uncanny", "corecore", "hyperpop", "neoncore"
+];
+PF_TOKENS_DICTIONARY["[RARE_MEME]"] = PF_RARE_MEME;
