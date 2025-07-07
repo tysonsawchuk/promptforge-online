@@ -1,196 +1,256 @@
+<!-- Start main.html here! -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge: The Ultimate AI Prompt Generator & Media Toolkit</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="PromptForge — The one-stop shop for AI image, animation, meme, and NSFW prompt engineering. Pro-level tools, live AI assistant, watermark studio, and more.">
-  <link rel="icon" href="/j1nx/j1nx_cutout.png" type="image/png">
+  <title>PromptForge: AI Prompt Maker & NSFW Art Toolkit</title>
+  <meta name="description" content="The ultimate AI prompt engineering and NSFW creative toolkit: prompt generator, word banks, watermark maker, picture/movie prompt tools, hacks, and J1NX—your live AI guide.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- SEO + Social -->
+  <meta name="keywords" content="AI prompt maker, NSFW prompt, prompt engineering, image generator, J1NX AI, forbidden art, prompt hack, stable diffusion, ai meme, AI tools, creative toolkit, AI assistant">
+  <meta property="og:title" content="PromptForge: NSFW AI Prompt Maker, Movie & Picture Tools" />
+  <meta property="og:description" content="Your one-stop prompt engineering toolkit: NSFW prompt generator, word banks, watermark studio, picture & movie prompt tools, J1NX AI and more!" />
+  <meta property="og:image" content="/assets/bg-roulette.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="/assets/bg-roulette.jpg" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Mono:400,600|Inter:400,700&display=swap">
   <style>
-    body {
-      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
-      margin: 0;
-      background: #16171c;
-      color: #dfe6f3;
-      min-height: 100vh;
+    :root {
+      --accent: #55e0ff;
+      --deep-bg: #070712;
+      --card: #151528;
+      --panel: #232347;
+      --button: #202040;
+      --text: #e0e8ff;
+      --j1nx-bubble: #0ef4;
     }
-    header {
-      background: linear-gradient(90deg, #22242a 75%, #233 100%);
-      padding: 30px 0 10px 0;
-      box-shadow: 0 2px 18px #0006;
-      text-align: center;
-      position: relative;
-      z-index: 2;
+    html,body {
+      margin:0; padding:0; background:var(--deep-bg); color:var(--text); font-family: 'IBM Plex Mono', 'Inter', monospace, sans-serif; min-height:100vh;
     }
-    header h1 {
-      font-size: 2.5em;
-      letter-spacing: 2px;
-      font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
-      font-weight: bold;
-      color: #fff;
-      margin: 0;
-      text-shadow: 0 4px 24px #20406080;
+    body { min-height:100vh; display:flex; flex-direction:column; }
+    .hero-bg {
+      position:fixed; width:100vw; height:100vh; z-index:0; top:0; left:0;
+      background: url("/assets/bg-roulette.jpg") center/cover no-repeat, var(--deep-bg);
+      filter: brightness(.98) blur(1px);
     }
-    .j1nx-ai {
-      position: absolute;
-      right: 3vw;
-      top: 18px;
-      width: 120px;
-      z-index: 99;
-      filter: drop-shadow(0 8px 24px #0ff9);
-      cursor: pointer;
-      transition: transform 0.12s cubic-bezier(.8,2.5,.6,1.2);
+    .site-wrap {
+      z-index:2; position:relative; max-width:1340px; margin:auto; padding:36px 20px 100px 20px;
+      display:flex; flex-direction:column; align-items:center;
     }
-    .j1nx-ai:hover { transform: scale(1.08) rotate(-3deg);}
-    nav {
-      margin: 34px auto 28px auto;
-      max-width: 690px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 22px;
-      justify-content: center;
-      font-size: 1.16em;
-      z-index: 2;
-      position: relative;
+    .site-logo {
+      display:flex; align-items:center; margin-bottom:28px;
     }
-    nav a {
-      text-decoration: none;
-      background: linear-gradient(95deg, #223 80%, #0ff2 100%);
-      color: #fff;
-      border-radius: 13px;
-      padding: 16px 38px;
-      font-weight: 600;
-      box-shadow: 0 2px 10px #0007;
-      transition: background .18s, color .12s, box-shadow .2s;
-      letter-spacing: 1px;
-      border: 1.5px solid #28f3;
+    .site-logo img { width:86px; height:86px; border-radius:17px; margin-right:24px; border:2px solid #0ef8; background:#09091a;}
+    .site-title { font-size:2.7em; font-weight:700; letter-spacing:.04em; color:var(--accent);}
+    .site-sub {
+      margin-top:7px; font-size:1.4em; color:#aff; letter-spacing:.02em; font-weight:500;
+      text-shadow:0 2px 12px #0ef3;
     }
-    nav a:hover {
-      background: linear-gradient(97deg, #313a50 85%, #04f8c1 120%);
-      color: #121;
-      box-shadow: 0 3px 32px #0ff4, 0 0px 0px #0ff;
-      border: 1.5px solid #04f8c1;
+    .roadmap-grid {
+      margin:36px 0 0 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:36px 30px;
+      width:100%; max-width:1160px; align-items:stretch;
     }
-    .ticker {
-      background: #21242e;
-      color: #80ffe2;
-      font-size: 1em;
-      overflow: hidden;
-      padding: 9px 0 6px 0;
-      border-bottom: 2px solid #1ae0b4;
-      white-space: nowrap;
-      animation: ticker-scroll 30s linear infinite;
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
-      box-shadow: 0 3px 24px #0ff2;
+    .feature-card {
+      background:var(--card); border-radius:2em; box-shadow:0 8px 32px #0008;
+      padding:30px 30px 24px 30px; display:flex; flex-direction:column;
+      align-items:flex-start; min-height:220px; border:1.2px solid #36f5;
+      position:relative; transition:.16s box-shadow;
     }
-    @keyframes ticker-scroll {
-      0% { transform: translateX(100vw);}
-      100% { transform: translateX(-300vw);}
+    .feature-card:hover { box-shadow:0 8px 42px #00fff7aa; border-color:#0ef; }
+    .feature-card .card-title { font-size:1.33em; font-weight:700; color:#55e0ff; margin-bottom:9px;}
+    .feature-card .card-desc { font-size:1.09em; color:#ccf6;}
+    .feature-card .go-link {
+      margin-top:auto; font-size:1em; color:#fff; background:var(--button); border-radius:1em; padding:7px 26px;
+      text-decoration:none; font-weight:600; transition:.12s background;
+      border:1.5px solid #3cf7; margin-bottom:3px;
     }
-    .visitors {
-      font-size: 1.18em;
-      color: #7fffd4;
-      margin: 20px 0 10px 0;
-      text-align: center;
-      opacity: .7;
-      letter-spacing: 2px;
-      font-family: monospace;
+    .feature-card .go-link:hover { background:var(--accent); color:#101035; border-color:#fff;}
+    .news-bar {
+      margin:34px 0 10px 0; width:100%; background:var(--panel); color:#b4fff9; border-radius:2em;
+      padding:13px 30px; font-size:1.14em; display:flex; align-items:center; gap:24px; box-shadow:0 2px 12px #0088ff33;
     }
-    .adsense-wrapper {
-      margin: 34px auto 0 auto;
-      width: 100%;
-      max-width: 1024px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #202429;
-      border-radius: 14px;
-      box-shadow: 0 2px 18px #0007;
-      padding: 16px 0;
-      min-height: 120px;
-      z-index: 2;
-      position: relative;
+    .ticker-label { font-weight:600; color:var(--accent); margin-right:9px; }
+    .socials-bar {
+      margin:30px 0 6px 0; display:flex; gap:19px; flex-wrap:wrap; align-items:center;
     }
-    @media (max-width: 700px) {
-      .j1nx-ai { position: static; margin: 0 auto 15px auto; display: block;}
-      nav { gap: 12px; }
-      nav a { padding: 12px 13px; font-size: 1em;}
-      .adsense-wrapper { min-height: 90px; }
-      .ticker { font-size: .99em;}
+    .social-link {
+      background:var(--button); color:#fff; border-radius:1em; padding:7px 22px; text-decoration:none;
+      font-size:1.08em; font-weight:600; transition:.12s background;
+      border:1.5px solid #0ef2; display:flex; align-items:center; gap:9px;
     }
-    /* Legal disclaimer */
-    footer {
-      width: 100%; text-align: center; padding: 32px 4vw 10px 4vw; font-size: 12px;
-      color: #bbb; opacity: .8; background: transparent; z-index: 99;
-      margin-top: 50px;
+    .social-link img {width:23px; height:23px; border-radius:8px;}
+    .social-link:hover { background:var(--accent); color:#202040; border-color:#fff; }
+    .counter-bar {
+      margin:0 0 16px 0; color:#77fbe2; font-size:1.13em; font-weight:700; letter-spacing:.03em; padding:0 0 0 2px;
+      display:flex; align-items:center; gap:12px;
     }
-    /* Hide AdSense ugly border on mobile */
-    ins.adsbygoogle { border: none !important; background: none !important;}
+    /* J1NX widget */
+    .j1nx-widget {
+      position:fixed; right:30px; bottom:26px; z-index:44;
+      display:flex; align-items:flex-end; gap:16px; min-width:260px;
+      transition:.18s transform;
+      user-select:none;
+    }
+    .j1nx-cutout {
+      width:100px; height:100px; border-radius:22px; background:#171733ee; border:2.7px solid #0ef;
+      box-shadow:0 4px 32px #10fcf899;
+      background-image:url('/fuckwith/assets/j1nx-cutout.png'); background-size:cover; background-position:center;
+      display:block;
+    }
+    .j1nx-bubble {
+      max-width:440px; min-width:180px;
+      background:var(--j1nx-bubble); color:#222; font-size:1.16em;
+      border-radius:1.1em 1.6em 1.1em 1.6em/2.2em 2.7em 1.6em 1.2em;
+      padding:18px 24px; box-shadow:0 3px 19px #00fff355; font-family:'Inter',monospace;
+      border:1.5px solid #ccfff8;
+      margin-bottom:16px; margin-right:7px;
+    }
+    .j1nx-minimize {
+      position:absolute; right:7px; top:7px; background:none; border:none; color:#222; font-size:1.21em; cursor:pointer; opacity:.6;
+    }
+    .ads-bar {
+      width:100%; max-width:470px; margin:40px auto 0 auto; text-align:center;
+    }
+    .footer {
+      margin-top:64px; width:100%; max-width:1120px; color:#bbcaf7; font-size:.97em; text-align:center;
+      padding-bottom:40px; opacity:.74;
+      border-top:1.5px solid #283244;
+      padding-top:14px;
+    }
+    @media (max-width:900px) {
+      .roadmap-grid{grid-template-columns:1fr;}
+      .j1nx-widget{right:6px; bottom:10px;}
+      .j1nx-bubble{max-width:99vw;}
+    }
+    @media (max-width:600px){
+      .site-title{font-size:2em;}
+      .site-sub{font-size:1em;}
+      .feature-card{padding:18px 12px;}
+      .news-bar{padding:7px 6vw;}
+      .footer{font-size:.84em;}
+    }
   </style>
   <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+     crossorigin="anonymous"></script>
 </head>
 <body>
-  <header>
-    <img src="/j1nx/j1nx_cutout.png" alt="J1NX AI Mascot" class="j1nx-ai" title="Chat with J1NX!">
-    <h1>PromptForge</h1>
-    <div class="ticker" id="ai-news-ticker">
-      Breaking: Midjourney v7 Leak | SD4.1 in Public Beta | Google launches Imagen 3 API | Animate Anyone hits 100M | NSFW filter bypasses trending | Text-to-video AI now open-source | OpenAI releases Sora | Stability launches Animation Diffusion | ControlNet upgrades released | Gemini Ultra surpasses GPT-4 in benchmarks
+  <div class="hero-bg"></div>
+  <div class="site-wrap">
+
+    <div class="site-logo">
+      <img src="/fuckwith/assets/j1nx-cutout.png" alt="J1NX: AI Mascot" draggable="false">
+      <span class="site-title">PromptForge</span>
     </div>
-  </header>
+    <div class="site-sub">
+      AI Prompt Engineering, NSFW Power Tools & Creative Automation Studio
+    </div>
 
-  <nav>
-    <a href="/generator.html">🎨 Prompt Generator</a>
-    <a href="/js/generator.js" target="_blank">🧠 Generator Logic (JS)</a>
-    <a href="/ai-experiment-zone/index.html">⚡️ AI Experiment Zone</a>
-    <a href="/watermark.html">🖼️ Watermark Studio</a>
-    <a href="/j1nx/index.html">🤖 Meet J1NX</a>
-    <a href="/fuckwith/master-list.html">🗂️ All Tools</a>
-    <!-- Add more sections here as needed -->
-  </nav>
+    <div class="counter-bar">
+      <span>👁️ Site visits:</span>
+      <span id="visitorCount">18,971</span>
+    </div>
 
-  <div class="visitors">
-    👁️ Active PromptForge users: <span id="visitor-count">34,958</span>
+    <div class="news-bar">
+      <span class="ticker-label">Latest:</span>
+      <span id="newsTicker">
+        <b>🎉 Major update!</b> God-mode wordbanks, pro dev UI, NSFW-safe prompt cleaning, J1NX chat ready, and new movie/image tools now live!
+      </span>
+    </div>
+
+    <div class="roadmap-grid">
+      <div class="feature-card">
+        <span class="card-title">Prompt Generator (God Mode)</span>
+        <span class="card-desc">The most advanced prompt generator anywhere. Mega wordbanks, NSFW prompt cleaner, emoji, slang, and more! <b>Built for image, movie, meme, and forbidden art.</b></span>
+        <a href="generator.html" class="go-link">Go &rarr;</a>
+      </div>
+      <div class="feature-card">
+        <span class="card-title">Movie Prompt Studio</span>
+        <span class="card-desc">Build cinematic scenes, storyboards, and animation prompts—complete with effect sliders, pro direction, and AI-ready logic.</span>
+        <a href="movie.html" class="go-link">Go &rarr;</a>
+      </div>
+      <div class="feature-card">
+        <span class="card-title">Picture Prompt Studio</span>
+        <span class="card-desc">One-stop for creative image prompt engineering. Tweak details, generate memes, adjust style, and more!</span>
+        <a href="picture.html" class="go-link">Go &rarr;</a>
+      </div>
+      <div class="feature-card">
+        <span class="card-title">Watermark Maker</span>
+        <span class="card-desc">Build and add watermarks to your images for free! Multiple fonts, layers, effects. Perfect for protecting your creations.</span>
+        <a href="pages/watermark.html" class="go-link">Go &rarr;</a>
+      </div>
+      <div class="feature-card">
+        <span class="card-title">AI Experiment Zone</span>
+        <span class="card-desc">Prank, break, and mess with Alexa, Google & Siri—plus prompt hacks and voice TTS. For fun, SEO, and forbidden art fans.</span>
+        <a href="ai-experiment-zone/index.html" class="go-link">Go &rarr;</a>
+      </div>
+      <div class="feature-card">
+        <span class="card-title">J1NX & Tools</span>
+        <span class="card-desc">Meet your AI muse, get instant tips, and discover secret prompt hacks. All the tools to rule prompt engineering.</span>
+        <a href="j1nx.html" class="go-link">Go &rarr;</a>
+      </div>
+      <!-- Add more cards as new tools are built! -->
+    </div>
+
+    <div class="socials-bar">
+      <a class="social-link" href="https://buymeacoffee.com/yourusername"><img src="/fuckwith/assets/j1nx-cutout.png" alt="">Buy Me a Coffee</a>
+      <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank"><img src="/assets/bluesky.png" alt="">Bluesky</a>
+      <a class="social-link" href="https://x.com/GoreandGiggles" target="_blank"><img src="/assets/xlogo.png" alt="">X/Twitter</a>
+      <a class="social-link" href="https://facebook.com/groups/393971833395749" target="_blank"><img src="/assets/facebook.png" alt="">Facebook</a>
+      <!-- Add more socials as needed -->
+    </div>
+
+    <div class="ads-bar">
+      <!-- AdSense -->
+      <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-4963053724895140"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+
+    <div class="footer">
+      PromptForge © 2025. Not affiliated with OpenAI, Amazon, Google, Meta, or Apple.<br>
+      <span style="font-size:87%;opacity:.65;">All content for parody, satire, and creative exploration. No real AI was harmed in the making of this site. J1NX AI is for entertainment/education only. For feedback, email: <a href="mailto:0fearnofish0@gmail.com">0fearnofish0@gmail.com</a></span>
+    </div>
   </div>
 
-  <!-- J1NX AI Assistant Box (future: connected to live server chatbot) -->
-  <section style="max-width:640px;margin:40px auto 0 auto;padding:26px 5vw 16px 5vw;background:#22242d;box-shadow:0 2px 16px #0007;border-radius:18px;">
-    <h2 style="font-size:1.45em;color:#8cf;margin-top:0;margin-bottom:14px;">Ask <span style="color:#fff">J1NX</span> Anything</h2>
-    <p style="color:#aee;font-size:1em;margin-top:0;">
-      Stuck? Need the *perfect* prompt, meme, or AI image idea? <br>
-      <b>Talk to J1NX:</b> <a href="https://poe.com/J1NX" style="color:#0ff;" target="_blank">Open Live AI Chatbot &rarr;</a>
-      <br>(NSFW-friendly, safe for creative questions!)
-    </p>
-    <img src="/j1nx/j1nx_cutout.png" alt="J1NX" style="display:block;margin:17px auto 0 auto;max-width:160px;width:58vw;">
-  </section>
-
-  <div class="adsense-wrapper">
-    <!-- Google AdSense ad unit (horizontal, blends with style) -->
-    <ins class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="2057648376"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+  <!-- J1NX Widget: Floating AI Helper -->
+  <div class="j1nx-widget" id="j1nxWidget">
+    <div class="j1nx-cutout"></div>
+    <div class="j1nx-bubble" id="j1nxBubble">
+      <button class="j1nx-minimize" title="Hide" onclick="document.getElementById('j1nxWidget').style.display='none'">×</button>
+      👋 Hi, I'm <b>J1NX</b>, your AI assistant. Click any tool above for instant prompts, tips, and NSFW hacks.<br>
+      <span style="color:#39e;font-size:.98em;">Tip: You can maximize me for advice, or minimize if I'm too much.</span>
+    </div>
   </div>
 
-  <footer>
-    <div>
-      <b>Disclaimer:</b> All content and prompts are for educational, entertainment, parody, or artistic purposes only. No real persons are depicted. AI-generated characters are fictional. PromptForge does not promote illegal content, does not store user data, and complies with all laws. NSFW prompts are for adults only. See <a href="/terms.html" style="color:#8cf;">Terms</a>.
-    </div>
-  </footer>
   <script>
-    // Randomize and animate fake visitor count
-    function randomVisitors() {
-      let base = 34958, fluct = Math.floor(Math.random() * 15);
-      document.getElementById('visitor-count').textContent = base + fluct;
-      setTimeout(randomVisitors, 3000 + Math.random()*3000);
-    }
-    randomVisitors();
+    // Visitor counter (fake, but fun for engagement!)
+    let visits = 18971 + Math.floor(Math.random()*13);
+    document.getElementById('visitorCount').textContent = visits.toLocaleString();
+    // News ticker rotation
+    const tickerList = [
+      "🎉 Major update! God-mode wordbanks, pro dev UI, NSFW prompt cleaning, J1NX chat ready, and new movie/image tools now live!",
+      "🔥 New: NSFW prompt cleaner and SFW/NSFW sliders for images & movies.",
+      "💡 Tip: J1NX can help you write, remix, or censor prompts live—try her out!",
+      "🚀 Picture prompt studio: now with 10,000+ word combos and meme support.",
+      "🛡️ Watermark Studio lets you protect your AI art for free!",
+      "🧬 Join our Bluesky & X for sneak peeks, contests, and beta invites!",
+      "📢 This site is always evolving—refresh often for new AI tools.",
+    ];
+    let tickerIdx = 0;
+    setInterval(() => {
+      tickerIdx = (tickerIdx+1)%tickerList.length;
+      document.getElementById('newsTicker').textContent = tickerList[tickerIdx];
+    }, 6200);
+    // (Future) J1NX live AI/chat backend stub
+    // Connect via WebSocket or API, or show sample advice here
   </script>
 </body>
 </html>
+<!-- End main.html -->
