@@ -1,41 +1,164 @@
-<!--
-  =============================================================
-  PROMPTFORGE GOD MODE - HIDDEN GENERATOR.HTML (v1.0)
-  Tyson | Gore & Giggles | 2025
-  Internal file: feeds the brain to apps/pages, not for users!
-  This page is for dev/test/debug/future upgrades only.
-  =============================================================
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Generator (God Mode Internal)</title>
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- Pro dev note: JS brain is modular & standalone. -->
+  <title>PromptForge GOD MODE — AI Prompt Generator</title>
+  <meta name="description" content="The ultimate expandable prompt generator for images, movies, NSFW, memes, and more.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Pro minimalist, modern, dark-theme style -->
   <style>
-    body { display: none; }
-    #debug { display: none; }
+    body { background: #191921; color: #efefef; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; }
+    header { padding: 2rem 0 1rem 0; text-align: center; background: #22223a; box-shadow: 0 2px 12px #0008; }
+    h1 { font-size: 2.5rem; margin: 0 0 .5rem 0; font-weight: 900; letter-spacing: 1px; }
+    h2 { font-size: 1.2rem; margin: 0 0 1rem 0; color: #b9d6ff; font-weight: 400; }
+    .container { max-width: 700px; margin: 2rem auto; padding: 2rem; background: #232336; border-radius: 1.2rem; box-shadow: 0 0 22px #0005; }
+    label { font-weight: 700; color: #b9d6ff; }
+    textarea, input[type="text"] {
+      width: 100%; min-height: 44px; border: 0; border-radius: .5rem;
+      margin: .5rem 0 1rem 0; padding: .9rem 1.1rem;
+      font-size: 1.04rem; background: #181823; color: #f3f3fa;
+      box-shadow: 0 1px 2px #0004;
+      outline: none;
+      transition: background .18s;
+    }
+    textarea:focus, input[type="text"]:focus { background: #232342; }
+    button, .copy-btn {
+      background: linear-gradient(90deg, #794fff 20%, #ff5e99 80%);
+      color: #fff; border: none; padding: .7rem 1.5rem; border-radius: .7rem;
+      font-weight: 700; font-size: 1.05rem; margin: .7rem 0 1.1rem 0;
+      cursor: pointer; box-shadow: 0 2px 8px #0005;
+      transition: transform .12s;
+    }
+    button:hover, .copy-btn:hover { transform: scale(1.04); }
+    .row { display: flex; gap: 1.3rem; flex-wrap: wrap; margin-bottom: 1.1rem; }
+    .row > * { flex: 1 1 45%; min-width: 180px; }
+    .neg-box { background: #221a2f; color: #f5c6d6; padding: 1rem; border-radius: .7rem; font-size: .98rem; margin-bottom: 1.5rem; }
+    .slider-label { display: flex; align-items: center; gap: 1.3em; font-size: 1rem; color: #f7caf6; }
+    .slider { width: 150px; accent-color: #c056e3; }
+    .footer { text-align: center; color: #aaa; font-size: .94rem; margin: 4rem 0 1.3rem 0; }
+    .suggestions, .inspiration { background: #19203a; color: #b3e5ff; border-radius: .5rem; padding: .8rem 1rem; margin: 1.3rem 0 2rem 0; font-size: 1.04rem; }
+    .summary { background: #1a2332; color: #c4fbc4; border-radius: .7rem; padding: 1rem 1.1rem; margin-bottom: 1rem; font-size: 1.06rem; }
+    .negative-title { color: #f48ca1; margin-top: 1.4rem; }
+    .copy-btn { float: right; margin-left: .7rem; margin-top: -.7rem; }
+    .j1nx-helper { background: #181823; border: 1px solid #3f4264; border-radius: .7rem; margin: 2rem 0 0 0; padding: 1.1rem; color: #ffe1fd; font-size: 1.03rem; min-height: 50px; }
+    @media (max-width: 600px) {
+      .container { padding: .9rem; }
+      .row { flex-direction: column; gap: .7rem; }
+    }
   </style>
 </head>
 <body>
-  <div id="debug"></div>
-  <!-- Hidden brain. Ready for live reload, slider hooks, or console UI. -->
+  <header>
+    <h1>PromptForge <span style="color:#f7caf6;">GOD MODE</span></h1>
+    <h2>The Ultimate AI Prompt Generator<br>
+      <span style="font-size:.98rem; color:#b0c8f7;">Image, Movie, NSFW, Meme, Story, Art, More</span>
+    </h2>
+  </header>
 
+  <div class="container">
+    <!-- Main prompt input/output -->
+    <label for="promptInput">Start with keywords, sentences, or describe your scene:</label>
+    <textarea id="promptInput" placeholder="Type your idea, subject, or mood..."></textarea>
+    
+    <div class="row">
+      <!-- NSFW/SFW Slider -->
+      <div>
+        <label class="slider-label" for="nsfwSlider">
+          <span>NSFW/SFW Filter:</span>
+          <input class="slider" type="range" min="0" max="100" value="40" id="nsfwSlider" />
+          <span id="nsfwStatus">Mixed</span>
+        </label>
+      </div>
+      <!-- Category selector -->
+      <div>
+        <label for="catSel">Prompt Style:</label>
+        <select id="catSel">
+          <option value="auto">Auto (Smart)</option>
+          <option value="art">Image/Art</option>
+          <option value="movie">Movie/Screenwriting</option>
+          <option value="nsfw">NSFW/Erotica</option>
+          <option value="meme">Meme/Internet</option>
+          <option value="poetic">Poetic/Surreal</option>
+          <option value="custom">Custom</option>
+        </select>
+      </div>
+    </div>
+    
+    <!-- Output: main prompt -->
+    <label for="mainPrompt">PromptForge Output:</label>
+    <div style="position:relative;">
+      <textarea id="mainPrompt" readonly style="font-size:1.08rem; min-height:82px; background:#141424; color:#fbf3ff;"></textarea>
+      <button class="copy-btn" onclick="pfCopy('mainPrompt')">Copy</button>
+    </div>
+
+    <!-- Output: summary or secondary (short, shareable, tweet, etc) -->
+    <label for="summaryOut">Summary / Social Share:</label>
+    <div style="position:relative;">
+      <div class="summary" id="summaryOut">(Your summary or social-ready prompt will appear here.)</div>
+      <button class="copy-btn" onclick="pfCopy('summaryOut', true)">Copy</button>
+    </div>
+
+    <!-- Inspiration, suggestions, random -->
+    <div class="suggestions" id="suggestionsBox">
+      <b>Suggestions & Inspiration:</b><br>
+      <span id="suggestionText">Try: "cyberpunk rooftop, moonlit, neon, staring into camera"</span>
+      <button class="copy-btn" onclick="pfRandomInspire()">Random</button>
+    </div>
+    
+    <!-- Negative prompt smart box -->
+    <div class="neg-box">
+      <span class="negative-title"><b>Smart Negative Words:</b></span><br>
+      <span id="negativeWords">deformed, bad anatomy, watermark, duplicate, blurry, ...</span>
+      <button class="copy-btn" onclick="pfCopy('negativeWords', true)">Copy</button>
+    </div>
+
+    <!-- J1NX AI helper / chat cutout (hidden for now, placeholder for future) -->
+    <div class="j1nx-helper" id="j1nxBox" style="display:none;">
+      <b>J1NX:</b> <span id="j1nxText">Hey! Need help with creative ideas, NSFW prompt fixes, or movie scene magic? I'm your dirty muse! (Feature coming soon...)</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Gore & Giggles / PromptForge — <a href="https://promptforge.online" style="color:#a9d2ff">promptforge.online</a> — <span style="color:#f7caf6;">God Mode</span><br>
+    <small>Prompts auto-filtered, smart logic for SFW/NSFW & viral image generation. <br>
+    <b>Disclaimer:</b> Not responsible for AI outputs. For advanced creative use only.</small>
+  </div>
+
+  <!-- SCRIPT BLOCK: Wire up everything to generator.js -->
   <script src="generator.js"></script>
   <script>
-    // === AUTO-RUN EXAMPLE (for dev/test only) ===
-    // Remove/comment out if running as API/hidden file!
-    if (typeof pf_generatePrompt === "function") {
-      const prompt = pf_generatePrompt();
-      // For debug: show in console
-      console.log("[PromptForge]:", prompt);
-
-      // If you want to output to page for testing, uncomment:
-      // document.getElementById('debug').style.display = 'block';
-      // document.getElementById('debug').innerText = prompt;
+    // Basic wire-up (update as generator.js expands)
+    function pfCopy(id, isDiv=false) {
+      const el = isDiv ? document.getElementById(id) : document.getElementById(id);
+      let txt = isDiv ? el.innerText : el.value;
+      navigator.clipboard.writeText(txt);
+      el.style.background = '#2233c2';
+      setTimeout(()=>{el.style.background='';},300);
     }
+    function pfRandomInspire() {
+      // Simple: Use PF_INSPIRATION (from generator.js) if present
+      if(typeof PF_INSPIRATION !== "undefined") {
+        const txt = PF_INSPIRATION[Math.floor(Math.random()*PF_INSPIRATION.length)];
+        document.getElementById('suggestionText').innerText = "Try: " + txt;
+      }
+    }
+    // NSFW/SFW slider update
+    document.getElementById('nsfwSlider').addEventListener('input', function() {
+      const v = parseInt(this.value,10);
+      let label = "Mixed";
+      if(v < 30) label = "SFW";
+      else if(v > 70) label = "NSFW";
+      document.getElementById('nsfwStatus').innerText = label;
+      // Optional: update prompt gen logic (future-proofed)
+      // If you want auto-regen on slider move, call your main generator function here!
+    });
+    // On load, random inspiration & negatives
+    document.addEventListener('DOMContentLoaded', () => {
+      pfRandomInspire();
+      if(typeof pfAutoNegative === "function") {
+        document.getElementById('negativeWords').innerText = pfAutoNegative();
+      }
+    });
   </script>
 </body>
 </html>
