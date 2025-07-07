@@ -1857,3 +1857,1924 @@ const PF_CAMERA_TRICKS_ADDON = [
   "fish-eye bend"
 ];
 if (typeof PF_CAMERA_TRICKS_ADDON !== "undefined") PF_CAMERA_STYLES = (typeof PF_CAMERA_STYLES !== "undefined" ? PF_CAMERA_STYLES : []).concat(PF_CAMERA_TRICKS_ADDON);
+// --- PromptForge Add-On Wordbank ---
+// GENRES (photo, art, film, and kink-friendly)
+const PF_GENRES_ADDON = [
+  "femme fatale noir",
+  "lesbian romance",
+  "shameful comedy",
+  "body horror",
+  "urban legend",
+  "fetish documentary",
+  "vampire drama",
+  "futuristic erotica",
+  "Gothic fairytale",
+  "tropical fever dream",
+  "teenage summer",
+  "power play saga",
+  "office scandal",
+  "cult ritual",
+  "revenge thriller",
+  "haunted romance",
+  "alien seduction",
+  "small town gossip",
+  "family secrets",
+  "coming of age lust"
+];
+if (typeof PF_GENRES_ADDON !== "undefined") PF_GENRES = (typeof PF_GENRES !== "undefined" ? PF_GENRES : []).concat(PF_GENRES_ADDON);
+
+// SEXUAL ACTS (explicit, cinematic, and prompt-optimized)
+const PF_SEXUAL_ACTS_ADDON = [
+  "face sitting",
+  "spit roasting",
+  "double penetration",
+  "cock worship",
+  "tongue riding",
+  "edge play",
+  "public masturbation",
+  "deepthroat challenge",
+  "anal creampie",
+  "forced orgasm",
+  "pegging",
+  "mutual fisting",
+  "squirt marking",
+  "sensation play",
+  "choking with consent",
+  "rimming",
+  "milking",
+  "dirty talking",
+  "femdom tease",
+  "strap-on riding",
+  "cum swapping",
+  "thigh grinding"
+];
+if (typeof PF_SEXUAL_ACTS_ADDON !== "undefined") PF_ACTS = (typeof PF_ACTS !== "undefined" ? PF_ACTS : []).concat(PF_SEXUAL_ACTS_ADDON);
+
+// DIRTY TALK / DIALOGUE SNIPPETS (NSFW, mood-setting, roleplay)
+const PF_DIRTY_TALK_ADDON = [
+  "\"Tell me how much you want it.\"",
+  "\"You're so fucking wet for me.\"",
+  "\"Beg for my cock.\"",
+  "\"Don’t stop, don’t ever stop.\"",
+  "\"Make me scream your name.\"",
+  "\"I want you deeper.\"",
+  "\"Harder, just like that.\"",
+  "\"Lick every inch.\"",
+  "\"Use me, I’m yours.\"",
+  "\"Show me you can take it.\"",
+  "\"I love the way you taste.\"",
+  "\"Don’t hold back now.\"",
+  "\"Get on your knees for me.\"",
+  "\"Let me hear you moan.\"",
+  "\"Keep your eyes on me.\"",
+  "\"Make it messy.\"",
+  "\"I want to feel you inside.\""
+];
+if (typeof PF_DIRTY_TALK_ADDON !== "undefined") PF_DIALOGUE = (typeof PF_DIALOGUE !== "undefined" ? PF_DIALOGUE : []).concat(PF_DIRTY_TALK_ADDON);
+
+// ADVANCED NEGATIVE PROMPTS (for filtering/cleaning unwanted elements in AI art)
+const PF_NEGATIVE_PROMPTS_ADDON = [
+  "extra arms",
+  "broken fingers",
+  "deformed hands",
+  "distorted face",
+  "crossed eyes",
+  "blurry skin",
+  "messed up anatomy",
+  "missing limbs",
+  "bad body proportions",
+  "multiple heads",
+  "extra legs",
+  "unrealistic shadow",
+  "watermark",
+  "text artifacts",
+  "extra nipples",
+  "mutated feet",
+  "unreal color cast",
+  "bad reflections",
+  "glitchy background",
+  "nsfw watermark",
+  "excess limbs",
+  "cut-off feet",
+  "missing fingers",
+  "overexposed",
+  "underexposed",
+  "weird teeth",
+  "monster hands"
+];
+if (typeof PF_NEGATIVE_PROMPTS_ADDON !== "undefined") PF_NEGATIVE_PROMPTS = (typeof PF_NEGATIVE_PROMPTS !== "undefined" ? PF_NEGATIVE_PROMPTS : []).concat(PF_NEGATIVE_PROMPTS_ADDON);
+// --- PromptForge Add-On Wordbank ---
+// COSTUMES & CLOTHING (sexy, creative, cinematic, SFW/NSFW)
+const PF_COSTUMES_ADDON = [
+  "lace teddy",
+  "wet t-shirt",
+  "school uniform",
+  "latex catsuit",
+  "leather mini skirt",
+  "open robe",
+  "corset with garters",
+  "stocking suspenders",
+  "mesh bodysuit",
+  "frilly apron",
+  "business suit, nothing underneath",
+  "zippered hoodie",
+  "oversized dress shirt",
+  "knee-high boots",
+  "boyshort panties",
+  "bikini with body chain",
+  "see-through raincoat",
+  "spiked collar",
+  "velvet gloves",
+  "pearl necklace"
+];
+if (typeof PF_COSTUMES_ADDON !== "undefined") PF_COSTUMES = (typeof PF_COSTUMES !== "undefined" ? PF_COSTUMES : []).concat(PF_COSTUMES_ADDON);
+
+// ACCESSORIES & DETAILS (scene dressing, realism, flavor)
+const PF_ACCESSORIES_ADDON = [
+  "choker",
+  "lip ring",
+  "anklet",
+  "nose stud",
+  "temporary tattoo",
+  "tousled hair",
+  "fuzzy handcuffs",
+  "nipple pasties",
+  "body glitter",
+  "ripped fishnets",
+  "beaded bracelet",
+  "crystal plug",
+  "ballet flats",
+  "single earring",
+  "leather cuffs",
+  "lace mask",
+  "sunhat",
+  "ankle socks",
+  "tooth gem"
+];
+if (typeof PF_ACCESSORIES_ADDON !== "undefined") PF_ACCESSORIES = (typeof PF_ACCESSORIES !== "undefined" ? PF_ACCESSORIES : []).concat(PF_ACCESSORIES_ADDON);
+
+// TABOO & EDGY THEMES (for pushing prompt boundaries—compliant, but wild)
+const PF_TABOO_THEMES_ADDON = [
+  "secret affair",
+  "power play",
+  "voyeurism",
+  "exhibitionism",
+  "role reversal",
+  "risky public",
+  "office fantasy",
+  "age gap",
+  "confessional sin",
+  "sneaking out",
+  "best friend's lover",
+  "one-night stand",
+  "forbidden fruit",
+  "anonymous hookup",
+  "after-hours party",
+  "step fantasy",
+  "caught in the act",
+  "summer camp crush",
+  "dangerous obsession"
+];
+if (typeof PF_TABOO_THEMES_ADDON !== "undefined") PF_TABOO = (typeof PF_TABOO !== "undefined" ? PF_TABOO : []).concat(PF_TABOO_THEMES_ADDON);
+
+// ADVANCED FACIAL/BODY DETAILS (for realism, beauty, or flaw prompts)
+const PF_FACIAL_BODY_DETAILS_ADDON = [
+  "beauty mark",
+  "freckled shoulders",
+  "glossy lips",
+  "smeared mascara",
+  "teary eyes",
+  "runny eyeliner",
+  "puffy cheeks",
+  "cheek dimples",
+  "stubbled jaw",
+  "pierced tongue",
+  "flushed neck",
+  "smudged foundation",
+  "painted nails",
+  "tan lines",
+  "scar above eyebrow",
+  "asymmetric grin",
+  "sunburned nose",
+  "pouting lips",
+  "messy bun",
+  "wild bedhead"
+];
+if (typeof PF_FACIAL_BODY_DETAILS_ADDON !== "undefined") PF_FACIAL_DETAILS = (typeof PF_FACIAL_DETAILS !== "undefined" ? PF_FACIAL_DETAILS : []).concat(PF_FACIAL_BODY_DETAILS_ADDON);
+
+// NSFW ACTION WORDS (verbs, movement, “heat”)
+const PF_NSFW_ACTIONS_ADDON = [
+  "splay",
+  "burrow",
+  "pulse",
+  "tremble",
+  "quiver",
+  "explode",
+  "throb",
+  "mash",
+  "snarl",
+  "melt",
+  "slick up",
+  "gush",
+  "soak",
+  "spasm",
+  "snap hips",
+  "clench thighs",
+  "spread wider",
+  "grip tight",
+  "collapse"
+];
+if (typeof PF_NSFW_ACTIONS_ADDON !== "undefined") PF_ACTIONS = PF_ACTIONS.concat(PF_NSFW_ACTIONS_ADDON);
+// --- PromptForge Add-On Wordbank ---
+// CHARACTER ARCHETYPES (personality & story fuel, SFW/NSFW)
+const PF_ARCHETYPES_ADDON = [
+  "bad girl",
+  "innocent ingenue",
+  "stoic protector",
+  "playful tease",
+  "domme queen",
+  "needy sub",
+  "flirty neighbor",
+  "naughty nurse",
+  "strict teacher",
+  "rebel lover",
+  "mysterious stranger",
+  "jealous ex",
+  "trophy partner",
+  "forbidden step",
+  "caring mentor",
+  "wild party animal",
+  "shy wallflower",
+  "cocky jock",
+  "crush next door",
+  "charismatic boss"
+];
+if (typeof PF_ARCHETYPES_ADDON !== "undefined") PF_ARCHETYPES = (typeof PF_ARCHETYPES !== "undefined" ? PF_ARCHETYPES : []).concat(PF_ARCHETYPES_ADDON);
+
+// GROUP/PAIRING TYPES (all combos for film, art, or kink scenes)
+const PF_GROUP_TYPES_ADDON = [
+  "lesbian couple",
+  "threesome (2 girls, 1 guy)",
+  "gay lovers",
+  "polyamorous quad",
+  "foursome",
+  "girl group",
+  "mixed couple",
+  "boy/boy pair",
+  "best friends",
+  "strangers",
+  "lovers reunited",
+  "secret affair",
+  "office hookup",
+  "dominant trio",
+  "pet & handler",
+  "family fantasy",
+  "party group",
+  "bff sleepover",
+  "roommates"
+];
+if (typeof PF_GROUP_TYPES_ADDON !== "undefined") PF_GROUP_TYPES = (typeof PF_GROUP_TYPES !== "undefined" ? PF_GROUP_TYPES : []).concat(PF_GROUP_TYPES_ADDON);
+
+// EMOTIONAL STATES (visual and mood prompt upgrades)
+const PF_EMOTIONAL_STATES_ADDON = [
+  "nervous anticipation",
+  "suppressed laughter",
+  "boiling jealousy",
+  "tender devotion",
+  "reckless abandon",
+  "flood of relief",
+  "drunk with desire",
+  "melancholy longing",
+  "hushed awe",
+  "fury barely contained",
+  "spiteful grin",
+  "dangerous curiosity",
+  "rapturous bliss",
+  "awkward shyness",
+  "guilty pleasure",
+  "heartfelt apology",
+  "exhausted contentment",
+  "smoldering anger",
+  "quiet satisfaction"
+];
+if (typeof PF_EMOTIONAL_STATES_ADDON !== "undefined") PF_MOODS = PF_MOODS.concat(PF_EMOTIONAL_STATES_ADDON);
+
+// ENVIRONMENT DETAILS (to set the scene, realistic and cinematic)
+const PF_ENVIRONMENT_DETAILS_ADDON = [
+  "rain streaks on glass",
+  "scattered rose petals",
+  "flickering TV light",
+  "bed sheets tangled",
+  "fog creeping under door",
+  "broken mirror shards",
+  "city skyline out window",
+  "laundry on floor",
+  "music thumping next room",
+  "hushed city street",
+  "distant thunder",
+  "sunbeam across bed",
+  "dripping faucet",
+  "candle wax drips",
+  "open closet door",
+  "condensation on mirror",
+  "party confetti",
+  "muffled footsteps",
+  "neon reflection"
+];
+if (typeof PF_ENVIRONMENT_DETAILS_ADDON !== "undefined") PF_ENVIRONMENT_DETAILS = (typeof PF_ENVIRONMENT_DETAILS !== "undefined" ? PF_ENVIRONMENT_DETAILS : []).concat(PF_ENVIRONMENT_DETAILS_ADDON);
+
+// NSFW FLUIDS & MARKS (for realism, taboo, or hyper-detail)
+const PF_NSFW_FLUIDS_MARKS_ADDON = [
+  "smeared lipstick",
+  "pearlescent streaks",
+  "milky drizzle",
+  "spit trails",
+  "wet handprint",
+  "tear-stained cheeks",
+  "sweat-slicked skin",
+  "streaked mascara",
+  "bite marks",
+  "scratched shoulders",
+  "thigh bruises",
+  "raked back",
+  "puddle on sheets",
+  "love bites",
+  "glossy slick",
+  "runny makeup",
+  "tongue print",
+  "rosy slap mark"
+];
+if (typeof PF_NSFW_FLUIDS_MARKS_ADDON !== "undefined") PF_NSFW_MARKS = (typeof PF_NSFW_MARKS !== "undefined" ? PF_NSFW_MARKS : []).concat(PF_NSFW_FLUIDS_MARKS_ADDON);
+// --- PromptForge Prompt Brain: Pro-Level Generator ---
+
+function randomFrom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// Template structures (expand later!)
+const PF_PROMPT_TEMPLATES = [
+  // Cinematic/Art
+  "[CHAR] [ACTION] [PROP] in [LOCATION], lit by [LIGHT], with [DETAIL], feeling [MOOD].",
+  // NSFW explicit
+  "[CHAR] [NSFW_ACTION] [NSFW_BODY_PART] with [PROP] in [LOCATION] while [MOOD] and [DIRTY_TALK]",
+  // Artistic
+  "[CHAR] in [COSTUME] [ACTION] at [LOCATION], with [FACIAL_DETAIL] and [COLOR] lighting.",
+  // Scenario
+  "[ARCHETYPE] and [ARCHETYPE2] in [SCENARIO] at [LOCATION], [MOOD], [PROP] nearby.",
+  // Group
+  "[GROUP_TYPE] [ACTION] [NSFW_VERB] in [LOCATION], [MOOD], covered in [NSFW_FLUIDS_MARKS].",
+  // Short punch
+  "[CHAR] [ACTION] in [LOCATION], [MOOD].",
+  // Minimal art
+  "[ACTION] [PROP], [MOOD], [COLOR] light."
+];
+
+// Word pools (auto-detect for safety/flexibility)
+function getPool(arrName, fallback) {
+  return (typeof window[arrName] !== "undefined" && window[arrName].length > 0)
+    ? window[arrName]
+    : (typeof window[fallback] !== "undefined" ? window[fallback] : [""]);
+}
+
+function generatePromptForgePrompt() {
+  // Helper: fallback if pool missing
+  const get = (arrName, fallback) => randomFrom(getPool(arrName, fallback));
+  
+  
+  // Pick template randomly
+  let tmpl = randomFrom(PF_PROMPT_TEMPLATES);
+
+  // For [ARCHETYPE2], make sure not to repeat [ARCHETYPE]
+  if (tmpl.includes("[ARCHETYPE2]")) {
+    let one = dict["[ARCHETYPE]"];
+    let two;
+    do {
+      two = get("PF_ARCHETYPES", "PF_CHARACTERS");
+    } while (two === one && getPool("PF_ARCHETYPES", "PF_CHARACTERS").length > 1);
+    dict["[ARCHETYPE2]"] = two;
+  }
+
+  // Replace tokens in template
+  let prompt = tmpl.replace(/\[[A-Z_0-9]+\]/g, (token) => dict[token] || "");
+  
+  // Clean up any weird double spaces or leftover commas
+  return prompt
+    .replace(/ ,/g, ",")
+    .replace(/\s+/g, " ")
+    .replace(/ ,/g, ",")
+    .replace(/ ,/g, ",")
+    .replace(/\s+\./g, ".")
+    .trim();
+}
+
+// --- End PromptForge Prompt Brain ---
+// --- PromptForge Add-On Wordbank ---
+// DESCRIPTIVE ADJECTIVES (for bodies, moods, scenes)
+const PF_ADJECTIVES_ADDON = [
+  "achingly soft",
+  "blindingly bright",
+  "dripping wet",
+  "razor-sharp",
+  "velvet smooth",
+  "flushed",
+  "tangled",
+  "delicate",
+  "feral",
+  "unbuttoned",
+  "stormy",
+  "teasing",
+  "smoldering",
+  "pale",
+  "sun-kissed",
+  "glistening",
+  "rumpled",
+  "scarred",
+  "inked",
+  "rumored",
+  "sweat-soaked"
+];
+if (typeof PF_ADJECTIVES_ADDON !== "undefined") PF_ADJECTIVES = (typeof PF_ADJECTIVES !== "undefined" ? PF_ADJECTIVES : []).concat(PF_ADJECTIVES_ADDON);
+
+// CONNECTORS & TRANSITIONS (for flowing, human-sounding sentences)
+const PF_CONNECTORS_ADDON = [
+  "while",
+  "as",
+  "with",
+  "beneath",
+  "above",
+  "against",
+  "inside",
+  "among",
+  "before",
+  "after",
+  "in the glow of",
+  "in spite of",
+  "during",
+  "because of",
+  "despite",
+  "alongside",
+  "in between",
+  "next to",
+  "over",
+  "under"
+];
+if (typeof PF_CONNECTORS_ADDON !== "undefined") PF_CONNECTORS = (typeof PF_CONNECTORS !== "undefined" ? PF_CONNECTORS : []).concat(PF_CONNECTORS_ADDON);
+
+// TIME PHRASES (scene setting, story flow, realism)
+const PF_TIME_PHRASES_ADDON = [
+  "at midnight",
+  "just before dawn",
+  "as the city sleeps",
+  "while rain beats on the window",
+  "in the blue hour",
+  "with sunrise coming",
+  "long after dark",
+  "under neon lights",
+  "during golden hour",
+  "in the hush before morning",
+  "as thunder rumbles",
+  "while headlights flicker outside",
+  "beneath a full moon",
+  "as music throbs through the walls"
+];
+if (typeof PF_TIME_PHRASES_ADDON !== "undefined") PF_TIME_PHRASES = (typeof PF_TIME_PHRASES !== "undefined" ? PF_TIME_PHRASES : []).concat(PF_TIME_PHRASES_ADDON);
+
+// ARTISTIC MOODS & ATMOSPHERES
+const PF_ART_MOODS_ADDON = [
+  "melancholy silence",
+  "feverish excitement",
+  "dreamlike haze",
+  "smoky seduction",
+  "haunted stillness",
+  "electric anticipation",
+  "shameful pleasure",
+  "dangerous longing",
+  "tender awe",
+  "charged tension",
+  "reckless abandon",
+  "breathless urgency",
+  "aching nostalgia",
+  "violent hunger",
+  "sweet surrender"
+];
+if (typeof PF_ART_MOODS_ADDON !== "undefined") PF_ART_MOODS = (typeof PF_ART_MOODS !== "undefined" ? PF_ART_MOODS : []).concat(PF_ART_MOODS_ADDON);
+
+// MINI-TEMPLATES FOR VARIETY (can be called in the main brain)
+const PF_MINI_TEMPLATES_ADDON = [
+  "[CHAR] [ACTION] [PROP] [CONNECTOR] [MOOD]",
+  "[CHAR] in [COSTUME] at [LOCATION], [TIME_PHRASE]",
+  "[ARCHETYPE] [ACTION] [BODY_PART], [ART_MOOD]",
+  "[GROUP_TYPE] tangled [CONNECTOR] [SCENARIO] [TIME_PHRASE]",
+  "[CHAR] [ACTION] [BODY_PART] [CONNECTOR] [DIRTY_TALK]"
+];
+if (typeof PF_MINI_TEMPLATES_ADDON !== "undefined") PF_PROMPT_TEMPLATES = PF_PROMPT_TEMPLATES.concat(PF_MINI_TEMPLATES_ADDON);
+// --- PromptForge Add-On Wordbank ---
+// ADVERBS (how actions happen, realism & flow)
+const PF_ADVERBS_ADDON = [
+  "slowly",
+  "deliberately",
+  "clumsily",
+  "hungrily",
+  "eagerly",
+  "shakily",
+  "gently",
+  "suddenly",
+  "breathlessly",
+  "desperately",
+  "softly",
+  "boldly",
+  "roughly",
+  "feverishly",
+  "subtly",
+  "playfully",
+  "timidly",
+  "recklessly",
+  "lazily",
+  "urgently"
+];
+if (typeof PF_ADVERBS_ADDON !== "undefined") PF_ADVERBS = (typeof PF_ADVERBS !== "undefined" ? PF_ADVERBS : []).concat(PF_ADVERBS_ADDON);
+
+// UNIQUE REACTIONS (mini-phrases for faces, bodies, and vibe)
+const PF_REACTIONS_ADDON = [
+  "eyes flutter shut",
+  "mouth falls open",
+  "voice cracks",
+  "knees buckle",
+  "fingers dig in",
+  "back arches higher",
+  "toes curl tight",
+  "hips buck",
+  "lips tremble",
+  "breath catches",
+  "shoulders tense",
+  "pulse races",
+  "cheeks burn",
+  "ears go red",
+  "thighs clench",
+  "hair stands on end",
+  "hands shake",
+  "heart pounds"
+];
+if (typeof PF_REACTIONS_ADDON !== "undefined") PF_REACTIONS = (typeof PF_REACTIONS !== "undefined" ? PF_REACTIONS : []).concat(PF_REACTIONS_ADDON);
+
+// RARE, CINEMATIC VERBS (for actions, movement, and mood)
+const PF_RARE_VERBS_ADDON = [
+  "cascade",
+  "coil",
+  "spill",
+  "scrawl",
+  "shudder",
+  "skitter",
+  "flutter",
+  "slither",
+  "drape",
+  "hover",
+  "curl",
+  "dart",
+  "graze",
+  "writhe",
+  "cling",
+  "fan out",
+  "shiver",
+  "sink",
+  "spill out",
+  "glide"
+];
+if (typeof PF_RARE_VERBS_ADDON !== "undefined") PF_ACTIONS = PF_ACTIONS.concat(PF_RARE_VERBS_ADDON);
+
+// ADVANCED BODY/SCENE DETAILS (high-res, ultra-human realism)
+const PF_BODY_SCENE_DETAILS_ADDON = [
+  "goosebumps along her arms",
+  "damp strands of hair at her temple",
+  "lingering perfume in the air",
+  "skin glistening under neon",
+  "tiny scratch on her hip",
+  "faint bruise beneath collarbone",
+  "pale blue veins visible at wrist",
+  "lash marks fading on her thigh",
+  "feather stuck to her cheek",
+  "mascara smeared beneath one eye",
+  "saliva glistening on lips",
+  "cool air on bare skin",
+  "heartbeat visible at her throat",
+  "smudged lipstick on the glass",
+  "fingerprints in the dust",
+  "heels digging into carpet",
+  "bare feet pressed to tile",
+  "sweat pooling in small of back"
+];
+if (typeof PF_BODY_SCENE_DETAILS_ADDON !== "undefined") PF_BODY_DETAILS = (typeof PF_BODY_DETAILS !== "undefined" ? PF_BODY_DETAILS : []).concat(PF_BODY_SCENE_DETAILS_ADDON);
+
+// INVISIBLE SCENE “GLUE” (phrases that link and flesh out real English scenes)
+const PF_SCENE_GLUE_ADDON = [
+  "with the city humming outside",
+  "while the music pounds through walls",
+  "in the hush between breaths",
+  "as neon flickers in the corner",
+  "before anyone can speak",
+  "after the lights go out",
+  "with fingers tangled in sheets",
+  "while rain blurs the window",
+  "under the weight of longing",
+  "as the world fades away",
+  "until sunrise bleeds through blinds",
+  "when nothing else exists",
+  "with her name on your lips",
+  "in that endless moment",
+  "while heat pools between them"
+];
+if (typeof PF_SCENE_GLUE_ADDON !== "undefined") PF_SCENE_GLUE = (typeof PF_SCENE_GLUE !== "undefined" ? PF_SCENE_GLUE : []).concat(PF_SCENE_GLUE_ADDON);
+
+// Optional: Add dictionary references for these to your prompt brain for advanced templates!
+// --- PF_DICT MAPPING START ---
+// PERSONALITY TRAITS
+const PF_PERSONALITY = [
+  "brooding",
+  "manic",
+  "charismatic",
+  "cynical",
+  "sweet-talking",
+  "ruthless",
+  "nervous",
+  "manipulative",
+  "innocent",
+  "impulsive",
+  "charming",
+  "sarcastic",
+  "obsessive",
+  "arrogant",
+  "loyal",
+  "jaded",
+  "calculating",
+  "shameless",
+  "guarded",
+  "reckless"
+];
+
+// OCCUPATIONS
+const PF_OCCUPATIONS = [
+  "paramedic",
+  "bartender",
+  "club dancer",
+  "artist",
+  "bouncer",
+  "influencer",
+  "DJ",
+  "janitor",
+  "psychiatrist",
+  "escort",
+  "teacher",
+  "photographer",
+  "librarian",
+  "mechanic",
+  "maid",
+  "nurse",
+  "private detective",
+  "manager",
+  "intern",
+  "priest"
+];
+
+// ROLES
+const PF_ROLES = [
+  "leader",
+  "sidekick",
+  "outsider",
+  "mentor",
+  "rival",
+  "antagonist",
+  "prodigy",
+  "fixer",
+  "victim",
+  "hero",
+  "villain",
+  "witness",
+  "confidant",
+  "double agent",
+  "blackmailer",
+  "saboteur",
+  "observer",
+  "protector",
+  "traitor",
+  "pawn"
+];
+
+// BODY TYPES
+const PF_BODY_TYPES = [
+  "slender",
+  "muscular",
+  "curvy",
+  "athletic",
+  "petite",
+  "plush",
+  "lanky",
+  "stocky",
+  "voluptuous",
+  "tall",
+  "short",
+  "boyish",
+  "feminine",
+  "angular",
+  "soft",
+  "hairless",
+  "hairy",
+  "hourglass",
+  "broad-shouldered",
+  "doll-like"
+];
+
+// EYE DETAILS
+const PF_EYE_DETAILS = [
+  "dark circles",
+  "smoky eyes",
+  "bloodshot",
+  "catlike pupils",
+  "faded iris",
+  "cold stare",
+  "glassy gaze",
+  "darting eyes",
+  "narrowed",
+  "tear-filled",
+  "sharp glint",
+  "sparkling",
+  "hooded eyelids",
+  "fluttering lashes",
+  "sunken",
+  "half-lidded",
+  "wild-eyed",
+  "pinned pupils",
+  "dilated",
+  "vacant stare"
+];
+
+// HAIR DETAILS
+const PF_HAIR_DETAILS = [
+  "messy bun",
+  "braided pigtails",
+  "long fringe",
+  "undercut",
+  "dreadlocks",
+  "pixie cut",
+  "loose waves",
+  "curly afro",
+  "tight ponytail",
+  "dyed streaks",
+  "slicked back",
+  "buzzed sides",
+  "asymmetric bob",
+  "shoulder-length",
+  "feathered",
+  "greasy strands",
+  "wet hair",
+  "spiky tips",
+  "frizzy",
+  "tangled"
+];
+
+// VOICES
+const PF_VOICES = [
+  "whispering",
+  "raspy",
+  "growling",
+  "moaning",
+  "panting",
+  "cracking",
+  "silky",
+  "sharp-tongued",
+  "soft-spoken",
+  "sing-song",
+  "hushed",
+  "murmured",
+  "stuttering",
+  "shrill",
+  "breathy",
+  "commanding",
+  "slurred",
+  "choked",
+  "coarse",
+  "drawling"
+];
+
+// CLOTHING
+const PF_CLOTHING = [
+  "ripped jeans",
+  "satin nightgown",
+  "cargo pants",
+  "fishnet top",
+  "silk slip",
+  "athletic shorts",
+  "cropped hoodie",
+  "graphic tee",
+  "mini skirt",
+  "sweatpants",
+  "oversized flannel",
+  "leather vest",
+  "plaid skirt",
+  "suspenders",
+  "lace bralette",
+  "boyshorts",
+  "spaghetti strap dress",
+  "bomber jacket",
+  "harness belt",
+  "thigh-high socks"
+];
+
+// TATTOOS
+const PF_TATTOOS = [
+  "full sleeve",
+  "ankle band",
+  "back dragon",
+  "tiny wrist heart",
+  "neck script",
+  "lower back tribal",
+  "finger dots",
+  "chest skull",
+  "collarbone feather",
+  "nape bar code",
+  "shoulder rose",
+  "sternum mandala",
+  "ribcage wings",
+  "hip butterfly",
+  "face teardrop",
+  "behind ear star",
+  "thigh garter",
+  "stomach snake",
+  "spine runes",
+  "hand spider"
+];
+
+// PIERCINGS
+const PF_PIERCINGS = [
+  "snakebite lip rings",
+  "eyebrow bar",
+  "monroe stud",
+  "nose hoop",
+  "septum ring",
+  "nipple barbell",
+  "navel jewel",
+  "industrial bar",
+  "tragus stud",
+  "tongue piercing",
+  "bridge bar",
+  "helix hoop",
+  "labret",
+  "cheek dermals",
+  "dahlia bites",
+  "smiley piercing",
+  "surface anchor",
+  "conch ring",
+  "double nostril",
+  "eyelid microdermal"
+];
+
+// POSES
+const PF_POSES = [
+  "arched back",
+  "kneeling",
+  "hands behind head",
+  "on all fours",
+  "cross-legged",
+  "sprawled",
+  "straddling",
+  "perched on edge",
+  "lying on side",
+  "crouching",
+  "reclining",
+  "spooning",
+  "leaning against wall",
+  "hunched",
+  "balanced on toes",
+  "spinning",
+  "head thrown back",
+  "biting knuckle",
+  "covering face",
+  "propped up on elbows"
+];
+// RELATIONSHIPS
+const PF_RELATIONSHIPS = [
+  "childhood friends",
+  "estranged lovers",
+  "secret enemies",
+  "co-workers",
+  "ex-partners",
+  "casual hook-ups",
+  "unrequited crush",
+  "mentor and apprentice",
+  "frenemies",
+  "roommates",
+  "rivals",
+  "dominant & submissive",
+  "long-distance couple",
+  "old flames",
+  "complicated trio",
+  "open relationship",
+  "forbidden love",
+  "workplace affair",
+  "summer fling",
+  "one night stand"
+];
+
+// SETTINGS
+const PF_SETTINGS = [
+  "rooftop bar",
+  "underground club",
+  "rain-soaked alley",
+  "motel room",
+  "suburban kitchen",
+  "empty classroom",
+  "locker room",
+  "backseat of a car",
+  "abandoned warehouse",
+  "laundromat",
+  "dingy basement",
+  "hotel suite",
+  "hospital hallway",
+  "neon-lit street",
+  "tattoo parlor",
+  "forest clearing",
+  "bathroom stall",
+  "beach at night",
+  "attic hideout",
+  "penthouse loft"
+];
+
+// COUPLE TYPES
+const PF_COUPLE_TYPES = [
+  "young lovers",
+  "May-December romance",
+  "biker and artist",
+  "stripper and CEO",
+  "teacher and student",
+  "married couple",
+  "office fling",
+  "online hookup",
+  "best friends to lovers",
+  "secret partners",
+  "rich and poor",
+  "neighbors",
+  "friends with benefits",
+  "first-time lovers",
+  "polyam couple",
+  "rebound couple",
+  "adventurous pair",
+  "forbidden pair",
+  "odd couple",
+  "estranged spouses"
+];
+
+// ENVIRONMENT DETAILS (cinematic, highly visual)
+const PF_ENVIRONMENT_DETAILS = [
+  "grimy mirrors",
+  "neon puddles",
+  "rain splatter",
+  "flickering signage",
+  "ashtray full of lipstick butts",
+  "broken blinds",
+  "liquor bottles on counter",
+  "faded polaroids",
+  "sticky carpet",
+  "flickering TV",
+  "open windows",
+  "rattling pipes",
+  "stained sheets",
+  "overgrown weeds",
+  "police sirens outside",
+  "ceiling fan spinning",
+  "old posters peeling",
+  "phone buzzing",
+  "laundry baskets",
+  "muffled laughter next door"
+];
+
+// ERAS (for story, fashion, vibe)
+const PF_ERAS = [
+  "1980s",
+  "Y2K",
+  "Victorian",
+  "Jazz Age",
+  "disco era",
+  "Roaring Twenties",
+  "post-apocalypse",
+  "retro-futurist",
+  "1970s",
+  "cyberpunk future",
+  "modern day",
+  "grunge era",
+  "noir 1940s",
+  "ancient Rome",
+  "early 2000s",
+  "space age",
+  "medieval times",
+  "late 90s",
+  "lost generation",
+  "age of decadence"
+];
+
+// SEASONS
+const PF_SEASONS = [
+  "late summer",
+  "early spring",
+  "monsoon season",
+  "dead of winter",
+  "high summer",
+  "first frost",
+  "wet autumn",
+  "endless July",
+  "rainy season",
+  "holiday season",
+  "equinox",
+  "solstice night",
+  "golden October",
+  "snowmelt",
+  "midsummer night",
+  "harvest time",
+  "leaf-fall",
+  "new year’s eve",
+  "crisp November",
+  "hottest day"
+];
+
+// EMOTIONS
+const PF_EMOTIONS = [
+  "jealousy",
+  "longing",
+  "rage",
+  "euphoria",
+  "bitterness",
+  "insecurity",
+  "infatuation",
+  "disgust",
+  "hopelessness",
+  "ecstasy",
+  "anticipation",
+  "remorse",
+  "confusion",
+  "glee",
+  "shame",
+  "lust",
+  "dread",
+  "tenderness",
+  "pride",
+  "envy"
+];
+
+// VIBES (mood/atmosphere)
+const PF_VIBES = [
+  "sleazy",
+  "electric",
+  "unhinged",
+  "sweet and dangerous",
+  "cozy",
+  "melancholic",
+  "chaotic",
+  "intimate",
+  "taboo",
+  "detached",
+  "decadent",
+  "playful",
+  "chilly",
+  "heated",
+  "numb",
+  "hypnotic",
+  "frenzied",
+  "haunted",
+  "secretive",
+  "feral"
+];
+
+// SENSATIONS (physical, sensory)
+const PF_SENSATIONS = [
+  "burning skin",
+  "chilled flesh",
+  "tingling fingertips",
+  "shudder down the spine",
+  "pounding pulse",
+  "goosebumps",
+  "prickling scalp",
+  "aching muscles",
+  "sticky sweat",
+  "flutter in the stomach",
+  "weak knees",
+  "cold breath",
+  "raspy throat",
+  "tight chest",
+  "spilled adrenaline",
+  "hazy vision",
+  "wet palms",
+  "blushing face",
+  "tensed jaw",
+  "dry mouth"
+];
+
+// TOUCHES (tactile details)
+const PF_TOUCHES = [
+  "tracing fingertips",
+  "digging nails",
+  "light slap",
+  "pulling hair",
+  "pinching",
+  "gentle caress",
+  "pressing palm",
+  "scraping teeth",
+  "brushing lips",
+  "gripping thigh",
+  "squeezing shoulder",
+  "twisting earlobe",
+  "cupping cheek",
+  "stroking back",
+  "patting knee",
+  "clutching fabric",
+  "thumb over lip",
+  "grinding hips",
+  "twining fingers",
+  "rubbing neck"
+];
+// SOUNDS (atmosphere, immersion)
+const PF_SOUNDS = [
+  "city sirens",
+  "distant laughter",
+  "muffled club bass",
+  "heels on tile",
+  "buzzing neon",
+  "heavy breathing",
+  "zipper undone",
+  "coins dropping",
+  "heartbeat pounding",
+  "bed creaking",
+  "shattered glass",
+  "whispers in darkness",
+  "rain on pavement",
+  "teeth chattering",
+  "music thumping",
+  "lock clicking",
+  "knuckles cracking",
+  "gasping moans",
+  "phone vibrating",
+  "TV static"
+];
+
+// TASTES (for mouth/scene detail)
+const PF_TASTES = [
+  "salty skin",
+  "cheap whiskey",
+  "sweet perfume",
+  "metallic blood",
+  "lipstick wax",
+  "peppermint",
+  "smoky breath",
+  "stale gum",
+  "vanilla frosting",
+  "minty toothpaste",
+  "cigarette ash",
+  "coffee on lips",
+  "spilled gin",
+  "cherry lipgloss",
+  "cologne",
+  "cotton candy",
+  "champagne bubbles",
+  "chocolate syrup",
+  "lemon bite",
+  "spicy cinnamon"
+];
+
+// SMELLS (scene realism)
+const PF_SMELLS = [
+  "sweat",
+  "bleach",
+  "incense",
+  "fresh coffee",
+  "cologne",
+  "wet pavement",
+  "old books",
+  "leather",
+  "vanilla",
+  "marijuana smoke",
+  "chlorine",
+  "cigarettes",
+  "rose petals",
+  "beer breath",
+  "fabric softener",
+  "ocean salt",
+  "musk",
+  "gasoline",
+  "peppermint",
+  "rubber"
+];
+
+// PHOTO STYLES (art/photo genre)
+const PF_PHOTO_STYLES = [
+  "35mm film",
+  "grainy Polaroid",
+  "soft focus",
+  "overexposed",
+  "infrared",
+  "cinematic widescreen",
+  "high contrast",
+  "night vision",
+  "sepia tone",
+  "color splash",
+  "monochrome",
+  "HDR",
+  "double exposure",
+  "vintage print",
+  "macro close-up",
+  "selfie style",
+  "panoramic",
+  "point-and-shoot",
+  "surveillance cam",
+  "handheld"
+];
+
+// CAMERA TRICKS (effects, looks)
+const PF_CAMERA_TRICKS = [
+  "lens flare",
+  "shallow depth of field",
+  "bokeh lights",
+  "mirror reflection",
+  "fish-eye distortion",
+  "slow shutter blur",
+  "zoom burst",
+  "soft vignette",
+  "edge burn",
+  "frame within frame",
+  "light leak",
+  "upward angle",
+  "downward angle",
+  "side lighting",
+  "backlight silhouette",
+  "focus pull",
+  "split toning",
+  "swivel shot",
+  "tilt-shift effect",
+  "underexposed shadow"
+];
+
+// GENRES (broad narrative/art genres)
+const PF_GENRES = [
+  "noir",
+  "erotic thriller",
+  "grindhouse",
+  "urban fantasy",
+  "post-apocalypse",
+  "teen drama",
+  "psychological horror",
+  "romantic comedy",
+  "gothic",
+  "slice of life",
+  "hard sci-fi",
+  "soap opera",
+  "coming of age",
+  "cyberpunk",
+  "murder mystery",
+  "action-adventure",
+  "body horror",
+  "musical",
+  "mockumentary",
+  "crime saga",
+  "supernatural romance"
+];
+
+// DIALOGUE (sultry/NSFW/cinematic lines)
+const PF_DIALOGUE = [
+  "Don’t stop.",
+  "You know you want this.",
+  "Make me beg.",
+  "Not here—someone might see.",
+  "Do you trust me?",
+  "Shut up and kiss me.",
+  "Say my name.",
+  "Harder.",
+  "I shouldn’t want this.",
+  "Take it off.",
+  "Bite me.",
+  "Keep your eyes on me.",
+  "No one can hear us.",
+  "I dare you.",
+  "Is this what you want?",
+  "You’re shaking.",
+  "Tell me you need it.",
+  "You like it rough?",
+  "Pull my hair.",
+  "Don’t you dare stop."
+];
+
+// SCENARIOS (scene concept, kink or roleplay seed)
+const PF_SCENARIOS = [
+  "caught in the act",
+  "office after hours",
+  "strangers at a club",
+  "forbidden classroom",
+  "hotel rendezvous",
+  "backseat encounter",
+  "accidental voyeur",
+  "tied and waiting",
+  "secret affair",
+  "undercover cop",
+  "bachelorette party",
+  "initiation ritual",
+  "midnight dare",
+  "shower surprise",
+  "double life revealed",
+  "seduction game",
+  "role reversal",
+  "lost bet",
+  "neighbor’s window",
+  "under the table"
+];
+
+// KINKS
+const PF_KINKS = [
+  "bondage",
+  "domination",
+  "exhibitionism",
+  "impact play",
+  "voyeurism",
+  "power exchange",
+  "role reversal",
+  "restraint",
+  "praise kink",
+  "shame play",
+  "choking",
+  "temperature play",
+  "brat taming",
+  "edging",
+  "sensory deprivation",
+  "spanking",
+  "wax play",
+  "collaring",
+  "overstimulation",
+  "public play"
+];
+
+// FETISHES
+const PF_FETISHES = [
+  "feet",
+  "lingerie",
+  "heels",
+  "latex",
+  "wetlook",
+  "pantyhose",
+  "gloves",
+  "nylon",
+  "corset",
+  "spit",
+  "masochism",
+  "leather",
+  "uniform",
+  "crossdressing",
+  "sweat",
+  "piercing",
+  "hair pulling",
+  "handcuffs",
+  "socks",
+  "spectacles"
+];
+// SEXUAL_ACTS (explicit, scenario triggers)
+const PF_ACTS = [
+  "oral fixation",
+  "deep kissing",
+  "blindfolded teasing",
+  "body worship",
+  "handjob under the table",
+  "riding on top",
+  "spooning from behind",
+  "lap dance",
+  "mutual masturbation",
+  "public touch",
+  "striptease",
+  "mirror play",
+  "shower fun",
+  "against the wall",
+  "slow grinding",
+  "over-the-clothes rub",
+  "edge of the bed",
+  "face-sitting",
+  "roleplay confession",
+  "forced submission"
+];
+
+// NSFW_BODY_PARTS (for detail and realism)
+const PF_NSFW_BODY_PARTS = [
+  "inner thigh",
+  "nape of neck",
+  "small of back",
+  "nipple",
+  "lower belly",
+  "wet slit",
+  "bare chest",
+  "swollen lips",
+  "firm ass",
+  "pulsing cock",
+  "arched foot",
+  "slick folds",
+  "hungry mouth",
+  "dripping tip",
+  "taut stomach",
+  "delicate jawline",
+  "moist opening",
+  "sensitive bud",
+  "clenched fist",
+  "open palm"
+];
+
+// NSFW_MARKS (traces, aftermath, realism)
+const PF_NSFW_MARKS = [
+  "fresh bite marks",
+  "red handprint",
+  "smeared lipstick",
+  "tangled hair",
+  "nail scratches",
+  "love bruise",
+  "spilled lube",
+  "streaked mascara",
+  "sticky residue",
+  "faded hickeys",
+  "lip gloss on skin",
+  "wet trail",
+  "stained pillow",
+  "damp spot",
+  "smudged makeup",
+  "slippery fingers",
+  "saliva strings",
+  "perfume lingering",
+  "wrinkled sheets",
+  "sweet musk"
+];
+
+// GROUP_TYPES (relationship & scene setup)
+const PF_GROUP_TYPES = [
+  "lesbian trio",
+  "throuple",
+  "bachelor party",
+  "two girls and a guy",
+  "group of strangers",
+  "best friends group",
+  "foursome",
+  "couple with guest",
+  "swingers",
+  "open polycule",
+  "orgy scene",
+  "voyeur crowd",
+  "lovers’ triangle",
+  "enemies to lovers",
+  "secret admirers",
+  "dom and subs",
+  "stag and vixen",
+  "step-siblings",
+  "college roommates",
+  "daddy and girls"
+];
+
+// COLORS (visual, lighting, mood)
+const PF_COLORS = [
+  "neon pink",
+  "blood red",
+  "deep violet",
+  "ghostly white",
+  "midnight blue",
+  "ash gray",
+  "emerald green",
+  "golden amber",
+  "smoky black",
+  "peach blush",
+  "burnt orange",
+  "icy teal",
+  "rose gold",
+  "bruised plum",
+  "electric yellow",
+  "cloudy silver",
+  "hazel",
+  "lavender haze",
+  "graphite",
+  "crimson"
+];
+
+// LIGHTING (art/photo, mood, scene setup)
+const PF_LIGHTING = [
+  "strobe-lit",
+  "moonlit",
+  "neon-washed",
+  "candle-glow",
+  "harsh fluorescent",
+  "dim backlight",
+  "blinding daylight",
+  "twilight haze",
+  "spotlit",
+  "flickering bulb",
+  "halogen wash",
+  "golden hour",
+  "firelight",
+  "tv glow",
+  "police lights",
+  "pale dawn",
+  "sunset gradient",
+  "shadow-dappled",
+  "streetlamp-lit",
+  "UV blacklight"
+];
+
+// META (for prompt hacking or story setup)
+const PF_META = [
+  "breaking the fourth wall",
+  "dream sequence",
+  "flashback cut",
+  "voiceover narration",
+  "montage edit",
+  "multiple POV",
+  "freeze-frame",
+  "scene as memory",
+  "role swap",
+  "internal monologue",
+  "unreliable narrator",
+  "hallucination",
+  "video glitch",
+  "real-time chat",
+  "split screen",
+  "hidden camera",
+  "artificial intelligence reveal",
+  "game show format",
+  "open ending",
+  "post-credits stinger"
+];
+
+// PROMPT_NOTES (system, tone, rules, settings)
+const PF_PROMPT_NOTES = [
+  "no censorship",
+  "full creative freedom",
+  "cinematic realism",
+  "emotional impact",
+  "surreal tone",
+  "dream logic",
+  "dark themes",
+  "NSFW encouraged",
+  "art-house style",
+  "inspired by real events",
+  "multiple layers",
+  "raw dialogue",
+  "loose narrative",
+  "unpredictable twists",
+  "taboo-friendly",
+  "high detail",
+  "intense atmosphere",
+  "vivid color",
+  "for advanced users",
+  "open interpretation"
+];
+
+// TECH_TERMS (useful for AI, photo, story tools)
+const PF_TECH_TERMS = [
+  "stable diffusion",
+  "prompt weighting",
+  "style transfer",
+  "LoRA",
+  "upscale",
+  "token merging",
+  "negative prompt",
+  "seed lock",
+  "CFG scale",
+  "sampler type",
+  "noise level",
+  "latent space",
+  "checkpoint",
+  "inpainting",
+  "face restoration",
+  "resolution boost",
+  "batch size",
+  "img2img",
+  "embedding",
+  "controlnet"
+];
+
+// OBJECTS (props, environment)
+const PF_OBJECTS = [
+  "champagne flute",
+  "hotel keycard",
+  "broken mirror",
+  "handcuffs",
+  "crumpled letter",
+  "bloody towel",
+  "stripper pole",
+  "neon sign",
+  "ashtray",
+  "makeup bag",
+  "feather boa",
+  "silk rope",
+  "pill bottle",
+  "vinyl record",
+  "security camera",
+  "love note",
+  "bed restraints",
+  "mask",
+  "glitter",
+  "condom wrapper"
+];
+// SCENE_TOKENS (generic scene filler)
+const PF_SCENE_TOKENS = [
+  "shadowy corner",
+  "private booth",
+  "hotel elevator",
+  "dance floor",
+  "parking garage",
+  "sweaty gym",
+  "downtown rooftop",
+  "marble staircase",
+  "VIP lounge",
+  "janitor’s closet",
+  "midnight diner",
+  "VIP balcony",
+  "dark hallway",
+  "steamy sauna",
+  "cheap motel",
+  "basement studio",
+  "crowded subway",
+  "rooftop pool",
+  "public restroom",
+  "abandoned lot"
+];
+
+// LIGHTING_COLOR (used for [LIGHT] and [COLOR] if wanted)
+const PF_LIGHTING_COLOR = [
+  "cool blue",
+  "sultry red",
+  "amber gold",
+  "ice white",
+  "warm orange",
+  "green glow",
+  "midnight purple",
+  "frosted silver",
+  "sunset pink",
+  "dirty yellow",
+  "foggy grey",
+  "rich copper",
+  "seafoam green",
+  "neon violet",
+  "hazy gold",
+  "smoky teal",
+  "milky rose",
+  "moonlit silver",
+  "bone white",
+  "dusky brown"
+];
+
+// TABOO (for [SCENARIO], [MOOD], [SCENARIOS])
+const PF_TABOO = [
+  "age gap",
+  "public risk",
+  "teacher/student",
+  "sibling rivalry",
+  "stepfamily tension",
+  "risky photo",
+  "blackmail",
+  "coercion",
+  "cheating",
+  "voyeurism",
+  "seducing authority",
+  "dirty confession",
+  "humiliation",
+  "anonymous hookup",
+  "anonymous tip",
+  "unplanned pregnancy",
+  "roleplay deception",
+  "cross-dressing",
+  "secret affair",
+  "fetish exposure"
+];
+
+// PROPS (more physical objects for realism)
+const PF_PROPS = [
+  "ice cube",
+  "fur coat",
+  "playing cards",
+  "striped tie",
+  "vintage camera",
+  "biker helmet",
+  "shot glass",
+  "silk scarf",
+  "ankle bracelet",
+  "lipstick tube",
+  "mirror compact",
+  "hand fan",
+  "glass ashtray",
+  "barstool",
+  "cigarette case",
+  "pearl necklace",
+  "garter belt",
+  "shower loofah",
+  "blindfold",
+  "perfume bottle"
+];
+
+// FACIAL_DETAILS (closeup realism, for [DETAIL])
+const PF_FACIAL_DETAILS = [
+  "smudged mascara",
+  "flushed cheeks",
+  "quivering lip",
+  "arced eyebrow",
+  "beaded sweat",
+  "teeth showing",
+  "freckled nose",
+  "swollen lips",
+  "tear tracks",
+  "crooked grin",
+  "smeared blush",
+  "fluttering lashes",
+  "wrinkled brow",
+  "furrowed forehead",
+  "dimples",
+  "sunken eyes",
+  "cracked smile",
+  "glistening eyes",
+  "downturned mouth",
+  "sharp jawline"
+];
+
+// FACE_EXPRESSIONS (raw emotion)
+const PF_FACE_EXPRESSIONS = [
+  "biting her lip",
+  "wide-eyed",
+  "half smile",
+  "glare",
+  "pleading eyes",
+  "sultry stare",
+  "arched brow",
+  "mock surprise",
+  "smirk",
+  "shy glance",
+  "rolling her eyes",
+  "nervous laugh",
+  "teasing grin",
+  "furrowed brow",
+  "moaning softly",
+  "gasping",
+  "breathless gasp",
+  "sticking out tongue",
+  "innocent blink",
+  "satisfied grin"
+];
+
+// EMOTIONAL_STATES (for [MOOD])
+const PF_EMOTIONAL_STATES = [
+  "anxious",
+  "defiant",
+  "yearning",
+  "content",
+  "overwhelmed",
+  "impulsive",
+  "melancholic",
+  "provocative",
+  "cautious",
+  "hesitant",
+  "starved for touch",
+  "dazed",
+  "apathetic",
+  "thrilled",
+  "lonely",
+  "satisfied",
+  "torn",
+  "daring",
+  "paranoid",
+  "euphoric"
+];
+
+// ACCESSORIES (costume/fashion details)
+const PF_ACCESSORIES = [
+  "choker necklace",
+  "silver hoop earrings",
+  "lace gloves",
+  "aviator sunglasses",
+  "spiked collar",
+  "anklet",
+  "body chain",
+  "velvet ribbon",
+  "knee pads",
+  "fingerless gloves",
+  "toe ring",
+  "bandana",
+  "bolo tie",
+  "cat ears",
+  "corset laces",
+  "leather cuffs",
+  "nipple clamps",
+  "tiara",
+  "zipper mask",
+  "spiked wristband"
+];
+
+// GROUPS (alt for [GROUP_TYPE])
+const PF_GROUPS = [
+  "bachelorette party",
+  "all-male squad",
+  "all-girl clique",
+  "band on tour",
+  "secret society",
+  "roommates",
+  "polycule",
+  "work team",
+  "throuple",
+  "sorority sisters",
+  "frat brothers",
+  "rival crews",
+  "street racers",
+  "drag troupe",
+  "support group",
+  "neighbors",
+  "sports team",
+  "lovers’ circle",
+  "club members",
+  "after-hours staff"
+];
+
+// --- PromptForge GOD-MODE DICTIONARY MAPPING (Pre-mapped, future-proof) ---
+// This mapping will cover you for 99% of anything creative, NSFW, film, art, emotion, etc.
+
+const PF_DICT = {
+  // CHARACTERS & ARCHETYPES
+  "[CHAR]": get("PF_ARCHETYPES", "PF_CHARACTERS"),
+  "[ARCHETYPE]": get("PF_ARCHETYPES", "PF_CHARACTERS"),
+  "[ARCHETYPE2]": get("PF_ARCHETYPES", "PF_CHARACTERS"),
+  "[PERSONALITY]": get("PF_PERSONALITY", ""),
+  "[OCCUPATION]": get("PF_OCCUPATIONS", ""),
+  "[ROLE]": get("PF_ROLES", ""),
+
+  // PHYSICAL TRAITS & BODIES
+  "[BODY_TYPE]": get("PF_BODY_TYPES", ""),
+  "[BODY_PART]": get("PF_BODY_PARTS", ""),
+  "[FACIAL_DETAIL]": get("PF_FACIAL_DETAILS", "PF_FACE_EXPRESSIONS"),
+  "[EYE_DETAIL]": get("PF_EYE_DETAILS", ""),
+  "[HAIR_DETAIL]": get("PF_HAIR_DETAILS", ""),
+  "[VOICE]": get("PF_VOICES", ""),
+
+  // STYLE, FASHION, COSTUMES
+  "[COSTUME]": get("PF_COSTUMES", "PF_ACCESSORIES"),
+  "[CLOTHING]": get("PF_CLOTHING", ""),
+  "[ACCESSORY]": get("PF_ACCESSORIES", ""),
+  "[PROP]": get("PF_PROPS", "PF_OBJECTS"),
+  "[TATTOO]": get("PF_TATTOOS", ""),
+  "[PIERCING]": get("PF_PIERCINGS", ""),
+
+  // ACTION, VERBS, REACTIONS
+  "[ACTION]": get("PF_ACTIONS", "PF_NSFW_ACTIONS"),
+  "[NSFW_ACTION]": get("PF_NSFW_ACTIONS", "PF_ACTIONS"),
+  "[NSFW_VERB]": get("PF_NSFW_VERBS", "PF_ACTIONS"),
+  "[RARE_VERB]": get("PF_RARE_VERBS", "PF_ACTIONS"),
+  "[ADVERB]": get("PF_ADVERBS", ""),
+  "[REACTION]": get("PF_REACTIONS", ""),
+  "[POSE]": get("PF_POSES", ""),
+  "[BODY_DETAIL]": get("PF_BODY_DETAILS", ""),
+
+  // GROUP & PAIRINGS
+  "[GROUP_TYPE]": get("PF_GROUP_TYPES", "PF_GROUPS"),
+  "[COUPLE_TYPE]": get("PF_COUPLE_TYPES", ""),
+  "[RELATIONSHIP]": get("PF_RELATIONSHIPS", ""),
+
+  // LOCATION, ENVIRONMENT, SCENES
+  "[LOCATION]": get("PF_LOCATIONS", "PF_SCENE_TOKENS"),
+  "[SETTING]": get("PF_SETTINGS", ""),
+  "[ENVIRONMENT_DETAIL]": get("PF_ENVIRONMENT_DETAILS", ""),
+  "[SCENE_GLUE]": get("PF_SCENE_GLUE", ""),
+
+  // TIME & FLOW
+  "[TIME_PHRASE]": get("PF_TIME_PHRASES", ""),
+  "[ERA]": get("PF_ERAS", ""),
+  "[SEASON]": get("PF_SEASONS", ""),
+
+  // EMOTION, MOOD, ATMOSPHERE
+  "[MOOD]": get("PF_MOODS", "PF_EMOTIONAL_STATES"),
+  "[ART_MOOD]": get("PF_ART_MOODS", ""),
+  "[EMOTION]": get("PF_EMOTIONS", ""),
+  "[VIBE]": get("PF_VIBES", ""),
+
+  // SENSATION & SENSES
+  "[SENSATION]": get("PF_SENSATIONS", ""),
+  "[TOUCH]": get("PF_TOUCHES", ""),
+  "[SOUND]": get("PF_SOUNDS", ""),
+  "[TASTE]": get("PF_TASTES", ""),
+  "[SMELL]": get("PF_SMELLS", ""),
+
+  // LIGHT, COLOR, PHOTO/ART FX
+  "[LIGHT]": get("PF_LIGHTING", "PF_LIGHTING_COLOR"),
+  "[COLOR]": get("PF_COLORS", "PF_LIGHTING_COLOR"),
+  "[PHOTO_STYLE]": get("PF_PHOTO_STYLES", ""),
+  "[CAMERA_TRICK]": get("PF_CAMERA_TRICKS", ""),
+  "[GENRE]": get("PF_GENRES", ""),
+
+  // NSFW/ADULT
+  "[DIRTY_TALK]": get("PF_DIALOGUE", "PF_DIRTY_TALK"),
+  "[SCENARIO]": get("PF_SCENARIOS", "PF_TABOO"),
+  "[KINK]": get("PF_KINKS", ""),
+  "[FETISH]": get("PF_FETISHES", ""),
+  "[SEXUAL_ACT]": get("PF_ACTS", ""),
+  "[NSFW_BODY_PART]": get("PF_BODY_PARTS", "PF_NSFW_BODY_PARTS"),
+  "[NSFW_FLUIDS_MARKS]": get("PF_NSFW_MARKS", "PF_NSFW_FLUIDS_MARKS"),
+
+  // ADVANCED/AI/META
+  "[META]": get("PF_META", ""),
+  "[PROMPT_NOTE]": get("PF_PROMPT_NOTES", ""),
+  "[TECH_TERM]": get("PF_TECH_TERMS", ""),
+
+  // ADJECTIVE/CONNECTORS/STRUCTURE
+  "[ADJECTIVE]": get("PF_ADJECTIVES", ""),
+  "[CONNECTOR]": get("PF_CONNECTORS", ""),
+
+  // OPEN: (add any new categories here)
+};
