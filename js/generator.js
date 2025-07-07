@@ -734,3 +734,264 @@ const PF_SLANG = [
   "simp", "edgy", "ghost", "lowkey", "highkey", "tbh", "dm", "irl", "lmao", "rofl", "lol", "omg", "wtf", "smh", "fml", "nsfw", "sfw",
   "💦", "🍑", "🍆", "🔥", "😈", "👀", "😘", "😏", "😍", "🤤", "🖤", "✨", "🎀", "🦄", "🐱", "🐻", "💋", "🤍"
 ];
+// --- VISUAL SUBJECTS & NOUNS ---
+const visualNouns = [
+  "woman", "man", "girl", "boy", "robot", "angel", "demon", "fairy", "elf", "orc", "witch", "wizard", "warrior",
+  "dragon", "wolf", "cat", "dog", "fox", "lion", "tiger", "alien", "vampire", "zombie", "cyborg", "nurse", "doctor",
+  "teacher", "student", "soldier", "queen", "king", "prince", "princess", "doll", "mermaid", "pirate", "samurai",
+  "ninja", "goblin", "succubus", "incubus", "spy", "knight", "hunter", "gamer", "superhero", "villain", "monster",
+  "detective", "athlete", "cheerleader", "police", "firefighter", "scientist", "cowgirl", "cowboy", "maid", "butler",
+  "rockstar", "idol", "celebrity", "clown", "magician", "ghost", "angel", "punk", "emo", "goth", "skater", "influencer",
+  "genie", "alien princess", "android", "mutant", "alien overlord", "youtuber", "twitch streamer", "athlete", "biker",
+  "mechanic", "steampunk adventurer", "space marine", "necromancer", "alchemist", "hacker", "cyberpunk", "femboy",
+  "himbo", "giga chad", "waifu", "husbando", "cosplayer", "model", "photographer"
+];
+
+// --- ADJECTIVES (VISUAL, PERSONALITY, MOOD) ---
+const adjectives = [
+  "gorgeous", "sexy", "hot", "adorable", "cute", "beautiful", "handsome", "muscular", "chiseled", "petite", "tall",
+  "short", "stocky", "athletic", "voluptuous", "slender", "curvy", "glamorous", "elegant", "classy", "wild", "punk",
+  "gritty", "graceful", "mysterious", "moody", "cheerful", "intense", "innocent", "sultry", "fiery", "cool", "icy",
+  "fierce", "bossy", "dominant", "submissive", "nerdy", "playful", "flirty", "sleepy", "shy", "coy", "bratty", "bold",
+  "confident", "sassy", "moody", "pouty", "seductive", "stoic", "smirking", "smiling", "teasing", "brooding", "dreamy",
+  "surprised", "determined", "whimsical", "jaded", "sarcastic", "aloof", "serene", "giddy", "bashful", "delicate",
+  "hardcore", "euphoric", "radiant", "electric", "magnetic", "mischievous"
+];
+
+// --- BODY PARTS & FEATURES (CLEAN & NSFW-READY) ---
+const bodyParts = [
+  "face", "eyes", "lips", "mouth", "teeth", "nose", "cheeks", "ears", "hair", "bangs", "ponytail", "braids", "pigtails",
+  "eyebrows", "lashes", "freckles", "dimples", "chin", "neck", "shoulders", "arms", "hands", "fingers", "nails",
+  "breasts", "chest", "waist", "hips", "thighs", "legs", "feet", "toes", "back", "butt", "abs", "biceps", "calves",
+  "spine", "collarbone", "ankles", "wrists", "knuckles", "nape", "belly", "navel", "groin", "crotch", "labia", "clit",
+  "nipples", "areola", "vulva", "pubic hair", "inner thighs", "ass", "taint", "crack", "shaft", "tip", "testicles",
+  "scrotum", "perineum", "anus", "pucker", "backdoor"
+];
+
+// --- ADULT & NSFW SYNONYMS / SLANG (MIXED) ---
+const nsfwWords = [
+  "pussy", "cock", "dick", "tits", "boobs", "ass", "butthole", "milkers", "package", "shaft", "cum", "jizz", "cream",
+  "juices", "load", "squirt", "orgasm", "climax", "nipple", "suck", "lick", "ride", "mount", "grind", "grip", "stroke",
+  "pump", "ram", "slam", "plow", "penetrate", "fuck", "bang", "blowjob", "oral", "deepthroat", "spitroast", "69",
+  "missionary", "doggystyle", "cowgirl", "reverse cowgirl", "anal", "fingering", "handjob", "masturbate", "jill off",
+  "jerk off", "play", "tease", "edge", "cumshot", "creampie", "facial", "spank", "slap", "pinch", "choke", "tie up",
+  "dominatrix", "submissive", "switch", "rough", "gentle", "hardcore", "softcore", "voyeur", "exhibitionist", "breeding",
+  "public", "private", "taboo", "forbidden", "fetish", "kink", "bdsm", "bondage", "leather", "latex", "lingerie"
+];
+
+// --- SLANG, MODERN & CLASSIC ---
+const slangWords = [
+  "baddie", "thicc", "drip", "vibe", "lit", "fire", "on fleek", "yeet", "sus", "based", "cringe", "edgy", "no cap",
+  "slay", "queen", "king", "icon", "stan", "simp", "fyp", "irl", "bruh", "sheesh", "vibing", "flex", "hype", "woke",
+  "ghost", "clapback", "mood", "lowkey", "highkey", "main character", "villain arc", "op", "ratio", "bussin", "fam",
+  "bet", "shade", "salty", "snatched", "receipts", "ship", "OTP", "DM", "savage", "goat", "npc", "pog", "grind", "fomo",
+  "stan", "tea", "spill", "iconic", "sussy", "mid", "boujee"
+];
+
+// --- ACTIONS / VERBS / PROMPT KEYWORDS ---
+const actions = [
+  "posing", "smiling", "biting lip", "winking", "making eye contact", "looking away", "laughing", "sleeping",
+  "dancing", "jumping", "running", "sitting", "lying down", "standing", "leaning", "crawling", "kneeling", "squatting",
+  "hugging", "kissing", "caressing", "stroking", "touching", "grabbing", "holding", "licking", "sucking", "biting",
+  "spreading", "thrusting", "grinding", "mounting", "teasing", "flirting", "seducing", "dominating", "submitting",
+  "whispering", "moaning", "yelling", "crying", "panting", "gasping", "arching back", "trembling", "shuddering",
+  "flexing", "showing off", "modeling", "blushing", "sweating", "panting", "dripping", "cumming", "edging", "milking"
+];
+
+// --- SETTINGS / SCENES / LOCATIONS ---
+const scenes = [
+  "bedroom", "bathroom", "shower", "bathtub", "beach", "forest", "meadow", "lake", "hot tub", "jacuzzi", "kitchen",
+  "living room", "studio", "photobooth", "car", "motel", "locker room", "classroom", "gym", "rooftop", "alley", "club",
+  "dungeon", "castle", "mansion", "penthouse", "subway", "office", "hospital", "spa", "sauna", "backyard", "balcony",
+  "attic", "basement", "tent", "campsite", "hotel", "train", "bus", "warehouse", "barn", "poolside", "garden", "patio",
+  "park", "streets", "downtown", "underground", "nightclub", "stage", "arena", "graveyard"
+];
+
+// --- STYLES, LIGHTING, EFFECTS ---
+const visualStyles = [
+  "photorealistic", "cinematic", "moody", "high key", "low key", "backlit", "rim light", "side-lit", "dramatic shadows",
+  "soft light", "golden hour", "blue hour", "neon lights", "cyberpunk", "vaporwave", "steampunk", "grunge", "art deco",
+  "baroque", "surreal", "minimalist", "noir", "vintage", "retro", "modern", "hyperreal", "glam", "luxurious", "dreamy",
+  "bokeh", "foggy", "misty", "rainy", "stormy", "sunny", "overcast", "harsh light", "spotlight", "studio light",
+  "ambient light", "twilight", "sunset", "sunrise", "firelight", "candlelight", "blacklight", "UV", "infrared"
+];
+
+// --- EMOTIONS / MOOD ---
+const emotions = [
+  "happy", "sad", "angry", "excited", "nervous", "anxious", "terrified", "aroused", "confused", "pleased", "relaxed",
+  "frustrated", "hopeful", "determined", "playful", "defiant", "embarrassed", "proud", "ashamed", "curious", "shocked",
+  "mischievous", "joyful", "tender", "bashful", "serene", "apathetic", "enraged", "flustered", "giddy", "hypnotized",
+  "melancholic", "amused", "smitten", "lustful", "hungry", "sleepy"
+];
+
+// --- PUNCTUATION & EMPHASIS ---
+const punctuation = [
+  ".", "!", "?", "...", "—", "~", "*", "**", "()", "[]", "{}", ":", ";", "->", "<3", "!!", "???", "***", "//"
+];
+
+// --- ANIMATION / VIDEO / MOVIE LINGO ---
+const animationWords = [
+  "frame-by-frame", "stop motion", "motion blur", "cel shading", "2D", "3D", "render", "keyframe", "loop", "GIF",
+  "sprite", "cutscene", "animatic", "compositing", "post-production", "transition", "camera pan", "zoom", "close-up",
+  "wide shot", "tracking shot", "slow motion", "fast forward", "reverse", "split screen", "voiceover", "soundtrack",
+  "caption", "subtitle", "sound fx", "fade in", "fade out", "iris in", "dissolve", "wipe", "green screen", "rotoscope",
+  "motion capture", "VFX", "SFX", "score", "dialogue", "screenplay", "storyboard", "animator", "director", "producer"
+];
+
+// --- MEME / SOCIAL / VIRAL PHRASES ---
+const memeWords = [
+  "when you", "it me", "no thoughts head empty", "feeling cute might delete later", "that feeling when", "TFW",
+  "this is fine", "big mood", "weird flex but ok", "literally me", "can't even", "savage", "goals", "woke up and chose violence",
+  "I'm baby", "not a phase", "main character energy", "it do be like that", "vibe check", "zero chill", "sippin' tea",
+  "ok boomer", "let that sink in", "blessed", "cursed", "level 9000", "smol bean", "senpai noticed me", "on god",
+  "say less", "sheesh", "deadass", "as seen on TV", "new phone who dis", "brainrot"
+];
+
+// --- NAMES (FICTIONAL/GENERIC) ---
+const names = [
+  "Alex", "Sam", "Jess", "Taylor", "Jordan", "Casey", "Morgan", "Sky", "Riley", "Drew", "Avery", "Jamie", "Hunter",
+  "Logan", "Reese", "Harley", "Quinn", "Phoenix", "River", "Aspen", "Blake", "Dakota", "Elliot", "Parker", "Rowan",
+  "Sage", "Zion", "Indigo", "Echo", "Storm", "Lux", "Nova", "Ray", "Artemis", "Sable", "Shadow", "Rogue", "Maverick",
+  "Vega", "Kit", "Jules", "Sloane", "Fox", "Chance"
+];
+
+// --- EMOJIS ---
+const emojis = [
+  "😍", "🥵", "🔥", "😈", "🥰", "😏", "😂", "👀", "💦", "🍑", "🍆", "😳", "💋", "🤤", "🙈", "🫦", "🥂", "🌈", "🦄", "😻",
+  "👅", "🧿", "✨", "🩷", "🖤", "💚", "🧡", "💙", "💜", "🤍", "🩵", "❤️‍🔥", "🫶", "🎬", "📷"
+];
+// --- PSYCHEDELIC, SURREALISM, FANTASY, FX ---
+const psychedelicWords = [
+  "psychedelic", "trippy", "hallucinogenic", "acid trip", "kaleidoscopic", "neon", "glowing", "rainbow", "vivid", "vibrant",
+  "fractals", "mandala", "dreamlike", "mind-bending", "LSD", "magic mushrooms", "melting", "dissolving", "blooming", "cosmic",
+  "spiritual", "aura", "radiating", "shimmering", "hypnotic", "swirling", "liquid", "electric", "iridescent", "glitch",
+  "spectrum", "laser beams", "multicolored", "strobe", "pixelated", "holographic", "ultraviolet", "chromatic aberration",
+  "infinite", "otherworldly", "extraterrestrial", "alternate reality", "paradoxical", "timeless", "fluid", "mirage", "prismatic",
+  "morphing", "fantastical", "dreamscape", "lucid", "visionary", "surreal", "phantasmagoric", "delirious", "psytrance", "vortex",
+  "echoes", "mirror world", "time loop", "refracted", "dimension", "portal", "fantasy realm", "meta", "tesseract", "wormhole"
+];
+
+// --- FINE ART, PAINTING, ILLUSTRATION STYLES ---
+const artStyles = [
+  "impressionist", "expressionist", "cubist", "dada", "pop art", "abstract", "pointillist", "minimalist", "futurist", "modernist",
+  "postmodern", "photo-realistic", "charcoal sketch", "watercolor", "oil painting", "ink drawing", "digital art", "comic book",
+  "anime", "manga", "pixel art", "line art", "flat color", "airbrush", "spray paint", "chalk", "graffiti", "collage", "surrealism",
+  "hyperreal", "low poly", "cut paper", "silhouette", "posterized", "matte painting", "vector", "isometric", "3D modeling",
+  "cell shading", "mixed media", "claymation", "stop motion", "chalk pastel", "charcoal", "fresco", "tattoo", "body paint"
+];
+
+// --- FANTASY SCENES, SETTINGS, AND ICONS ---
+const fantasySettings = [
+  "enchanted forest", "crystal cave", "volcanic lair", "haunted mansion", "floating island", "magic castle", "underwater city",
+  "moonlit glade", "fairy circle", "goblin market", "cloud kingdom", "dragon's den", "witch's cottage", "steampunk city",
+  "clockwork factory", "sky ship", "portal gate", "eldritch temple", "ancient ruins", "forgotten tomb", "spirit realm",
+  "mirror lake", "abyss", "astral plane", "starfield", "dream palace", "eldritch void", "crystal palace", "sunken ruins",
+  "rainbow bridge", "mythic volcano", "snow-capped peak", "whispering woods", "eldritch swamp", "coral reef", "blasted wasteland"
+];
+
+// --- MOODS & ATMOSPHERES (EXTENDED) ---
+const moods = [
+  "ecstatic", "melancholic", "nostalgic", "restless", "ominous", "ethereal", "oppressive", "liberated", "wistful", "serene",
+  "paranoid", "elated", "haunted", "enchanted", "foreboding", "mystical", "delirious", "transcendent", "triumphant",
+  "haunted", "enraptured", "hypnotized", "energized", "sinister", "gloomy", "peaceful", "overwhelmed", "rapturous",
+  "desolate", "thrilled", "euphoric", "introspective", "wistful", "anxious", "ominous", "overjoyed", "vulnerable"
+];
+
+// --- SPECIAL EFFECTS, FILTERS, VISUAL FX ---
+const fxWords = [
+  "double exposure", "infrared", "x-ray", "vaporwave filter", "polaroid", "motion blur", "lens flare", "chromatic shift",
+  "bokeh", "fisheye", "kaleidoscope", "mirror", "glitch art", "datamosh", "pixelation", "vhs effect", "crt scanlines",
+  "static", "vignette", "tint", "duotone", "sepia", "grayscale", "selective color", "toon shader", "outline", "posterize",
+  "sunbeams", "light leaks", "dream blur", "aura effect", "halo", "radiance", "ghost image", "soft focus", "backlit shadow"
+];
+
+// --- MONSTERS, MYTH, AND SURREAL CREATURES ---
+const monsterWords = [
+  "shapeshifter", "chimera", "hydra", "banshee", "kraken", "leviathan", "werewolf", "minotaur", "gargoyle", "wendigo",
+  "mothman", "lizardman", "harpy", "siren", "dryad", "nymph", "djinn", "ogre", "troll", "golem", "sphinx", "manticore",
+  "cerberus", "basilisk", "medusa", "phoenix", "salamander", "cockatrice", "roc", "giant", "yeti", "sasquatch", "bigfoot"
+];
+// --- MODERN SLANG & INTERNET LINGO (NEW/OLD SCHOOL) ---
+const modernSlang = [
+  "slay", "lit", "fire", "no cap", "sus", "yeet", "vibe", "mood", "flex", "salty", "simp", "stan", "ratio", "bussin", "ghost", "clout", "lowkey", "highkey", "fam", "bet", "ship", "shade", "cancel", "snatched", "woke", "thicc", "savage", "based", "cringe", "fomo", "rizz", "drip", "main character", "NPC", "grind", "goat", "w", "l", "slaps", "receipts", "sus af", "yass", "sksksk", "vibing", "deadass", "flexin", "hardcore", "gassed", "sheesh", "rip", "big yikes", "swole", "squad", "poppin", "shook", "suss", "banger", "tbh", "irl", "idk", "idc", "tfw", "smh", "rofl", "lol", "lmao", "bruh", "ayy", "woke af"
+];
+
+// --- NSFW + SAFE VARIANTS (EXAMPLES, LOGIC-READY) ---
+const nsfwWords = [
+  "nude", "naked", "bare", "exposed", "intimate", "sensual", "alluring", "provocative", "teasing", "suggestive", "topless", "lingerie", "scantily clad", "revealing", "bare-skinned", "unclothed", "cheeky", "seductive", "explicit", "steamy", "risqué", "sultry", "adult", "XXX", "uncensored", "erotic", "fetish", "taboo", "lewd", "hardcore", "playful", "kinky", "naughty", "racy", "boudoir", "after dark", "private", "forbidden", "wild", "fantasy", "voluptuous", "tempting", "bare-chested", "thigh gap", "see-through", "skimpy", "slippery", "glossy skin", "shiny", "moist", "aroused", "climax", "pleasure", "orgasmic", "bliss", "satisfying"
+];
+const nsfwCleanVariants = [
+  "artistic nude", "elegant nude", "tasteful nude", "figure study", "intimate portrait", "implied nude", "classical pose", "studio glamour", "aesthetic sensual", "sensual fashion", "private moment", "ethereal", "serene", "dreamy", "soft focus", "natural beauty", "body positive", "romantic", "playful", "mysterious", "fantasy vibe", "muse", "timeless", "gentle", "expressive", "moody", "subtle", "inviting", "curious"
+];
+
+// --- VERBS, ACTIONS (QUADRUPLED, SCENE READY) ---
+const actionVerbs = [
+  "walks", "runs", "jumps", "dances", "spins", "leans", "kneels", "poses", "arches", "twirls", "reaches", "touches", "caresses", "grabs", "pulls", "pushes", "crawls", "climbs", "slides", "rolls", "stretches", "bends", "glides", "tiptoes", "perches", "balances", "stands", "sits", "reclines", "lounges", "lies down", "rolls over", "crouches", "hugs", "embraces", "kisses", "licks", "bites", "winks", "smiles", "laughs", "frowns", "gazes", "peeks", "stares", "squints", "glances", "nods", "shrugs", "waves", "signals", "beckons", "gestures", "snaps", "claps", "sways", "tilts", "nods off", "wakes", "shivers", "trembles", "moans", "whispers", "murmurs", "gasps", "pants", "sighs", "yelps", "giggles", "squeals"
+];
+
+// --- BODY, POSE, EXPRESSIONS ---
+const bodyParts = [
+  "eyes", "lips", "mouth", "neck", "shoulders", "collarbone", "arms", "hands", "fingers", "breasts", "chest", "waist", "hips", "thighs", "legs", "feet", "back", "buttocks", "calves", "ankles", "toes", "eyelashes", "cheeks", "chin", "forehead", "ears", "nose", "eyebrows", "jawline", "belly", "belly button", "groin", "private area", "pubic area", "intimate zone", "soft skin", "goosebumps"
+];
+const facialExpressions = [
+  "smiling", "grinning", "pouting", "blushing", "frowning", "serious", "soft gaze", "intense stare", "teary-eyed", "playful smirk", "sensual", "mischievous", "coy", "wide-eyed", "sultry", "innocent", "curious", "dreamy", "focused", "biting lip", "parted lips", "aroused", "relaxed", "surprised", "satisfied", "delighted", "wistful", "confident", "bashful", "tender", "vulnerable", "inviting"
+];
+
+// --- SENSORY, TEXTURE, COLOR ---
+const sensoryWords = [
+  "soft", "silky", "smooth", "warm", "cool", "tingling", "electric", "velvet", "fuzzy", "slick", "glossy", "matte", "gritty", "wet", "dry", "sweaty", "sticky", "powdery", "creamy", "flushed", "glowing", "dappled", "radiant", "shimmering", "dewy", "luminescent", "sun-kissed", "frosted"
+];
+const colorWords = [
+  "red", "crimson", "rose", "pink", "peach", "orange", "gold", "yellow", "lime", "green", "emerald", "teal", "cyan", "blue", "navy", "indigo", "violet", "lavender", "purple", "magenta", "brown", "tan", "ivory", "white", "silver", "grey", "charcoal", "black", "midnight", "opal", "pearl", "champagne", "blush", "bronze", "turquoise"
+];
+
+// --- PHOTOGRAPHY / CAMERA TERMS (PROMPT FRIENDLY) ---
+const photoTerms = [
+  "close-up", "macro", "bokeh", "wide shot", "POV", "cinematic", "soft lighting", "backlit", "rim light", "spotlight", "hard shadow", "studio lighting", "natural light", "overexposed", "underexposed", "motion blur", "focus pull", "depth of field", "aperture", "ISO", "shutter speed", "panorama", "portrait mode", "rule of thirds", "dynamic angle", "tilt shift", "fish eye", "vignette", "framing", "crop", "composition", "lens flare", "golden hour", "blue hour", "flash", "high contrast", "HDR", "low light", "sunbeam"
+];
+
+// --- RANDOM FILLER, FUN PROMPT BOOSTERS ---
+const fillerWords = [
+  "totally", "absolutely", "seriously", "honestly", "literally", "insanely", "epically", "crazy", "ridiculously", "surprisingly", "unbelievably", "secretly", "openly", "wildly", "magically", "undeniably", "supremely", "dangerously", "playfully", "softly", "boldly", "beautifully", "strangely", "unexpectedly", "almost", "just", "barely", "somehow", "effortlessly", "suddenly", "quietly", "loudly", "gently", "passionately"
+];
+// --- FASHION & ACCESSORIES ---
+const fashionWords = [
+  "dress", "mini skirt", "maxi dress", "crop top", "hoodie", "jean shorts", "overalls", "sundress", "romper", "cardigan", "tank top", "sports bra", "lace lingerie", "bralette", "high heels", "sneakers", "boots", "ballet flats", "hair bow", "scrunchie", "hair clip", "headband", "dangly earrings", "necklace", "choker", "bangles", "bracelet", "ring", "anklet", "clutch", "purse", "backpack", "crossbody bag", "fishnet stockings", "thigh-high socks", "knee-high boots", "pleated skirt", "tube top", "off-shoulder", "halter top", "oversized sweater"
+];
+
+// --- MAKEUP & BEAUTY ---
+const makeupWords = [
+  "lip gloss", "red lipstick", "matte lipstick", "winged eyeliner", "cat eyes", "glitter eyeshadow", "smoky eyes", "mascara", "false lashes", "blush", "highlighter", "contour", "foundation", "BB cream", "dewy skin", "freckles", "rosy cheeks", "nail polish", "acrylic nails", "french tips", "ombre nails", "sparkly nails", "hair extensions", "high ponytail", "braids", "messy bun", "soft curls", "beach waves", "rainbow hair", "pastel hair", "bangs"
+];
+
+// --- GIRLY SCENES / AESTHETICS ---
+const girlyScenes = [
+  "slumber party", "pillow fight", "shopping spree", "mall date", "coffee shop", "nail salon", "beauty parlor", "selfie session", "mirror selfie", "picnic in the park", "baking cookies", "bubble bath", "reading romance", "watching rom-coms", "stargazing", "sunset at the beach", "music festival", "concert night", "poolside lounging", "cute café", "flower field", "prom night", "birthday party", "ice cream date", "road trip", "bedroom makeover"
+];
+
+// --- CUTE & GIRLY EMOJIS (for prompts, or to inspire tone) ---
+const girlyEmojis = [
+  "💕", "💖", "✨", "🌸", "🎀", "🥰", "💅", "👗", "👛", "👠", "👑", "🌈", "🦋", "🌺", "🩰", "🍦", "🎉", "🥳", "🛍️", "🧁", "🎀", "🩷", "🌷", "💄", "📸"
+];
+
+// --- GIRLFRIEND/CRUSH/SOFT VIBES (Tone Words) ---
+const softVibes = [
+  "cuddly", "adorable", "lovely", "sweet", "innocent", "gentle", "flirty", "playful", "giggles", "shy", "dreamy", "enchanting", "sparkling", "bubbly", "affectionate", "heartfelt", "cozy", "warm", "inviting", "whimsical", "feminine", "delicate", "angelic", "tender", "caring", "sincere", "radiant"
+];
+
+// --- POSING & ACTIONS (Girly) ---
+const girlyActions = [
+  "twirling", "spinning", "skipping", "blowing a kiss", "winking", "playing with hair", "fixing makeup", "pouting", "making a heart with hands", "hugging a pillow", "lying on bed", "dangling feet", "holding flowers", "jumping in the air", "peeking from behind", "resting chin on hands", "sipping coffee", "biting lip", "tugging at shirt", "sitting cross-legged", "hugging knees", "leaning on wall", "dangling legs", "resting head on hand", "giggling"
+];
+const promptHacks = [
+  "Use (parentheses) for strong focus, [brackets] for less.",
+  "Try weights: 'beautiful face:1.4, ugly:0.2'.",
+  "Combine styles: 'anime, digital art, watercolor'.",
+  "Describe lighting for drama: 'neon lights, soft glow'.",
+  "Prompt for mood: 'dreamy, cinematic, vintage, noir'.",
+  "Add camera details: 'shot on Canon, f/1.8 lens, wide angle'.",
+  "For eyes: 'sharp eyes, reflective pupils, direct gaze'.",
+  "Emphasize background or ignore: 'background blur, [background details]'.",
+  "Try: 'masterpiece, best quality, ultra-detailed' at start of prompt.",
+  "Use emojis for inspiration or to break creative block!"
+];
