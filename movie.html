@@ -2,74 +2,150 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Movie Prompt Generator – PromptForge</title>
-  <meta name="description" content="Generate forbidden, viral, or pro prompts for AI video, film, comics, and animation. Full scene, dialogue, NSFW hacks, descriptors, infinite creative power.">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono">
+  <title>PromptForge: Movie/Scene Prompt Generator - God Mode</title>
+  <meta name="description" content="Write AI movie and video prompts like a pro. Genre, NSFW/SFW, cinematic details, smart negatives, J1NX Muse assistant. The best AI script prompt builder.">
+  <meta name="keywords" content="AI movie prompt, script generator, video scene, PromptForge, J1NX, NSFW, SFW, screenplay, film, shot, scene writing">
+  <meta property="og:title" content="PromptForge - Movie/Scene AI Prompt Generator God Mode" />
+  <meta property="og:description" content="Build detailed, creative prompts for AI video, movie, and scene generation. NSFW/SFW, inspiration, and J1NX script muse included." />
+  <meta property="og:image" content="PUT_YOUR_MOVIE_SOCIAL_IMAGE_URL_HERE" />
+  <meta property="og:url" content="https://promptforge.online/movie" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
   <style>
-    html,body { background:#0b0920; color:#fff; font-family:'Share Tech Mono',monospace; margin:0; padding:0; min-height:100vh;}
-    .container { max-width:900px; margin:0 auto; padding:44px 10px 60px 10px;}
-    h1 { font-size:2.1em; color:#ffb43d; margin-bottom:11px;}
-    .desc {font-size:1.13em; color:#fff9eab0; margin-bottom:28px; line-height:1.55;}
-    .footer {text-align:center;font-size:.99em;margin-top:80px;color:#e2dafb70;}
-    .footer a {color:#7af;}
-    .nav-card-row {display:flex;flex-wrap:wrap;gap:19px;justify-content:center;}
-    .nav-card {
-      flex:1 1 190px; min-width:175px; max-width:320px; background:#19162b; border-radius:2em;
-      box-shadow:0 4px 16px #f44a; padding:28px 21px; margin-bottom:14px;
-      color:#fafaff; text-decoration:none; font-size:1.02em; transition:.17s;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-    }
-    .nav-card:hover { background:#40304a; color:#fff1d1;}
-    .nav-card .emoji {font-size:2.25em; margin-bottom:8px;}
-    .inception-placeholder {text-align:center; margin:33px 0 28px 0; font-size:1.05em; color:#f7e377; background:#11161d; padding:15px 13px; border-radius:1em;}
-    @media(max-width:700px){ .container{padding:22px 1vw 30px 1vw;} .nav-card-row{gap:8px;}}
+    /* All styles from Picture Generator + a few tweaks for Movie/Scripts */
+    body { background: #121621; color: #ebeff5; font-family: 'IBM Plex Mono', monospace; }
+    .container { max-width: 1180px; margin: 2.5rem auto; padding:2.5rem; background: #191e28; border-radius: 1.3rem; box-shadow: 0 8px 40px #000c, 0 2px 8px #3334; }
+    h1 { color: #b89cff; }
+    .movie-flex { display: flex; gap: 1.3em; }
+    .movie-box { background: #202540; border-radius: 1.1em; padding: 1.1em 1.1em 1.5em 1.1em; margin-bottom: 1.6em; }
+    .copy-btn { background: #ae4deb; }
+    .slider { accent-color: #ae4deb; }
+    .genre-select, .scene-type { width: 100%; padding:0.7em 0.8em; border-radius:0.7em; background:#2a2e47; color:#fafaff; font-size:1.1em; border:1px solid #3a3956; margin-bottom:1em;}
+    .j1nx-muse { right:55px; bottom:42px; border-color: #ae4deb; }
   </style>
-  <!-- SEO/LINKS -->
-  <link rel="canonical" href="https://promptforge.online/movie.html">
 </head>
 <body>
-  <!-- STICKY UNIFIED NAV -->
-  <nav class="sticky-nav" style="width:100%;background:#10101a;display:flex;gap:2vw;justify-content:center;align-items:center;padding:13px 0 5px 0;position:sticky;top:0;z-index:20;box-shadow:0 2px 14px #1f192f88;">
-    <a href="/main.html">🏠 Main</a>
-    <a href="/picture.html">Picture</a>
-    <a href="/movie.html">Movie</a>
-    <a href="/j1nx.html">J1NX</a>
-    <a href="/fuckwith/ai-experiment-zone/index.html">AI Experiment Zone</a>
-    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">☕ Coffee</a>
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-    <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
-    <a href="https://www.reddit.com/r/promptforge" target="_blank">Reddit</a>
-    <!-- <a href="https://discord.gg/promptforge" target="_blank">Discord (soon)</a> -->
-    <a href="/changelog.html">Changelog</a>
-    <a href="/help.html">Help/FAQ</a>
-  </nav>
   <div class="container">
-    <h1>Movie Prompt Generator <span style="font-size:.7em;">— Epic Scenes & Dialogues</span></h1>
-    <div class="desc">
-      Build scripts, scenes, forbidden ideas, or viral AI video prompts. <br>
-      <b>Mix genres, dialogue, story cues, “God Mode” exploit tricks, and more.</b>
+    <h1>PromptForge: <span style="color:#ae4deb;">Movie/Scene</span> Prompt Generator <span style="font-size:0.55em;color:#b3d3ff;">GOD MODE</span></h1>
+    <div class="label">Write epic AI video, cinematic, or script prompts for any genre, style, or mood. NSFW and SFW ready.</div>
+    <form id="moviegen-form" autocomplete="off">
+      <div class="movie-box movie-flex">
+        <div style="flex:1;">
+          <label class="label" for="sceneInput">Describe your scene, action, or characters:</label>
+          <input class="input" type="text" id="sceneInput" name="sceneInput" placeholder="e.g. chase scene in neon-lit city, rainy night" maxlength="180">
+        </div>
+        <div style="flex:0.7;">
+          <label class="label" for="genreSelect">Genre:</label>
+          <select class="genre-select" id="genreSelect" name="genreSelect">
+            <option>Action</option>
+            <option>Romance</option>
+            <option>Comedy</option>
+            <option>Horror</option>
+            <option>Fantasy</option>
+            <option>Sci-Fi</option>
+            <option>Drama</option>
+            <option>Thriller</option>
+            <option>Erotic</option>
+            <option>Surreal</option>
+            <option>Experimental</option>
+            <option>Documentary</option>
+          </select>
+          <label class="label" for="nsfwToggle">NSFW Mode:</label>
+          <input type="range" min="0" max="1" value="1" class="slider" id="nsfwToggle" name="nsfwToggle" step="1">
+          <span id="nsfwLabel" style="color:#f78aff;">NSFW</span> /
+          <span id="sfwLabel" style="color:#fff;">SFW</span>
+          <label class="label" for="complexitySlider">Detail Level:</label>
+          <input type="range" min="1" max="3" value="2" class="slider" id="complexitySlider" name="complexitySlider" step="1">
+          <span style="font-size:0.94em;">Simple</span>
+          <span style="font-size:0.94em; float:right;">Script/Story Mode</span>
+        </div>
+      </div>
+      <div class="movie-box">
+        <button type="button" class="btn" id="generateBtn">Generate Movie Prompt</button>
+      </div>
+    </form>
+    <div class="suggestion-box" id="suggestionBox">
+      <b>Inspiration:</b> Try "slow-mo fight scene in cyberpunk alley, broken glass" or "awkward first date at haunted arcade, 1980s synth music"
     </div>
-    <!-- MAIN GENERATOR LOGIC (load movie.js for all heavy code) -->
-    <script src="/js/movie.js"></script>
-    <div id="movie-generator-root">
-      <!-- movie.js will render the UI and results here -->
+    <!-- Main Output -->
+    <div class="movie-box">
+      <div class="label">Movie/Scene Prompt:</div>
+      <div class="main-output" id="mainOutput"></div>
+      <button class="copy-btn" onclick="pfCopy('mainOutput')">Copy</button>
     </div>
-    <div class="nav-card-row">
-      <a class="nav-card" href="/picture.html"><span class="emoji">🖼️</span>Picture Prompt Generator<br><span style="font-size:.92em;color:#aff;">Photoreal, NSFW-safe, art prompt engineering</span></a>
-      <a class="nav-card" href="/fuckwith/ai-experiment-zone/index.html"><span class="emoji">🧪</span>AI Experiment Zone<br><span style="font-size:.92em;color:#aff;">Pranks, hacks, TTS and more for Alexa, Google, Siri</span></a>
-      <a class="nav-card" href="/j1nx.html"><span class="emoji">🤖</span>J1NX & Tools<br><span style="font-size:.92em;color:#aff;">Chatbot and hidden utilities</span></a>
+    <div class="movie-box">
+      <div class="label">Short Summary:</div>
+      <div class="summary-output" id="summaryOutput"></div>
+      <button class="copy-btn" onclick="pfCopy('summaryOutput')">Copy</button>
     </div>
-    <div class="inception-placeholder">
-      <b>Inception Placeholder:</b> (This box stays forever.)  
-      For future superuser controls, secret roadmap, and meta upgrades.<br>
-      <i>Do not delete this box.</i>
-    </div>
-    <div class="footer">
-      &copy; 2025 Gore & Giggles | <a href="https://promptforge.online">promptforge.online</a>
-      <br>
-      <span style="font-size:.94em;color:#c9e9;">Join us: <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> · <a href="https://x.com/GoreandGiggles">X</a> · <a href="https://www.reddit.com/r/promptforge">Reddit</a></span>
+    <div class="movie-box">
+      <div class="label">Smart Negatives (what to avoid):</div>
+      <div class="neg-output" id="negOutput"></div>
+      <button class="copy-btn" onclick="pfCopy('negOutput')">Copy</button>
     </div>
   </div>
+  <div class="j1nx-muse" id="j1nxMuse">
+    <div class="j1nx-muse-header">J1NX Muse <span style="font-size:0.79em;color:#81f8f8;">Script Assistant</span></div>
+    <div class="j1nx-muse-body" id="j1nxMuseBody">
+      <i>Need scene ideas, dialogue, or twist? I’m your hacktivist muse. <br>Want NSFW, horror, or meme? Just ask.</i>
+      <br><br>
+      (Online chat coming soon!)
+    </div>
+  </div>
+  <div class="hidden-admin" id="adminPanel">
+    <b>ADMIN CONTROLS:</b><br>
+    • <span style="color:#b7f4a7;">Edit genres, script tokens, debug prompt logic</span><br>
+    • Coming soon: Export/import genre banks, admin-only script options, direct token test.<br>
+    <hr>
+    <label for="adminToken">Test a Token:</label>
+    <input type="text" id="adminToken" placeholder="[CHARACTER] [ACTION] [LOCATION] ...">
+    <button class="btn" style="font-size:0.95em;" onclick="pfAdminTest()">Test</button>
+    <div style="margin-top:0.7em; color:#ee3;">Result:</div>
+    <div id="adminResult" style="color:#e3f6fc; margin-bottom:1.5em;"></div>
+  </div>
+  <script src="generator.js"></script>
+  <script>
+    function pfCopy(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => { alert("Copied!"); });
+    }
+    document.getElementById('nsfwToggle').addEventListener('input', function() {
+      document.getElementById('nsfwLabel').style.fontWeight = this.value == 1 ? 'bold' : 'normal';
+      document.getElementById('sfwLabel').style.fontWeight = this.value == 0 ? 'bold' : 'normal';
+    });
+    document.getElementById('generateBtn').addEventListener('click', function() {
+      const sceneInput = document.getElementById('sceneInput').value.trim();
+      const genre = document.getElementById('genreSelect').value;
+      const isNSFW = document.getElementById('nsfwToggle').value == 1;
+      const complexity = parseInt(document.getElementById('complexitySlider').value);
+
+      // --- Call generator.js logic!
+      let mainPrompt = generatePromptForgeMoviePrompt(sceneInput, genre, isNSFW, complexity);
+      let summary = mainPrompt.length > 100 ? mainPrompt.slice(0,100)+"..." : mainPrompt;
+      let negWords = getPromptForgeNegatives(sceneInput, isNSFW, genre);
+
+      document.getElementById('mainOutput').innerText = mainPrompt;
+      document.getElementById('summaryOutput').innerText = summary;
+      document.getElementById('negOutput').innerText = negWords;
+    });
+    function pfAdminTest() {
+      const t = document.getElementById('adminToken').value.trim();
+      if(!t) return;
+      document.getElementById('adminResult').innerText = generatePromptForgeMoviePrompt(t, "Action", true, 3);
+    }
+    // Movie inspiration ideas
+    const movieIdeas = [
+      "slow zoom on masked hacker in neon-lit alley, synthwave score",
+      "awkward date, spilled wine, sudden blackout, power returns, she's gone",
+      "rain-soaked rooftop chase, city skyline, camera tilt, police lights",
+      "trapped in endless mirror maze, dream logic, echoing footsteps",
+      "dance-off in abandoned arcade, 1980s music, color strobe lights",
+      "sultry villainess in foggy church, forbidden romance, dramatic reveal",
+      "parody: cat vs. cucumber, slow-mo close-up, horror soundtrack"
+    ];
+    setInterval(() => {
+      document.getElementById('suggestionBox').innerHTML = "<b>Inspiration:</b> " + movieIdeas[Math.floor(Math.random()*movieIdeas.length)];
+    }, 6200);
+  </script>
 </body>
 </html>
