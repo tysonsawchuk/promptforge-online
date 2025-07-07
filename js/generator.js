@@ -584,3 +584,153 @@ const PF_EMOJI_BANK = [
   // Kaomoji
   "( ͡° ͜ʖ ͡°)","(ᵔᴥᵔ)","(｡♥‿♥｡)","(✿◠‿◠)","( ͡ᵔ ͜ʖ ͡ᵔ )","(¬‿¬)","(☞ﾟヮﾟ)☞","(づ｡◕‿‿◕｡)づ","¯\\_(ツ)_/¯","ಠ_ಠ","(╯°□°）╯︵ ┻━┻","(☞ ͡° ͜ʖ ͡°)☞","ʕ•ᴥ•ʔ"
 ];
+// ==== PF_PROMPT_BRAIN WORD BANKS: ROUND 1 ====
+
+// Mega Adjectives (over 200: old school, modern, rare, pro, pop culture)
+const PF_ADJECTIVES = [
+  // Visual/Descriptive
+  "vivid", "luminous", "velvety", "opulent", "sleek", "sublime", "gothic", "plush", "ethereal", "euphoric", "moody",
+  "gritty", "dreamy", "crystalline", "pristine", "frosted", "burnished", "celestial", "spectral", "volatile", "polished",
+  "feathered", "saturated", "cinematic", "noir", "raw", "decadent", "surreal", "vintage", "hyperreal", "textured",
+  "ominous", "lush", "voluptuous", "torrid", "neon", "holographic", "dappled", "aurora", "steamy", "muted", "iridescent",
+  "opalescent", "spiky", "dusky", "fiery", "glossy", "candy-colored", "matte", "dusky", "hazy", "bokeh", "mosaic", "splattered",
+  // Personality/Mood
+  "fiesty", "sultry", "aloof", "feral", "innocent", "devilish", "naive", "dominant", "coy", "brazen", "playful", "sinister",
+  "submissive", "curious", "manic", "impish", "naughty", "blissful", "enigmatic", "whimsical", "tender", "melancholic",
+  "apathetic", "jealous", "passionate", "arrogant", "mischievous", "discreet", "wild", "restless", "spiteful", "gentle",
+  "brash", "eccentric", "delicate", "moody", "intense", "fierce", "serene", "cheeky", "cheery", "exuberant", "perky",
+  "brooding", "distant", "smitten", "giddy", "grumpy", "snarky", "provocative", "chill", "neurotic",
+  // Modern/Internet Slang
+  "drippy", "extra", "lit", "slay", "savage", "woke", "sus", "based", "cringe", "poggers", "glow-up", "yeet", "no-cap",
+  "vibe-y", "rizzed", "stan", "simp", "goated", "ghosted", "bet", "snatched", "chad", "Karen", "sigma", "gyatt", "zesty",
+  "rizz", "drip", "boomer", "zoomer", "NPC", "sussy", "mid", "cheugy", "eshay", "on-fleek",
+  // NSFW (censored, for filter-beating magic)
+  "risqué", "lewd", "saucy", "raunchy", "taboo", "forbidden", "salacious", "kinky", "spicy", "uncensored", "XXX", "provocative",
+  "teasing", "tantalizing", "scandalous", "explicit", "suggestive", "naughty", "voluptuous", "sultry", "bodacious",
+  // Special/Emotional
+  "subliminal", "psychedelic", "hypnotic", "trippy", "surrealist", "phantasmagoric", "otherworldly", "eldritch", "haunting",
+  "glitched", "fractured", "timeless", "venerable", "timid", "volatile", "yearning", "lustful", "aching",
+];
+
+// Mega Verbs (for prompts, actions, directions: 150+)
+const PF_VERBS = [
+  // Movement/Action
+  "run", "walk", "jump", "crawl", "leap", "spin", "sway", "stagger", "glide", "saunter", "pounce", "dodge", "strut",
+  "shiver", "twitch", "flinch", "lurch", "swagger", "tremble", "skip", "stroll", "prance", "slither", "slide", "hop",
+  "roll", "bounce", "march", "sprint", "charge", "tiptoe", "amble", "barrel", "dart", "hurtle", "dart", "coast", "tread",
+  // Facial/Emotion
+  "smile", "frown", "smirk", "grimace", "glare", "wink", "sneer", "beam", "leer", "pout", "scowl", "blush", "grin",
+  "snarl", "glower", "giggle", "sigh", "groan", "moan", "gasp", "snicker", "chuckle", "sob", "weep", "guffaw", "scream",
+  "shout", "whisper", "murmur", "mutter", "shriek", "howl", "yelp", "bark", "pant", "hum", "chant",
+  // Interact/Touch
+  "caress", "grip", "stroke", "grab", "hold", "tease", "tickle", "poke", "prod", "nudge", "scratch", "pinch", "squeeze",
+  "clutch", "fondle", "spank", "rub", "trace", "brush", "press", "hug", "cuddle", "embrace", "kiss", "lick", "nibble",
+  "bite", "nuzzle", "snuggle", "pet", "massage", "grope", "play", "fondle", "toy with",
+  // Scene/Camera
+  "zoom", "pan", "focus", "blur", "rotate", "tilt", "track", "frame", "snap", "capture", "record", "shoot", "film", "freeze",
+  "highlight", "isolate", "crop", "fade", "flash", "backlight", "silhouette", "spotlight", "illuminate",
+  // NSFW (censored)
+  "arouse", "entice", "stimulate", "seduce", "excite", "tempt", "inflame", "enchant", "ravish", "beckon", "tease",
+  "taunt", "tantalize", "thrill", "provoke", "torment", "flirt", "ogle", "lust after", "fantasize", "gyrate", "grind",
+];
+
+// Mega Nouns (people, parts, body, props, environment, objects: 200+)
+const PF_NOUNS = [
+  // Characters/People
+  "girl", "woman", "boy", "man", "person", "dancer", "model", "angel", "devil", "witch", "robot", "elf", "nymph", "faerie",
+  "siren", "vampire", "werewolf", "goddess", "warrior", "student", "teacher", "nurse", "cop", "firefighter", "paramedic",
+  "gamer", "cosplayer", "influencer", "celebrity", "idol", "waitress", "bartender", "maid", "mistress", "dominatrix",
+  // Body/Anatomy
+  "face", "eyes", "lips", "mouth", "smile", "hair", "cheeks", "neck", "shoulders", "arms", "hands", "fingers", "waist",
+  "hips", "legs", "thighs", "knees", "feet", "toes", "back", "spine", "stomach", "chest", "breasts", "nipple", "torso",
+  "belly", "butt", "booty", "hips", "crotch", "groin", "labia", "clitoris", "penis", "testicles", "vagina", "anus",
+  // Props/Objects
+  "mirror", "camera", "phone", "bed", "sofa", "chair", "couch", "table", "lamp", "window", "curtain", "blanket", "pillow",
+  "sheet", "towel", "shower", "bathtub", "pool", "hot tub", "car", "motorcycle", "bicycle", "skateboard", "rollerblades",
+  // Scenery/Environment
+  "beach", "forest", "meadow", "mountain", "lake", "river", "desert", "city", "street", "rooftop", "alley", "club", "bar",
+  "party", "festival", "carnival", "concert", "studio", "gym", "locker room", "stage", "runway", "bedroom", "bathroom",
+  "office", "classroom", "hospital", "ambulance", "park", "garden", "balcony", "fire escape",
+];
+
+// Mega Styles (art/genre/photography: 100+)
+const PF_STYLES = [
+  "photorealistic", "cinematic", "analog film", "35mm", "digital painting", "sketch", "cartoon", "anime", "manga", "pixel art",
+  "oil painting", "watercolor", "charcoal", "ink", "low poly", "3D render", "isometric", "concept art", "vaporwave", "futuristic",
+  "cyberpunk", "steampunk", "art nouveau", "art deco", "impressionist", "expressionist", "minimalist", "maximalist", "abstract",
+  "pop art", "comic book", "synthwave", "surrealist", "baroque", "rococo", "gothic", "postmodern", "hyperreal", "realism",
+  "noir", "documentary", "vintage", "retro", "lo-fi", "high key", "low key", "bokeh", "long exposure", "HDR", "tilt shift",
+  "macro", "ultra wide", "soft focus", "monochrome", "duotone", "sepia", "infrared", "neon", "UV", "x-ray", "ultraviolet",
+];
+
+// Mega Emoji/Unicode/ASCII (useful for prompt variety, filtering, filter-beating: 100+)
+const PF_EMOJI = [
+  "😈", "😇", "😍", "🥵", "🥺", "😳", "😉", "🤤", "😏", "🫦", "👅", "👀", "🔥", "💦", "🍑", "🍆", "🌈", "🌊", "🩷", "💋", "🧸",
+  "👄", "🙈", "🫶", "💃", "🕺", "🦄", "🍒", "💎", "🖤", "🎀", "🛌", "🛀", "🏩", "💣", "🎲", "💥", "🫧", "✨", "🌟", "🌠", "🛸",
+  "🦾", "🧠", "🎧", "🎤", "📸", "📷", "🎬", "🖼️", "🎨", "📚", "🔞", "🚫", "🎭", "👑", "🎩", "🐾", "🦋", "🌺", "🌙", "🌌",
+  "💯", "🆒", "🆗", "🆓", "🆕", "🚀", "🛰️", "🛸", "⚡", "🌩️", "⛈️", "🌪️", "🌤️", "🌅", "🌃", "🌇", "🌆", "🧬", "💊", "🧪",
+  "🔬", "📡", "🛠️", "🔧", "🔩", "💡", "🔦", "🕳️", "🪞", "🗝️", "🪐", "🛸", "👽", "🤖",
+];
+
+
+// ==== END ROUND 1 ====
+
+const PF_BODY_TYPES = [
+  "slim", "slender", "petite", "skinny", "lean", "fit", "athletic", "toned", "muscular", "broad-shouldered", "curvy", "full-figured", "voluptuous",
+  "hourglass", "pear-shaped", "apple-shaped", "rectangular build", "tall", "short", "average height", "lanky", "stocky", "chubby", "plus-size",
+  "big-boned", "tiny waist", "busty", "flat-chested", "large chest", "big hips", "narrow hips", "long legs", "short legs", "shapely calves",
+  "thick thighs", "thigh gap", "bubble butt", "small butt", "round butt", "broad back", "defined abs", "soft belly", "flat stomach",
+  "toned arms", "tattoos", "freckles", "scar", "birthmark", "piercings", "hairy", "smooth skin", "tan lines", "pale skin", "sun-kissed",
+  "dark skin", "olive skin", "light skin", "porcelain skin", "alabaster", "bronzed", "ruddy", "rosy cheeks", "blushing", "wrinkles", "crow’s feet",
+  "baby face", "sharp jawline", "strong chin", "round face", "heart-shaped face", "square jaw", "double chin", "dimples", "gapped teeth", "braces",
+  "feminine features", "masculine features", "androgynous", "genderfluid", "transgender", "non-binary", "ambiguous gender", "broad chest",
+  "hairy chest", "smooth chest", "bald", "shaved head", "buzz cut", "long hair", "bob cut", "pixie cut", "afro", "cornrows", "braids", "ponytail",
+  "pigtails", "messy bun", "curly hair", "straight hair", "wavy hair", "spiky hair", "mohawk", "dyed hair", "ombre hair", "highlights", "roots showing",
+  "natural hair", "gray hair", "white hair", "pastel hair", "rainbow hair", "streaks", "side shave", "undercut", "widow’s peak"
+];
+const PF_FACE_EXPRESSIONS = [
+  "smiling", "grinning", "smirk", "playful look", "mischievous grin", "serious expression", "frown", "pout", "sad eyes", "crying", "teary-eyed",
+  "angry", "rage", "furious", "disgusted", "confused", "surprised", "shocked", "wide-eyed", "eyebrow raised", "wink", "blowing a kiss",
+  "biting lip", "licking lips", "sultry stare", "bedroom eyes", "intense gaze", "blank stare", "bored", "sleepy", "dozing", "yawning", "blushing",
+  "flushed", "sighing", "rolling eyes", "eye roll", "side-eye", "nervous smile", "timid", "shy glance", "confident", "coy smile", "innocent look",
+  "cheeky", "teasing", "mocking", "skeptical", "raised eyebrow", "deadpan", "stoic", "determined", "focused", "dreamy", "lost in thought",
+  "daydreaming", "melancholy", "nostalgic", "relieved", "content", "excited", "ecstatic", "joyful", "gleeful", "giggling", "laughing", "roaring with laughter",
+  "smiling with teeth", "smiling without teeth", "biting tongue", "pursed lips", "lip gloss", "open mouth", "closed mouth", "sneering"
+];
+const PF_CLOTHING = [
+  // Clean & mainstream
+  "casual clothes", "jeans and t-shirt", "hoodie", "sweater", "tank top", "sundress", "gown", "little black dress", "miniskirt", "crop top",
+  "leggings", "business suit", "school uniform", "workout gear", "swimsuit", "bikini", "one-piece swimsuit", "sweats", "cargo pants", "denim jacket",
+  "overalls", "pajamas", "robe", "bathrobe", "evening dress", "gala dress", "vintage outfit", "retro style", "grunge look", "punk outfit", "gothic dress",
+  "leather jacket", "varsity jacket", "sports jersey", "lingerie", "bralette", "sports bra", "panties", "boxers", "briefs", "stockings", "thigh-highs",
+  "garter belt", "fishnets", "lace bodysuit", "corset", "pasties", "see-through blouse", "open shirt", "unbuttoned", "unzipped jeans", "shirtless",
+  "barefoot", "socks", "combat boots", "heels", "stilettos", "sneakers", "flip-flops", "sandals", "ankle boots", "thigh boots", "platform shoes"
+];
+const PF_HAIR_COLORS = [
+  "blonde", "brunette", "redhead", "auburn", "black hair", "brown hair", "platinum", "silver", "white hair", "gray hair", "blue hair",
+  "green hair", "pink hair", "purple hair", "magenta", "teal", "pastel rainbow", "dyed tips", "ombre", "frosted tips"
+];
+const PF_GENRES = [
+  "romantic", "erotic", "intimate", "sensual", "dramatic", "adventurous", "comedic", "tragic", "action-packed", "noir", "mystery", "suspense",
+  "thriller", "horror", "gothic", "fantasy", "sci-fi", "cyberpunk", "post-apocalyptic", "slice of life", "coming-of-age", "satire", "parody", "spoof",
+  "musical", "superhero", "cartoon", "anime", "magical realism", "surreal", "abstract", "minimalist", "maximalist", "vintage", "retro", "modern",
+  "futuristic", "steampunk", "baroque", "rococo", "expressionist", "pop art", "impressionist"
+];
+const PF_ENVIRONMENTS = [
+  "city street", "rooftop", "bedroom", "bathroom", "shower", "locker room", "kitchen", "dining room", "living room", "hotel room", "club",
+  "bar", "library", "classroom", "school gym", "beach", "forest", "mountain", "meadow", "swimming pool", "hot tub", "spa", "sauna",
+  "subway", "elevator", "office", "cubicle", "boardroom", "warehouse", "garage", "parking lot", "car", "limousine", "motorcycle", "park",
+  "garden", "balcony", "patio", "attic", "basement", "underground", "dungeon", "castle", "mansion", "cottage", "loft", "studio", "stage",
+  "movie set", "soundstage", "photobooth", "mirror room", "futuristic lab", "virtual reality", "dreamscape"
+];
+const PF_ROLEPLAY = [
+  "schoolgirl", "nurse", "doctor", "police officer", "firefighter", "maid", "butler", "librarian", "professor", "teacher", "student", "cheerleader",
+  "football player", "coach", "spy", "secret agent", "superhero", "villain", "monster", "vampire", "werewolf", "zombie", "robot", "android",
+  "AI assistant", "witch", "wizard", "knight", "pirate", "sailor", "pilot", "flight attendant", "bartender", "dancer", "stripper", "dominatrix",
+  "submissive", "master", "servant", "prince", "princess", "queen", "king", "emperor", "goddess", "angel", "demon", "alien", "mermaid", "centaur"
+];
+const PF_SLANG = [
+  "baddie", "thicc", "bae", "lit", "savage", "sus", "cringe", "goat", "mood", "vibe", "yass", "queen", "king", "slay", "yeet", "flex", "stan",
+  "simp", "edgy", "ghost", "lowkey", "highkey", "tbh", "dm", "irl", "lmao", "rofl", "lol", "omg", "wtf", "smh", "fml", "nsfw", "sfw",
+  "💦", "🍑", "🍆", "🔥", "😈", "👀", "😘", "😏", "😍", "🤤", "🖤", "✨", "🎀", "🦄", "🐱", "🐻", "💋", "🤍"
+];
