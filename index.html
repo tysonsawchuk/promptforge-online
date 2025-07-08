@@ -52,32 +52,32 @@
     }
     #terminalInput {
       background: transparent;
-      color: #ff5eea;
+      color: #20ffe0;
       border: none;
       outline: none;
       font-family: inherit;
       font-size: 1.11rem;
       width: 50vw;
-      caret-color: #ff42e6;
-      text-shadow: 0 0 7px #ff84ff, 0 0 1px #fff;
+      caret-color: #ff0db9;
       font-weight: bold;
-      transition: box-shadow 0.12s;
     }
     #terminalInput:focus {
-      box-shadow: 0 0 0 2px #ff86ff66, 0 0 10px #fd4cff99;
-      background: rgba(34,0,40,0.09);
+      outline: none;
+      box-shadow: none;
     }
     #blinker {
-      width: 1ch;
-      height: 1.2em;
-      margin-left: -0.18em;
+      width: 0.76em;
+      height: 1.3em;
+      margin-left: -0.16em;
       display: inline-block;
-      background: #ff45e1;
+      background: #ff1d8e;
       border-radius: 2px;
-      box-shadow: 0 0 6px #ff97f7, 0 0 1px #fff;
+      box-shadow: 0 0 7px #ff5fff, 0 0 2px #fff;
       opacity: 1;
-      animation: blink 0.9s steps(1) infinite;
+      animation: blink 0.6s steps(1) infinite;
       transition: background 0.13s;
+      position: relative;
+      top: 0.05em;
     }
     @keyframes blink { 0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;} }
     .network-video {
@@ -106,20 +106,33 @@
       margin-top: 1.2em;
       font-style: italic;
     }
-    .adsbygoogle {
-      display: block;
-      margin: 1.6em auto 0.5em auto;
-      min-height: 86px;
-      max-width: 510px;
-      border-radius: 9px;
-      background: #19142a;
-      box-shadow: 0 0 7px #00ffe678, 0 0 3px #ff6bf44a;
+    /* AdSense movie-screen style */
+    .adsbygoogle-movie {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 98vw;
+      max-width: 780px;
+      height: 92px;
+      margin: 0 auto 0.5em auto;
+      margin-top: 0;
+      border-radius: 13px;
+      background: linear-gradient(180deg, #181930 70%, #0e111f 100%);
+      box-shadow: 0 0 26px #00ffe612, 0 0 4px #3c1b3c, 0 0 0.5em #390e4180;
+      border: 2px solid #13141c;
+      outline: 1.5px solid #1d265c;
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      z-index: 1001;
       text-align: center;
-      z-index: 2;
+      transition: box-shadow 0.23s;
     }
     @media (max-width: 900px) {
       .terminal { width: 100vw; padding: 2vw 2vw; }
       .network-video { display: none; }
+      .adsbygoogle-movie { width: 97vw; max-width: 97vw; height: 70px; }
     }
   </style>
 </head>
@@ -140,20 +153,23 @@
     </div>
   </div>
 
-  <!-- Google AdSense Banner -->
-  <ins class="adsbygoogle"
-     style="display:block;text-align:center;"
-     data-ad-client="ca-pub-4963053724895140"
-     data-ad-slot="1234567890"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins>
+  <video class="network-video" autoplay muted loop playsinline>
+    <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
+  </video>
+
+  <!-- AdSense: styled as movie-screen and fixed at bottom -->
+  <div class="adsbygoogle-movie">
+    <ins class="adsbygoogle"
+      style="display:block;width:100%;height:90px;"
+      data-ad-client="ca-pub-4963053724895140"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+  </div>
   <script>
        (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 
-  <video class="network-video" autoplay muted loop playsinline>
-    <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
-  </video>
   <script>
     // Initial scrollback "boot" text
     const bootLines = [
