@@ -1,112 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge Watermark Studio – Free Layered Image Watermarking Tool</title>
-  <meta name="description" content="Add text, logo, or custom layered watermarks to your AI art and images with PromptForge. 100% free, no upload. Works offline, advanced editor, instant PNG export.">
-  <meta name="keywords" content="watermark, AI art, logo, transparent, online, free, png, layered, promptforge, add text, meme, copyright, batch, stamp, editor, image generator, protect, signature">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:image" content="https://promptforge.online/assets/bg-roulette.jpg" />
-  <meta name="twitter:image" content="https://promptforge.online/assets/bg-roulette.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Share+Tech+Mono:400,700|Montserrat:400,700|Bangers|Lobster|Permanent+Marker|Oswald|Anton|Lato">
+  <meta charset="UTF-8" />
+  <title>PromptForge Watermark Studio | Legendary Art Watermark & Signature Tool</title>
+  <meta name="description" content="Create, customize, and install powerful watermarks on your art. Upload huge images, design pro text/image/signature overlays, and save reusable templates. CoralDraw-level power, free forever.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
-    html,body {margin:0;padding:0;background:#0a0a14;color:#fff;font-family:'Share Tech Mono',monospace;}
-    body {min-height:100vh;}
-    .studio-wrap {max-width:1200px;margin:0 auto;padding:33px 8px 70px 8px;}
-    h1 {font-size:2.2em;font-weight:700;color:#ffe400;margin-bottom:12px;letter-spacing:0.01em;}
-    .subtitle {color:#bee;font-size:1.13em;margin-bottom:16px;}
-    .stage {background:#191a2a;border-radius:18px;box-shadow:0 0 30px #000c;padding:18px;position:relative;display:flex;gap:28px;}
-    .canvas-col{flex:1;}
-    .layer-panel {width:222px;min-width:165px;max-width:280px;background:#15151c99;border-radius:14px;padding:18px 10px;}
-    #studio-canvas {border:3px solid #ffe40033;border-radius:11px;background:#222;max-width:100%;height:auto;touch-action:none;}
-    .btn-row {margin:18px 0 12px 0;display:flex;gap:15px;flex-wrap:wrap;}
-    button, .fake-btn {
-      background: linear-gradient(90deg,#ffe400 10%,#15151c 99%);
-      color:#1a0a01;font-size:1em;font-weight:700;padding:8px 22px;
-      border:none;border-radius:1.4em;cursor:pointer;transition:background 0.14s;
-      margin-right:3px; margin-bottom:6px; box-shadow:0 2px 12px #ffe40030;
+    body {
+      background: #16191f;
+      color: #e3e6ed;
+      font-family: 'JetBrains Mono', 'Fira Mono', 'Consolas', monospace;
+      margin: 0; padding: 0; overflow-x: hidden;
+      letter-spacing: 0.03em;
     }
-    button:hover, .fake-btn:hover {background:linear-gradient(90deg,#ffe400 60%,#fff7 100%);}
-    .layer-row {padding:7px 4px;margin-bottom:5px;border-bottom:1px dashed #ffe40015;cursor:pointer;}
-    .layer-row.selected {background:#ffe40022;}
-    .layer-name {font-size:1.04em;color:#ffe400;}
-    .layer-btns button {font-size:1.1em;padding:2px 7px 2px 7px;background:#232;color:#fff;border-radius:8px;}
-    #layerControls label{margin:0 10px 0 0;}
-    #layerControls input[type="text"], #layerControls select, #layerControls input[type="number"]{font-size:.98em;}
-    .export-btn{background:linear-gradient(90deg,#ffe400 80%,#fff7 100%);color:#15151c;}
-    /* J1NX styles */
-    #j1nx-root {position:fixed;bottom:22px;right:22px;z-index:999;}
-    .nav-bar {margin:30px 0 20px 0;display:flex;gap:2vw;flex-wrap:wrap;justify-content:center;align-items:center;}
-    .nav-link, .nav-icon {
-      color:#fff; text-decoration:none; background:#181826; border-radius:1em; padding:7px 20px; font-size:1.07em; transition:background 0.14s;
+    .wm-container {
+      max-width: 1080px;
+      margin: 36px auto;
+      background: rgba(20,24,34,0.98);
+      box-shadow: 0 0 42px 0 #0009;
+      border-radius: 2.2em;
+      padding: 3.2em 2.6em 1.5em 2.6em;
+      position: relative; z-index: 2;
     }
-    .nav-link:hover, .nav-icon:hover {background:#ffe400;color:#191a2a;}
-    .j1nx-coffee {margin:32px 0 0 0; text-align:center;}
-    .j1nx-coffee img {border-radius:50%; vertical-align:middle; margin-right:10px;box-shadow:0 2px 7px #ffe40033;}
-    .ad-bar {width:100%; max-width:470px; margin:0 auto 20px auto; text-align:center;}
-    @media (max-width:900px){.stage{flex-direction:column;gap:13px;} .layer-panel{max-width:none;width:100%;}}
+    h1 {
+      font-size: 2.2em;
+      font-weight: 800;
+      letter-spacing: 0.07em;
+      margin-top: 0;
+      color: #ff2d6f;
+      background: linear-gradient(90deg, #ff2d6f 0%, #6cf7f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .watermark-toolbar {
+      display: flex;
+      gap: 1.4em;
+      flex-wrap: wrap;
+      align-items: center;
+      background: #232735;
+      border-radius: 1.2em;
+      padding: 1em 1.5em;
+      margin-bottom: 1.5em;
+      box-shadow: 0 4px 18px #0c0e16a9;
+    }
+    .wm-canvas-wrap {
+      background: #141722;
+      border-radius: 1.5em;
+      box-shadow: 0 2px 12px #0c0e16a3;
+      padding: 1.5em;
+      position: relative;
+      margin-bottom: 2em;
+      text-align: center;
+      min-height: 350px;
+    }
+    .layer-list {
+      margin: 0 0 1em 0;
+      padding: 0;
+      list-style: none;
+      font-size: 1em;
+    }
+    .layer-list li {
+      margin-bottom: 6px;
+      padding: 6px 9px;
+      border-radius: 0.7em;
+      background: #232735;
+      color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+    .layer-list li.selected {
+      background: #6cf7f188;
+      color: #111;
+      border: 1px solid #ff2d6f99;
+    }
+    .watermark-action {
+      background: #ff2d6f;
+      color: #fff;
+      border: none;
+      padding: 0.7em 1.3em;
+      border-radius: 1.2em;
+      font-size: 1em;
+      font-weight: 600;
+      margin: 0 8px 8px 0;
+      cursor: pointer;
+      box-shadow: 0 1px 6px #ff2d6f44;
+      transition: background 0.18s;
+    }
+    .watermark-action:hover {
+      background: #6cf7f1;
+      color: #222;
+    }
+    .signature-box {
+      border: 2px dashed #ff2d6fbb;
+      border-radius: 1.1em;
+      background: #16191f;
+      margin: 1.2em auto 0 auto;
+      width: 340px;
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    @media (max-width: 700px) {
+      .wm-container { padding: 1em; }
+      .watermark-toolbar { flex-direction: column; gap: 0.6em; }
+      .wm-canvas-wrap { padding: 0.4em; }
+    }
+    /* Hide scrollbars on modals for clean look */
+    #signature-modal, #wm-help-modal {
+      display:none;
+      position:fixed;
+      z-index:999;
+      top:0; left:0;
+      width:100vw; height:100vh;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+    }
   </style>
 </head>
 <body>
-  <div class="ad-bar">
-    <ins class="adsbygoogle"
-      style="display:block"
-      data-ad-client="ca-pub-XXXXXX"
-      data-ad-slot="YYYYYY"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-  <div class="nav-bar">
-    <a class="nav-link" href="https://promptforge.online">PromptForge Home</a>
-    <a class="nav-link" href="picture.html">Picture Forge</a>
-    <a class="nav-link" href="movie.html">Movie Forge</a>
-    <a class="nav-link" href="ai-experiment-zone/index.html">AI Experiment Zone</a>
-    <a class="nav-link" href="https://promptforge.online/j1nx">J1NX & Tools</a>
-    <a class="nav-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-    <a class="nav-link" href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
-  </div>
-  <div class="studio-wrap">
-    <h1>PromptForge Watermark Studio</h1>
-    <div class="subtitle">
-      Add, edit, and layer custom watermarks to protect your AI art and images.<br>
-      <b>No upload. Works offline. Fully free.</b> Drag/drop your image, add text or logo, style it, and export PNG instantly.<br>
-      <span style="color:#ffe400;">Pro tip: Add multiple watermark layers (text or logo), use rotation, opacity, shadow, and even SVG overlays for pro results.</span>
+  <div class="wm-container">
+    <h1>Watermark Studio <span style="font-size:0.7em;">by PromptForge</span></h1>
+    <div class="watermark-toolbar">
+      <label class="watermark-action">
+        <input type="file" id="img-upload" style="display:none" accept="image/*" />
+        Upload Art
+      </label>
+      <button class="watermark-action" id="addTextBtn">Add Text</button>
+      <button class="watermark-action" id="addImageBtn">Add Logo/Image</button>
+      <button class="watermark-action" id="signBtn">Sign</button>
+      <button class="watermark-action" id="saveTemplateBtn">Save Template</button>
+      <button class="watermark-action" id="loadTemplateBtn">Templates</button>
+      <button class="watermark-action" id="exportBtn">Export</button>
+      <span style="margin-left:auto">
+        <button class="watermark-action" id="helpBtn">?</button>
+      </span>
     </div>
-    <div class="stage">
-      <div class="canvas-col">
-        <canvas id="studio-canvas" width="820" height="560"></canvas>
-        <div class="btn-row">
-          <button onclick="addTextLayer()">Add Text</button>
-          <button onclick="addLogoLayer()">Add Logo/Image</button>
-          <button onclick="addSVG()">Add SVG</button>
-          <button class="export-btn" onclick="downloadStudio()">Export PNG</button>
+    <div class="wm-canvas-wrap">
+      <canvas id="wm-canvas" width="1280" height="800" style="max-width:100%;border-radius:1.5em;background:#252a37"></canvas>
+      <ul class="layer-list" id="layer-list"></ul>
+    </div>
+    <!-- Signature modal popup -->
+    <div id="signature-modal" style="display:none;align-items:center;justify-content:center;">
+      <div style="background:#22272d;border-radius:1.2em;padding:2em;max-width:420px;margin:auto;box-shadow:0 2px 36px #ff2d6f44;">
+        <h2 style="color:#ff2d6f">Sign Your Art</h2>
+        <div class="signature-box">
+          <canvas id="sig-canvas" width="320" height="110"></canvas>
         </div>
-      </div>
-      <div class="layer-panel">
-        <b>LAYERS</b>
-        <div id="layersList"></div>
-        <div id="layerControls"></div>
-        <div class="btn-row" style="margin-top:14px;">
-          <button onclick="undo()">Undo</button>
-          <button onclick="redo()">Redo</button>
+        <div style="margin-top:1em;">
+          <button class="watermark-action" id="saveSigBtn">Save Signature</button>
+          <button class="watermark-action" id="closeSigBtn">Cancel</button>
+          <button class="watermark-action" id="clearSigBtn">Clear</button>
         </div>
       </div>
     </div>
-    <div class="j1nx-coffee">
-      <a href="https://buymeacoffee.com/yourusername">
-        <img src="/assets/j1nx.png" width="44" alt="J1NX mascot"> <b>J1NX says: Buy Me a Coffee to keep the tools free!</b>
-      </a>
+    <!-- Help info modal -->
+    <div id="wm-help-modal" style="display:none;align-items:center;justify-content:center;">
+      <div style="background:#191b23;border-radius:1em;padding:2.2em;max-width:520px;margin:auto;box-shadow:0 2px 44px #6cf7f133;color:#f8f8f8;">
+        <h2 style="color:#6cf7f1">How to Use Watermark Studio</h2>
+        <ol style="font-size:1.15em">
+          <li>Upload your art (PNG, JPG, or WebP, any size!)</li>
+          <li>Add a text watermark, signature, or logo.</li>
+          <li>Drag, scale, rotate, and style each layer as you like.</li>
+          <li>Save your favorite setups as templates for instant reuse.</li>
+          <li>Export your watermarked masterpiece at any resolution.</li>
+        </ol>
+        <p style="color:#ff2d6f">100% offline. Your art never leaves your device. Stay creative, stay protected.</p>
+        <button class="watermark-action" id="closeHelpBtn">Close</button>
+      </div>
     </div>
+    <!-- Footer -->
+    <footer style="margin-top:2em;padding:1em 0;text-align:center;color:#6cf7f1;">
+      <a href="https://promptforge.online" target="_blank" style="color:#ff2d6f;font-weight:700">PromptForge</a> &bull; 
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> &bull; 
+      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a> &bull; 
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook</a> &bull; 
+      <a href="legal.html" target="_blank">Legal</a>
+    </footer>
   </div>
-  <!-- Floating J1NX chat/assistant -->
-  <div id="j1nx-root"></div>
-  <img src="/assets/bg-roulette.jpg"
-    alt="PromptForge Watermark Studio viral hacker art background"
-    style="display:none;" aria-hidden="true"/>
-  <script src="/js/watermark.js"></script>
-  <script src="/js/j1nx.js"></script>
-  <!-- If you have custom CSS for J1NX, add it here -->
+  <script>
+    // ======= CORE LOGIC FOR GOD MODE WATERMARK STUDIO =======
+
+    // Globals
+    let layers = [], selectedLayer = null, baseImg = null, savedSignature = null;
+    const canvas = document.getElementById('wm-canvas'), ctx = canvas.getContext('2d');
+    const layerList = document.getElementById('layer-list');
+    let drag = false, dragOffset = {x:0, y:0};
+
+    // --------- Drawing -----------
+    function redrawAll() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (baseImg) ctx.drawImage(baseImg, 0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < layers.length; i++) {
+        const l = layers[i];
+        ctx.save();
+        ctx.globalAlpha = l.opacity ?? 1;
+        ctx.translate(l.x, l.y);
+        ctx.rotate((l.rotate||0) * Math.PI/180);
+        if (l.type === "text") {
+          ctx.font = `${l.size||42}px ${l.font||'Arial'}`;
+          ctx.fillStyle = l.color || "#ff2d6f";
+          ctx.textBaseline = "top";
+          ctx.fillText(l.text, 0, 0);
+        }
+        if (l.type === "img" && l.imgObj) {
+          ctx.drawImage(l.imgObj, 0, 0, l.w, l.h);
+        }
+        if (l.type === "sig" && l.imgObj) {
+          ctx.globalAlpha = 0.95;
+          ctx.drawImage(l.imgObj, 0, 0, l.w, l.h);
+        }
+        ctx.restore();
+      }
+    }
+
+    // --------- Layer Handling -----------
+    function updateLayerList() {
+      layerList.innerHTML = '';
+      layers.forEach((l, idx) => {
+        const li = document.createElement('li');
+        li.textContent = (l.type === "text" ? "📝 " : l.type==="img" ? "🖼️ " : "✍️ ") + (l.name||l.type);
+        li.className = (selectedLayer===idx) ? 'selected' : '';
+        li.onclick = ()=>{selectedLayer=idx; updateLayerList();};
+        layerList.appendChild(li);
+      });
+    }
+
+    // --------- File Upload -----------
+    document.getElementById('img-upload').addEventListener('change', function(e){
+      const file = this.files[0];
+      if (!file) return;
+      const img = new window.Image();
+      img.onload = function() {
+        baseImg = img;
+        canvas.width = img.width; canvas.height = img.height;
+        redrawAll();
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // --------- Add Text Layer -----------
+    document.getElementById('addTextBtn').onclick = function() {
+      const text = prompt('Enter watermark text:', 'Protected by PromptForge');
+      if (!text) return;
+      layers.push({
+        type: "text", name: "Text", text, x: 100, y: 100, size: 48, color: "#ff2d6f", font: "Arial", rotate: 0, opacity: 0.35
+      });
+      selectedLayer = layers.length-1; updateLayerList(); redrawAll();
+    };
+
+    // --------- Add Image Layer (Logo) -----------
+    document.getElementById('addImageBtn').onclick = function() {
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = 'image/*';
+      inp.onchange = function(e){
+        const file = this.files[0];
+        if (!file) return;
+        const img = new window.Image();
+        img.onload = function() {
+          layers.push({
+            type: "img", name: "Logo", imgObj: img, x: 60, y: 60, w: img.width/2, h: img.height/2, opacity: 0.35
+          });
+          selectedLayer = layers.length-1; updateLayerList(); redrawAll();
+        };
+        img.src = URL.createObjectURL(file);
+      };
+      inp.click();
+    };
+
+    // --------- Signature Modal ---------
+    const sigModal = document.getElementById('signature-modal');
+    const sigCanvas = document.getElementById('sig-canvas');
+    const sigCtx = sigCanvas.getContext('2d');
+    let sigDrawing = false, sigLast = null;
+    function openSignature() {
+      sigModal.style.display = "flex";
+      sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+      if (savedSignature) {
+        const img = new window.Image();
+        img.onload = ()=>{sigCtx.drawImage(img,0,0,sigCanvas.width,sigCanvas.height);}
+        img.src = savedSignature;
+      }
+    }
+    function saveSignature() {
+      savedSignature = sigCanvas.toDataURL();
+      // Add as watermark layer
+      const img = new window.Image();
+      img.onload = function() {
+        layers.push({type:"sig", name:"Signature", imgObj:img, x:150, y:canvas.height-120, w:img.width, h:img.height});
+        selectedLayer = layers.length-1; updateLayerList(); redrawAll();
+      }
+      img.src = savedSignature;
+      closeSignature();
+    }
+    function closeSignature() { sigModal.style.display = "none"; }
+    function clearSignature() { sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height); }
+    sigCanvas.onmousedown = (e) => { sigDrawing = true; sigLast = {x:e.offsetX, y:e.offsetY}; }
+    sigCanvas.onmouseup = ()=>{sigDrawing=false;}
+    sigCanvas.onmousemove = function(e){
+      if(!sigDrawing) return;
+      sigCtx.strokeStyle = "#ff2d6f";
+      sigCtx.lineWidth = 2.5;
+      sigCtx.lineCap = "round";
+      sigCtx.beginPath();
+      sigCtx.moveTo(sigLast.x, sigLast.y);
+      sigCtx.lineTo(e.offsetX, e.offsetY);
+      sigCtx.stroke();
+      sigLast = {x:e.offsetX, y:e.offsetY};
+    };
+    document.getElementById('signBtn').onclick = openSignature;
+    document.getElementById('saveSigBtn').onclick = saveSignature;
+    document.getElementById('closeSigBtn').onclick = closeSignature;
+    document.getElementById('clearSigBtn').onclick = clearSignature;
+
+    // --------- Help Modal ----------
+    document.getElementById('helpBtn').onclick = ()=>{document.getElementById('wm-help-modal').style.display="flex";};
+    document.getElementById('closeHelpBtn').onclick = ()=>{document.getElementById('wm-help-modal').style.display="none";};
+
+    // --------- Layer Drag/Move -----------
+    canvas.onmousedown = function(e){
+      if (selectedLayer===null) return;
+      const l = layers[selectedLayer];
+      const mx = e.offsetX, my = e.offsetY;
+      // Basic bounding box hit-test for drag (expand to more precise if wanted)
+      if (mx >= l.x && mx <= l.x+180 && my >= l.y && my <= l.y+60) {
+        drag = true; dragOffset = {x:mx-l.x, y:my-l.y};
+      }
+    };
+    canvas.onmouseup = ()=>{drag=false;}
+    canvas.onmouseleave = ()=>{drag=false;}
+    canvas.onmousemove = function(e){
+      if (!drag || selectedLayer===null) return;
+      const l = layers[selectedLayer];
+      l.x = e.offsetX - dragOffset.x;
+      l.y = e.offsetY - dragOffset.y;
+      redrawAll();
+    };
+
+    // --------- Export Final Image -----------
+    document.getElementById('exportBtn').onclick = function() {
+      redrawAll();
+      const url = canvas.toDataURL("image/png");
+      const a = document.createElement('a');
+      a.href = url; a.download = "watermarked_art.png";
+      a.click();
+    };
+
+    // --------- Save Template -----------
+    document.getElementById('saveTemplateBtn').onclick = function() {
+      const name = prompt("Save template as:", "MyWatermark");
+      if (!name) return;
+      localStorage.setItem("wmtemplate_" + name, JSON.stringify(layers));
+      alert("Template saved!");
+    };
+    // --------- Load Template -----------
+    document.getElementById('loadTemplateBtn').onclick = function() {
+      let tpls = [];
+      for (let i=0; i<localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k.startsWith("wmtemplate_")) tpls.push(k.replace("wmtemplate_",""));
+      }
+      if (!tpls.length) {alert("No templates saved."); return;}
+      const name = prompt("Available templates:\n" + tpls.join("\n") + "\n\nEnter name to load:");
+      if (!name) return;
+      let data = localStorage.getItem("wmtemplate_" + name);
+      if (data) {
+        try {
+          layers = JSON.parse(data);
+          // fix: reload images for img/sig layers (since objects are lost in JSON)
+          layers.forEach(l=>{
+            if ((l.type==="img"||l.type==="sig") && l.imgObj && l.imgObj.src) {
+              let i=new window.Image();
+              i.onload=()=>{l.imgObj=i; redrawAll();}
+              i.src = l.imgObj.src;
+            }
+          });
+          selectedLayer = 0; updateLayerList(); redrawAll();
+        } catch {}
+      }
+    };
+
+    // --------- Keep in sync ---------
+    updateLayerList();
+    redrawAll();
+    // Redraw on resize for clean canvas fit
+    window.addEventListener('resize', redrawAll);
+
+  </script>
 </body>
 </html>
