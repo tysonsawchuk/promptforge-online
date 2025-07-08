@@ -2,117 +2,327 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Picture Prompt Generator | PromptForge God Mode</title>
-  <meta name="description" content="Ultimate picture prompt generator: SFW, NSFW, memes, photo, anime. Pro-level, expandable. Free, private, instant.">
-  <link rel="stylesheet" href="main.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- SEO & Social -->
-  <meta property="og:title" content="Picture Prompt Generator - PromptForge">
-  <meta property="og:description" content="Instantly craft stunning, detailed, SFW/NSFW image prompts for any AI art generator.">
-  <meta property="og:image" content="YOUR_SOCIAL_PREVIEW.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" href="YOUR_FAVICON.png">
+  <title>PromptForge | Picture God Mode Generator</title>
+  <meta name="description" content="AI prompt generator for image, NSFW, art & creative work. Underground pro tool, future-proof, with sliders, J1NX assistant, and smart logic.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta property="og:title" content="PromptForge Picture God Mode Generator">
+  <meta property="og:description" content="Generate next-level AI image prompts with sliders, auto-cleaning, and J1NX AI help.">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    html, body {
+      background: #16191d;
+      color: #e9eaea;
+      font-family: 'Inter', 'Roboto', Arial, sans-serif;
+      margin: 0; padding: 0; min-height: 100vh;
+    }
+    main {
+      max-width: 670px;
+      margin: 2.5rem auto 1rem auto;
+      background: #23252a;
+      border-radius: 18px;
+      box-shadow: 0 0 24px #12131499;
+      padding: 2.5rem 2.2rem 2rem 2.2rem;
+      position: relative;
+    }
+    .breadcrumbs {
+      font-size: 1rem;
+      color: #88ddff;
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+    }
+    .breadcrumbs a { color: #88ddff; text-decoration: none; }
+    h1 {
+      margin: 0 0 0.2em 0;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #b2f6ff;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 4px #1116;
+    }
+    .subtitle {
+      font-size: 1.13rem;
+      color: #dadada;
+      margin-bottom: 2.2em;
+      opacity: 0.92;
+    }
+    .seed-section {
+      margin: 1.2em 0 1.2em 0;
+      text-align: left;
+    }
+    #seedForm {
+      display: flex;
+      gap: 0.7em;
+      margin-bottom: 1.5em;
+    }
+    #seedInput {
+      flex: 1;
+      font-size: 1.13rem;
+      padding: 0.72em 1em;
+      border-radius: 10px;
+      border: none;
+      background: #242a30;
+      color: #f3f6ff;
+      outline: none;
+      box-shadow: 0 1px 8px #223a4a22 inset;
+      letter-spacing: 0.03em;
+      transition: box-shadow 0.18s;
+    }
+    #seedInput:focus { box-shadow: 0 0 0 2px #32f6ff33; }
+    #startBtn {
+      font-size: 1.13rem;
+      background: linear-gradient(90deg,#00e7ff,#42d9f6 90%);
+      color: #18191d;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6em 1.6em;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background 0.2s;
+      box-shadow: 0 1px 10px #2225;
+    }
+    #mainForm { display: none; margin-top: 1.2em; }
+    .sectionLabel {
+      font-size: 1.05rem;
+      color: #9efbff;
+      margin: 1.2em 0 0.2em 0;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .sliderRow {
+      display: flex; align-items: center;
+      margin-bottom: 1em;
+      gap: 1em;
+    }
+    .sliderRow label { min-width: 110px; }
+    .sliderRow input[type="range"] {
+      width: 130px;
+      accent-color: #b2f6ff;
+      background: #22242b;
+    }
+    .checkboxRow {
+      display: flex; align-items: center; gap: 0.7em;
+      margin-bottom: 1em;
+    }
+    .copyBtn {
+      margin-left: 0.3em;
+      background: #1e2a30;
+      color: #88ddff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.34em 1em;
+      font-size: 1.08em;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 0 6px #22e9ff29;
+      transition: background 0.15s;
+    }
+    .copyBtn:active { background: #223a4a; color: #fff; }
+    #promptOutput, #negativeOutput, #summaryOutput {
+      width: 100%; min-height: 2.6em;
+      background: #1b2126;
+      border: 1px solid #232c36;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.09em;
+      padding: 1em 1em 0.7em 1em;
+      margin: 0.25em 0 0.8em 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Roboto', Arial, sans-serif;
+      resize: none;
+      box-shadow: 0 1px 7px #22e9ff0e;
+    }
+    #j1nx {
+      position: fixed; right: 30px; bottom: 28px;
+      width: 320px; max-width: 92vw;
+      background: #20242a;
+      border: 2px solid #222a2f;
+      border-radius: 16px 16px 9px 16px;
+      box-shadow: 0 2px 18px #0009;
+      padding: 0 0 1em 0;
+      z-index: 99;
+      display: flex; flex-direction: column;
+    }
+    #j1nxHeader {
+      background: #16191d;
+      color: #b2f6ff;
+      font-weight: bold;
+      padding: 0.7em 1em;
+      border-radius: 16px 16px 0 0;
+      font-size: 1.15em;
+      display: flex; align-items: center; gap: 0.6em;
+    }
+    #j1nxBody {
+      padding: 0.9em 1em 0 1em;
+      color: #d5e7ea;
+      font-size: 1.04em;
+      min-height: 62px;
+      max-height: 222px;
+      overflow-y: auto;
+      word-break: break-word;
+    }
+    #j1nxInputRow {
+      display: flex; gap: 0.6em;
+      margin-top: 0.6em;
+    }
+    #j1nxInput {
+      flex: 1; padding: 0.4em 0.7em; border-radius: 8px;
+      border: none; background: #242a30; color: #e9eaea;
+      font-size: 1em;
+    }
+    #j1nxSendBtn {
+      background: #b2f6ff;
+      color: #22242a;
+      font-weight: bold;
+      border: none;
+      border-radius: 7px;
+      padding: 0.35em 1.1em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    @media (max-width: 700px) {
+      main { max-width: 99vw; padding: 1.2em 0.4em 1em 0.4em; }
+      #j1nx { right: 4vw; width: 94vw; bottom: 10px; }
+    }
+  </style>
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+    crossorigin="anonymous"></script>
 </head>
-<body style="background:#161622;font-family:sans-serif;">
-
-<header style="background:#23223a;padding:18px 0 12px 0;border-bottom:2px solid #444;text-align:center;">
-  <img src="YOUR_LOGO.png" alt="PromptForge Logo" style="height:42px;vertical-align:middle;margin-right:16px;">
-  <span style="font-size:2rem;color:#fff;font-family:'Orbitron',monospace;font-weight:bold;">PromptForge</span>
-  <nav style="margin-top:8px;">
-    <a href="index.html" style="color:#ccc;margin:0 10px;">Home</a>
-    <a href="generator-movie.html" style="color:#ffd700;margin:0 10px;">🎬 Movie</a>
-    <a href="generator-picture.html" style="color:#b2f6ff;margin:0 10px;font-weight:bold;">🖼️ Picture</a>
-    <a href="watermark.html" style="color:#aaa;margin:0 10px;">🖋️ Watermark</a>
-    <a href="j1nx.html" style="color:#aaa;margin:0 10px;">🤖 J1NX</a>
-  </nav>
-</header>
-
-<main style="max-width:720px;margin:38px auto 60px auto;background:#181824;border-radius:18px;padding:28px 24px 32px 24px;box-shadow:0 2px 30px #000a;position:relative;">
-
-  <h1 style="font-size:2rem;color:#fff;margin-bottom:4px;letter-spacing:1px;">Picture Prompt Generator</h1>
-  <p style="color:#b2f6ff;margin-bottom:20px;font-size:1.11rem;">Make perfect AI image prompts for art, memes, fantasy, or pure filth. SFW↔NSFW slider, all word banks, instant copy, and smart negatives.</p>
-
-  <section style="margin-bottom:30px;">
-    <label style="font-weight:bold;display:block;margin-bottom:6px;">Describe Your Image:</label>
-    <textarea id="sceneInputPic" rows="3" style="width:100%;font-size:1.12rem;border-radius:7px;padding:10px;" placeholder="Ex: Golden hour, girl on a hood, bokeh, city lights, pouty face..."></textarea>
-  </section>
-
-  <section style="margin-bottom:22px;">
-    <div style="margin-bottom:13px;">
-      <label for="picCategory" style="font-weight:bold;">Picture Type:</label>
-      <select id="picCategory" style="margin-left:8px;padding:2px 7px;">
-        <option>Photorealistic</option><option>Meme</option><option>Landscape</option>
-        <option>Portrait</option><option>Anime/Toon</option><option>Macro</option>
-        <option>Erotic</option><option>Cosplay</option><option>Other</option>
-      </select>
+<body>
+  <main>
+    <nav class="breadcrumbs">
+      <a href="/">Home</a> &gt; <a href="/picture.html">Picture Generator</a>
+    </nav>
+    <h1>Picture God Mode Generator</h1>
+    <div class="subtitle">
+      Enter a few keywords. Unlock the full underground dev power.<br>
+      <span style="font-size:0.98em;color:#7bffc4;">Everything you need to create legendary AI image prompts.</span>
     </div>
-    <div style="margin-bottom:13px;">
-      <label for="picNSFWSlider" style="font-weight:bold;">NSFW Level:</label>
-      <input type="range" min="0" max="100" value="0" id="picNSFWSlider" style="vertical-align:middle;margin:0 8px;width:170px;">
-      <span id="picNSFWLabel" style="color:#ffd7dc;">SFW</span>
-    </div>
-    <div>
-      <label for="picEmphasisSlider" style="font-weight:bold;">Emphasis:</label>
-      <input type="range" min="0" max="100" value="40" id="picEmphasisSlider" style="vertical-align:middle;margin:0 8px;width:130px;">
-      <span id="picEmphasisLabel" style="color:#b2ffb2;">Normal</span>
-    </div>
-  </section>
+    <section class="seed-section">
+      <form id="seedForm" onsubmit="event.preventDefault(); showMainForm();">
+        <input id="seedInput" type="text" placeholder="e.g. 'cyberpunk neon street', 'girl with pink hair', 'sinister forest at night'">
+        <button id="startBtn" type="submit">Let's Go &rarr;</button>
+      </form>
+    </section>
+    <form id="mainForm" autocomplete="off" onsubmit="event.preventDefault(); generatePrompt();">
+      <div class="sectionLabel">Prompt Power</div>
+      <div class="sliderRow">
+        <label for="sfwNsfwSlider">SFW ← NSFW</label>
+        <input id="sfwNsfwSlider" type="range" min="0" max="100" value="30" title="How wild?">
+        <span id="sfwNsfwVal">Mild</span>
+      </div>
+      <div class="sliderRow">
+        <label for="emphasisSlider">Emphasis</label>
+        <input id="emphasisSlider" type="range" min="0" max="100" value="60">
+        <span id="emphasisVal">Balanced</span>
+      </div>
+      <div class="sliderRow">
+        <label for="styleSlider">Art Style</label>
+        <input id="styleSlider" type="range" min="0" max="100" value="70">
+        <span id="styleVal">Modern</span>
+      </div>
+      <div class="checkboxRow">
+        <input type="checkbox" id="negativeWordsChk" checked>
+        <label for="negativeWordsChk">Add negative wordbank (avoid ugly generations)</label>
+      </div>
+      <div class="sectionLabel">Prompt</div>
+      <textarea id="promptOutput" readonly></textarea>
+      <button class="copyBtn" type="button" onclick="pfCopy('promptOutput')">Copy Prompt</button>
+      <div class="sectionLabel">Negative Words</div>
+      <textarea id="negativeOutput" readonly></textarea>
+      <button class="copyBtn" type="button" onclick="pfCopy('negativeOutput')">Copy Negatives</button>
+      <div class="sectionLabel">Prompt Summary</div>
+      <textarea id="summaryOutput" readonly></textarea>
+      <button class="copyBtn" type="button" onclick="pfCopy('summaryOutput')">Copy Summary</button>
+      <div style="margin: 2em 0 0.6em 0;">
+        <button type="submit" style="font-size:1.22em;background:#00e7ff;color:#16191d;border:none;border-radius:8px;padding:0.63em 2.3em;letter-spacing:0.06em;box-shadow:0 1px 9px #22e9ff66;cursor:pointer;font-weight:800;">GENERATE</button>
+      </div>
+    </form>
+  </main>
 
-  <section style="margin-bottom:30px;">
-    <button id="generatePicBtn" style="width:100%;padding:15px 0;font-size:1.23rem;font-weight:bold;background:#b2f6ff;color:#181824;border:none;border-radius:8px;box-shadow:0 2px 12px #b2f6ff44;cursor:pointer;letter-spacing:1px;">
-      🖼️ Generate Picture Prompt
-    </button>
-  </section>
+  <!-- J1NX Chat Assistant (pinned, draggable if wanted) -->
+  <div id="j1nx">
+    <div id="j1nxHeader">
+      <img src="/j1nx.png" alt="J1NX" style="height:2em;width:2em;border-radius:50%;border:2px solid #b2f6ff;background:#1e242b;margin-right:0.5em;">
+      J1NX // Pro Prompt Muse
+    </div>
+    <div id="j1nxBody">
+      <span style="color:#7bffc4;">Need inspiration?</span> Type a question or ask for a prompt. I can suggest, explain, or remix anything.
+    </div>
+    <div id="j1nxInputRow">
+      <input id="j1nxInput" type="text" placeholder="Ask me for prompt ideas, style tips...">
+      <button id="j1nxSendBtn" onclick="j1nxSend()">Send</button>
+    </div>
+  </div>
 
-  <section style="margin-bottom:24px;">
-    <div style="margin-bottom:10px;">
-      <label for="picMainPrompt" style="font-weight:bold;">Main Prompt:</label>
-      <textarea id="picMainPrompt" rows="3" readonly style="width:100%;font-size:1.09rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
-      <button onclick="pfCopy('picMainPrompt')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
-      <div style="clear:both;"></div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <label for="picSummary" style="font-weight:bold;">Summary:</label>
-      <textarea id="picSummary" rows="2" readonly style="width:100%;font-size:1.04rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
-      <button onclick="pfCopy('picSummary')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
-      <div style="clear:both;"></div>
-    </div>
-    <div>
-      <label for="picNegatives" style="font-weight:bold;">Negatives:</label>
-      <textarea id="picNegatives" rows="2" readonly style="width:100%;font-size:1.03rem;background:#232342;color:#fff;"></textarea>
-      <button onclick="pfCopy('picNegatives')" class="copy-btn" style="float:right;">Copy</button>
-      <div style="clear:both;"></div>
-    </div>
-  </section>
+  <!-- AdSense Bottom -->
+  <div style="max-width:730px;margin:16px auto 0 auto;min-height:80px;text-align:center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-4963053724895140"
+         data-ad-slot="8259436982"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
 
-  <section style="margin-bottom:22px;">
-    <button onclick="pfRandomInspire('pic')" style="margin-bottom:8px;">Inspire Me</button>
-    <div id="picSuggestions" style="min-height:34px;color:#b2f6ff;"></div>
-    <div id="picJ1NX" style="display:none;margin-top:18px;">
-      <img src="J1NX_IMAGE.png" style="width:64px;float:left;margin-right:13px;">
-      <div style="font-style:italic;color:#b2f6ff;">J1NX Muse: “Need an idea? I’ve got wild ones for every style.”</div>
-    </div>
-  </section>
-
-  <footer style="margin-top:38px;text-align:center;">
-    <div style="font-size:.97rem;color:#888;">
-      Related: <a href="https://openart.ai" target="_blank" rel="noopener" style="color:#b2f6ff;">OpenArt</a> |
-      <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener" style="color:#ffd7dc;">Perchance</a> |
-      <a href="https://promptforge.online" target="_blank" rel="noopener" style="color:#b2f6ff;">PromptForge Online</a>
-    </div>
+  <footer style="text-align:center;font-size:0.97em;color:#757c8c;margin:2.2em 0 1.2em 0;opacity:0.73;">
+    Not affiliated with OpenAI, Midjourney, etc. | <a href="/" style="color:#88ddff;text-decoration:none;">PromptForge</a> | <a href="/movie.html" style="color:#7bffc4;">Movie Generator</a> | <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" style="color:#b2f6ff;">Perchance</a>
   </footer>
-</main>
-
-<script>
-// Copy-to-clipboard logic
-function pfCopy(id) {
-  let el = document.getElementById(id);
-  navigator.clipboard.writeText(el.value);
-  el.style.background = "#223c22";
-  setTimeout(() => { el.style.background = "#202032"; }, 600);
-}
-</script>
-
-<script src="generator.js"></script>
+  <script src="generator.js"></script>
+  <script>
+    // Show main generator only after a seed is entered (stealth for SEO)
+    function showMainForm() {
+      document.getElementById('mainForm').style.display = 'block';
+      document.getElementById('seedForm').style.display = 'none';
+    }
+    // Copy-to-clipboard
+    function pfCopy(id) {
+      let el = document.getElementById(id);
+      el.select && el.select();
+      navigator.clipboard.writeText(el.value);
+      el.style.background = "#183c22";
+      setTimeout(() => { el.style.background = "#1b2126"; }, 700);
+    }
+    // Slider live value
+    const sfwMap = ["Pure", "Mild", "Spicy", "Wild", "God Mode"];
+    document.getElementById('sfwNsfwSlider').oninput = function() {
+      let v = +this.value;
+      document.getElementById('sfwNsfwVal').innerText = v < 20 ? sfwMap[0] : v < 40 ? sfwMap[1] : v < 60 ? sfwMap[2] : v < 85 ? sfwMap[3] : sfwMap[4];
+    };
+    document.getElementById('emphasisSlider').oninput = function() {
+      let v = +this.value;
+      document.getElementById('emphasisVal').innerText = v < 30 ? "Low" : v < 70 ? "Balanced" : "Max";
+    };
+    document.getElementById('styleSlider').oninput = function() {
+      let v = +this.value;
+      document.getElementById('styleVal').innerText = v < 40 ? "Classic" : v < 80 ? "Modern" : "Experimental";
+    };
+    // J1NX simple demo (plug into real API later)
+    function j1nxSend() {
+      let input = document.getElementById('j1nxInput').value;
+      let body = document.getElementById('j1nxBody');
+      if (input.length < 2) return;
+      body.innerHTML += `<div style="color:#b2f6ff;margin:0.4em 0 0.2em 0;"><b>You:</b> ${input}</div>`;
+      // Fake "AI" reply:
+      setTimeout(() => {
+        body.innerHTML += `<div><span style="color:#7bffc4;">J1NX:</span> ${j1nxResponse(input)}</div>`;
+        body.scrollTop = body.scrollHeight;
+      }, 650);
+      document.getElementById('j1nxInput').value = '';
+    }
+    function j1nxResponse(input) {
+      // Replace this with live API connection to Perchance, Character.AI, etc
+      let r = input.toLowerCase();
+      if (r.includes('prompt')) return "Try adding more descriptive words for style, mood, and lighting. Want something spicier or more artistic?";
+      if (r.includes('nsfw')) return "Adjust the SFW/NSFW slider to unlock wild prompt variations. I can suggest kinkier themes if you need.";
+      if (r.includes('style')) return "Modern styles work great for AI. Try surreal, hyperrealistic, cinematic, or retro!";
+      if (r.includes('help')) return "Give me a theme, and I’ll suggest wild prompt starters or negatives.";
+      return "Legendary prompt ideas need great input! Mix genres, moods, props, and let the brain do its thing.";
+    }
+  </script>
 </body>
 </html>
