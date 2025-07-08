@@ -2,150 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge: Movie/Scene Prompt Generator - God Mode</title>
-  <meta name="description" content="Write AI movie and video prompts like a pro. Genre, NSFW/SFW, cinematic details, smart negatives, J1NX Muse assistant. The best AI script prompt builder.">
-  <meta name="keywords" content="AI movie prompt, script generator, video scene, PromptForge, J1NX, NSFW, SFW, screenplay, film, shot, scene writing">
-  <meta property="og:title" content="PromptForge - Movie/Scene AI Prompt Generator God Mode" />
-  <meta property="og:description" content="Build detailed, creative prompts for AI video, movie, and scene generation. NSFW/SFW, inspiration, and J1NX script muse included." />
-  <meta property="og:image" content="PUT_YOUR_MOVIE_SOCIAL_IMAGE_URL_HERE" />
-  <meta property="og:url" content="https://promptforge.online/movie" />
+  <title>Movie Prompt Generator | PromptForge God Mode</title>
+  <meta name="description" content="The most advanced AI movie prompt generator. Instantly create cinematic, NSFW, and SFW scene prompts for any AI. Free, pro-level, expandable.">
+  <link rel="stylesheet" href="main.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* All styles from Picture Generator + a few tweaks for Movie/Scripts */
-    body { background: #121621; color: #ebeff5; font-family: 'IBM Plex Mono', monospace; }
-    .container { max-width: 1180px; margin: 2.5rem auto; padding:2.5rem; background: #191e28; border-radius: 1.3rem; box-shadow: 0 8px 40px #000c, 0 2px 8px #3334; }
-    h1 { color: #b89cff; }
-    .movie-flex { display: flex; gap: 1.3em; }
-    .movie-box { background: #202540; border-radius: 1.1em; padding: 1.1em 1.1em 1.5em 1.1em; margin-bottom: 1.6em; }
-    .copy-btn { background: #ae4deb; }
-    .slider { accent-color: #ae4deb; }
-    .genre-select, .scene-type { width: 100%; padding:0.7em 0.8em; border-radius:0.7em; background:#2a2e47; color:#fafaff; font-size:1.1em; border:1px solid #3a3956; margin-bottom:1em;}
-    .j1nx-muse { right:55px; bottom:42px; border-color: #ae4deb; }
-  </style>
+  <!-- SEO & Social -->
+  <meta property="og:title" content="Movie Prompt Generator - PromptForge">
+  <meta property="og:description" content="Make wild, vivid, cinematic, or erotic movie prompts for any AI with God Mode!">
+  <meta property="og:image" content="YOUR_SOCIAL_PREVIEW.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="YOUR_FAVICON.png">
 </head>
-<body>
-  <div class="container">
-    <h1>PromptForge: <span style="color:#ae4deb;">Movie/Scene</span> Prompt Generator <span style="font-size:0.55em;color:#b3d3ff;">GOD MODE</span></h1>
-    <div class="label">Write epic AI video, cinematic, or script prompts for any genre, style, or mood. NSFW and SFW ready.</div>
-    <form id="moviegen-form" autocomplete="off">
-      <div class="movie-box movie-flex">
-        <div style="flex:1;">
-          <label class="label" for="sceneInput">Describe your scene, action, or characters:</label>
-          <input class="input" type="text" id="sceneInput" name="sceneInput" placeholder="e.g. chase scene in neon-lit city, rainy night" maxlength="180">
-        </div>
-        <div style="flex:0.7;">
-          <label class="label" for="genreSelect">Genre:</label>
-          <select class="genre-select" id="genreSelect" name="genreSelect">
-            <option>Action</option>
-            <option>Romance</option>
-            <option>Comedy</option>
-            <option>Horror</option>
-            <option>Fantasy</option>
-            <option>Sci-Fi</option>
-            <option>Drama</option>
-            <option>Thriller</option>
-            <option>Erotic</option>
-            <option>Surreal</option>
-            <option>Experimental</option>
-            <option>Documentary</option>
-          </select>
-          <label class="label" for="nsfwToggle">NSFW Mode:</label>
-          <input type="range" min="0" max="1" value="1" class="slider" id="nsfwToggle" name="nsfwToggle" step="1">
-          <span id="nsfwLabel" style="color:#f78aff;">NSFW</span> /
-          <span id="sfwLabel" style="color:#fff;">SFW</span>
-          <label class="label" for="complexitySlider">Detail Level:</label>
-          <input type="range" min="1" max="3" value="2" class="slider" id="complexitySlider" name="complexitySlider" step="1">
-          <span style="font-size:0.94em;">Simple</span>
-          <span style="font-size:0.94em; float:right;">Script/Story Mode</span>
-        </div>
-      </div>
-      <div class="movie-box">
-        <button type="button" class="btn" id="generateBtn">Generate Movie Prompt</button>
-      </div>
-    </form>
-    <div class="suggestion-box" id="suggestionBox">
-      <b>Inspiration:</b> Try "slow-mo fight scene in cyberpunk alley, broken glass" or "awkward first date at haunted arcade, 1980s synth music"
-    </div>
-    <!-- Main Output -->
-    <div class="movie-box">
-      <div class="label">Movie/Scene Prompt:</div>
-      <div class="main-output" id="mainOutput"></div>
-      <button class="copy-btn" onclick="pfCopy('mainOutput')">Copy</button>
-    </div>
-    <div class="movie-box">
-      <div class="label">Short Summary:</div>
-      <div class="summary-output" id="summaryOutput"></div>
-      <button class="copy-btn" onclick="pfCopy('summaryOutput')">Copy</button>
-    </div>
-    <div class="movie-box">
-      <div class="label">Smart Negatives (what to avoid):</div>
-      <div class="neg-output" id="negOutput"></div>
-      <button class="copy-btn" onclick="pfCopy('negOutput')">Copy</button>
-    </div>
-  </div>
-  <div class="j1nx-muse" id="j1nxMuse">
-    <div class="j1nx-muse-header">J1NX Muse <span style="font-size:0.79em;color:#81f8f8;">Script Assistant</span></div>
-    <div class="j1nx-muse-body" id="j1nxMuseBody">
-      <i>Need scene ideas, dialogue, or twist? I’m your hacktivist muse. <br>Want NSFW, horror, or meme? Just ask.</i>
-      <br><br>
-      (Online chat coming soon!)
-    </div>
-  </div>
-  <div class="hidden-admin" id="adminPanel">
-    <b>ADMIN CONTROLS:</b><br>
-    • <span style="color:#b7f4a7;">Edit genres, script tokens, debug prompt logic</span><br>
-    • Coming soon: Export/import genre banks, admin-only script options, direct token test.<br>
-    <hr>
-    <label for="adminToken">Test a Token:</label>
-    <input type="text" id="adminToken" placeholder="[CHARACTER] [ACTION] [LOCATION] ...">
-    <button class="btn" style="font-size:0.95em;" onclick="pfAdminTest()">Test</button>
-    <div style="margin-top:0.7em; color:#ee3;">Result:</div>
-    <div id="adminResult" style="color:#e3f6fc; margin-bottom:1.5em;"></div>
-  </div>
-  <script src="generator.js"></script>
-  <script>
-    function pfCopy(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => { alert("Copied!"); });
-    }
-    document.getElementById('nsfwToggle').addEventListener('input', function() {
-      document.getElementById('nsfwLabel').style.fontWeight = this.value == 1 ? 'bold' : 'normal';
-      document.getElementById('sfwLabel').style.fontWeight = this.value == 0 ? 'bold' : 'normal';
-    });
-    document.getElementById('generateBtn').addEventListener('click', function() {
-      const sceneInput = document.getElementById('sceneInput').value.trim();
-      const genre = document.getElementById('genreSelect').value;
-      const isNSFW = document.getElementById('nsfwToggle').value == 1;
-      const complexity = parseInt(document.getElementById('complexitySlider').value);
+<body style="background:#161622;font-family:sans-serif;">
 
-      // --- Call generator.js logic!
-      let mainPrompt = generatePromptForgeMoviePrompt(sceneInput, genre, isNSFW, complexity);
-      let summary = mainPrompt.length > 100 ? mainPrompt.slice(0,100)+"..." : mainPrompt;
-      let negWords = getPromptForgeNegatives(sceneInput, isNSFW, genre);
+<!-- HEADER & NAV (reusable on all pages) -->
+<header style="background:#23223a;padding:18px 0 12px 0;border-bottom:2px solid #444;text-align:center;">
+  <img src="YOUR_LOGO.png" alt="PromptForge Logo" style="height:42px;vertical-align:middle;margin-right:16px;">
+  <span style="font-size:2rem;color:#fff;font-family:'Orbitron',monospace;font-weight:bold;">PromptForge</span>
+  <nav style="margin-top:8px;">
+    <a href="index.html" style="color:#ccc;margin:0 10px;">Home</a>
+    <a href="generator-movie.html" style="color:#ffd700;margin:0 10px;font-weight:bold;">🎬 Movie</a>
+    <a href="generator-picture.html" style="color:#b2f6ff;margin:0 10px;">🖼️ Picture</a>
+    <a href="watermark.html" style="color:#aaa;margin:0 10px;">🖋️ Watermark</a>
+    <a href="j1nx.html" style="color:#aaa;margin:0 10px;">🤖 J1NX</a>
+  </nav>
+</header>
 
-      document.getElementById('mainOutput').innerText = mainPrompt;
-      document.getElementById('summaryOutput').innerText = summary;
-      document.getElementById('negOutput').innerText = negWords;
-    });
-    function pfAdminTest() {
-      const t = document.getElementById('adminToken').value.trim();
-      if(!t) return;
-      document.getElementById('adminResult').innerText = generatePromptForgeMoviePrompt(t, "Action", true, 3);
-    }
-    // Movie inspiration ideas
-    const movieIdeas = [
-      "slow zoom on masked hacker in neon-lit alley, synthwave score",
-      "awkward date, spilled wine, sudden blackout, power returns, she's gone",
-      "rain-soaked rooftop chase, city skyline, camera tilt, police lights",
-      "trapped in endless mirror maze, dream logic, echoing footsteps",
-      "dance-off in abandoned arcade, 1980s music, color strobe lights",
-      "sultry villainess in foggy church, forbidden romance, dramatic reveal",
-      "parody: cat vs. cucumber, slow-mo close-up, horror soundtrack"
-    ];
-    setInterval(() => {
-      document.getElementById('suggestionBox').innerHTML = "<b>Inspiration:</b> " + movieIdeas[Math.floor(Math.random()*movieIdeas.length)];
-    }, 6200);
-  </script>
+<main style="max-width:720px;margin:38px auto 60px auto;background:#181824;border-radius:18px;padding:28px 24px 32px 24px;box-shadow:0 2px 30px #000a;position:relative;">
+
+  <h1 style="font-size:2rem;color:#fff;margin-bottom:4px;letter-spacing:1px;">Movie Prompt Generator</h1>
+  <p style="color:#f6ffb2;margin-bottom:20px;font-size:1.11rem;">Unleash scene prompts for any AI—realistic, cinematic, or totally taboo. Built-in SFW↔NSFW logic, intensity sliders, smart negatives, summaries, and one-click inspiration.</p>
+
+  <!-- Step 1: Describe -->
+  <section style="margin-bottom:30px;">
+    <label style="font-weight:bold;display:block;margin-bottom:6px;">Describe Your Movie Scene:</label>
+    <textarea id="sceneInputMovie" rows="3" style="width:100%;font-size:1.12rem;border-radius:7px;padding:10px;" placeholder="Ex: Neon-lit city rooftop. Two rivals. Pouring rain. Sexual tension..."></textarea>
+  </section>
+
+  <!-- Step 2: All Controls/Sliders -->
+  <section style="margin-bottom:22px;">
+    <div style="margin-bottom:13px;">
+      <label for="movieGenre" style="font-weight:bold;">Genre:</label>
+      <select id="movieGenre" style="margin-left:8px;padding:2px 7px;">
+        <option>Cyberpunk</option><option>Romantic Comedy</option><option>Thriller</option>
+        <option>Erotic Drama</option><option>Supernatural</option><option>Action</option>
+        <option>Sci-Fi</option><option>Animated</option><option>Indie</option><option>Other</option>
+      </select>
+    </div>
+    <div style="margin-bottom:13px;">
+      <label for="movieNSFWSlider" style="font-weight:bold;">NSFW Level:</label>
+      <input type="range" min="0" max="100" value="0" id="movieNSFWSlider" style="vertical-align:middle;margin:0 8px;width:170px;">
+      <span id="movieNSFWLabel" style="color:#ffd7dc;">SFW</span>
+    </div>
+    <div>
+      <label for="emphasisSlider" style="font-weight:bold;">Emphasis:</label>
+      <input type="range" min="0" max="100" value="40" id="emphasisSlider" style="vertical-align:middle;margin:0 8px;width:130px;">
+      <span id="emphasisLabel" style="color:#b2ffb2;">Normal</span>
+    </div>
+  </section>
+
+  <!-- Step 3: Generate! -->
+  <section style="margin-bottom:30px;">
+    <button id="generateMovieBtn" style="width:100%;padding:15px 0;font-size:1.23rem;font-weight:bold;background:#4cf6b2;color:#181824;border:none;border-radius:8px;box-shadow:0 2px 12px #4cf6b244;cursor:pointer;letter-spacing:1px;">
+      🎬 Generate Movie Prompt
+    </button>
+  </section>
+
+  <!-- Step 4: Output -->
+  <section style="margin-bottom:24px;">
+    <div style="margin-bottom:10px;">
+      <label for="movieMainPrompt" style="font-weight:bold;">Main Prompt:</label>
+      <textarea id="movieMainPrompt" rows="3" readonly style="width:100%;font-size:1.09rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
+      <button onclick="pfCopy('movieMainPrompt')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
+      <div style="clear:both;"></div>
+    </div>
+    <div style="margin-bottom:10px;">
+      <label for="movieSummary" style="font-weight:bold;">Summary:</label>
+      <textarea id="movieSummary" rows="2" readonly style="width:100%;font-size:1.04rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
+      <button onclick="pfCopy('movieSummary')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
+      <div style="clear:both;"></div>
+    </div>
+    <div>
+      <label for="movieNegatives" style="font-weight:bold;">Negatives:</label>
+      <textarea id="movieNegatives" rows="2" readonly style="width:100%;font-size:1.03rem;background:#232342;color:#fff;"></textarea>
+      <button onclick="pfCopy('movieNegatives')" class="copy-btn" style="float:right;">Copy</button>
+      <div style="clear:both;"></div>
+    </div>
+  </section>
+
+  <!-- Step 5: Inspiration + J1NX -->
+  <section style="margin-bottom:22px;">
+    <button onclick="pfRandomInspire('movie')" style="margin-bottom:8px;">Inspire Me</button>
+    <div id="movieSuggestions" style="min-height:34px;color:#eaffb2;"></div>
+    <div id="movieJ1NX" style="display:none;margin-top:18px;">
+      <img src="J1NX_IMAGE.png" style="width:64px;float:left;margin-right:13px;">
+      <div style="font-style:italic;color:#fff;">J1NX Muse: “Want wilder scenes? Ask me for dirty ideas.”</div>
+    </div>
+  </section>
+
+  <!-- SEO/related discreet links -->
+  <footer style="margin-top:38px;text-align:center;">
+    <div style="font-size:.97rem;color:#888;">
+      Related: <a href="https://openart.ai" target="_blank" rel="noopener" style="color:#b2f6ff;">OpenArt</a> |
+      <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener" style="color:#ffd7dc;">Perchance</a> |
+      <a href="https://promptforge.online" target="_blank" rel="noopener" style="color:#b2f6ff;">PromptForge Online</a>
+    </div>
+  </footer>
+</main>
+
+<script>
+// Copy-to-clipboard logic
+function pfCopy(id) {
+  let el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value);
+  el.style.background = "#223c22";
+  setTimeout(() => { el.style.background = "#202032"; }, 600);
+}
+</script>
+
+<!-- Link to your generator.js at the end for brain logic -->
+<script src="generator.js"></script>
 </body>
 </html>
