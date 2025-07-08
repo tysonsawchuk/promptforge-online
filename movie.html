@@ -2,125 +2,372 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Movie Prompt Generator | PromptForge God Mode</title>
-  <meta name="description" content="The most advanced AI movie prompt generator. Instantly create cinematic, NSFW, and SFW scene prompts for any AI. Free, pro-level, expandable.">
-  <link rel="stylesheet" href="main.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- SEO & Social -->
-  <meta property="og:title" content="Movie Prompt Generator - PromptForge">
-  <meta property="og:description" content="Make wild, vivid, cinematic, or erotic movie prompts for any AI with God Mode!">
-  <meta property="og:image" content="YOUR_SOCIAL_PREVIEW.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" type="image/png" href="YOUR_FAVICON.png">
+  <title>PromptForge | Movie God Mode Generator</title>
+  <meta name="description" content="Underground AI movie/script prompt generator with pro workflow, sliders, J1NX muse, and advanced logic.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta property="og:title" content="PromptForge Movie God Mode Generator">
+  <meta property="og:description" content="Create legendary AI movie, video, and script prompts—pro tools, wild logic, J1NX help.">
+  <link rel="icon" href="/favicon.png">
+  <style>
+    html, body {
+      background: #16191d;
+      color: #e9eaea;
+      font-family: 'Inter', 'Roboto', Arial, sans-serif;
+      margin: 0; padding: 0; min-height: 100vh;
+    }
+    main {
+      max-width: 740px;
+      margin: 2.6rem auto 1.4rem auto;
+      background: #23252a;
+      border-radius: 18px;
+      box-shadow: 0 0 26px #12131499;
+      padding: 2.5rem 2.3rem 2rem 2.3rem;
+      position: relative;
+    }
+    .breadcrumbs {
+      font-size: 1rem;
+      color: #88ddff;
+      margin-bottom: 17px;
+      letter-spacing: 0.06em;
+    }
+    .breadcrumbs a { color: #88ddff; text-decoration: none; }
+    h1 {
+      margin: 0 0 0.2em 0;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #f6ca7b;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 4px #1116;
+    }
+    .subtitle {
+      font-size: 1.13rem;
+      color: #dadada;
+      margin-bottom: 2.2em;
+      opacity: 0.93;
+    }
+    .seed-section {
+      margin: 1.2em 0 1.2em 0;
+      text-align: left;
+    }
+    #seedForm {
+      display: flex;
+      gap: 0.7em;
+      margin-bottom: 1.5em;
+    }
+    #seedInput {
+      flex: 1;
+      font-size: 1.13rem;
+      padding: 0.72em 1em;
+      border-radius: 10px;
+      border: none;
+      background: #242a30;
+      color: #f3f6ff;
+      outline: none;
+      box-shadow: 0 1px 8px #223a4a22 inset;
+      letter-spacing: 0.03em;
+      transition: box-shadow 0.18s;
+    }
+    #seedInput:focus { box-shadow: 0 0 0 2px #ffd78055; }
+    #startBtn {
+      font-size: 1.13rem;
+      background: linear-gradient(90deg,#ffde7b,#ffd780 90%);
+      color: #16191d;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6em 1.6em;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background 0.2s;
+      box-shadow: 0 1px 10px #b98c0015;
+    }
+    #mainForm { display: none; margin-top: 1.2em; }
+    .sectionLabel {
+      font-size: 1.08rem;
+      color: #ffd780;
+      margin: 1.25em 0 0.24em 0;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .sliderRow {
+      display: flex; align-items: center;
+      margin-bottom: 1em;
+      gap: 1em;
+    }
+    .sliderRow label { min-width: 120px; }
+    .sliderRow input[type="range"] {
+      width: 140px;
+      accent-color: #ffd780;
+      background: #22242b;
+    }
+    .checkboxRow {
+      display: flex; align-items: center; gap: 0.7em;
+      margin-bottom: 1em;
+    }
+    .sceneBlock {
+      background: #1b2126;
+      border: 1px solid #232c36;
+      border-radius: 11px;
+      color: #ffd780;
+      font-size: 1.04em;
+      padding: 0.8em 1em;
+      margin-bottom: 1em;
+      font-family: 'Fira Mono','Consolas',monospace;
+      box-shadow: 0 1px 8px #ffd7800e;
+      line-height: 1.45em;
+    }
+    .addSceneBtn {
+      display: inline-block;
+      background: #ffd780;
+      color: #16191d;
+      border: none;
+      border-radius: 7px;
+      padding: 0.44em 1.18em;
+      font-size: 1.06em;
+      font-weight: 700;
+      margin-top: 0.2em;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ffd78011;
+    }
+    .copyBtn {
+      margin-left: 0.3em;
+      background: #20242a;
+      color: #ffd780;
+      border: none;
+      border-radius: 7px;
+      padding: 0.34em 1em;
+      font-size: 1.09em;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 0 6px #ffd78018;
+      transition: background 0.15s;
+    }
+    .copyBtn:active { background: #28342e; color: #fff; }
+    #promptOutput, #negativeOutput, #summaryOutput {
+      width: 100%; min-height: 2.7em;
+      background: #1b2126;
+      border: 1px solid #232c36;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1.09em;
+      padding: 1em 1em 0.7em 1em;
+      margin: 0.25em 0 0.8em 0;
+      box-sizing: border-box;
+      font-family: 'Inter', 'Roboto', Arial, sans-serif;
+      resize: none;
+      box-shadow: 0 1px 7px #ffd7800a;
+    }
+    #j1nx {
+      position: fixed; right: 30px; bottom: 28px;
+      width: 320px; max-width: 92vw;
+      background: #20242a;
+      border: 2px solid #232a1f;
+      border-radius: 16px 16px 9px 16px;
+      box-shadow: 0 2px 18px #0009;
+      padding: 0 0 1em 0;
+      z-index: 99;
+      display: flex; flex-direction: column;
+    }
+    #j1nxHeader {
+      background: #16191d;
+      color: #ffd780;
+      font-weight: bold;
+      padding: 0.7em 1em;
+      border-radius: 16px 16px 0 0;
+      font-size: 1.15em;
+      display: flex; align-items: center; gap: 0.6em;
+    }
+    #j1nxBody {
+      padding: 0.9em 1em 0 1em;
+      color: #fcebc1;
+      font-size: 1.03em;
+      min-height: 62px;
+      max-height: 222px;
+      overflow-y: auto;
+      word-break: break-word;
+    }
+    #j1nxInputRow {
+      display: flex; gap: 0.6em;
+      margin-top: 0.6em;
+    }
+    #j1nxInput {
+      flex: 1; padding: 0.4em 0.7em; border-radius: 8px;
+      border: none; background: #242a30; color: #ffd780;
+      font-size: 1em;
+    }
+    #j1nxSendBtn {
+      background: #ffd780;
+      color: #22242a;
+      font-weight: bold;
+      border: none;
+      border-radius: 7px;
+      padding: 0.35em 1.1em;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    @media (max-width: 800px) {
+      main { max-width: 99vw; padding: 1.1em 0.4em 1em 0.4em; }
+      #j1nx { right: 4vw; width: 94vw; bottom: 10px; }
+    }
+  </style>
+  <!-- AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+    crossorigin="anonymous"></script>
 </head>
-<body style="background:#161622;font-family:sans-serif;">
-
-<!-- HEADER & NAV (reusable on all pages) -->
-<header style="background:#23223a;padding:18px 0 12px 0;border-bottom:2px solid #444;text-align:center;">
-  <img src="YOUR_LOGO.png" alt="PromptForge Logo" style="height:42px;vertical-align:middle;margin-right:16px;">
-  <span style="font-size:2rem;color:#fff;font-family:'Orbitron',monospace;font-weight:bold;">PromptForge</span>
-  <nav style="margin-top:8px;">
-    <a href="index.html" style="color:#ccc;margin:0 10px;">Home</a>
-    <a href="generator-movie.html" style="color:#ffd700;margin:0 10px;font-weight:bold;">🎬 Movie</a>
-    <a href="generator-picture.html" style="color:#b2f6ff;margin:0 10px;">🖼️ Picture</a>
-    <a href="watermark.html" style="color:#aaa;margin:0 10px;">🖋️ Watermark</a>
-    <a href="j1nx.html" style="color:#aaa;margin:0 10px;">🤖 J1NX</a>
-  </nav>
-</header>
-
-<main style="max-width:720px;margin:38px auto 60px auto;background:#181824;border-radius:18px;padding:28px 24px 32px 24px;box-shadow:0 2px 30px #000a;position:relative;">
-
-  <h1 style="font-size:2rem;color:#fff;margin-bottom:4px;letter-spacing:1px;">Movie Prompt Generator</h1>
-  <p style="color:#f6ffb2;margin-bottom:20px;font-size:1.11rem;">Unleash scene prompts for any AI—realistic, cinematic, or totally taboo. Built-in SFW↔NSFW logic, intensity sliders, smart negatives, summaries, and one-click inspiration.</p>
-
-  <!-- Step 1: Describe -->
-  <section style="margin-bottom:30px;">
-    <label style="font-weight:bold;display:block;margin-bottom:6px;">Describe Your Movie Scene:</label>
-    <textarea id="sceneInputMovie" rows="3" style="width:100%;font-size:1.12rem;border-radius:7px;padding:10px;" placeholder="Ex: Neon-lit city rooftop. Two rivals. Pouring rain. Sexual tension..."></textarea>
-  </section>
-
-  <!-- Step 2: All Controls/Sliders -->
-  <section style="margin-bottom:22px;">
-    <div style="margin-bottom:13px;">
-      <label for="movieGenre" style="font-weight:bold;">Genre:</label>
-      <select id="movieGenre" style="margin-left:8px;padding:2px 7px;">
-        <option>Cyberpunk</option><option>Romantic Comedy</option><option>Thriller</option>
-        <option>Erotic Drama</option><option>Supernatural</option><option>Action</option>
-        <option>Sci-Fi</option><option>Animated</option><option>Indie</option><option>Other</option>
-      </select>
+<body>
+  <main>
+    <nav class="breadcrumbs">
+      <a href="/">Home</a> &gt; <a href="/movie.html">Movie Generator</a>
+    </nav>
+    <h1>Movie God Mode Generator</h1>
+    <div class="subtitle">
+      Enter your keywords or title.<br>
+      <span style="font-size:0.98em;color:#ffd780;">Script, storyboard, or cinematic scene—one click from pro AI output.</span>
     </div>
-    <div style="margin-bottom:13px;">
-      <label for="movieNSFWSlider" style="font-weight:bold;">NSFW Level:</label>
-      <input type="range" min="0" max="100" value="0" id="movieNSFWSlider" style="vertical-align:middle;margin:0 8px;width:170px;">
-      <span id="movieNSFWLabel" style="color:#ffd7dc;">SFW</span>
-    </div>
-    <div>
-      <label for="emphasisSlider" style="font-weight:bold;">Emphasis:</label>
-      <input type="range" min="0" max="100" value="40" id="emphasisSlider" style="vertical-align:middle;margin:0 8px;width:130px;">
-      <span id="emphasisLabel" style="color:#b2ffb2;">Normal</span>
-    </div>
-  </section>
+    <section class="seed-section">
+      <form id="seedForm" onsubmit="event.preventDefault(); showMainForm();">
+        <input id="seedInput" type="text" placeholder="e.g. 'gritty detective thriller', 'alien romance at prom', 'apocalypse heist getaway'">
+        <button id="startBtn" type="submit">Let's Go &rarr;</button>
+      </form>
+    </section>
+    <form id="mainForm" autocomplete="off" onsubmit="event.preventDefault(); generateMoviePrompt();">
+      <div class="sectionLabel">Prompt Power</div>
+      <div class="sliderRow">
+        <label for="sfwNsfwSlider">SFW ← NSFW</label>
+        <input id="sfwNsfwSlider" type="range" min="0" max="100" value="30" title="How wild?">
+        <span id="sfwNsfwVal">Mild</span>
+      </div>
+      <div class="sliderRow">
+        <label for="detailSlider">Detail</label>
+        <input id="detailSlider" type="range" min="0" max="100" value="65">
+        <span id="detailVal">Balanced</span>
+      </div>
+      <div class="sliderRow">
+        <label for="scriptStyleSlider">Script Style</label>
+        <input id="scriptStyleSlider" type="range" min="0" max="100" value="60">
+        <span id="scriptStyleVal">Modern</span>
+      </div>
+      <div class="checkboxRow">
+        <input type="checkbox" id="negativeWordsChk" checked>
+        <label for="negativeWordsChk">Add negative wordbank (avoid cliché or messy output)</label>
+      </div>
+      <div class="sectionLabel">Scene Blocks</div>
+      <div id="sceneBlocksArea">
+        <div class="sceneBlock" id="sceneBlock1">
+          <b>Scene 1:</b> INT. LOCATION - DAY<br>
+          A <span style="color:#ffd780;">[CHAR]</span> <span style="color:#fcebc1;">[ACTION]</span> in <span style="color:#ffd780;">[SETTING]</span>, feeling <span style="color:#fae4b8;">[MOOD]</span>.<br>
+          <i>“[DIALOGUE]”</i>
+        </div>
+      </div>
+      <button type="button" class="addSceneBtn" onclick="addSceneBlock()">+ Add Scene Block</button>
+      <div class="sectionLabel">Movie/Script Prompt</div>
+      <textarea id="promptOutput" readonly></textarea>
+      <button class="copyBtn" type="button" onclick="pfCopy('promptOutput')">Copy Prompt</button>
+      <div class="sectionLabel">Negative Words</div>
+      <textarea id="negativeOutput" readonly></textarea>
+      <button class="copyBtn" type="button" onclick="pfCopy('negativeOutput')">Copy Negatives</button>
+      <div class="sectionLabel">Summary</div>
+      <textarea id="summaryOutput" readonly></textarea>
+      <button class="copyBtn" type="button" onclick="pfCopy('summaryOutput')">Copy Summary</button>
+      <div style="margin: 2.1em 0 0.7em 0;">
+        <button type="submit" style="font-size:1.22em;background:#ffd780;color:#16191d;border:none;border-radius:8px;padding:0.63em 2.3em;letter-spacing:0.06em;box-shadow:0 1px 9px #ffd78045;cursor:pointer;font-weight:800;">GENERATE</button>
+      </div>
+    </form>
+  </main>
 
-  <!-- Step 3: Generate! -->
-  <section style="margin-bottom:30px;">
-    <button id="generateMovieBtn" style="width:100%;padding:15px 0;font-size:1.23rem;font-weight:bold;background:#4cf6b2;color:#181824;border:none;border-radius:8px;box-shadow:0 2px 12px #4cf6b244;cursor:pointer;letter-spacing:1px;">
-      🎬 Generate Movie Prompt
-    </button>
-  </section>
+  <!-- J1NX Chat Assistant -->
+  <div id="j1nx">
+    <div id="j1nxHeader">
+      <img src="/j1nx.png" alt="J1NX" style="height:2em;width:2em;border-radius:50%;border:2px solid #ffd780;background:#1e242b;margin-right:0.5em;">
+      J1NX // Pro Prompt Muse
+    </div>
+    <div id="j1nxBody">
+      <span style="color:#ffd780;">Need script ideas?</span> Ask me for plot twists, dialogue, or scene help.
+    </div>
+    <div id="j1nxInputRow">
+      <input id="j1nxInput" type="text" placeholder="Ask for a script seed, twist, or movie concept...">
+      <button id="j1nxSendBtn" onclick="j1nxSend()">Send</button>
+    </div>
+  </div>
 
-  <!-- Step 4: Output -->
-  <section style="margin-bottom:24px;">
-    <div style="margin-bottom:10px;">
-      <label for="movieMainPrompt" style="font-weight:bold;">Main Prompt:</label>
-      <textarea id="movieMainPrompt" rows="3" readonly style="width:100%;font-size:1.09rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
-      <button onclick="pfCopy('movieMainPrompt')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
-      <div style="clear:both;"></div>
-    </div>
-    <div style="margin-bottom:10px;">
-      <label for="movieSummary" style="font-weight:bold;">Summary:</label>
-      <textarea id="movieSummary" rows="2" readonly style="width:100%;font-size:1.04rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
-      <button onclick="pfCopy('movieSummary')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
-      <div style="clear:both;"></div>
-    </div>
-    <div>
-      <label for="movieNegatives" style="font-weight:bold;">Negatives:</label>
-      <textarea id="movieNegatives" rows="2" readonly style="width:100%;font-size:1.03rem;background:#232342;color:#fff;"></textarea>
-      <button onclick="pfCopy('movieNegatives')" class="copy-btn" style="float:right;">Copy</button>
-      <div style="clear:both;"></div>
-    </div>
-  </section>
+  <!-- AdSense Bottom -->
+  <div style="max-width:730px;margin:16px auto 0 auto;min-height:80px;text-align:center;">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-4963053724895140"
+         data-ad-slot="8259436982"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
 
-  <!-- Step 5: Inspiration + J1NX -->
-  <section style="margin-bottom:22px;">
-    <button onclick="pfRandomInspire('movie')" style="margin-bottom:8px;">Inspire Me</button>
-    <div id="movieSuggestions" style="min-height:34px;color:#eaffb2;"></div>
-    <div id="movieJ1NX" style="display:none;margin-top:18px;">
-      <img src="J1NX_IMAGE.png" style="width:64px;float:left;margin-right:13px;">
-      <div style="font-style:italic;color:#fff;">J1NX Muse: “Want wilder scenes? Ask me for dirty ideas.”</div>
-    </div>
-  </section>
-
-  <!-- SEO/related discreet links -->
-  <footer style="margin-top:38px;text-align:center;">
-    <div style="font-size:.97rem;color:#888;">
-      Related: <a href="https://openart.ai" target="_blank" rel="noopener" style="color:#b2f6ff;">OpenArt</a> |
-      <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener" style="color:#ffd7dc;">Perchance</a> |
-      <a href="https://promptforge.online" target="_blank" rel="noopener" style="color:#b2f6ff;">PromptForge Online</a>
-    </div>
+  <footer style="text-align:center;font-size:0.97em;color:#757c8c;margin:2.2em 0 1.2em 0;opacity:0.73;">
+    Not affiliated with OpenAI, Midjourney, etc. | <a href="/" style="color:#88ddff;text-decoration:none;">PromptForge</a> | <a href="/picture.html" style="color:#b2f6ff;">Picture Generator</a> | <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" style="color:#ffd780;">Perchance</a>
   </footer>
-</main>
-
-<script>
-// Copy-to-clipboard logic
-function pfCopy(id) {
-  let el = document.getElementById(id);
-  navigator.clipboard.writeText(el.value);
-  el.style.background = "#223c22";
-  setTimeout(() => { el.style.background = "#202032"; }, 600);
-}
-</script>
-
-<!-- Link to your generator.js at the end for brain logic -->
-<script src="generator.js"></script>
+  <script src="generator.js"></script>
+  <script>
+    function showMainForm() {
+      document.getElementById('mainForm').style.display = 'block';
+      document.getElementById('seedForm').style.display = 'none';
+    }
+    function pfCopy(id) {
+      let el = document.getElementById(id);
+      el.select && el.select();
+      navigator.clipboard.writeText(el.value);
+      el.style.background = "#3a2918";
+      setTimeout(() => { el.style.background = "#1b2126"; }, 700);
+    }
+    // Sliders live
+    const sfwMap = ["Pure", "Mild", "Spicy", "Wild", "God Mode"];
+    document.getElementById('sfwNsfwSlider').oninput = function() {
+      let v = +this.value;
+      document.getElementById('sfwNsfwVal').innerText = v < 20 ? sfwMap[0] : v < 40 ? sfwMap[1] : v < 60 ? sfwMap[2] : v < 85 ? sfwMap[3] : sfwMap[4];
+    };
+    document.getElementById('detailSlider').oninput = function() {
+      let v = +this.value;
+      document.getElementById('detailVal').innerText = v < 30 ? "Low" : v < 70 ? "Balanced" : "Max";
+    };
+    document.getElementById('scriptStyleSlider').oninput = function() {
+      let v = +this.value;
+      document.getElementById('scriptStyleVal').innerText = v < 40 ? "Classic" : v < 80 ? "Modern" : "Experimental";
+    };
+    // Add more scenes
+    let sceneCount = 1;
+    function addSceneBlock() {
+      sceneCount++;
+      let div = document.createElement('div');
+      div.className = 'sceneBlock';
+      div.innerHTML = `<b>Scene ${sceneCount}:</b> INT./EXT. LOCATION - DAY/NIGHT<br>
+      <span style="color:#ffd780;">[CHAR]</span> <span style="color:#fcebc1;">[ACTION]</span> in <span style="color:#ffd780;">[SETTING]</span>, feeling <span style="color:#fae4b8;">[MOOD]</span>.<br>
+      <i>“[DIALOGUE]”</i>`;
+      document.getElementById('sceneBlocksArea').appendChild(div);
+    }
+    // J1NX chat demo (replace with real API call if needed)
+    function j1nxSend() {
+      let q = document.getElementById('j1nxInput').value.trim();
+      if (!q) return;
+      let a = "";
+      if (q.toLowerCase().includes("twist")) a = "Try a double-cross: the main villain is the hero’s childhood friend.";
+      else if (q.toLowerCase().includes("dialogue")) a = "Pro dialogue: 'You can’t outrun fate.' or 'This city chews up good cops.'";
+      else if (q.toLowerCase().includes("ending")) a = "Bittersweet ending: the heist succeeds, but the love is lost.";
+      else if (q.toLowerCase().includes("genre")) a = "How about a neo-noir sci-fi romance?";
+      else if (q.toLowerCase().includes("scene")) a = "Add a silent, rain-soaked rooftop scene for cinematic mood.";
+      else if (q.toLowerCase().includes("help")) a = "J1NX: Ask for plot starters, scene glue, or dialogue examples.";
+      else a = "For movie prompts, try mixing genres, adding a wild location, or setting a scene in a way no one expects.";
+      let jBody = document.getElementById('j1nxBody');
+      jBody.innerHTML = `<span style="color:#ffd780;">${a}</span>`;
+      document.getElementById('j1nxInput').value = '';
+    }
+    // Prompt logic placeholder (replace w/ your generator.js logic)
+    function generateMoviePrompt() {
+      let seed = document.getElementById('seedInput').value.trim();
+      // TODO: Insert your God Mode generator logic here
+      document.getElementById('promptOutput').value = `[GodMode-MOVIE] Scene: ${seed ? seed : '[scene idea here]'}\n(Example output; connect to generator.js)`;
+      document.getElementById('negativeOutput').value = 'bad script, boring, cliche, out of frame, typo, logo, watermark, distorted audio, blurry, irrelevant';
+      document.getElementById('summaryOutput').value = `Summary: ${seed ? seed : '[summary based on scene]'} (expand w/ genre, tone, etc.)`;
+    }
+  </script>
 </body>
 </html>
