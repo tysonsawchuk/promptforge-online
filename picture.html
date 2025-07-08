@@ -2,280 +2,117 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge: Picture Prompt Generator - God Mode</title>
-  <meta name="description" content="Create world-class AI art prompts with NSFW/SFW controls, smart suggestions, J1NX Muse, and copy-ready output. The ultimate generator for artists and meme lords.">
-  <meta name="keywords" content="AI prompt generator, NSFW, SFW, meme, art, PromptForge, J1NX, image prompts, photo, movie, generator, hackertools">
-  <meta property="og:title" content="PromptForge - Picture AI Prompt Generator God Mode" />
-  <meta property="og:description" content="The most powerful, customizable prompt generator for AI art and memes. NSFW/SFW, inspiration, and J1NX creative muse included." />
-  <meta property="og:image" content="PUT_YOUR_LOGO_OR_SOCIAL_IMAGE_URL_HERE" />
-  <meta property="og:url" content="https://promptforge.online/picture" />
+  <title>Picture Prompt Generator | PromptForge God Mode</title>
+  <meta name="description" content="Ultimate picture prompt generator: SFW, NSFW, memes, photo, anime. Pro-level, expandable. Free, private, instant.">
+  <link rel="stylesheet" href="main.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      background: #0d1117;
-      color: #e2e6ed;
-      font-family: 'IBM Plex Mono', 'Fira Mono', 'Menlo', 'Consolas', monospace;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: #161b22;
-      border-radius: 1.25rem;
-      box-shadow: 0 8px 32px 0 #000a, 0 2px 8px 0 #2224;
-    }
-    h1, h2 {
-      font-weight: 700;
-      color: #eb4d85;
-      letter-spacing: 1px;
-      margin-bottom: 0.25em;
-      text-shadow: 0 1px 0 #101114, 0 0px 16px #eb4d8577;
-    }
-    .label {
-      color: #a1a7b4;
-      font-size: 0.98em;
-      margin-bottom: 0.1em;
-      font-weight: 500;
-    }
-    .input, .slider, .select, textarea, input[type=text] {
-      background: #22242a;
-      color: #f2f3f7;
-      border: 1px solid #32394a;
-      border-radius: 0.6em;
-      font-size: 1.1em;
-      padding: 0.5em 1em;
-      margin-bottom: 0.75em;
-      width: 100%;
-      box-sizing: border-box;
-      outline: none;
-    }
-    .btn, button {
-      background: linear-gradient(90deg,#eb4d85 10%,#6b8cff 90%);
-      color: #fff;
-      border: none;
-      border-radius: 0.7em;
-      padding: 0.7em 1.5em;
-      font-size: 1em;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      margin: 0.5em 0;
-      box-shadow: 0 2px 10px #eb4d8530;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.12s;
-    }
-    .btn:active { transform: scale(0.98); }
-    .box {
-      margin-bottom: 2em;
-      background: #21242b;
-      border-radius: 1em;
-      padding: 1.2em 1em;
-      box-shadow: 0 0 2px #3336, 0 1px 8px #15151a44;
-    }
-    .flex { display: flex; gap: 1em; }
-    .flex-row { flex-direction: row; }
-    .flex-col { flex-direction: column; }
-    .main-output, .summary-output, .neg-output {
-      font-size: 1.2em;
-      background: #232336;
-      border-radius: 0.8em;
-      padding: 1.2em 1em;
-      min-height: 60px;
-      margin-bottom: 1em;
-      white-space: pre-line;
-      word-break: break-word;
-    }
-    .j1nx-muse {
-      position: fixed; right: 40px; bottom: 38px;
-      z-index: 50; width: 235px;
-      min-height: 150px;
-      background: #151a21f0;
-      border: 2px solid #eb4d85aa;
-      border-radius: 1.2em 1.2em 1.8em 1.2em;
-      box-shadow: 0 3px 20px #eb4d8577, 0 2px 4px #1119;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .j1nx-muse-header {
-      background: #28263e;
-      color: #fff;
-      font-weight: 700;
-      padding: 0.6em 1em;
-      border-bottom: 1px solid #eb4d8588;
-      text-align: center;
-      font-size: 1.08em;
-      letter-spacing: 1px;
-    }
-    .j1nx-muse-body {
-      flex: 1;
-      padding: 1em 1em 1.4em 1em;
-      color: #ebd9f7;
-      font-size: 1em;
-      overflow-y: auto;
-      white-space: pre-line;
-    }
-    .copy-btn {
-      background: #3635f1;
-      border-radius: 0.5em;
-      padding: 0.45em 0.8em;
-      margin-left: 0.8em;
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 1em;
-      transition: background 0.15s;
-      border: none;
-      outline: none;
-    }
-    .copy-btn:hover { background: #eb4d85; }
-    .suggestion-box { font-size: 1.1em; color: #7df2cc; font-style: italic; margin-bottom: 1.4em; }
-    .hidden-admin {
-      display: none;
-      margin-top: 1em;
-      background: #272740;
-      border-radius: 1em;
-      padding: 1.1em;
-      box-shadow: 0 0 10px #21224f60;
-      font-size: 0.98em;
-      color: #deedff;
-    }
-    /* Show admin area if .admin-mode on body */
-    body.admin-mode .hidden-admin { display: block; }
-  </style>
+  <!-- SEO & Social -->
+  <meta property="og:title" content="Picture Prompt Generator - PromptForge">
+  <meta property="og:description" content="Instantly craft stunning, detailed, SFW/NSFW image prompts for any AI art generator.">
+  <meta property="og:image" content="YOUR_SOCIAL_PREVIEW.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="YOUR_FAVICON.png">
 </head>
-<body>
-  <div class="container">
-    <h1>PromptForge: Picture Prompt Generator <span style="font-size:0.55em; color:#b3d3ff;">GOD MODE</span></h1>
-    <div class="label">Create a perfect prompt for any AI image generator — art, meme, NSFW, or safe-for-work.</div>
-    <form id="promptgen-form" autocomplete="off">
-      <div class="box flex flex-row">
-        <div style="flex:1;">
-          <label class="label" for="userInput">Describe your idea, theme, or key elements:</label>
-          <input class="input" type="text" id="userInput" name="userInput" placeholder="e.g. punk girl in rainy neon alley" maxlength="180">
-        </div>
-        <div style="flex:0.5;">
-          <label class="label" for="nsfwToggle">NSFW Mode:</label>
-          <input type="range" min="0" max="1" value="1" class="slider" id="nsfwToggle" name="nsfwToggle" step="1">
-          <div style="font-size:0.99em; margin-top:0.1em;">
-            <span id="nsfwLabel" style="color:#c2ffb8;">NSFW</span> /
-            <span id="sfwLabel" style="color:#fff;">SFW</span>
-          </div>
-          <label class="label" for="complexitySlider">Prompt Complexity:</label>
-          <input type="range" min="1" max="3" value="2" class="slider" id="complexitySlider" name="complexitySlider" step="1">
-          <span style="font-size:0.94em;">Simple</span>
-          <span style="font-size:0.94em; float:right;">Max Detail</span>
-        </div>
-      </div>
-      <div class="box">
-        <button type="button" class="btn" id="generateBtn">Generate Prompt</button>
-      </div>
-    </form>
+<body style="background:#161622;font-family:sans-serif;">
 
-    <!-- Suggestion / Inspiration Box -->
-    <div class="suggestion-box" id="suggestionBox">
-      <b>Inspiration:</b> Try "cinematic shower scene with foggy glass and neon lighting" or "meme cat in disco helmet, vaporwave style"
+<header style="background:#23223a;padding:18px 0 12px 0;border-bottom:2px solid #444;text-align:center;">
+  <img src="YOUR_LOGO.png" alt="PromptForge Logo" style="height:42px;vertical-align:middle;margin-right:16px;">
+  <span style="font-size:2rem;color:#fff;font-family:'Orbitron',monospace;font-weight:bold;">PromptForge</span>
+  <nav style="margin-top:8px;">
+    <a href="index.html" style="color:#ccc;margin:0 10px;">Home</a>
+    <a href="generator-movie.html" style="color:#ffd700;margin:0 10px;">🎬 Movie</a>
+    <a href="generator-picture.html" style="color:#b2f6ff;margin:0 10px;font-weight:bold;">🖼️ Picture</a>
+    <a href="watermark.html" style="color:#aaa;margin:0 10px;">🖋️ Watermark</a>
+    <a href="j1nx.html" style="color:#aaa;margin:0 10px;">🤖 J1NX</a>
+  </nav>
+</header>
+
+<main style="max-width:720px;margin:38px auto 60px auto;background:#181824;border-radius:18px;padding:28px 24px 32px 24px;box-shadow:0 2px 30px #000a;position:relative;">
+
+  <h1 style="font-size:2rem;color:#fff;margin-bottom:4px;letter-spacing:1px;">Picture Prompt Generator</h1>
+  <p style="color:#b2f6ff;margin-bottom:20px;font-size:1.11rem;">Make perfect AI image prompts for art, memes, fantasy, or pure filth. SFW↔NSFW slider, all word banks, instant copy, and smart negatives.</p>
+
+  <section style="margin-bottom:30px;">
+    <label style="font-weight:bold;display:block;margin-bottom:6px;">Describe Your Image:</label>
+    <textarea id="sceneInputPic" rows="3" style="width:100%;font-size:1.12rem;border-radius:7px;padding:10px;" placeholder="Ex: Golden hour, girl on a hood, bokeh, city lights, pouty face..."></textarea>
+  </section>
+
+  <section style="margin-bottom:22px;">
+    <div style="margin-bottom:13px;">
+      <label for="picCategory" style="font-weight:bold;">Picture Type:</label>
+      <select id="picCategory" style="margin-left:8px;padding:2px 7px;">
+        <option>Photorealistic</option><option>Meme</option><option>Landscape</option>
+        <option>Portrait</option><option>Anime/Toon</option><option>Macro</option>
+        <option>Erotic</option><option>Cosplay</option><option>Other</option>
+      </select>
     </div>
-
-    <!-- Main Output -->
-    <div class="box">
-      <div class="label">Prompt Output:</div>
-      <div class="main-output" id="mainOutput"></div>
-      <button class="copy-btn" onclick="pfCopy('mainOutput')">Copy</button>
+    <div style="margin-bottom:13px;">
+      <label for="picNSFWSlider" style="font-weight:bold;">NSFW Level:</label>
+      <input type="range" min="0" max="100" value="0" id="picNSFWSlider" style="vertical-align:middle;margin:0 8px;width:170px;">
+      <span id="picNSFWLabel" style="color:#ffd7dc;">SFW</span>
     </div>
-
-    <!-- Short Summary -->
-    <div class="box">
-      <div class="label">Short/Summary Prompt:</div>
-      <div class="summary-output" id="summaryOutput"></div>
-      <button class="copy-btn" onclick="pfCopy('summaryOutput')">Copy</button>
+    <div>
+      <label for="picEmphasisSlider" style="font-weight:bold;">Emphasis:</label>
+      <input type="range" min="0" max="100" value="40" id="picEmphasisSlider" style="vertical-align:middle;margin:0 8px;width:130px;">
+      <span id="picEmphasisLabel" style="color:#b2ffb2;">Normal</span>
     </div>
+  </section>
 
-    <!-- Negative/Bad Words Smart List -->
-    <div class="box">
-      <div class="label">Smart Negative/Bad Words:</div>
-      <div class="neg-output" id="negOutput"></div>
-      <button class="copy-btn" onclick="pfCopy('negOutput')">Copy</button>
+  <section style="margin-bottom:30px;">
+    <button id="generatePicBtn" style="width:100%;padding:15px 0;font-size:1.23rem;font-weight:bold;background:#b2f6ff;color:#181824;border:none;border-radius:8px;box-shadow:0 2px 12px #b2f6ff44;cursor:pointer;letter-spacing:1px;">
+      🖼️ Generate Picture Prompt
+    </button>
+  </section>
+
+  <section style="margin-bottom:24px;">
+    <div style="margin-bottom:10px;">
+      <label for="picMainPrompt" style="font-weight:bold;">Main Prompt:</label>
+      <textarea id="picMainPrompt" rows="3" readonly style="width:100%;font-size:1.09rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
+      <button onclick="pfCopy('picMainPrompt')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
+      <div style="clear:both;"></div>
     </div>
-  </div>
-  <!-- J1NX Muse: Floating Creative Assistant -->
-  <div class="j1nx-muse" id="j1nxMuse">
-    <div class="j1nx-muse-header">J1NX Muse <span style="font-size:0.79em;color:#81f8f8;">AI Assistant</span></div>
-    <div class="j1nx-muse-body" id="j1nxMuseBody">
-      <i>Ask me for ideas, tips, or wild inspiration.<br>Need NSFW? I’m on it. Want meme magic? Easy.</i>
-      <br><br>
-      (Online chat coming soon!)
+    <div style="margin-bottom:10px;">
+      <label for="picSummary" style="font-weight:bold;">Summary:</label>
+      <textarea id="picSummary" rows="2" readonly style="width:100%;font-size:1.04rem;margin-bottom:7px;background:#202032;color:#fff;"></textarea>
+      <button onclick="pfCopy('picSummary')" class="copy-btn" style="float:right;margin-bottom:14px;">Copy</button>
+      <div style="clear:both;"></div>
     </div>
-  </div>
-  <div class="hidden-admin" id="adminPanel">
-    <b>ADMIN CONTROLS:</b><br>
-    • <span style="color:#b7f4a7;">Edit word banks, test tokens, debug prompt logic</span><br>
-    • Coming soon: Export/import banks, admin-only sliders, direct data edit.<br>
-    <hr>
-    <label for="adminToken">Test a Token:</label>
-    <input type="text" id="adminToken" placeholder="[ADJECTIVE] [ACTION] [LOCATION] ...">
-    <button class="btn" style="font-size:0.95em;" onclick="pfAdminTest()">Test</button>
-    <div style="margin-top:0.7em; color:#ee3;">Result:</div>
-    <div id="adminResult" style="color:#e3f6fc; margin-bottom:1.5em;"></div>
-  </div>
-  <script src="generator.js"></script>
-  <script>
-    // COPY BUTTON LOGIC
-    function pfCopy(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Copied!");
-      });
-    }
+    <div>
+      <label for="picNegatives" style="font-weight:bold;">Negatives:</label>
+      <textarea id="picNegatives" rows="2" readonly style="width:100%;font-size:1.03rem;background:#232342;color:#fff;"></textarea>
+      <button onclick="pfCopy('picNegatives')" class="copy-btn" style="float:right;">Copy</button>
+      <div style="clear:both;"></div>
+    </div>
+  </section>
 
-    // SLIDER TOGGLE LOGIC
-    document.getElementById('nsfwToggle').addEventListener('input', function() {
-      document.getElementById('nsfwLabel').style.fontWeight = this.value == 1 ? 'bold' : 'normal';
-      document.getElementById('sfwLabel').style.fontWeight = this.value == 0 ? 'bold' : 'normal';
-    });
+  <section style="margin-bottom:22px;">
+    <button onclick="pfRandomInspire('pic')" style="margin-bottom:8px;">Inspire Me</button>
+    <div id="picSuggestions" style="min-height:34px;color:#b2f6ff;"></div>
+    <div id="picJ1NX" style="display:none;margin-top:18px;">
+      <img src="J1NX_IMAGE.png" style="width:64px;float:left;margin-right:13px;">
+      <div style="font-style:italic;color:#b2f6ff;">J1NX Muse: “Need an idea? I’ve got wild ones for every style.”</div>
+    </div>
+  </section>
 
-    // MAIN GENERATE BUTTON
-    document.getElementById('generateBtn').addEventListener('click', function() {
-      const userInput = document.getElementById('userInput').value.trim();
-      const isNSFW = document.getElementById('nsfwToggle').value == 1;
-      const complexity = parseInt(document.getElementById('complexitySlider').value);
+  <footer style="margin-top:38px;text-align:center;">
+    <div style="font-size:.97rem;color:#888;">
+      Related: <a href="https://openart.ai" target="_blank" rel="noopener" style="color:#b2f6ff;">OpenArt</a> |
+      <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" rel="noopener" style="color:#ffd7dc;">Perchance</a> |
+      <a href="https://promptforge.online" target="_blank" rel="noopener" style="color:#b2f6ff;">PromptForge Online</a>
+    </div>
+  </footer>
+</main>
 
-      // — Here, call your generator.js "brain" and get prompts!
-      let mainPrompt = generatePromptForgePrompt(userInput, isNSFW, complexity); // <- your engine, flexible!
-      let summary = mainPrompt.length > 100 ? mainPrompt.slice(0,100)+"..." : mainPrompt;
-      let negWords = getPromptForgeNegatives(userInput, isNSFW);
+<script>
+// Copy-to-clipboard logic
+function pfCopy(id) {
+  let el = document.getElementById(id);
+  navigator.clipboard.writeText(el.value);
+  el.style.background = "#223c22";
+  setTimeout(() => { el.style.background = "#202032"; }, 600);
+}
+</script>
 
-      document.getElementById('mainOutput').innerText = mainPrompt;
-      document.getElementById('summaryOutput').innerText = summary;
-      document.getElementById('negOutput').innerText = negWords;
-    });
-
-    // ADMIN PANEL LOGIC (Optional)
-    function pfAdminTest() {
-      const t = document.getElementById('adminToken').value.trim();
-      // Test output by running tokens through brain
-      if(!t) return;
-      document.getElementById('adminResult').innerText = generatePromptForgePrompt(t, true, 3);
-    }
-
-    // Suggestion Inspiration (auto-rotate ideas)
-    const inspirationIdeas = [
-      "ethereal girl under streetlight, rain, cyberpunk mood",
-      "angry cat meme as anime villain",
-      "bare skin, candle-lit, close-up, dreamy bokeh",
-      "lone warrior in snowy wasteland, dramatic angle",
-      "meme frog on psychedelic rainbow car",
-      "steamy mirror selfie, messy bun, intimate",
-      "vaporwave landscape with ancient ruins, pink sky",
-      "femme fatale with neon umbrella, moody city",
-      "action pose, torn jacket, gritty realism"
-    ];
-    setInterval(() => {
-      document.getElementById('suggestionBox').innerHTML = "<b>Inspiration:</b> " + inspirationIdeas[Math.floor(Math.random()*inspirationIdeas.length)];
-    }, 6000);
-  </script>
+<script src="generator.js"></script>
 </body>
 </html>
