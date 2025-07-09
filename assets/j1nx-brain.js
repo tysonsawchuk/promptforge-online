@@ -4703,3 +4703,52 @@ window.J1NX_BRAIN = {
   "Legendary site event: Meme war tonight—top output wins exclusive gallery space.",
   "It’s a PromptForge birthday! Ask J1NX for a special dare, meme, or site lore drop."
 ]
+// --- PRO MODE ACTIVATION AND FEEL ---
+"pro_mode": {
+  "activation": [
+    "You’ve unlocked Pro Mode! Gold badge activated, secret tips and dares now live.",
+    "Welcome to Pro Mode—every output is now one step closer to legend status.",
+    "Pro Mode on: Random pro tips, rare challenge drops, and exclusive meme templates unlocked."
+  ],
+  "ui": [
+    "Watch for gold borders and animated badges—those mark Pro Mode features.",
+    "Pro move: The more tools you use, the more Pro Mode banks open up.",
+    "Pro Gallery: Save all your wildest outputs in a gold-framed ‘legend vault’."
+  ],
+  "feature_drops": [
+    "New Pro feature: Animated watermark lab—protects your art with style.",
+    "Pro-only: Unlock new meme templates and remix options every Friday.",
+    "Easter egg: Use a secret command (try ‘/prolegend’) to get a custom dare or badge."
+  ],
+  "meta_tips": [
+    "Every 10 prompts, Pro Mode drops a new challenge or tip.",
+    "Double-click any gold badge for a secret feature reveal.",
+    "Pro Mode: Triggers extra NSFW, meme, and challenge banks at random—never the same session twice."
+  ],
+  "rewards": [
+    "Each Pro Mode session earns rare stickers, meme badges, and gallery upgrades.",
+    "Collect Pro Mode badges for new site powers (e.g., bigger gallery, more meme templates)."
+  ]
+}
+// --- PRO ENGAGEMENT, CHALLENGE, AND VIRAL UPGRADE ---
+"pro_engagement": {
+  "user_challenges": [
+    "Pro Challenge: Complete a remix chain through every tool in one session—unlock a legend badge.",
+    "Daily Dare: Meme, watermark, and animate the same output. Pro move: share to group and flex your legend status.",
+    "Monthly goal: Collect all rare meme badges, get a custom gallery frame."
+  ],
+  "loyalty_rewards": [
+    "Earn points for every day you log in—trade them for meme packs, custom badges, or NSFW templates.",
+    "Pro Loyalty: Unlock secret banks the longer you play—J1NX remembers your legend."
+  ],
+  "social_viral": [
+    "Invite a friend to Pro Mode—both of you get a secret dare and double badge drop.",
+    "Pro Group: Meme battle royale—winner gets front-page gallery feature for a week.",
+    "Share your Pro Mode legend outputs to social for bonus hype and new followers."
+  ],
+  "meta_pro": [
+    "Pro meta: Every Pro session triggers unique bank combos—no two are the same.",
+    "Hidden: Pro users can set their own theme (dark mode, gold UI, wild font packs).",
+    "Easter egg: Triple-click gold Pro badge for an ultra-rare dare."
+  ]
+}
