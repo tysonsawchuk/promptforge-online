@@ -62,12 +62,19 @@
     .footer { width: 100%; background: #090c14; color: #b3bedc; font-size: 1.03em; text-align: center; padding: 1.1em 0 2.1em 0; margin-top: 2.5em;}
     .footer a { color: var(--gold);}
     .adsense-bar { width: 100vw; min-height: 60px; background: #090c14; padding: 1.2em 0 .7em 0; text-align: center; z-index: 800; position: relative; margin-top: 1em;}
+    /* J1NX Mood Styles */
+    .j1nx-chatbox.nsfw { background: #350021; box-shadow: 0 0 16px #ff2499; border-color: #ff2499;}
+    .j1nx-chatbox.help { background: #15233b; box-shadow: 0 0 16px #1ffbfa; border-color: #1ffbfa;}
+    .j1nx-chatbox.danger { background: #311016; box-shadow: 0 0 16px #e0193c; border-color: #e0193c;}
+    .j1nx-chatbox.celebrate { background: #2a2412; box-shadow: 0 0 18px #ffe760; border-color: #ffe760;}
+    .j1nx-chatbox.support { background: #1d2244; box-shadow: 0 0 18px #39ebff; border-color: #39ebff;}
+    .j1nx-chatbox.fun { background: #161931; box-shadow: 0 0 18px #da69f7; border-color: #da69f7;}
+    .j1nx-chatbox.neutral { background: #12132a; border-color: #ffe760;}
     /* J1NX */
     .j1nx-bot { position: fixed; right: 2vw; bottom: 2vw; z-index: 1002; display: flex; flex-direction: column; align-items: flex-end; min-width: 345px;}
     .j1nx-img { width: 88px; height: 88px; background: url('j1nx/j1nx_cutout.png') center/contain no-repeat; filter: drop-shadow(0 0 28px #ffe76077); z-index: 1; margin-bottom: -15px;}
     .j1nx-chatbox { background: var(--bubble-bg); color: #fff; border-radius: 20px 20px 12px 20px; box-shadow: 0 0 18px #ffe76040; min-width: 310px; max-width: 370px; border: 2.2px solid #ffe760; display: flex; flex-direction: column; padding: 1em 1.2em 0.7em 1.2em; font-weight: 700; font-size: 1.07em; margin-bottom: .6em; position:relative;}
-    .j1nx-chatbox.nsfw { background: var(--bubble-nsfw);}
-    .j1nx-chatbox.safe { background: var(--bubble-safe);}
+    .j1nx-chatbox.nsfw { background: #350021;}
     .j1nx-messages { min-height: 1.2em; margin-bottom: 0.7em; word-break: break-word; font-weight: 500; }
     .j1nx-row { display: flex; width: 100%; align-items: center;}
     .j1nx-input { flex: 1 1 auto; background: #191933; color: #fff; border-radius: 8px; border: none; font-size: 1.01em; padding: .57em .9em; margin-right: .7em; outline: none; font-family: inherit; box-shadow: 0 0 7px #ffe76044;}
@@ -194,6 +201,11 @@
       data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
+
+  <!-- J1NX BRAIN & TIPS -->
+  <script src="/assets/j1nx_brain.js"></script>
+  <script src="/assets/j1nx_tips.js"></script>
+
   <!-- MINI J1NX BOT -->
   <div class="j1nx-bot" id="j1nxBot" data-mood="safe">
     <div class="j1nx-img"></div>
@@ -222,7 +234,6 @@
       };
       const path = window.location.pathname;
       const trail = [];
-      // Always start with Home
       trail.push(`<a href="/main.html">Home</a>`);
       if (map[path] && path !== '/main.html') {
         trail.push(`<span>/</span> <a href="${path}">${map[path]}</a>`);
@@ -256,39 +267,32 @@
     window.addEventListener('mousemove', updateEyes, {passive:true});
     window.addEventListener('touchmove', updateEyes, {passive:true});
 
-    // --- J1NX Unified Chat (external brain only) ---
+    // --- J1NX Unified Chat (brain with mood!) ---
     let j1nxMode18 = false;
     const j1nxChatbox = document.getElementById('j1nxChatbox');
     const j1nxMessages = document.getElementById('j1nxMessages');
     const j1nxInput = document.getElementById('j1nxInput');
     const j1nxSend = document.getElementById('j1nxSend');
     const j1nx18 = document.getElementById('j1nx18');
-    let j1nxBrain = null;
-
-    fetch('/assets/j1nx_brain.js').then(r=>r.ok?r.text():null).then(txt=>{
-      if(txt){
-        try{ eval(txt); j1nxBrain = window.j1nxBrain; }catch(e){}
-      }
-      if(!j1nxBrain) {
-        j1nxMessages.innerHTML = "<span style='color:#ff3171'>J1NX brain file missing or invalid. No responses possible.</span>";
-      }
-    });
 
     function handleJ1nxInput(val) {
-      if (!j1nxBrain) {
+      if (!window.j1nxBrain) {
         j1nxMessages.innerHTML = "<span style='color:#ff3171'>J1NX brain file missing or invalid. No responses possible.</span>";
         return;
       }
-      let matched = null;
+      let matched = null, rawInput = val.toLowerCase();
       for(let i=0;i<j1nxBrain.length;i++) {
-        const node = j1nxBrain[i];
-        if((j1nxMode18 || node.safe !== false) && node.match.test(val)) {
-          matched = node;
+        if((j1nxMode18 || j1nxBrain[i].safe !== false) && j1nxBrain[i].match.test(val)) {
+          matched = j1nxBrain[i];
           break;
         }
       }
       if(matched) {
         j1nxMessages.textContent = matched.text;
+        if(matched.mood){
+          j1nxChatbox.classList.remove('nsfw','help','danger','support','fun','celebrate','neutral');
+          j1nxChatbox.classList.add(matched.mood);
+        }
         if(matched.nsfw || (j1nxMode18 && matched.nsfw)) {
           j1nxChatbox.classList.add('nsfw'); j1nxChatbox.classList.remove('safe');
         } else {
@@ -306,7 +310,6 @@
     }
     j1nxInput.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitJ1nx(); }});
     j1nxSend.addEventListener('click', submitJ1nx);
-    // 18+ toggle
     j1nx18.addEventListener('click', function(){
       j1nxMode18 = !j1nxMode18;
       j1nx18.classList.toggle('on', j1nxMode18);
