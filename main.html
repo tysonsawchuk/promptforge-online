@@ -2,106 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge.online — AI, NSFW, Movie & Image Prompt Tools</title>
-  <meta name="description" content="PromptForge.online — The most advanced AI and NSFW prompt tools: generate, watermark, create movie/image prompts, experiment, and more.">
-  <meta property="og:title" content="PromptForge.online — AI, NSFW, Movie & Image Prompt Tools">
-  <meta property="og:description" content="PromptForge: Modern, powerful, all real AI prompt tools in one place.">
-  <meta property="og:image" content="/assets/og_image.png">
-  <meta property="og:url" content="https://promptforge.online/">
-  <link rel="canonical" href="https://promptforge.online/">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <title>PromptForge Main — Pro AI Prompt Makers, NSFW, Art, Movie, Watermark Tools</title>
+  <meta name="description" content="PromptForge: Your pro AI prompt console. All-in-one movie, art, watermark and creative tools. No dead links, dev/console vibes.">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta property="og:title" content="PromptForge: Pro AI Prompt Tools">
+  <meta property="og:description" content="AI movie prompts, photo/NSFW/portrait/art prompts, watermark tools and more. No bloat.">
+  <meta property="og:image" content="/assets/promptforge-og-main.png">
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/assets/main.css?v=21">
   <style>
-    :root {
-      --bg: #090c14;
-      --fg: #e9f6ff;
-      --fg-dim: #98a9c4;
-      --accent: #28e4ff;
-      --headline: #29f9ff;
-      --link: #28e4ff;
-      --link-hover: #ffe760;
-      --gold: #ffe760;
-      --bubble-bg: #12132a;
-      --bubble-nsfw: #350021;
-      --bubble-safe: #192134;
-      --hidden-toggle: #222a;
-      --eye-glow: #ffe760;
-      --eye-dot: #ffe760;
-      --micro-line: #36394e;
-    }
-    html, body {margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: 'Inter', 'Fira Mono', 'Consolas', monospace;}
-    .navbar {
-      width: 100%; max-width: 1350px; margin: 0 auto; display: flex; align-items: center; gap: 1.4em;
-      background: transparent; font-size: 1.04em; padding: 1.1em 0 0.5em 2vw;
-    }
-    .navbar a {color: var(--accent); text-decoration: none; font-weight: 700; border-radius: 7px; padding: 0.16em 0.56em; letter-spacing: .01em; transition: color .13s;}
-    .navbar a.active, .navbar a:active { color: var(--gold);}
-    .navbar a:hover { color: var(--link-hover);}
-    .breadcrumbs {max-width: 1250px; margin: 0 auto 0.5em auto; padding: 0 0 0.7em 2vw; font-size: 1.06em; color: var(--fg-dim);}
-    .breadcrumbs a {color: var(--gold); text-decoration: none; font-weight: 600;}
-    .breadcrumbs a:hover { color: var(--accent);}
-    .ascii-art-block { background: #090c14; padding: 30px 0 7px 0; font-size: 1.17em; text-align: center; white-space: pre; letter-spacing: .01em;}
-    .ascii-eye { color: var(--accent); font-weight: bold; position: relative; text-shadow: 0 0 12px var(--eye-glow), 0 0 18px #ffe76090;}
-    .eye-dot { position: absolute; left: 50%; top: 50%; width: 0.15em; height: 0.15em; background: var(--eye-dot); border-radius: 50%; box-shadow: 0 0 7px var(--eye-glow), 0 0 7px #ffe760; transform: translate(-50%,-50%); pointer-events: none; z-index: 2;}
-    .main-title { color: var(--headline); font-size: 2.09em; margin: 0.23em 0 0.13em 0; text-align: center; font-weight: 900; letter-spacing: 0.07em; text-shadow: 0 0 10px #ffe760;}
-    .desc {text-align:center;color:var(--fg-dim);font-size:1.13em;margin-bottom:1.7em;}
-    .section-label { color: var(--gold); font-size: 1.11em; font-weight: bold; margin: 2.2em 0 0.9em 2vw; letter-spacing: .02em;}
-    .pro-list { max-width: 900px; margin: 0 auto; font-size: 1.12em; display: flex; flex-direction: column; gap: 0.06em;}
-    .pro-list .line {margin-bottom: .12em;}
-    .pro-list a { color: var(--link); text-decoration: none; font-weight: 700; font-size: 1.10em; transition: color .13s;}
-    .pro-list a:hover { color: var(--link-hover);}
-    .pro-list .desc { color: var(--fg-dim); font-size: .98em; font-weight: 400; margin-left: .45em;}
-    .micro-line { width: 98%; height: 2px; border: none; background: linear-gradient(90deg, #191b24 0%, var(--micro-line) 55%, #191b24 100%); margin: 2.2em auto 2.2em auto; opacity: 0.77; border-radius: 3px;}
-    .links-bar, .social-bar { display: flex; gap: 1.5em; justify-content: center; margin: 2.2em 0 1.2em 0; align-items: center;}
-    .links-bar a, .social-bar a { color: #fff; background: none; border-radius: 8px; font-size: 1.32em; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: color .13s; text-decoration:none;}
-    .links-bar a:hover, .social-bar a:hover { color: var(--accent);}
-    .social-bar .disabled { color: #444; opacity: 0.46; cursor: not-allowed; position:relative;}
-    .coming-soon-badge { position: absolute; font-size: .67em; bottom: -17px; left: 0px; background: #20224c; color: var(--gold); padding: 2px 7px; border-radius: 6px; pointer-events: none;}
-    .bmc-btn { background: var(--gold); color: #111; font-weight: bold; font-size: 1.08em; border-radius: 11px; padding: 1em 2em; border: none; cursor: pointer; margin: 2em auto 1.1em auto; display: block; text-decoration: none; text-align:center; transition: box-shadow 0.14s;}
-    .bmc-btn:hover { box-shadow: 0 0 18px #ffe760c2;}
-    .footer { width: 100%; background: #090c14; color: #b3bedc; font-size: 1.03em; text-align: center; padding: 1.1em 0 2.1em 0; margin-top: 2.5em;}
-    .footer a { color: var(--gold);}
-    .adsense-bar { width: 100vw; min-height: 60px; background: #090c14; padding: 1.2em 0 .7em 0; text-align: center; z-index: 800; position: relative; margin-top: 1em;}
-    /* J1NX Mood Styles */
-    .j1nx-chatbox.nsfw { background: #350021; box-shadow: 0 0 16px #ff2499; border-color: #ff2499;}
-    .j1nx-chatbox.help { background: #15233b; box-shadow: 0 0 16px #1ffbfa; border-color: #1ffbfa;}
-    .j1nx-chatbox.danger { background: #311016; box-shadow: 0 0 16px #e0193c; border-color: #e0193c;}
-    .j1nx-chatbox.celebrate { background: #2a2412; box-shadow: 0 0 18px #ffe760; border-color: #ffe760;}
-    .j1nx-chatbox.support { background: #1d2244; box-shadow: 0 0 18px #39ebff; border-color: #39ebff;}
-    .j1nx-chatbox.fun { background: #161931; box-shadow: 0 0 18px #da69f7; border-color: #da69f7;}
-    .j1nx-chatbox.neutral { background: #12132a; border-color: #ffe760;}
-    /* J1NX */
-    .j1nx-bot { position: fixed; right: 2vw; bottom: 2vw; z-index: 1002; display: flex; flex-direction: column; align-items: flex-end; min-width: 345px;}
-    .j1nx-img { width: 88px; height: 88px; background: url('j1nx/j1nx_cutout.png') center/contain no-repeat; filter: drop-shadow(0 0 28px #ffe76077); z-index: 1; margin-bottom: -15px;}
-    .j1nx-chatbox { background: var(--bubble-bg); color: #fff; border-radius: 20px 20px 12px 20px; box-shadow: 0 0 18px #ffe76040; min-width: 310px; max-width: 370px; border: 2.2px solid #ffe760; display: flex; flex-direction: column; padding: 1em 1.2em 0.7em 1.2em; font-weight: 700; font-size: 1.07em; margin-bottom: .6em; position:relative;}
-    .j1nx-chatbox.nsfw { background: #350021;}
-    .j1nx-messages { min-height: 1.2em; margin-bottom: 0.7em; word-break: break-word; font-weight: 500; }
-    .j1nx-row { display: flex; width: 100%; align-items: center;}
-    .j1nx-input { flex: 1 1 auto; background: #191933; color: #fff; border-radius: 8px; border: none; font-size: 1.01em; padding: .57em .9em; margin-right: .7em; outline: none; font-family: inherit; box-shadow: 0 0 7px #ffe76044;}
-    .j1nx-send { background: none; border: none; color: var(--gold); font-size: 1.5em; cursor: pointer; }
-    .j1nx-18 { width: 20px; height: 20px; border-radius: 50%; background: var(--hidden-toggle); color: #ffe760; display: flex; align-items: center; justify-content: center; font-size: .96em; border: 1px solid #444; position: absolute; bottom: 6px; right: 7px; cursor: pointer; opacity: 0.66; transition: opacity .19s;}
-    .j1nx-18.on { background: var(--bubble-nsfw); color: #fff; opacity: 1; box-shadow: 0 0 7px #ffe760;}
-    .j1nx-18:hover { opacity:1; }
-    @media (max-width:900px) {.j1nx-bot{min-width:98vw;right:.5vw;bottom:1vw;}.pro-list{padding-left:5vw;padding-right:5vw;}}
-    @media (max-width:600px) {.ascii-art-block{font-size: .91em;}.main-title{font-size:1.13em;}}
+    body { background: #0a0b11; color: #e2e2ed; font-family: 'JetBrains Mono', 'Consolas', 'Menlo', monospace; margin:0; }
+    .main-wrap { max-width: 780px; margin: 44px auto 60px auto; padding: 2.7em 2.3em 3em 2.3em; background: rgba(10,14,28,0.97); border-radius: 2.1em; box-shadow: 0 8px 46px #000b;}
+    .breadcrumbs { margin: 0 0 1.7em 0; font-size: 1.05em;}
+    .breadcrumbs a { color: #50e3c2; text-decoration:none; font-weight:bold; }
+    h1 { font-weight: 900; letter-spacing:0.02em; color: #ffe47a; font-size:2.05em; margin:1.2em 0 0.4em 0;}
+    .ascii-art { font-family: 'Fira Mono','Consolas','Menlo',monospace; white-space: pre; font-size: 1.09em; letter-spacing: 0.03em; line-height:1.18em; color:#eee; background:transparent; margin: 0 0 0.8em 0; text-align:center;}
+    .eye { color: #ffe600; text-shadow: 0 0 8px #ffe600cc, 0 0 12px #ffe60099; position:relative; }
+    .pupil { color: #00c3ff; font-size:1em; position:absolute; left:0; top:0; pointer-events:none; }
+    .cat-label { color:#ff7aa2; font-size:1.13em; font-weight:bold; margin-top:2.1em;}
+    .tool-link { display:block; font-size:1.14em; font-weight:bold; margin-bottom:3px;}
+    .tool-desc { font-size:.97em; color:#bababa; margin-bottom:7px;}
+    .microline { border:0; border-top:1.7px solid #444; margin:16px 0 20px 0; opacity:.26;}
+    .links-bar { margin:1.3em 0 1.1em 0; }
+    .links-bar a { color:#fff; background:#232742; border-radius:7px; font-size:1em; font-weight:600; margin:0 0.7em 0 0; padding:0.34em 1.1em; display:inline-block; text-decoration:none;}
+    .links-bar a:hover { background:#ffe47a; color:#252841;}
+    .bmc-btn { background: #ffe47a; color: #181c29; font-size: 1.13em; border-radius: 1em; padding: 0.56em 1.8em; margin:1.8em auto 0 auto; display: block; font-weight: bold; text-decoration:none; box-shadow:0 0 2px #0a0;}
+    .adsense-bar { position:fixed; left:0; bottom:0; width:100vw; background:#23263b; text-align:center; z-index:300; padding:0.5em 0;}
+    .j1nx-bot { position:fixed; right:1.7vw; bottom:5vw; z-index:999; }
+    .j1nx-img { background:url('/assets/j1nx_cutout.png') no-repeat center/contain; width:70px; height:70px; margin:auto;}
+    .j1nx-chatbox { background:#252841fa; color:#fff; border-radius:1.5em 1.5em 1.6em 1.6em; min-width:248px; max-width:330px; padding:1.1em; margin-top:-1.2em; font-size:1.14em; box-shadow:0 5px 16px #000c;}
+    .j1nx-messages { min-height:3.1em;}
+    .j1nx-row { display:flex; gap:0.45em; margin-top:.7em;}
+    .j1nx-input { flex:1; border-radius:7px; border:1px solid #555; font-size:1.02em; background:#191a24; color:#ffe47a; padding:.45em 1em;}
+    .j1nx-send { background:#ffe47a; border:none; border-radius:8px; color:#181c29; font-size:1.2em; font-weight:700; padding:0 1.15em;}
+    .j1nx-18 { margin-left:0.8em; font-size:1.09em; color:#5ce3c7; cursor:pointer;}
+    .j1nx-chatbox.nsfw { background:#2e1223fa; color:#fff0fa; box-shadow:0 0 18px #f69e;}
+    .j1nx-chatbox.celebrate { background:#211b13fa; color:#ffe47a;}
+    .j1nx-chatbox.fun { background:#142a2efa; color:#aefcff;}
+    .j1nx-chatbox.danger { background:#3c0b14fa; color:#ff4c4c;}
+    .j1nx-chatbox.help, .j1nx-chatbox.support { background:#14395afa; color:#89f2ff;}
+    .j1nx-chatbox.safe { background:#232841fa;}
+    @media (max-width:900px){ .adsense-bar{position:static!important;}.j1nx-bot{bottom:88px!important;} }
+    @media (max-width:600px){ .main-wrap{padding:1em .5em;} .j1nx-bot{bottom:110px!important;min-width:98vw!important;right:0!important;} }
   </style>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- MODERN NAVBAR -->
-  <nav class="navbar">
-    <a href="/main.html" class="active">Home</a>
-    <a href="/tools/nsfw.html">Prompt Generator</a>
-    <a href="/movieprompt.html">Movie Prompts</a>
-    <a href="/pictureprompt.html">Picture Prompts</a>
-    <a href="/tools/markgen.html">Watermark</a>
-    <a href="/messwithai.html">Mess With AI</a>
-    <a href="/legal.html">Legal</a>
-    <a href="/about.html">About</a>
-    <a href="/tools/credits.html">Credits</a>
-  </nav>
-  <div class="breadcrumbs" id="breadcrumbs"></div>
-  <div class="ascii-art-block" id="ascii-art-block">
+  <div class="breadcrumbs">
+    <a href="/main.html">Main</a>
+  </div>
+
+  <!-- ASCII ART BLOCK WITH EYE ANIMATION -->
+  <pre class="ascii-art" id="asciiArt">
   ))    ))       .-.   \\\    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
   | (_))| (_)),'.---.`, | \  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
@@ -109,89 +61,50 @@
   |(    )|\\ | \_____/ ||| \/ ||  |(     (  )(  _)  | \_____/ | )|\\ | \_.--.(  _)  
    \)  (/  \)'. `---' .`||    ||   \)     )/  )/    '. `---' .`(/  \)'.   \) \`.__) 
    (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
-  </div>
-  <div class="main-title">Promptforge.online</div>
-  <div class="desc">Advanced AI, NSFW, movie & image prompt tools. Generate, watermark, experiment, and more.</div>
+  </pre>
 
-  <div class="section-label">Prompt Creation</div>
-  <div class="pro-list">
-    <div class="line">
-      <a href="/tools/nsfw.html">Prompt Generator</a>
-      <span class="desc">Create detailed, original NSFW/AI prompts for any generator.</span>
-    </div>
-    <div class="line">
-      <a href="/movieprompt.html">Movie Prompt Maker</a>
-      <span class="desc">Write cinematic movie prompts for AI video tools.</span>
-    </div>
-    <div class="line">
-      <a href="/pictureprompt.html">Picture Prompt Maker</a>
-      <span class="desc">Design rich image prompts for photorealistic or fantasy art.</span>
-    </div>
-  </div>
-  <hr class="micro-line">
+  <h1>PromptForge.online</h1>
 
-  <div class="section-label">Utilities</div>
-  <div class="pro-list">
-    <div class="line">
-      <a href="/tools/markgen.html">Watermark Generator</a>
-      <span class="desc">Protect your images with unique watermarks or logos.</span>
-    </div>
-    <!-- For future add-ons, just add another .line here -->
-  </div>
-  <hr class="micro-line">
+  <div class="main-wrap">
+    <!-- Prompt Makers Category -->
+    <div class="cat-label" style="margin-top:0;">Prompt Makers</div>
+    <hr class="microline">
+    <a class="tool-link" href="/movie.html">🎬 Movie Prompt Maker</a>
+    <div class="tool-desc">Build cinematic, story, video, and animation prompts. Extreme creativity, all genres.</div>
+    <a class="tool-link" href="/pictureprompt.html">🖼️ Picture Forge</a>
+    <div class="tool-desc">For ultra-realistic AI art, portrait, illustration, fantasy, or NSFW. Fully customizable.</div>
 
-  <div class="section-label">Play & Experiments</div>
-  <div class="pro-list">
-    <div class="line">
-      <a href="/messwithai.html">Mess With AI</a>
-      <span class="desc">Experiment and break boundaries with custom AI logic.</span>
-    </div>
-  </div>
-  <hr class="micro-line">
+    <!-- Utility Tools -->
+    <div class="cat-label">Utilities</div>
+    <hr class="microline">
+    <a class="tool-link" href="/watermark.html">💧 Watermark Lab</a>
+    <div class="tool-desc">Protect your art and images with text or logo watermarks.</div>
+    <a class="tool-link" href="/messwithai.html">🤖 Mess With AI</a>
+    <div class="tool-desc">Experiment, break prompt logic, and see what happens.</div>
 
-  <div class="section-label">Info & Legal</div>
-  <div class="pro-list">
-    <div class="line">
-      <a href="/legal.html">Legal & Disclaimer</a>
-      <span class="desc">Full legal, privacy, and content rules for creators.</span>
+    <!-- About/Legal -->
+    <div class="cat-label">About & Legal</div>
+    <hr class="microline">
+    <a class="tool-link" href="/legal.html">⚖️ Legal & Disclaimer</a>
+    <div class="tool-desc">Privacy, admin contact, rules. No illegal deepfakes/nudes allowed.</div>
+    <a class="tool-link" href="/about.html">ℹ️ About / Credits</a>
+    <div class="tool-desc">Who made PromptForge, credits, and admin links.</div>
+
+    <!-- External/Useful Links -->
+    <div class="cat-label">Useful Links</div>
+    <hr class="microline">
+    <div class="links-bar">
+      <a href="https://openart.ai/" target="_blank">OpenArt</a>
+      <a href="https://krea.ai/" target="_blank">KREA</a>
+      <a href="https://runwayml.com/" target="_blank">RunwayML</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank"><i class="fa-brands fa-bluesky"></i> Bluesky</a>
+      <a href="https://x.com/GoreandGiggles" target="_blank"><i class="fa-brands fa-x-twitter"></i> X</a>
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank"><i class="fa-brands fa-facebook"></i> Facebook</a>
+      <span class="discord"><i class="fa-brands fa-discord"></i> Discord <small>(soon)</small></span>
     </div>
-    <div class="line">
-      <a href="/about.html">About & Credits</a>
-      <span class="desc">Info about PromptForge, contributors, and contact.</span>
-    </div>
-    <div class="line">
-      <a href="/tools/credits.html">Full Credits</a>
-      <span class="desc">See all contributors, tools, and partners.</span>
-    </div>
+    <a class="bmc-btn" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">☕ Buy Me a Coffee</a>
   </div>
 
-  <div class="section-label">Useful AI Sites</div>
-  <div class="links-bar">
-    <a href="https://openart.ai/" target="_blank" title="OpenArt"><i class="fa-solid fa-wand-magic-sparkles"></i></a>
-    <a href="https://www.craiyon.com/" target="_blank" title="Craiyon"><i class="fa-solid fa-brush"></i></a>
-    <a href="https://runwayml.com/" target="_blank" title="Runway ML"><i class="fa-solid fa-film"></i></a>
-    <a href="https://www.krea.ai/" target="_blank" title="Krea"><i class="fa-solid fa-camera-retro"></i></a>
-    <a href="https://www.artbreeder.com/" target="_blank" title="Artbreeder"><i class="fa-solid fa-images"></i></a>
-  </div>
-
-  <div class="section-label">Connect</div>
-  <div class="social-bar">
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><i class="fa-brands fa-cloudversify"></i></a>
-    <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-    <a href="https://www.facebook.com/groups/393971833395749" target="_blank" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
-    <span class="disabled" title="Discord"><i class="fa-brands fa-discord"></i>
-      <span class="coming-soon-badge">Coming soon</span>
-    </span>
-  </div>
-  <a class="bmc-btn" href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Buy Me a Coffee</a>
-  <div class="footer">
-    <strong>PromptForge &copy; 2025 Gore and Giggles.</strong><br>
-    No illegal deepfakes/nudes allowed. <a href="mailto:0fearnofish0@gmail.com">Contact admin</a>.<br>
-    <span style="color:#777;">Privacy &amp; Terms | All links live | All tools real.</span>
-    <div style="display:none;">
-      prompt generator, NSFW prompts, AI art, goreandgiggles, buy me a coffee, watermark, openart, krea, movie prompt, picture prompt, messwithai, runway ml, artbreeder, hack, privacy, legal, admin, unrestricted AI, image generator, video generator, photorealistic prompt, cinema, bluesky, x, facebook, discord, connect, credits
-    </div>
-  </div>
   <div class="adsense-bar">
     <ins class="adsbygoogle"
       style="display:block"
@@ -202,11 +115,8 @@
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
 
-  <!-- J1NX BRAIN & TIPS -->
+  <!-- MINI J1NX BOT (ALWAYS-ON, UNIFIED) -->
   <script src="/assets/j1nx_brain.js"></script>
-  <script src="/assets/j1nx_tips.js"></script>
-
-  <!-- MINI J1NX BOT -->
   <div class="j1nx-bot" id="j1nxBot" data-mood="safe">
     <div class="j1nx-img"></div>
     <div class="j1nx-chatbox safe" id="j1nxChatbox">
@@ -219,62 +129,13 @@
     </div>
   </div>
   <script>
-    // NAV BREADCRUMBS LOGIC
-    function updateBreadcrumbs() {
-      const map = {
-        '/main.html': 'Home',
-        '/tools/nsfw.html': 'Prompt Generator',
-        '/movieprompt.html': 'Movie Prompt Maker',
-        '/pictureprompt.html': 'Picture Prompt Maker',
-        '/tools/markgen.html': 'Watermark Generator',
-        '/messwithai.html': 'Mess With AI',
-        '/legal.html': 'Legal',
-        '/about.html': 'About',
-        '/tools/credits.html': 'Credits'
-      };
-      const path = window.location.pathname;
-      const trail = [];
-      trail.push(`<a href="/main.html">Home</a>`);
-      if (map[path] && path !== '/main.html') {
-        trail.push(`<span>/</span> <a href="${path}">${map[path]}</a>`);
-      }
-      document.getElementById('breadcrumbs').innerHTML = trail.join(' ');
-    }
-    updateBreadcrumbs();
-
-    // ASCII EYES — glowing yellow
-    const asciiBlock = document.getElementById('ascii-art-block');
-    let art = asciiBlock.innerHTML;
-    art = art.replace(/([Oo])/g, '<span class="ascii-eye">$1<span class="eye-dot"></span></span>');
-    asciiBlock.innerHTML = art;
-    function updateEyes(e){
-      let mx, my;
-      if (e.touches && e.touches.length) {
-        mx = e.touches[0].clientX; my = e.touches[0].clientY;
-      } else { mx = e.clientX; my = e.clientY; }
-      document.querySelectorAll('.ascii-eye').forEach(function(eye) {
-        const dot = eye.querySelector('.eye-dot'); if(!dot) return;
-        const rect = eye.getBoundingClientRect();
-        const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
-        let dx = mx - cx, dy = my - cy;
-        const dist = Math.min(Math.sqrt(dx*dx + dy*dy), 7);
-        const angle = Math.atan2(dy, dx);
-        const moveX = Math.cos(angle) * dist * 0.32;
-        const moveY = Math.sin(angle) * dist * 0.32;
-        dot.style.left = `calc(50% + ${moveX}px)`; dot.style.top  = `calc(50% + ${moveY}px)`;
-      });
-    }
-    window.addEventListener('mousemove', updateEyes, {passive:true});
-    window.addEventListener('touchmove', updateEyes, {passive:true});
-
-    // --- J1NX Unified Chat (brain with mood!) ---
+    // J1NX Chat logic (identical on every page)
     let j1nxMode18 = false;
     const j1nxChatbox = document.getElementById('j1nxChatbox');
     const j1nxMessages = document.getElementById('j1nxMessages');
     const j1nxInput = document.getElementById('j1nxInput');
     const j1nxSend = document.getElementById('j1nxSend');
     const j1nx18 = document.getElementById('j1nx18');
-
     function handleJ1nxInput(val) {
       if (!window.j1nxBrain) {
         j1nxMessages.innerHTML = "<span style='color:#ff3171'>J1NX brain file missing or invalid. No responses possible.</span>";
@@ -290,8 +151,7 @@
       if(matched) {
         j1nxMessages.textContent = matched.text;
         if(matched.mood){
-          j1nxChatbox.classList.remove('nsfw','help','danger','support','fun','celebrate','neutral');
-          j1nxChatbox.classList.add(matched.mood);
+          j1nxChatbox.className = "j1nx-chatbox "+matched.mood;
         }
         if(matched.nsfw || (j1nxMode18 && matched.nsfw)) {
           j1nxChatbox.classList.add('nsfw'); j1nxChatbox.classList.remove('safe');
@@ -315,6 +175,35 @@
       j1nx18.classList.toggle('on', j1nxMode18);
       handleJ1nxInput(j1nxInput.value || '');
     });
+
+    // ---- ASCII ART EYE-TRACKING (yellow eyes, blue pinpoint pupil) ----
+    const asciiBlock = document.getElementById('asciiArt');
+    let art = asciiBlock.textContent;
+    // Replace o/O/0 (eyes) with spans for animation
+    art = art.replace(/([oO0])/g, (m) => `<span class="eye" data-eye="${m}">${m}<span class="pupil" style="left:0;top:0;">•</span></span>`);
+    asciiBlock.innerHTML = art;
+
+    // Eye-tracking for each .eye
+    function trackEyes(e) {
+      const eyes = document.querySelectorAll('.eye');
+      eyes.forEach(function(eye) {
+        const rect = eye.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        const dx = e.clientX - cx, dy = e.clientY - cy;
+        const maxD = 5;
+        let angle = Math.atan2(dy, dx);
+        let dist = Math.min(maxD, Math.sqrt(dx*dx+dy*dy)/8);
+        const px = Math.cos(angle)*dist, py = Math.sin(angle)*dist;
+        const pupil = eye.querySelector('.pupil');
+        pupil.style.left = `${8+px}px`;
+        pupil.style.top = `${2+py}px`;
+      });
+    }
+    window.addEventListener('mousemove', trackEyes);
+
   </script>
+  <!-- Google AdSense async -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </body>
 </html>
