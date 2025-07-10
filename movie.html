@@ -2,372 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge | Movie God Mode Generator</title>
-  <meta name="description" content="Underground AI movie/script prompt generator with pro workflow, sliders, J1NX muse, and advanced logic.">
+  <title>PromptForge Movie Maker — Cinematic AI Prompts, Video Magic, NSFW, Art & More</title>
+  <meta name="description" content="PromptForge Movie Maker: Build legendary AI movie prompts with pro sliders, negative cues, NSFW, keyword help, and the wildest generation engine.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta property="og:title" content="PromptForge Movie God Mode Generator">
-  <meta property="og:description" content="Create legendary AI movie, video, and script prompts—pro tools, wild logic, J1NX help.">
-  <link rel="icon" href="/favicon.png">
+  <meta property="og:title" content="PromptForge Movie Maker — Cinematic Prompts & Video Magic">
+  <meta property="og:description" content="Ultimate AI video prompt builder: console vibes, instant keyword help, sliders, negatives, and more.">
+  <meta property="og:image" content="/assets/promptforge-og-movie.png">
+  <link rel="stylesheet" href="/assets/main.css?v=20">
+  <link rel="icon" href="/assets/favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    html, body {
-      background: #16191d;
-      color: #e9eaea;
-      font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      margin: 0; padding: 0; min-height: 100vh;
-    }
-    main {
-      max-width: 740px;
-      margin: 2.6rem auto 1.4rem auto;
-      background: #23252a;
-      border-radius: 18px;
-      box-shadow: 0 0 26px #12131499;
-      padding: 2.5rem 2.3rem 2rem 2.3rem;
-      position: relative;
-    }
-    .breadcrumbs {
-      font-size: 1rem;
-      color: #88ddff;
-      margin-bottom: 17px;
-      letter-spacing: 0.06em;
-    }
-    .breadcrumbs a { color: #88ddff; text-decoration: none; }
-    h1 {
-      margin: 0 0 0.2em 0;
-      font-size: 2.1rem;
-      font-weight: 700;
-      color: #f6ca7b;
-      letter-spacing: 0.04em;
-      text-shadow: 0 1px 4px #1116;
-    }
-    .subtitle {
-      font-size: 1.13rem;
-      color: #dadada;
-      margin-bottom: 2.2em;
-      opacity: 0.93;
-    }
-    .seed-section {
-      margin: 1.2em 0 1.2em 0;
-      text-align: left;
-    }
-    #seedForm {
-      display: flex;
-      gap: 0.7em;
-      margin-bottom: 1.5em;
-    }
-    #seedInput {
-      flex: 1;
-      font-size: 1.13rem;
-      padding: 0.72em 1em;
-      border-radius: 10px;
-      border: none;
-      background: #242a30;
-      color: #f3f6ff;
-      outline: none;
-      box-shadow: 0 1px 8px #223a4a22 inset;
-      letter-spacing: 0.03em;
-      transition: box-shadow 0.18s;
-    }
-    #seedInput:focus { box-shadow: 0 0 0 2px #ffd78055; }
-    #startBtn {
-      font-size: 1.13rem;
-      background: linear-gradient(90deg,#ffde7b,#ffd780 90%);
-      color: #16191d;
-      border: none;
-      border-radius: 8px;
-      padding: 0.6em 1.6em;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.04em;
-      transition: background 0.2s;
-      box-shadow: 0 1px 10px #b98c0015;
-    }
-    #mainForm { display: none; margin-top: 1.2em; }
-    .sectionLabel {
-      font-size: 1.08rem;
-      color: #ffd780;
-      margin: 1.25em 0 0.24em 0;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-    }
-    .sliderRow {
-      display: flex; align-items: center;
-      margin-bottom: 1em;
-      gap: 1em;
-    }
-    .sliderRow label { min-width: 120px; }
-    .sliderRow input[type="range"] {
-      width: 140px;
-      accent-color: #ffd780;
-      background: #22242b;
-    }
-    .checkboxRow {
-      display: flex; align-items: center; gap: 0.7em;
-      margin-bottom: 1em;
-    }
-    .sceneBlock {
-      background: #1b2126;
-      border: 1px solid #232c36;
-      border-radius: 11px;
-      color: #ffd780;
-      font-size: 1.04em;
-      padding: 0.8em 1em;
-      margin-bottom: 1em;
-      font-family: 'Fira Mono','Consolas',monospace;
-      box-shadow: 0 1px 8px #ffd7800e;
-      line-height: 1.45em;
-    }
-    .addSceneBtn {
-      display: inline-block;
-      background: #ffd780;
-      color: #16191d;
-      border: none;
-      border-radius: 7px;
-      padding: 0.44em 1.18em;
-      font-size: 1.06em;
-      font-weight: 700;
-      margin-top: 0.2em;
-      cursor: pointer;
-      box-shadow: 0 0 10px #ffd78011;
-    }
-    .copyBtn {
-      margin-left: 0.3em;
-      background: #20242a;
-      color: #ffd780;
-      border: none;
-      border-radius: 7px;
-      padding: 0.34em 1em;
-      font-size: 1.09em;
-      cursor: pointer;
-      font-weight: 700;
-      box-shadow: 0 0 6px #ffd78018;
-      transition: background 0.15s;
-    }
-    .copyBtn:active { background: #28342e; color: #fff; }
-    #promptOutput, #negativeOutput, #summaryOutput {
-      width: 100%; min-height: 2.7em;
-      background: #1b2126;
-      border: 1px solid #232c36;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 1.09em;
-      padding: 1em 1em 0.7em 1em;
-      margin: 0.25em 0 0.8em 0;
-      box-sizing: border-box;
-      font-family: 'Inter', 'Roboto', Arial, sans-serif;
-      resize: none;
-      box-shadow: 0 1px 7px #ffd7800a;
-    }
-    #j1nx {
-      position: fixed; right: 30px; bottom: 28px;
-      width: 320px; max-width: 92vw;
-      background: #20242a;
-      border: 2px solid #232a1f;
-      border-radius: 16px 16px 9px 16px;
-      box-shadow: 0 2px 18px #0009;
-      padding: 0 0 1em 0;
-      z-index: 99;
-      display: flex; flex-direction: column;
-    }
-    #j1nxHeader {
-      background: #16191d;
-      color: #ffd780;
-      font-weight: bold;
-      padding: 0.7em 1em;
-      border-radius: 16px 16px 0 0;
-      font-size: 1.15em;
-      display: flex; align-items: center; gap: 0.6em;
-    }
-    #j1nxBody {
-      padding: 0.9em 1em 0 1em;
-      color: #fcebc1;
-      font-size: 1.03em;
-      min-height: 62px;
-      max-height: 222px;
-      overflow-y: auto;
-      word-break: break-word;
-    }
-    #j1nxInputRow {
-      display: flex; gap: 0.6em;
-      margin-top: 0.6em;
-    }
-    #j1nxInput {
-      flex: 1; padding: 0.4em 0.7em; border-radius: 8px;
-      border: none; background: #242a30; color: #ffd780;
-      font-size: 1em;
-    }
-    #j1nxSendBtn {
-      background: #ffd780;
-      color: #22242a;
-      font-weight: bold;
-      border: none;
-      border-radius: 7px;
-      padding: 0.35em 1.1em;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    @media (max-width: 800px) {
-      main { max-width: 99vw; padding: 1.1em 0.4em 1em 0.4em; }
-      #j1nx { right: 4vw; width: 94vw; bottom: 10px; }
-    }
+    body { background: #0a0b11; color: #e2e2ed; font-family: 'JetBrains Mono', 'Consolas', 'Menlo', monospace; margin:0; }
+    .main-wrap { max-width: 720px; margin: 28px auto 60px auto; padding: 2.5em 2em 3em 2em; background: rgba(10,14,28,0.98); border-radius: 2em; box-shadow: 0 8px 42px #0008;}
+    .section { margin-bottom: 2em; }
+    h1, h2 { font-weight: 800; letter-spacing:0.03em; color: #f5db67; margin: 0 0 0.45em 0;}
+    h2 { font-size:1.3em; color:#86e3fc;}
+    .breadcrumbs { margin: 0 0 1.2em 0; font-size: 1em;}
+    .breadcrumbs a { color: #50e3c2; text-decoration:none; font-weight:bold; }
+    .breadcrumbs a:hover { color:#ffe47a; }
+    .prompt-label { color: #f36; font-weight:700; letter-spacing:0.02em;}
+    .prompt-group { display:flex; align-items:center; gap:0.6em; margin-bottom:0.7em;}
+    .prompt-group input[type=text], .prompt-group textarea { flex:1; background:#171926; color:#ffe47a; border:1.5px solid #444; border-radius:8px; font-size:1.04em; padding:0.4em 0.7em; font-family:inherit;}
+    .prompt-group button, .slider-btn, .popup-btn { background:#252841; color:#fff; font-size:1em; padding:0.35em 1em; border-radius:7px; border:none; font-weight:700; cursor:pointer; transition:.15s;}
+    .prompt-group button:hover, .slider-btn:hover, .popup-btn:hover { background:#5ce3c7; color:#0a0a11;}
+    .slider-row { display:flex; align-items:center; gap:1em; margin-bottom:1.2em;}
+    .slider-label { min-width: 4.2em; font-size:1.03em; color:#ffe47a;}
+    .slider { flex:1; }
+    input[type=range] { width:100%; accent-color: #f5db67;}
+    .neg-label { color:#ff3171; font-weight:600;}
+    .neg-group textarea { min-height:2.3em;}
+    .help-tip { cursor: pointer; font-size:1em; margin-left:0.35em; color:#5ce3c7; }
+    .help-popup { display:none; position:absolute; left:110%; top:-.7em; background:#161924; color:#fffa; border-radius:1em; font-size:1em; padding:.7em 1em; max-width:260px; box-shadow: 0 0 12px #000a; z-index: 80;}
+    .help-tip:hover + .help-popup, .help-tip:focus + .help-popup { display:block; }
+    .links-bar { margin:1.5em 0 1.2em 0; text-align:center;}
+    .links-bar a { color:#fff; background:#232742; border-radius:6px; font-size:1em; font-weight:600; margin:0 0.6em 0 0; padding:0.28em 1em; display:inline-block; text-decoration:none;}
+    .links-bar a:hover { background:#ffe47a; color:#252841;}
+    .bmc-btn { background: #ffe47a; color: #181c29; font-size: 1.15em; border-radius: 1em; padding: 0.5em 1.7em; margin:1.2em auto 0 auto; display: block; font-weight: bold; text-decoration:none; box-shadow:0 0 2px #0a0;}
+    .adsense-bar { position:fixed; left:0; bottom:0; width:100vw; background:#23263b; text-align:center; z-index:300; padding:0.5em 0;}
+    .j1nx-bot { position:fixed; right:1.6vw; bottom:5vw; z-index:999; }
+    .j1nx-img { background:url('/assets/j1nx_cutout.png') no-repeat center/contain; width:70px; height:70px; margin:auto;}
+    .j1nx-chatbox { background:#252841fa; color:#fff; border-radius:1.5em 1.5em 1.6em 1.6em; min-width:248px; max-width:330px; padding:1.1em; margin-top:-1.2em; font-size:1.14em; box-shadow:0 5px 16px #000c;}
+    .j1nx-messages { min-height:3.1em;}
+    .j1nx-row { display:flex; gap:0.45em; margin-top:.7em;}
+    .j1nx-input { flex:1; border-radius:7px; border:1px solid #555; font-size:1.02em; background:#191a24; color:#ffe47a; padding:.45em 1em;}
+    .j1nx-send { background:#ffe47a; border:none; border-radius:8px; color:#181c29; font-size:1.2em; font-weight:700; padding:0 1.15em;}
+    .j1nx-18 { margin-left:0.8em; font-size:1.09em; color:#5ce3c7; cursor:pointer;}
+    .j1nx-chatbox.nsfw { background:#2e1223fa; color:#fff0fa; box-shadow:0 0 18px #f69e;}
+    .j1nx-chatbox.celebrate { background:#211b13fa; color:#ffe47a;}
+    .j1nx-chatbox.fun { background:#142a2efa; color:#aefcff;}
+    .j1nx-chatbox.danger { background:#3c0b14fa; color:#ff4c4c;}
+    .j1nx-chatbox.help, .j1nx-chatbox.support { background:#14395afa; color:#89f2ff;}
+    .j1nx-chatbox.safe { background:#232841fa;}
+    @media (max-width:900px){ .adsense-bar{position:static!important;}.j1nx-bot{bottom:88px!important;} }
+    @media (max-width:600px){ .main-wrap{padding:1em .4em;} .j1nx-bot{bottom:110px!important;min-width:98vw!important;right:0!important;} }
   </style>
-  <!-- AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
-    crossorigin="anonymous"></script>
 </head>
 <body>
-  <main>
-    <nav class="breadcrumbs">
-      <a href="/">Home</a> &gt; <a href="/movie.html">Movie Generator</a>
-    </nav>
-    <h1>Movie God Mode Generator</h1>
-    <div class="subtitle">
-      Enter your keywords or title.<br>
-      <span style="font-size:0.98em;color:#ffd780;">Script, storyboard, or cinematic scene—one click from pro AI output.</span>
+  <div class="breadcrumbs"><a href="/main.html">Home</a> &gt; <span>Movie Prompt Maker</span></div>
+  <div class="main-wrap">
+    <h1>🎬 PromptForge <span style="color:#ffe47a;">Movie Maker</span></h1>
+    <div class="section">
+      <div class="prompt-label">Describe Your Scene <span class="help-tip" tabindex="0">?</span>
+        <span class="help-popup">Write anything: character, location, genre, mood. Try “A neon-soaked Tokyo alley, cyberpunk chase, Blade Runner vibes”.<br>Click <b>‘Keywords’</b> for ideas!</span>
+      </div>
+      <div class="prompt-group">
+        <input id="sceneInput" type="text" placeholder="Type your movie scene...">
+        <button class="popup-btn" onclick="showKeywordPopup()">Keywords</button>
+      </div>
+      <div class="prompt-label">Prompt Summary</div>
+      <div class="prompt-group">
+        <textarea id="promptSummary" placeholder="Summary will appear here..." readonly></textarea>
+        <button onclick="summarizePrompt()">Summarize</button>
+      </div>
+      <div class="prompt-label neg-label">Negative Prompt <span class="help-tip" tabindex="0">?</span>
+        <span class="help-popup">What to <b>avoid</b> in the output. Ex: “No text, bad anatomy, extra limbs, boring lighting, watermark”.</span>
+      </div>
+      <div class="neg-group prompt-group">
+        <textarea id="negativeInput" placeholder="Describe things to avoid..."></textarea>
+      </div>
     </div>
-    <section class="seed-section">
-      <form id="seedForm" onsubmit="event.preventDefault(); showMainForm();">
-        <input id="seedInput" type="text" placeholder="e.g. 'gritty detective thriller', 'alien romance at prom', 'apocalypse heist getaway'">
-        <button id="startBtn" type="submit">Let's Go &rarr;</button>
-      </form>
-    </section>
-    <form id="mainForm" autocomplete="off" onsubmit="event.preventDefault(); generateMoviePrompt();">
-      <div class="sectionLabel">Prompt Power</div>
-      <div class="sliderRow">
-        <label for="sfwNsfwSlider">SFW ← NSFW</label>
-        <input id="sfwNsfwSlider" type="range" min="0" max="100" value="30" title="How wild?">
-        <span id="sfwNsfwVal">Mild</span>
+    <div class="section">
+      <h2>🎛️ Pro Controls</h2>
+      <div class="slider-row">
+        <span class="slider-label">Creativity</span>
+        <input class="slider" id="creativitySlider" type="range" min="0" max="10" value="6">
+        <span id="creativityVal">6</span>
       </div>
-      <div class="sliderRow">
-        <label for="detailSlider">Detail</label>
-        <input id="detailSlider" type="range" min="0" max="100" value="65">
-        <span id="detailVal">Balanced</span>
+      <div class="slider-row">
+        <span class="slider-label">Detail</span>
+        <input class="slider" id="detailSlider" type="range" min="0" max="10" value="8">
+        <span id="detailVal">8</span>
       </div>
-      <div class="sliderRow">
-        <label for="scriptStyleSlider">Script Style</label>
-        <input id="scriptStyleSlider" type="range" min="0" max="100" value="60">
-        <span id="scriptStyleVal">Modern</span>
+      <div class="slider-row">
+        <span class="slider-label">Risk/NSFW</span>
+        <input class="slider" id="nsfwSlider" type="range" min="0" max="10" value="3">
+        <span id="nsfwVal">3</span>
       </div>
-      <div class="checkboxRow">
-        <input type="checkbox" id="negativeWordsChk" checked>
-        <label for="negativeWordsChk">Add negative wordbank (avoid cliché or messy output)</label>
-      </div>
-      <div class="sectionLabel">Scene Blocks</div>
-      <div id="sceneBlocksArea">
-        <div class="sceneBlock" id="sceneBlock1">
-          <b>Scene 1:</b> INT. LOCATION - DAY<br>
-          A <span style="color:#ffd780;">[CHAR]</span> <span style="color:#fcebc1;">[ACTION]</span> in <span style="color:#ffd780;">[SETTING]</span>, feeling <span style="color:#fae4b8;">[MOOD]</span>.<br>
-          <i>“[DIALOGUE]”</i>
-        </div>
-      </div>
-      <button type="button" class="addSceneBtn" onclick="addSceneBlock()">+ Add Scene Block</button>
-      <div class="sectionLabel">Movie/Script Prompt</div>
-      <textarea id="promptOutput" readonly></textarea>
-      <button class="copyBtn" type="button" onclick="pfCopy('promptOutput')">Copy Prompt</button>
-      <div class="sectionLabel">Negative Words</div>
-      <textarea id="negativeOutput" readonly></textarea>
-      <button class="copyBtn" type="button" onclick="pfCopy('negativeOutput')">Copy Negatives</button>
-      <div class="sectionLabel">Summary</div>
-      <textarea id="summaryOutput" readonly></textarea>
-      <button class="copyBtn" type="button" onclick="pfCopy('summaryOutput')">Copy Summary</button>
-      <div style="margin: 2.1em 0 0.7em 0;">
-        <button type="submit" style="font-size:1.22em;background:#ffd780;color:#16191d;border:none;border-radius:8px;padding:0.63em 2.3em;letter-spacing:0.06em;box-shadow:0 1px 9px #ffd78045;cursor:pointer;font-weight:800;">GENERATE</button>
-      </div>
-    </form>
-  </main>
-
-  <!-- J1NX Chat Assistant -->
-  <div id="j1nx">
-    <div id="j1nxHeader">
-      <img src="/j1nx.png" alt="J1NX" style="height:2em;width:2em;border-radius:50%;border:2px solid #ffd780;background:#1e242b;margin-right:0.5em;">
-      J1NX // Pro Prompt Muse
+      <button class="slider-btn" onclick="generatePrompt()">Generate Movie Prompt</button>
     </div>
-    <div id="j1nxBody">
-      <span style="color:#ffd780;">Need script ideas?</span> Ask me for plot twists, dialogue, or scene help.
+    <div class="section">
+      <h2>Useful Links</h2>
+      <div class="links-bar">
+        <a href="https://openart.ai/" target="_blank">OpenArt</a>
+        <a href="https://krea.ai/" target="_blank">KREA</a>
+        <a href="https://runwayml.com/" target="_blank">RunwayML</a>
+        <a href="https://www.artbreeder.com/" target="_blank">Artbreeder</a>
+        <a href="/pictureprompt.html">Picture Prompt Forge</a>
+        <a href="/main.html">Main</a>
+      </div>
     </div>
-    <div id="j1nxInputRow">
-      <input id="j1nxInput" type="text" placeholder="Ask for a script seed, twist, or movie concept...">
-      <button id="j1nxSendBtn" onclick="j1nxSend()">Send</button>
-    </div>
+    <a class="bmc-btn" href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Buy Me a Coffee</a>
   </div>
-
-  <!-- AdSense Bottom -->
-  <div style="max-width:730px;margin:16px auto 0 auto;min-height:80px;text-align:center;">
+  <div class="adsense-bar">
     <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-4963053724895140"
-         data-ad-slot="8259436982"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+      style="display:block"
+      data-ad-client="ca-pub-4963053724895140"
+      data-ad-slot="31313131"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
-
-  <footer style="text-align:center;font-size:0.97em;color:#757c8c;margin:2.2em 0 1.2em 0;opacity:0.73;">
-    Not affiliated with OpenAI, Midjourney, etc. | <a href="/" style="color:#88ddff;text-decoration:none;">PromptForge</a> | <a href="/picture.html" style="color:#b2f6ff;">Picture Generator</a> | <a href="https://perchance.org/ai-text-to-image-generator" target="_blank" style="color:#ffd780;">Perchance</a>
-  </footer>
-  <script src="generator.js"></script>
+  <!-- J1NX BRAIN -->
+  <script src="/assets/j1nx_brain.js"></script>
+  <!-- MONSTER GENERATOR -->
+  <script src="/assets/generator.js"></script>
+  <!-- MINI J1NX BOT -->
+  <div class="j1nx-bot" id="j1nxBot" data-mood="safe">
+    <div class="j1nx-img"></div>
+    <div class="j1nx-chatbox safe" id="j1nxChatbox">
+      <div class="j1nx-messages" id="j1nxMessages">👾 Hi! I’m J1NX. Type for help, advice, or anything…</div>
+      <div class="j1nx-row">
+        <input class="j1nx-input" id="j1nxInput" placeholder="Type to J1NX, hit Enter...">
+        <button class="j1nx-send" id="j1nxSend" title="Send"><i class="fa-solid fa-arrow-up"></i></button>
+        <div class="j1nx-18" id="j1nx18" title="Toggle 18+ mode"><i class="fa-solid fa-lock"></i></div>
+      </div>
+    </div>
+  </div>
   <script>
-    function showMainForm() {
-      document.getElementById('mainForm').style.display = 'block';
-      document.getElementById('seedForm').style.display = 'none';
+    // J1NX Chat logic (unchanged, same as main, loads /assets/j1nx_brain.js)
+    let j1nxMode18 = false;
+    const j1nxChatbox = document.getElementById('j1nxChatbox');
+    const j1nxMessages = document.getElementById('j1nxMessages');
+    const j1nxInput = document.getElementById('j1nxInput');
+    const j1nxSend = document.getElementById('j1nxSend');
+    const j1nx18 = document.getElementById('j1nx18');
+    function handleJ1nxInput(val) {
+      if (!window.j1nxBrain) {
+        j1nxMessages.innerHTML = "<span style='color:#ff3171'>J1NX brain file missing or invalid. No responses possible.</span>";
+        return;
+      }
+      let matched = null, rawInput = val.toLowerCase();
+      for(let i=0;i<j1nxBrain.length;i++) {
+        if((j1nxMode18 || j1nxBrain[i].safe !== false) && j1nxBrain[i].match.test(val)) {
+          matched = j1nxBrain[i];
+          break;
+        }
+      }
+      if(matched) {
+        j1nxMessages.textContent = matched.text;
+        if(matched.mood){
+          j1nxChatbox.className = "j1nx-chatbox "+matched.mood;
+        }
+        if(matched.nsfw || (j1nxMode18 && matched.nsfw)) {
+          j1nxChatbox.classList.add('nsfw'); j1nxChatbox.classList.remove('safe');
+        } else {
+          j1nxChatbox.classList.add('safe'); j1nxChatbox.classList.remove('nsfw');
+        }
+      } else {
+        j1nxMessages.textContent = "J1NX: ...";
+        j1nxChatbox.classList.add('safe'); j1nxChatbox.classList.remove('nsfw');
+      }
     }
-    function pfCopy(id) {
-      let el = document.getElementById(id);
-      el.select && el.select();
-      navigator.clipboard.writeText(el.value);
-      el.style.background = "#3a2918";
-      setTimeout(() => { el.style.background = "#1b2126"; }, 700);
+    function submitJ1nx() {
+      let val = j1nxInput.value.trim();
+      if(val) handleJ1nxInput(val);
+      j1nxInput.value = '';
     }
-    // Sliders live
-    const sfwMap = ["Pure", "Mild", "Spicy", "Wild", "God Mode"];
-    document.getElementById('sfwNsfwSlider').oninput = function() {
-      let v = +this.value;
-      document.getElementById('sfwNsfwVal').innerText = v < 20 ? sfwMap[0] : v < 40 ? sfwMap[1] : v < 60 ? sfwMap[2] : v < 85 ? sfwMap[3] : sfwMap[4];
-    };
-    document.getElementById('detailSlider').oninput = function() {
-      let v = +this.value;
-      document.getElementById('detailVal').innerText = v < 30 ? "Low" : v < 70 ? "Balanced" : "Max";
-    };
-    document.getElementById('scriptStyleSlider').oninput = function() {
-      let v = +this.value;
-      document.getElementById('scriptStyleVal').innerText = v < 40 ? "Classic" : v < 80 ? "Modern" : "Experimental";
-    };
-    // Add more scenes
-    let sceneCount = 1;
-    function addSceneBlock() {
-      sceneCount++;
-      let div = document.createElement('div');
-      div.className = 'sceneBlock';
-      div.innerHTML = `<b>Scene ${sceneCount}:</b> INT./EXT. LOCATION - DAY/NIGHT<br>
-      <span style="color:#ffd780;">[CHAR]</span> <span style="color:#fcebc1;">[ACTION]</span> in <span style="color:#ffd780;">[SETTING]</span>, feeling <span style="color:#fae4b8;">[MOOD]</span>.<br>
-      <i>“[DIALOGUE]”</i>`;
-      document.getElementById('sceneBlocksArea').appendChild(div);
+    j1nxInput.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitJ1nx(); }});
+    j1nxSend.addEventListener('click', submitJ1nx);
+    j1nx18.addEventListener('click', function(){
+      j1nxMode18 = !j1nxMode18;
+      j1nx18.classList.toggle('on', j1nxMode18);
+      handleJ1nxInput(j1nxInput.value || '');
+    });
+
+    // SLIDERS - display value
+    document.getElementById('creativitySlider').addEventListener('input',e=>document.getElementById('creativityVal').textContent=e.target.value);
+    document.getElementById('detailSlider').addEventListener('input',e=>document.getElementById('detailVal').textContent=e.target.value);
+    document.getElementById('nsfwSlider').addEventListener('input',e=>document.getElementById('nsfwVal').textContent=e.target.value);
+
+    // Popups for help and keywords
+    function showKeywordPopup() {
+      alert("Scene keywords:\nCyberpunk, noir, chase, synthwave, forbidden love, revenge, aerial shot, POV, horror, neon, apocalyptic, close-up, action, monster, time-lapse, glitch, retro, mythic, fantasy, sci-fi, dreamlike, brutalist, rain, fog, sunrise, surreal, synth, voiceover, etc.");
     }
-    // J1NX chat demo (replace with real API call if needed)
-    function j1nxSend() {
-      let q = document.getElementById('j1nxInput').value.trim();
-      if (!q) return;
-      let a = "";
-      if (q.toLowerCase().includes("twist")) a = "Try a double-cross: the main villain is the hero’s childhood friend.";
-      else if (q.toLowerCase().includes("dialogue")) a = "Pro dialogue: 'You can’t outrun fate.' or 'This city chews up good cops.'";
-      else if (q.toLowerCase().includes("ending")) a = "Bittersweet ending: the heist succeeds, but the love is lost.";
-      else if (q.toLowerCase().includes("genre")) a = "How about a neo-noir sci-fi romance?";
-      else if (q.toLowerCase().includes("scene")) a = "Add a silent, rain-soaked rooftop scene for cinematic mood.";
-      else if (q.toLowerCase().includes("help")) a = "J1NX: Ask for plot starters, scene glue, or dialogue examples.";
-      else a = "For movie prompts, try mixing genres, adding a wild location, or setting a scene in a way no one expects.";
-      let jBody = document.getElementById('j1nxBody');
-      jBody.innerHTML = `<span style="color:#ffd780;">${a}</span>`;
-      document.getElementById('j1nxInput').value = '';
+    function summarizePrompt() {
+      const scene = document.getElementById('sceneInput').value;
+      const creativity = document.getElementById('creativitySlider').value;
+      const detail = document.getElementById('detailSlider').value;
+      const nsfw = document.getElementById('nsfwSlider').value;
+      let summary = `Scene: ${scene}\nCreativity: ${creativity}/10\nDetail: ${detail}/10\nNSFW: ${nsfw}/10`;
+      document.getElementById('promptSummary').value = summary;
     }
-    // Prompt logic placeholder (replace w/ your generator.js logic)
-    function generateMoviePrompt() {
-      let seed = document.getElementById('seedInput').value.trim();
-      // TODO: Insert your God Mode generator logic here
-      document.getElementById('promptOutput').value = `[GodMode-MOVIE] Scene: ${seed ? seed : '[scene idea here]'}\n(Example output; connect to generator.js)`;
-      document.getElementById('negativeOutput').value = 'bad script, boring, cliche, out of frame, typo, logo, watermark, distorted audio, blurry, irrelevant';
-      document.getElementById('summaryOutput').value = `Summary: ${seed ? seed : '[summary based on scene]'} (expand w/ genre, tone, etc.)`;
+    // Generate prompt using generator.js (must match your generator’s interface)
+    function generatePrompt() {
+      if(typeof window.generateMoviePrompt === "function") {
+        const scene = document.getElementById('sceneInput').value;
+        const neg = document.getElementById('negativeInput').value;
+        const creativity = +document.getElementById('creativitySlider').value;
+        const detail = +document.getElementById('detailSlider').value;
+        const nsfw = +document.getElementById('nsfwSlider').value;
+        let prompt = window.generateMoviePrompt(scene, {negative:neg, creativity, detail, nsfw});
+        document.getElementById('promptSummary').value = prompt || "Prompt generated. (Check output)";
+      } else {
+        document.getElementById('promptSummary').value = "Movie Generator not available.";
+      }
     }
   </script>
+  <!-- Google AdSense async -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </body>
 </html>
