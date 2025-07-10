@@ -314,5 +314,4 @@ window.j1nxBrain = [
 
 // ---- FINAL CATCH-ALL ----
 {match:/.*/, text:"You can say anything—stoned, sad, horny, lost, inspired—and I’ll always serve up a prompt, a roast, or a wild comeback. Now spark up and let’s create some chaos.", nsfw:false, safe:true, mood:'neutral'}
-
 ];
