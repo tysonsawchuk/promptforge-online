@@ -2,116 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge.online — Pro AI & NSFW Prompt Hub</title>
-  <meta name="description" content="PromptForge.online — Pro-level AI, NSFW, and image/video prompt tools. Face mapping, watermarking, AI sandboxes, and more.">
-  <meta property="og:title" content="PromptForge.online — Pro AI & NSFW Prompt Hub">
+  <title>PromptForge.online — AI, NSFW, Movie & Image Prompt Tools</title>
+  <meta name="description" content="PromptForge.online — The most advanced AI and NSFW prompt tools: generate, watermark, create movie/image prompts, experiment, and more.">
+  <meta property="og:title" content="PromptForge.online — AI, NSFW, Movie & Image Prompt Tools">
   <meta property="og:description" content="PromptForge: Modern, powerful, all real AI prompt tools in one place.">
   <meta property="og:image" content="/assets/og_image.png">
   <meta property="og:url" content="https://promptforge.online/">
   <link rel="canonical" href="https://promptforge.online/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- FontAwesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
     :root {
-      --bg: #0a0a13;
+      --bg: #090c14;
       --fg: #e9f6ff;
-      --fg-light: #a9bed4;
-      --accent: #27f9ee;
-      --accent2: #ffe760;
-      --headline: #1ffbf3;
-      --link: #36ffd3;
+      --fg-dim: #98a9c4;
+      --accent: #28e4ff;
+      --headline: #29f9ff;
+      --link: #28e4ff;
+      --link-hover: #ffe760;
       --gold: #ffe760;
       --bubble-bg: #12132a;
       --bubble-nsfw: #350021;
       --bubble-safe: #192134;
-      --danger: #ff3171;
       --hidden-toggle: #222a;
+      --eye-glow: #39ebff;
+      --eye-dot: #05c3ff;
     }
-    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: 'Inter', 'Fira Mono', 'Consolas', monospace;}
+    html, body {margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: 'Inter', 'Fira Mono', 'Consolas', monospace;}
     .breadcrumbs {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1.1em 0 0 2.2em;
-      font-size: 1em;
-      color: var(--fg-light);
-      opacity: 0.93;
+      max-width: 1250px;
+      margin: 0 auto 0.8em auto;
+      padding: 1.2em 0 0.7em 2vw;
+      font-size: 1.07em;
+      color: var(--fg-dim);
       letter-spacing: .02em;
     }
-    .breadcrumbs a {
-      color: var(--accent2); text-decoration: none; font-weight: 700; letter-spacing: 0.01em; transition: color .14s;
-    }
+    .breadcrumbs a {color: var(--gold); text-decoration: none; font-weight: 600;}
     .breadcrumbs a:hover { color: var(--accent);}
-    .ascii-art-block { background: #0a0a13; padding: 32px 0 5px 0; font-size: 1.19em; text-align: center; white-space: pre; letter-spacing: .01em; }
-    .ascii-eye { color: var(--accent); font-weight: bold; position: relative; text-shadow: 0 0 11px #27ffe7, 0 0 16px #22ffe744;}
+    .ascii-art-block { background: #090c14; padding: 30px 0 7px 0; font-size: 1.17em; text-align: center; white-space: pre; letter-spacing: .01em; }
+    .ascii-eye { color: var(--accent); font-weight: bold; position: relative; text-shadow: 0 0 12px var(--eye-glow), 0 0 18px #29f7fa66;}
     .eye-dot {
       position: absolute;
       left: 50%; top: 50%;
-      width: 0.12em; height: 0.12em;
-      background: #ff3bd7;
+      width: 0.15em; height: 0.15em;
+      background: var(--eye-dot);
       border-radius: 50%;
-      box-shadow: 0 0 6px #ff7bec;
+      box-shadow: 0 0 8px var(--eye-glow), 0 0 7px #0079ff;
       transform: translate(-50%,-50%);
       pointer-events: none;
+      z-index: 2;
     }
-    .main-title { color: var(--headline); font-size: 2.1em; margin: 0.22em 0 0.13em 0; text-align: center; font-weight: 900; letter-spacing: 0.07em; text-shadow: 0 0 11px #19f2df; }
-    .desc {text-align:center;color:var(--fg-light);font-size:1.17em;margin-bottom:1.5em;}
-    .section-label { color: var(--gold); font-size: 1.13em; font-weight: bold; margin: 2.2em 0 0.8em 4vw; letter-spacing: .02em;}
-    .pro-list { max-width: 750px; margin: 0 auto; font-size: 1.17em; display: flex; flex-direction: column; gap: 0.40em;}
-    .pro-list a { color: var(--link); text-decoration: none; font-weight: 700; font-size: 1.13em; transition: color .14s;}
-    .pro-list a:hover { color: var(--accent2);}
-    .pro-list .desc { font-size: .99em; color: var(--fg-light); margin-left: 1.8em; margin-bottom: 0.13em;}
-    .links-bar, .social-bar {
-      display: flex;
-      gap: 1.5em;
-      justify-content: center;
-      margin: 2.2em 0 1.2em 0;
-      align-items: center;
-    }
-    .links-bar a, .social-bar a {
-      color: #fff; background: none;
-      border-radius: 8px;
-      font-size: 1.5em;
-      width: 43px; height: 43px;
-      display: flex; align-items: center; justify-content: center;
-      transition: color .14s;
-      text-decoration:none;
-    }
+    .main-title { color: var(--headline); font-size: 2.08em; margin: 0.21em 0 0.13em 0; text-align: center; font-weight: 900; letter-spacing: 0.07em; text-shadow: 0 0 11px #22d3ff;}
+    .desc {text-align:center;color:var(--fg-dim);font-size:1.12em;margin-bottom:1.7em;}
+    .section-label { color: var(--gold); font-size: 1.12em; font-weight: bold; margin: 2.2em 0 1em 2vw; letter-spacing: .02em;}
+    .pro-list { max-width: 900px; margin: 0 auto 0 auto; font-size: 1.11em; display: flex; flex-direction: column; gap: 0.12em;}
+    .pro-list a { color: var(--link); text-decoration: none; font-weight: 700; font-size: 1.11em; transition: color .13s;}
+    .pro-list a:hover { color: var(--link-hover);}
+    .pro-list .line {margin-bottom: .21em; margin-left: 0.1em;}
+    .pro-list .desc { color: var(--fg-dim); font-size: .99em; font-weight: 400; margin-left: .4em;}
+    .links-bar, .social-bar { display: flex; gap: 1.5em; justify-content: center; margin: 2.2em 0 1.2em 0; align-items: center;}
+    .links-bar a, .social-bar a { color: #fff; background: none; border-radius: 8px; font-size: 1.32em; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: color .13s; text-decoration:none;}
     .links-bar a:hover, .social-bar a:hover { color: var(--accent);}
-    .social-bar .disabled {
-      color: #444; opacity: 0.46; cursor: not-allowed; position:relative;
-    }
-    .coming-soon-badge { position: absolute; font-size: .68em; bottom: -18px; left: 0px; background: #20224c; color: var(--gold); padding: 2px 8px; border-radius: 6px; pointer-events: none;}
+    .social-bar .disabled { color: #444; opacity: 0.46; cursor: not-allowed; position:relative;}
+    .coming-soon-badge { position: absolute; font-size: .67em; bottom: -17px; left: 0px; background: #20224c; color: var(--gold); padding: 2px 7px; border-radius: 6px; pointer-events: none;}
     .bmc-btn { background: var(--gold); color: #111; font-weight: bold; font-size: 1.08em; border-radius: 11px; padding: 1em 2em; border: none; cursor: pointer; margin: 2em auto 1.1em auto; display: block; text-decoration: none; text-align:center; transition: box-shadow 0.14s;}
     .bmc-btn:hover { box-shadow: 0 0 18px #ffe760c2;}
-    .footer { width: 100%; background: #0a0a13; color: #b3bedc; font-size: 1.03em; text-align: center; padding: 1.1em 0 2.1em 0; margin-top: 2.5em;}
+    .footer { width: 100%; background: #090c14; color: #b3bedc; font-size: 1.03em; text-align: center; padding: 1.1em 0 2.1em 0; margin-top: 2.5em;}
     .footer a { color: var(--gold);}
-    .adsense-bar { width: 100vw; min-height: 60px; background: #0a0a13; padding: 1.2em 0 .7em 0; text-align: center; z-index: 800; position: relative; margin-top: 1em;}
-
-    /* J1NX - Unified chat, one bubble, input at bottom, toggle */
-    .j1nx-bot { position: fixed; right: 2vw; bottom: 2vw; z-index: 1002; display: flex; flex-direction: column; align-items: flex-end; min-width: 365px;}
-    .j1nx-img { width: 90px; height: 90px; background: url('j1nx/j1nx_cutout.png') center/contain no-repeat; filter: drop-shadow(0 0 28px #32ffd877); z-index: 1; margin-bottom: -16px;}
+    .adsense-bar { width: 100vw; min-height: 60px; background: #090c14; padding: 1.2em 0 .7em 0; text-align: center; z-index: 800; position: relative; margin-top: 1em;}
+    /* J1NX */
+    .j1nx-bot { position: fixed; right: 2vw; bottom: 2vw; z-index: 1002; display: flex; flex-direction: column; align-items: flex-end; min-width: 345px;}
+    .j1nx-img { width: 88px; height: 88px; background: url('j1nx/j1nx_cutout.png') center/contain no-repeat; filter: drop-shadow(0 0 28px #32ffd877); z-index: 1; margin-bottom: -15px;}
     .j1nx-chatbox { background: var(--bubble-bg); color: #fff; border-radius: 20px 20px 12px 20px; box-shadow: 0 0 18px #0ff9; min-width: 310px; max-width: 370px; border: 2.2px solid #22ffd7; display: flex; flex-direction: column; padding: 1em 1.2em 0.7em 1.2em; font-weight: 700; font-size: 1.07em; margin-bottom: .6em; position:relative;}
     .j1nx-chatbox.nsfw { background: var(--bubble-nsfw);}
     .j1nx-chatbox.safe { background: var(--bubble-safe);}
     .j1nx-messages { min-height: 1.2em; margin-bottom: 0.7em; word-break: break-word; font-weight: 500; }
     .j1nx-row { display: flex; width: 100%; align-items: center;}
-    .j1nx-input {
-      flex: 1 1 auto; background: #191933; color: #fff; border-radius: 8px; border: none; font-size: 1.01em;
-      padding: .57em .9em; margin-right: .7em; outline: none; font-family: inherit; box-shadow: 0 0 7px #1ae4fb44;
-    }
-    .j1nx-send { background: none; border: none; color: var(--accent2); font-size: 1.6em; cursor: pointer; }
-    .j1nx-18 { width: 20px; height: 20px; border-radius: 50%; background: var(--hidden-toggle); color: #f64cc5; display: flex; align-items: center; justify-content: center; font-size: .95em; border: 1px solid #444; position: absolute; bottom: 6px; right: 7px; cursor: pointer; opacity: 0.66; transition: opacity .19s;}
-    .j1nx-18.on { background: var(--danger); color: #fff; opacity: 1; box-shadow: 0 0 6px #ff40be;}
+    .j1nx-input { flex: 1 1 auto; background: #191933; color: #fff; border-radius: 8px; border: none; font-size: 1.01em; padding: .57em .9em; margin-right: .7em; outline: none; font-family: inherit; box-shadow: 0 0 7px #1ae4fb44;}
+    .j1nx-send { background: none; border: none; color: var(--gold); font-size: 1.5em; cursor: pointer; }
+    .j1nx-18 { width: 20px; height: 20px; border-radius: 50%; background: var(--hidden-toggle); color: #39ebff; display: flex; align-items: center; justify-content: center; font-size: .96em; border: 1px solid #444; position: absolute; bottom: 6px; right: 7px; cursor: pointer; opacity: 0.66; transition: opacity .19s;}
+    .j1nx-18.on { background: var(--bubble-nsfw); color: #fff; opacity: 1; box-shadow: 0 0 7px #20c2ff;}
     .j1nx-18:hover { opacity:1; }
-    @media (max-width:900px) {.j1nx-bot{min-width:97vw;right:.5vw;bottom:1vw;}}
+    @media (max-width:900px) {.j1nx-bot{min-width:98vw;right:.5vw;bottom:1vw;}.pro-list{padding-left:5vw;padding-right:5vw;}}
     @media (max-width:600px) {.ascii-art-block{font-size: .91em;}.main-title{font-size:1.13em;}}
   </style>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="breadcrumbs">
-    <a href="/main.html">Home</a> <span>/</span> <span>Tools & Features</span>
+    <a href="/main.html">Home</a>
   </div>
   <div class="ascii-art-block" id="ascii-art-block">
   ))    ))       .-.   \\\    /// ))   (o)__(o)         .-.     ))       \/         
@@ -123,18 +102,42 @@
    (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
   </div>
   <div class="main-title">Promptforge.online</div>
-  <div class="desc">Pro-level AI & NSFW tools. Generate, swap, watermark, experiment.</div>
+  <div class="desc">Advanced AI, NSFW, movie & image prompt tools. Generate, watermark, experiment, and more.</div>
+
   <div class="section-label">PromptForge Tools</div>
   <div class="pro-list">
-    <div><a href="/tools/nsfw.html">Prompt Generator</a><span class="desc">Ultra-detailed NSFW/AI prompt generator</span></div>
-    <div><a href="/tools/faceswap.html">Face Swap / Mapping</a><span class="desc">Map faces onto AI-generated art—private, secure</span></div>
-    <div><a href="/tools/markgen.html">Watermark Generator</a><span class="desc">Protect your creations with custom marks</span></div>
-    <div><a href="/movieprompt.html">Movie Prompt Maker</a><span class="desc">Generate cinematic, AI-ready movie prompts</span></div>
-    <div><a href="/pictureprompt.html">Picture Prompt Maker</a><span class="desc">Create perfect AI art prompts, photorealistic or fantasy</span></div>
-    <div><a href="/messwithai.html">Mess With AI</a><span class="desc">Experiment, break, and test in a safe sandbox</span></div>
-    <div><a href="/legal.html">Legal & Disclaimer</a><span class="desc">Full legal, policy, safety details</span></div>
-    <div><a href="/about.html">About & Credits</a><span class="desc">Project info, credits, and contact</span></div>
-    <div><a href="/tools/credits.html">Full Credits</a><span class="desc">See all contributors</span></div>
+    <div class="line">
+      <a href="/tools/nsfw.html">Prompt Generator</a>
+      <span class="desc">Create detailed, original NSFW/AI prompts for any generator.</span>
+    </div>
+    <div class="line">
+      <a href="/movieprompt.html">Movie Prompt Maker</a>
+      <span class="desc">Write powerful, cinematic movie prompts for AI video tools.</span>
+    </div>
+    <div class="line">
+      <a href="/pictureprompt.html">Picture Prompt Maker</a>
+      <span class="desc">Design rich image prompts for photorealistic or fantasy art.</span>
+    </div>
+    <div class="line">
+      <a href="/tools/markgen.html">Watermark Generator</a>
+      <span class="desc">Protect your images with unique watermarks or logos.</span>
+    </div>
+    <div class="line">
+      <a href="/messwithai.html">Mess With AI</a>
+      <span class="desc">Experiment and break boundaries with custom AI logic.</span>
+    </div>
+    <div class="line">
+      <a href="/legal.html">Legal & Disclaimer</a>
+      <span class="desc">Full legal, privacy, and content rules for creators.</span>
+    </div>
+    <div class="line">
+      <a href="/about.html">About & Credits</a>
+      <span class="desc">Info about PromptForge, contributors, and contact.</span>
+    </div>
+    <div class="line">
+      <a href="/tools/credits.html">Full Credits</a>
+      <span class="desc">See all contributors, tools, and partners.</span>
+    </div>
   </div>
 
   <div class="section-label">Useful AI Sites</div>
@@ -145,6 +148,7 @@
     <a href="https://www.krea.ai/" target="_blank" title="Krea"><i class="fa-solid fa-camera-retro"></i></a>
     <a href="https://www.artbreeder.com/" target="_blank" title="Artbreeder"><i class="fa-solid fa-images"></i></a>
   </div>
+
   <div class="section-label">Connect</div>
   <div class="social-bar">
     <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><i class="fa-brands fa-cloudversify"></i></a>
@@ -160,7 +164,7 @@
     No illegal deepfakes/nudes allowed. <a href="mailto:0fearnofish0@gmail.com">Contact admin</a>.<br>
     <span style="color:#777;">Privacy &amp; Terms | All links live | All tools real.</span>
     <div style="display:none;">
-      prompt generator, NSFW prompts, AI art, goreandgiggles, buy me a coffee, markgen, face swap, promptforge, openart, krea, movie prompt, picture prompt, markgen, messwithai, runway ml, artbreeder, developer tool, hack, privacy, legal, admin, 2025, unrestricted AI, image generator, video generator, photorealistic prompt, face mapping, credits, help, AI tools, pro prompt, facemapping, watermark, sandbox, image ai, movie ai, create, cinema, bluesky, x, facebook, discord, connect, credits
+      prompt generator, NSFW prompts, AI art, goreandgiggles, buy me a coffee, watermark, openart, krea, movie prompt, picture prompt, messwithai, runway ml, artbreeder, hack, privacy, legal, admin, unrestricted AI, image generator, video generator, photorealistic prompt, cinema, bluesky, x, facebook, discord, connect, credits
     </div>
   </div>
   <div class="adsense-bar">
@@ -185,33 +189,26 @@
     </div>
   </div>
   <script>
-    // --- ASCII eyes, pinpoint dot ---
+    // ASCII eyes, blue glowing dot
     const asciiBlock = document.getElementById('ascii-art-block');
     let art = asciiBlock.innerHTML;
     art = art.replace(/([Oo])/g, '<span class="ascii-eye">$1<span class="eye-dot"></span></span>');
     asciiBlock.innerHTML = art;
-    // Eyes: always dead center, move only inside O/o
     function updateEyes(e){
       let mx, my;
       if (e.touches && e.touches.length) {
-        mx = e.touches[0].clientX;
-        my = e.touches[0].clientY;
-      } else {
-        mx = e.clientX;
-        my = e.clientY;
-      }
+        mx = e.touches[0].clientX; my = e.touches[0].clientY;
+      } else { mx = e.clientX; my = e.clientY; }
       document.querySelectorAll('.ascii-eye').forEach(function(eye) {
-        const dot = eye.querySelector('.eye-dot');
-        if(!dot) return;
+        const dot = eye.querySelector('.eye-dot'); if(!dot) return;
         const rect = eye.getBoundingClientRect();
         const cx = rect.left + rect.width/2, cy = rect.top + rect.height/2;
         let dx = mx - cx, dy = my - cy;
-        const dist = Math.min(Math.sqrt(dx*dx + dy*dy), 6); // shorter movement
+        const dist = Math.min(Math.sqrt(dx*dx + dy*dy), 7);
         const angle = Math.atan2(dy, dx);
-        const moveX = Math.cos(angle) * dist * 0.34;
-        const moveY = Math.sin(angle) * dist * 0.34;
-        dot.style.left = `calc(50% + ${moveX}px)`;
-        dot.style.top  = `calc(50% + ${moveY}px)`;
+        const moveX = Math.cos(angle) * dist * 0.32;
+        const moveY = Math.sin(angle) * dist * 0.32;
+        dot.style.left = `calc(50% + ${moveX}px)`; dot.style.top  = `calc(50% + ${moveY}px)`;
       });
     }
     window.addEventListener('mousemove', updateEyes, {passive:true});
@@ -226,7 +223,6 @@
     const j1nx18 = document.getElementById('j1nx18');
     let j1nxBrain = null;
 
-    // Load the big brain file, REQUIRED
     fetch('/assets/j1nx_brain.js').then(r=>r.ok?r.text():null).then(txt=>{
       if(txt){
         try{ eval(txt); j1nxBrain = window.j1nxBrain; }catch(e){}
