@@ -5,14 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="PromptForge.online: Next-gen AI prompt engine for devs and taboo creators." />
   <title>PromptForge.online</title>
+  <!-- AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+  <!-- J1nx brain: must define window.j1nxBrain(prompt) returning a Promise -->
+  <script src="assets/j1nx_brain.js"></script>
   <style>
     body { margin:0; font-family:'Segoe UI','Fira Mono',monospace,sans-serif; background:linear-gradient(120deg,#191b14 0%,#28241d 100%); color:#e6e5e1; min-height:100vh; display:flex; flex-direction:column; }
     header { width:100vw; padding:0.75em 2em 0.25em 2em; display:flex; justify-content:space-between; align-items:center; background:rgba(28,30,22,0.92); border-bottom:1.5px solid #28271e; font-size:1em; z-index:1; }
     .breadcrumbs { color:#bdb687; font-size:.98em; }
     .news-banner { color:#9ee37d; font-weight:600; font-size:.98em; }
     .ansi-art { font-family:monospace,'Fira Mono',Consolas,'Menlo','Courier New',monospace; white-space:pre; font-size:1.18em; line-height:1.1; letter-spacing:0.03em; margin:1.6em auto 0.3em auto; text-align:center; user-select:none; pointer-events:none; color:#d1cfa8; max-width:98vw; }
-    .eye { color:#b488ff; text-shadow:0 0 8px #c083ff,0 0 14px #732aff; font-weight:bold; background:transparent; }
+    .eye { display:inline-block; width:1.18em; height:1.18em; background:#fff; border-radius:50%; border:2.5px solid #b488ff; position:relative; margin:0 2.5px; vertical-align:middle; box-shadow:0 0 14px #b488ff44;}
+    .pupil { width:.47em; height:.47em; background:#b488ff; border-radius:50%; position:absolute; top:0.36em; left:0.36em; transition:all .16s cubic-bezier(.23,1.16,.5,1.08); }
     h1 { text-align:center; margin:.05em 0 0.1em 0; font-size:2.6em; letter-spacing:0.09em; font-family:'Fira Mono','Segoe UI',monospace,sans-serif; background:linear-gradient(90deg,#c9d26d 0%,#a7f3a0 60%,#bdb687 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:800; user-select:none; }
     .desc { max-width:780px; margin:0 auto 2.1em auto; text-align:center; font-size:1.1em; color:#d3cfae; line-height:1.7; padding:0 1.5em; font-weight:400; }
     .main-wrap { display:flex; flex-direction:row; justify-content:center; align-items:flex-start; gap:2.7em; width:100vw; max-width:1200px; margin:0 auto 0 auto;}
@@ -23,7 +27,7 @@
     .nav-descriptions b { color:#dde2b6; font-weight:600; letter-spacing:0.01em; }
     .j1nx-side { position:fixed; bottom:36px; right:26px; z-index:10; display:flex; flex-direction:column; align-items:flex-end; pointer-events:none; }
     .j1nx-cutout { width:85px; margin-bottom:-8px; filter:drop-shadow(0 0 8px #2e2c1c44); pointer-events:auto; user-select:none; }
-    .j1nx-chatbubble { min-width:240px; max-width:430px; min-height:70px; max-height:360px; padding:1.1em 1.5em; border-radius:23px 23px 18px 8px; font-size:1.08em; line-height:1.45; font-family:'Fira Mono',monospace; font-weight:600; color:#d8d4ff; background:#232236; border:3px solid #b488ff; box-shadow:0 4px 20px #9b7fcf66; pointer-events:auto; transition:border .2s,box-shadow .2s,background .2s,color .2s; overflow-y:auto; margin-bottom:8px;}
+    .j1nx-chatbubble { min-width:240px; max-width:420px; min-height:120px; max-height:330px; padding:1.1em 1.5em; border-radius:23px 23px 18px 8px; font-size:1.08em; line-height:1.45; font-family:'Fira Mono',monospace; font-weight:600; color:#d8d4ff; background:#232236; border:3px solid #b488ff; box-shadow:0 4px 20px #9b7fcf66; pointer-events:auto; transition:border .2s,box-shadow .2s,background .2s,color .2s; overflow-y:auto; margin-bottom:8px;}
     .j1nx-chatbubble[data-mood='happy'] { border-color:#8fffcb; background:#23343a; color:#c1ffe7; box-shadow:0 0 18px #8fffcb99;}
     .j1nx-chatbubble[data-mood='angry'] { border-color:#e062c7; background:#321634; color:#ffc3f6; box-shadow:0 0 18px #e062c799;}
     .j1nx-chatbubble[data-mood='default'] { border-color:#b488ff;}
@@ -34,7 +38,16 @@
     .j1nx-textinput { flex:1; border-radius:7px; border:1.5px solid #b488ff66; font-family:'Fira Mono',monospace; font-size:1.06em; padding:.53em .65em; background:#191924; color:#e6e5e1; outline:none; resize:none;}
     .j1nx-sendbtn { background:#b488ff; color:#222236; font-weight:700; font-family:inherit; border:none; border-radius:6px; padding:.54em 1.2em; cursor:pointer; transition:background .17s; }
     .j1nx-sendbtn:hover { background:#d5a8ff; }
-    /* ...ad, bmc, and camo bar styles (not changed, can copy from previous if needed)... */
+    .coffee-wrap { display:flex; justify-content:center; align-items:center; margin:2.1em 0 0.1em 0; }
+    .bmc-btn { display:inline-flex; align-items:center; font-family:'Fira Mono',monospace; background:#ffdd00; color:#20110e; border:none; border-radius:7px; font-size:1.09em; padding:0.55em 1.5em; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #c1a91b1f; transition:box-shadow 0.18s; }
+    .bmc-btn:hover { box-shadow:0 2px 16px #c1a91b44; background:#ffe866; }
+    .bmc-btn img { height:26px; margin-right:9px; filter:grayscale(0); }
+    .ad-blend { width:99vw; margin:2em auto 0.3em auto; display:flex; align-items:center; justify-content:center; }
+    .ad-blend-inner { background:linear-gradient(90deg,#18191c 60%,#222416 100%); border:1.5px dashed #5b546f; border-radius:7px; color:#b488ff; font-family:'Fira Mono',monospace; font-size:1.07em; padding:0.55em 2.1em; margin:0 auto; letter-spacing:.03em; box-shadow:0 2px 10px #0c0c1833; max-width:550px; opacity:0.97; transition:border .17s; user-select:text;}
+    .ad-blend-inner span { color:#ae65f7; font-weight:bold; }
+    .adsense-wrap { display:flex; justify-content:center; align-items:center; margin:1.5em 0 0 0; min-height:80px;}
+    footer { width:100vw; text-align:center; padding:1.5em 0 0.1em 0; font-size:.98em; color:#928e71; background:transparent; letter-spacing:.03em; margin-top:auto; font-family:'Fira Mono',monospace; position:relative; z-index:1;}
+    @media (max-width:900px){ .main-wrap{flex-direction:column; align-items:center; gap:2em;} .j1nx-side{display:none;} .ansi-art{font-size:0.96em;} .ad-blend-inner{font-size:0.98em; padding:0.55em 1.1em;} .j1nx-chatbubble{width:96vw; min-width:0;}}
   </style>
 </head>
 <body>
@@ -43,18 +56,37 @@
     <div class="news-banner">🔥 New: Face Mapping & DirtyMuse live (beta)!</div>
   </header>
 
-  <!-- ANSI art block: Paste raw, all O/o/0 become eyes -->
-  <div class="ansi-art" id="ansiArt">
-: "
-  ))    ))       .-.   \\\    /// ))   (o)__(o)         .-.     ))       \/         
- (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
-  | (_))| (_)),'.---.`, | \  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
-  | .-' |  .'/ /|_|_|\ \||\\//||  | .-'   )(  .' __)/ /|_|_|\ \ |  .'/ /|_|_\ .' __)
-  |(    )|\\ | \_____/ ||| \/ ||  |(     (  )(  _)  | \_____/ | )|\\ | \_.--.(  _)  
-   \)  (/  \)'. `---' .`||    ||   \)     )/  )/    '. `---' .`(/  \)'.   \) \`.__) 
-   (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
-"
-  </div>
+  <!-- ANSI art: O/o/0 replaced with animated EYES! -->
+  <div class="ansi-art" id="ansiArt"></div>
+  <script>
+    // ANSI art with "O"/"o"/"0" replaced with eyes
+    const rawAnsi = `
+ ))    ))       .-.   \\\    /// ))   (o)__(o)         .-.     ))       \\/         
+(o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
+ | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
+ | .-' |  .'/ /|_|_|\\ \\||\\\\//||  | .-'   )(  .' __)/ /|_|_|\\ \\ |  .'/ /|_|_\\ .' __)
+ |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  
+  \\)  (/  \\)'. \`---' .\`||    ||   \\)     )/  )/    '. \`---' .\`(/  \\)'.   \\) \\`.__) 
+  (    )      \`-...-' (_/    \\_)  (     (   (        \`-...-'   )      \`-.(_.'      
+`;
+    function eyeHTML() {
+      return `<span class="eye"><span class="pupil"></span></span>`;
+    }
+    // Replace every o/O/0 with a live eye!
+    document.getElementById('ansiArt').innerHTML = rawAnsi.replace(/[oO0]/g, eyeHTML);
+    // Eye tracking!
+    document.addEventListener('mousemove', function(e){
+      var eyes=document.querySelectorAll('.eye'),ww=window.innerWidth,wh=window.innerHeight;
+      eyes.forEach(function(eye){
+        var pupil=eye.querySelector('.pupil');
+        var cx=eye.getBoundingClientRect().left+eye.offsetWidth/2,cy=eye.getBoundingClientRect().top+eye.offsetHeight/2;
+        var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
+        var px= Math.max(-.32, Math.min(.32, dx)), py=Math.max(-.32,Math.min(.32, dy));
+        pupil.style.left=0.36+px*0.42+'em';
+        pupil.style.top=0.36+py*0.42+'em';
+      });
+    });
+  </script>
 
   <h1>PromptForge.online</h1>
   <div class="desc">PromptForge is the underground prompt engine for real AI creators, pro devs, and anyone who wants *full* control—no filters, no limits. Build ultra-detailed image/video prompts, automate NSFW, watermark art, face swap, and unlock forbidden features. This is the toolbox for those who want to dominate AI—sleek UI, deep logic, pro docs, and DirtyMuse for when you’re feeling wild. Your workflow, your rules, your way.</div>
@@ -78,7 +110,7 @@
     </div>
   </div>
 
-  <!-- J1nx: Unified chat bubble -->
+  <!-- J1nx: Unified chat bubble, API ready -->
   <div class="j1nx-side">
     <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
     <div class="j1nx-chatbubble" id="j1nxBubble" data-mood="default">
@@ -89,43 +121,8 @@
       <button class="j1nx-sendbtn" id="j1nxSend">Send</button>
     </div>
   </div>
-
-  <!-- (adsense, bmc, camo bar: just paste from previous file as before) -->
-
   <script>
-    // Convert all O/o/0 in ANSI art to .eye spans (Easter egg for devs)
-    (() => {
-      let ansiDiv = document.getElementById('ansiArt');
-      ansiDiv.innerHTML = ansiDiv.innerHTML.replace(/([oO0])/g, "<span class='eye'>$1</span>");
-    })();
-
-    // Eyes: Actually track mouse (up, down, left, right, center)
-    let allEyes = [];
-    setTimeout(() => {
-      allEyes = document.querySelectorAll('.eye');
-      let lastPos = {x:0.5, y:0.5};
-      document.addEventListener('mousemove', e => {
-        let ww = window.innerWidth, wh = window.innerHeight;
-        let mx = e.clientX/ww, my = e.clientY/wh;
-        let dx = mx-0.5, dy = my-0.5;
-        allEyes.forEach((eye) => {
-          // Simple direction: left/right/up/down/center
-          let dir = '';
-          if (Math.abs(dx) > Math.abs(dy)) {
-            dir = dx > 0.15 ? 'right' : dx < -0.15 ? 'left' : '';
-          } else {
-            dir = dy > 0.10 ? 'down' : dy < -0.10 ? 'up' : '';
-          }
-          if (dir === 'left') eye.innerHTML = '<span style="margin-right:-3px;">◄</span><span style="color:#b488ff;">●</span>';
-          else if (dir === 'right') eye.innerHTML = '<span style="color:#b488ff;">●</span><span style="margin-left:-3px;">►</span>';
-          else if (dir === 'up') eye.innerHTML = '<span style="position:relative;top:-3px;color:#b488ff;">●</span>';
-          else if (dir === 'down') eye.innerHTML = '<span style="position:relative;top:3px;color:#b488ff;">●</span>';
-          else eye.innerHTML = '<span style="color:#b488ff;">●</span>';
-        });
-      });
-    }, 350);
-
-    // J1nx: Unified 2-way speech bubble (demo brain logic, hook your own as needed)
+    // J1nx: Real chat, mood glow, API-ready
     const chatLog = document.getElementById('j1nxChatLog');
     const bubble = document.getElementById('j1nxBubble');
     const input = document.getElementById('j1nxInput');
@@ -133,41 +130,79 @@
     let chat = [
       {from:'j1nx', text:"Hey, I'm J1nx. Ask me anything about prompt hacking, NSFW, or whatever!"}
     ];
-    function getJ1nxReply(txt) {
-      // Hook this to your backend/brain
-      txt = txt.trim().toLowerCase();
-      if (/(fuck|wtf|angry|mad|bitch|shit|hate)/i.test(txt)) {
-        bubble.setAttribute('data-mood', 'angry');
-        return "Damn, you feeling spicy. Want a forbidden trick?";
-      }
-      if (/(hi|hey|thanks|happy|cool|love|lmao|lol|genius|yo|yo!|hello)/i.test(txt)) {
-        bubble.setAttribute('data-mood', 'happy');
-        return "Hell yeah! Need a dirty prompt or wanna chat?";
-      }
-      bubble.setAttribute('data-mood', 'default');
-      if (txt.includes('prompt')) return "Wanna see a sample prompt for images or movies?";
-      if (txt.includes('nsfw')) return "NSFW tools: top left. Go wild. I won't judge.";
-      if (txt.includes('bye')) return "Peace out, legend.";
-      return "I see you. What do you want to create?";
-    }
     function renderChat() {
       chatLog.innerHTML = chat.map(
         c => `<div class="j1nx-chatline"><span class="j1nx-chatfrom ${c.from==='you'?'user':'ai'}">${c.from==='you'?'You':'J1nx'}:</span>${c.text}</div>`
-      ).slice(-7).join('');
+      ).slice(-14).join('');
       bubble.scrollTop = bubble.scrollHeight;
     }
+    function moodFrom(str) {
+      if(/fuck|wtf|angry|mad|bitch|shit|hate/i.test(str)) return "angry";
+      if(/hi|hey|thanks|happy|cool|love|lmao|lol|genius|yo|hello/i.test(str)) return "happy";
+      return "default";
+    }
+    async function getJ1nxReply(val) {
+      // Call your real brain (assets/j1nx_brain.js must set window.j1nxBrain)
+      if(window.j1nxBrain && typeof window.j1nxBrain === 'function') {
+        try {
+          const reply = await window.j1nxBrain(val);
+          return reply || "(No reply from J1nx brain)";
+        } catch(e) { return "(Error in J1nx brain)"; }
+      } else {
+        return "(J1nx brain not loaded)";
+      }
+    }
     renderChat();
-    sendBtn.onclick = function() {
+    sendBtn.onclick = async function() {
       let val = input.value.trim();
       if (!val) return;
       chat.push({from:'you', text:val});
-      let reply = getJ1nxReply(val);
-      setTimeout(()=>{ chat.push({from:'j1nx',text:reply}); renderChat(); }, 500);
+      let mood = moodFrom(val);
+      bubble.setAttribute("data-mood", mood);
+      renderChat();
+      // Call J1nx brain:
+      let reply = await getJ1nxReply(val);
+      let replyMood = moodFrom(reply);
+      chat.push({from:'j1nx', text:reply});
+      bubble.setAttribute("data-mood", replyMood);
       renderChat();
       input.value = '';
     };
-    input.addEventListener('keyup', e=>{ if(e.key=="Enter") sendBtn.click(); });
-
+    input.addEventListener('keydown',e=>{if(e.key==="Enter")sendBtn.onclick();});
   </script>
+
+  <!-- Ad & Buy Me a Coffee -->
+  <div class="ad-blend">
+    <div class="ad-blend-inner">
+      <span>Ad/Partner Tool:</span> Get <b>PromptForge Pro</b> for instant AI image generation & private vaults.<br>
+      <i>Want your tool featured here? <a href="#" style="color:#b488ff;">Contact us</a></i>
+    </div>
+  </div>
+  <div class="adsense-wrap">
+    <ins class="adsbygoogle"
+      style="display:block; text-align:center; min-width:320px; min-height:80px;"
+      data-ad-client="ca-pub-4963053724895140"
+      data-ad-slot="auto"
+      data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+  <div class="coffee-wrap">
+    <a class="bmc-btn" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">
+      <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee" />
+      Buy Me a Coffee
+    </a>
+  </div>
+
+  <footer>
+    Made underground. #PromptForge &bull; <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#bdb687;">Bluesky</a> &bull; <a href="https://x.com/GoreandGiggles" style="color:#bdb687;">Twitter/X</a>
+    <br>
+    <div style="margin:1.5em 0 -0.5em 0">
+    <pre style="font-family:monospace; font-size:1em; line-height:1.1; letter-spacing:2px; background:transparent; margin:0; padding:0; width:100vw; text-align:center;">
+<span style="color:#4b4d3a">░▒▒▓▓░▒▒▞▚▒▒▒░</span><span style="color:#726345">▞▚▚░░▒▒░▒░▒</span><span style="color:#2e2c1c">░█▒▞▚▒▒█░▉░</span><span style="color:#a4947a">▒▞▞░░▒▒▚▒▒</span><span style="color:#232922">▓▓▒▒▞▒░▒░</span><span style="color:#88806b">░▚▚▓▒▒░░▒</span><span style="color:#141414">▒░▒▒▒█▒░</span><span style="color:#63594d">▒▒░▚▚▒▒</span>
+<span style="color:#2e2c1c">▚░░▒▓▓▞▞░▒▒</span><span style="color:#726345">▓▒░▒░░▞▒</span><span style="color:#232922">▒▒░▒▒▓░▒</span><span style="color:#4b4d3a">▒▒░▓▓░▒▒</span><span style="color:#63594d">░▚▚▒▒▞▞</span><span style="color:#141414">░▓▓░▒░▒</span><span style="color:#88806b">▒▒▒▞▞░░</span>
+<span style="color:#a4947a">▚▒░▓▓▒▒▒▞</span><span style="color:#2e2c1c">▒▒▞▞▒▒░▓</span><span style="color:#726345">▒░▒▒▞▞▒</span><span style="color:#4b4d3a">▞░░▒▒▒▓</span><span style="color:#232922">▒▒▒░░▓</span><span style="color:#63594d">▒▒▚▚░▒</span>
+    </pre>
+    </div>
+  </footer>
 </body>
 </html>
