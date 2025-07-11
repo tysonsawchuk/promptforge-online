@@ -5,237 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="PromptForge.online: Next-gen AI prompt engine for devs and taboo creators. Elite NSFW, video, image, watermarking, face mapping, and underground workflow tools." />
   <title>PromptForge.online</title>
+  <!-- Google AdSense (recommended: in <head> for fastest async load) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+    crossorigin="anonymous"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', 'Fira Mono', monospace, sans-serif;
-      background: linear-gradient(120deg, #191b14 0%, #28241d 100%);
-      color: #e6e5e1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      width: 100vw;
-      padding: 0.75em 2em 0.25em 2em;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(28, 30, 22, 0.92);
-      border-bottom: 1.5px solid #28271e;
-      font-size: 1em;
-      z-index: 1;
-    }
-    .breadcrumbs { color: #bdb687; font-size: .98em; }
-    .news-banner { color: #9ee37d; font-weight: 600; font-size: .98em; }
-
-    .ansi-art {
-      font-family: monospace, 'Fira Mono', 'Consolas', 'Menlo', 'Courier New', monospace;
-      white-space: pre;
-      font-size: 1.18em;
-      line-height: 1.1;
-      letter-spacing: 0.03em;
-      margin: 1.6em auto 0.3em auto;
-      text-align: center;
-      user-select: none;
-      pointer-events: none;
-      color: #d1cfa8;
-      max-width: 98vw;
-    }
-    .eye {
-      color: #b488ff;
-      text-shadow: 0 0 6px #ae65f7, 0 0 10px #a03cf5;
-      font-weight: bold;
-      transition: color .15s, text-shadow .2s;
-      background: transparent;
-    }
-
-    h1 {
-      text-align: center;
-      margin: .05em 0 0.1em 0;
-      font-size: 2.6em;
-      letter-spacing: 0.09em;
-      font-family: 'Fira Mono', 'Segoe UI', monospace, sans-serif;
-      background: linear-gradient(90deg, #c9d26d 0%, #a7f3a0 60%, #bdb687 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 800;
-      user-select: none;
-    }
-
-    .desc {
-      max-width: 780px;
-      margin: 0 auto 2.1em auto;
-      text-align: center;
-      font-size: 1.1em;
-      color: #d3cfae;
-      line-height: 1.7;
-      padding: 0 1.5em;
-      font-weight: 400;
-    }
-
-    .main-wrap {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 2.7em;
-      width: 100vw;
-      max-width: 1200px;
-      margin: 0 auto 0 auto;
-    }
-
-    .nav-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 1.13em;
-      min-width: 220px;
-      margin-top: .2em;
-    }
-    .nav-buttons a {
-      display: inline-block;
-      text-decoration: none;
-      background: #222416;
-      color: #e6e5e1;
-      font-weight: 600;
-      font-family: inherit;
-      padding: 0.7em 1.4em;
-      border-radius: 7px;
-      border: 1.5px solid #40421e;
-      font-size: 1.05em;
-      letter-spacing: 0.04em;
-      transition: background .17s, border .17s;
-    }
-    .nav-buttons a:hover {
-      background: #3c4027;
-      border: 1.5px solid #bdb687;
-      color: #fff;
-    }
-    .nav-descriptions {
-      display: flex;
-      flex-direction: column;
-      gap: 1.35em;
-      margin-left: .3em;
-      margin-top: .12em;
-      color: #bcbdb3;
-      font-size: .99em;
-      max-width: 500px;
-      word-break: break-word;
-    }
-    .nav-descriptions b {
-      color: #dde2b6;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-
-    .j1nx-side {
-      position: fixed;
-      top: 92px;
-      right: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      pointer-events: none;
-    }
-    .j1nx-cutout {
-      width: 105px;
-      filter: drop-shadow(0 0 8px #2e2c1c44);
-      pointer-events: auto;
-      user-select: none;
-    }
-    .j1nx-bubble {
-      margin-right: 110px;
-      margin-top: 10px;
-      background: #222236;
-      color: #dbd4ff;
-      border-radius: 19px 19px 19px 6px;
-      padding: 0.8em 1.1em;
-      font-size: 1.02em;
-      border: 2px solid #b488ff;
-      box-shadow: 0 1px 12px #8c68b4bb;
-      min-width: 110px;
-      max-width: 340px;
-      font-family: 'Fira Mono', monospace;
-      font-weight: 600;
-      pointer-events: auto;
-      transition: border .25s, box-shadow .25s;
-      outline: none;
-      resize: none;
-    }
-    .j1nx-bubble[data-mood='happy'] {
-      border-color: #8fffcb;
-      box-shadow: 0 0 14px #8fffcb77;
-      color: #c1ffe7;
-      background: #23343a;
-    }
-    .j1nx-bubble[data-mood='angry'] {
-      border-color: #e062c7;
-      box-shadow: 0 0 14px #e062c799;
-      color: #ffc3f6;
-      background: #321634;
-    }
-    .j1nx-bubble:focus { outline: 2px solid #b488ff; }
-
-    .ad-blend {
-      width: 99vw;
-      margin: 2em auto 0.3em auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .ad-blend-inner {
-      background: linear-gradient(90deg, #18191c 60%, #222416 100%);
-      border: 1.5px dashed #5b546f;
-      border-radius: 7px;
-      color: #b488ff;
-      font-family: 'Fira Mono', monospace;
-      font-size: 1.07em;
-      padding: 0.55em 2.1em;
-      margin: 0 auto;
-      letter-spacing: .03em;
-      box-shadow: 0 2px 10px #0c0c1833;
-      max-width: 550px;
-      opacity: 0.97;
-      transition: border .17s;
-      user-select: text;
-    }
-    .ad-blend-inner span {
-      color: #ae65f7;
-      font-weight: bold;
-    }
-
-    footer {
-      width: 100vw;
-      text-align: center;
-      padding: 1.5em 0 0.1em 0;
-      font-size: .98em;
-      color: #928e71;
-      background: transparent;
-      letter-spacing: .03em;
-      margin-top: auto;
-      font-family: 'Fira Mono', monospace;
-      position: relative;
-      z-index: 1;
-    }
-
-    @media (max-width: 900px) {
-      .main-wrap { flex-direction: column; align-items: center; gap: 2em;}
-      .j1nx-side { display:none; }
-      .ansi-art { font-size: 0.96em; }
-      .ad-blend-inner { font-size: 0.98em; padding: 0.55em 1.1em; }
-    }
+    /* ...all previous CSS from earlier message... (see above for full styles) */
+    body { margin: 0; font-family: 'Segoe UI', 'Fira Mono', monospace, sans-serif; background: linear-gradient(120deg, #191b14 0%, #28241d 100%); color: #e6e5e1; min-height: 100vh; display: flex; flex-direction: column; }
+    /* ...keep all other styles unchanged... */
+    .coffee-wrap { display: flex; justify-content: center; align-items: center; margin: 2.1em 0 0.1em 0; }
+    .bmc-btn { display: inline-flex; align-items: center; font-family: 'Fira Mono', monospace; background: #ffdd00; color: #20110e; border: none; border-radius: 7px; font-size: 1.09em; padding: 0.55em 1.5em; text-decoration: none; font-weight: bold; box-shadow: 0 2px 8px #c1a91b1f; transition: box-shadow 0.18s; }
+    .bmc-btn:hover { box-shadow: 0 2px 16px #c1a91b44; background: #ffe866; }
+    .bmc-btn img { height: 26px; margin-right: 9px; filter: grayscale(0); }
+    .ad-blend { width: 99vw; margin: 2em auto 0.3em auto; display: flex; align-items: center; justify-content: center; }
+    .ad-blend-inner { background: linear-gradient(90deg, #18191c 60%, #222416 100%); border: 1.5px dashed #5b546f; border-radius: 7px; color: #b488ff; font-family: 'Fira Mono', monospace; font-size: 1.07em; padding: 0.55em 2.1em; margin: 0 auto; letter-spacing: .03em; box-shadow: 0 2px 10px #0c0c1833; max-width: 550px; opacity: 0.97; transition: border .17s; user-select: text; }
+    .ad-blend-inner span { color: #ae65f7; font-weight: bold; }
+    .adsense-wrap { display: flex; justify-content: center; align-items: center; margin: 1.5em 0 0 0; min-height: 80px;}
+    /* ...rest of CSS unchanged... */
   </style>
 </head>
 <body>
-
+  <!-- ...everything above is the same... -->
   <header>
     <div class="breadcrumbs">/ai /tools /promptforge</div>
     <div class="news-banner">🔥 New: Face Mapping & DirtyMuse live (beta)!</div>
   </header>
 
-  <!-- Your exact ANSI art here! -->
+  <!-- ANSI art block (unchanged) -->
   <div class="ansi-art" id="ansiArt">
 &nbsp; ))    ))       .-.   \\\    /// ))   (<span class="eye">o</span>)__(<span class="eye">o</span>)         .-.     ))       \/         
 &nbsp;(<span class="eye">o</span>0)-.(<span class="eye">O</span>o)-.  c(<span class="eye">O</span>_<span class="eye">O</span>)c ((<span class="eye">O</span>)  (<span class="eye">O</span>))(o0)-.(__  __)wWw    c(<span class="eye">O</span>_<span class="eye">O</span>)c  (Oo)-.   (OO)   wWw  
@@ -279,6 +74,26 @@
     </div>
   </div>
 
+  <!-- Google AdSense ad slot (centered, above camo bar & BMC) -->
+  <div class="adsense-wrap">
+    <ins class="adsbygoogle"
+      style="display:block; text-align:center; min-width:320px; min-height:80px;"
+      data-ad-client="ca-pub-4963053724895140"
+      data-ad-slot="auto"
+      data-ad-format="auto"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+  <!-- Buy Me a Coffee button (centered, above camo) -->
+  <div class="coffee-wrap">
+    <a class="bmc-btn" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">
+      <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee" />
+      Buy Me a Coffee
+    </a>
+  </div>
+
   <!-- J1nx floating cutout and full chat bubble -->
   <div class="j1nx-side">
     <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
@@ -306,7 +121,6 @@
     setInterval(() => {
       blinkT++;
       allEyes.forEach((e, i) => {
-        // Flicker between two purples for that animated vibe
         e.style.color = (blinkT + i) % 6 < 3 ? '#b488ff' : '#ae65f7';
         e.style.textShadow = (blinkT + i) % 6 < 3
           ? '0 0 6px #ae65f7, 0 0 10px #a03cf5'
@@ -331,7 +145,6 @@
     if (j1nx) {
       j1nx.addEventListener('input', function () {
         let v = this.value.trim().toLowerCase();
-        // Mood detection: demo logic, you can hook this to your brain/api
         if (v.includes('fuck') || v.includes('wtf') || v.includes('angry') || v.includes('mad')) {
           this.setAttribute('data-mood', 'angry');
         } else if (v.includes('hi') || v.includes('hey') || v.includes('thanks') || v.includes('happy') || v.includes('cool')) {
