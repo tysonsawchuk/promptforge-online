@@ -25,29 +25,46 @@
     .nav-buttons a:hover { background:#3c4027; border:1.5px solid #bdb687; color:#fff; }
     .nav-descriptions { display:flex; flex-direction:column; gap:1.35em; margin-left:.3em; margin-top:.12em; color:#bcbdb3; font-size:.99em; max-width:500px; word-break:break-word; }
     .nav-descriptions b { color:#dde2b6; font-weight:600; letter-spacing:0.01em; }
-    .j1nx-side { position:fixed; bottom:36px; right:26px; z-index:10; display:flex; flex-direction:column; align-items:flex-end; pointer-events:none; }
-    .j1nx-cutout { width:85px; margin-bottom:-8px; filter:drop-shadow(0 0 8px #2e2c1c44); pointer-events:auto; user-select:none; }
-    .j1nx-chatbubble { min-width:240px; max-width:420px; min-height:120px; max-height:330px; padding:1.1em 1.5em; border-radius:23px 23px 18px 8px; font-size:1.08em; line-height:1.45; font-family:'Fira Mono',monospace; font-weight:600; color:#d8d4ff; background:#232236; border:3px solid #b488ff; box-shadow:0 4px 20px #9b7fcf66; pointer-events:auto; transition:border .2s,box-shadow .2s,background .2s,color .2s; overflow-y:auto; margin-bottom:8px;}
-    .j1nx-chatbubble[data-mood='happy'] { border-color:#8fffcb; background:#23343a; color:#c1ffe7; box-shadow:0 0 18px #8fffcb99;}
-    .j1nx-chatbubble[data-mood='angry'] { border-color:#e062c7; background:#321634; color:#ffc3f6; box-shadow:0 0 18px #e062c799;}
-    .j1nx-chatbubble[data-mood='default'] { border-color:#b488ff;}
-    .j1nx-chatline { margin-bottom:.6em; }
-    .j1nx-chatfrom { font-weight:700; font-size:.93em; margin-right:7px; color:#b488ff; }
-    .j1nx-chatfrom.user { color:#f1e67a;}
-    .j1nx-inputrow { display:flex; align-items:center; margin-top:6px; gap:0.5em;}
-    .j1nx-textinput { flex:1; border-radius:7px; border:1.5px solid #b488ff66; font-family:'Fira Mono',monospace; font-size:1.06em; padding:.53em .65em; background:#191924; color:#e6e5e1; outline:none; resize:none;}
-    .j1nx-sendbtn { background:#b488ff; color:#222236; font-weight:700; font-family:inherit; border:none; border-radius:6px; padding:.54em 1.2em; cursor:pointer; transition:background .17s; }
+    /* NEW: Unified Chat Bubble */
+    .j1nx-chatbox-wrap {
+      position:fixed; bottom:40px; right:32px; z-index:20;
+      max-width:410px; width:96vw;
+      pointer-events:none;
+      display:flex; flex-direction:column; align-items:flex-end;
+    }
+    .j1nx-chatbox {
+      width:100%; min-width:240px; max-width:410px;
+      min-height:150px; max-height:350px; overflow-y:auto;
+      border-radius:23px 23px 18px 8px; font-size:1.07em; line-height:1.52;
+      font-family:'Fira Mono',monospace; font-weight:600;
+      color:#d8d4ff; background:#232236; border:3px solid #b488ff;
+      box-shadow:0 4px 20px #9b7fcf66; pointer-events:auto;
+      transition:border .2s,box-shadow .2s,background .2s,color .2s;
+      padding:1.2em 1.25em .7em 1.2em; margin-bottom:8px;
+      display:flex; flex-direction:column; justify-content:flex-end;
+    }
+    .j1nx-chatbox[data-mood='happy'] { border-color:#8fffcb; background:#23343a; color:#c1ffe7; box-shadow:0 0 18px #8fffcb99;}
+    .j1nx-chatbox[data-mood='angry'] { border-color:#e062c7; background:#321634; color:#ffc3f6; box-shadow:0 0 18px #e062c799;}
+    .j1nx-chatbox[data-mood='default'] { border-color:#b488ff;}
+    .j1nx-message { margin-bottom:.7em; word-break:break-word; display:flex; gap:.42em; align-items:flex-end;}
+    .j1nx-bot {color:#b488ff;}
+    .j1nx-user {color:#ffe67a;}
+    .j1nx-bubble-inner {
+      background:rgba(40,38,82,0.08); border-radius:1.3em 1.3em 1.1em .7em; padding:.53em 1em .48em .9em; font-size:1em;
+    }
+    .j1nx-input-row {
+      width:100%; display:flex; gap:0.5em; margin-top:.18em;
+    }
+    .j1nx-textinput {
+      flex:1; border-radius:7px; border:1.5px solid #b488ff66; font-family:'Fira Mono',monospace; font-size:1.05em; padding:.5em .6em; background:#191924; color:#e6e5e1; outline:none; resize:none; }
+    .j1nx-sendbtn {
+      background:#b488ff; color:#222236; font-weight:700; font-family:inherit; border:none; border-radius:6px; padding:.54em 1.2em; cursor:pointer; transition:background .17s; }
     .j1nx-sendbtn:hover { background:#d5a8ff; }
-    .coffee-wrap { display:flex; justify-content:center; align-items:center; margin:2.1em 0 0.1em 0; }
-    .bmc-btn { display:inline-flex; align-items:center; font-family:'Fira Mono',monospace; background:#ffdd00; color:#20110e; border:none; border-radius:7px; font-size:1.09em; padding:0.55em 1.5em; text-decoration:none; font-weight:bold; box-shadow:0 2px 8px #c1a91b1f; transition:box-shadow 0.18s; }
-    .bmc-btn:hover { box-shadow:0 2px 16px #c1a91b44; background:#ffe866; }
-    .bmc-btn img { height:26px; margin-right:9px; filter:grayscale(0); }
-    .ad-blend { width:99vw; margin:2em auto 0.3em auto; display:flex; align-items:center; justify-content:center; }
-    .ad-blend-inner { background:linear-gradient(90deg,#18191c 60%,#222416 100%); border:1.5px dashed #5b546f; border-radius:7px; color:#b488ff; font-family:'Fira Mono',monospace; font-size:1.07em; padding:0.55em 2.1em; margin:0 auto; letter-spacing:.03em; box-shadow:0 2px 10px #0c0c1833; max-width:550px; opacity:0.97; transition:border .17s; user-select:text;}
-    .ad-blend-inner span { color:#ae65f7; font-weight:bold; }
-    .adsense-wrap { display:flex; justify-content:center; align-items:center; margin:1.5em 0 0 0; min-height:80px;}
-    footer { width:100vw; text-align:center; padding:1.5em 0 0.1em 0; font-size:.98em; color:#928e71; background:transparent; letter-spacing:.03em; margin-top:auto; font-family:'Fira Mono',monospace; position:relative; z-index:1;}
-    @media (max-width:900px){ .main-wrap{flex-direction:column; align-items:center; gap:2em;} .j1nx-side{display:none;} .ansi-art{font-size:0.96em;} .ad-blend-inner{font-size:0.98em; padding:0.55em 1.1em;} .j1nx-chatbubble{width:96vw; min-width:0;}}
+    .j1nx-cutout { width:62px; margin-bottom:-14px; margin-right:6px; filter:drop-shadow(0 0 8px #2e2c1c44); pointer-events:auto; user-select:none; }
+    @media (max-width:600px){
+      .j1nx-chatbox-wrap { right:2vw; bottom:8vw; }
+      .j1nx-chatbox, .j1nx-chatbox-wrap { max-width:96vw; }
+    }
   </style>
 </head>
 <body>
@@ -55,8 +72,6 @@
     <div class="breadcrumbs">/ai /tools /promptforge</div>
     <div class="news-banner">🔥 New: Face Mapping & DirtyMuse live (beta)!</div>
   </header>
-
-  <!-- ANSI art: O/o/0 replaced with animated EYES! -->
   <div class="ansi-art" id="ansiArt"></div>
   <script>
     // ANSI art with "O"/"o"/"0" replaced with eyes
@@ -72,9 +87,7 @@
     function eyeHTML() {
       return `<span class="eye"><span class="pupil"></span></span>`;
     }
-    // Replace every o/O/0 with a live eye!
     document.getElementById('ansiArt').innerHTML = rawAnsi.replace(/[oO0]/g, eyeHTML);
-    // Eye tracking!
     document.addEventListener('mousemove', function(e){
       var eyes=document.querySelectorAll('.eye'),ww=window.innerWidth,wh=window.innerHeight;
       eyes.forEach(function(eye){
@@ -87,10 +100,8 @@
       });
     });
   </script>
-
   <h1>PromptForge.online</h1>
   <div class="desc">PromptForge is the underground prompt engine for real AI creators, pro devs, and anyone who wants *full* control—no filters, no limits. Build ultra-detailed image/video prompts, automate NSFW, watermark art, face swap, and unlock forbidden features. This is the toolbox for those who want to dominate AI—sleek UI, deep logic, pro docs, and DirtyMuse for when you’re feeling wild. Your workflow, your rules, your way.</div>
-
   <div class="main-wrap">
     <div class="nav-buttons">
       <a href="/pic.html">Image Prompt Builder</a>
@@ -109,20 +120,19 @@
       <div><b>Terms & Access Codes:</b> Underground access info, TOS, unlock codes, legal, warnings—get the full forbidden details.</div>
     </div>
   </div>
-
-  <!-- J1nx: Unified chat bubble, API ready -->
-  <div class="j1nx-side">
-    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
-    <div class="j1nx-chatbubble" id="j1nxBubble" data-mood="default">
+  <!-- UNIFIED J1NX CHAT BUBBLE -->
+  <div class="j1nx-chatbox-wrap">
+    <div class="j1nx-chatbox" id="j1nxBubble" data-mood="default">
       <div id="j1nxChatLog"></div>
+      <div class="j1nx-input-row">
+        <input class="j1nx-textinput" id="j1nxInput" placeholder="Type to chat with J1nx...">
+        <button class="j1nx-sendbtn" id="j1nxSend">Send</button>
+      </div>
     </div>
-    <div class="j1nx-inputrow">
-      <input class="j1nx-textinput" id="j1nxInput" placeholder="Type to chat with J1nx...">
-      <button class="j1nx-sendbtn" id="j1nxSend">Send</button>
-    </div>
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
   </div>
   <script>
-    // J1nx: Real chat, mood glow, API-ready
+    // Unified chat history, mood, one bubble, input at bottom!
     const chatLog = document.getElementById('j1nxChatLog');
     const bubble = document.getElementById('j1nxBubble');
     const input = document.getElementById('j1nxInput');
@@ -132,8 +142,8 @@
     ];
     function renderChat() {
       chatLog.innerHTML = chat.map(
-        c => `<div class="j1nx-chatline"><span class="j1nx-chatfrom ${c.from==='you'?'user':'ai'}">${c.from==='you'?'You':'J1nx'}:</span>${c.text}</div>`
-      ).slice(-14).join('');
+        c => `<div class="j1nx-message"><span class="${c.from==='you'?'j1nx-user':'j1nx-bot'}"><b>${c.from==='you'?'You':'J1nx'}:</b></span> <span class="j1nx-bubble-inner">${c.text}</span></div>`
+      ).slice(-20).join('');
       bubble.scrollTop = bubble.scrollHeight;
     }
     function moodFrom(str) {
@@ -142,7 +152,6 @@
       return "default";
     }
     async function getJ1nxReply(val) {
-      // Call your real brain (assets/j1nx_brain.js must set window.j1nxBrain)
       if(window.j1nxBrain && typeof window.j1nxBrain === 'function') {
         try {
           const reply = await window.j1nxBrain(val);
@@ -160,7 +169,6 @@
       let mood = moodFrom(val);
       bubble.setAttribute("data-mood", mood);
       renderChat();
-      // Call J1nx brain:
       let reply = await getJ1nxReply(val);
       let replyMood = moodFrom(reply);
       chat.push({from:'j1nx', text:reply});
@@ -170,7 +178,6 @@
     };
     input.addEventListener('keydown',e=>{if(e.key==="Enter")sendBtn.onclick();});
   </script>
-
   <!-- Ad & Buy Me a Coffee -->
   <div class="ad-blend">
     <div class="ad-blend-inner">
@@ -192,7 +199,6 @@
       Buy Me a Coffee
     </a>
   </div>
-
   <footer>
     Made underground. #PromptForge &bull; <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#bdb687;">Bluesky</a> &bull; <a href="https://x.com/GoreandGiggles" style="color:#bdb687;">Twitter/X</a>
     <br>
