@@ -44,9 +44,10 @@
       max-width: 98vw;
     }
     .eye {
-      color: #9ee37d;
+      color: #b488ff;
+      text-shadow: 0 0 6px #ae65f7, 0 0 10px #a03cf5;
       font-weight: bold;
-      transition: color .15s;
+      transition: color .15s, text-shadow .2s;
       background: transparent;
     }
 
@@ -147,23 +148,63 @@
     .j1nx-bubble {
       margin-right: 110px;
       margin-top: 10px;
-      background: #202818;
-      color: #d7ffd6;
+      background: #222236;
+      color: #dbd4ff;
       border-radius: 19px 19px 19px 6px;
       padding: 0.8em 1.1em;
       font-size: 1.02em;
-      border: 2px solid #bdb687;
-      box-shadow: 0 1px 8px #272c1850;
-      min-width: 90px;
-      max-width: 280px;
+      border: 2px solid #b488ff;
+      box-shadow: 0 1px 12px #8c68b4bb;
+      min-width: 110px;
+      max-width: 340px;
       font-family: 'Fira Mono', monospace;
       font-weight: 600;
       pointer-events: auto;
       transition: border .25s, box-shadow .25s;
+      outline: none;
+      resize: none;
     }
-    .j1nx-bubble[data-mood='happy'] { border-color: #9ee37d; box-shadow: 0 0 14px #9ee37d55; }
-    .j1nx-bubble[data-mood='angry'] { border-color: #ff4141; box-shadow: 0 0 14px #ff414155; }
-    .j1nx-bubble[data-mood='default'] { border-color: #bdb687; }
+    .j1nx-bubble[data-mood='happy'] {
+      border-color: #8fffcb;
+      box-shadow: 0 0 14px #8fffcb77;
+      color: #c1ffe7;
+      background: #23343a;
+    }
+    .j1nx-bubble[data-mood='angry'] {
+      border-color: #e062c7;
+      box-shadow: 0 0 14px #e062c799;
+      color: #ffc3f6;
+      background: #321634;
+    }
+    .j1nx-bubble:focus { outline: 2px solid #b488ff; }
+
+    .ad-blend {
+      width: 99vw;
+      margin: 2em auto 0.3em auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ad-blend-inner {
+      background: linear-gradient(90deg, #18191c 60%, #222416 100%);
+      border: 1.5px dashed #5b546f;
+      border-radius: 7px;
+      color: #b488ff;
+      font-family: 'Fira Mono', monospace;
+      font-size: 1.07em;
+      padding: 0.55em 2.1em;
+      margin: 0 auto;
+      letter-spacing: .03em;
+      box-shadow: 0 2px 10px #0c0c1833;
+      max-width: 550px;
+      opacity: 0.97;
+      transition: border .17s;
+      user-select: text;
+    }
+    .ad-blend-inner span {
+      color: #ae65f7;
+      font-weight: bold;
+    }
 
     footer {
       width: 100vw;
@@ -183,6 +224,7 @@
       .main-wrap { flex-direction: column; align-items: center; gap: 2em;}
       .j1nx-side { display:none; }
       .ansi-art { font-size: 0.96em; }
+      .ad-blend-inner { font-size: 0.98em; padding: 0.55em 1.1em; }
     }
   </style>
 </head>
@@ -229,10 +271,19 @@
     </div>
   </div>
 
-  <!-- J1nx floating cutout and mood bubble, position+logic up to you -->
+  <!-- Ad/utility module: blends in above camo bar -->
+  <div class="ad-blend">
+    <div class="ad-blend-inner">
+      <span>Ad/Partner Tool:</span> Get <b>PromptForge Pro</b> for instant AI image generation & private vaults.<br>
+      <i>Want your tool featured here? <a href="#" style="color:#b488ff;">Contact us</a></i>
+    </div>
+  </div>
+
+  <!-- J1nx floating cutout and full chat bubble -->
   <div class="j1nx-side">
     <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
-    <div class="j1nx-bubble" id="j1nxBubble" data-mood="default">Hey, I'm J1nx. Booting up...</div>
+    <textarea class="j1nx-bubble" id="j1nxBubble" data-mood="default" rows="2" maxlength="240"
+      placeholder="Type to chat with J1nx..."></textarea>
   </div>
 
   <footer>
@@ -249,28 +300,47 @@
   </footer>
 
   <script>
-    // Blinking/animated eyes on your ANSI art
+    // Blinking/animated purple eyes on your ANSI art
     const allEyes = document.querySelectorAll('.eye');
     let blinkT = 0;
     setInterval(() => {
       blinkT++;
       allEyes.forEach((e, i) => {
-        e.style.color = (blinkT + i) % 7 < 3 ? '#9ee37d' : '#bdb687';
+        // Flicker between two purples for that animated vibe
+        e.style.color = (blinkT + i) % 6 < 3 ? '#b488ff' : '#ae65f7';
+        e.style.textShadow = (blinkT + i) % 6 < 3
+          ? '0 0 6px #ae65f7, 0 0 10px #a03cf5'
+          : '0 0 6px #b488ff, 0 0 10px #fff1fe';
       });
-    }, 330);
+    }, 333);
 
-    // Mouse follow: move 'O'/'o'/'0' eyes to look toward mouse X
+    // Mouse follow: move all eyes to look toward mouse X
     document.addEventListener('mousemove', e => {
       const ww = window.innerWidth;
       const mouseX = e.clientX;
       const bias = Math.floor(((mouseX / ww) - 0.5) * 6);
-      allEyes.forEach((e, i) => {
-        // Animate all 'eye' letters: 'O' looks forward, 'o' left, '0' right
-        if (bias < -1) e.textContent = 'o';
-        else if (bias > 1) e.textContent = '0';
-        else e.textContent = 'O';
+      allEyes.forEach((eye, i) => {
+        if (bias < -1) eye.textContent = 'o';
+        else if (bias > 1) eye.textContent = '0';
+        else eye.textContent = 'O';
       });
     });
+
+    // J1nx AI chat bubble - interactive, resizes, mood changes on input
+    const j1nx = document.getElementById('j1nxBubble');
+    if (j1nx) {
+      j1nx.addEventListener('input', function () {
+        let v = this.value.trim().toLowerCase();
+        // Mood detection: demo logic, you can hook this to your brain/api
+        if (v.includes('fuck') || v.includes('wtf') || v.includes('angry') || v.includes('mad')) {
+          this.setAttribute('data-mood', 'angry');
+        } else if (v.includes('hi') || v.includes('hey') || v.includes('thanks') || v.includes('happy') || v.includes('cool')) {
+          this.setAttribute('data-mood', 'happy');
+        } else {
+          this.setAttribute('data-mood', 'default');
+        }
+      });
+    }
   </script>
 </body>
 </html>
