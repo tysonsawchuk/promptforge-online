@@ -1,336 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge.online — Pro AI Prompt Tools</title>
-  <meta name="description" content="PromptForge: Underground psychedelic prompt engineering for artists, rebels, and AI freaks. Movie, picture, NSFW, watermark, and more.">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta property="og:title" content="PromptForge.online: Underground Pro AI Prompt Tools">
-  <meta property="og:description" content="Create, experiment, and protect with the ultimate prompt generator. Movie, picture, NSFW, watermark, and more—all in one pro console.">
-  <meta property="og:url" content="https://promptforge.online/main.html">
-  <meta property="og:image" content="/assets/promptforge-og-main.png">
-  <link rel="canonical" href="https://promptforge.online/main.html"/>
-  <meta name="keywords" content="AI prompt, prompt generator, movie prompt, picture prompt, NSFW, watermark, AI art, creative tools, PromptForge, AI generator, creative AI, goreandgiggles, Tyson Sawchuk, OpenArt, KREA, RunwayML">
-  <link rel="icon" href="/assets/favicon.ico">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="PromptForge.online: Next-gen AI prompt engine for devs and taboo creators. Elite NSFW, video, image, watermarking, face mapping, and underground workflow tools." />
+  <title>PromptForge.online</title>
   <style>
-    :root {
-      --bg: #18162b;
-      --box: rgba(30,24,60,0.98);
-      --accent: #ffe600;
-      --pink: #ff7aa2;
-      --cyan: #50e3c2;
-      --micro: #303355;
-      --text: #e6e6f5;
-      --desc: #b5f4ff;
-      --line: #282947;
-      --btn: #161633;
-      --btnhover: #ffe60022;
-    }
     body {
-      background: linear-gradient(120deg,#1a0635 0%,#090d20 70%,#143751 100%);
-      background-size: 400% 400%;
-      animation: bgmove 22s ease-in-out infinite;
       margin: 0;
-      color: var(--text);
-      font-family: 'JetBrains Mono', 'Consolas', 'Menlo', monospace;
+      font-family: 'Segoe UI', 'Fira Mono', monospace, sans-serif;
+      background: linear-gradient(120deg, #191b14 0%, #28241d 100%);
+      color: #e6e5e1;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    @keyframes bgmove {
-      0% {background-position:0% 30%;}
-      50% {background-position:100% 70%;}
-      100% {background-position:0% 30%;}
+
+    header {
+      width: 100vw;
+      padding: 0.75em 2em 0.25em 2em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(28, 30, 22, 0.92);
+      border-bottom: 1.5px solid #28271e;
+      font-size: 1em;
+      z-index: 1;
     }
-    .mainwrap {
-      max-width: 1180px; margin: 44px auto 0 auto; display: flex; gap: 2.7em;
-      background: var(--box); border-radius: 2.15em; box-shadow: 0 10px 44px #000b;
-      padding: 2.2em 2.5em 2.7em 2.5em; position: relative;
+    .breadcrumbs { color: #bdb687; font-size: .98em; }
+    .news-banner { color: #9ee37d; font-weight: 600; font-size: .98em; }
+
+    .ansi-art {
+      font-family: monospace, 'Fira Mono', 'Consolas', 'Menlo', 'Courier New', monospace;
+      white-space: pre;
+      font-size: 1.18em;
+      line-height: 1.1;
+      letter-spacing: 0.03em;
+      margin: 1.6em auto 0.3em auto;
+      text-align: center;
+      user-select: none;
+      pointer-events: none;
+      color: #d1cfa8;
+      max-width: 98vw;
     }
-    .leftcol {
-      width: 340px; min-width:220px; flex-shrink: 0;
+    .eye {
+      color: #9ee37d;
+      font-weight: bold;
+      transition: color .15s;
+      background: transparent;
     }
-    .ascii-art {
-      font-family: 'Fira Mono','Consolas','Menlo',monospace; white-space: pre;
-      font-size: 1.11em; letter-spacing: 0.02em; line-height:1.14em; color:#f5f5f5;
-      background:transparent; margin: 0 0 0.3em 0; text-align:left;
+
+    h1 {
+      text-align: center;
+      margin: .05em 0 0.1em 0;
+      font-size: 2.6em;
+      letter-spacing: 0.09em;
+      font-family: 'Fira Mono', 'Segoe UI', monospace, sans-serif;
+      background: linear-gradient(90deg, #c9d26d 0%, #a7f3a0 60%, #bdb687 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 800;
+      user-select: none;
     }
-    .eye { color: var(--accent); text-shadow: 0 0 7px #ffe600cc, 0 0 14px #ffe60099; position:relative; }
-    .pupil { color: #00c3ff; font-size:1em; position:absolute; left:0; top:0; pointer-events:none; }
-    .site-title {
-      font-size: 2.06em; font-weight: 900; color: var(--accent); letter-spacing:0.02em;
-      margin: .8em 0 0.5em 0; text-shadow:0 3px 14px #242e46cc;
-      text-align: left;
+
+    .desc {
+      max-width: 780px;
+      margin: 0 auto 2.1em auto;
+      text-align: center;
+      font-size: 1.1em;
+      color: #d3cfae;
+      line-height: 1.7;
+      padding: 0 1.5em;
+      font-weight: 400;
     }
-    .descblock {
-      margin-left: 18px;
+
+    .main-wrap {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 2.7em;
+      width: 100vw;
+      max-width: 1200px;
+      margin: 0 auto 0 auto;
     }
-    .descblock h2 {
-      margin: 0 0 .45em 0; font-size:1.23em; color:var(--cyan); font-weight:900;
-      letter-spacing:0.05em;
+
+    .nav-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1.13em;
+      min-width: 220px;
+      margin-top: .2em;
     }
-    .descblock .desc-main {
-      font-size: 1.12em; line-height:1.65em; color:#f8ffe5; margin-bottom: 1.1em;
-      font-weight:600;
-      background: linear-gradient(90deg,#201046b2 75%,#3821a0 120%);
-      border-radius:1.3em; box-shadow:0 1px 14px #000a; padding:1.12em 2em 1em 1.2em;
-      border:1.2px solid #32314a;
+    .nav-buttons a {
+      display: inline-block;
+      text-decoration: none;
+      background: #222416;
+      color: #e6e5e1;
+      font-weight: 600;
+      font-family: inherit;
+      padding: 0.7em 1.4em;
+      border-radius: 7px;
+      border: 1.5px solid #40421e;
+      font-size: 1.05em;
+      letter-spacing: 0.04em;
+      transition: background .17s, border .17s;
     }
-    .descblock ul {
-      margin: 0 0 1.4em 1.1em; color: #ffe47a; font-size:1.01em; line-height:1.58em;
-      padding: 0;
+    .nav-buttons a:hover {
+      background: #3c4027;
+      border: 1.5px solid #bdb687;
+      color: #fff;
     }
-    .descblock ul li {
-      margin: 0 0 0.18em 0; color: var(--desc); font-weight: 500;
+    .nav-descriptions {
+      display: flex;
+      flex-direction: column;
+      gap: 1.35em;
+      margin-left: .3em;
+      margin-top: .12em;
+      color: #bcbdb3;
+      font-size: .99em;
+      max-width: 500px;
+      word-break: break-word;
     }
-    .tool-list { margin: 2em 0 1.2em 0; }
-    .tool-row {
-      display: flex; align-items: center; gap: 1.3em; margin-bottom: 0.45em;
-      padding: .19em 0 .28em 0;
-      border-bottom: 1.4px solid var(--micro); opacity: .95;
-    }
-    .tool-btn {
-      font-family: inherit; font-size: 1.19em; font-weight: 800; letter-spacing:0.02em;
-      color: var(--cyan); background: var(--btn); border: 2px solid var(--line);
-      border-radius: .9em; padding: .28em 1.44em; cursor: pointer;
-      transition: background .14s, color .13s, border .14s, box-shadow .13s;
-      text-decoration: none; display: inline-block; margin-right:1.4em;
-      box-shadow: 0 2px 8px #001a;
-    }
-    .tool-btn:hover, .tool-btn:focus {
-      background: var(--btnhover);
-      color: #222; border-color: var(--accent); box-shadow: 0 0 0 2px #ffe60077;
-    }
-    .tool-desc {
-      font-size: 1.06em; color: var(--desc); font-weight:500;
+    .nav-descriptions b {
+      color: #dde2b6;
+      font-weight: 600;
       letter-spacing: 0.01em;
-      margin-right: 0.5em;
     }
-    .microline {
-      border:0; border-top:1.7px solid var(--micro); margin:17px 0 19px 0; opacity:.28;
+
+    .j1nx-side {
+      position: fixed;
+      top: 92px;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      pointer-events: none;
     }
-    .social-row {
-      margin: 1.6em 0 0.5em 0; display: flex; gap: 1.22em; align-items: center;
+    .j1nx-cutout {
+      width: 105px;
+      filter: drop-shadow(0 0 8px #2e2c1c44);
+      pointer-events: auto;
+      user-select: none;
     }
-    .social-row a, .bmc-btn {
-      color:#fff; font-size:1.4em; text-decoration: none;
-      display:inline-flex; align-items: center; gap: 0.38em;
-      padding:0.28em 1.05em; border-radius: 0.7em;
-      background: #242542; transition: background 0.15s, color 0.15s;
-      font-weight: 700;
+    .j1nx-bubble {
+      margin-right: 110px;
+      margin-top: 10px;
+      background: #202818;
+      color: #d7ffd6;
+      border-radius: 19px 19px 19px 6px;
+      padding: 0.8em 1.1em;
+      font-size: 1.02em;
+      border: 2px solid #bdb687;
+      box-shadow: 0 1px 8px #272c1850;
+      min-width: 90px;
+      max-width: 280px;
+      font-family: 'Fira Mono', monospace;
+      font-weight: 600;
+      pointer-events: auto;
+      transition: border .25s, box-shadow .25s;
     }
-    .social-row a:hover, .bmc-btn:hover { background: var(--accent); color: #232841;}
-    .bmc-btn { background: #ffe47a; color: #141620; margin-left: .9em; font-size: 1.12em; }
-    .adbar {
-      margin:2.2em 0 1.1em 0; background:rgba(28,24,56,.82); border-radius:1.13em;
-      border:1.3px solid #3a3160; box-shadow:0 2px 10px #130d25bb;
-      padding:0.82em 1.4em 0.8em 1.5em; max-width:530px; margin-left:auto; margin-right:auto;
-      display: flex; align-items: center; gap:1.05em; position:relative;
-    }
-    .adbar::before {
-      content:"🧠 Sponsored — powers PromptForge";
-      font-size:.98em; color:#ffe47a; opacity: .83; font-weight: 700;
-      margin-right:1.5em; letter-spacing:0.02em;
-    }
-    .adbar ins { display:block!important; min-width:220px; min-height:70px;}
+    .j1nx-bubble[data-mood='happy'] { border-color: #9ee37d; box-shadow: 0 0 14px #9ee37d55; }
+    .j1nx-bubble[data-mood='angry'] { border-color: #ff4141; box-shadow: 0 0 14px #ff414155; }
+    .j1nx-bubble[data-mood='default'] { border-color: #bdb687; }
+
     footer {
-      margin:2.7em auto 1.2em auto; text-align:center; font-size:.98em; color:#ccc; opacity:.81; max-width:920px;
+      width: 100vw;
+      text-align: center;
+      padding: 1.5em 0 0.1em 0;
+      font-size: .98em;
+      color: #928e71;
+      background: transparent;
+      letter-spacing: .03em;
+      margin-top: auto;
+      font-family: 'Fira Mono', monospace;
+      position: relative;
+      z-index: 1;
     }
-    .footer-line { margin:2.4em 0 1.1em 0; }
-    /* J1NX Bot */
-    .j1nx-bot { position:fixed; right:2vw; bottom:4vw; z-index:999; display:flex; flex-direction:column; align-items:center; }
-    .j1nx-img { background:url('/assets/j1nx_cutout.png') no-repeat center/contain; width:68px; height:68px; margin:auto; margin-bottom:-14px; box-shadow:0 2px 14px #38e1c944;}
-    .j1nx-chatbox { background:#232841f5; color:#fff; border-radius:1.5em 1.5em 1.6em 1.6em; min-width:238px; max-width:330px; padding:1.1em 1em; margin-top:-1.2em; font-size:1.12em; box-shadow:0 4px 14px #000c; display:none; }
-    .j1nx-chatbox.active { display:block; }
-    .j1nx-messages { min-height:3.1em;}
-    .j1nx-row { display:flex; gap:0.45em; margin-top:.7em;}
-    .j1nx-input { flex:1; border-radius:7px; border:1px solid #555; font-size:1.02em; background:#191a24; color:#ffe47a; padding:.45em 1em;}
-    .j1nx-send { background:#ffe47a; border:none; border-radius:8px; color:#181c29; font-size:1.2em; font-weight:700; padding:0 1.15em;}
-    .j1nx-18 { margin-left:0.8em; font-size:1.09em; color:#5ce3c7; cursor:pointer;}
-    .j1nx-chatbox.nsfw { background:#2e1223fa; color:#fff0fa; box-shadow:0 0 18px #f69e;}
-    .j1nx-chatbox.celebrate { background:#211b13fa; color:#ffe47a;}
-    .j1nx-chatbox.fun { background:#142a2efa; color:#aefcff;}
-    .j1nx-chatbox.danger { background:#3c0b14fa; color:#ff4c4c;}
-    .j1nx-chatbox.help, .j1nx-chatbox.support { background:#14395afa; color:#89f2ff;}
-    .j1nx-chatbox.safe { background:#232841fa;}
-    .j1nx-img:hover { filter:brightness(1.08) drop-shadow(0 0 12px #ffe600bb);}
-    @media (max-width:1150px){ .mainwrap{flex-direction:column; gap:1.2em;} .leftcol{width:100%;} .descblock{margin-left:0;} }
-    @media (max-width:750px){ .mainwrap{padding:.4em 0.2em 1.3em 0.2em;} .leftcol{width:100%;} .descblock{margin-left:0;} .tool-row{flex-direction:column;align-items:flex-start;} }
-    @media (max-width:600px){ .j1nx-bot{bottom:99px!important; right:1vw;} }
+
+    @media (max-width: 900px) {
+      .main-wrap { flex-direction: column; align-items: center; gap: 2em;}
+      .j1nx-side { display:none; }
+      .ansi-art { font-size: 0.96em; }
+    }
   </style>
 </head>
 <body>
-  <div class="mainwrap">
-    <div class="leftcol">
-      <!-- ASCII ART BLOCK WITH EYE ANIMATION -->
-      <pre class="ascii-art" id="asciiArt">
-  ))    ))       .-.   \\\    /// ))   (o)__(o)         .-.     ))       \/         
- (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
-  | (_))| (_)),'.---.`, | \  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
-  | .-' |  .'/ /|_|_|\ \||\\//||  | .-'   )(  .' __)/ /|_|_|\ \ |  .'/ /|_|_\ .' __)
-  |(    )|\\ | \_____/ ||| \/ ||  |(     (  )(  _)  | \_____/ | )|\\ | \_.--.(  _)  
-   \)  (/  \)'. `---' .`||    ||   \)     )/  )/    '. `---' .`(/  \)'.   \) \`.__) 
-   (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
-      </pre>
-      <div class="site-title">PromptForge.online</div>
-      <div class="tool-list">
-        <div style="font-weight:900; font-size:1.12em; color:var(--accent);margin:1.25em 0 0.7em 0;">TOOLS</div>
-        <div class="tool-row">
-          <a class="tool-btn" href="/movie.html">Movie Maker</a>
-          <div class="tool-desc">Script, storyboard, and prompt generator for cinematic AI scenes, trailer vibes, and viral short film ideas. Perfect for visual storytellers and AI video makers.</div>
-        </div>
-        <div class="tool-row">
-          <a class="tool-btn" href="/pictureprompt.html">Picture Forge</a>
-          <div class="tool-desc">Create hyperreal images, portraits, and fantasy visuals with scene control, lighting, and mood. Unmatched for artists, cosplayers, and meme freaks.</div>
-        </div>
-        <div class="tool-row">
-          <a class="tool-btn" href="/watermark.html">Watermark Lab</a>
-          <div class="tool-desc">Add text or logo watermarks to any image—protect your art instantly, with pro-style options and custom presets.</div>
-        </div>
-        <div class="tool-row">
-          <a class="tool-btn" href="/messwithai.html">Mess With AI</a>
-          <div class="tool-desc">Break, remix, and experiment with prompt logic. For hackers, troll-artists, and prompt explorers who want to break the mold.</div>
-        </div>
-      </div>
+
+  <header>
+    <div class="breadcrumbs">/ai /tools /promptforge</div>
+    <div class="news-banner">🔥 New: Face Mapping & DirtyMuse live (beta)!</div>
+  </header>
+
+  <!-- Your exact ANSI art here! -->
+  <div class="ansi-art" id="ansiArt">
+&nbsp; ))    ))       .-.   \\\    /// ))   (<span class="eye">o</span>)__(<span class="eye">o</span>)         .-.     ))       \/         
+&nbsp;(<span class="eye">o</span>0)-.(<span class="eye">O</span>o)-.  c(<span class="eye">O</span>_<span class="eye">O</span>)c ((<span class="eye">O</span>)  (<span class="eye">O</span>))(o0)-.(__  __)wWw    c(<span class="eye">O</span>_<span class="eye">O</span>)c  (Oo)-.   (OO)   wWw  
+&nbsp; | (_))| (_)),'.---.`, | \  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
+&nbsp; | .-' |  .'/ /|_|_|\ \||\\//||  | .-'   )(  .' __)/ /|_|_|\ \ |  .'/ /|_|_\ .' __)
+&nbsp; |(    )|\\ | \_____/ ||| \/ ||  |(     (  )(  _)  | \_____/ | )|\\ | \_.--.(  _)  
+&nbsp;  \)  (/  \)'. `---' .`||    ||   \)     )/  )/    '. `---' .`(/  \)'.   \) \`.__) 
+&nbsp;  (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
+  </div>
+
+  <h1>PromptForge.online</h1>
+
+  <div class="desc">
+    PromptForge is the underground prompt engine for real AI creators, pro devs, and anyone who wants *full* control—no filters, no limits. Build ultra-detailed image/video prompts, automate NSFW, watermark art, face swap, and unlock forbidden features. This is the toolbox for those who want to dominate AI—sleek UI, deep logic, pro docs, and DirtyMuse for when you’re feeling wild. Your workflow, your rules, your way.
+  </div>
+
+  <div class="main-wrap">
+    <div class="nav-buttons">
+      <a href="/pic.html">Image Prompt Builder</a>
+      <a href="/movie.html">Video Prompt Builder</a>
+      <a href="/muses.html">Muse Directory</a>
+      <a href="/watermark.html">Watermark Tool</a>
+      <a href="/settings.html">Settings Vault</a>
+      <a href="/terms.html">Terms & Access Codes</a>
     </div>
-    <div class="descblock" style="flex:1;">
-      <h2>Underground. Psychedelic. Built by Prompt Engineers.</h2>
-      <div class="desc-main">
-        Welcome to <b>PromptForge</b>—the no-nonsense, dev-approved AI prompt toolkit for artists, rebels, NSFW creators, and those who never settle for “default.” Every tool is built for speed, creative chaos, and real utility—never placeholders or dead links.<br><br>
-        Our workflow: You dream it, we build it, you break it, we make it better. ASCII art and moving eyes? Always. J1NX in the corner? Always-on muse, roaster, and helper. Ad bar? It blends in, supports the site, and never ruins your flow.<br><br>
-        <ul>
-          <li>🔹 <b>Trending:</b> Cinematic cyberpunk, 8K NSFW, retro noir, glitchcore, art with attitude.</li>
-          <li>🔹 <b>Who’s it for?</b> Artists, devs, meme lords, cosplay, story-makers, and AI explorers.</li>
-          <li>🔹 <b>Why PromptForge?</b> Not just tools—actual workflow power, dev energy, never “AI for dummies.”</li>
-        </ul>
-      </div>
-      <div class="social-row">
-        <a href="https://www.facebook.com/groups/393971833395749" target="_blank" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
-        <a href="https://x.com/GoreandGiggles" target="_blank" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><i class="fa-brands fa-bluesky"></i></a>
-        <a class="bmc-btn" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank"><i class="fa-solid fa-mug-hot"></i> Buy Me a Coffee</a>
-      </div>
-      <!-- AdSense as native bar -->
-      <div class="adbar">
-        <ins class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-4963053724895140"
-          data-ad-slot="31313131"
-          data-ad-format="auto"
-          data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      </div>
+    <div class="nav-descriptions">
+      <div><b>Image Prompt Builder:</b> Generate elite, detailed prompts for any AI art model—pro dropdowns, NSFW unlocked, facial/pose presets.</div>
+      <div><b>Video Prompt Builder:</b> Write complex frame or scene prompts for AI video—mix SFW and full taboo, future proofed for video models.</div>
+      <div><b>Muse Directory:</b> Your AI muses—see all personalities, pick your favorites, link them straight into your prompt flow, preview features.</div>
+      <div><b>Watermark Tool:</b> Instantly add branded or stealth watermarks to your AI creations—pro settings, privacy, custom overlays.</div>
+      <div><b>Settings Vault:</b> Import/export configs, lock in all your prompt brain settings, and keep customizations safe and portable.</div>
+      <div><b>Terms & Access Codes:</b> Underground access info, TOS, unlock codes, legal, warnings—get the full forbidden details.</div>
     </div>
+  </div>
+
+  <!-- J1nx floating cutout and mood bubble, position+logic up to you -->
+  <div class="j1nx-side">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
+    <div class="j1nx-bubble" id="j1nxBubble" data-mood="default">Hey, I'm J1nx. Booting up...</div>
   </div>
 
   <footer>
-    <hr class="footer-line">
-    <div>
-      <b>PromptForge.online</b> | No illegal deepfakes or nudes. All AI generations are for art and personal fun only.<br>
-      &copy; 2025 Tyson Sawchuk & Gore and Giggles | <a href="mailto:0fearnofish0@gmail.com" style="color:#ffe47a;text-decoration:none;">Contact</a> | <a href="/legal.html" style="color:#86e3fc;text-decoration:none;">Privacy & Legal</a>
-    </div>
-    <div style="font-size:.9em;opacity:.88;margin-top:.5em;">
-      Built for creative chaos. Powered by AI, OpenArt, and sleepless nights.
+    Made underground. #PromptForge &bull; <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#bdb687;">Bluesky</a> &bull; <a href="https://x.com/GoreandGiggles" style="color:#bdb687;">Twitter/X</a>
+    <br>
+    <div style="margin:1.5em 0 -0.5em 0">
+    <!-- 3-line colored realistic camo ANSI bar -->
+    <pre style="font-family:monospace; font-size:1em; line-height:1.1; letter-spacing:2px; background:transparent; margin:0; padding:0; width:100vw; text-align:center;">
+<span style="color:#4b4d3a">░▒▒▓▓░▒▒▞▚▒▒▒░</span><span style="color:#726345">▞▚▚░░▒▒░▒░▒</span><span style="color:#2e2c1c">░█▒▞▚▒▒█░▉░</span><span style="color:#a4947a">▒▞▞░░▒▒▚▒▒</span><span style="color:#232922">▓▓▒▒▞▒░▒░</span><span style="color:#88806b">░▚▚▓▒▒░░▒</span><span style="color:#141414">▒░▒▒▒█▒░</span><span style="color:#63594d">▒▒░▚▚▒▒</span>
+<span style="color:#2e2c1c">▚░░▒▓▓▞▞░▒▒</span><span style="color:#726345">▓▒░▒░░▞▒</span><span style="color:#232922">▒▒░▒▒▓░▒</span><span style="color:#4b4d3a">▒▒░▓▓░▒▒</span><span style="color:#63594d">░▚▚▒▒▞▞</span><span style="color:#141414">░▓▓░▒░▒</span><span style="color:#88806b">▒▒▒▞▞░░</span>
+<span style="color:#a4947a">▚▒░▓▓▒▒▒▞</span><span style="color:#2e2c1c">▒▒▞▞▒▒░▓</span><span style="color:#726345">▒░▒▒▞▞▒</span><span style="color:#4b4d3a">▞░░▒▒▒▓</span><span style="color:#232922">▒▒▒░░▓</span><span style="color:#63594d">▒▒▚▚░▒</span>
+    </pre>
     </div>
   </footer>
 
-  <!-- MINI J1NX BOT (always-on, unified) -->
-  <script src="/assets/j1nx_brain.js"></script>
-  <div class="j1nx-bot" id="j1nxBot" data-mood="safe" title="Chat with J1NX">
-    <div class="j1nx-img" id="j1nxImg"></div>
-    <div class="j1nx-chatbox safe" id="j1nxChatbox">
-      <div class="j1nx-messages" id="j1nxMessages">👾 Hi! I’m J1NX. Type for help, advice, or anything…</div>
-      <div class="j1nx-row">
-        <input class="j1nx-input" id="j1nxInput" placeholder="Type to J1NX, hit Enter...">
-        <button class="j1nx-send" id="j1nxSend" title="Send"><i class="fa-solid fa-arrow-up"></i></button>
-        <div class="j1nx-18" id="j1nx18" title="Toggle 18+ mode"><i class="fa-solid fa-lock"></i></div>
-      </div>
-    </div>
-  </div>
   <script>
-    // --- J1NX Chat logic ---
-    let j1nxMode18 = false;
-    const j1nxBot = document.getElementById('j1nxBot');
-    const j1nxChatbox = document.getElementById('j1nxChatbox');
-    const j1nxMessages = document.getElementById('j1nxMessages');
-    const j1nxInput = document.getElementById('j1nxInput');
-    const j1nxSend = document.getElementById('j1nxSend');
-    const j1nx18 = document.getElementById('j1nx18');
-    document.getElementById('j1nxImg').onclick = function() {
-      j1nxChatbox.classList.toggle('active');
-      if (j1nxChatbox.classList.contains('active')) j1nxInput.focus();
-    };
-    function handleJ1nxInput(val) {
-      if (!window.j1nxBrain) {
-        j1nxMessages.innerHTML = "<span style='color:#ff3171'>J1NX brain file missing or invalid. No responses possible.</span>";
-        return;
-      }
-      let matched = null, rawInput = val.toLowerCase();
-      for(let i=0;i<j1nxBrain.length;i++) {
-        if((j1nxMode18 || j1nxBrain[i].safe !== false) && j1nxBrain[i].match.test(val)) {
-          matched = j1nxBrain[i];
-          break;
-        }
-      }
-      if(matched) {
-        j1nxMessages.textContent = matched.text;
-        if(matched.mood){
-          j1nxChatbox.className = "j1nx-chatbox active "+matched.mood;
-        }
-        if(matched.nsfw || (j1nxMode18 && matched.nsfw)) {
-          j1nxChatbox.classList.add('nsfw'); j1nxChatbox.classList.remove('safe');
-        } else {
-          j1nxChatbox.classList.add('safe'); j1nxChatbox.classList.remove('nsfw');
-        }
-      } else {
-        j1nxMessages.textContent = "J1NX: ...";
-        j1nxChatbox.classList.add('safe'); j1nxChatbox.classList.remove('nsfw');
-      }
-    }
-    function submitJ1nx() {
-      let val = j1nxInput.value.trim();
-      if(val) handleJ1nxInput(val);
-      j1nxInput.value = '';
-    }
-    j1nxInput.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitJ1nx(); }});
-    j1nxSend.addEventListener('click', submitJ1nx);
-    j1nx18.addEventListener('click', function(){
-      j1nxMode18 = !j1nxMode18;
-      j1nx18.classList.toggle('on', j1nxMode18);
-      handleJ1nxInput(j1nxInput.value || '');
-    });
-
-    // ---- ASCII ART EYE-TRACKING (yellow eyes, blue pinpoint pupil) ----
-    const asciiBlock = document.getElementById('asciiArt');
-    let art = asciiBlock.textContent;
-    // Replace o/O/0 (eyes) with spans for animation
-    art = art.replace(/([oO0])/g, (m) => `<span class="eye" data-eye="${m}">${m}<span class="pupil" style="left:0;top:0;">•</span></span>`);
-    asciiBlock.innerHTML = art;
-    function trackEyes(e) {
-      const eyes = document.querySelectorAll('.eye');
-      eyes.forEach(function(eye) {
-        const rect = eye.getBoundingClientRect();
-        const cx = rect.left + rect.width/2;
-        const cy = rect.top + rect.height/2;
-        const dx = e.clientX - cx, dy = e.clientY - cy;
-        const maxD = 5;
-        let angle = Math.atan2(dy, dx);
-        let dist = Math.min(maxD, Math.sqrt(dx*dx+dy*dy)/8);
-        const px = Math.cos(angle)*dist, py = Math.sin(angle)*dist;
-        const pupil = eye.querySelector('.pupil');
-        pupil.style.left = `${8+px}px`;
-        pupil.style.top = `${2+py}px`;
+    // Blinking/animated eyes on your ANSI art
+    const allEyes = document.querySelectorAll('.eye');
+    let blinkT = 0;
+    setInterval(() => {
+      blinkT++;
+      allEyes.forEach((e, i) => {
+        e.style.color = (blinkT + i) % 7 < 3 ? '#9ee37d' : '#bdb687';
       });
-    }
-    window.addEventListener('mousemove', trackEyes);
+    }, 330);
 
-    // --- Dismiss J1NX chat on click outside
-    document.addEventListener('click', function(e){
-      if (!j1nxBot.contains(e.target) && j1nxChatbox.classList.contains('active')) {
-        j1nxChatbox.classList.remove('active');
-      }
+    // Mouse follow: move 'O'/'o'/'0' eyes to look toward mouse X
+    document.addEventListener('mousemove', e => {
+      const ww = window.innerWidth;
+      const mouseX = e.clientX;
+      const bias = Math.floor(((mouseX / ww) - 0.5) * 6);
+      allEyes.forEach((e, i) => {
+        // Animate all 'eye' letters: 'O' looks forward, 'o' left, '0' right
+        if (bias < -1) e.textContent = 'o';
+        else if (bias > 1) e.textContent = '0';
+        else e.textContent = 'O';
+      });
     });
   </script>
-  <!-- Google AdSense async -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </body>
 </html>
