@@ -9,60 +9,52 @@
   <style>
     html, body {
       height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
+      width: 100vw;
+      margin: 0; padding: 0;
       background: #090b10;
       font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      color: #20ffe0;
-      overflow-x: hidden;
-      overflow-y: hidden;
+      color: #1aff87;
+      overflow: hidden;
     }
-    .main-wrap {
+    .container {
       display: flex;
       flex-direction: row;
       height: 100vh;
       width: 100vw;
-      position: relative;
-      min-height: 0;
     }
-    .terminal-col {
+    .left {
       width: 54vw;
-      min-width: 260px;
-      height: 100vh;
+      min-width: 240px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      background: transparent;
       padding-left: 2vw;
+      padding-bottom: 3.2em;
       z-index: 10;
-      position: relative;
+      background: transparent;
     }
     .terminal-inner {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       height: 100vh;
+      min-height: 0;
     }
     .fakery {
       white-space: pre-line;
-      font-size: 1.08rem;
+      font-size: 1.05rem;
       color: #1aff87;
-      line-height: 1.23;
+      line-height: 1.22;
+      margin-bottom: 0.15em;
       user-select: text;
-      margin-bottom: 0.3em;
-      flex-shrink: 0;
-      flex-grow: 0;
-      text-shadow: 0 0 4px #0fa, 0 0 1px #031;
+      text-shadow: 0 0 3px #31fd81,0 0 2px #021;
     }
     .cmd-hints {
       color: #36e0ab;
       font-size: 0.99em;
       font-style: italic;
-      margin-bottom: 0.2em;
-      margin-top: 0.11em;
-      flex-shrink: 0;
-      flex-grow: 0;
+      margin-bottom: 0.12em;
+      margin-top: 0.08em;
       text-shadow: 0 0 2px #067, 0 0 1px #000;
     }
     .input-row {
@@ -70,14 +62,13 @@
       align-items: center;
       width: 100%;
       margin-bottom: 0;
-      flex-shrink: 0;
       background: transparent;
     }
     #prompt {
       color: #13f9d6;
       font-weight: 700;
-      margin-right: 0.23em;
-      font-size: 1.12rem;
+      margin-right: 0.2em;
+      font-size: 1.13rem;
     }
     #terminalInput {
       background: transparent;
@@ -85,7 +76,7 @@
       border: none;
       outline: none;
       font-family: inherit;
-      font-size: 1.17rem;
+      font-size: 1.13rem;
       width: 28vw;
       min-width: 120px;
       max-width: 400px;
@@ -98,69 +89,68 @@
     #terminalInput:focus { outline: none; }
     #fakeCursor {
       color: #ff37e2;
-      font-size: 1.18em;
-      font-weight: 800;
-      margin-left: -0.07em;
-      animation: blink 1.07s steps(2, start) infinite;
+      font-size: 1.16em;
+      font-weight: 900;
+      margin-left: -0.09em;
+      animation: blink 1.03s steps(2, start) infinite;
       position: relative;
-      top: 0.09em;
       left: 0;
+      top: 0.10em;
       display: inline-block;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    .globe-col {
+    .right {
       flex: 1 1 0;
       min-width: 220px;
       height: 100vh;
       position: relative;
+      background: transparent;
+      z-index: 2;
+      overflow: hidden;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      overflow: hidden;
-      background: transparent;
-      z-index: 2;
     }
+    /* Star Wars vertical credits effect, always below the globe */
+    .starwars-credits {
+      position: absolute;
+      left: 0; bottom: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .starwars-text {
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      color: #ffee88;
+      font-size: 1.17em;
+      opacity: 0.97;
+      text-shadow: 0 0 8px #ffe, 0 0 2px #880;
+      font-weight: 600;
+      width: 92%;
+      max-width: 620px;
+      margin: 0 auto;
+      text-align: center;
+      white-space: pre-line;
+      animation: starwars-scroll 75s linear infinite;
+    }
+    @keyframes starwars-scroll {
+      from { transform: translateY(100vh);}
+      to   { transform: translateY(-120vh);}
+    }
+    /* Globe video over credits */
     .globe-bg-video {
       position: absolute;
-      right: 0; top: 0; width: 100%; height: 100%;
+      left: 0; top: 0; width: 100%; height: 100vh;
       object-fit: cover;
       z-index: 3;
       pointer-events: none;
       filter: saturate(1.18) brightness(1.08) contrast(1.12);
       background: transparent;
-    }
-    /* Star Wars credits effect */
-    .starwars-credits {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 100%;
-      height: 90vh;
-      overflow: hidden;
-      z-index: 2;
-      pointer-events: none;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      background: transparent;
-    }
-    .starwars-text {
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      color: #ffee88;
-      font-size: 1.15em;
-      opacity: 0.95;
-      text-shadow: 0 0 6px #ffe, 0 0 2px #880;
-      font-weight: 600;
-      white-space: pre-line;
-      width: 90%;
-      max-width: 650px;
-      margin: 0 auto;
-      text-align: center;
-      animation: starwars-scroll 55s linear infinite;
-    }
-    @keyframes starwars-scroll {
-      from { transform: translateY(100vh); }
-      to { transform: translateY(-100vh);}
     }
     .footer-sticky {
       width: 100vw;
@@ -170,7 +160,7 @@
       text-align: center;
       position: fixed;
       left: 0; bottom: 0;
-      padding: 0.51em 0 0.15em 0;
+      padding: 0.51em 0 0.19em 0;
       border-top: 2.5px solid #1ae2d2;
       z-index: 200;
       font-family: inherit;
@@ -184,19 +174,19 @@
       font-weight: 700;
     }
     @media (max-width: 900px) {
-      .main-wrap{flex-direction:column;}
-      .terminal-col,.globe-col{width:100vw;min-width:0;height:49vh;max-width:100vw;}
-      .starwars-credits{height:40vh;}
-      .fakery{max-width:96vw;}
+      .container{flex-direction:column;}
+      .left,.right{width:100vw;min-width:0;height:47vh;max-width:100vw;}
+      .starwars-credits{height:47vh;}
+      .fakery{max-width:97vw;}
       #terminalInput{width:58vw;}
     }
   </style>
 </head>
 <body>
-<div class="main-wrap">
+<div class="container">
   <!-- Terminal Left -->
-  <div class="terminal-col">
-    <div class="terminal-inner" style="height: calc(100vh - 3em); min-height:0;">
+  <div class="left">
+    <div class="terminal-inner" style="height: calc(100vh - 3.2em); min-height:0;">
       <div class="fakery" id="fakery"></div>
       <div class="cmd-hints" id="cmdHints"></div>
       <div class="input-row">
@@ -206,26 +196,26 @@
       </div>
     </div>
   </div>
-  <!-- Globe Right + Star Wars credits text -->
-  <div class="globe-col">
+  <!-- Globe + credits -->
+  <div class="right">
+    <div class="starwars-credits">
+      <div class="starwars-text" id="starwarsText">
+PromptForge.online is the world’s only 100% free, pro-level AI toolkit.
+Batch watermark your TikToks and pics, build prompts, face map, and unlock dev tools instantly.
+No paywalls, no filters, all features unlocked—ever.
+Artists, rebels, and creators welcome.
+Your creativity, your rules—join the underground.
+Facebook: Gore & Giggles // Bluesky: goreandgiggles.bsky.social // X: @GoreandGiggles
+// admin@goreandgiggles.com
+DMCA tools, watermark forge, instant batch, open source, creator power, always safe, always free.
+(Why? Ad revenue only. Pay nothing, create everything.)
+// Welcome to the network.
+// Type “main” to unlock all tools.
+      </div>
+    </div>
     <video class="globe-bg-video" autoplay muted loop playsinline>
       <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
     </video>
-    <div class="starwars-credits">
-      <div class="starwars-text" id="starwarsText">
-        PromptForge.online is the world’s only 100% free, pro-level AI toolkit. 
-        Batch watermark your TikToks and pics, build prompts, face map, and unlock dev tools instantly.
-        No paywalls, no filters, all features unlocked—ever. 
-        Artists, rebels, and creators welcome. 
-        Your creativity, your rules—join the underground. 
-        Facebook: Gore & Giggles // Bluesky: goreandgiggles.bsky.social // X: @GoreandGiggles 
-        // admin@goreandgiggles.com 
-        DMCA tools, watermark forge, instant batch, open source, creator power, always safe, always free.
-        (Why? Ad revenue only. Pay nothing, create everything.)
-        // Welcome to the network. 
-        // Type “main” to unlock all tools.
-      </div>
-    </div>
   </div>
 </div>
 <!-- Footer -->
@@ -234,7 +224,7 @@
   Google users: for all content, <a href="main.html">proceed to main hub &rarr;</a>
 </div>
 <script>
-  // -- Terminal fakery
+  // Terminal fakery
   const bootLines = [
     "booting up...",
     "",
@@ -261,7 +251,7 @@
   ];
   document.getElementById('fakery').innerText = bootLines.join('\n');
   document.getElementById('cmdHints').innerHTML = 'try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>';
-  // Always keep input focused
+  // Input focus always
   const input = document.getElementById('terminalInput');
   input.value = "";
   input.focus();
