@@ -9,7 +9,6 @@
   <style>
     html, body {
       height: 100%;
-      width: 100%;
       margin: 0;
       padding: 0;
       background: #090b10;
@@ -17,54 +16,63 @@
       color: #20ffe0;
       overflow: hidden;
     }
-    .container {
+    .main-wrap {
       display: flex;
       flex-direction: row;
       height: 100vh;
       width: 100vw;
       overflow: hidden;
+      position: relative;
     }
-    .terminal-side {
-      flex: 0 0 54vw;
+    .terminal-col {
+      width: 54vw;
+      min-width: 260px;
       height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
-      padding-left: 2vw;
+      justify-content: flex-start;
       background: transparent;
+      padding-left: 2vw;
       z-index: 10;
-      position: relative;
     }
-    .terminal-fakery {
+    .terminal-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      justify-content: flex-end;
+    }
+    .fakery {
       white-space: pre-line;
-      font-size: 1.06rem;
+      font-size: 1.08rem;
       color: #20ffe0;
       line-height: 1.25;
       user-select: text;
-      padding-top: 2.6vw;
-      flex: 1 1 auto;
-      width: 100%;
-      overflow: hidden;
+      margin-bottom: 0.3em;
+      flex-shrink: 0;
+      flex-grow: 0;
     }
     .cmd-hints {
       color: #38ffe0b0;
       font-size: 0.99em;
       font-style: italic;
-      margin: 0.12em 0 0.11em 0;
-      width: 100%;
+      margin-bottom: 0.20em;
+      margin-top: 0.11em;
+      flex-shrink: 0;
+      flex-grow: 0;
     }
-    .terminal-input-row {
+    .input-row {
       display: flex;
       align-items: center;
       width: 100%;
-      padding-bottom: 0.6em;
-      background: transparent;
+      margin-bottom: 0.3em;
+      flex-shrink: 0;
+      flex-grow: 0;
     }
     #prompt {
       color: #13f9d6;
       font-weight: 700;
       margin-right: 0.23em;
-      font-size: 1.10rem;
+      font-size: 1.12rem;
     }
     #terminalInput {
       background: transparent;
@@ -72,10 +80,10 @@
       border: none;
       outline: none;
       font-family: inherit;
-      font-size: 1.14rem;
-      width: 30vw;
-      min-width: 130px;
-      max-width: 420px;
+      font-size: 1.17rem;
+      width: 28vw;
+      min-width: 120px;
+      max-width: 400px;
       caret-color: #ff3cd7;
       font-weight: bold;
       letter-spacing: 0;
@@ -83,17 +91,17 @@
     #terminalInput:focus { outline: none; }
     #fakeCursor {
       color: #ff37e2;
-      font-size: 1.12em;
+      font-size: 1.17em;
       font-weight: 800;
-      margin-left: -0.11em;
-      animation: blink 1.17s steps(2, start) infinite;
+      margin-left: -0.07em;
+      animation: blink 1.07s steps(2, start) infinite;
       position: relative;
       top: 0.09em;
       left: 0;
       display: inline-block;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    .right-side {
+    .globe-col {
       flex: 1 1 0;
       min-width: 220px;
       height: 100vh;
@@ -104,7 +112,6 @@
       overflow: hidden;
       background: transparent;
     }
-    /* Globe background video */
     .globe-bg-video {
       position: absolute;
       right: 0; top: 0; width: 100%; height: 100%;
@@ -113,13 +120,12 @@
       pointer-events: none;
       filter: saturate(1.18) brightness(1.08) contrast(1.12);
     }
-    /* Scrolling SEO ticker text, behind globe */
     .seo-ticker {
       position: absolute;
-      bottom: 5vw;
+      bottom: 7vw;
       left: 0;
       width: 100%;
-      height: 2.7em;
+      height: 2.4em;
       overflow: hidden;
       z-index: 3;
       pointer-events: none;
@@ -130,7 +136,7 @@
       white-space: nowrap;
       font-size: 1.16em;
       color: #b3ffff;
-      opacity: 0.90;
+      opacity: 0.93;
       text-shadow: 0 0 8px #001, 0 0 15px #21eaff, 0 0 2px #2f2fff;
       letter-spacing: 0.011em;
       font-style: italic;
@@ -139,16 +145,15 @@
       user-select: none;
       margin-bottom: 0.2em;
     }
-    /* Footer */
     .footer-sticky {
       width: 100vw;
       background: #0d2a26f1;
       color: #aeeef7;
-      font-size: 1.08em;
+      font-size: 1.10em;
       text-align: center;
       position: fixed;
       left: 0; bottom: 0;
-      padding: 0.51em 0 0.22em 0;
+      padding: 0.51em 0 0.18em 0;
       border-top: 2.5px solid #1ae2d2;
       z-index: 200;
       font-family: inherit;
@@ -162,28 +167,30 @@
       font-weight: 700;
     }
     @media (max-width: 900px) {
-      .container{flex-direction:column;}
-      .terminal-side,.right-side{width:100vw;min-width:0;height:47vh;max-width:100vw;}
+      .main-wrap{flex-direction:column;}
+      .terminal-col,.globe-col{width:100vw;min-width:0;height:48vh;max-width:100vw;}
       .seo-ticker{height:2.1em;}
-      .terminal-fakery{max-width:96vw;}
-      #terminalInput{width:60vw;}
+      .fakery{max-width:95vw;}
+      #terminalInput{width:58vw;}
     }
   </style>
 </head>
 <body>
-<div class="container">
+<div class="main-wrap">
   <!-- Terminal Left -->
-  <div class="terminal-side">
-    <div class="terminal-fakery" id="fakery"></div>
-    <div class="cmd-hints" id="cmdHints"></div>
-    <div class="terminal-input-row">
-      <span id="prompt">root@network:/#</span>
-      <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
-      <span id="fakeCursor">_</span>
+  <div class="terminal-col">
+    <div class="terminal-inner">
+      <div class="fakery" id="fakery"></div>
+      <div class="cmd-hints" id="cmdHints"></div>
+      <div class="input-row">
+        <span id="prompt">root@network:/#</span>
+        <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
+        <span id="fakeCursor">_</span>
+      </div>
     </div>
   </div>
   <!-- Globe Right + SEO Bio Text -->
-  <div class="right-side">
+  <div class="globe-col">
     <video class="globe-bg-video" autoplay muted loop playsinline>
       <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
     </video>
@@ -225,21 +232,19 @@
   ];
   document.getElementById('fakery').innerText = bootLines.join('\n');
   document.getElementById('cmdHints').innerHTML = 'try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>';
-  // Always keep input focused (mobile-friendly hack)
+  // Focus input always
   const input = document.getElementById('terminalInput');
   input.value = "";
   input.focus();
   window.onclick = () => input.focus();
-  // Hide native caret (let _ fakeCursor be the real one)
   input.addEventListener('blur', () => setTimeout(()=>input.focus(), 50));
-
   // -- SEO scrolling text
   const seoText = "PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, prompt generator, instant unlock tools. TikTok watermark, batch watermark, open source, Discord, Facebook group, Bluesky, art generator, PromptForge, Gore & Giggles, safe for all creators, DMCA tools, always free, hack your prompt, watermark batch, join the underground, instant tools, Bluesky: goreandgiggles.bsky.social, X: @GoreandGiggles, admin@goreandgiggles.com, join now! ";
   const ticker = document.getElementById('seoTicker');
   ticker.innerText = seoText + "   " + seoText;
   let pos = 0;
   function scrollTicker() {
-    pos -= 0.08; // Very slow, readable
+    pos -= 0.08; // slow, readable
     ticker.style.transform = `translateX(${pos}px)`;
     if(Math.abs(pos) > ticker.scrollWidth/2) pos = 0;
     requestAnimationFrame(scrollTicker);
