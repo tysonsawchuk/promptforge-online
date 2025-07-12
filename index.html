@@ -10,40 +10,56 @@
     html, body {
       height: 100%;
       margin: 0;
+      padding: 0;
       background: #090b10;
       font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
       color: #20ffe0;
       overflow: hidden;
     }
-    .wrap {
+    .layout-row {
       display: flex;
       flex-direction: row;
-      height: 100vh;
+      height: calc(100vh - 54px); /* Leaves room for footer */
       width: 100vw;
       overflow: hidden;
+      position: relative;
     }
     .terminal-pane {
-      width: 54vw;
-      min-width: 300px;
+      flex: 0 0 54vw;
+      height: 100%;
+      min-width: 320px;
+      max-width: 750px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      position: relative;
+      align-items: flex-start;
+      background: transparent;
       z-index: 10;
-      padding-bottom: 2.5em; /* for footer */
+      border: none;
+      position: relative;
     }
     .fakery {
-      flex: 1 1 auto;
       padding: 2vw 0 0 2vw;
       font-size: 1.08rem;
       white-space: pre-line;
       overflow-y: auto;
-      min-height: 0;
+      flex: 1 1 auto;
+      width: 100%;
+    }
+    .cmd-hints {
+      color: #38ffe0b0;
+      font-size: 0.99em;
+      font-style: italic;
+      margin: 0 0 0.12em 2vw;
+      width: 100%;
     }
     .input-row {
       display: flex;
       align-items: center;
-      padding: 0 0 0.8em 2vw;
+      padding: 0 0 1.1em 2vw;
+      width: 100%;
+      background: transparent;
+      z-index: 30;
     }
     #prompt {
       color: #13f9d6;
@@ -57,8 +73,8 @@
       outline: none;
       font-family: inherit;
       font-size: 1.14rem;
-      width: 32vw;
-      min-width: 160px;
+      width: 31vw;
+      min-width: 150px;
       caret-color: #ff3cd7;
       font-weight: bold;
       letter-spacing: 0;
@@ -66,9 +82,9 @@
     #terminalInput:focus { outline: none; }
     #fakeCursor {
       color: #ff37e2;
-      font-size: 1.15em;
+      font-size: 1.19em;
       font-weight: 700;
-      margin-left: -0.13em;
+      margin-left: -0.15em;
       animation: blink 1.15s steps(2, start) infinite;
       position: relative;
       top: 0.09em;
@@ -76,20 +92,13 @@
       display: inline-block;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    .cmd-hints {
-      color: #38ffe0b0;
-      font-size: 0.99em;
-      font-style: italic;
-      margin: 0 0 0.12em 2vw;
-    }
-    /* Globe/SEO */
     .globe-pane {
-      width: 46vw;
+      flex: 1 1 0;
+      height: 100%;
       min-width: 220px;
-      height: 100vh;
       position: relative;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
       overflow: hidden;
     }
@@ -98,16 +107,16 @@
       bottom: 7vh;
       left: 0;
       width: 100%;
-      height: 2.6em;
+      height: 2.5em;
       overflow: hidden;
       z-index: 3;
       pointer-events: none;
     }
     .seo-ticker-text {
       white-space: nowrap;
-      font-size: 1.22em;
+      font-size: 1.21em;
       color: #e0ffff;
-      opacity: 0.98;
+      opacity: 0.99;
       text-shadow: 0 0 8px #181a, 0 0 11px #21eaff, 0 0 1.5px #0af2c7;
       letter-spacing: 0.01em;
       font-style: italic;
@@ -143,16 +152,16 @@
       font-weight: 700;
     }
     @media (max-width: 900px) {
-      .wrap{flex-direction:column;}
-      .terminal-pane,.globe-pane{width:100vw;min-width:0;height:47vh;}
-      .seo-ticker-layer{height:2.2em;}
+      .layout-row{flex-direction:column;}
+      .terminal-pane,.globe-pane{width:100vw;min-width:0;height:47vh;max-width:100vw;}
+      .seo-ticker-layer{height:2.1em;}
       .fakery{max-width:96vw;}
       #terminalInput{width:60vw;}
     }
   </style>
 </head>
 <body>
-<div class="wrap">
+<div class="layout-row">
   <!-- Terminal -->
   <div class="terminal-pane">
     <div class="fakery" id="fakery"></div>
@@ -165,12 +174,12 @@
   </div>
   <!-- Globe & SEO ticker -->
   <div class="globe-pane">
-    <div class="seo-ticker-layer">
-      <span class="seo-ticker-text" id="seoTicker"></span>
-    </div>
     <video class="globe-bg-video" autoplay muted loop playsinline>
       <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
     </video>
+    <div class="seo-ticker-layer">
+      <span class="seo-ticker-text" id="seoTicker"></span>
+    </div>
   </div>
 </div>
 <div class="footer-sticky">
@@ -218,7 +227,7 @@
   ticker.innerText = seoText + "   " + seoText;
   let pos = 0;
   function scrollTicker() {
-    pos -= 0.25;
+    pos -= 0.15; // Slow and readable
     ticker.style.transform = `translateX(${pos}px)`;
     if(Math.abs(pos) > ticker.scrollWidth/2) pos = 0;
     requestAnimationFrame(scrollTicker);
