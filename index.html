@@ -3,13 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="PromptForge.online: Underground AI toolkit for rebels. Hacker login, secret tools, NSFW/clean, watermark, video, art prompt builder. Why? We believe AI belongs to everyone. Zero paywall, only ads. No filters.">
+  <meta name="description" content="PromptForge.online is the pro underground NSFW/AI prompt toolkit for creators, with watermarking, face mapping, AI hacks, video builder, and more. Zero filters, full features, modern UI, always free.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta property="og:title" content="PromptForge Terminal Entry | Gore & Giggles">
-  <meta property="og:description" content="Enter PromptForge: pro-level AI tools, hacker terminal, NSFW art, watermarking, no paywall, only ads. Why? Because you deserve real freedom.">
+  <meta property="og:description" content="Enter the PromptForge network: hacker-style, animated, and creative. Unlock secret tools, art, and more.">
   <meta property="og:url" content="https://promptforge.online/">
   <meta property="og:image" content="https://promptforge.online/assets/j1nx_cutout.png">
   <link rel="icon" type="image/png" href="favicon.png">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+     crossorigin="anonymous"></script>
   <style>
     body {
       background: #090b10;
@@ -27,28 +30,25 @@
       background: transparent;
       padding: 2vw 3vw;
       border: none;
-      z-index: 2;
+      z-index: 1;
       overflow: hidden;
       box-shadow: none;
-      pointer-events: auto;
     }
     #output {
       font-size: 1.09rem;
       line-height: 1.27;
-      min-height: 53vh;
+      min-height: 60vh;
       user-select: text;
       word-break: break-all;
       color: #20ffe0;
       text-shadow: 0 0 2px #01f0ff77;
-      margin-bottom: 11px;
+      margin-bottom: 12px;
       white-space: pre-wrap;
     }
     .input-row {
       display: flex;
       align-items: center;
       color: #00ffd0;
-      margin-top: 3px;
-      margin-bottom: 0.12em;
     }
     #terminalInput {
       background: transparent;
@@ -56,79 +56,20 @@
       border: none;
       outline: none;
       font-family: inherit;
-      font-size: 1.16rem;
+      font-size: 1.11rem;
       width: 49vw;
-      caret-color: #ff32ff;
-      font-weight: bold;
-      position: relative;
-      z-index: 3;
-      letter-spacing: 0.03em;
-      box-shadow: none;
+      caret-color: #16ffe2; /* soft blue/cyan caret */
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
     #terminalInput:focus {
       outline: none;
       box-shadow: none;
     }
-    #blinker {
-      width: 1.11em;
-      height: 1.36em;
-      margin-left: -0.14em;
-      display: inline-block;
-      background: #ff29f9;
-      border-radius: 4px;
-      box-shadow: 0 0 16px #fd3fff, 0 0 6px #fff, 0 0 10px #ed00fe;
-      opacity: 1;
-      animation: blink 0.49s steps(1) infinite;
-      position: relative;
-      top: 0.04em;
-      border: 2px solid #fff7;
-      transition: background 0.13s, box-shadow 0.1s;
-    }
-    @keyframes blink { 0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;} }
-    .network-video {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 44vw;
-      height: 100vh;
-      object-fit: cover;
-      background: transparent;
-      box-shadow: none !important;
-      border: none !important;
-      z-index: 0;
-      pointer-events: none;
-    }
-    /* Scrolling SEO text under the globe */
-    #seo-scroller {
-      position: absolute;
-      top: 8vh;
-      right: 3vw;
-      width: 41vw;
-      height: 84vh;
-      z-index: 1;
-      overflow: hidden;
-      pointer-events: none;
-      background: transparent;
-    }
-    #seo-scroll-content {
-      position: absolute;
-      left: 0;
-      width: 100%;
-      font-size: 1.13em;
-      color: #9aeaea70;
-      line-height: 1.68;
-      white-space: pre-line;
-      filter: blur(0.2px);
-      animation: scrollseo 44s linear infinite;
-      user-select: text;
-      pointer-events: none;
-    }
-    @keyframes scrollseo {
-      0% { top: 100%; }
-      100% { top: -235%; }
-    }
+    #terminalInput::placeholder { color: #38ffe0a2; }
+
     .cmd-hints {
-      margin-top: 0.25em;
+      margin-top: 0.7em;
       color: #38ffe0b0;
       font-size: 0.98em;
       letter-spacing: 0.02em;
@@ -137,92 +78,131 @@
     .footer-note {
       color: #254a47a0;
       font-size: 0.91em;
-      margin-top: 0.5em;
+      margin-top: 1.2em;
       font-style: italic;
     }
-    .seo-bar {
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      width: 100vw;
-      background: #1a2030ef;
-      color: #8df7d9c0;
-      font-size: 1.04em;
-      text-align: center;
-      padding: 8px 4vw 9px 4vw;
-      z-index: 22;
-      letter-spacing: .01em;
-      font-family: inherit;
-    }
-    /* Passkey CAUTION BOX */
-    .passkey-modal-bg {
-      position: fixed;
-      left: 0; top: 0; right: 0; bottom: 0;
-      background: rgba(25,12,22,0.79);
-      z-index: 1500;
+    /* AdSense movie-screen style */
+    .adsbygoogle-movie {
       display: flex;
-      align-items: center;
       justify-content: center;
-      pointer-events: auto;
-    }
-    .passkey-modal-box {
-      background: repeating-linear-gradient(-45deg, #ffec7d 0 15px, #fa5360 15px 27px, #ffe18d 27px 35px, #fa5360 35px 49px);
-      box-shadow: 0 0 34px #ffd70088, 0 0 9px #e11919;
-      border: 4px solid #fff3;
-      border-radius: 16px;
-      padding: 2.6em 2em 1.5em 2em;
+      align-items: center;
+      width: 98vw;
+      max-width: 780px;
+      height: 92px;
+      margin: 0 auto 0.5em auto;
+      margin-top: 0;
+      border-radius: 13px;
+      background: linear-gradient(180deg, #181930 70%, #0e111f 100%);
+      box-shadow: 0 0 26px #00ffe612, 0 0 4px #3c1b3c, 0 0 0.5em #390e4180;
+      border: 2px solid #13141c;
+      outline: 1.5px solid #1d265c;
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      z-index: 1001;
       text-align: center;
-      max-width: 400px;
-      width: 92vw;
-      position: relative;
-      z-index: 1502;
-      font-family: inherit;
-      color: #28002c;
-    }
-    .passkey-modal-box h2 {
-      color: #c00014;
-      font-size: 1.34em;
-      margin: 0 0 0.5em 0;
-      text-shadow: 0 0 8px #fff7;
-      font-weight: 900;
-      letter-spacing: 0.07em;
-    }
-    .passkey-modal-box input[type="text"] {
-      background: #fff6;
-      border: 2px solid #fd8;
-      border-radius: 7px;
-      color: #b000c9;
-      font-size: 1.13em;
-      padding: 7px 10px;
-      margin-top: 0.9em;
-      font-family: inherit;
-      width: 82%;
-      text-align: center;
-      box-shadow: 0 0 5px #fd0, 0 0 1px #c03;
-      outline: none;
-      font-weight: bold;
-      letter-spacing: 0.14em;
-    }
-    .passkey-modal-box button {
-      margin-top: 1.2em;
-      background: linear-gradient(90deg, #fa5360 50%, #ffe18d 100%);
-      border: none;
-      border-radius: 6px;
-      color: #222;
-      padding: 9px 26px;
-      font-size: 1em;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.17s;
-      box-shadow: 0 0 8px #ffdf7d77;
-    }
-    .passkey-modal-box button:hover {
-      background: linear-gradient(90deg, #ffe18d 60%, #fa5360 100%);
-      color: #d90048;
+      transition: box-shadow 0.23s;
     }
     @media (max-width: 900px) {
       .terminal { width: 100vw; padding: 2vw 2vw; }
       .network-video { display: none; }
-      #seo-scroller { display: none; }
+      .adsbygoogle-movie { width: 97vw; max-width: 97vw; height: 70px; }
+      #terminalInput { width: 95vw; }
+    }
+    /* SEO scrolling text behind globe */
+    .seo-scroll {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 45vw;
+      height: 100vh;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+      color: #20ffe0;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      opacity: 0.15;
+      font-size: 1.08em;
+      white-space: pre-line;
+      mix-blend-mode: lighten;
+    }
+    .seo-scroll span {
+      display: inline-block;
+      animation: scrollText 24s linear infinite;
+    }
+    @keyframes scrollText {
+      0% { transform: translateY(100%);}
+      100% { transform: translateY(-105%);}
+    }
+    /* Passkey modal */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.46);
+      justify-content: center; align-items: center;
+    }
+    .modal-passkey {
+      background: #221a13;
+      border: 4px dashed #fffa31;
+      border-radius: 13px;
+      box-shadow: 0 0 22px #f22a2a91, 0 0 4px #fffa31;
+      max-width: 360px;
+      padding: 2.2em 1.8em 1.6em 1.8em;
+      color: #fcfeee;
+      font-size: 1.17em;
+      position: relative;
+      text-align: center;
+    }
+    .modal-passkey label {
+      font-weight: bold;
+      color: #fffa31;
+      margin-bottom: 0.4em;
+      display: block;
+      font-size: 1.07em;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 7px #fff2335b;
+    }
+    .modal-passkey input {
+      padding: 0.6em 1.2em;
+      font-size: 1.11em;
+      border-radius: 6px;
+      border: 2px solid #fffa31;
+      background: #2d2217;
+      color: #f23e2a;
+      outline: none;
+      margin-top: 0.6em;
+      margin-bottom: 1em;
+      letter-spacing: 0.22em;
+      font-weight: bold;
+      box-shadow: 0 0 10px #f22a2a21;
+      width: 90%;
+      text-align: center;
+    }
+    .modal-passkey button {
+      padding: 0.5em 1.6em;
+      background: #f23e2a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-top: 0.6em;
+      cursor: pointer;
+      transition: background 0.18s;
+      box-shadow: 0 0 10px #f22a2a43;
+    }
+    .modal-passkey button:hover {
+      background: #fcbc1e;
+      color: #222;
+    }
+    .modal-passkey .close {
+      position: absolute; top: 0.4em; right: 0.7em;
+      color: #fffa31; font-size: 1.5em; cursor: pointer;
+      font-weight: bold; text-shadow: 0 0 7px #fff2337e;
+      border: none; background: none;
     }
   </style>
 </head>
@@ -232,7 +212,6 @@
     <div class="input-row">
       <span style="color:#13f9d6">root@network:/#</span>
       <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
-      <span id="blinker"></span>
     </div>
     <div class="cmd-hints">
       try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>
@@ -242,40 +221,41 @@
       <span style="color:#1f7c7a">Tip: 'main' is locked, try <b>passkey</b> for a secret entry code.</span>
     </div>
   </div>
-
+  <!-- SEO: scrolling bio/text behind globe -->
+  <div class="seo-scroll">
+    <span>
+PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. The ultimate underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls.
+PromptForge is your all-in-one prompt hub for uncensored creativity: watermark tools, face swap, NSFW generator, trending AI art, video, clickbait, Google-friendly, SEO optimized, batch watermark, TikTok, X, Bluesky, Facebook group. Make, remix, and hack your content. Exclusive invite, no login required. DMCA tools, legal AI, open source.
+Why ads? We believe in open, free access for artists. No premium upsells, no paid feature lockouts, just killer AI tools and watermarking for every creator. 
+Best features: AI prompt builder, batch watermark, instant download, art generator, video prompt creator, ANSI art, AI hacks, face mapping. PromptForge means next-gen prompt tools, free watermark creator, and more. 
+Connect: admin@goreandgiggles.com | X: @GoreandGiggles | bsky.app/profile/goreandgiggles.bsky.social | fb group: Gore & Giggles.  
+Join the underground, unlock creativity. PromptForge.online — hack your prompt.
+    </span>
+  </div>
+  <!-- GLOBE VIDEO -->
   <video class="network-video" autoplay muted loop playsinline>
     <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
   </video>
-
-  <!-- SEO Text scroller, always under the globe, for Google -->
-  <div id="seo-scroller">
-    <div id="seo-scroll-content">
-PromptForge.online – Pro-level, ad-supported AI toolkit: prompt generator, NSFW/clean art tools, face mapping, video builder, watermark maker, ASCII/ANSI art, and more. Built by artists for artists and rebels. Our mission: put cutting-edge creative power in your hands for free. No logins, no paywalls, only respectful ads. <b>Why free?</b> We believe real AI belongs to the people, not greedy SaaS overlords. Want watermark batch, signature, prompt hacking, NSFW? It’s all here—unlock everything, build your brand, and stay underground. PromptForge is 100% Canadian-owned, run by PTSD survivors, and privacy-obsessed. <b>How do we make money?</b> We rely only on ad revenue and Buy Me a Coffee donations, never selling your data. All features are open to all—zero tricks, zero tiers, no “pro” scam. Need help? J1nx AI assistant lives on every page, ready to serve you. Join our growing art underground—ditch the corporate chains. 2025’s best alternative to Midjourney, Dall-E, stock watermarkers, and paid prompt apps. Find us on Bluesky, X, Facebook. <b>Support PromptForge: use, share, and spread the word. Welcome home.</b>
-    </div>
+  <!-- AdSense: styled as movie-screen and fixed at bottom -->
+  <div class="adsbygoogle-movie">
+    <ins class="adsbygoogle"
+      style="display:block;width:100%;height:90px;"
+      data-ad-client="ca-pub-4963053724895140"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
   </div>
-
-  <!-- SEO footer bar (only for Google, subtle for users) -->
-  <div class="seo-bar">
-    PromptForge.online is a private AI hub. Entry is by login only.<br>
-    <b>To access tools and main features, type <span style="color:#fa528e;">main</span> or <span style="color:#fa528e;">passkey</span> above. <br> Google users: for all content, <a href="https://promptforge.online/main.html" style="color:#20ffe0;text-decoration:underline;">proceed to main hub &rarr;</a></b>
-  </div>
-
-  <!-- Passkey Modal (hidden by default) -->
-  <div id="passkey-modal" style="display:none;" class="passkey-modal-bg">
-    <div class="passkey-modal-box">
-      <h2>
-        <span style="color:#fa5360">&#9888;</span> Caution: Secure Access Required
-      </h2>
-      <div style="margin-bottom:0.9em;font-size:1.06em;">
-        This area is restricted. <br>
-        Please enter the secret passcode to unlock advanced tools.
-      </div>
-      <input type="text" id="passkeyInput" maxlength="16" placeholder="Type passcode..." />
+  <!-- Passkey Modal -->
+  <div class="modal-bg" id="modalBG">
+    <div class="modal-passkey">
+      <button class="close" onclick="closePasskeyModal()" aria-label="Close">&times;</button>
+      <label for="passkeyInput">Enter Secret Passkey</label>
+      <input id="passkeyInput" maxlength="12" autocomplete="off" placeholder="••••••••" />
       <br>
-      <button onclick="submitPasskey()">Submit</button>
+      <button onclick="submitPasskey()">Unlock</button>
+      <div style="color:#f23e2a;font-size:0.97em;margin-top:0.8em;">Access is restricted.<br>Find the passkey for entry.</div>
     </div>
   </div>
-
   <script>
     // Initial scrollback "boot" text
     const bootLines = [
@@ -307,9 +287,8 @@ PromptForge.online – Pro-level, ad-supported AI toolkit: prompt generator, NSF
     let unlockedMain = false;
     const output = document.getElementById('output');
     const input = document.getElementById('terminalInput');
-    input.value = "";
 
-    // Boot animation, tighter (less space)
+    // Boot sequence animation
     async function showBoot() {
       for (const line of bootLines) {
         output.innerHTML += line + "<br>";
@@ -350,16 +329,14 @@ PromptForge.online – Pro-level, ad-supported AI toolkit: prompt generator, NSF
       ].join('\n');
     }
 
-    // --- Passkey Modal Logic ---
     function showPasskeyModal() {
-      document.getElementById('passkey-modal').style.display = 'flex';
-      setTimeout(() => {
-        document.getElementById('passkeyInput').focus();
-      }, 10);
+      document.getElementById('modalBG').style.display = "flex";
+      document.getElementById('passkeyInput').value = "";
+      setTimeout(() => document.getElementById('passkeyInput').focus(), 200);
     }
     function closePasskeyModal() {
-      document.getElementById('passkey-modal').style.display = 'none';
-      setTimeout(() => { input.focus(); }, 100);
+      document.getElementById('modalBG').style.display = "none";
+      input.focus();
     }
     function submitPasskey() {
       unlockedMain = true;
@@ -368,10 +345,6 @@ PromptForge.online – Pro-level, ad-supported AI toolkit: prompt generator, NSF
       output.innerHTML += "<span style='color:#11ffc4'>You can now type <b>main</b> to enter.</span><br>";
       input.focus();
     }
-    // Also submit on Enter in modal
-    document.getElementById('passkeyInput').addEventListener('keydown',function(e){
-      if (e.key === "Enter") submitPasskey();
-    });
 
     function showMain() {
       output.innerHTML += `<span style='color:#6fff87'>>>> Main System Unlocked! Welcome to PromptForge.</span><br>`;
@@ -388,7 +361,7 @@ PromptForge.online – Pro-level, ad-supported AI toolkit: prompt generator, NSF
       setTimeout(() => { showMain(); }, 800);
     }
 
-    // Command handler (with removed |type a command...| and extra lines)
+    // Command handler (clean, no "type a command...", no floating blinker)
     input.addEventListener('keydown', function(e){
       if(e.key === "Enter"){
         let cmd = input.value.trim().toLowerCase();
@@ -428,24 +401,13 @@ PromptForge.online – Pro-level, ad-supported AI toolkit: prompt generator, NSF
 
     // Initial boot
     showBoot();
+    // Focus on input
+    window.onload = () => { input.focus(); }
+    // Fix: auto focus on click anywhere in terminal area
+    document.querySelector('.terminal').addEventListener('click', () => { input.focus(); });
 
-    // Blinker always sticks to input
-    setInterval(() => {
-      let blinker = document.getElementById('blinker');
-      if (input === document.activeElement) {
-        blinker.style.opacity = 0.93;
-        blinker.style.background = '#ff29f9';
-        blinker.style.boxShadow = "0 0 20px #ff3fff, 0 0 11px #fff, 0 0 22px #ed00fe";
-      } else {
-        blinker.style.opacity = 0.45;
-        blinker.style.background = '#ffb1ff';
-        blinker.style.boxShadow = "0 0 8px #ffb1ff, 0 0 2px #fff";
-      }
-    }, 390);
-
-    // Scrolling SEO text repeats on a loop
-    // (No extra JS needed—CSS handles it)
-
+    // AdSense
+    (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 </body>
 </html>
