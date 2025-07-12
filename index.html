@@ -47,6 +47,7 @@
       display: flex;
       align-items: center;
       color: #00ffd0;
+      margin-top: 2px;
     }
     #terminalInput {
       background: transparent;
@@ -54,9 +55,9 @@
       border: none;
       outline: none;
       font-family: inherit;
-      font-size: 1.11rem;
+      font-size: 1.12rem;
       width: 50vw;
-      caret-color: #ff0db9;
+      caret-color: #ff32ff;
       font-weight: bold;
       position: relative;
       z-index: 3;
@@ -68,18 +69,19 @@
       box-shadow: none;
     }
     #blinker {
-      width: 0.76em;
-      height: 1.3em;
-      margin-left: -0.16em;
+      width: 0.90em;
+      height: 1.35em;
+      margin-left: -0.12em;
       display: inline-block;
-      background: #ff1d8e;
-      border-radius: 2px;
-      box-shadow: 0 0 7px #ff5fff, 0 0 2px #fff;
+      background: #ff29f9;
+      border-radius: 3px;
+      box-shadow: 0 0 13px #fd3fff, 0 0 2px #fff, 0 0 8px #ed00fe;
       opacity: 1;
-      animation: blink 0.6s steps(1) infinite;
-      transition: background 0.13s;
+      animation: blink 0.55s steps(1) infinite;
       position: relative;
-      top: 0.05em;
+      top: 0.07em;
+      border: 2px solid #fff5;
+      transition: background 0.13s, box-shadow 0.1s;
     }
     @keyframes blink { 0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;} }
     .network-video {
@@ -109,7 +111,6 @@
     }
     #seo-scroll-content {
       position: absolute;
-      top: 100%;
       left: 0;
       width: 100%;
       font-size: 1.13em;
@@ -182,7 +183,6 @@
   <!-- SEO Text scroller, always under the globe, for Google -->
   <div id="seo-scroller">
     <div id="seo-scroll-content">
-      <!-- MASSIVE SEO KEYWORDS: these are visible to Google, hidden behind globe -->
       PromptForge.online – pro-level AI prompt generator, NSFW art tools, face mapping, video builder, watermark maker, ASCII art, no censorship, zero filters, no login, custom watermark batch, open-source, Google hack tools, artist underground, secret prompts, best free image generator, watermark PNG, photo batch editor, video prompt, AI experiments, AI hacks, prompt side-by-side comparison, free templates, pro watermark features, 2025 AI tools, Gore and Giggles, J1nx chatbot, dark web prompt toolkit, viral clickbait, creative hacks, artist tools, paid features free, unlock everything, make money with AI, batch watermark, signature tool, download watermark, creative watermark ideas, 2025 AI hub, hidden AI tricks, bypass NSFW filter, watermark inspiration, stock image tools, next-gen art, PromptForge main hub, TikTok watermark, Twitter, X, Facebook, Discord, trending art, face swap, AI chat, unrestricted creativity, blueprint, watermark your world, underground prompt community, hack your own art, custom prompt builder, exclusive, buy me a coffee, secret GPT, midjourney style, dall-e alternative, real photo editor, photo hack, face mapping unlock, watermark download, Google-friendly, SEO boost, exclusive invite, zero censorship AI, prompt marketplace, prompt sharing, instant tools, Gore & Giggles, bsky, bluesky, x.com, facebook group, 2025, one-click prompt, watermark batch, no paywall, safe, fun, not for normies, join now, unlock promptforge.
     </div>
   </div>
@@ -228,30 +228,14 @@
     const input = document.getElementById('terminalInput');
     input.value = "";
 
-    function printLine(str = '', delay = 25) {
-      return new Promise(resolve => {
-        let i = 0;
-        let interval = setInterval(() => {
-          if (i <= str.length) {
-            output.innerHTML += str.substring(0, i) + "<br>";
-            output.scrollTop = output.scrollHeight;
-            i = str.length + 1;
-          } else {
-            clearInterval(interval);
-            resolve();
-          }
-        }, delay);
-      });
-    }
-
-    // Boot sequence animation
+    // Print each boot line, then finish—NO 'type a command...' fake field
     async function showBoot() {
       for (const line of bootLines) {
         output.innerHTML += line + "<br>";
         output.scrollTop = output.scrollHeight;
         await new Promise(r => setTimeout(r, 55 + Math.random()*30));
       }
-      output.innerHTML += '<span style="color:#13f9d6">root@network:/#</span> <span style="opacity:0.5;">|type a command...</span><br>';
+      // All done! No extra line, no '[type a command...]'
     }
 
     function terminalHelp() {
@@ -350,10 +334,19 @@
 
     // Initial boot
     showBoot();
-    // Blinker animation (invisible if input focused)
+
+    // Blinker: always ultra-bright, right where you type (no phantom box)
     setInterval(() => {
       document.getElementById('blinker').style.opacity = input === document.activeElement ? 0 : 1;
     }, 400);
+
+    // --- SEO Text scroller loop logic: restart animation every time it ends
+    const seoScroller = document.getElementById('seo-scroll-content');
+    seoScroller.addEventListener('animationiteration', function() {
+      seoScroller.style.animation = 'none';
+      void seoScroller.offsetWidth; // reflow
+      seoScroller.style.animation = null;
+    });
   </script>
 </body>
 </html>
