@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="PromptForge.online — The pro underground AI prompt toolkit, watermark creator, face mapping, and more. All free, forever.">
+  <meta name="description" content="PromptForge.online: Pro-level AI prompt toolkit, watermark creator, face mapping, instant batch watermark, and more. Always free. No paywalls, no filters. Join the underground for uncensored AI tools and creator power.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
     html, body {
       height: 100%;
+      width: 100%;
       margin: 0;
       padding: 0;
       background: #090b10;
@@ -16,55 +17,54 @@
       color: #20ffe0;
       overflow: hidden;
     }
-    .layout-row {
+    .container {
       display: flex;
       flex-direction: row;
-      height: calc(100vh - 54px); /* Leaves room for footer */
+      height: 100vh;
       width: 100vw;
       overflow: hidden;
-      position: relative;
     }
-    .terminal-pane {
+    .terminal-side {
       flex: 0 0 54vw;
-      height: 100%;
-      min-width: 320px;
-      max-width: 750px;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      align-items: flex-start;
+      padding-left: 2vw;
       background: transparent;
       z-index: 10;
-      border: none;
       position: relative;
     }
-    .fakery {
-      padding: 2vw 0 0 2vw;
-      font-size: 1.08rem;
+    .terminal-fakery {
       white-space: pre-line;
-      overflow-y: auto;
+      font-size: 1.06rem;
+      color: #20ffe0;
+      line-height: 1.25;
+      user-select: text;
+      padding-top: 2.6vw;
       flex: 1 1 auto;
       width: 100%;
+      overflow: hidden;
     }
     .cmd-hints {
       color: #38ffe0b0;
       font-size: 0.99em;
       font-style: italic;
-      margin: 0 0 0.12em 2vw;
+      margin: 0.12em 0 0.11em 0;
       width: 100%;
     }
-    .input-row {
+    .terminal-input-row {
       display: flex;
       align-items: center;
-      padding: 0 0 1.1em 2vw;
       width: 100%;
+      padding-bottom: 0.6em;
       background: transparent;
-      z-index: 30;
     }
     #prompt {
       color: #13f9d6;
       font-weight: 700;
-      margin-right: 0.3ch;
+      margin-right: 0.23em;
+      font-size: 1.10rem;
     }
     #terminalInput {
       background: transparent;
@@ -73,8 +73,9 @@
       outline: none;
       font-family: inherit;
       font-size: 1.14rem;
-      width: 31vw;
-      min-width: 150px;
+      width: 30vw;
+      min-width: 130px;
+      max-width: 420px;
       caret-color: #ff3cd7;
       font-weight: bold;
       letter-spacing: 0;
@@ -82,54 +83,61 @@
     #terminalInput:focus { outline: none; }
     #fakeCursor {
       color: #ff37e2;
-      font-size: 1.19em;
-      font-weight: 700;
-      margin-left: -0.15em;
-      animation: blink 1.15s steps(2, start) infinite;
+      font-size: 1.12em;
+      font-weight: 800;
+      margin-left: -0.11em;
+      animation: blink 1.17s steps(2, start) infinite;
       position: relative;
       top: 0.09em;
       left: 0;
       display: inline-block;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    .globe-pane {
+    .right-side {
       flex: 1 1 0;
-      height: 100%;
       min-width: 220px;
+      height: 100vh;
       position: relative;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       overflow: hidden;
+      background: transparent;
     }
-    .seo-ticker-layer {
-      position: absolute;
-      bottom: 7vh;
-      left: 0;
-      width: 100%;
-      height: 2.5em;
-      overflow: hidden;
-      z-index: 3;
-      pointer-events: none;
-    }
-    .seo-ticker-text {
-      white-space: nowrap;
-      font-size: 1.21em;
-      color: #e0ffff;
-      opacity: 0.99;
-      text-shadow: 0 0 8px #181a, 0 0 11px #21eaff, 0 0 1.5px #0af2c7;
-      letter-spacing: 0.01em;
-      font-style: italic;
-      font-weight: 600;
-      will-change: transform;
-      user-select: none;
-    }
+    /* Globe background video */
     .globe-bg-video {
       position: absolute;
       right: 0; top: 0; width: 100%; height: 100%;
       object-fit: cover;
-      z-index: 7;
+      z-index: 2;
       pointer-events: none;
+      filter: saturate(1.18) brightness(1.08) contrast(1.12);
+    }
+    /* Scrolling SEO ticker text, behind globe */
+    .seo-ticker {
+      position: absolute;
+      bottom: 5vw;
+      left: 0;
+      width: 100%;
+      height: 2.7em;
+      overflow: hidden;
+      z-index: 3;
+      pointer-events: none;
+      display: flex;
+      align-items: flex-end;
+    }
+    .seo-ticker-text {
+      white-space: nowrap;
+      font-size: 1.16em;
+      color: #b3ffff;
+      opacity: 0.90;
+      text-shadow: 0 0 8px #001, 0 0 15px #21eaff, 0 0 2px #2f2fff;
+      letter-spacing: 0.011em;
+      font-style: italic;
+      font-weight: 600;
+      will-change: transform;
+      user-select: none;
+      margin-bottom: 0.2em;
     }
     /* Footer */
     .footer-sticky {
@@ -140,11 +148,13 @@
       text-align: center;
       position: fixed;
       left: 0; bottom: 0;
-      padding: 0.54em 0 0.3em 0;
+      padding: 0.51em 0 0.22em 0;
       border-top: 2.5px solid #1ae2d2;
       z-index: 200;
       font-family: inherit;
-      box-shadow: 0 -2px 16px #011;
+      box-shadow: 0 -2px 14px #011;
+      line-height: 1.18;
+      letter-spacing: 0.01em;
     }
     .footer-sticky a {
       color: #11ffc9;
@@ -152,42 +162,43 @@
       font-weight: 700;
     }
     @media (max-width: 900px) {
-      .layout-row{flex-direction:column;}
-      .terminal-pane,.globe-pane{width:100vw;min-width:0;height:47vh;max-width:100vw;}
-      .seo-ticker-layer{height:2.1em;}
-      .fakery{max-width:96vw;}
+      .container{flex-direction:column;}
+      .terminal-side,.right-side{width:100vw;min-width:0;height:47vh;max-width:100vw;}
+      .seo-ticker{height:2.1em;}
+      .terminal-fakery{max-width:96vw;}
       #terminalInput{width:60vw;}
     }
   </style>
 </head>
 <body>
-<div class="layout-row">
-  <!-- Terminal -->
-  <div class="terminal-pane">
-    <div class="fakery" id="fakery"></div>
+<div class="container">
+  <!-- Terminal Left -->
+  <div class="terminal-side">
+    <div class="terminal-fakery" id="fakery"></div>
     <div class="cmd-hints" id="cmdHints"></div>
-    <div class="input-row">
+    <div class="terminal-input-row">
       <span id="prompt">root@network:/#</span>
       <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
       <span id="fakeCursor">_</span>
     </div>
   </div>
-  <!-- Globe & SEO ticker -->
-  <div class="globe-pane">
+  <!-- Globe Right + SEO Bio Text -->
+  <div class="right-side">
     <video class="globe-bg-video" autoplay muted loop playsinline>
       <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
     </video>
-    <div class="seo-ticker-layer">
+    <div class="seo-ticker">
       <span class="seo-ticker-text" id="seoTicker"></span>
     </div>
   </div>
 </div>
+<!-- Footer -->
 <div class="footer-sticky">
   To access tools and main features, type <b>main</b> or <b>passkey</b> above.<br>
   Google users: for all content, <a href="main.html">proceed to main hub &rarr;</a>
 </div>
 <script>
-  // -------- Fakery Boot
+  // -- Terminal fakery
   const bootLines = [
     "booting up...",
     "",
@@ -212,22 +223,23 @@
     "node handshake: [✓] validated",
     "status: ALL SYSTEMS ONLINE"
   ];
-  const fakeryDiv = document.getElementById('fakery');
-  fakeryDiv.innerText = bootLines.join('\n');
+  document.getElementById('fakery').innerText = bootLines.join('\n');
   document.getElementById('cmdHints').innerHTML = 'try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>';
-  // Keep input focused
+  // Always keep input focused (mobile-friendly hack)
   const input = document.getElementById('terminalInput');
   input.value = "";
   input.focus();
   window.onclick = () => input.focus();
+  // Hide native caret (let _ fakeCursor be the real one)
+  input.addEventListener('blur', () => setTimeout(()=>input.focus(), 50));
 
-  // -------- SEO Ticker
-  const seoText = "PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, prompt generator, safe unlock tools. No paywalls, always free. TikTok watermark, batch watermark, open source, trending, Discord, Facebook group, Bluesky, art generator, unlock, exclusive, admin@goreandgiggles.com, PromptForge, Gore & Giggles, hack your prompt, watermark batch, safe for all creators, join now! ";
+  // -- SEO scrolling text
+  const seoText = "PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, prompt generator, instant unlock tools. TikTok watermark, batch watermark, open source, Discord, Facebook group, Bluesky, art generator, PromptForge, Gore & Giggles, safe for all creators, DMCA tools, always free, hack your prompt, watermark batch, join the underground, instant tools, Bluesky: goreandgiggles.bsky.social, X: @GoreandGiggles, admin@goreandgiggles.com, join now! ";
   const ticker = document.getElementById('seoTicker');
   ticker.innerText = seoText + "   " + seoText;
   let pos = 0;
   function scrollTicker() {
-    pos -= 0.15; // Slow and readable
+    pos -= 0.08; // Very slow, readable
     ticker.style.transform = `translateX(${pos}px)`;
     if(Math.abs(pos) > ticker.scrollWidth/2) pos = 0;
     requestAnimationFrame(scrollTicker);
