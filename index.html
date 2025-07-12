@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="Pro-level AI prompt toolkit, watermark creator, face mapping, and video builder. Free, open, and underground for artists and rebels. Monetized by ads, not paywalls.">
+  <meta name="description" content="Pro-level AI prompt toolkit, watermark creator, face mapping, and video builder. The underground, all-free hub for artists and rebels. Monetized by ads, never paywalls.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta property="og:title" content="PromptForge Terminal Entry | Gore & Giggles">
   <meta property="og:description" content="Enter PromptForge: hacker-style boot, secret features, and pro creator tools. Free, safe, and uncensored.">
@@ -12,41 +12,48 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
-      background: #090b10;
       margin: 0;
-      color: #20ffe0;
+      padding: 0;
       font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      background: #090b10;
       overflow-x: hidden;
     }
-    .terminal {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 54vw;
+    .main-wrap {
+      display: flex;
+      flex-direction: row;
+      width: 100vw;
       height: 100vh;
+      position: relative;
+    }
+    .terminal {
+      width: 51vw;
+      min-width: 320px;
+      padding: 2vw 2.5vw 0 2vw;
+      height: 100vh;
+      box-sizing: border-box;
+      z-index: 3;
       background: transparent;
-      padding: 2vw 3vw;
-      border: none;
-      z-index: 2;
-      overflow: hidden;
-      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
     #output {
       font-size: 1.09rem;
       line-height: 1.27;
-      min-height: 60vh;
-      user-select: text;
-      word-break: break-all;
+      min-height: 54vh;
       color: #20ffe0;
       text-shadow: 0 0 2px #01f0ff77;
       margin-bottom: 16px;
       white-space: pre-wrap;
+      word-break: break-word;
+      flex: 1;
+      user-select: text;
     }
     .input-row {
       display: flex;
       align-items: center;
-      color: #00ffd0;
       font-family: inherit;
+      margin-top: 3px;
     }
     #terminalInput {
       background: transparent;
@@ -55,11 +62,16 @@
       outline: none;
       font-family: inherit;
       font-size: 1.11rem;
-      width: 44vw;
+      width: 80%;
+      min-width: 70px;
+      max-width: 32vw;
       caret-color: #ff0db9;
       font-weight: bold;
+      position: relative;
+      z-index: 3;
+      letter-spacing: 0.01em;
+      margin-left: 0.2em;
     }
-    #terminalInput:focus { outline: none; }
     #fakeCursor {
       font-weight: bold;
       font-size: 1.17em;
@@ -67,6 +79,9 @@
       margin-left: -0.1em;
       animation: blink-cursor 1s steps(1) infinite;
       display: inline-block;
+      position: relative;
+      left: -0.04em;
+      z-index: 4;
     }
     @keyframes blink-cursor {
       0%, 50% { opacity: 1; }
@@ -75,62 +90,64 @@
     .cmd-hints {
       margin-top: 0.7em;
       color: #38ffe0b0;
-      font-size: 0.98em;
-      letter-spacing: 0.02em;
+      font-size: 0.97em;
       font-style: italic;
     }
     .footer-note {
       color: #254a47a0;
-      font-size: 0.91em;
-      margin-top: 1.2em;
+      font-size: 0.93em;
+      margin-top: 1.1em;
       font-style: italic;
     }
-    /* Earth globe and SEO text */
-    .earth-wrap {
-      position: fixed;
-      right: 0;
-      top: 0;
-      width: 46vw;
+    /* Video globe + SEO text scroll */
+    .globe-zone {
+      position: relative;
+      width: 49vw;
+      min-width: 200px;
       height: 100vh;
-      z-index: 1;
-      pointer-events: none;
       overflow: hidden;
-      background: transparent;
+      z-index: 2;
       display: flex;
       align-items: center;
       justify-content: flex-end;
+      background: transparent;
     }
-    .earth-bg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 2;
+    .globe-bgvid {
       position: absolute;
       right: 0;
       top: 0;
-      filter: drop-shadow(0 0 25px #1cfbffb8);
+      width: 100%;
+      min-width: 340px;
+      max-width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 3;
+      filter: drop-shadow(0 0 42px #13f6ffd8);
       pointer-events: none;
+      opacity: 0.97;
     }
     .seo-scroll {
       position: absolute;
-      left: 4vw;
-      top: 4vw;
-      width: 70vw;
-      height: 76vh;
+      left: 2vw;
+      top: 5vh;
+      width: 38vw;
+      height: 89vh;
       overflow: hidden;
-      z-index: 1;
+      z-index: 4;
       pointer-events: none;
-      color: #18fff0;
-      opacity: 0.18;
-      font-size: 1.15em;
-      font-family: inherit;
-      text-shadow: 0 0 5px #0ffff7, 0 0 1px #00e6c8;
+      color: #b2fff9;
+      opacity: 0.99;
+      font-size: 1.14em;
+      text-shadow: 0 0 9px #00fff9, 0 0 1px #00f4e9;
       white-space: pre-line;
-      animation: seo-scroll 18s linear infinite;
+      line-height: 1.29;
+      animation: seo-scroll 21s linear infinite;
+      word-break: break-word;
+      letter-spacing: 0.02em;
     }
     @keyframes seo-scroll {
-      0% { transform: translateY(20vh);}
-      100% { transform: translateY(-90vh);}
+      0% { transform: translateY(48vh);}
+      100% { transform: translateY(-120vh);}
     }
     .footer-bar {
       position: fixed;
@@ -141,8 +158,8 @@
       background: #06161e;
       color: #43ffc2;
       text-align: center;
-      font-size: 1.03em;
-      padding: 0.55em 0 0.38em 0;
+      font-size: 1.05em;
+      padding: 0.61em 0 0.42em 0;
       border-top: 1.3px solid #13636c3a;
       letter-spacing: 0.04em;
       font-family: inherit;
@@ -154,41 +171,50 @@
       font-weight: bold;
     }
     @media (max-width: 900px) {
-      .terminal { width: 100vw; padding: 2vw 2vw; }
-      .earth-wrap { display: none; }
-      .footer-bar { font-size: 0.98em; }
+      .main-wrap { flex-direction: column; }
+      .terminal, .globe-zone { width: 100vw; min-width: 99vw; }
+      .globe-bgvid { width: 100vw; min-width: 300px; height: 40vh; }
+      .seo-scroll { width: 98vw; left:1vw; font-size:1em;}
+      .footer-bar { font-size: 0.99em; }
     }
   </style>
 </head>
 <body>
-  <div class="terminal">
-    <div id="output"></div>
-    <div class="input-row">
-      <span style="color:#13f9d6">root@network:/#</span>
-      <span style="position:relative;display:inline-block;">
-        <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" style="position:relative;z-index:2;" />
-        <span id="fakeCursor">|</span>
-      </span>
+  <div class="main-wrap">
+    <div class="terminal">
+      <div id="output"></div>
+      <div class="input-row">
+        <span style="color:#13f9d6">root@network:/#</span>
+        <span style="position:relative;display:inline-block;width:auto;">
+          <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
+          <span id="fakeCursor">|</span>
+        </span>
+      </div>
+      <div class="cmd-hints">
+        try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>
+      </div>
+      <div class="footer-note">
+        This is a demo terminal. No sensitive info is ever processed.<br>
+        <span style="color:#1f7c7a">Tip: 'main' is locked, try <b>passkey</b> for a secret entry code.</span>
+      </div>
     </div>
-    <div class="cmd-hints">
-      try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>
-    </div>
-    <div class="footer-note">
-      This is a demo terminal. No sensitive info is ever processed.<br>
-      <span style="color:#1f7c7a">Tip: 'main' is locked, try <b>passkey</b> for a secret entry code.</span>
+    <div class="globe-zone">
+      <video class="globe-bgvid" autoplay muted loop playsinline>
+        <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
+      </video>
+      <div class="seo-scroll" id="seoScroll">
+PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. The ultimate underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls.
+
+PromptForge is your all-in-one prompt hub for uncensored creativity: watermark tools, face swap, NSFW generator, trending AI art, video, clickbait, Google-friendly, SEO optimized, batch watermark, TikTok, X, Bluesky, Facebook group. Make, remix, and hack your content. Exclusive invite, no login required. DMCA tools, legal AI, open source.
+
+Why ads? We believe in open, free access for artists. No premium upsells, no paid feature lockouts; just killer AI tools and watermarking for every creator. Best features: AI prompt builder, batch watermark, instant download, art generator, video prompter creator, ANSI art, AI hacks, face mapping. PromptForge means next-gen prompt tools, free watermark creator and more.
+
+Connect: admin@goreandgiggles.com | X: @GoreandGiggles | bsky.app/profile/goreandgiggles.bsky.social | fb group: Gore & Giggles.
+
+Join the underground, unlock creativity. PromptForge.online — hack your prompt.
+      </div>
     </div>
   </div>
-
-  <div class="earth-wrap">
-    <img src="assets/globe_animation.png" class="earth-bg" alt="Spinning Earth">
-    <div class="seo-scroll" id="seoScroll">
-      PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. The ultimate underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls.
-      PromptForge is your all-in-one prompt hub for uncensored creativity: watermark tools, face swap, NSFW generator, trending AI art, video, clickbait, Google-friendly, SEO optimized, batch watermark, TikTok, X, Bluesky, Facebook group. Make, remix, and hack your content. Exclusive invite, no login required. DMCA tools, legal AI, open source. Why ads? We believe in open, free access for artists. No premium upsells, no paid feature lockouts; just killer AI tools and watermarking for every creator. Best features: AI prompt builder, batch watermark, instant download, art generator, video prompter creator, ANSI art, AI hacks, face mapping. PromptForge means next-gen prompt tools, free watermark creator and more.
-      Connect: admin@goreandgiggles.com | X: @GoreandGiggles | bsky.app/profile/goreandgiggles.bsky.social | fb group: Gore & Giggles.
-      Join the underground, unlock creativity. PromptForge.online — hack your prompt.
-    </div>
-  </div>
-
   <div class="footer-bar">
     To access tools and main features, type <b>main</b> or <b>passkey</b> above.<br>
     <span style="color:#9cf764">Google users: for all content, <a href="main.html">proceed to main hub →</a></span>
@@ -221,7 +247,6 @@
       ""
     ];
     let unlockedMain = false;
-    let passkeyStep = false;
     const output = document.getElementById('output');
     const input = document.getElementById('terminalInput');
     const fakeCursor = document.getElementById('fakeCursor');
@@ -364,22 +389,26 @@
           output.innerHTML += `<span style='color:#fd8989'>Unknown command: <b>${cmd}</b> — type 'help' for list.</span><br>`;
         }
         input.value = "";
+        updateFakeCursor();
         output.scrollTop = output.scrollHeight;
       }
     });
 
-    // Blinking fake cursor logic
-    function updateCursor() {
-      // Always move cursor after the typed text
-      const rect = input.getBoundingClientRect();
-      fakeCursor.style.opacity = (document.activeElement === input) ? "1" : "0.4";
+    // Move fake blinking | cursor
+    function updateFakeCursor() {
+      // Place right after input
+      fakeCursor.style.left = (input.value.length * 0.66) + "em";
     }
-    input.addEventListener('input', updateCursor);
-    input.addEventListener('focus', updateCursor);
-    input.addEventListener('blur', updateCursor);
+    input.addEventListener('input', updateFakeCursor);
+    input.addEventListener('focus', updateFakeCursor);
+    input.addEventListener('blur', updateFakeCursor);
 
     // Initial boot
     showBoot();
+    setTimeout(() => { input.focus(); }, 350);
+
+    // Fix cursor position after DOM loaded
+    updateFakeCursor();
   </script>
 </body>
 </html>
