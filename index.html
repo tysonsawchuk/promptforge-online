@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="A realistic retro terminal gateway for PromptForge. Experience a hacker-style boot sequence and unlock hidden features. Safe, fun, and open.">
+  <meta name="description" content="PromptForge.online: underground AI toolkit. Hacker terminal login, secret tools, zero filters, one click to main hub. NSFW, watermark, prompt builders & more.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta property="og:title" content="PromptForge Terminal Entry | Gore & Giggles">
-  <meta property="og:description" content="Enter the PromptForge network: hacker-style, animated, and creative. Unlock secret tools, art, and more.">
+  <meta property="og:description" content="Enter PromptForge: hacker-style boot, spinning globe, secret AI tools, NSFW art, face mapping & more. One login, no rules.">
   <meta property="og:url" content="https://promptforge.online/">
-  <meta property="og:image" content="https://promptforge.online/assets/j1nx-cutout.png">
+  <meta property="og:image" content="https://promptforge.online/assets/j1nx_cutout.png">
   <link rel="icon" type="image/png" href="favicon.png">
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
-     crossorigin="anonymous"></script>
   <style>
     body {
       background: #090b10;
@@ -30,9 +27,10 @@
       background: transparent;
       padding: 2vw 3vw;
       border: none;
-      z-index: 1;
+      z-index: 2;
       overflow: hidden;
       box-shadow: none;
+      pointer-events: auto;
     }
     #output {
       font-size: 1.09rem;
@@ -60,6 +58,10 @@
       width: 50vw;
       caret-color: #ff0db9;
       font-weight: bold;
+      position: relative;
+      z-index: 3;
+      letter-spacing: 0.02em;
+      box-shadow: none;
     }
     #terminalInput:focus {
       outline: none;
@@ -87,11 +89,41 @@
       width: 44vw;
       height: 100vh;
       object-fit: cover;
-      background: #000;
+      background: transparent;
       box-shadow: none !important;
       border: none !important;
       z-index: 0;
       pointer-events: none;
+    }
+    /* Scrolling SEO text under the globe */
+    #seo-scroller {
+      position: absolute;
+      top: 8vh;
+      right: 3vw;
+      width: 41vw;
+      height: 84vh;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+      background: transparent;
+    }
+    #seo-scroll-content {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      font-size: 1.13em;
+      color: #9aeaea70;
+      line-height: 1.7;
+      white-space: pre-line;
+      filter: blur(0.2px);
+      animation: scrollseo 44s linear infinite;
+      user-select: text;
+      pointer-events: none;
+    }
+    @keyframes scrollseo {
+      0% { top: 100%; }
+      100% { top: -220%; }
     }
     .cmd-hints {
       margin-top: 0.7em;
@@ -106,33 +138,23 @@
       margin-top: 1.2em;
       font-style: italic;
     }
-    /* AdSense movie-screen style */
-    .adsbygoogle-movie {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 98vw;
-      max-width: 780px;
-      height: 92px;
-      margin: 0 auto 0.5em auto;
-      margin-top: 0;
-      border-radius: 13px;
-      background: linear-gradient(180deg, #181930 70%, #0e111f 100%);
-      box-shadow: 0 0 26px #00ffe612, 0 0 4px #3c1b3c, 0 0 0.5em #390e4180;
-      border: 2px solid #13141c;
-      outline: 1.5px solid #1d265c;
+    .seo-bar {
       position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      z-index: 1001;
+      left: 0; right: 0; bottom: 0;
+      width: 100vw;
+      background: #1a2030ef;
+      color: #8df7d9c0;
+      font-size: 1.04em;
       text-align: center;
-      transition: box-shadow 0.23s;
+      padding: 8px 4vw 9px 4vw;
+      z-index: 22;
+      letter-spacing: .01em;
+      font-family: inherit;
     }
     @media (max-width: 900px) {
       .terminal { width: 100vw; padding: 2vw 2vw; }
       .network-video { display: none; }
-      .adsbygoogle-movie { width: 97vw; max-width: 97vw; height: 70px; }
+      #seo-scroller { display: none; }
     }
   </style>
 </head>
@@ -157,18 +179,19 @@
     <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
   </video>
 
-  <!-- AdSense: styled as movie-screen and fixed at bottom -->
-  <div class="adsbygoogle-movie">
-    <ins class="adsbygoogle"
-      style="display:block;width:100%;height:90px;"
-      data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="1234567890"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
+  <!-- SEO Text scroller, always under the globe, for Google -->
+  <div id="seo-scroller">
+    <div id="seo-scroll-content">
+      <!-- MASSIVE SEO KEYWORDS: these are visible to Google, hidden behind globe -->
+      PromptForge.online – pro-level AI prompt generator, NSFW art tools, face mapping, video builder, watermark maker, ASCII art, no censorship, zero filters, no login, custom watermark batch, open-source, Google hack tools, artist underground, secret prompts, best free image generator, watermark PNG, photo batch editor, video prompt, AI experiments, AI hacks, prompt side-by-side comparison, free templates, pro watermark features, 2025 AI tools, Gore and Giggles, J1nx chatbot, dark web prompt toolkit, viral clickbait, creative hacks, artist tools, paid features free, unlock everything, make money with AI, batch watermark, signature tool, download watermark, creative watermark ideas, 2025 AI hub, hidden AI tricks, bypass NSFW filter, watermark inspiration, stock image tools, next-gen art, PromptForge main hub, TikTok watermark, Twitter, X, Facebook, Discord, trending art, face swap, AI chat, unrestricted creativity, blueprint, watermark your world, underground prompt community, hack your own art, custom prompt builder, exclusive, buy me a coffee, secret GPT, midjourney style, dall-e alternative, real photo editor, photo hack, face mapping unlock, watermark download, Google-friendly, SEO boost, exclusive invite, zero censorship AI, prompt marketplace, prompt sharing, instant tools, Gore & Giggles, bsky, bluesky, x.com, facebook group, 2025, one-click prompt, watermark batch, no paywall, safe, fun, not for normies, join now, unlock promptforge.
+    </div>
   </div>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
+
+  <!-- SEO footer bar (only for Google, subtle for users) -->
+  <div class="seo-bar">
+    PromptForge.online is a private AI hub. Entry is by login only.<br>
+    <b>To access tools and main features, type <span style="color:#fa528e;">main</span> or <span style="color:#fa528e;">passkey</span> above. <br> Google users: for all content, <a href="https://promptforge.online/main.html" style="color:#20ffe0;text-decoration:underline;">proceed to main hub &rarr;</a></b>
+  </div>
 
   <script>
     // Initial scrollback "boot" text
@@ -200,7 +223,6 @@
 
     // Terminal logic
     let unlockedMain = false;
-    let passkeyStep = false;
 
     const output = document.getElementById('output');
     const input = document.getElementById('terminalInput');
@@ -267,7 +289,6 @@
     function fakePasskeyPrompt() {
       const chars = Math.floor(Math.random()*4)+6;
       let pass = prompt(`Enter passkey (${chars} chars):`);
-      // No matter what, unlock main.
       unlockedMain = true;
       output.innerHTML += "verifying passkey... [OK]<br>Access granted.<br>";
       output.innerHTML += "<span style='color:#11ffc4'>You can now type <b>main</b> to enter.</span><br>";
@@ -277,7 +298,6 @@
     function showMain() {
       output.innerHTML += `<span style='color:#6fff87'>>>> Main System Unlocked! Welcome to PromptForge.</span><br>`;
       output.innerHTML += `<span style='color:#00ffe8'>You're in. Enjoy exploring the tools.<br>(Index page shows once per session.)</span><br>`;
-      // REAL redirect
       setTimeout(function(){
         window.location.href = "main.html";
       }, 1300);
