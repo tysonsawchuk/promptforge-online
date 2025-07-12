@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="PromptForge.online is the pro underground NSFW/AI prompt toolkit for creators, with watermarking, face mapping, AI hacks, video builder, and more. Zero filters, full features, modern UI, always free.">
+  <meta name="description" content="Pro-level AI prompt toolkit, watermark creator, face mapping, and video builder. Free, open, and underground for artists and rebels. Monetized by ads, not paywalls.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta property="og:title" content="PromptForge Terminal Entry | Gore & Giggles">
-  <meta property="og:description" content="Enter the PromptForge network: hacker-style, animated, and creative. Unlock secret tools, art, and more.">
+  <meta property="og:description" content="Enter PromptForge: hacker-style boot, secret features, and pro creator tools. Free, safe, and uncensored.">
   <meta property="og:url" content="https://promptforge.online/">
   <meta property="og:image" content="https://promptforge.online/assets/j1nx_cutout.png">
   <link rel="icon" type="image/png" href="favicon.png">
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
-     crossorigin="anonymous"></script>
   <style>
     body {
       background: #090b10;
@@ -30,7 +27,7 @@
       background: transparent;
       padding: 2vw 3vw;
       border: none;
-      z-index: 1;
+      z-index: 2;
       overflow: hidden;
       box-shadow: none;
     }
@@ -42,7 +39,7 @@
       word-break: break-all;
       color: #20ffe0;
       text-shadow: 0 0 2px #01f0ff77;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
       white-space: pre-wrap;
     }
     .input-row {
@@ -57,17 +54,14 @@
       outline: none;
       font-family: inherit;
       font-size: 1.11rem;
-      width: 49vw;
-      caret-color: #16ffe2; /* soft blue/cyan caret */
-      font-weight: 500;
-      letter-spacing: 0.01em;
+      width: 50vw;
+      caret-color: #ff0db9;
+      font-weight: bold;
     }
-    #terminalInput:focus {
-      outline: none;
-      box-shadow: none;
+    #terminalInput:focus { outline: none; }
+    #blinker {
+      display: none; /* no pink blob anymore */
     }
-    #terminalInput::placeholder { color: #38ffe0a2; }
-
     .cmd-hints {
       margin-top: 0.7em;
       color: #38ffe0b0;
@@ -81,128 +75,78 @@
       margin-top: 1.2em;
       font-style: italic;
     }
-    /* AdSense movie-screen style */
-    .adsbygoogle-movie {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 98vw;
-      max-width: 780px;
-      height: 92px;
-      margin: 0 auto 0.5em auto;
-      margin-top: 0;
-      border-radius: 13px;
-      background: linear-gradient(180deg, #181930 70%, #0e111f 100%);
-      box-shadow: 0 0 26px #00ffe612, 0 0 4px #3c1b3c, 0 0 0.5em #390e4180;
-      border: 2px solid #13141c;
-      outline: 1.5px solid #1d265c;
+    /* Earth globe and SEO text */
+    .earth-wrap {
       position: fixed;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      z-index: 1001;
-      text-align: center;
-      transition: box-shadow 0.23s;
+      right: 0;
+      top: 0;
+      width: 46vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
     }
-    @media (max-width: 900px) {
-      .terminal { width: 100vw; padding: 2vw 2vw; }
-      .network-video { display: none; }
-      .adsbygoogle-movie { width: 97vw; max-width: 97vw; height: 70px; }
-      #terminalInput { width: 95vw; }
-    }
-    /* SEO scrolling text behind globe */
-    .seo-scroll {
+    .earth-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 2;
       position: absolute;
       right: 0;
       top: 0;
-      width: 45vw;
-      height: 100vh;
+      filter: drop-shadow(0 0 25px #1cfbffb8);
       pointer-events: none;
+    }
+    .seo-scroll {
+      position: absolute;
+      left: 4vw;
+      top: 4vw;
+      width: 70vw;
+      height: 76vh;
       overflow: hidden;
-      z-index: 0;
-      color: #20ffe0;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      opacity: 0.15;
-      font-size: 1.08em;
+      z-index: 1;
+      pointer-events: none;
+      color: #18fff0;
+      opacity: 0.19;
+      font-size: 1.15em;
+      font-family: inherit;
+      text-shadow: 0 0 5px #0ffff7, 0 0 1px #00e6c8;
       white-space: pre-line;
-      mix-blend-mode: lighten;
+      animation: seo-scroll 18s linear infinite;
     }
-    .seo-scroll span {
-      display: inline-block;
-      animation: scrollText 24s linear infinite;
+    @keyframes seo-scroll {
+      0% { transform: translateY(20vh);}
+      100% { transform: translateY(-90vh);}
     }
-    @keyframes scrollText {
-      0% { transform: translateY(100%);}
-      100% { transform: translateY(-105%);}
-    }
-    /* Passkey modal */
-    .modal-bg {
-      display: none;
+    .footer-bar {
       position: fixed;
-      z-index: 2000;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.46);
-      justify-content: center; align-items: center;
-    }
-    .modal-passkey {
-      background: #221a13;
-      border: 4px dashed #fffa31;
-      border-radius: 13px;
-      box-shadow: 0 0 22px #f22a2a91, 0 0 4px #fffa31;
-      max-width: 360px;
-      padding: 2.2em 1.8em 1.6em 1.8em;
-      color: #fcfeee;
-      font-size: 1.17em;
-      position: relative;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      z-index: 1002;
+      background: #06161e;
+      color: #43ffc2;
       text-align: center;
-    }
-    .modal-passkey label {
-      font-weight: bold;
-      color: #fffa31;
-      margin-bottom: 0.4em;
-      display: block;
-      font-size: 1.07em;
+      font-size: 1.03em;
+      padding: 0.55em 0 0.38em 0;
+      border-top: 1.3px solid #13636c3a;
       letter-spacing: 0.04em;
-      text-shadow: 0 0 7px #fff2335b;
+      font-family: inherit;
+      box-shadow: 0 0 17px #12dbcc10;
     }
-    .modal-passkey input {
-      padding: 0.6em 1.2em;
-      font-size: 1.11em;
-      border-radius: 6px;
-      border: 2px solid #fffa31;
-      background: #2d2217;
-      color: #f23e2a;
-      outline: none;
-      margin-top: 0.6em;
-      margin-bottom: 1em;
-      letter-spacing: 0.22em;
+    .footer-bar a {
+      color: #38ffe6;
+      text-decoration: underline;
       font-weight: bold;
-      box-shadow: 0 0 10px #f22a2a21;
-      width: 90%;
-      text-align: center;
     }
-    .modal-passkey button {
-      padding: 0.5em 1.6em;
-      background: #f23e2a;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1.1em;
-      font-weight: bold;
-      margin-top: 0.6em;
-      cursor: pointer;
-      transition: background 0.18s;
-      box-shadow: 0 0 10px #f22a2a43;
-    }
-    .modal-passkey button:hover {
-      background: #fcbc1e;
-      color: #222;
-    }
-    .modal-passkey .close {
-      position: absolute; top: 0.4em; right: 0.7em;
-      color: #fffa31; font-size: 1.5em; cursor: pointer;
-      font-weight: bold; text-shadow: 0 0 7px #fff2337e;
-      border: none; background: none;
+    @media (max-width: 900px) {
+      .terminal { width: 100vw; padding: 2vw 2vw; }
+      .earth-wrap { display: none; }
+      .footer-bar { font-size: 0.98em; }
     }
   </style>
 </head>
@@ -212,6 +156,7 @@
     <div class="input-row">
       <span style="color:#13f9d6">root@network:/#</span>
       <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
+      <span id="cursor" style="color:#ff0db9;font-weight:bold;font-size:1.18em;">|</span>
     </div>
     <div class="cmd-hints">
       try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>
@@ -221,40 +166,20 @@
       <span style="color:#1f7c7a">Tip: 'main' is locked, try <b>passkey</b> for a secret entry code.</span>
     </div>
   </div>
-  <!-- SEO: scrolling bio/text behind globe -->
-  <div class="seo-scroll">
-    <span>
-PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. The ultimate underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls.
-PromptForge is your all-in-one prompt hub for uncensored creativity: watermark tools, face swap, NSFW generator, trending AI art, video, clickbait, Google-friendly, SEO optimized, batch watermark, TikTok, X, Bluesky, Facebook group. Make, remix, and hack your content. Exclusive invite, no login required. DMCA tools, legal AI, open source.
-Why ads? We believe in open, free access for artists. No premium upsells, no paid feature lockouts, just killer AI tools and watermarking for every creator. 
-Best features: AI prompt builder, batch watermark, instant download, art generator, video prompt creator, ANSI art, AI hacks, face mapping. PromptForge means next-gen prompt tools, free watermark creator, and more. 
-Connect: admin@goreandgiggles.com | X: @GoreandGiggles | bsky.app/profile/goreandgiggles.bsky.social | fb group: Gore & Giggles.  
-Join the underground, unlock creativity. PromptForge.online — hack your prompt.
-    </span>
-  </div>
-  <!-- GLOBE VIDEO -->
-  <video class="network-video" autoplay muted loop playsinline>
-    <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
-  </video>
-  <!-- AdSense: styled as movie-screen and fixed at bottom -->
-  <div class="adsbygoogle-movie">
-    <ins class="adsbygoogle"
-      style="display:block;width:100%;height:90px;"
-      data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="1234567890"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-  </div>
-  <!-- Passkey Modal -->
-  <div class="modal-bg" id="modalBG">
-    <div class="modal-passkey">
-      <button class="close" onclick="closePasskeyModal()" aria-label="Close">&times;</button>
-      <label for="passkeyInput">Enter Secret Passkey</label>
-      <input id="passkeyInput" maxlength="12" autocomplete="off" placeholder="••••••••" />
-      <br>
-      <button onclick="submitPasskey()">Unlock</button>
-      <div style="color:#f23e2a;font-size:0.97em;margin-top:0.8em;">Access is restricted.<br>Find the passkey for entry.</div>
+
+  <div class="earth-wrap">
+    <img src="assets/globe_animation.png" class="earth-bg" alt="Spinning Earth">
+    <div class="seo-scroll" id="seoScroll">
+      PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. The ultimate underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls.
+      PromptForge is your all-in-one prompt hub for uncensored creativity: watermark tools, face swap, NSFW generator, trending AI art, video, clickbait, Google-friendly, SEO optimized, batch watermark, TikTok, X, Bluesky, Facebook group. Make, remix, and hack your content. Exclusive invite, no login required. DMCA tools, legal AI, open source. Why ads? We believe in open, free access for artists. No premium upsells, no paid feature lockouts; just killer AI tools and watermarking for every creator. Best features: AI prompt builder, batch watermark, instant download, art generator, video prompter creator, ANSI art, AI hacks, face mapping. PromptForge means next-gen prompt tools, free watermark creator and more.
+      Connect: admin@goreandgiggles.com | X: @GoreandGiggles | bsky.app/profile/goreandgiggles.bsky.social | fb group: Gore & Giggles.
+      Join the underground, unlock creativity. PromptForge.online — hack your prompt.
     </div>
+  </div>
+
+  <div class="footer-bar">
+    To access tools and main features, type <b>main</b> or <b>passkey</b> above.<br>
+    <span style="color:#9cf764">Google users: for all content, <a href="main.html">proceed to main hub →</a></span>
   </div>
   <script>
     // Initial scrollback "boot" text
@@ -283,11 +208,28 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
       "status: ALL SYSTEMS ONLINE",
       ""
     ];
-
+    // Terminal logic
     let unlockedMain = false;
+    let passkeyStep = false;
     const output = document.getElementById('output');
     const input = document.getElementById('terminalInput');
-
+    const cursor = document.getElementById('cursor');
+    input.value = "";
+    function printLine(str = '', delay = 25) {
+      return new Promise(resolve => {
+        let i = 0;
+        let interval = setInterval(() => {
+          if (i <= str.length) {
+            output.innerHTML += str.substring(0, i) + "<br>";
+            output.scrollTop = output.scrollHeight;
+            i = str.length + 1;
+          } else {
+            clearInterval(interval);
+            resolve();
+          }
+        }, delay);
+      });
+    }
     // Boot sequence animation
     async function showBoot() {
       for (const line of bootLines) {
@@ -295,8 +237,8 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
         output.scrollTop = output.scrollHeight;
         await new Promise(r => setTimeout(r, 55 + Math.random()*30));
       }
+      output.innerHTML += '<span style="color:#13f9d6">root@network:/#</span><br>';
     }
-
     function terminalHelp() {
       return [
         "Available commands:",
@@ -308,7 +250,6 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
         "  main      Enter main system (locked, try passkey)"
       ].join('\n');
     }
-
     function terminalAbout() {
       return [
         "PromptForge Network Entry Terminal",
@@ -318,7 +259,6 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
         "Tip: Find the secret passkey to unlock main!"
       ].join('\n');
     }
-
     function terminalContact() {
       return [
         "Contact:",
@@ -328,24 +268,60 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
         "  Facebook: https://www.facebook.com/groups/393971833395749"
       ].join('\n');
     }
-
     function showPasskeyModal() {
-      document.getElementById('modalBG').style.display = "flex";
-      document.getElementById('passkeyInput').value = "";
-      setTimeout(() => document.getElementById('passkeyInput').focus(), 200);
+      // Custom caution modal for passkey entry
+      let modal = document.createElement('div');
+      modal.style.position = 'fixed';
+      modal.style.left = '0';
+      modal.style.top = '0';
+      modal.style.width = '100vw';
+      modal.style.height = '100vh';
+      modal.style.background = 'rgba(28,20,6,0.93)';
+      modal.style.zIndex = 20000;
+      modal.style.display = 'flex';
+      modal.style.flexDirection = 'column';
+      modal.style.alignItems = 'center';
+      modal.style.justifyContent = 'center';
+      modal.innerHTML = `
+        <div style="
+          background: linear-gradient(180deg,#ffec6b 80%,#ff8d8d 100%);
+          border: 3.5px solid #f33333;
+          border-radius: 19px;
+          box-shadow: 0 0 55px #fbcf6e99, 0 0 15px #fd3232c5;
+          padding: 1.8em 2.7em 2em 2.7em;
+          font-size: 1.18em;
+          font-family: 'Fira Mono', monospace;
+          color: #542601;
+          font-weight: bold;
+          text-align: center;
+        ">
+          <div style="font-size:1.22em;margin-bottom:1em;">
+            <span style="background:#f10; color:#fff; padding:0.15em 0.7em; border-radius:11px;font-size:0.95em;">
+              <b>CAUTION</b>
+            </span><br>
+            <span style="color:#e72800;font-weight:bold;">Restricted system access<br>Enter passkey to continue</span>
+          </div>
+          <input id="passkeyInput" type="password" maxlength="16" autocomplete="off"
+            style="margin:1em auto 0.6em auto; display:block; font-size:1.12em; color:#f00; background:#fff7b7; border-radius:7px; border:1.4px solid #e72800; padding:0.5em; outline:none;width:11em;text-align:center;" autofocus>
+          <button id="passkeyBtn" style="background:#fff11c;color:#e72800;font-weight:bold;font-size:1.06em;border-radius:7px;border:1.2px solid #a00;padding:0.44em 1.1em;margin-top:0.7em;cursor:pointer;">Unlock</button>
+          <div style="font-size:0.9em; color:#9c2d00;margin-top:1em;">Or <a href="#" id="cancelModal" style="color:#254; text-decoration:underline;">go back</a></div>
+        </div>`;
+      document.body.appendChild(modal);
+      document.getElementById('passkeyInput').focus();
+      document.getElementById('cancelModal').onclick = function(e){
+        e.preventDefault();
+        document.body.removeChild(modal);
+        input.focus();
+      };
+      document.getElementById('passkeyBtn').onclick = function() {
+        document.body.removeChild(modal);
+        // Always unlock (demo)
+        unlockedMain = true;
+        output.innerHTML += "verifying passkey... [OK]<br>Access granted.<br>";
+        output.innerHTML += "<span style='color:#11ffc4'>You can now type <b>main</b> to enter.</span><br>";
+        input.focus();
+      };
     }
-    function closePasskeyModal() {
-      document.getElementById('modalBG').style.display = "none";
-      input.focus();
-    }
-    function submitPasskey() {
-      unlockedMain = true;
-      closePasskeyModal();
-      output.innerHTML += "verifying passkey... [OK]<br>Access granted.<br>";
-      output.innerHTML += "<span style='color:#11ffc4'>You can now type <b>main</b> to enter.</span><br>";
-      input.focus();
-    }
-
     function showMain() {
       output.innerHTML += `<span style='color:#6fff87'>>>> Main System Unlocked! Welcome to PromptForge.</span><br>`;
       output.innerHTML += `<span style='color:#00ffe8'>You're in. Enjoy exploring the tools.<br>(Index page shows once per session.)</span><br>`;
@@ -353,15 +329,13 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
         window.location.href = "main.html";
       }, 1300);
     }
-
     function easterEgg() {
       output.innerHTML += `<span style='color:#e3f363'>Hidden dev entry unlocked! Welcome, admin 👾</span><br>`;
       output.innerHTML += `<span style='color:#f363a3'>Redirecting to main...</span><br>`;
       unlockedMain = true;
       setTimeout(() => { showMain(); }, 800);
     }
-
-    // Command handler (clean, no "type a command...", no floating blinker)
+    // Command handler
     input.addEventListener('keydown', function(e){
       if(e.key === "Enter"){
         let cmd = input.value.trim().toLowerCase();
@@ -398,16 +372,16 @@ Join the underground, unlock creativity. PromptForge.online — hack your prompt
         output.scrollTop = output.scrollHeight;
       }
     });
-
+    // Terminal blinking cursor
+    setInterval(() => {
+      if(document.activeElement === input){
+        cursor.style.opacity = (cursor.style.opacity === "0" ? "1" : "0");
+      } else {
+        cursor.style.opacity = "1";
+      }
+    }, 520);
     // Initial boot
     showBoot();
-    // Focus on input
-    window.onload = () => { input.focus(); }
-    // Fix: auto focus on click anywhere in terminal area
-    document.querySelector('.terminal').addEventListener('click', () => { input.focus(); });
-
-    // AdSense
-    (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
 </body>
 </html>
