@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge Terminal Entry | Gore & Giggles</title>
-  <meta name="description" content="PromptForge.online is the underground AI prompt toolkit: watermark creator, face mapping, video builder, ANSI art, prompt generator, and more. All tools, no paywalls. Monetized by ads, not upsells.">
+  <meta name="description" content="PromptForge.online: underground AI prompt tools, watermark creator, face mapping, video builder, and more. Free, uncensored, no paywalls.">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta property="og:title" content="PromptForge Terminal Entry | Gore & Giggles">
-  <meta property="og:description" content="Hacker-style animated gateway to PromptForge. Unlock secret art, prompt tools, watermark, and more. Free for all creators.">
+  <meta property="og:description" content="Hacker-style gateway to PromptForge. Unlock art, watermark, prompt tools and more. Free for all creators.">
   <meta property="og:url" content="https://promptforge.online/">
   <meta property="og:image" content="https://promptforge.online/assets/j1nx-cutout.png">
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    html, body {margin:0;padding:0;width:100vw;height:100vh;background:#090b10;color:#20ffe0;font-family:'Fira Mono','Consolas','Menlo',monospace;overflow:hidden;}
-    .main-flex {display:flex;width:100vw;height:100vh;box-sizing:border-box;}
-    .terminal-side {width:52vw;min-width:330px;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;background:transparent;position:relative;padding-left:2vw;box-sizing:border-box;}
-    .output-box {width:97%;max-width:46vw;flex:1 1 auto;overflow-y:auto;padding-top:2vw;padding-bottom:0.1vw;font-size:1.05rem;color:#20ffe0;text-shadow:0 0 2px #01f0ff77;margin-bottom:0;white-space:pre-wrap;display:flex;flex-direction:column;justify-content:flex-end;}
-    .cmd-hints {color:#38ffe0b0;font-size:0.97em;font-style:italic;margin-bottom:0.1em;margin-top:-0.3em;}
-    .input-row {display:flex;align-items:center;margin-bottom:0;background:transparent;font-size:1.13rem;width:99%;position:relative;z-index:10;}
-    #prompt {color:#13f9d6;font-weight:700;margin-right:0.5ch;}
-    #terminalInput {background:transparent;color:#20ffe0;border:none;outline:none;font-family:inherit;font-size:1.13rem;min-width:28vw;width:48vw;caret-color:#ff3cd7;font-weight:bold;flex:1;position:relative;z-index:5;letter-spacing:0;}
-    #terminalInput:focus {outline:none;}
-    #fakeCursor {color:#ff37e2;font-size:1.2em;font-weight:700;margin-left:-0.05em;animation:blink 1.13s infinite steps(2, start);letter-spacing:0;vertical-align:baseline;transition:color 0.17s;position:relative;left:-0.14ch;}
-    @keyframes blink { 0%{opacity:1;} 49%{opacity:0;} 100%{opacity:1;} }
+    html, body {height:100%;margin:0;padding:0;overflow:hidden;}
+    body {background:#090b10;font-family:'Fira Mono','Consolas','Menlo',monospace;}
+    .main-flex {display:flex;width:100vw;height:100vh;}
+    .terminal-side {width:54vw;min-width:320px;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;position:relative;}
+    .output-box {width:97%;flex:1 1 auto;overflow-y:auto;padding:2vw 0 0 2vw;font-size:1.05rem;color:#20ffe0;text-shadow:0 0 2px #01f0ff77;white-space:pre-wrap;display:flex;flex-direction:column;}
+    .cmd-hints {color:#38ffe0b0;font-size:0.97em;font-style:italic;margin-bottom:0.1em;margin-top:0;}
+    .input-row {display:flex;align-items:center;font-size:1.13rem;width:100%;background:transparent;padding:0 0 1.1em 2vw;position:absolute;bottom:0;left:0;}
+    #prompt {color:#13f9d6;font-weight:700;margin-right:0.3ch;}
+    #terminalInput {background:transparent;color:#20ffe0;border:none;outline:none;font-family:inherit;font-size:1.13rem;min-width:28vw;width:40vw;caret-color:#ff3cd7;font-weight:bold;flex:1;letter-spacing:0;}
+    #fakeCursor {color:#ff37e2;font-size:1.2em;font-weight:700;margin-left:-0.04em;animation:blink 1.13s infinite steps(2, start);}
+    @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
     .footer-sticky {width:100vw;background:#0d2a26f1;color:#aeeef7;font-size:1.07em;text-align:center;position:fixed;left:0;bottom:0;padding:0.54em 0 0.3em 0;letter-spacing:0.01em;border-top:2.5px solid #1ae2d2;z-index:99;box-shadow:0 -2px 22px #011;}
     .footer-sticky a {color:#11ffc9;text-decoration:underline;}
-    .globe-side {width:48vw;min-width:340px;height:100vh;position:relative;overflow:hidden;display:flex;align-items:flex-end;justify-content:flex-end;}
-    .seo-scroll-wrap {position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:2;}
-    .seo-scroller {position:absolute;left:2vw;width:89%;color:#81fcf4;font-size:1.18em;font-family:inherit;opacity:0.97;letter-spacing:0.03em;font-style:italic;filter:blur(0.05px);text-shadow:0 0 8px #00fff97a,0 0 2px #000;user-select:none;line-height:1.32;white-space:pre-line;top:0;}
-    .globe-bg-video {position:absolute;right:0;top:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;opacity:0.99;}
-    @media (max-width:900px) {.main-flex{flex-direction:column;}.terminal-side,.globe-side{width:100vw;min-width:0;height:48vh;}.output-box{max-width:98vw;}.input-row{width:99vw;}.seo-scroll-wrap,.globe-bg-video{height:100%;}}
+    .globe-side {width:46vw;min-width:320px;height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+    .seo-ticker-wrap {position:absolute;left:0;bottom:4.7vh;width:100%;height:2.7em;overflow:hidden;z-index:10;pointer-events:none;}
+    .seo-ticker-text {white-space:nowrap;font-size:1.15em;color:#aef7f4;opacity:0.97;text-shadow:0 0 6px #111,0 0 8px #0cfff4e6,0 0 1px #0af2c7;letter-spacing:0.01em;font-style:italic;font-family:inherit;}
+    .globe-bg-video {position:absolute;right:0;top:0;width:100%;height:100%;object-fit:cover;z-index:3;pointer-events:none;}
+    @media (max-width:900px) {.main-flex{flex-direction:column;}.terminal-side,.globe-side{width:100vw;height:48vh;min-width:0;}.output-box{max-width:98vw;}.input-row{width:99vw;}.seo-ticker-wrap{height:2.5em;}}
   </style>
 </head>
 <body>
@@ -43,10 +43,10 @@
       <span id="fakeCursor">_</span>
     </div>
   </div>
-  <!-- Globe/Scrolling SEO -->
+  <!-- Globe & SEO ticker -->
   <div class="globe-side">
-    <div class="seo-scroll-wrap">
-      <div class="seo-scroller" id="seoScroller"></div>
+    <div class="seo-ticker-wrap">
+      <span class="seo-ticker-text" id="seoTicker"></span>
     </div>
     <video class="globe-bg-video" autoplay muted loop playsinline>
       <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
@@ -93,7 +93,7 @@
     for (const line of bootLines) {
       output.innerHTML += line + "<br>";
       output.scrollTop = output.scrollHeight;
-      await new Promise(r => setTimeout(r, 60 + Math.random()*30));
+      await new Promise(r => setTimeout(r, 55 + Math.random()*28));
     }
     output.innerHTML += '<span style="color:#13f9d6">root@network:/#</span><br>';
   }
@@ -215,40 +215,27 @@
       output.scrollTop = output.scrollHeight;
     }
   });
-  // Blinking cursor always at end of input
+
+  // Blinking cursor is always at end of input (by default, with input caret, but custom cursor shown for effect)
   input.addEventListener('input',function(){
-    fakeCursor.style.left = (input.value.length * 0.65) + 'ch';
+    // No need to move the cursor, stays at end
   });
-  // On focus, always scroll output to bottom
-  input.addEventListener('focus',function(){
-    output.scrollTop = output.scrollHeight;
-  });
+
   // Initial boot
   showBoot();
 
-  // -- SEO scroller
-  const seoText = `PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. The ultimate underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls.
-
-PromptForge is your all-in-one prompt hub for uncensored creativity: watermark tools, batch watermark, TikTok art, trending AI art, video, clickbait, Google-friendly, SEO optimized, batch watermark, instant download, art generator, your content. Exclusive invite, no login required. DMCA tools, legal AI, open source. Best features: AI prompt builder, batch watermark, trending tools for every creator.
-
-Face mapping, creative watermark inspiration, ANSI/ASCII art, AI hacks, face swap, AI chat, watermark download, watermark your world, underground prompt community. Hack your own art, exclusive, buy me coffee, secret, signature tool, watermark inspiration. No feature lockouts, just killer AI tools and watermarking for every creator. 
-
-Connect: admin@goreandgiggles.com | Bluesky: bsky.app/profile/goreandgiggles.bsky.social | X: x.com/GoreandGiggles | Facebook group: facebook.com/groups/393971833395749
-
-PromptForge.online means next-gen prompt tools, free watermark creator and more. Unlock, watermark download, Google-friendly SEO boost, exclusive invite, zero censorship AI, prompt marketplace, prompt sharing, instant tools, trending art.
-`;
-
-  const scroller = document.getElementById('seoScroller');
-  let scrollY = 0, maxScroll;
-  function updateScroll() {
-    scrollY += 0.11;
-    if (!maxScroll) maxScroll = scroller.scrollHeight - scroller.parentNode.offsetHeight + 50;
-    if (scrollY > maxScroll) scrollY = 0;
-    scroller.style.top = (-scrollY) + "px";
-    requestAnimationFrame(updateScroll);
+  // SEO Ticker: horizontal scroll, infinite, slow
+  const seoText = "PromptForge.online — pro-level AI prompt toolkit, watermark creator, face mapping, video builder, ANSI art, prompt generator, safe unlock tools. Underground hub for creators and rebels. All tools, no filters, always free. Monetized by ads, not paywalls. PromptForge: watermark tools, batch watermark, TikTok art, trending AI art, video, clickbait, Google-friendly, SEO optimized, instant download, art generator, DMCA tools, legal AI, open source. Face mapping, creative watermark inspiration, AI hacks, face swap, watermark download, watermark your world, underground prompt community. Connect: admin@goreandgiggles.com | bsky.app/profile/goreandgiggles.bsky.social | x.com/GoreandGiggles | facebook.com/groups/393971833395749. Next-gen prompt tools, watermark creator and more. Unlock, Google SEO boost, exclusive invite, zero censorship AI, prompt marketplace, prompt sharing, instant tools, trending art. | ";
+  const seoTicker = document.getElementById('seoTicker');
+  seoTicker.textContent = seoText + seoText;
+  let tickerPos = 0;
+  function animateTicker() {
+    tickerPos -= 0.43; // slow and smooth
+    if (Math.abs(tickerPos) > seoText.length * 7.85) tickerPos = 0;
+    seoTicker.style.transform = `translateX(${tickerPos}px)`;
+    requestAnimationFrame(animateTicker);
   }
-  scroller.textContent = seoText + seoText;
-  setTimeout(updateScroll, 300);
+  animateTicker();
 </script>
 </body>
 </html>
