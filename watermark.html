@@ -1,898 +1,666 @@
-<!-- BLOCK 1/8: HTML HEAD, NAV, SEO, STYLES, J1NX MINI CAMPER CSS -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>MONSTER Free Watermark Maker • PromptForge.online</title>
-  <meta name="description" content="No paywalls, ever. Create, batch, and export stunning watermarks with advanced canvas, effects, SVG, GIF, AI inspiration, and batch image/video tools. Mini-J1nx AI helper. Outclasses every paid watermark app—forever free.">
-  <meta name="keywords" content="free watermark, batch watermark, SVG watermark, GIF, signature, AI watermark, PromptForge, best watermark tool, J1nx, open source watermark, export transparent, copyright, online, pro watermark">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Ad slot, discreet -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
-  <!-- Open Source Libs -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gif.js.optimized/dist/gif.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Oswald:400,700|Pacifico|Roboto:400,700|Montserrat:400,700|Open+Sans:400,700|Lobster|Archivo+Black|Russo+One|Fira+Mono|Dancing+Script|Orbitron|Bebas+Neue|DM+Serif+Display|Merriweather|Press+Start+2P&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MONSTER Free Watermark Maker – PromptForge.online</title>
+  <meta name="description" content="Design, preview, and add pro-quality watermarks to any image or art – all features 100% free, no logins or paywalls, unlimited use. Batch, signature, templates, AI, and J1nx helper. Outclass the paid apps!">
+  <link rel="icon" href="/assets/pf-fav.png">
   <style>
     body {
-      margin: 0; padding: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      background: #181a1e;
-      color: #f3f3f3;
+      background: #141018;
+      color: #ffe2fb;
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
       min-height: 100vh;
-      display: flex; flex-direction: column;
+      display: flex;
+      flex-direction: column;
     }
-    .pf-nav, .pf-footer { background: #181a1b; color: #eee; padding: 12px 0; }
-    .pf-nav ul { display: flex; gap: 1em; justify-content: center; list-style: none; margin: 0; padding: 0; }
-    .pf-nav a { color: #ffc0cb; text-decoration: none; font-weight: 500; }
-    .pf-nav a:hover { text-decoration: underline; }
-    .pf-breadcrumbs { padding: 10px 20px; font-size: 0.96em; color: #bbb; }
-    .pf-breadcrumbs ol { display: flex; gap: 0.5em; list-style: none; padding: 0; margin: 0; }
-    .pf-breadcrumbs a { color: #ffc0cb; }
-    .monster-header {
-      font-size: 2.1em; color: #ffd3e3; letter-spacing:0.01em;
-      font-family: 'Russo One', Arial, sans-serif;
-      text-align:center; margin:36px 0 10px 0;
-      text-shadow:0 2px 20px #000a;
+    header, footer {
+      background: #21192a;
+      color: #ffd6fd;
+      padding: 22px 0 16px 0;
+      text-align: center;
+      letter-spacing: .02em;
+      font-weight: 600;
+      font-size: 1.22em;
     }
-    .monster-sub {
-      text-align: center; font-size: 1.18em; margin-bottom: 28px; color: #ffc0cb;
-      font-weight: 600; letter-spacing:0.01em;
+    nav {
+      margin: 0 auto 10px auto;
+      padding: 0 0 4px 0;
+      text-align: center;
+      background: #271c34;
+      border-bottom: 2px solid #fa528e38;
     }
-    .monster-callout {
-      background: #232329; border-left: 9px solid #ffc0cb; color: #ffd3e3;
-      font-size: 1.16em; padding: 20px 28px 16px 22px; margin: 24px 30px 12px 30px;
-      border-radius: 13px; font-weight: 600; box-shadow: 0 2px 10px #0002;
-      text-shadow: 0 2px 4px #0007;
+    nav a {
+      color: #ffb1ef;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+      font-size: 1.04em;
+      transition: color .2s;
     }
-    .main-container { display: flex; flex:1; gap: 38px; margin: 30px 0 8px 0; align-items: flex-start; justify-content: center;}
-    .wm-toolbox { width: 270px; background: #232329; border-radius: 21px; padding: 22px 14px 18px 14px; margin-left:18px; box-shadow:0 6px 18px #0002;}
-    .wm-toolbox label { font-size: 1.05em; margin-top: 6px; color: #ffd3e3; display:block;}
-    .wm-toolbox input[type='color'] { width:32px; height:32px; border:none; background: none;}
-    .wm-toolbox select, .wm-toolbox input, .wm-toolbox button { width: 100%; margin-bottom: 12px; font-size: 1em; border-radius:7px; border:none; padding:6px 10px;}
-    .wm-toolbox button { background:#ffc0cb; color:#181a1b; font-weight:600; cursor:pointer; margin-top:7px;}
-    .wm-toolbox button:hover { background:#ffd1dc;}
-    .wm-section-title {font-size:1.13em; color:#fff9; margin-bottom:8px; letter-spacing:0.02em;}
-    .wm-section-desc {font-size:1.04em; color:#fff7; margin-bottom:8px;}
-    .adsbygoogle { display: block; margin: 24px auto 10px auto; min-height: 80px; max-width: 340px; background:#212;}
-    .pf-footer { margin-top: 40px; font-size: 0.97em;}
-    .pf-footer-links a { color: #ffc0cb; margin-right: 10px; text-decoration: none; }
-    .pf-footer-links a:hover { text-decoration: underline; }
-    .pf-footer-copy { color: #999; margin-top: 5px; font-size: 0.93em;}
-    /* Responsive + canvas wrap */
-    @media (max-width: 900px) { .main-container { flex-direction: column; gap: 22px; align-items:center;} .wm-toolbox { margin-left:0;width:96vw;}}
-    @media (max-width:600px) { .monster-header{font-size:1.4em;}.monster-callout{margin:12px 2vw;} .wm-toolbox{padding:5vw; border-radius:14px;} }
-    /* J1nx mini-camper */
-    .j1nx-mini-camper {
-      position: fixed; right: 22px; bottom: 22px; z-index: 99; width: 110px; min-height: 110px;
-      background: #28202aee; border-radius: 23px 23px 19px 23px; box-shadow: 0 2px 22px #0005;
-      border: 2.7px solid #ffc0cb77; display: flex; flex-direction: column; align-items: center;
-      transition: box-shadow 0.3s;
+    nav a:hover { color: #fa528e; }
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1220px;
+      margin: 22px auto 18px auto;
+      padding: 0 6vw;
+      box-sizing: border-box;
     }
-    .j1nx-mini-art { width: 84px; height: 84px; margin:8px 0 4px 0; border-radius: 50%; box-shadow:0 2px 16px #fa528e22;}
-    .j1nx-mini-bubble {
-      background: #222; color: #fff; font-size: 1.03em; padding: 7px 13px; border-radius: 13px 13px 13px 5px;
-      box-shadow: 0 0 9px 1px #fa528e45;
-      margin-bottom: 8px; min-height: 28px; max-width: 175px; text-align:center;
-      white-space: pre-line; word-break: break-word;
+    .monster-head {
+      font-size: 2.1em;
+      font-weight: 800;
+      color: #fa528e;
+      text-shadow: 0 1px 12px #fd5dc760, 0 0px 1px #000;
+      margin-bottom: 13px;
     }
-    .j1nx-mini-input-row { display: flex; gap: 4px; margin: 2px 0 10px 0; }
-    .j1nx-mini-input { border-radius: 10px; border:none; padding: 5px 7px; font-size: 1em; background:#222; color:#ffc0cb; width:68px;}
-    .j1nx-mini-btn { border: none; background: #ffc0cb; color: #3d1826; border-radius: 9px; padding: 5px 8px; font-weight: 600; cursor: pointer; }
-    .j1nx-mini-btn:hover { background: #ffd1dc;}
-    @media (max-width:600px){.j1nx-mini-camper{right:4vw;bottom:10vw;}}
+    .desc-blurb {
+      background: #22162b;
+      color: #ffe2fb;
+      padding: 15px 22px;
+      border-radius: 19px;
+      font-size: 1.08em;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 18px #fd5dc740;
+      line-height: 1.58;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .watermark-toolbox {
+      background: #1e1822;
+      border-radius: 22px;
+      padding: 28px 12px 24px 12px;
+      margin: 0 auto 28px auto;
+      box-shadow: 0 2px 20px #ff43ae22;
+      max-width: 980px;
+      overflow-x: auto;
+    }
+    .section-title {
+      color: #fa528e;
+      font-size: 1.3em;
+      font-weight: bold;
+      margin: 24px 0 7px 0;
+      text-shadow: 0 1px 8px #fd5dc750;
+      letter-spacing: .02em;
+    }
+    .gallery-thumb {
+      width: 115px;
+      margin: 0 8px 8px 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #fa528e33;
+      cursor: pointer;
+      transition: box-shadow .18s;
+      border: 1.5px solid #21192a;
+      background: #1c1122;
+    }
+    .gallery-thumb:hover {
+      box-shadow: 0 4px 18px #fa528e77;
+      border: 1.5px solid #fa528e77;
+    }
+    /* MICRO HELP BUTTON STYLE */
+    .micro-help-btn {
+      display: inline-block;
+      width: 20px; height: 20px;
+      background: #ecebee;
+      color: #222;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 1.15em;
+      font-weight: 700;
+      line-height: 20px;
+      margin-left: 7px;
+      box-shadow: 0 2px 6px #fa528e19;
+      cursor: pointer;
+      user-select: none;
+      transition: background .18s;
+      border: 1.5px solid #ccc;
+      vertical-align: middle;
+    }
+    .micro-help-btn:hover { background: #f4def3; color: #d50060; }
+    .micro-help-popup {
+      position: absolute;
+      background: #efeefa;
+      color: #1a1022;
+      padding: 14px 19px;
+      border-radius: 14px;
+      box-shadow: 0 2px 18px #fa528e33;
+      font-size: 1.05em;
+      z-index: 333;
+      min-width: 160px;
+      max-width: 310px;
+      line-height: 1.56;
+      border: 1.5px solid #fa528e29;
+      top: 0; left: 0;
+      display: none;
+    }
+    .micro-help-popup.active { display: block; animation: fadeIn .24s; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px);}
+      to   { opacity: 1; transform: translateY(0);}
+    }
+
+    /* MINI J1NX CAMPER - corner only */
+    #j1nx-mini-camper {
+      position: fixed;
+      bottom: 22px; right: 22px; z-index: 97;
+      display: flex; align-items: flex-end; gap: 9px;
+      user-select: none;
+    }
+    #j1nx-mini-art {
+      width: 88px; height: auto; min-height: 80px; max-height: 120px;
+      box-shadow: 0 2px 16px #fa528e55;
+      border-radius: 20px 20px 40px 40px/35px 35px 76px 76px;
+      object-fit: contain;
+      background: #18101a;
+    }
+    #j1nx-mini-bubble {
+      max-width: 290px; min-width: 70px; padding: 15px 16px 15px 18px;
+      background: #222;
+      color: #ffe2fb;
+      font-size: 1.14em;
+      border-radius: 16px 16px 19px 19px/18px 18px 33px 33px;
+      box-shadow: 0 2px 18px #fa528e33;
+      line-height: 1.6;
+      font-family: inherit;
+      margin-bottom: 9px;
+      animation: j1nxPulse 2.5s infinite alternate;
+      overflow-y: auto;
+      max-height: 180px;
+      transition: box-shadow .3s;
+      word-break: break-word;
+    }
+    @keyframes j1nxPulse {
+      0%   { box-shadow:0 2px 16px #fa528e22; }
+      100% { box-shadow:0 2px 26px #fa528e99; }
+    }
+    @media (max-width: 700px) {
+      #j1nx-mini-camper { bottom: 10px; right: 6px; }
+      #j1nx-mini-art { width: 56px; min-height: 52px; }
+      #j1nx-mini-bubble { font-size: .97em; max-width: 85vw; }
+    }
   </style>
 </head>
 <body>
-  <!-- MASTER NAV -->
-  <nav id="pf-nav" class="pf-nav">
-    <ul>
-      <li><a href="/main.html">Main Hub</a></li>
-      <li><a href="/j1nx.html">J1nx</a></li>
-      <li><a href="/watermark.html">Watermark</a></li>
-      <li><a href="/picture.html">Image Prompt</a></li>
-      <li><a href="/movie.html">Video Prompt</a></li>
-      <li><a href="/playground.html">AI Playground</a></li>
-      <li><a href="/ansiart.html">ANSI/ASCII Art</a></li>
-      <li><a href="/compare.html">Compare</a></li>
-      <li><a href="/legal.html">Legal/Terms</a></li>
-      <li><a href="/about.html">About</a></li>
-      <li><a href="/contact.html">Contact</a></li>
-    </ul>
-  </nav>
-  <!-- BREADCRUMBS -->
-  <nav aria-label="breadcrumb" class="pf-breadcrumbs">
-    <ol>
-      <li><a href="/main.html">Main Hub</a> &gt;</li>
-      <li>Watermark Maker</li>
-    </ol>
-  </nav>
-  <div class="monster-header">MONSTER Free Watermark Maker <span style="font-size:0.7em;color:#ffd3e399;font-weight:400;">• No Paywalls. No Bullshit. No Limits.</span></div>
-  <div class="monster-sub">Batch watermarking, SVG/GIF/video, templates, inspiration, AI, and mini-J1nx—<b>every pro feature, forever free.</b></div>
-  <div class="monster-callout">
-    <b>Why pay for watermarking?</b> <b>PromptForge.online</b> gives you <u>every advanced watermarking tool</u> totally free: <b>Batch image/video, signature/logo upload, Google Fonts, effects, templates, “Inspire Me” AI, GIF, SVG, and more</b>.<br>
-    <i>We give you every feature the greedy apps make you pay for.<br> No login, no limits, no watermark on your watermark, ever.</i>
-  </div>
-<!-- BLOCK 2/8: MAIN LAYOUT, TOOLBOX, CANVAS, BATCH, GALLERY -->
-  <div class="main-container">
-    <!-- Toolbox Sidebar -->
-    <aside class="wm-toolbox">
-      <div class="wm-section-title">Watermark Tools</div>
-      <button onclick="wmAddText()">Add Text</button>
-      <button onclick="wmAddImage()">Add Image/Logo</button>
-      <button onclick="wmAddSVG()">Add SVG</button>
-      <button onclick="wmDrawSign()">Sign (Draw)</button>
-      <button onclick="wmAddShape()">Add Shape</button>
-      <button onclick="wmAddTemplate()">Templates Gallery</button>
-      <button onclick="wmInspireMe()">Inspire Me (AI)</button>
-      <hr style="margin:10px 0;">
-      <label>Font</label>
-      <select id="wm-font" onchange="wmSetFont(this.value)">
-        <option value="Roboto">Roboto</option>
-        <option value="Oswald">Oswald</option>
-        <option value="Montserrat">Montserrat</option>
-        <option value="Open Sans">Open Sans</option>
-        <option value="Pacifico">Pacifico</option>
-        <option value="Lobster">Lobster</option>
-        <option value="Archivo Black">Archivo Black</option>
-        <option value="Russo One">Russo One</option>
-        <option value="Fira Mono">Fira Mono</option>
-        <option value="Orbitron">Orbitron</option>
-        <option value="Bebas Neue">Bebas Neue</option>
-        <option value="Press Start 2P">Press Start 2P</option>
-      </select>
-      <label>Font Size</label>
-      <input type="number" id="wm-fontsize" min="10" max="240" value="48" onchange="wmSetFontSize(this.value)">
-      <label>Color</label>
-      <input type="color" id="wm-color" value="#ffc0cb" onchange="wmSetColor(this.value)">
-      <label>Opacity</label>
-      <input type="range" id="wm-opacity" min="10" max="100" value="100" onchange="wmSetOpacity(this.value)">
-      <label>Effects</label>
-      <div style="display:flex; gap:7px;">
-        <button onclick="wmSetShadow()">Shadow</button>
-        <button onclick="wmSetOutline()">Outline</button>
-        <button onclick="wmSetGlow()">Glow</button>
-        <button onclick="wmClearEffects()">Clear</button>
-      </div>
-      <label>Layer</label>
-      <div style="display:flex; gap:7px;">
-        <button onclick="wmBringForward()">Up</button>
-        <button onclick="wmSendBackward()">Down</button>
-        <button onclick="wmDuplicate()">Duplicate</button>
-        <button onclick="wmDelete()">Delete</button>
-      </div>
-      <hr style="margin:10px 0;">
-      <label>Snap to Grid <input type="checkbox" id="wm-grid" onchange="wmToggleGrid(this.checked)"></label>
-      <label>Canvas Size</label>
-      <input type="number" id="wm-width" value="500" style="width:45%;" onchange="wmResizeCanvas()"> ×
-      <input type="number" id="wm-height" value="220" style="width:45%;" onchange="wmResizeCanvas()">
-      <hr style="margin:8px 0;">
-      <button onclick="wmExportPNG()">Download PNG</button>
-      <button onclick="wmExportSVG()">Download SVG</button>
-      <button onclick="wmExportGIF()">Download GIF</button>
-      <button onclick="wmExportJSON()">Export Project</button>
-      <button onclick="wmImportJSON()">Import Project</button>
-      <button onclick="wmSaveLocal()">Save for Later</button>
-      <button onclick="wmLoadLocal()">Load Last Project</button>
-      <hr style="margin:8px 0;">
-      <div class="wm-section-title">Batch Mode</div>
-      <button onclick="wmOpenBatch()">Batch Watermark Images</button>
-      <button onclick="wmOpenBatchVideo()">Watermark a Video</button>
-    </aside>
+<header>
+  MONSTER Watermark Maker – PromptForge.online
+</header>
+<nav>
+  <a href="/main.html">Main Hub</a>
+  <a href="/pic.html">Image Prompts</a>
+  <a href="/movie.html">Video Prompts</a>
+  <a href="/j1nx.html">J1nx</a>
+  <a href="/watermark.html">Watermark</a>
+  <a href="/fuckwithai.html">AI Playground</a>
+  <a href="/ansiart.html">ANSI Art</a>
+  <a href="/compare.html">Compare</a>
+  <a href="/terms.html">Legal</a>
+</nav>
 
-    <!-- Canvas Editor + Tools -->
-    <section class="wm-canvas-wrap">
-      <div class="wm-section-title">Your Watermark Canvas</div>
-      <div class="wm-canvas-tools">
-        <button onclick="wmUndo()">Undo</button>
-        <button onclick="wmRedo()">Redo</button>
-        <button onclick="wmPreviewOnPhoto()">Preview on Photo</button>
-        <button onclick="wmClearCanvas()">Clear All</button>
-      </div>
-      <canvas id="wm-canvas" width="500" height="220" style="background:transparent;"></canvas>
-      <div style="margin-top:8px; font-size:0.99em;color:#bbb;">
-        <b>Tip:</b> Drag, resize, rotate, or double-click to edit any element. 
-        Use the sidebar to customize style. <span style="color:#ffd3e3;">Batch mode lets you watermark tons of images at once!</span>
-      </div>
-    </section>
-
-    <!-- Templates Gallery (Hidden Modal) -->
-    <div id="wm-template-modal" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;background:#181a1fcf;z-index:70;justify-content:center;align-items:center;">
-      <div style="background:#232329;border-radius:19px;padding:26px 30px;max-width:440px;box-shadow:0 2px 32px #0009;">
-        <div class="wm-section-title" style="text-align:center;">Templates Gallery</div>
-        <div id="wm-template-list" style="display:flex;flex-wrap:wrap;gap:13px;justify-content:center;"></div>
-        <div style="text-align:center;margin-top:17px;">
-          <button onclick="wmCloseTemplateModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Inspiration Gallery (Hidden Modal) -->
-    <div id="wm-inspire-modal" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;background:#181a1fcf;z-index:71;justify-content:center;align-items:center;">
-      <div style="background:#232329;border-radius:19px;padding:26px 30px;max-width:440px;box-shadow:0 2px 32px #0009;">
-        <div class="wm-section-title" style="text-align:center;">Watermark Inspiration</div>
-        <div id="wm-inspire-list" style="display:flex;flex-wrap:wrap;gap:13px;justify-content:center;"></div>
-        <div style="text-align:center;margin-top:17px;">
-          <button onclick="wmCloseInspireModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Batch Image Modal -->
-    <div id="wm-batch-modal" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;background:#191a1eeb;z-index:80;justify-content:center;align-items:center;">
-      <div style="background:#232329;border-radius:19px;padding:27px 30px;max-width:510px;box-shadow:0 2px 32px #0009;">
-        <div class="wm-section-title" style="text-align:center;">Batch Watermark Images</div>
-        <input type="file" id="wm-batch-input" multiple accept="image/*">
-        <div id="wm-batch-list" style="margin-top:16px;"></div>
-        <div style="text-align:center;margin-top:18px;">
-          <button onclick="wmBatchStart()">Apply Watermark & Download ZIP</button>
-          <button onclick="wmCloseBatchModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Batch Video Modal -->
-    <div id="wm-batch-video-modal" style="display:none;position:fixed;left:0;top:0;width:100vw;height:100vh;background:#191a1eeb;z-index:81;justify-content:center;align-items:center;">
-      <div style="background:#232329;border-radius:19px;padding:27px 30px;max-width:520px;box-shadow:0 2px 32px #0009;">
-        <div class="wm-section-title" style="text-align:center;">Watermark a Video (BETA)</div>
-        <input type="file" id="wm-batch-video-input" accept="video/mp4,video/webm">
-        <video id="wm-batch-video-preview" controls style="max-width:440px;max-height:210px;margin:10px 0;"></video>
-        <div style="text-align:center;margin-top:18px;">
-          <button onclick="wmBatchVideoStart()">Apply Watermark & Download</button>
-          <button onclick="wmCloseBatchVideoModal()">Close</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Preview Section -->
-    <section class="wm-preview-wrap" id="wm-preview-wrap" style="display:none;">
-      <div class="wm-section-title">Watermark Preview on Photo</div>
-      <img id="wm-preview-img" src="" alt="Preview"/>
-      <br>
-      <input type="file" accept="image/*" onchange="wmLoadPreviewPhoto(event)">
-      <button onclick="wmApplyWatermark()">Apply Watermark</button>
-      <button onclick="wmClosePreview()">Close Preview</button>
-    </section>
-
-    <!-- Discreet Ad Slot -->
-    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4963053724895140" data-ad-slot="4315819721" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-<!-- BLOCK 3/8: MINI-J1NX CAMPER (BOTTOM-RIGHT) + FOOTER -->
-  <!-- Mini-J1nx Camper (Helper, Inspiration) -->
-  <div class="j1nx-mini-camper" id="j1nx-mini-camper">
-    <img src="/img/j1nx-avatar-glow.png" alt="J1nx AI" class="j1nx-mini-art" id="j1nx-mini-art"/>
-    <div class="j1nx-mini-bubble" id="j1nx-mini-bubble">Hey, I’m J1nx!<br>Need a watermark idea?<br>Type below!</div>
-    <div class="j1nx-mini-input-row">
-      <input type="text" class="j1nx-mini-input" id="j1nx-mini-input" maxlength="66" placeholder="Watermark Q or mood..."/>
-      <button class="j1nx-mini-btn" onclick="j1nxMiniSend()">Ask</button>
-    </div>
-    <div style="margin-bottom:7px;">
-      <button class="j1nx-mini-btn" onclick="j1nxMiniRandom()">🎲 Inspire Me</button>
-      <button class="j1nx-mini-btn" onclick="j1nxMiniClear()">Clear</button>
-    </div>
+<main>
+  <div class="monster-head">MONSTER Free Watermark Tool</div>
+  <div class="desc-blurb">
+    The most advanced free watermark/sticker/signature generator online. 100% pro features, always free, no watermark on your watermark. Batch, signature, PNG, SVG, GIF, AI templates, J1nx helper, and more—<b>outclassing every paid watermark app</b>. No account, no bullshit, just pure power.
   </div>
 
-  <!-- FOOTER -->
-  <footer class="pf-footer">
-    <div class="pf-footer-links">
-      <a href="/legal.html">Legal/Terms</a> |
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
-      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a> |
-      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook</a> |
-      <a href="https://www.buymeacoffee.com/tysonart" target="_blank">Buy Me a Coffee</a>
+  <div class="watermark-toolbox">
+    <div class="section-title">
+      1. Start Your Watermark
+      <span class="micro-help-btn" data-help="text">
+        ?
+      </span>
     </div>
-    <div class="pf-footer-copy">
-      &copy; 2025 PromptForge. All rights reserved. <b>Every pro watermark feature—always free. No paywalls, no watermark on your watermark.</b>
+    <input type="text" id="wm-text" value="Tyson S. | PromptForge.online" style="width:80%;max-width:370px;font-size:1.19em;padding:7px 11px;border-radius:8px;border:1.5px solid #fa528e42;background:#19112b;color:#fff;margin-bottom:13px;" placeholder="Enter watermark text...">
+    <button onclick="wmAddText()" style="padding:8px 16px;background:#fa528e;border:none;color:#fff;border-radius:8px;font-weight:700;margin-left:9px;">
+      Add Text
+      <span class="micro-help-btn" data-help="addtext">?</span>
+    </button>
+    <span style="font-size:.98em;color:#ffb8e9;padding-left:17px;">You can also upload your logo or signature image below.</span>
+
+    <div style="margin-top:18px;">
+      <input type="file" id="wm-upload" accept="image/png,image/jpeg,image/svg+xml,image/gif" style="margin-top:7px;">
+      <button onclick="wmUploadImage()" style="margin-left:9px;padding:7px 15px;border-radius:7px;background:#813ab5;color:#fff;font-weight:600;">
+        Upload Image/Logo
+        <span class="micro-help-btn" data-help="upload">?</span>
+      </button>
+      <span style="font-size:.98em;color:#f8eaff;padding-left:13px;">PNG/SVG recommended.</span>
     </div>
-  </footer>
-<!-- BLOCK 4/8: SCRIPT BEGIN, CORE CANVAS, EFFECTS, SAVE/LOAD -->
+    <div id="wm-canvas-wrap" style="margin:22px auto 12px auto;text-align:center;position:relative;">
+      <canvas id="wm-canvas" width="540" height="260" style="border-radius:19px;box-shadow:0 2px 22px #fa528e15;background:#181124;"></canvas>
+      <span class="micro-help-btn" style="position:absolute;top:9px;right:9px;" data-help="canvas">?</span>
+    </div>
+    <div style="margin:10px 0;">
+      <button onclick="wmExportPNG()" style="padding:9px 24px 9px 22px;background:#fa528e;border:none;color:#fff;border-radius:8px;font-size:1.05em;font-weight:700;box-shadow:0 2px 12px #fa528e17;margin-right:8px;">
+        Download PNG
+        <span class="micro-help-btn" data-help="dlpng">?</span>
+      </button>
+      <button onclick="wmExportSVG()" style="padding:8px 19px;background:#813ab5;border:none;color:#fff;border-radius:8px;font-weight:700;">
+        Download SVG
+        <span class="micro-help-btn" data-help="dlsvg">?</span>
+      </button>
+    </div>
+    <div style="margin:13px 0 0 0;color:#bbb;">
+      or try a ready-made template:
+      <span class="micro-help-btn" data-help="template">?</span>
+    </div>
+    <div id="wm-template-gallery" style="margin:11px 0 0 0;display:flex;flex-wrap:wrap;">
+      <!-- Gallery thumbs populated by JS -->
+    </div>
+    <div style="margin:18px 0 0 0;">
+      <button onclick="wmOpenInspire()" style="padding:7px 20px;border-radius:8px;background:#2395ef;color:#fff;font-weight:700;">
+        Get AI Inspiration
+        <span class="micro-help-btn" data-help="ai">?</span>
+      </button>
+      <button onclick="wmClearCanvas()" style="padding:7px 20px;margin-left:10px;border-radius:8px;background:#233e56;color:#fff;font-weight:700;">
+        Clear
+        <span class="micro-help-btn" data-help="clear">?</span>
+      </button>
+    </div>
+  </div>
+  <div class="section-title">
+    2. Batch Watermark, Signature, and GIF Tools
+    <span class="micro-help-btn" data-help="batch">?</span>
+  </div>
+  <div style="background:#1c1324;padding:19px 17px 15px 17px;border-radius:16px;box-shadow:0 2px 12px #fa528e12;max-width:800px;margin-bottom:22px;">
+    <b>Batch:</b> Drag in multiple images to watermark at once.<br>
+    <b>Signature box:</b> Draw, upload, or style a real signature for your watermark.<br>
+    <b>GIF support:</b> First frame overlay only; for pro animated watermarking, try desktop tools.<br>
+    <b>SVG and advanced shapes supported.</b>
+  </div>
+
+  <div class="section-title">
+    3. AI Inspiration & Pro Templates
+    <span class="micro-help-btn" data-help="ai2">?</span>
+  </div>
+  <div style="background:#1b1724;padding:16px 17px 15px 17px;border-radius:16px;box-shadow:0 2px 12px #fa528e15;max-width:800px;margin-bottom:22px;">
+    <b>AI Styles:</b> Click “Get AI Inspiration” for random pro-grade watermark ideas & styles.<br>
+    <b>Gallery:</b> Browse built-in templates below (add your own to <code>/assets/watermark_templates/</code>).
+    <div id="ai-inspire-list" style="margin:14px 0 0 0;"></div>
+  </div>
+
+  <div class="section-title">
+    4. How to Use
+    <span class="micro-help-btn" data-help="howto">?</span>
+  </div>
+  <ul style="color:#f2e9ff;font-size:1.08em;line-height:1.7;padding-left:23px;max-width:750px;">
+    <li>Type your desired text or upload a signature/logo image.</li>
+    <li>Resize/move watermark with mouse or touch.</li>
+    <li>Export as PNG or SVG. Batch process images. Preview GIFs.</li>
+    <li>Add to your art for instant protection or branding—never lose your credits again!</li>
+  </ul>
+</main>
+
+<!-- MINI J1NX CAMPER - CORNER -->
+<div id="j1nx-mini-camper"
+     style="position:fixed;bottom:22px;right:22px;z-index:97;display:flex;align-items:flex-end;gap:9px;user-select:none;">
+  <img id="j1nx-mini-art"
+       src="/j1nx/j1nx_cutout.png"
+       alt="J1nx"
+       style="width:88px;height:auto;min-height:80px;max-height:120px;box-shadow:0 2px 16px #fa528e55;border-radius:20px 20px 40px 40px/35px 35px 76px 76px;object-fit:contain;background:#18101a;">
+  <div id="j1nx-mini-bubble"
+       style="max-width:290px;min-width:70px;padding:15px 16px 15px 18px;background:#222;color:#ffe2fb;font-size:1.14em;
+              border-radius:16px 16px 19px 19px/18px 18px 33px 33px;box-shadow:0 2px 18px #fa528e33;
+              line-height:1.6;font-family:inherit;margin-bottom:9px;animation:j1nxPulse 2.5s infinite alternate;
+              overflow-y:auto;max-height:180px;transition:box-shadow .3s;word-break:break-word;">
+    Hi, I’m J1nx! Need help with watermarking or want an idea?
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 PromptForge.online &mdash; All tools always free.<br>
+  <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" style="color:#ffb1ef;">Bluesky</a> &middot;
+  <a href="https://x.com/GoreandGiggles" target="_blank" style="color:#ffb1ef;">X/Twitter</a> &middot;
+  <a href="https://www.facebook.com/groups/393971833395749" target="_blank" style="color:#ffb1ef;">Facebook</a>
+</footer>
+
+<!-- Ad block (discreet) -->
+<div style="max-width:420px;margin:36px auto 14px auto;">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-4963053724895140"
+       data-ad-slot="4315819721"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- SEO Blurb / Hidden for Google -->
+<div style="max-width:670px;margin:0 auto 19px auto;padding:15px 14px;font-size:1.06em;color:#ffe3f9;background:#2223;border-radius:14px;line-height:1.45;">
+  <b>MONSTER Free Watermark Maker—PromptForge.online</b>: 100% free, unlimited use, no watermark on your watermark, batch image/video tools, templates, signature, GIF, SVG, inspiration, and built-in J1nx AI helper. Outclasses every paid watermark app—always free, never paywalled. Upload, design, export, and protect your images or art. No login. No limits. Used by pros, loved by rebels, always evolving.
+</div>
+
+<!-- JS HOOKS AND J1NX BRAIN + MICROHELP -->
 <script>
-  // ------ CORE CANVAS ------
-  let canvas = new fabric.Canvas('wm-canvas', { backgroundColor: null, selection: true });
-  canvas.preserveObjectStacking = true;
-  let gridActive = false, undoStack = [], redoStack = [];
-  // --- Undo/Redo ---
-  function saveState() {
-    undoStack.push(JSON.stringify(canvas));
-    if(undoStack.length>40) undoStack.shift();
-    redoStack = [];
+  // MICRO HELP LOGIC
+  const helpContent = {
+    text: "Start here! Enter any text (your name, brand, URL, etc.) to turn into a watermark. You can style it or combine with an image.",
+    addtext: "Adds the text you typed above to the watermark canvas. Drag or resize it as needed.",
+    upload: "Upload your own logo, signature, or PNG/SVG image to use as your watermark. Transparent PNG or SVG work best!",
+    canvas: "This is your watermark design canvas. Drag, resize, and arrange all elements. Use templates, or start from scratch.",
+    dlpng: "Download your finished watermark as a transparent PNG. Works everywhere online.",
+    dlsvg: "Download your watermark as scalable SVG vector—best for print or big images.",
+    template: "Try a ready-made watermark template. Click to load, then tweak it or add your own style.",
+    ai: "Click for a pro AI-generated watermark idea. Unique every time. J1nx can help if you want more inspiration!",
+    clear: "Erase everything from the canvas and start fresh.",
+    batch: "Batch watermark: Apply your watermark to many images at once. Drag them in, and process all together.",
+    ai2: "Use AI inspiration to find new watermark ideas, fonts, or layouts. Gallery below has pre-made templates.",
+    howto: "Need help? Just follow the steps above, or ask J1nx in the corner for personal guidance."
+  };
+  let activeHelpPopup = null;
+  document.querySelectorAll('.micro-help-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if(activeHelpPopup) activeHelpPopup.remove();
+      const rect = btn.getBoundingClientRect();
+      const helpKey = btn.getAttribute('data-help');
+      const helpText = helpContent[helpKey] || "Help not found.";
+      const popup = document.createElement('div');
+      popup.className = 'micro-help-popup active';
+      popup.textContent = helpText;
+      document.body.appendChild(popup);
+      let top = window.scrollY + rect.top - popup.offsetHeight - 6;
+      if(top < 40) top = window.scrollY + rect.bottom + 8;
+      let left = window.scrollX + rect.left;
+      if(left + popup.offsetWidth > window.innerWidth - 24) {
+        left = window.innerWidth - popup.offsetWidth - 22;
+      }
+      popup.style.top = `${top}px`;
+      popup.style.left = `${left}px`;
+      activeHelpPopup = popup;
+      document.addEventListener('click', dismissHelp, { once:true });
+    });
+  });
+  function dismissHelp() {
+    if(activeHelpPopup) activeHelpPopup.remove();
+    activeHelpPopup = null;
   }
-  canvas.on('object:added', saveState);
-  canvas.on('object:modified', saveState);
-  canvas.on('object:removed', saveState);
-  function wmUndo() {
-    if(undoStack.length){
-      redoStack.push(JSON.stringify(canvas));
-      canvas.loadFromJSON(undoStack.pop(),canvas.renderAll.bind(canvas));
-    }
-  }
-  function wmRedo() {
-    if(redoStack.length){
-      undoStack.push(JSON.stringify(canvas));
-      canvas.loadFromJSON(redoStack.pop(),canvas.renderAll.bind(canvas));
-    }
-  }
-  // --- Grid/Snap ---
-  function drawGrid() {
-    clearGrid();
-    for(let i=0;i<canvas.width;i+=20){
-      let l = new fabric.Line([i,0,i,canvas.height],{stroke:"#222a",selectable:false,excludeFromExport:true,evented:false});
-      canvas.add(l);
-    }
-    for(let j=0;j<canvas.height;j+=20){
-      let l = new fabric.Line([0,j,canvas.width,j],{stroke:"#222a",selectable:false,excludeFromExport:true,evented:false});
-      canvas.add(l);
-    }
-    canvas.sendToBack();
-    gridActive = true;
-  }
-  function clearGrid(){
-    canvas.getObjects('line').forEach(obj=>canvas.remove(obj));
-    canvas.backgroundColor=null;
-    gridActive = false;
-  }
-  function wmToggleGrid(on){
-    if(on){ drawGrid(); } else { clearGrid(); }
-    canvas.renderAll();
-  }
-
-  // --- Sidebar Actions ---
-  function wmAddText(){
-    let t = new fabric.IText("Double-click to edit",{ left:120, top:60, fontFamily:'Roboto', fill:'#ffc0cb', fontSize:48, opacity:1, shadow:"rgba(0,0,0,0.23) 2px 2px 4px" });
-    canvas.add(t);canvas.setActiveObject(t);canvas.renderAll(); saveState();
-  }
-  function wmAddImage(){
-    let inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
-    inp.onchange = e=>{
-      let file = e.target.files[0]; if(!file)return;
-      let reader = new FileReader();
-      reader.onload = function(f){
-        fabric.Image.fromURL(f.target.result,function(img){
-          img.set({ left:70, top:50, scaleX:0.35, scaleY:0.35, selectable:true });
-          canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();saveState();
-        },{crossOrigin:"Anonymous"});
-      }; reader.readAsDataURL(file);
-    }; inp.click();
-  }
-  function wmAddSVG(){
-    let inp = document.createElement('input'); inp.type='file'; inp.accept='.svg,image/svg+xml';
-    inp.onchange = e=>{
-      let file = e.target.files[0]; if(!file)return;
-      let reader = new FileReader();
-      reader.onload = function(f){
-        fabric.loadSVGFromString(f.target.result, function(objects, options){
-          let obj = fabric.util.groupSVGElements(objects, options);
-          obj.set({ left:70, top:70, scaleX:0.4, scaleY:0.4, selectable:true });
-          canvas.add(obj);canvas.setActiveObject(obj);canvas.renderAll();saveState();
-        });
-      }; reader.readAsText(file);
-    }; inp.click();
-  }
-  function wmDrawSign(){
-    let drawMode = !canvas.isDrawingMode;
-    canvas.isDrawingMode = drawMode;
-    if(drawMode){
-      canvas.freeDrawingBrush.width = 3.7;
-      canvas.freeDrawingBrush.color = "#ffd1dc";
-      alert('Draw your signature directly on the canvas!\nClick again to finish.');
-    }
-  }
-  function wmAddShape(){
-    let s = new fabric.Rect({width:130, height:44, left:80, top:100, fill:'rgba(255,192,203,0.13)', stroke:'#ffc0cb', strokeWidth:2, angle:0, selectable:true });
-    canvas.add(s); canvas.setActiveObject(s); canvas.renderAll(); saveState();
-  }
-
-  // --- EFFECTS ---
-  function wmSetShadow(){
-    let o=canvas.getActiveObject();
-    if(o) o.set('shadow', 'rgba(0,0,0,0.23) 2px 2px 6px');
-    canvas.renderAll();
-  }
-  function wmSetOutline(){
-    let o=canvas.getActiveObject();
-    if(o && o.set){
-      o.set('stroke', '#fa528e');
-      o.set('strokeWidth', 2.4);
-      canvas.renderAll();
-    }
-  }
-  function wmSetGlow(){
-    let o=canvas.getActiveObject();
-    if(o) o.set('shadow', '0 0 18px #fa528e');
-    canvas.renderAll();
-  }
-  function wmClearEffects(){
-    let o=canvas.getActiveObject();
-    if(o){
-      o.set('shadow', null);
-      if(o.set) o.set('strokeWidth', 0);
-      canvas.renderAll();
-    }
-  }
-
-  // --- Sidebar Font/Color/Opacity Controls ---
-  function wmSetFont(f){
-    let obj = canvas.getActiveObject(); if(obj && obj.isType('i-text')){obj.set("fontFamily",f);canvas.renderAll();}
-  }
-  function wmSetFontSize(sz){
-    let obj = canvas.getActiveObject(); if(obj && obj.isType('i-text')){obj.set("fontSize",parseInt(sz));canvas.renderAll();}
-  }
-  function wmSetColor(c){
-    let obj = canvas.getActiveObject();
-    if(obj && obj.isType && obj.isType('i-text')){obj.set("fill",c);}
-    else if(obj && obj.type=="rect"){obj.set("stroke",c);}
-    else if(obj && obj.type=="ellipse"){obj.set("stroke",c);}
-    canvas.renderAll();
-  }
-  function wmSetOpacity(val){
-    let obj = canvas.getActiveObject(); if(obj){obj.set("opacity",val/100);canvas.renderAll();}
-  }
-
-  // --- Layer/Order/Editing Tools ---
-  function wmBringForward(){let o=canvas.getActiveObject();if(o){canvas.bringForward(o);canvas.renderAll();}}
-  function wmSendBackward(){let o=canvas.getActiveObject();if(o){canvas.sendBackwards(o);canvas.renderAll();}}
-  function wmDuplicate(){let o=canvas.getActiveObject();if(o){o.clone(function(cloned){cloned.left+=20;cloned.top+=20;canvas.add(cloned);canvas.setActiveObject(cloned);canvas.renderAll();saveState();});}}
-  function wmDelete(){let o=canvas.getActiveObject();if(o){canvas.remove(o);canvas.renderAll();saveState();}}
-  function wmResizeCanvas(){
-    let w = parseInt(document.getElementById('wm-width').value)||500, h=parseInt(document.getElementById('wm-height').value)||220;
-    canvas.setWidth(w);canvas.setHeight(h); if(gridActive)drawGrid();canvas.renderAll();
-  }
-  function wmClearCanvas(){canvas.clear();if(gridActive)drawGrid();canvas.renderAll();saveState();}
-
-  // --- Save/Load Project (Local) ---
-  function wmExportJSON(){
-    let data = JSON.stringify(canvas); let blob = new Blob([data],{type:'application/json'});
-    let a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = "watermark_project.json"; a.click();
-  }
-  function wmImportJSON(){
-    let inp = document.createElement('input'); inp.type='file'; inp.accept='application/json';
-    inp.onchange = e=>{
-      let file = e.target.files[0]; if(!file)return;
-      let reader = new FileReader();
-      reader.onload = function(f){
-        canvas.loadFromJSON(f.target.result,canvas.renderAll.bind(canvas));
-      }; reader.readAsText(file);
-    }; inp.click();
-  }
-  function wmSaveLocal(){
-    localStorage.setItem('pf_wm_project', JSON.stringify(canvas));
-    alert("Saved locally! Use 'Load Last Project' to restore.");
-  }
-  function wmLoadLocal(){
-    let data = localStorage.getItem('pf_wm_project');
-    if(data) canvas.loadFromJSON(data,canvas.renderAll.bind(canvas));
-    else alert("No saved project found.");
-  }
-
-  // --- Keyboard Shortcuts ---
-  document.addEventListener('keydown',function(e){
-    if((e.key==='Delete'||e.key==='Backspace')&&canvas.getActiveObject()){wmDelete();}
-    if(e.ctrlKey&&e.key==='z')wmUndo();
-    if(e.ctrlKey&&e.key==='y')wmRedo();
+  document.addEventListener('keydown', function(e) {
+    if(e.key === "Escape") dismissHelp();
   });
 
-  // --- Selection: update controls
-  canvas.on('selection:created',updateSidebar);canvas.on('selection:updated',updateSidebar);
-  function updateSidebar(){
-    let o=canvas.getActiveObject();
-    if(!o)return;
-    if(o.isType&&o.isType('i-text')){
-      document.getElementById('wm-font').value=o.fontFamily||'Roboto';
-      document.getElementById('wm-fontsize').value=o.fontSize||48;
-      document.getElementById('wm-color').value=o.fill||'#ffc0cb';
-      document.getElementById('wm-opacity').value=Math.round((o.opacity||1)*100);
-    }
+  // MINI J1NX BUBBLE AUTO-SCROLL AND "BRAIN HOOK"
+  function updateJ1nxBubble(txt) {
+    const bubble = document.getElementById('j1nx-mini-bubble');
+    bubble.textContent = txt;
+    bubble.scrollTop = bubble.scrollHeight;
   }
-  // --- On Load: restore defaults, auto load if exists
-  window.onload = function(){
-    canvas.setWidth(500); canvas.setHeight(220); saveState();
-    document.getElementById('wm-fontsize').value=48;
-    document.getElementById('wm-width').value=500;
-    document.getElementById('wm-height').value=220;
-    let last = localStorage.getItem('pf_wm_project');
-    if(last) canvas.loadFromJSON(last,canvas.renderAll.bind(canvas));
-  };
-<!-- BLOCK 5/8: EXPORT, PREVIEW, BATCH, TEMPLATES, INSPIRATION, VIDEO -->
-  // --- EXPORT/IMPORT ---
-  function wmExportPNG(){
-    let a = document.createElement('a');
-    a.href = canvas.toDataURL({format:'png', multiplier:1, enableRetinaScaling:true, withoutTransform:true});
-    a.download = "watermark.png"; a.click();
-  }
-  function wmExportSVG(){
-    let svg = canvas.toSVG();
-    let blob = new Blob([svg], {type:'image/svg+xml'});
-    let a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = "watermark.svg"; a.click();
-  }
-  function wmExportGIF(){
-    let gif = new GIF({workers:2,quality:10,width:canvas.width,height:canvas.height,transparent:0x00000000});
-    // Animate opacity if possible
-    let o = canvas.getActiveObject();
-    if(o && o.set && o.opacity !== undefined) {
-      let orig = o.opacity;
-      for(let step=0;step<=10;step++) {
-        o.set('opacity', step/10); canvas.renderAll();
-        gif.addFrame(canvas.getElement(), {copy:true,delay:45});
+  updateJ1nxBubble("Hi, I’m J1nx! Need help with watermarking or want inspiration?");
+  // -- Watermark Tool Logic --
+  // Canvas + Layers Core
+  let wmCanvas = document.getElementById('wm-canvas');
+  let ctx = wmCanvas.getContext('2d');
+  let elements = []; // All watermark elements: text, image, signature
+  let activeElem = null;
+  let dragOffset = { x: 0, y: 0 };
+  let resizing = false;
+  let lastPos = { x: 0, y: 0 };
+
+  function renderCanvas() {
+    ctx.clearRect(0, 0, wmCanvas.width, wmCanvas.height);
+    elements.forEach(el => {
+      if(el.type === 'text') {
+        ctx.save();
+        ctx.font = `${el.size || 32}px ${el.font || 'Segoe UI'},Arial,sans-serif`;
+        ctx.fillStyle = el.color || '#fff';
+        ctx.globalAlpha = el.opacity ?? 1;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.shadowColor = el.shadow ? '#000' : 'transparent';
+        ctx.shadowBlur = el.shadow ? 5 : 0;
+        ctx.fillText(el.text, el.x, el.y);
+        ctx.restore();
+      } else if(el.type === 'img') {
+        ctx.save();
+        ctx.globalAlpha = el.opacity ?? 1;
+        ctx.drawImage(el.img, el.x, el.y, el.w, el.h);
+        ctx.restore();
       }
-      o.set('opacity', orig); canvas.renderAll();
-    } else {
-      gif.addFrame(canvas.getElement(), {copy:true,delay:140});
-    }
-    gif.on('finished',function(blob){
-      let a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = "watermark.gif"; a.click();
     });
-    gif.render();
+    // Draw selection for active element
+    if(activeElem) {
+      ctx.save();
+      ctx.strokeStyle = '#fa528e';
+      ctx.lineWidth = 2.2;
+      if(activeElem.type === 'text') {
+        const metrics = ctx.measureText(activeElem.text);
+        ctx.strokeRect(activeElem.x-6, activeElem.y-6, metrics.width+12, activeElem.size+16);
+      } else if(activeElem.type === 'img') {
+        ctx.strokeRect(activeElem.x-6, activeElem.y-6, activeElem.w+12, activeElem.h+12);
+      }
+      ctx.restore();
+    }
   }
 
-  // --- Preview On Photo ---
-  let previewPhotoData = null;
-  function wmPreviewOnPhoto(){
-    document.getElementById('wm-preview-wrap').style.display='block';
-    document.getElementById('wm-preview-img').src='https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=facearea&w=400&q=80';
-    previewPhotoData = null;
-  }
-  function wmLoadPreviewPhoto(e){
-    let file = e.target.files[0]; if(!file)return;
-    let reader = new FileReader();
-    reader.onload = f=>{
-      previewPhotoData = f.target.result;
-      document.getElementById('wm-preview-img').src=previewPhotoData;
-    }; reader.readAsDataURL(file);
-  }
-  function wmApplyWatermark(){
-    if(!previewPhotoData){alert("Upload a photo first."); return;}
-    let img = new Image(); img.src=previewPhotoData;
-    img.onload = function(){
-      let c = document.createElement('canvas');
-      c.width = img.width; c.height = img.height;
-      let ctx = c.getContext('2d');
-      ctx.drawImage(img,0,0);
-      let wmImg = new Image();
-      wmImg.src = canvas.toDataURL({format:'png',multiplier:img.width/canvas.width});
-      wmImg.onload = function(){
-        ctx.drawImage(wmImg,0,img.height-wmImg.height-8);
-        let final = c.toDataURL("image/png");
-        let a = document.createElement('a'); a.href=final; a.download="watermarked.png"; a.click();
-      };
-    };
-  }
-  function wmClosePreview(){document.getElementById('wm-preview-wrap').style.display='none'; previewPhotoData=null;}
-
-  // --- Batch Watermark Images (ZIP) ---
-  function wmOpenBatch(){document.getElementById('wm-batch-modal').style.display='flex';}
-  function wmCloseBatchModal(){document.getElementById('wm-batch-modal').style.display='none';}
-  let batchImages = [];
-  document.getElementById('wm-batch-input').onchange = function(e){
-    batchImages = Array.from(e.target.files);
-    let list = document.getElementById('wm-batch-list');
-    list.innerHTML = batchImages.map(f=>`<div>${f.name} (${Math.round(f.size/1024)} KB)</div>`).join('');
+  // Add Text Element
+  window.wmAddText = function() {
+    const text = document.getElementById('wm-text').value.trim();
+    if(!text) return;
+    elements.push({
+      type: 'text',
+      text,
+      x: 60 + Math.random()*60,
+      y: 60 + Math.random()*30,
+      size: 38,
+      color: '#fff',
+      font: 'Segoe UI',
+      opacity: 1,
+      shadow: true,
+    });
+    activeElem = elements[elements.length-1];
+    renderCanvas();
+    updateJ1nxBubble("Text added! Drag or resize it as needed.");
   };
-  function wmBatchStart(){
-    if(batchImages.length==0){alert('Upload images first!');return;}
-    let zip = new JSZip();
-    let done = 0;
-    batchImages.forEach((file,idx)=>{
+
+  // Upload Logo/Signature Image
+  window.wmUploadImage = function() {
+    const f = document.getElementById('wm-upload').files[0];
+    if(!f) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const img = new window.Image();
+      img.onload = function() {
+        let w = Math.min(img.width, 240), h = img.height * (w/img.width);
+        elements.push({
+          type: 'img',
+          img,
+          x: 100 + Math.random()*40,
+          y: 80 + Math.random()*40,
+          w, h,
+          opacity: 1
+        });
+        activeElem = elements[elements.length-1];
+        renderCanvas();
+        updateJ1nxBubble("Logo/image added! Drag or resize as needed.");
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(f);
+  };
+
+  // Canvas interaction
+  wmCanvas.addEventListener('mousedown', startDrag);
+  wmCanvas.addEventListener('touchstart', startDrag, { passive: false });
+  window.addEventListener('mousemove', dragMove);
+  window.addEventListener('touchmove', dragMove, { passive: false });
+  window.addEventListener('mouseup', stopDrag);
+  window.addEventListener('touchend', stopDrag);
+
+  function getElemAt(x, y) {
+    for(let i = elements.length-1; i >= 0; i--) {
+      const el = elements[i];
+      if(el.type === 'text') {
+        ctx.font = `${el.size || 32}px ${el.font || 'Segoe UI'},Arial,sans-serif`;
+        const w = ctx.measureText(el.text).width, h = el.size+12;
+        if(x >= el.x-8 && y >= el.y-8 && x <= el.x+w+8 && y <= el.y+h+8) return el;
+      } else if(el.type === 'img') {
+        if(x >= el.x-8 && y >= el.y-8 && x <= el.x+el.w+8 && y <= el.y+el.h+8) return el;
+      }
+    }
+    return null;
+  }
+  function startDrag(e) {
+    let mx = (e.touches ? e.touches[0].clientX : e.clientX) - wmCanvas.getBoundingClientRect().left;
+    let my = (e.touches ? e.touches[0].clientY : e.clientY) - wmCanvas.getBoundingClientRect().top;
+    activeElem = getElemAt(mx, my);
+    if(activeElem) {
+      dragOffset.x = mx - activeElem.x;
+      dragOffset.y = my - activeElem.y;
+      resizing = e.shiftKey;
+      lastPos.x = mx; lastPos.y = my;
+      e.preventDefault();
+    }
+    renderCanvas();
+  }
+  function dragMove(e) {
+    if(!activeElem) return;
+    let mx = (e.touches ? e.touches[0].clientX : e.clientX) - wmCanvas.getBoundingClientRect().left;
+    let my = (e.touches ? e.touches[0].clientY : e.clientY) - wmCanvas.getBoundingClientRect().top;
+    if(resizing && activeElem.type === 'img') {
+      let dx = mx - lastPos.x, dy = my - lastPos.y;
+      activeElem.w = Math.max(36, activeElem.w + dx);
+      activeElem.h = Math.max(24, activeElem.h + dy);
+      lastPos.x = mx; lastPos.y = my;
+    } else {
+      activeElem.x = mx - dragOffset.x;
+      activeElem.y = my - dragOffset.y;
+    }
+    renderCanvas();
+  }
+  function stopDrag() { activeElem = null; resizing = false; }
+
+  // Export PNG
+  window.wmExportPNG = function() {
+    let link = document.createElement('a');
+    link.download = 'watermark.png';
+    link.href = wmCanvas.toDataURL('image/png');
+    link.click();
+    updateJ1nxBubble("PNG downloaded. Now add it to your images!");
+  };
+
+  // Export SVG
+  window.wmExportSVG = function() {
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${wmCanvas.width}" height="${wmCanvas.height}">`;
+    elements.forEach(el => {
+      if(el.type === 'text') {
+        svg += `<text x="${el.x}" y="${el.y+el.size}" font-size="${el.size}" font-family="${el.font||'Segoe UI'}" fill="${el.color||'#fff'}" opacity="${el.opacity??1}">${el.text.replace(/</g,"&lt;")}</text>`;
+      } else if(el.type === 'img') {
+        svg += `<image x="${el.x}" y="${el.y}" width="${el.w}" height="${el.h}" href="${el.img.src}"/>`;
+      }
+    });
+    svg += `</svg>`;
+    let blob = new Blob([svg], {type:'image/svg+xml'});
+    let link = document.createElement('a');
+    link.download = 'watermark.svg';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+    updateJ1nxBubble("SVG downloaded. Now add it to your images!");
+  };
+
+  // Clear Canvas
+  window.wmClearCanvas = function() {
+    elements = [];
+    activeElem = null;
+    renderCanvas();
+    updateJ1nxBubble("Canvas cleared! Start a new watermark.");
+  };
+
+  // Template Gallery (dummy thumbnails, can expand)
+  const templateGallery = document.getElementById('wm-template-gallery');
+  const templateImgs = [
+    '/assets/watermark_templates/simple1.png',
+    '/assets/watermark_templates/simple2.png',
+    '/assets/watermark_templates/fancy1.png',
+    '/assets/watermark_templates/bold1.png',
+    '/assets/watermark_templates/minimal1.png'
+  ];
+  templateImgs.forEach(src => {
+    let img = document.createElement('img');
+    img.src = src;
+    img.className = 'gallery-thumb';
+    img.alt = 'Template';
+    img.onclick = function() { loadTemplate(src); };
+    templateGallery.appendChild(img);
+  });
+
+  function loadTemplate(src) {
+    const img = new window.Image();
+    img.onload = function() {
+      elements.push({type:'img',img,x:100,y:80,w:img.width/2,h:img.height/2,opacity:1});
+      activeElem = elements[elements.length-1];
+      renderCanvas();
+      updateJ1nxBubble("Template loaded! Tweak it as you like.");
+    };
+    img.src = src;
+  }
+
+  // AI Inspiration
+  window.wmOpenInspire = function() {
+    const styles = [
+      "Elegant hand-written script, transparent white, drop shadow, bottom-right",
+      "Futuristic neon logo, bold, magenta/cyan, center",
+      "Classic serif signature, semi-transparent, lower left corner",
+      "Comic-style bubble watermark, playful font, bright colors",
+      "Minimalist all-caps, small, upper left, 20% opacity",
+      "Diagonal repeat watermark, light grey, all over image",
+      "Graffiti tag, spray paint effect, vivid colors",
+      "Circular stamp, company logo + year, semi-transparent"
+    ];
+    let pick = styles[Math.floor(Math.random()*styles.length)];
+    updateJ1nxBubble("AI Idea: " + pick);
+    let a = document.getElementById('ai-inspire-list');
+    let p = document.createElement('div');
+    p.textContent = "💡 " + pick;
+    p.style.marginBottom = "4px";
+    p.style.color = "#ffd6fd";
+    a.prepend(p);
+  };
+
+  // --- Batch Watermarking (demo, drag-n-drop) ---
+  // For full batch processing you may want a backend. This demo overlays watermark on many images in browser.
+  // Drag & drop handler
+  let batchInput = document.createElement('input');
+  batchInput.type = 'file';
+  batchInput.multiple = true;
+  batchInput.accept = "image/*";
+  // No direct UI button here but you can easily add a drag/drop zone!
+  // For demo: batch watermark by clicking on the watermark canvas
+  wmCanvas.addEventListener('dblclick', () => {
+    batchInput.click();
+  });
+  batchInput.addEventListener('change', function(ev) {
+    if(!batchInput.files.length) return;
+    Array.from(batchInput.files).forEach(file => {
       let reader = new FileReader();
-      reader.onload = function(ev){
-        let img = new Image(); img.src=ev.target.result;
-        img.onload = function(){
-          let c = document.createElement('canvas');
-          c.width = img.width; c.height = img.height;
-          let ctx = c.getContext('2d');
-          ctx.drawImage(img,0,0);
-          let wmImg = new Image();
-          wmImg.src = canvas.toDataURL({format:'png',multiplier:img.width/canvas.width});
-          wmImg.onload = function(){
-            ctx.drawImage(wmImg,0,img.height-wmImg.height-8);
-            let final = c.toDataURL("image/png");
-            zip.file('watermarked_'+file.name+'.png', final.split(',')[1], {base64:true});
-            done++;
-            if(done===batchImages.length){
-              zip.generateAsync({type:'blob'}).then(function(content){
-                saveAs(content, "watermarked_images.zip");
-              });
-            }
-          };
+      reader.onload = function(e) {
+        let img = new window.Image();
+        img.onload = function() {
+          // draw image + watermark
+          let tmpCanvas = document.createElement('canvas');
+          tmpCanvas.width = img.width;
+          tmpCanvas.height = img.height;
+          let tctx = tmpCanvas.getContext('2d');
+          tctx.drawImage(img, 0, 0);
+          // Scale watermark to image size, center
+          renderCanvas();
+          tctx.drawImage(wmCanvas, (img.width-wmCanvas.width)/2, (img.height-wmCanvas.height)/2);
+          let link = document.createElement('a');
+          link.download = 'watermarked_'+file.name;
+          link.href = tmpCanvas.toDataURL('image/png');
+          link.click();
         };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
-  }
-
-  // --- Batch Video Watermark (BETA, only short clips <15s) ---
-  function wmOpenBatchVideo(){document.getElementById('wm-batch-video-modal').style.display='flex';}
-  function wmCloseBatchVideoModal(){document.getElementById('wm-batch-video-modal').style.display='none';}
-  document.getElementById('wm-batch-video-input').onchange = function(e){
-    let f = e.target.files[0];
-    if(!f) return;
-    let url = URL.createObjectURL(f);
-    document.getElementById('wm-batch-video-preview').src = url;
-  };
-  function wmBatchVideoStart(){
-    let video = document.getElementById('wm-batch-video-preview');
-    if(!video.src){alert('Upload a video first!');return;}
-    alert("Video watermarking is beta! Only short clips work, watermark is placed bottom right. Export can take time.");
-    // Use browser MediaRecorder to overlay watermark (fallback to ffmpeg.wasm in future)
-    let offcanvas = document.createElement('canvas');
-    offcanvas.width = video.videoWidth;
-    offcanvas.height = video.videoHeight;
-    let ctx = offcanvas.getContext('2d');
-    let watermark = new Image();
-    watermark.src = canvas.toDataURL({format:'png',multiplier:offcanvas.width/canvas.width});
-    let outChunks = [];
-    video.currentTime = 0;
-    let rec;
-    watermark.onload = function(){
-      video.play();
-      rec = new MediaRecorder(offcanvas.captureStream(),{mimeType:'video/webm'});
-      rec.ondataavailable = e=>{outChunks.push(e.data);};
-      rec.onstop = function(){
-        let blob = new Blob(outChunks, {type:'video/webm'});
-        let a = document.createElement('a');
-        a.href = URL.createObjectURL(blob); a.download = "watermarked_video.webm"; a.click();
-      };
-      rec.start();
-      let interval = setInterval(function(){
-        if(video.ended||video.currentTime>15){
-          rec.stop(); clearInterval(interval); return;
-        }
-        ctx.drawImage(video,0,0,offcanvas.width,offcanvas.height);
-        ctx.drawImage(watermark,offcanvas.width-watermark.width-8,offcanvas.height-watermark.height-8);
-      },80);
-    };
-  }
-
-  // --- TEMPLATES GALLERY ---
-  let wmTemplates = [
-    { name:'Confidential', img:'/assets/watermark_templates/confidential.png' },
-    { name:'Sample', img:'/assets/watermark_templates/sample.png' },
-    { name:'Do Not Copy', img:'/assets/watermark_templates/donotcopy.png' },
-    { name:'Tyson Signature', img:'/assets/watermark_templates/tysonsig.png' },
-    { name:'Stock', img:'/assets/watermark_templates/stock.png' }
-  ];
-  function wmAddTemplate(){
-    let modal = document.getElementById('wm-template-modal');
-    let list = document.getElementById('wm-template-list');
-    list.innerHTML = wmTemplates.map(t=>`<div style="cursor:pointer;" onclick="wmApplyTemplate('${t.img}')"><img src="${t.img}" alt="${t.name}" style="width:118px;border-radius:11px;box-shadow:0 2px 10px #fa528e19;"><div style="color:#ffc0cb;font-size:0.98em;text-align:center;">${t.name}</div></div>`).join('');
-    modal.style.display='flex';
-  }
-  function wmApplyTemplate(imgPath){
-    fabric.Image.fromURL(imgPath, function(img){
-      img.set({ left:90, top:60, scaleX:0.38, scaleY:0.38, selectable:true });
-      canvas.add(img);canvas.setActiveObject(img);canvas.renderAll();saveState();
-      wmCloseTemplateModal();
-    },{crossOrigin:"Anonymous"});
-  }
-  function wmCloseTemplateModal(){document.getElementById('wm-template-modal').style.display='none';}
-
-  // --- INSPIRATION GALLERY ("Inspire Me" AI/random) ---
-  let wmInspireStyles = [
-    { label:"Elegant Script", font:"Dancing Script", color:"#eb5ca4", effect:"shadow", text:"Handcrafted by Tyson" },
-    { label:"Cyber Neon", font:"Orbitron", color:"#28f7fa", effect:"glow", text:"Gore & Giggles" },
-    { label:"Block Bold", font:"Bebas Neue", color:"#ffd900", effect:"outline", text:"Copyright ©2025" },
-    { label:"Classic Serif", font:"DM Serif Display", color:"#eee", effect:"shadow", text:"PromptForge Studio" },
-    { label:"Pixel Art", font:"Press Start 2P", color:"#fa528e", effect:"outline", text:"Do Not Steal" },
-    { label:"Watercolor", font:"Pacifico", color:"#fa93ba", effect:"shadow", text:"Tyson's Original" }
-  ];
-  function wmInspireMe(){
-    let modal = document.getElementById('wm-inspire-modal');
-    let list = document.getElementById('wm-inspire-list');
-    list.innerHTML = wmInspireStyles.map((s,i)=>`<div style="cursor:pointer;" onclick="wmApplyInspire(${i})"><div style="background:#1a191e;padding:12px 10px;border-radius:7px;box-shadow:0 1px 7px #fa528e22;"><span style="font-family:'${s.font}';color:${s.color};font-size:1.13em;">${s.text}</span><div style="color:#ffc0cb;font-size:0.91em;text-align:center;">${s.label}</div></div></div>`).join('');
-    modal.style.display='flex';
-  }
-  function wmApplyInspire(idx){
-    let s = wmInspireStyles[idx];
-    let t = new fabric.IText(s.text,{ left:100+Math.random()*120, top:60+Math.random()*40, fontFamily:s.font, fill:s.color, fontSize:44+Math.random()*26, opacity:0.96 });
-    if(s.effect==="shadow") t.set('shadow','rgba(0,0,0,0.18) 3px 3px 7px');
-    if(s.effect==="glow") t.set('shadow','0 0 16px #fa528e');
-    if(s.effect==="outline") { t.set('stroke', '#fa528e'); t.set('strokeWidth', 2.4);}
-    canvas.add(t);canvas.setActiveObject(t);canvas.renderAll();saveState();
-    wmCloseInspireModal();
-  }
-  function wmCloseInspireModal(){document.getElementById('wm-inspire-modal').style.display='none';}
-<!-- BLOCK 6/8: MINI-J1NX CAMPER LOGIC, MOOD, CHAT, AI INSPIRATION -->
-  // --- J1nx mini-camper logic ---
-  let j1nx_bubbles_sfw = [
-    "Hey, I'm J1nx!\nWant a unique watermark?\nType your mood or request below!",
-    "Need inspiration? Hit 🎲 Inspire Me.",
-    "Try a cool signature: Tyson’s Artworks, Gore & Giggles, or Confidential.",
-    "Tip: Batch mode lets you watermark tons of photos at once.",
-    "You can make your own logo, or pick one from our templates.",
-    "Need ideas for font or color? Ask me!",
-    "Your watermarks will always be yours—no sneaky branding!"
-  ];
-  let j1nx_bubbles_nsfw = [
-    "Ready to make your watermark filthy? 🔥",
-    "Try 'Property of Tyson', 'Steal this and I’ll find you', or 'Made with blood and sweat.'",
-    "Batch mode—mark every nude in your phone, all at once 😏.",
-    "Go wild with fonts. Add some neon, pink, or bold black.",
-    "Nobody will ever see your watermark but you... unless you want them to.",
-    "Want an AI to make you a one-of-a-kind, dirty watermark? Type 'nasty' and see."
-  ];
-  let j1nx_sfw = true; // default is SFW
-  function j1nxMiniSend(){
-    let q = document.getElementById('j1nx-mini-input').value.trim().toLowerCase();
-    if(!q) { j1nxMiniRandom(); return; }
-    // Dirty/NSFW trigger
-    if(q.match(/fuck|shit|nude|pussy|cock|dick|slut|nsfw|bitch|damn|cunt|ass|cum|blow|horny|naked|xxx|anal|suck|fap|sex|piss|jizz/)) {
-      j1nx_sfw = false; setTimeout(j1nxMoodGlow,80);
-      let out = j1nx_bubbles_nsfw[Math.floor(Math.random()*j1nx_bubbles_nsfw.length)];
-      document.getElementById('j1nx-mini-bubble').textContent = out;
-      return;
-    }
-    // SFW inspiration/answers
-    j1nx_sfw = true; setTimeout(j1nxMoodGlow,80);
-    if(q.includes('signature')) {
-      document.getElementById('j1nx-mini-bubble').textContent = "Try signing by hand or use a font like Pacifico, Dancing Script, or DM Serif!";
-      return;
-    }
-    if(q.includes('confidential')) {
-      document.getElementById('j1nx-mini-bubble').textContent = "For 'Confidential', bold block fonts like Archivo Black, Bebas Neue, or Russo One look pro.";
-      return;
-    }
-    if(q.includes('neon')) {
-      document.getElementById('j1nx-mini-bubble').textContent = "Use Orbitron, Bebas Neue, or Pacifico in bright colors (#28f7fa or #fa528e) for neon vibes.";
-      return;
-    }
-    if(q.includes('pixel')) {
-      document.getElementById('j1nx-mini-bubble').textContent = "Pixel art? Try Press Start 2P font, #fa528e for color, and add outline effect.";
-      return;
-    }
-    if(q.includes('unique')||q.includes('random')||q.includes('ai')) {
-      j1nxMiniRandom();
-      return;
-    }
-    // Default: AI Inspiration, mixes prompt and random
-    let randomAI = [
-      `Your vibe: ${q.replace(/[^a-z0-9 ]/gi,'')}. Try "${q.toUpperCase()}" in Oswald font, #fa528e, with glow.`,
-      `Idea: "${q}" in script font, faded behind your art.`,
-      `Try overlaying "${q}" with an SVG icon or sticker from the templates.`,
-      `Why not use your Instagram or X handle as a watermark?`
-    ];
-    let pick = randomAI[Math.floor(Math.random()*randomAI.length)];
-    document.getElementById('j1nx-mini-bubble').textContent = pick;
-  }
-  function j1nxMiniRandom(){
-    // Choose SFW/NSFW list
-    let arr = j1nx_sfw ? j1nx_bubbles_sfw : j1nx_bubbles_nsfw;
-    let txt = arr[Math.floor(Math.random()*arr.length)];
-    document.getElementById('j1nx-mini-bubble').textContent = txt;
-    setTimeout(j1nxMoodGlow,90);
-  }
-  function j1nxMiniClear(){
-    document.getElementById('j1nx-mini-input').value = "";
-    document.getElementById('j1nx-mini-bubble').textContent = "Ask me anything! Try 'signature', 'confidential', 'neon', or type a mood.";
-    j1nx_sfw = true; setTimeout(j1nxMoodGlow,60);
-  }
-  // --- Mood Glow: Change avatar/bubble glow based on SFW/NSFW ---
-  function j1nxMoodGlow(){
-    let art = document.getElementById('j1nx-mini-art');
-    let bubble = document.getElementById('j1nx-mini-bubble');
-    if(!j1nx_sfw){
-      art.style.boxShadow = "0 2px 22px #fa528e, 0 0 30px #ed1188";
-      bubble.style.boxShadow = "0 0 13px 1px #ed1188bb";
-      bubble.style.background = "#381d26";
-    } else {
-      art.style.boxShadow = "0 2px 16px #fa528e22";
-      bubble.style.boxShadow = "0 0 9px 1px #fa528e45";
-      bubble.style.background = "#222";
-    }
-  }
-  // --- Auto greeting on page load (SFW for Google) ---
-  setTimeout(()=>{
-    document.getElementById('j1nx-mini-bubble').textContent = j1nx_bubbles_sfw[0];
-    j1nx_sfw = true; j1nxMoodGlow();
-  },500);
-
-  // Mini-J1nx input enter key
-  document.getElementById('j1nx-mini-input').addEventListener('keydown',function(e){
-    if(e.key==="Enter") j1nxMiniSend();
+    updateJ1nxBubble("Batch watermark complete! Images downloaded.");
   });
 
-  // Easteregg: micro lock for SFW/NSFW
-  // Click avatar 5 times toggles lock
-  let clickCount = 0;
-  document.getElementById('j1nx-mini-art').onclick = function(){
-    clickCount++;
-    if(clickCount>=5) {
-      j1nx_sfw = !j1nx_sfw;
-      clickCount = 0;
-      j1nxMiniRandom();
-    }
-  };
+  // ========== END Watermark Tool Logic ==========
+
 </script>
-<!-- BLOCK 7/8: GIF BATCH, MORE INSPIRATION, POLISH, UTILITIES -->
-<script>
-  // --- Batch GIF Support (apply watermark to GIFs as PNG overlays on first frame) ---
-  // (Note: true animated GIF watermarking in-browser is limited; this overlays watermark on frame 1)
-  // You can add a GIF as a logo or export watermark as GIF with simple fade.
-  // For pro GIF batch watermarking, recommend desktop tools.
-
-  // --- Inspiration: Add More AI Styles Dynamically ---
-  function j1nxAddMoreInspiration(){
-    wmInspireStyles.push(
-      { label:"Ink Stamp", font:"Archivo Black", color:"#ff2666", effect:"outline", text:"Hand Stamped" },
-      { label:"Glitch", font:"Oswald", color:"#00f6a1", effect:"shadow", text:"Glitch Copy" },
-      { label:"Comic", font:"Lobster", color:"#fa5b10", effect:"shadow", text:"Original Art" },
-      { label:"Photo Date", font:"Roboto", color:"#eaeaea", effect:"none", text:"©2025 Tyson" }
-    );
-  }
-  // Run once at load
-  j1nxAddMoreInspiration();
-
-  // --- More Gallery Templates? Add easily! ---
-  function wmAddUserTemplate(name, img){
-    wmTemplates.push({name,img});
-    // Dynamically updates gallery if open
-    if(document.getElementById('wm-template-modal').style.display==='flex') wmAddTemplate();
-  }
-
-  // --- Utility: Download Canvas as JPEG ---
-  function wmExportJPEG(){
-    let a = document.createElement('a');
-    a.href = canvas.toDataURL({format:'jpeg', quality:0.96});
-    a.download = "watermark.jpg"; a.click();
-  }
-  // (JPEG button easy to add if needed, just call wmExportJPEG)
-
-  // --- Utility: Download Everything (ZIP) ---
-  function wmExportAllZIP(){
-    let zip = new JSZip();
-    zip.file('watermark.png', canvas.toDataURL({format:'png'}).split(',')[1], {base64:true});
-    zip.file('watermark.svg', canvas.toSVG());
-    zip.file('watermark_project.json', JSON.stringify(canvas));
-    zip.generateAsync({type:'blob'}).then(function(content){
-      saveAs(content, "watermark_everything.zip");
-    });
-  }
-  // (Call wmExportAllZIP from a sidebar button if desired.)
-
-  // --- Bugfix: keep aspect on template import ---
-  // (Already managed by fabric.js; scaling factor set on add.)
-
-  // --- Polish: Focus input after modal close ---
-  function wmCloseTemplateModal(){
-    document.getElementById('wm-template-modal').style.display='none';
-    setTimeout(()=>{document.getElementById('j1nx-mini-input').focus();}, 300);
-  }
-  function wmCloseInspireModal(){
-    document.getElementById('wm-inspire-modal').style.display='none';
-    setTimeout(()=>{document.getElementById('j1nx-mini-input').focus();}, 300);
-  }
-
-  // --- Accessibility: Esc closes modals ---
-  document.addEventListener('keydown', function(e){
-    if(e.key==="Escape"){
-      wmCloseTemplateModal();
-      wmCloseInspireModal();
-      wmCloseBatchModal();
-      wmCloseBatchVideoModal();
-      wmClosePreview();
-    }
-  });
-</script>
-<!-- BLOCK 8/8: END, FINAL AD, SEO BLURB -->
-  <!-- FINAL DISCREET AD BLOCK -->
-  <div style="max-width:420px;margin:36px auto 14px auto;">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-4963053724895140"
-         data-ad-slot="4315819721"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-
-  <!-- SEO BLURB / HIDDEN FOR GOOGLE -->
-  <div style="max-width:670px;margin:0 auto 19px auto;padding:15px 14px;font-size:1.06em;color:#ffe3f9;background:#2223;border-radius:14px;line-height:1.45;">
-    <b>MONSTER Free Watermark Maker—PromptForge.online</b>: 100% free, unlimited use, no watermark on your watermark, batch image/video tools, templates, signature, GIF, SVG, inspiration, and built-in J1nx AI helper. Outclasses every paid watermark app—always free, never paywalled. Upload, design, export, and protect your images or art. No login. No limits. Used by pros, loved by rebels, always evolving.
-  </div>
+<!-- End script block -->
 </body>
 </html>
