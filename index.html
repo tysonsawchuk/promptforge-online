@@ -46,6 +46,7 @@
       display: flex;
       align-items: center;
       color: #00ffd0;
+      font-family: inherit;
     }
     #terminalInput {
       background: transparent;
@@ -54,13 +55,22 @@
       outline: none;
       font-family: inherit;
       font-size: 1.11rem;
-      width: 50vw;
+      width: 44vw;
       caret-color: #ff0db9;
       font-weight: bold;
     }
     #terminalInput:focus { outline: none; }
-    #blinker {
-      display: none; /* no pink blob anymore */
+    #fakeCursor {
+      font-weight: bold;
+      font-size: 1.17em;
+      color: #ff0db9;
+      margin-left: -0.1em;
+      animation: blink-cursor 1s steps(1) infinite;
+      display: inline-block;
+    }
+    @keyframes blink-cursor {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
     }
     .cmd-hints {
       margin-top: 0.7em;
@@ -111,7 +121,7 @@
       z-index: 1;
       pointer-events: none;
       color: #18fff0;
-      opacity: 0.19;
+      opacity: 0.18;
       font-size: 1.15em;
       font-family: inherit;
       text-shadow: 0 0 5px #0ffff7, 0 0 1px #00e6c8;
@@ -155,8 +165,10 @@
     <div id="output"></div>
     <div class="input-row">
       <span style="color:#13f9d6">root@network:/#</span>
-      <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
-      <span id="cursor" style="color:#ff0db9;font-weight:bold;font-size:1.18em;">|</span>
+      <span style="position:relative;display:inline-block;">
+        <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" style="position:relative;z-index:2;" />
+        <span id="fakeCursor">|</span>
+      </span>
     </div>
     <div class="cmd-hints">
       try: <b>help</b>, <b>about</b>, <b>contact</b>, <b>clear</b>, <b>passkey</b>, <b>main</b>
@@ -208,29 +220,14 @@
       "status: ALL SYSTEMS ONLINE",
       ""
     ];
-    // Terminal logic
     let unlockedMain = false;
     let passkeyStep = false;
     const output = document.getElementById('output');
     const input = document.getElementById('terminalInput');
-    const cursor = document.getElementById('cursor');
+    const fakeCursor = document.getElementById('fakeCursor');
     input.value = "";
-    function printLine(str = '', delay = 25) {
-      return new Promise(resolve => {
-        let i = 0;
-        let interval = setInterval(() => {
-          if (i <= str.length) {
-            output.innerHTML += str.substring(0, i) + "<br>";
-            output.scrollTop = output.scrollHeight;
-            i = str.length + 1;
-          } else {
-            clearInterval(interval);
-            resolve();
-          }
-        }, delay);
-      });
-    }
-    // Boot sequence animation
+
+    // Print terminal lines
     async function showBoot() {
       for (const line of bootLines) {
         output.innerHTML += line + "<br>";
@@ -239,6 +236,7 @@
       }
       output.innerHTML += '<span style="color:#13f9d6">root@network:/#</span><br>';
     }
+
     function terminalHelp() {
       return [
         "Available commands:",
@@ -269,7 +267,6 @@
       ].join('\n');
     }
     function showPasskeyModal() {
-      // Custom caution modal for passkey entry
       let modal = document.createElement('div');
       modal.style.position = 'fixed';
       modal.style.left = '0';
@@ -315,7 +312,6 @@
       };
       document.getElementById('passkeyBtn').onclick = function() {
         document.body.removeChild(modal);
-        // Always unlock (demo)
         unlockedMain = true;
         output.innerHTML += "verifying passkey... [OK]<br>Access granted.<br>";
         output.innerHTML += "<span style='color:#11ffc4'>You can now type <b>main</b> to enter.</span><br>";
@@ -335,7 +331,6 @@
       unlockedMain = true;
       setTimeout(() => { showMain(); }, 800);
     }
-    // Command handler
     input.addEventListener('keydown', function(e){
       if(e.key === "Enter"){
         let cmd = input.value.trim().toLowerCase();
@@ -372,14 +367,17 @@
         output.scrollTop = output.scrollHeight;
       }
     });
-    // Terminal blinking cursor
-    setInterval(() => {
-      if(document.activeElement === input){
-        cursor.style.opacity = (cursor.style.opacity === "0" ? "1" : "0");
-      } else {
-        cursor.style.opacity = "1";
-      }
-    }, 520);
+
+    // Blinking fake cursor logic
+    function updateCursor() {
+      // Always move cursor after the typed text
+      const rect = input.getBoundingClientRect();
+      fakeCursor.style.opacity = (document.activeElement === input) ? "1" : "0.4";
+    }
+    input.addEventListener('input', updateCursor);
+    input.addEventListener('focus', updateCursor);
+    input.addEventListener('blur', updateCursor);
+
     // Initial boot
     showBoot();
   </script>
