@@ -103,7 +103,7 @@
     }
     .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
     .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
-    /* Passkey Modal and 3D Self-Destruct Button (now more "terminal" style) */
+    /* Passkey Modal and Pro Dev Access Button */
     #passkeyPopup {
       position:fixed;top:0;left:0;width:100vw;height:100vh;
       background:rgba(18,16,16,0.98);z-index:9999;display:flex;
@@ -111,12 +111,12 @@
     }
     .modal-warning {
       background: #080d0c; color: #ffe800;
-      border: 7px solid #ff4d4d;
-      box-shadow: 0 0 33px #b70d0d77, 0 0 0 13px #222 inset;
+      border: 7px solid #39ff14;
+      box-shadow: 0 0 33px #09852d88, 0 0 0 13px #222 inset;
       font-size:1.22em; font-family:'Fira Mono', 'Consolas', monospace;
       padding: 2.1em 2em 2em 2em; border-radius: 1.2em; text-align:center;
-      min-width:280px; max-width:430px; position:relative; outline: 7px solid #2e0707; letter-spacing: 0.04em;
-      background-image: repeating-linear-gradient(135deg, #1a1a1a 0 8px, #2b0d0d 8px 16px);
+      min-width:280px; max-width:430px; position:relative; outline: 7px solid #1a320f; letter-spacing: 0.04em;
+      background-image: repeating-linear-gradient(135deg, #1a1a1a 0 8px, #0e1a0f 8px 16px);
       background-size: 90px 90px;
       background-blend-mode: multiply;
       text-shadow: 0 0 7px #222, 0 0 2px #111;
@@ -125,7 +125,7 @@
       display: block; margin: 0 auto 0.8em auto; width: 3.2em; height: 3.2em;
     }
     .modal-warning strong {
-      color: #ff1111; font-size:1.09em;
+      color: #39ff14; font-size:1.09em;
       display: block; margin-bottom: 0.2em;
       text-shadow: 0 2px 8px #000a;
     }
@@ -134,37 +134,38 @@
     }
     .modal-warning input {
       margin-top:1em;font-size:1.13em;
-      border:2.2px solid #d90e00;
+      border:2.2px solid #39ff14;
       padding:0.28em 0.59em; border-radius:0.36em;
-      background: #141a19; color: #fb4747; font-weight: bold; letter-spacing: 0.11em;
-      box-shadow: 0 2px 8px #ffec4b99; outline:none; width: 78%; text-align: center;
+      background: #141a19; color: #39ff14; font-weight: bold; letter-spacing: 0.11em;
+      box-shadow: 0 2px 8px #39ff1499; outline:none; width: 78%; text-align: center;
       margin-bottom: 1em; font-family:inherit;
     }
     .modal-warning .modal-note {
       font-size:0.93em;color:#ffd600; margin-top: 1em; display:block; user-select: none;
     }
-    .self-destruct-btn {
+    .access-btn {
       display: inline-block;
-      padding: 0.47em 1.6em;
-      background: radial-gradient(circle at 60% 40%, #ff4949 0%, #ff2323 78%, #b80d0d 100%);
-      border: 2.7px solid #ee8;
-      border-radius: 1.4em;
+      padding: 0.53em 2em;
+      background: linear-gradient(90deg, #222e 0%, #39ff14 100%);
+      border: 2.8px solid #39ff14;
+      border-radius: 1.6em;
       font-size: 1.11em;
       font-family: inherit;
-      color: #fff2f2;
-      box-shadow: 0 0 13px #ff353570, 0 2px 0 #7c0707, inset 0 6px 9px #ff5959bb;
+      color: #111;
+      box-shadow: 0 0 17px #39ff1466, 0 2px 0 #060, inset 0 6px 14px #33ff11bb;
       cursor: pointer;
       font-weight: 800;
-      text-shadow: 0 0 6px #a00, 0 0 1px #fff;
-      letter-spacing: 0.03em;
+      text-shadow: 0 0 6px #21fd36, 0 0 1px #fff;
+      letter-spacing: 0.05em;
       margin-top: 0.1em;
-      margin-bottom: 0.1em;
+      margin-bottom: 0.13em;
       transition: transform 0.11s, box-shadow 0.18s, background 0.13s;
     }
-    .self-destruct-btn:hover, .self-destruct-btn:active {
-      background: radial-gradient(circle at 50% 50%, #ff1a1a 0%, #b80d0d 100%);
-      transform: scale(1.09);
-      box-shadow: 0 0 23px #ff1818, 0 2px 0 #700707, 0 0 4px #fff7;
+    .access-btn:hover, .access-btn:active {
+      background: linear-gradient(90deg, #39ff14 0%, #333 100%);
+      color: #fff;
+      transform: scale(1.07);
+      box-shadow: 0 0 24px #12ff3b, 0 2px 0 #010, 0 0 4px #fff7;
     }
     @media (max-width: 900px) {
       .container {flex-direction: column;}
@@ -256,14 +257,11 @@ PromptForge.online — for creators who refuse to be censored.
     // Render two blocks to make it seamless!
     const starwars = document.getElementById('starwarsScroll');
     starwars.innerText = seoText + "\n\n" + seoText;
-
     // Animate with JS for perfect seamless looping and fade
     let scrollPos = 0;
     function doStarwarsScroll() {
       const wrap = document.querySelector('.starwars-scroll-wrap');
-      let wrapH = wrap.offsetHeight || 900;
       let textH = starwars.scrollHeight;
-      // tune scroll speed: lower = slower
       scrollPos += 0.38;
       if (scrollPos > textH/2) scrollPos = 0;
       starwars.style.transform = `translateY(${-scrollPos}px)`;
@@ -272,7 +270,6 @@ PromptForge.online — for creators who refuse to be censored.
     doStarwarsScroll();
 
     // Terminal Fakery as before...
-
     function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
     function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
     const bootLines = [
@@ -320,7 +317,6 @@ PromptForge.online — for creators who refuse to be censored.
       } else {
         isBooted = true;
         setTimeout(()=>{
-          // After all lines, clean up progress bars for "System Ready"
           fakeryEl.innerHTML = bootLines.map(f=>(typeof f==="function"?f():f)).join('<br>');
           fakeryEl.scrollTop = fakeryEl.scrollHeight;
           cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
@@ -349,7 +345,7 @@ PromptForge.online — for creators who refuse to be censored.
     input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
     showNextLine();
 
-    // Terminal Command Logic (snark, SEO, core cmds)
+    // Terminal Command Logic
     input.value = '';
     const snarkyCmds = [
       "Access denied: Only true hackers can run that command.",
@@ -443,7 +439,7 @@ PromptForge.online — for creators who refuse to be censored.
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
     setInterval(() => { if(document.activeElement !== input) focusInput(); }, 800);
 
-    // Passkey Modal w/ 3D Self-Destruct Button — NOW FULLY WORKS
+    // PASSKEY MODAL — PRO DEV ACCESS, WORKS 100%
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         document.getElementById('passkeyPopup').style.display = 'flex';
@@ -458,35 +454,38 @@ PromptForge.online — for creators who refuse to be censored.
             <polygon points="45,10 85,78 5,78" style="fill:#ffe800;stroke:#111;stroke-width:6" />
             <text x="45" y="65" text-anchor="middle" font-size="46" font-weight="bold" fill="#b30000" font-family="monospace">!</text>
           </svg>
-          <strong>RESTRICTED ACCESS</strong>
-          <div class="modal-text">Professional AI Dev Toolkit<br>Entry restricted to authorized users.<br>Enter passkey to continue.</div>
-          <input id="passkeyInput" autocomplete="off" autofocus placeholder="6-digit Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
-          <button class="self-destruct-btn" id="selfDestructBtn" disabled>SELF-DESTRUCT / ENTER</button>
-          <span class="modal-note">Access without authorization is strictly prohibited.<br>Security protocols are in effect.</span>
+          <strong>RESTRICTED DEVELOPER ACCESS</strong>
+          <div class="modal-text">This area is for authorized PromptForge devs only.<br>
+          Unauthorized access is strictly prohibited.<br>
+          Enter your 6-digit dev passkey to continue.</div>
+          <input id="passkeyInput" autocomplete="off" autofocus placeholder="6-digit Dev Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+          <button class="access-btn" id="accessBtn" disabled>ENTER SYSTEM</button>
+          <span class="modal-note">All actions monitored. Unapproved entry will be logged.<br>System security protocols are in effect.</span>
         </div>
       `;
       document.body.appendChild(modal);
       let passInput = document.getElementById('passkeyInput');
-      let selfBtn = document.getElementById('selfDestructBtn');
-      setTimeout(() => passInput.focus(), 80);
+      let accessBtn = document.getElementById('accessBtn');
+      setTimeout(() => passInput.focus(), 100);
+
       function checkInput() {
-        // Allow only numbers (no letters)
+        // Always force numbers only (fixes all device bugs)
         passInput.value = passInput.value.replace(/\D/g, '');
-        if(passInput.value.length===6 && /^\d{6}$/.test(passInput.value)) {
-          selfBtn.disabled = false;
-          selfBtn.style.opacity = "1";
+        if(passInput.value.length===6) {
+          accessBtn.disabled = false;
+          accessBtn.style.opacity = "1";
         } else {
-          selfBtn.disabled = true;
-          selfBtn.style.opacity = "0.55";
+          accessBtn.disabled = true;
+          accessBtn.style.opacity = "0.55";
         }
       }
       passInput.addEventListener('input', checkInput);
       passInput.addEventListener('keydown', function(e){
         checkInput();
-        if(e.key === 'Enter' && !selfBtn.disabled) closePasskey();
+        if(e.key === 'Enter' && !accessBtn.disabled) closePasskey();
       });
-      selfBtn.addEventListener('click', function() {
-        if (!selfBtn.disabled) closePasskey();
+      accessBtn.addEventListener('click', function() {
+        if (!accessBtn.disabled) closePasskey();
       });
     }
     function closePasskey() {
