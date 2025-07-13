@@ -141,12 +141,11 @@
     }
     .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
     .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
-    /* PASSKEY MODAL and rest: unchanged ... */
+    /* PASSKEY MODAL: unchanged ... */
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Terminal Left -->
     <div class="left">
       <div class="terminal-inner">
         <div class="fakery" id="fakery"></div>
@@ -161,7 +160,6 @@
         <audio id="fxAudio" src="https://cdn.pixabay.com/audio/2022/07/26/audio_123bfa1e5c.mp3" preload="auto"></audio>
       </div>
     </div>
-    <!-- Globe + scrolling SEO + Ghost Skull -->
     <div class="right">
       <div class="ghost-skull" id="ghostSkull" aria-hidden="true" style="opacity:0;">
       { . . . }<br>
@@ -178,7 +176,6 @@
       </video>
     </div>
   </div>
-  <!-- Footer unchanged... -->
   <div class="footer-sticky" style="padding:0 0 0.12em 0;">
     <pre style="color:#21c5c8;font-size:1em;line-height:1.1;margin:0 0 0 0;letter-spacing:-0.03em;">
  888888ba                                          dP   .8888b                                    
@@ -235,7 +232,7 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
         lastKeyFx = Date.now();
       }
     });
-    // STARWARS SCROLL: (Unchanged, always preloaded)
+    // STARWARS SCROLL: (Preloaded, never empty)
     const seoText = `Welcome to PromptForge.online — the internet’s most powerful, uncensored AI toolkit for creators, rebels, artists, and visionaries. Here you’ll find pro-level tools for batch watermarking TikToks, batch meme creation, face mapping, viral remixing, DMCA protection, open source utilities, NSFW/SFW prompt generators, and more. No paywalls, no ads, no limits—just pure, underground creative power.
 
 PromptForge was founded by medics, meme lords, and creators who got tired of walled gardens, censorship, and rent-seeking “AI as a service” scams. We believe in open access, creative freedom, and protecting artists’ rights. This site is run by Tyson Sawchuk and the Gore & Giggles crew. We built PromptForge for TikTokers, digital artists, adult content creators, meme warriors, teachers, prompt engineers, and anyone sick of locked-down, censored, overpriced software.
@@ -260,9 +257,102 @@ PromptForge.online — for creators who refuse to be censored.
       requestAnimationFrame(doStarwarsScroll);
     }
     doStarwarsScroll();
-    // REST OF YOUR WORKING JS/TERMINAL/PASSKEY LOGIC IS UNCHANGED HERE!
-
-    // To keep code clean: FX are overlays only, never break main logic!
+    // ==== BOOT ANIMATION with Revision at Top ====
+    function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
+    function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
+    let progressStatus = [false,false,false];
+    // REVISION MARKER is always line 1
+    const REVISION_MARK = "=== PromptForge INDEX REVISION: v4.23 — 2025-07-12 ===";
+    const bootLines = [
+      () => `<span class="info" style="color:#ffec4b;background:#210a20;">${REVISION_MARK}</span>`,
+      () => `<span class="sys">[BOOT]</span> Launching <b>PromptForge Underground</b>`,
+      () => `<span class="cmd">sudo apt-get insta11 promptforge-core</span>`,
+      () => `<span class="info">Authenticating as root@${randomIP()} ...</span>`,
+      () => `<span class="warn">WARNING: Unstable kernel detected (patched)</span>`,
+      () => `<span class="cmd">mount /dev/sdz0 /mnt/ai_vault -o encrypted</span>`,
+      () => `<span class="err">Error: /dev/sdz0 not found, falling back...</span>`,
+      () => `<span class="cmd">mount /dev/sda1 /mnt/ai_vault -o encrypted</span>`,
+      () => `<span class="info">Vault mounted at /mnt/ai_vault</span>`,
+      () => `<span class="cmd">wget https://promptforge.online/pool/j1nx-ai_b3ta.deb</span>`,
+      () => `<span class="cmd">dpkg -i j1nx-ai_b3ta.deb</span>`,
+      () => `<span class="progress" id="progress1">Progress [                    ] 0%</span>`,
+      () => `<span class="info">Unpacking j1nx-core...</span>`,
+      () => `<span class="progress" id="progress2">Progress [                    ] 0%</span>`,
+      () => `<span class="info">Injecting custom payload: <span class="sudo">${hexPayload()}</span></span>`,
+      () => `<span class="info">Linking meme-generator batch...</span>`,
+      () => `<span class="progress" id="progress3">Progress [                    ] 0%</span>`,
+      () => `<span class="info">Bypassing AI filter protocols...</span>`,
+      () => `<span class="warn">[WARN] Unfiltered mode enabled. Trace: masked.</span>`,
+      () => `<span class="sys">System Ready: <span style="color:#ffec4b;">ALL SYSTEMS GREEN</span></span>`,
+      () => `<span class="info">Type '<b>main</b>' to unlock PromptForge, or '<b>help</b>' for commands.</span>`,
+      () => `<span class="info">Available: help, about, contact, clear, passkey, main</span>`
+    ];
+    let lineIdx = 0, isBooted = false;
+    const fakeryEl = document.getElementById('fakery');
+    const cmdHintsEl = document.getElementById('cmdHints');
+    const input = document.getElementById('terminalInput');
+    // Error reporter
+    function showError(msg, code) {
+      fakeryEl.innerHTML += `<br><span class="err">TERMINAL ERROR: ${msg} [${code}]</span>`;
+      console.error(`[PromptForge TERMINAL ERROR ${code}] ${msg}`);
+    }
+    function updateProgressBar(idx, id, cb) {
+      let percent = 0;
+      function tick() {
+        percent++;
+        let barLen = Math.floor(percent/5);
+        let spaces = 20 - barLen;
+        let html = percent<100 ?
+          `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${percent}%` :
+          `<span class="complete">Progress [${'='.repeat(20)}] 100% — COMPLETE</span>`;
+        let el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+        if (percent < 100) setTimeout(tick, 8 + Math.random()*11);
+        else {
+          progressStatus[idx]=true;
+          if(cb) setTimeout(cb,450);
+        }
+      }
+      tick();
+    }
+    function showNextLine() {
+      try {
+        if (lineIdx < bootLines.length) {
+          let out = [];
+          for(let i=0; i<lineIdx; ++i) out.push(typeof bootLines[i]==="function"?bootLines[i]():bootLines[i]);
+          if(lineIdx===10) setTimeout(()=>updateProgressBar(0,"progress1",()=>showNextLine()),160);
+          if(lineIdx===12) setTimeout(()=>updateProgressBar(1,"progress2",()=>showNextLine()),160);
+          if(lineIdx===14) setTimeout(()=>updateProgressBar(2,"progress3",()=>showNextLine()),160);
+          if (![10,12,14].includes(lineIdx)) {
+            out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
+            fakeryEl.innerHTML = out.join('<br>');
+            fakeryEl.scrollTop = fakeryEl.scrollHeight;
+            lineIdx++;
+            let delay = 650 + Math.random()*670;
+            setTimeout(showNextLine, delay);
+          } else {
+            out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
+            fakeryEl.innerHTML = out.join('<br>');
+            fakeryEl.scrollTop = fakeryEl.scrollHeight;
+            lineIdx++;
+          }
+        } else {
+          isBooted = true;
+          setTimeout(()=>{
+            fakeryEl.innerHTML = bootLines.map(f=>(typeof f==="function"?f():f)).join('<br>');
+            fakeryEl.scrollTop = fakeryEl.scrollHeight;
+            cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
+            input.disabled = false;
+            input.focus();
+          },800);
+        }
+      } catch (e) {
+        showError("Boot sequence failed. Report this code: [boot-seq-0423]", "boot-seq-0423");
+      }
+    }
+    input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
+    showNextLine();
+    // ...Rest of your command handling, passkey modal, snarkyCmds, unchanged...
   </script>
 </body>
 </html>
