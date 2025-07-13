@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>PromptForge | Terminal Entry</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PromptForge.online: The ultimate free AI prompt generator, batch watermark, face mapping, NSFW/SFW, dev toolkit for creators, hackers, meme lords, artists, and rebels. No paywalls, no ads on sign-in, pure underground.">
+  <meta name="description" content="PromptForge.online: Underground AI toolkit for hackers, creators, and rebels. Free, pro-level, uncensored AI prompt generation, watermarking, face mapping, NSFW, SFW, creative dev vault, and more. No paywalls. No ads on sign-in.">
   <style>
     html, body {
       height: 100%;
@@ -149,7 +149,7 @@
       left: 0; bottom: 0;
       width: 100%;
       height: 100vh;
-      z-index: 4;
+      z-index: 3;
       pointer-events: none;
       overflow: hidden;
       display: flex;
@@ -160,22 +160,22 @@
     .starwars-scroll {
       width: 92%;
       max-width: 700px;
-      opacity: 0.60;
+      opacity: 0.62;
       font-family: inherit;
       color: #ffee88;
-      font-size: 1.11em;
+      font-size: 1.14em;
       font-weight: 600;
       text-align: center;
       text-shadow: 0 0 8px #ffe, 0 0 2px #880;
       white-space: pre-line;
-      line-height: 1.42;
+      line-height: 1.43;
       animation: starwars-column-scroll 120s linear infinite;
       pointer-events: none;
       user-select: text;
     }
     @keyframes starwars-column-scroll {
-      from { transform: translateY(95vh);}
-      to   { transform: translateY(-150vh);}
+      from { transform: translateY(100vh);}
+      to   { transform: translateY(-170vh);}
     }
     .footer-sticky {
       width: 100vw;
@@ -256,11 +256,14 @@
       box-shadow: 0 2px 8px #ffec4b99;
       outline:none;
       width: 80%;
+      text-align: center;
+      letter-spacing: 0.14em;
     }
     .modal-warning .modal-note {
       font-size:0.96em;color:#ffd600;
       margin-top: 1em;
       display:block;
+      user-select: none;
     }
     @media (max-width: 900px) {
       .container {flex-direction: column;}
@@ -293,7 +296,7 @@
         <div class="cmd-hints" id="cmdHints"></div>
         <div class="input-row">
           <span id="prompt">root@promptforge:/entry#</span>
-          <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
+          <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" maxlength="40"/>
           <span id="fakeCursor">|</span>
         </div>
       </div>
@@ -348,7 +351,6 @@ PromptForge.online — the underground network grows.
       const blocks = Math.floor(pct / 5);
       return `<span class="progress">[${"=".repeat(blocks)}${" ".repeat(20-blocks)}] ${pct}%</span>`;
     }
-    // Mix of real Linux and hacker shit
     const bootLines = [
       () => `<span class="sys">[BOOT]</span> Loading PromptForge Underground Node v${(Math.random()*2+3).toFixed(3)}`,
       () => `<span class="sys">[INFO]</span> Initializing <span class="dir">root@${randomIP()}</span> ...`,
@@ -389,20 +391,20 @@ PromptForge.online — the underground network grows.
     const helpLines = [
       "main      — Sign in and unlock all tools",
       "help      — Show this help menu",
-      "about     — What is PromptForge? Why no ads?",
+      "about     — What is PromptForge?",
       "contact   — How to reach the team",
-      "passkey   — Enter passkey for access (any key works!)",
+      "passkey   — Enter passkey for access",
       "clear     — Clear terminal output",
       "random    — Print a random fun fact",
       "promo     — See latest underground promo codes",
       "vault     — Access the secret vault (404)",
-      "wtf       — Show a hidden feature (try it!)",
+      "wtf       — Show a hidden feature",
       "discord   — Link to the underground Discord",
-      "sudo      — Access admin mode (nice try)",
-      "easteregg — Hidden message just for you",
-      "reset     — Reboot the terminal (refresh page)",
+      "sudo      — Access admin mode",
+      "easteregg — Hidden message",
+      "reset     — Reboot the terminal",
       "fortune   — Get a fortune cookie (soon)",
-      "whoami    — Identify yourself (mysterious)",
+      "whoami    — Identify yourself",
       "whyfree   — Why is this actually free?",
       "google    — Why no ads?",
       "faq       — See frequently asked questions",
@@ -448,7 +450,7 @@ PromptForge.online — the underground network grows.
           resp = '<span class="info">' + helpLines.join('<br>') + '</span>';
           break;
         case 'about':
-          resp = "<span class='info'>PromptForge.online — Built by creators for creators. No ads, ever. All features unlocked. Pure AI power.</span>";
+          resp = "<span class='info'>PromptForge.online — Built by creators for creators. All features unlocked. Pure AI power.</span>";
           break;
         case 'contact':
           resp = "<span class='info'>Reach out: admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social</span>";
@@ -471,15 +473,15 @@ PromptForge.online — the underground network grows.
           resp = [
             "AI eats 10TB of data per day.",
             "No prompt is ever truly lost.",
-            "This terminal is 97% fake.",
+            "This terminal is 97% legit.",
             "You’re through the looking glass.",
             "There is no spoon.",
             "All hacks are real here.",
-            "Fakery complete.",
+            "Underground only.",
           ].sort(() => .5 - Math.random())[0];
           break;
         case 'wtf':
-          resp = "<span class='warn'>You found a hidden feature! Or did you?</span>";
+          resp = "<span class='warn'>You found a hidden feature!</span>";
           break;
         default:
           resp = `<span class='err'>Unknown command: ${cmd}. Type 'help' for a full list.</span>`;
@@ -504,7 +506,7 @@ PromptForge.online — the underground network grows.
       if(document.activeElement !== input) focusInput();
     }, 1000);
 
-    // PASSKEY MODAL
+    // PASSKEY MODAL (serious, 6 digits)
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         document.getElementById('passkeyPopup').style.display = 'flex';
@@ -520,15 +522,15 @@ PromptForge.online — the underground network grows.
             <text x="45" y="65" text-anchor="middle" font-size="46" font-weight="bold" fill="#b30000" font-family="monospace">!</text>
           </svg>
           <strong>RESTRICTED ACCESS</strong>
-          <div class="modal-text">Warning: Professional AI Dev Toolkit<br>Entry Restricted to Authorized Users Only</div>
-          <input id="passkeyInput" autocomplete="off" autofocus placeholder="Enter Passkey" />
-          <span class="modal-note">Any passkey will unlock entry.<br>This is a pro-grade, uncensored AI tool. Use at your own risk.</span>
+          <div class="modal-text">Professional AI Dev Toolkit<br>Entry restricted to authorized users.<br>Enter passkey to continue.</div>
+          <input id="passkeyInput" autocomplete="off" autofocus placeholder="6-digit Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+          <span class="modal-note">Access without authorization is strictly prohibited.<br>Security protocols are in effect.</span>
         </div>
       `;
       document.body.appendChild(modal);
       setTimeout(() => document.getElementById('passkeyInput').focus(), 80);
       document.getElementById('passkeyInput').addEventListener('keydown', function(e){
-        if(e.key === 'Enter') {
+        if(e.key === 'Enter' && this.value.length === 6 && /^\d{6}$/.test(this.value)) {
           closePasskey();
         }
       });
