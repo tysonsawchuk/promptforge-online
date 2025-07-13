@@ -69,7 +69,6 @@
       display: inline-block; user-select: none;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    /* Star Wars SEO Scroll over globe */
     .right {
       flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
       background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden;
@@ -103,7 +102,7 @@
     }
     .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
     .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
-    /* Passkey Modal and Pro Dev Access Button */
+    /* PASSKEY MODAL */
     #passkeyPopup {
       position:fixed;top:0;left:0;width:100vw;height:100vh;
       background:rgba(18,16,16,0.98);z-index:9999;display:flex;
@@ -238,7 +237,7 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
     </div>
   </div>
   <script>
-    // Star Wars Scroll — seamless, fade top, always loaded, no SEO/meta-talk
+    // Star Wars Scroll
     const seoText = `
 Welcome to PromptForge.online — the internet’s most powerful, uncensored AI toolkit for creators, rebels, artists, and visionaries. Here you’ll find pro-level tools for batch watermarking TikToks, batch meme creation, face mapping, viral remixing, DMCA protection, open source utilities, NSFW/SFW prompt generators, and more. No paywalls, no ads, no limits—just pure, underground creative power.
 
@@ -253,25 +252,22 @@ Join the underground—type 'main' in the terminal and unlock the most powerful 
 Follow us: Bluesky goreandgiggles.bsky.social, X @GoreandGiggles, email admin@goreandgiggles.com.
 PromptForge.online — for creators who refuse to be censored.
 `.replace(/^\s+|\s+$/g, '');
-
-    // Render two blocks to make it seamless!
     const starwars = document.getElementById('starwarsScroll');
     starwars.innerText = seoText + "\n\n" + seoText;
-    // Animate with JS for perfect seamless looping and fade
     let scrollPos = 0;
     function doStarwarsScroll() {
-      const wrap = document.querySelector('.starwars-scroll-wrap');
       let textH = starwars.scrollHeight;
-      scrollPos += 0.38;
+      scrollPos += 0.52; // 35% faster
       if (scrollPos > textH/2) scrollPos = 0;
       starwars.style.transform = `translateY(${-scrollPos}px)`;
       requestAnimationFrame(doStarwarsScroll);
     }
     doStarwarsScroll();
 
-    // Terminal Fakery as before...
+    // Terminal Fakery — 35% faster, progress always to 100%
     function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
     function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
+    let progressBars = [0,0,0];
     const bootLines = [
       () => `<span class="sys">[BOOT]</span> Launching <b>PromptForge Underground</b> (v4.22)`,
       () => `<span class="cmd">sudo apt-get insta11 promptforge-core</span>`,
@@ -283,12 +279,12 @@ PromptForge.online — for creators who refuse to be censored.
       () => `<span class="info">Vault mounted at /mnt/ai_vault</span>`,
       () => `<span class="cmd">wget https://promptforge.online/pool/j1nx-ai_b3ta.deb</span>`,
       () => `<span class="cmd">dpkg -i j1nx-ai_b3ta.deb</span>`,
-      () => `<span class="progress" id="progress1">Progress [=               ] 3%</span>`,
+      () => `<span class="progress" id="progress1">Progress [                    ] 0%</span>`,
       () => `<span class="info">Unpacking j1nx-core...</span>`,
-      () => `<span class="progress" id="progress2">Progress [====           ] 18%</span>`,
+      () => `<span class="progress" id="progress2">Progress [                    ] 0%</span>`,
       () => `<span class="info">Injecting custom payload: <span class="sudo">${hexPayload()}</span></span>`,
       () => `<span class="info">Linking meme-generator batch...</span>`,
-      () => `<span class="progress" id="progress3">Progress [============   ] 67%</span>`,
+      () => `<span class="progress" id="progress3">Progress [                    ] 0%</span>`,
       () => `<span class="info">Bypassing AI filter protocols...</span>`,
       () => `<span class="warn">[WARN] Unfiltered mode enabled. Trace: masked.</span>`,
       () => `<span class="sys">System Ready: <span style="color:#ffec4b;">ALL SYSTEMS GREEN</span></span>`,
@@ -299,21 +295,42 @@ PromptForge.online — for creators who refuse to be censored.
     const fakeryEl = document.getElementById('fakery');
     const cmdHintsEl = document.getElementById('cmdHints');
     const input = document.getElementById('terminalInput');
+    function updateProgressBar(idx, id, cb) {
+      let percent = progressBars[idx];
+      function tick() {
+        percent++;
+        progressBars[idx] = percent;
+        let barLen = Math.floor(percent/5);
+        let spaces = 20 - barLen;
+        let html = `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${percent}%`;
+        let el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+        if (percent < 100) setTimeout(tick, 8 + Math.random()*11); // super fast for 35% boost
+        else { progressBars[idx]=100; if(cb) setTimeout(cb,150); }
+      }
+      tick();
+    }
     function showNextLine() {
       if (lineIdx < bootLines.length) {
         let out = [];
         for(let i=0; i<lineIdx; ++i) out.push(typeof bootLines[i]==="function"?bootLines[i]():bootLines[i]);
-        // Only show one progress bar at a time
-        if(lineIdx===10) setTimeout(()=>animateProgressBar(0,"progress1",3,38,58,()=>{}),280);
-        if(lineIdx===12) setTimeout(()=>animateProgressBar(1,"progress2",18,82,49,()=>{}),210);
-        if(lineIdx===14) setTimeout(()=>animateProgressBar(2,"progress3",67,100,44,()=>{}),180);
-        out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
-        fakeryEl.innerHTML = out.join('<br>');
-        fakeryEl.scrollTop = fakeryEl.scrollHeight;
-        lineIdx++;
-        let delay = 1200 + Math.random()*1200;
-        if([10,12,14].includes(lineIdx)) delay = 700;
-        setTimeout(showNextLine, delay);
+        // Show each progress bar, then next step after 100%
+        if(lineIdx===10) setTimeout(()=>updateProgressBar(0,"progress1",()=>showNextLine()),160);
+        if(lineIdx===12) setTimeout(()=>updateProgressBar(1,"progress2",()=>showNextLine()),160);
+        if(lineIdx===14) setTimeout(()=>updateProgressBar(2,"progress3",()=>showNextLine()),160);
+        if (![10,12,14].includes(lineIdx)) {
+          out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
+          fakeryEl.innerHTML = out.join('<br>');
+          fakeryEl.scrollTop = fakeryEl.scrollHeight;
+          lineIdx++;
+          let delay = 650 + Math.random()*670; // 35% faster
+          setTimeout(showNextLine, delay);
+        } else {
+          out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
+          fakeryEl.innerHTML = out.join('<br>');
+          fakeryEl.scrollTop = fakeryEl.scrollHeight;
+          lineIdx++;
+        }
       } else {
         isBooted = true;
         setTimeout(()=>{
@@ -322,25 +339,8 @@ PromptForge.online — for creators who refuse to be censored.
           cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
           input.disabled = false;
           input.focus();
-        },1500);
+        },800);
       }
-    }
-    function animateProgressBar(idx, elId, from, to, speed, cb) {
-      let curr = from;
-      function tick() {
-        if (curr < to) {
-          curr += 1;
-          let barLen = Math.floor(curr/5);
-          let spaces = 16 - barLen;
-          let html = `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${curr}%`;
-          let el = document.getElementById(elId);
-          if (el) el.innerHTML = html;
-          setTimeout(tick, speed);
-        } else {
-          if(cb) cb();
-        }
-      }
-      tick();
     }
     input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
     showNextLine();
@@ -432,18 +432,21 @@ PromptForge.online — for creators who refuse to be censored.
       }
     });
     function focusInput() {
-      input.focus();
-      setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 10);
+      if (!document.getElementById('passkeyPopup')) {
+        input.focus();
+        setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 10);
+      }
     }
     window.onclick = focusInput;
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
-    setInterval(() => { if(document.activeElement !== input) focusInput(); }, 800);
+    setInterval(() => { if(document.activeElement !== input && !document.getElementById('passkeyPopup')) focusInput(); }, 800);
 
-    // PASSKEY MODAL — PRO DEV ACCESS, WORKS 100%
+    // PASSKEY MODAL — PRO DEV ACCESS, FULLY FIXED
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
+        let passInput = document.getElementById('passkeyInput');
         document.getElementById('passkeyPopup').style.display = 'flex';
-        setTimeout(() => document.getElementById('passkeyInput').focus(), 100);
+        setTimeout(() => { passInput.focus(); passInput.setSelectionRange(passInput.value.length, passInput.value.length); }, 80);
         return;
       }
       let modal = document.createElement('div');
@@ -458,7 +461,7 @@ PromptForge.online — for creators who refuse to be censored.
           <div class="modal-text">This area is for authorized PromptForge devs only.<br>
           Unauthorized access is strictly prohibited.<br>
           Enter your 6-digit dev passkey to continue.</div>
-          <input id="passkeyInput" autocomplete="off" autofocus placeholder="6-digit Dev Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+          <input id="passkeyInput" type="tel" autocomplete="off" placeholder="6-digit Dev Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
           <button class="access-btn" id="accessBtn" disabled>ENTER SYSTEM</button>
           <span class="modal-note">All actions monitored. Unapproved entry will be logged.<br>System security protocols are in effect.</span>
         </div>
@@ -466,7 +469,7 @@ PromptForge.online — for creators who refuse to be censored.
       document.body.appendChild(modal);
       let passInput = document.getElementById('passkeyInput');
       let accessBtn = document.getElementById('accessBtn');
-      setTimeout(() => passInput.focus(), 100);
+      setTimeout(() => { passInput.focus(); passInput.setSelectionRange(passInput.value.length, passInput.value.length); }, 100);
 
       function checkInput() {
         // Always force numbers only (fixes all device bugs)
@@ -487,9 +490,17 @@ PromptForge.online — for creators who refuse to be censored.
       accessBtn.addEventListener('click', function() {
         if (!accessBtn.disabled) closePasskey();
       });
+      // Stop background focus when modal open
+      document.body.addEventListener('focusin', modalFocusTrap, true);
+      function modalFocusTrap(e) {
+        if(document.getElementById('passkeyPopup') && !modal.contains(e.target)){
+          passInput.focus();
+        }
+      }
     }
     function closePasskey() {
-      document.getElementById('passkeyPopup').style.display = 'none';
+      document.body.removeEventListener('focusin', modalFocusTrap, true);
+      document.getElementById('passkeyPopup').remove();
       window.location.href = "main.html";
     }
   </script>
