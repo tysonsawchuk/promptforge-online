@@ -8,18 +8,21 @@
   <meta name="description" content="PromptForge.online: The underground’s only uncensored, free, and pro-level AI toolkit for watermarking, prompt building, face mapping, NSFW/SFW creation, meme gen, viral content, and more. No paywalls. No filters. All features unlocked.">
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    html, body { height: 100%; width: 100vw; margin: 0; padding: 0; background: #090b10;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace; color: #1aff87; overflow: hidden; }
+    html, body {
+      height: 100%; width: 100vw; margin: 0; padding: 0; background: #090b10;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      color: #1aff87; overflow: hidden;
+    }
     body { min-height: 100vh; }
-    .container { display: flex; flex-direction: row; height: 100vh; width: 100vw; box-sizing: border-box; }
+    .container { display: flex; flex-direction: row; height: 100vh; width: 100vw; box-sizing: border-box;}
     .left { width: 46vw; min-width: 220px; background: #090b10;
       display: flex; flex-direction: column; justify-content: flex-start;
-      align-items: stretch; border-right: 2px solid #162019; position: relative; z-index: 3; }
+      align-items: stretch; border-right: 2px solid #162019; position: relative; z-index: 3;}
     .terminal-inner { display: flex; flex-direction: column; flex: 1 1 0; padding: 2.5vh 0 0 2vw;
-      height: calc(100vh - 4em); min-height: 0; box-sizing: border-box; position: relative; z-index: 9; }
+      height: calc(100vh - 4em); min-height: 0; box-sizing: border-box; position: relative; z-index: 9;}
     .fakery { font-size: 1.09rem; white-space: pre-line; min-height: 10em; max-height: 36vh; overflow-y: auto;
       font-family: inherit; margin-bottom: 0.12em; font-weight: 600; letter-spacing: 0.01em; user-select: text;
-      color: #32ffd3; text-shadow: 0 0 2px #14ff98, 0 0 6px #11fda1; transition: color 0.2s; position: relative; z-index: 11; }
+      color: #32ffd3; text-shadow: 0 0 2px #14ff98, 0 0 6px #11fda1; transition: color 0.2s; position: relative; z-index: 11;}
     .fakery .sys { color: #32ff32; }
     .fakery .cmd { color: #aff1ff; }
     .fakery .info { color: #ffe662; }
@@ -34,7 +37,6 @@
       mix-blend-mode: lighten;
       background: repeating-linear-gradient(to bottom,rgba(0,0,0,0.18) 0px,rgba(0,0,0,0.08) 1px,transparent 3px,transparent 5px),
       linear-gradient(0deg,rgba(24,255,143,0.07),rgba(17,33,19,0.09));
-      pointer-events: none;
       animation: crt-flicker 0.65s infinite steps(2,end);
       display: block;
     }
@@ -105,11 +107,9 @@
       box-shadow: 0 -2px 14px #111b; line-height: 1.08; user-select: text; letter-spacing: -0.01em;}
     .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
     .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
-    #passkeyPopup {
-      position:fixed;top:0;left:0;width:100vw;height:100vh;
+    #passkeyPopup { position:fixed;top:0;left:0;width:100vw;height:100vh;
       background:rgba(18,16,16,0.98);z-index:9999;display:flex;
-      align-items:center;justify-content:center;pointer-events:auto;
-    }
+      align-items:center;justify-content:center;pointer-events:auto; }
     .modal-warning { background: #080d0c; color: #ffe800;
       border: 7px solid #39ff14; box-shadow: 0 0 33px #09852d88, 0 0 0 13px #222 inset;
       font-size:1.22em; font-family:'Fira Mono', 'Consolas', monospace; padding: 2.1em 2em 2em 2em;
@@ -242,7 +242,7 @@ PromptForge.online — for creators who refuse to be censored.
       requestAnimationFrame(doStarwarsScroll);
     }
     doStarwarsScroll();
-    // ---- Terminal boot + revision marker (unchanged)
+    // ---- Terminal boot + revision marker
     function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
     function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
     let progressStatus = [false,false,false];
@@ -336,7 +336,6 @@ PromptForge.online — for creators who refuse to be censored.
     input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
     showNextLine();
 
-    // --- TERMINAL COMMANDS (minimal for demo, expand as needed)
     input.value = '';
     function processCommand(cmd) {
       cmd = cmd.trim().toLowerCase();
@@ -383,7 +382,7 @@ PromptForge.online — for creators who refuse to be censored.
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
     setInterval(() => { if(document.activeElement !== input && !document.getElementById('passkeyPopup')) focusInput(); }, 800);
 
-    // === FULLY WORKING PASSKEY MODAL ===
+    // --- PASSKEY MODAL (fully working)
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         let passInput = document.getElementById('passkeyInput');
