@@ -8,37 +8,18 @@
   <meta name="description" content="PromptForge.online: The underground’s only uncensored, free, and pro-level AI toolkit for watermarking, prompt building, face mapping, NSFW/SFW creation, meme gen, viral content, and more. No paywalls. No filters. All features unlocked.">
   <link rel="icon" type="image/png" href="favicon.png">
   <style>
-    html, body {
-      height: 100%; width: 100vw; margin: 0; padding: 0; background: #090b10;
-      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-      color: #1aff87; overflow: hidden;
-    }
+    html, body { height: 100%; width: 100vw; margin: 0; padding: 0; background: #090b10;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace; color: #1aff87; overflow: hidden; }
     body { min-height: 100vh; }
-    .container {
-      display: flex; flex-direction: row;
-      height: 100vh; width: 100vw; box-sizing: border-box;
-    }
-    .left {
-      width: 46vw; min-width: 220px; background: #090b10;
+    .container { display: flex; flex-direction: row; height: 100vh; width: 100vw; box-sizing: border-box; }
+    .left { width: 46vw; min-width: 220px; background: #090b10;
       display: flex; flex-direction: column; justify-content: flex-start;
-      align-items: stretch; border-right: 2px solid #162019;
-      position: relative; z-index: 3;
-    }
-    .terminal-inner {
-      display: flex; flex-direction: column; flex: 1 1 0;
-      padding: 2.5vh 0 0 2vw; height: calc(100vh - 4em); min-height: 0; box-sizing: border-box;
-      position: relative;
-      z-index: 9;
-    }
-    .fakery {
-      font-size: 1.09rem; white-space: pre-line; min-height: 10em; max-height: 36vh; overflow-y: auto;
-      font-family: inherit; margin-bottom: 0.12em; font-weight: 600;
-      letter-spacing: 0.01em; user-select: text; color: #32ffd3;
-      text-shadow: 0 0 2px #14ff98, 0 0 6px #11fda1;
-      transition: color 0.2s;
-      position: relative;
-      z-index: 11;
-    }
+      align-items: stretch; border-right: 2px solid #162019; position: relative; z-index: 3; }
+    .terminal-inner { display: flex; flex-direction: column; flex: 1 1 0; padding: 2.5vh 0 0 2vw;
+      height: calc(100vh - 4em); min-height: 0; box-sizing: border-box; position: relative; z-index: 9; }
+    .fakery { font-size: 1.09rem; white-space: pre-line; min-height: 10em; max-height: 36vh; overflow-y: auto;
+      font-family: inherit; margin-bottom: 0.12em; font-weight: 600; letter-spacing: 0.01em; user-select: text;
+      color: #32ffd3; text-shadow: 0 0 2px #14ff98, 0 0 6px #11fda1; transition: color 0.2s; position: relative; z-index: 11; }
     .fakery .sys { color: #32ff32; }
     .fakery .cmd { color: #aff1ff; }
     .fakery .info { color: #ffe662; }
@@ -49,12 +30,10 @@
     .fakery .progress.complete { color: #ff4242; font-weight: 900;}
     .fakery .sudo { color: #ff94ef; }
     .crt-fx {
-      pointer-events: none;
-      position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-      z-index: 20; opacity: 0.26; mix-blend-mode: lighten;
-      background:
-        repeating-linear-gradient(to bottom,rgba(0,0,0,0.18) 0px,rgba(0,0,0,0.08) 1px,transparent 3px,transparent 5px),
-        linear-gradient(0deg,rgba(24,255,143,0.07),rgba(17,33,19,0.09));
+      pointer-events: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 20; opacity: 0.26;
+      mix-blend-mode: lighten;
+      background: repeating-linear-gradient(to bottom,rgba(0,0,0,0.18) 0px,rgba(0,0,0,0.08) 1px,transparent 3px,transparent 5px),
+      linear-gradient(0deg,rgba(24,255,143,0.07),rgba(17,33,19,0.09));
       pointer-events: none;
       animation: crt-flicker 0.65s infinite steps(2,end);
       display: block;
@@ -82,20 +61,11 @@
     }
     .fx-btn.off { color: #bbb; border-color: #555; background: #141515bb;}
     .fx-btn:active { background: #12ff39bb; color: #111;}
-    .cmd-hints {
-      color: #21c5c8; font-size: 0.98em; margin-bottom: 0.11em;
-      margin-top: 0; font-style: italic;
-      text-shadow: 0 0 1px #045, 0 0 2px #000; user-select: none;
-    }
-    .input-row {
-      display: flex; align-items: center; margin: 0; width: 100%;
-      background: transparent; font-size: 1.11rem; z-index: 10;
-      padding-bottom: 0.11em; position: relative;
-    }
-    #prompt {
-      color: #fa4242; font-weight: 700; margin-right: 0.14em;
-      font-size: 1.13rem; letter-spacing: 0.01em; user-select: none;
-    }
+    .cmd-hints { color: #21c5c8; font-size: 0.98em; margin-bottom: 0.11em; margin-top: 0;
+      font-style: italic; text-shadow: 0 0 1px #045, 0 0 2px #000; user-select: none; }
+    .input-row { display: flex; align-items: center; margin: 0; width: 100%;
+      background: transparent; font-size: 1.11rem; z-index: 10; padding-bottom: 0.11em; position: relative; }
+    #prompt { color: #fa4242; font-weight: 700; margin-right: 0.14em; font-size: 1.13rem; letter-spacing: 0.01em; user-select: none; }
     #terminalInput {
       background: transparent; color: #f8e4fb; border: none; outline: none; font-family: inherit;
       font-size: 1.13rem; width: 22vw; min-width: 100px; max-width: 370px;
@@ -108,10 +78,8 @@
       display: inline-block; user-select: none;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    .right {
-      flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
-      background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden;
-    }
+    .right { flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
+      background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden; }
     .starwars-scroll-wrap {
       width: 100%; height: 100vh; position: absolute; left: 0; top: 0; pointer-events: none; z-index: 12;
       display: flex; align-items: flex-start; justify-content: center;
@@ -132,16 +100,36 @@
       position: absolute; top: 0; left: 0; border: none; filter: none; pointer-events: none;
       opacity: 0.88;
     }
-    .footer-sticky {
-      width: 100vw; background: #182523e7; color: #21c5c8; font-size: 1em; text-align: center;
-      position: fixed; left: 0; bottom: 0; padding:0 0 0.1em 0;
-      border-top: 2px solid #fa4242; z-index: 1001; font-family: inherit;
-      box-shadow: 0 -2px 14px #111b; line-height: 1.08; user-select: text;
-      letter-spacing: -0.01em;
-    }
+    .footer-sticky { width: 100vw; background: #182523e7; color: #21c5c8; font-size: 1em; text-align: center;
+      position: fixed; left: 0; bottom: 0; padding:0 0 0.1em 0; border-top: 2px solid #fa4242; z-index: 1001; font-family: inherit;
+      box-shadow: 0 -2px 14px #111b; line-height: 1.08; user-select: text; letter-spacing: -0.01em;}
     .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
     .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
-    /* PASSKEY MODAL: unchanged ... */
+    #passkeyPopup {
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(18,16,16,0.98);z-index:9999;display:flex;
+      align-items:center;justify-content:center;pointer-events:auto;
+    }
+    .modal-warning { background: #080d0c; color: #ffe800;
+      border: 7px solid #39ff14; box-shadow: 0 0 33px #09852d88, 0 0 0 13px #222 inset;
+      font-size:1.22em; font-family:'Fira Mono', 'Consolas', monospace; padding: 2.1em 2em 2em 2em;
+      border-radius: 1.2em; text-align:center; min-width:280px; max-width:430px; position:relative; outline: 7px solid #1a320f;
+      letter-spacing: 0.04em; background-image: repeating-linear-gradient(135deg, #1a1a1a 0 8px, #0e1a0f 8px 16px);
+      background-size: 90px 90px; background-blend-mode: multiply; text-shadow: 0 0 7px #222, 0 0 2px #111;}
+    .modal-warning .modal-icon { display: block; margin: 0 auto 0.8em auto; width: 3.2em; height: 3.2em;}
+    .modal-warning strong { color: #39ff14; font-size:1.09em; display: block; margin-bottom: 0.2em; text-shadow: 0 2px 8px #000a;}
+    .modal-warning .modal-text { color: #ffee88; font-size: 1.01em; font-weight: 700; margin-bottom: 0.41em; text-shadow: 0 0 2px #0009;}
+    .modal-warning input { margin-top:1em;font-size:1.13em; border:2.2px solid #39ff14; padding:0.28em 0.59em; border-radius:0.36em;
+      background: #141a19; color: #39ff14; font-weight: bold; letter-spacing: 0.11em; box-shadow: 0 2px 8px #39ff1499;
+      outline:none; width: 78%; text-align: center; margin-bottom: 1em; font-family:inherit;}
+    .modal-warning .modal-note { font-size:0.93em;color:#ffd600; margin-top: 1em; display:block; user-select: none;}
+    .access-btn { display: inline-block; padding: 0.53em 2em; background: linear-gradient(90deg, #222e 0%, #39ff14 100%);
+      border: 2.8px solid #39ff14; border-radius: 1.6em; font-size: 1.11em; font-family: inherit; color: #111;
+      box-shadow: 0 0 17px #39ff1466, 0 2px 0 #060, inset 0 6px 14px #33ff11bb; cursor: pointer; font-weight: 800;
+      text-shadow: 0 0 6px #21fd36, 0 0 1px #fff; letter-spacing: 0.05em; margin-top: 0.1em; margin-bottom: 0.13em;
+      transition: transform 0.11s, box-shadow 0.18s, background 0.13s;}
+    .access-btn:hover, .access-btn:active { background: linear-gradient(90deg, #39ff14 0%, #333 100%);
+      color: #fff; transform: scale(1.07); box-shadow: 0 0 24px #12ff3b, 0 2px 0 #010, 0 0 4px #fff7;}
   </style>
 </head>
 <body>
@@ -200,7 +188,7 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
     </div>
   </div>
   <script>
-    // FX Toggle, CRT overlay, Ghost Skull
+    // --- FX Toggle, CRT overlay, Ghost Skull
     let fxOn = true;
     let crt = document.getElementById('crtFX');
     let fxBtn = document.getElementById('fxBtn');
@@ -213,7 +201,6 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
       fxBtn.textContent = 'FX: ' + (fxOn ? 'ON' : 'OFF');
       fxBtn.className = fxOn ? 'fx-btn' : 'fx-btn off';
     };
-    // Ghost Skull Easter Egg
     function showGhostSkull() {
       if (!fxOn) return;
       skull.style.opacity = "0.10";
@@ -221,9 +208,7 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
       setTimeout(()=>skull.style.opacity="0.04", 1400);
       setTimeout(()=>skull.style.opacity="0", 1800);
     }
-    setInterval(function() {
-      if(Math.random()>0.76 && fxOn) showGhostSkull();
-    }, 9200);
+    setInterval(function() { if(Math.random()>0.76 && fxOn) showGhostSkull(); }, 9200);
     // Terminal Sound FX (only on input)
     let lastKeyFx = Date.now();
     document.getElementById('terminalInput').addEventListener('keydown',function(e){
@@ -232,7 +217,7 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
         lastKeyFx = Date.now();
       }
     });
-    // STARWARS SCROLL: (Preloaded, never empty)
+    // STARWARS SCROLL (Preloaded, never empty)
     const seoText = `Welcome to PromptForge.online — the internet’s most powerful, uncensored AI toolkit for creators, rebels, artists, and visionaries. Here you’ll find pro-level tools for batch watermarking TikToks, batch meme creation, face mapping, viral remixing, DMCA protection, open source utilities, NSFW/SFW prompt generators, and more. No paywalls, no ads, no limits—just pure, underground creative power.
 
 PromptForge was founded by medics, meme lords, and creators who got tired of walled gardens, censorship, and rent-seeking “AI as a service” scams. We believe in open access, creative freedom, and protecting artists’ rights. This site is run by Tyson Sawchuk and the Gore & Giggles crew. We built PromptForge for TikTokers, digital artists, adult content creators, meme warriors, teachers, prompt engineers, and anyone sick of locked-down, censored, overpriced software.
@@ -257,11 +242,10 @@ PromptForge.online — for creators who refuse to be censored.
       requestAnimationFrame(doStarwarsScroll);
     }
     doStarwarsScroll();
-    // ==== BOOT ANIMATION with Revision at Top ====
+    // ---- Terminal boot + revision marker (unchanged)
     function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
     function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
     let progressStatus = [false,false,false];
-    // REVISION MARKER is always line 1
     const REVISION_MARK = "=== PromptForge INDEX REVISION: v4.23 — 2025-07-12 ===";
     const bootLines = [
       () => `<span class="info" style="color:#ffec4b;background:#210a20;">${REVISION_MARK}</span>`,
@@ -291,7 +275,6 @@ PromptForge.online — for creators who refuse to be censored.
     const fakeryEl = document.getElementById('fakery');
     const cmdHintsEl = document.getElementById('cmdHints');
     const input = document.getElementById('terminalInput');
-    // Error reporter
     function showError(msg, code) {
       fakeryEl.innerHTML += `<br><span class="err">TERMINAL ERROR: ${msg} [${code}]</span>`;
       console.error(`[PromptForge TERMINAL ERROR ${code}] ${msg}`);
@@ -352,7 +335,115 @@ PromptForge.online — for creators who refuse to be censored.
     }
     input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
     showNextLine();
-    // ...Rest of your command handling, passkey modal, snarkyCmds, unchanged...
+
+    // --- TERMINAL COMMANDS (minimal for demo, expand as needed)
+    input.value = '';
+    function processCommand(cmd) {
+      cmd = cmd.trim().toLowerCase();
+      let resp = '';
+      switch(cmd) {
+        case 'help':
+          resp = '<span class="info">main — Sign in | help — Show help | about — Info | contact — Contact | passkey — Dev pass | clear — Clear</span>';
+          break;
+        case 'about':
+          resp = "<span class='info'>PromptForge.online — Built by rebels, medics, and meme lords. All features unlocked. AI power for the underground.</span>";
+          break;
+        case 'contact':
+          resp = "<span class='info'>admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social</span>";
+          break;
+        case 'passkey':
+          showPasskey();
+          return;
+        case 'main':
+          window.location.href = "main.html";
+          return;
+        case 'clear':
+          fakeryEl.innerHTML = '';
+          return;
+        default:
+          resp = `<span class='err'>Unknown command: <b>${cmd}</b>. Type 'help'.</span>`;
+      }
+      fakeryEl.innerHTML += '<br><br>' + resp;
+      fakeryEl.scrollTop = fakeryEl.scrollHeight;
+    }
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        let cmd = input.value;
+        input.value = '';
+        processCommand(cmd);
+      }
+    });
+    function focusInput() {
+      if (!document.getElementById('passkeyPopup')) {
+        input.focus();
+        setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 10);
+      }
+    }
+    window.onclick = focusInput;
+    input.addEventListener('blur', () => setTimeout(focusInput, 60));
+    setInterval(() => { if(document.activeElement !== input && !document.getElementById('passkeyPopup')) focusInput(); }, 800);
+
+    // === FULLY WORKING PASSKEY MODAL ===
+    function showPasskey() {
+      if(document.getElementById('passkeyPopup')) {
+        let passInput = document.getElementById('passkeyInput');
+        document.getElementById('passkeyPopup').style.display = 'flex';
+        setTimeout(() => { passInput.focus(); passInput.setSelectionRange(passInput.value.length, passInput.value.length); }, 80);
+        return;
+      }
+      let modal = document.createElement('div');
+      modal.id = 'passkeyPopup';
+      modal.innerHTML = `
+        <div class="modal-warning">
+          <svg class="modal-icon" viewBox="0 0 90 90">
+            <polygon points="45,10 85,78 5,78" style="fill:#ffe800;stroke:#111;stroke-width:6" />
+            <text x="45" y="65" text-anchor="middle" font-size="46" font-weight="bold" fill="#b30000" font-family="monospace">!</text>
+          </svg>
+          <strong>RESTRICTED DEVELOPER ACCESS</strong>
+          <div class="modal-text">This area is for authorized PromptForge devs only.<br>
+          Unauthorized access is strictly prohibited.<br>
+          Enter your 6-digit dev passkey to continue.</div>
+          <input id="passkeyInput" type="tel" autocomplete="off" placeholder="6-digit Dev Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+          <button class="access-btn" id="accessBtn" disabled>ENTER SYSTEM</button>
+          <span class="modal-note">All actions monitored. Unapproved entry will be logged.<br>System security protocols are in effect.</span>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      let passInput = document.getElementById('passkeyInput');
+      let accessBtn = document.getElementById('accessBtn');
+      setTimeout(() => { passInput.focus(); passInput.setSelectionRange(passInput.value.length, passInput.value.length); }, 100);
+
+      function checkInput() {
+        passInput.value = passInput.value.replace(/\D/g, '');
+        if(passInput.value.length===6) {
+          accessBtn.disabled = false;
+          accessBtn.style.opacity = "1";
+        } else {
+          accessBtn.disabled = true;
+          accessBtn.style.opacity = "0.55";
+        }
+      }
+      passInput.addEventListener('input', checkInput);
+
+      function doClosePasskey() {
+        document.body.removeEventListener('focusin', modalFocusTrap, true);
+        document.getElementById('passkeyPopup').remove();
+        window.location.href = "main.html";
+      }
+      passInput.addEventListener('keydown', function(e){
+        checkInput();
+        if(e.key === 'Enter' && !accessBtn.disabled) doClosePasskey();
+      });
+      accessBtn.addEventListener('click', function() {
+        if (!accessBtn.disabled) doClosePasskey();
+      });
+      function modalFocusTrap(e) {
+        if(document.getElementById('passkeyPopup') && !modal.contains(e.target)){
+          passInput.focus();
+        }
+      }
+      document.body.addEventListener('focusin', modalFocusTrap, true);
+    }
   </script>
 </body>
 </html>
