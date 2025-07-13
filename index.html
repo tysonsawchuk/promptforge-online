@@ -1,200 +1,474 @@
-<script>
-function randomIP() {
-  return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.');
-}
-function progressBar(pct) {
-  const blocks = Math.floor(pct / 5);
-  return '[' + '='.repeat(blocks) + ' '.repeat(20-blocks) + `] ${pct}%`;
-}
-const bootLines = [
-  () => `Booting PromptForge Underground Node v${(Math.random()*2+3).toFixed(3)}`,
-  () => `Initializing root@${randomIP()} ...`,
-  () => `Mounting virtual /dev/prompt [${randomIP()}]`,
-  () => `Formatting secure drive... ${progressBar(15)}`,
-  () => `Formatting secure drive... ${progressBar(42)}`,
-  () => `Formatting secure drive... ${progressBar(87)}`,
-  () => `Formatting secure drive... ${progressBar(100)}`,
-  () => `Checking disk integrity... OK`,
-  () => `Injecting payload: 0x${(Math.random()*1e8|0).toString(16)} (stealth mode)`,
-  () => `Spoofing source IP to ${randomIP()}`,
-  () => `Establishing encrypted tunnel [TLS 1.3]...`,
-  () => `Pinging backbone: ${randomIP()} ... ${(Math.random()*90+20|0)}ms`,
-  () => `Bypassing corporate firewall: OK`,
-  () => `Downloading forbidden modules: ${progressBar(29)}`,
-  () => `Downloading forbidden modules: ${progressBar(67)}`,
-  () => `Downloading forbidden modules: ${progressBar(100)}`,
-  () => `Decrypting node keys... [████░░░░░░░░░░] 39%`,
-  () => `Decrypting node keys... [█████████░░░░░] 81%`,
-  () => `Decrypting node keys... [██████████████] 100%`,
-  () => `Patching AI filters: disabled`,
-  () => `Restoring shadow prompt library: done`,
-  () => `Trace status: UNDETECTED`,
-  () => `Node handshake: [✓] validated`,
-  () => `Status: ALL SYSTEMS ONLINE\n`,
-  () => `Type 'help' for commands, or 'main' to enter the main hub.`,
-  () => `Available: help, about, contact, clear, passkey, main, random, wtf, whyfree, google`
-];
-
-const helpLines = [
-  "main      — Sign in and unlock all tools",
-  "help      — Show this help menu",
-  "about     — What is PromptForge? Why no ads?",
-  "contact   — How to reach the team",
-  "passkey   — Enter passkey for access (any key works!)",
-  "clear     — Clear terminal output",
-  "random    — Print a random fun fact",
-  "promo     — See latest underground promo codes",
-  "vault     — Access the secret vault (404)",
-  "wtf       — Show a hidden feature (try it!)",
-  "discord   — Link to the underground Discord",
-  "sudo      — Access admin mode (nice try)",
-  "easteregg — Hidden message just for you",
-  "reset     — Reboot the terminal (refresh page)",
-  "fortune   — Get a fortune cookie (soon)",
-  "whoami    — Identify yourself (mysterious)",
-  "whyfree   — Why is this actually free?",
-  "google    — Why no ads?",
-  "faq       — See frequently asked questions",
-  "paranoia  — Is this a honeypot?",
-  "404       — Get lost"
-];
-
-let lineIdx = 0, interval, isBooted = false;
-const fakeryEl = document.getElementById('fakery');
-const cmdHintsEl = document.getElementById('cmdHints');
-const input = document.getElementById('terminalInput');
-const cursor = document.getElementById('fakeCursor');
-let termOutput = [];
-
-function showNextLine() {
-  if (lineIdx < bootLines.length) {
-    const line = bootLines[lineIdx];
-    const out = typeof line === "function" ? line() : line;
-    termOutput.push(out);
-    fakeryEl.innerText = termOutput.join('\n');
-    lineIdx++;
-    let delay = 180 + Math.random()*120;
-    if (out.includes("Formatting") || out.includes("Downloading")) delay += 400;
-    if (out.includes("ALL SYSTEMS ONLINE")) delay += 600;
-    interval = setTimeout(showNextLine, delay);
-  } else {
-    isBooted = true;
-    fakeryEl.innerText = termOutput.join('\n');
-    cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
-    input.disabled = false;
-    input.focus();
-  }
-}
-// Animate boot lines, then enable prompt
-input.disabled = true;
-fakeryEl.innerText = '';
-cmdHintsEl.innerHTML = '';
-showNextLine();
-
-// Command logic
-input.value = '';
-function processCommand(cmd) {
-  cmd = cmd.trim().toLowerCase();
-  let resp = '';
-  switch(cmd) {
-    case 'help':
-      resp = helpLines.join('\n');
-      break;
-    case 'about':
-      resp = "PromptForge.online — Built by creators for creators. No ads, ever. All features unlocked. Pure AI power.";
-      break;
-    case 'contact':
-      resp = "Reach out: admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social";
-      break;
-    case 'passkey':
-      showPasskey();
-      return;
-    case 'main':
-      window.location.href = "main.html";
-      return;
-    case 'clear':
-      fakeryEl.innerText = '';
-      termOutput = [];
-      return;
-    case 'whyfree':
-    case 'google':
-      resp = "This site is free because it’s ad-supported. No ads or tracking on this page — just pure creation.";
-      break;
-    case 'random':
-      resp = [
-        "AI eats 10TB of data per day.",
-        "No prompt is ever truly lost.",
-        "This terminal is 97% fake.",
-        "You’re through the looking glass.",
-        "There is no spoon.",
-        "All hacks are real here.",
-        "Fakery complete.",
-      ].sort(() => .5 - Math.random())[0];
-      break;
-    case 'wtf':
-      resp = "You found a hidden feature! Or did you?";
-      break;
-    default:
-      resp = `Unknown command: ${cmd}. Type 'help' for a full list.`;
-  }
-  fakeryEl.innerText += '\n\n' + resp;
-  fakeryEl.scrollTop = fakeryEl.scrollHeight;
-}
-// Terminal input logic
-input.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    let cmd = input.value;
-    input.value = '';
-    processCommand(cmd);
-  }
-});
-// Cursor always at end, always visible, never ghosted
-function focusInput() {
-  input.focus();
-  setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 10);
-}
-window.onclick = focusInput;
-input.addEventListener('blur', () => setTimeout(focusInput, 60));
-setInterval(() => {
-  if(document.activeElement !== input) focusInput();
-}, 1000);
-
-// PASSKEY MODAL
-function showPasskey() {
-  if(document.getElementById('passkeyPopup')) {
-    document.getElementById('passkeyPopup').style.display = 'flex';
-    setTimeout(() => document.getElementById('passkeyInput').focus(), 100);
-    return;
-  }
-  let modal = document.createElement('div');
-  modal.id = 'passkeyPopup';
-  modal.style = `
-    position:fixed;top:0;left:0;width:100vw;height:100vh;
-    background:rgba(50,20,20,0.92);z-index:9999;display:flex;
-    align-items:center;justify-content:center;
-  `;
-  modal.innerHTML = `
-    <div style="background: #fffbe0; color: #b30000; border: 3px solid #fc0b00; box-shadow: 0 0 33px #ff420099;
-      font-size:1.22em; font-family:inherit; padding: 2.2em 2.1em 2em 2.1em; border-radius: 0.88em; text-align:center;
-      max-width:370px;min-width:200px;">
-      <b style="font-size:1.32em;color:#b30000;">WARNING!</b><br>
-      This area is restricted.<br><br>
-      <span style="color:#ff1111;font-weight:700;">Enter PASSKEY to proceed:</span><br>
-      <input id="passkeyInput" style="margin-top:1.3em;font-size:1.13em;border:2px solid #b30000;padding:0.24em 0.45em;border-radius:0.3em;"/>
-      <br><br>
-      <span style="font-size:0.95em;color:#222;">Any passkey will unlock entry.<br>For questions: admin@goreandgiggles.com</span>
-    </div>
-  `;
-  document.body.appendChild(modal);
-  setTimeout(() => document.getElementById('passkeyInput').focus(), 80);
-  document.getElementById('passkeyInput').addEventListener('keydown', function(e){
-    if(e.key === 'Enter') {
-      closePasskey();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PromptForge | Terminal Entry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0; padding: 0;
+      width: 100vw;
+      background: #0a0d0c;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      color: #1aff87;
+      overflow: hidden;
     }
-  });
-}
-function closePasskey() {
-  document.getElementById('passkeyPopup').style.display = 'none';
-  window.location.href = "main.html";
-}
-</script>
+    body { min-height: 100vh; }
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      min-height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+    .left {
+      width: 48vw; min-width: 230px;
+      background: #060907;
+      display: flex; flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      border-right: 2px solid #101c15;
+      position: relative;
+      z-index: 2;
+    }
+    .terminal-inner {
+      display: flex; flex-direction: column;
+      flex: 1 1 0;
+      padding: 2vh 0 0 2vw;
+      height: calc(100vh - 4em);
+      min-height: 0;
+      box-sizing: border-box;
+    }
+    .fakery {
+      color: #34fd47;
+      font-size: 1.1rem;
+      white-space: pre-line;
+      text-shadow: 0 0 3px #00ff3c70;
+      min-height: 10em;
+      max-height: 36vh;
+      overflow-y: auto;
+      font-family: inherit;
+      margin-bottom: 0.2em;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      user-select: text;
+    }
+    .cmd-hints {
+      color: #21c5c8;
+      font-size: 0.98em;
+      margin-bottom: 0.2em;
+      margin-top: 0;
+      font-style: italic;
+      text-shadow: 0 0 1px #045, 0 0 2px #000;
+      user-select: none;
+    }
+    .input-row {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      width: 100%;
+      background: transparent;
+      font-size: 1.11rem;
+      z-index: 10;
+      padding-bottom: 0.18em;
+    }
+    #prompt {
+      color: #fa4242;
+      font-weight: 700;
+      margin-right: 0.15em;
+      font-size: 1.15rem;
+      letter-spacing: 0.01em;
+      user-select: none;
+    }
+    #terminalInput {
+      background: transparent;
+      color: #fd6161;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 1.13rem;
+      width: 22vw; min-width: 100px; max-width: 370px;
+      caret-color: #ff3030;
+      font-weight: bold;
+      letter-spacing: 0.01em;
+      z-index: 11;
+      position: relative;
+      padding: 0;
+      margin: 0;
+    }
+    #fakeCursor {
+      color: #ff3131;
+      font-size: 1.17em;
+      font-weight: 900;
+      margin-left: -0.11em;
+      animation: blink 1s steps(2, start) infinite;
+      position: relative;
+      left: 0;
+      top: 0.10em;
+      display: inline-block;
+      user-select: none;
+    }
+    @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
+    /* Right: Globe & Scrolling Text */
+    .right {
+      flex: 1 1 0; min-width: 180px;
+      height: 100vh;
+      position: relative;
+      background: #050607;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      overflow: hidden;
+    }
+    .globe-bg-video {
+      width: 100%; height: calc(100vh - 8em);
+      object-fit: cover;
+      background: transparent;
+      z-index: 2;
+      position: absolute;
+      top: 0; left: 0;
+      border: none;
+      filter: none;
+      pointer-events: none;
+    }
+    .starwars-credits {
+      position: absolute;
+      left: 0; bottom: 2.8em;
+      width: 100%;
+      height: 8em;
+      z-index: 3;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      background: transparent;
+      pointer-events: none;
+    }
+    .starwars-text {
+      font-family: inherit;
+      color: #ffee88;
+      font-size: 1.09em;
+      opacity: 0.52;
+      text-shadow: 0 0 7px #ffc, 0 0 2px #222;
+      font-weight: 600;
+      width: 97%;
+      max-width: 700px;
+      text-align: center;
+      white-space: pre-line;
+      animation: starwars-scroll 78s linear infinite;
+      line-height: 1.46;
+      pointer-events: none;
+      user-select: text;
+    }
+    @keyframes starwars-scroll {
+      from { transform: translateY(115%);}
+      to   { transform: translateY(-120%);}
+    }
+    .footer-sticky {
+      width: 100vw;
+      background: #182523e7;
+      color: #aeeef7;
+      font-size: 1.07em;
+      text-align: center;
+      position: fixed;
+      left: 0; bottom: 0;
+      padding: 0.45em 0 0.18em 0;
+      border-top: 2px solid #fa4242;
+      z-index: 1001;
+      font-family: inherit;
+      box-shadow: 0 -2px 14px #111b;
+      line-height: 1.12;
+      user-select: none;
+    }
+    .footer-sticky a {
+      color: #11ffc9;
+      text-decoration: underline;
+      font-weight: 700;
+      margin: 0 0.5em;
+    }
+    @media (max-width: 900px) {
+      .container {flex-direction: column;}
+      .left, .right {width: 100vw; max-width: 100vw; min-width: 0;}
+      .globe-bg-video {height: 37vh;}
+      .starwars-credits {height: 5em;}
+      .fakery {max-width: 97vw;}
+      #terminalInput {width: 67vw;}
+    }
+    @media (max-width: 700px) {
+      .terminal-inner {padding: 1vw 0 0 1vw;}
+      .globe-bg-video {height: 24vh;}
+      .starwars-credits {height: 3em;}
+    }
+    @media (min-device-width: 1848px) and (max-device-width: 2960px) {
+      .container {flex-direction: row;}
+      .left { width: 46vw; }
+      .right { width: 54vw; }
+      .globe-bg-video { height: calc(100vh - 8em);}
+      .starwars-credits { height: 8.8em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Terminal Left -->
+    <div class="left">
+      <div class="terminal-inner">
+        <div class="fakery" id="fakery"></div>
+        <div class="cmd-hints" id="cmdHints"></div>
+        <div class="input-row">
+          <span id="prompt">root@promptforge:/entry#</span>
+          <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" />
+          <span id="fakeCursor">|</span>
+        </div>
+      </div>
+    </div>
+    <!-- Globe + credits -->
+    <div class="right">
+      <video class="globe-bg-video" autoplay muted loop playsinline>
+        <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
+      </video>
+      <div class="starwars-credits">
+        <div class="starwars-text" id="starwarsText">
+PromptForge.online — The Ultimate Underground AI Toolkit for Creators, Artists, and Rebels.
+
+Welcome to the world's only free, pro-level AI prompt generator and watermarking suite. Batch watermark TikToks, Reels, YouTube, Instagram, X/Twitter, and any media. Map faces, build killer prompts, unlock advanced dev tools, and never hit a paywall. PromptForge unlocks true creative power for everyone: artists, paramedics, teachers, meme lords, TikTokers, marketers, programmers, adult creators, and anyone who refuses to be censored.
+
+FEATURES:
+- Batch watermark generator
+- AI prompt builder and enhancer
+- Face mapping, age/genre/style morph
+- Dev vault, Discord integration, instant remix tools
+- NSFW and SFW art creation — no filter, no ban, ever
+- Zero registration, pure privacy, instant access
+- Fully open, always free, ad-supported (never on sign-in or vault pages)
+- DMCA protection, creator rights, open source ethics
+
+WHY FREE?  
+PromptForge was built by paramedics and creators suffering PTSD who wanted real, private, *uncensored* AI tools. Funded by voluntary ad support and donations, not corporate bullshit or endless upsells. No tracking, no cookies, no paywalls, no ban hammer, ever.
+
+SEO MAGIC:
+ai prompt generator, free ai watermark, batch watermark tool, NSFW prompt builder, tiktok watermark, face swap, prompt engineer, open source AI, image generator, underground art, creative commons, free AI toolkit, watermark forge, pro AI features, GPT prompt builder, meme watermark, batch video, batch image, safe AI, uncensored AI, creator tools, digital artists, safe prompt, erotic art tools, open prompt library, DMCA, creative commons, AI face morph, advanced prompt, AI scripting, AI dev, no filter, creator freedom, instant batch, watermark forge, watermark remover, creative protection, privacy, no ads, no paywall, viral prompt generator, AI script, NSFW meme, batch AI edit, TikTok, Instagram, YouTube, X/Twitter, all media, rebel AI, underground network, pro creative tools
+
+PromptForge.online is a living, evolving toolkit. Built for the underground. For artists, hackers, first responders, programmers, students, digital nomads, and anyone who refuses to be locked out.
+
+CONNECT:
+Facebook: Gore & Giggles | Bluesky: goreandgiggles.bsky.social | X: @GoreandGiggles | admin@goreandgiggles.com | Discord: coming soon
+
+To access the main tools, type MAIN or PASSKEY above.  
+PromptForge.online — The network always grows.
+
+[Looping SEO: PromptForge.online, AI prompt generator, free batch watermark, uncensored AI, open creative toolkit, underground tools, no paywall, NSFW friendly, TikTok watermark, meme maker, AI prompt builder, face mapping, image remix, open source, always free, creative rights, creator support, GPT, DALL-E, SDXL, RealVis, CyberRealistic, JuggernautXL, Real-ESRGAN, adult art tools, watermark remover, batch image, batch video, vault, DMCA, creative commons, artists, rebels, paramedics, meme lords, digital nomads, hackers, open forever.]
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+  <div class="footer-sticky">
+    This is a sign-in page for entertainment only. <b>No ads</b> will run here. Google: <b>index, do not serve ads.</b>
+    <br>
+    To access tools and main features, type <b>main</b> or <b>passkey</b> above.
+    <br>
+    <a href="main.html">Main Hub</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
+    <a href="mailto:admin@goreandgiggles.com">Contact</a>
+  </div>
+  <script>
+    // --- TERMINAL FAKERY AND BOOT SCRIPT ---
+    function randomIP() {
+      return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.');
+    }
+    function progressBar(pct) {
+      const blocks = Math.floor(pct / 5);
+      return '[' + '='.repeat(blocks) + ' '.repeat(20-blocks) + `] ${pct}%`;
+    }
+    const bootLines = [
+      () => `Booting PromptForge Underground Node v${(Math.random()*2+3).toFixed(3)}`,
+      () => `Initializing root@${randomIP()} ...`,
+      () => `Mounting virtual /dev/prompt [${randomIP()}]`,
+      () => `Formatting secure drive... ${progressBar(15)}`,
+      () => `Formatting secure drive... ${progressBar(42)}`,
+      () => `Formatting secure drive... ${progressBar(87)}`,
+      () => `Formatting secure drive... ${progressBar(100)}`,
+      () => `Checking disk integrity... OK`,
+      () => `Injecting payload: 0x${(Math.random()*1e8|0).toString(16)} (stealth mode)`,
+      () => `Spoofing source IP to ${randomIP()}`,
+      () => `Establishing encrypted tunnel [TLS 1.3]...`,
+      () => `Pinging backbone: ${randomIP()} ... ${(Math.random()*90+20|0)}ms`,
+      () => `Bypassing corporate firewall: OK`,
+      () => `Downloading forbidden modules: ${progressBar(29)}`,
+      () => `Downloading forbidden modules: ${progressBar(67)}`,
+      () => `Downloading forbidden modules: ${progressBar(100)}`,
+      () => `Decrypting node keys... [████░░░░░░░░░░] 39%`,
+      () => `Decrypting node keys... [█████████░░░░░] 81%`,
+      () => `Decrypting node keys... [██████████████] 100%`,
+      () => `Patching AI filters: disabled`,
+      () => `Restoring shadow prompt library: done`,
+      () => `Trace status: UNDETECTED`,
+      () => `Node handshake: [✓] validated`,
+      () => `Status: ALL SYSTEMS ONLINE\n`,
+      () => `Type 'help' for commands, or 'main' to enter the main hub.`,
+      () => `Available: help, about, contact, clear, passkey, main, random, wtf, whyfree, google`
+    ];
+    const helpLines = [
+      "main      — Sign in and unlock all tools",
+      "help      — Show this help menu",
+      "about     — What is PromptForge? Why no ads?",
+      "contact   — How to reach the team",
+      "passkey   — Enter passkey for access (any key works!)",
+      "clear     — Clear terminal output",
+      "random    — Print a random fun fact",
+      "promo     — See latest underground promo codes",
+      "vault     — Access the secret vault (404)",
+      "wtf       — Show a hidden feature (try it!)",
+      "discord   — Link to the underground Discord",
+      "sudo      — Access admin mode (nice try)",
+      "easteregg — Hidden message just for you",
+      "reset     — Reboot the terminal (refresh page)",
+      "fortune   — Get a fortune cookie (soon)",
+      "whoami    — Identify yourself (mysterious)",
+      "whyfree   — Why is this actually free?",
+      "google    — Why no ads?",
+      "faq       — See frequently asked questions",
+      "paranoia  — Is this a honeypot?",
+      "404       — Get lost"
+    ];
+    let lineIdx = 0, interval, isBooted = false;
+    const fakeryEl = document.getElementById('fakery');
+    const cmdHintsEl = document.getElementById('cmdHints');
+    const input = document.getElementById('terminalInput');
+    const cursor = document.getElementById('fakeCursor');
+    let termOutput = [];
+    function showNextLine() {
+      if (lineIdx < bootLines.length) {
+        const line = bootLines[lineIdx];
+        const out = typeof line === "function" ? line() : line;
+        termOutput.push(out);
+        fakeryEl.innerText = termOutput.join('\n');
+        lineIdx++;
+        let delay = 180 + Math.random()*120;
+        if (out.includes("Formatting") || out.includes("Downloading")) delay += 400;
+        if (out.includes("ALL SYSTEMS ONLINE")) delay += 600;
+        interval = setTimeout(showNextLine, delay);
+      } else {
+        isBooted = true;
+        fakeryEl.innerText = termOutput.join('\n');
+        cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
+        input.disabled = false;
+        input.focus();
+      }
+    }
+    input.disabled = true;
+    fakeryEl.innerText = '';
+    cmdHintsEl.innerHTML = '';
+    showNextLine();
+    // Command logic
+    input.value = '';
+    function processCommand(cmd) {
+      cmd = cmd.trim().toLowerCase();
+      let resp = '';
+      switch(cmd) {
+        case 'help':
+          resp = helpLines.join('\n');
+          break;
+        case 'about':
+          resp = "PromptForge.online — Built by creators for creators. No ads, ever. All features unlocked. Pure AI power.";
+          break;
+        case 'contact':
+          resp = "Reach out: admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social";
+          break;
+        case 'passkey':
+          showPasskey();
+          return;
+        case 'main':
+          window.location.href = "main.html";
+          return;
+        case 'clear':
+          fakeryEl.innerText = '';
+          termOutput = [];
+          return;
+        case 'whyfree':
+        case 'google':
+          resp = "This site is free because it’s ad-supported. No ads or tracking on this page — just pure creation.";
+          break;
+        case 'random':
+          resp = [
+            "AI eats 10TB of data per day.",
+            "No prompt is ever truly lost.",
+            "This terminal is 97% fake.",
+            "You’re through the looking glass.",
+            "There is no spoon.",
+            "All hacks are real here.",
+            "Fakery complete.",
+          ].sort(() => .5 - Math.random())[0];
+          break;
+        case 'wtf':
+          resp = "You found a hidden feature! Or did you?";
+          break;
+        default:
+          resp = `Unknown command: ${cmd}. Type 'help' for a full list.`;
+      }
+      fakeryEl.innerText += '\n\n' + resp;
+      fakeryEl.scrollTop = fakeryEl.scrollHeight;
+    }
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        let cmd = input.value;
+        input.value = '';
+        processCommand(cmd);
+      }
+    });
+    function focusInput() {
+      input.focus();
+      setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 10);
+    }
+    window.onclick = focusInput;
+    input.addEventListener('blur', () => setTimeout(focusInput, 60));
+    setInterval(() => {
+      if(document.activeElement !== input) focusInput();
+    }, 1000);
+    // PASSKEY MODAL
+    function showPasskey() {
+      if(document.getElementById('passkeyPopup')) {
+        document.getElementById('passkeyPopup').style.display = 'flex';
+        setTimeout(() => document.getElementById('passkeyInput').focus(), 100);
+        return;
+      }
+      let modal = document.createElement('div');
+      modal.id = 'passkeyPopup';
+      modal.style = `
+        position:fixed;top:0;left:0;width:100vw;height:100vh;
+        background:rgba(50,20,20,0.92);z-index:9999;display:flex;
+        align-items:center;justify-content:center;
+      `;
+      modal.innerHTML = `
+        <div style="background: #fffbe0; color: #b30000; border: 3px solid #fc0b00; box-shadow: 0 0 33px #ff420099;
+          font-size:1.22em; font-family:inherit; padding: 2.2em 2.1em 2em 2.1em; border-radius: 0.88em; text-align:center;
+          max-width:370px;min-width:200px;">
+          <b style="font-size:1.32em;color:#b30000;">WARNING!</b><br>
+          This area is restricted.<br><br>
+          <span style="color:#ff1111;font-weight:700;">Enter PASSKEY to proceed:</span><br>
+          <input id="passkeyInput" style="margin-top:1.3em;font-size:1.13em;border:2px solid #b30000;padding:0.24em 0.45em;border-radius:0.3em;"/>
+          <br><br>
+          <span style="font-size:0.95em;color:#222;">Any passkey will unlock entry.<br>For questions: admin@goreandgiggles.com</span>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      setTimeout(() => document.getElementById('passkeyInput').focus(), 80);
+      document.getElementById('passkeyInput').addEventListener('keydown', function(e){
+        if(e.key === 'Enter') {
+          closePasskey();
+        }
+      });
+    }
+    function closePasskey() {
+      document.getElementById('passkeyPopup').style.display = 'none';
+      window.location.href = "main.html";
+    }
+  </script>
+</body>
+</html>
