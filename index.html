@@ -74,22 +74,23 @@
       flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
       background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden;
     }
-    .starwars-scroll {
-      width: 96%; max-width: 880px; opacity: 0.52;
-      font-family: inherit; color: #ffee88; font-size: 1.22em; font-weight: 700;
-      text-align: center; text-shadow: 0 0 8px #ffe, 0 0 2px #880;
-      white-space: pre-line; line-height: 1.5;
-      position: absolute; left: 2%; top: 0; z-index: 7;
-      animation: starwars-scroll 75s linear infinite;
-      pointer-events: none; user-select: text;
-      filter: drop-shadow(0 2px 14px #000a);
-      /* fade out at top: */
+    .starwars-scroll-wrap {
+      width: 100%; height: 100vh; position: absolute; left: 0; top: 0; pointer-events: none; z-index: 12;
+      display: flex; align-items: flex-start; justify-content: center;
+      /* vertical fade gradient at top for the credits effect */
       -webkit-mask-image: linear-gradient(to top, #000 90%, transparent 100%);
       mask-image: linear-gradient(to top, #000 90%, transparent 100%);
+      background: transparent;
+      /* force preloading of text */
     }
-    @keyframes starwars-scroll {
-      0% { transform: translateY(100vh);}
-      100% { transform: translateY(-140vh);}
+    .starwars-scroll {
+      width: 94%; max-width: 880px; opacity: 0.53;
+      font-family: inherit; color: #ffee88; font-size: 1.23em; font-weight: 700;
+      text-align: center; text-shadow: 0 0 8px #ffe, 0 0 2px #880;
+      white-space: pre-line; line-height: 1.5;
+      user-select: text; pointer-events: none;
+      /* CSS animation below */
+      will-change: transform;
     }
     .globe-bg-video {
       width: 100%; height: 100vh; object-fit: cover; background: transparent; z-index: 3;
@@ -205,16 +206,8 @@
     </div>
     <!-- Globe + scrolling SEO -->
     <div class="right">
-      <div class="starwars-scroll" id="starwarsScroll">
-PromptForge.online — the underground’s only uncensored, free, and pro-level AI toolkit. Batch watermark, meme-gen, NSFW prompt engine, face mapping, viral remix, DMCA safe, open source, and more.
-
-SEO: ai prompt generator, watermark, meme builder, face swap, TikTok, RealVis, CyberRealistic, creative commons, meme batch, NSFW, SFW, rebel prompt, GPT-4, underground, all features unlocked, PromptForge, Gore & Giggles, creator power, free forever, copyright, digital art, meme toolkit, no filter, no ads, TikTok watermark, batch image, viral meme, instant access.
-
-Built by rebels, medics, meme lords, and creators for a new generation. No ads. No cookies. No tracking. All features, always free. This is the underground.
-
-Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt system the net has never seen… mostly because we hid it. Want in? Go underground.
-
-[SEO LOOP] PromptForge, AI prompt, meme batch, pro dev tools, NSFW, watermark, meme gen, digital artist, face morph, open source AI, DMCA, SFW, creative rights, underground, ad-free, instant access.
+      <div class="starwars-scroll-wrap">
+        <div class="starwars-scroll" id="starwarsScroll"></div>
       </div>
       <video class="globe-bg-video" autoplay muted loop playsinline>
         <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
@@ -246,88 +239,116 @@ a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b.
     </div>
   </div>
   <script>
-    // Terminal Fakery (30% faster)
-    function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
-    function randomMAC() { return "6f:" + Array(5).fill(0).map(()=>Math.floor(Math.random()*256).toString(16).padStart(2,'0')).join(':'); }
-    function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
-    let percent1 = 0, percent2 = 0, percent3 = 0;
-    let progressIntervals = [];
-    function progressBar(idx, pct) {
-      let bar = `[${"=".repeat(Math.floor(pct/5))}${" ".repeat(20-Math.floor(pct/5))}] ${pct}%`;
-      return `<span class="progress">Process ${idx}: ${bar}</span>`;
+    // Star Wars Scroll — seamless, fade top, always loaded
+    const seoText = `
+PromptForge.online — the underground’s only uncensored, free, and pro-level AI toolkit. Batch watermark, meme-gen, NSFW prompt engine, face mapping, viral remix, DMCA safe, open source, and more.
+SEO: ai prompt generator, watermark, meme builder, face swap, TikTok, RealVis, CyberRealistic, creative commons, meme batch, NSFW, SFW, rebel prompt, GPT-4, underground, all features unlocked, PromptForge, Gore & Giggles, creator power, free forever, copyright, digital art, meme toolkit, no filter, no ads, TikTok watermark, batch image, viral meme, instant access.
+Built by rebels, medics, meme lords, and creators for a new generation. No ads. No cookies. No tracking. All features, always free. This is the underground.
+Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt system the net has never seen… mostly because we hid it. Want in? Go underground.
+[SEO LOOP] PromptForge, AI prompt, meme batch, pro dev tools, NSFW, watermark, meme gen, digital artist, face morph, open source AI, DMCA, SFW, creative rights, underground, ad-free, instant access.
+
+PromptForge.online — the underground’s only uncensored, free, and pro-level AI toolkit. Batch watermark, meme-gen, NSFW prompt engine, face mapping, viral remix, DMCA safe, open source, and more.
+SEO: ai prompt generator, watermark, meme builder, face swap, TikTok, RealVis, CyberRealistic, creative commons, meme batch, NSFW, SFW, rebel prompt, GPT-4, underground, all features unlocked, PromptForge, Gore & Giggles, creator power, free forever, copyright, digital art, meme toolkit, no filter, no ads, TikTok watermark, batch image, viral meme, instant access.
+Built by rebels, medics, meme lords, and creators for a new generation. No ads. No cookies. No tracking. All features, always free. This is the underground.
+Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt system the net has never seen… mostly because we hid it. Want in? Go underground.
+[SEO LOOP] PromptForge, AI prompt, meme batch, pro dev tools, NSFW, watermark, meme gen, digital artist, face morph, open source AI, DMCA, SFW, creative rights, underground, ad-free, instant access.
+`.replace(/^\s+|\s+$/g, '');
+
+    // Render two blocks to make it seamless!
+    const starwars = document.getElementById('starwarsScroll');
+    starwars.innerText = seoText + "\n\n" + seoText;
+
+    // Animate with JS for perfect seamless looping and fade
+    let scrollPos = 0;
+    const lineHeight = 36; // px, tune if font size changes
+    function doStarwarsScroll() {
+      const wrap = document.querySelector('.starwars-scroll-wrap');
+      let wrapH = wrap.offsetHeight || 900;
+      let textH = starwars.scrollHeight;
+      // tune scroll speed: lower = slower
+      scrollPos += 0.45;
+      if (scrollPos > textH/2) scrollPos = 0;
+      starwars.style.transform = `translateY(${-scrollPos}px)`;
+      requestAnimationFrame(doStarwarsScroll);
     }
+    doStarwarsScroll();
+
+    // Terminal Fakery (real feeling, no stuck lines, slower)
+    function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
+    function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
     const bootLines = [
-      () => `<span class="sys">[BOOT]</span> Initializing <b>PromptForge</b>: underground AI suite`,
-      () => `<span class="cmd">sudo -S systemctl start j1nx-ai</span>`,
-      () => `<span class="info">Authenticating as <span class="dir">root@${randomIP()}</span> ...</span>`,
-      () => `<span class="info">Establishing backchannel with GoreAndGiggles core server...</span>`,
-      () => `<span class="info">Spoofing MAC address: ${randomMAC()}</span>`,
-      () => `<span class="info">DNS spoof: promptforge.online &rarr; 127.0.0.1</span>`,
-      () => `<span class="info">Cracking system vault...</span>`,
-      () => `<span class="sys">[OK]</span> Vault unlocked.`,
-      () => `<span class="cmd">wget https://promptforge.online/pool/j1nx-ai.deb</span>`,
-      () => `<span class="cmd">dpkg -i j1nx-ai.deb</span>`,
-      () => progressBar(1, percent1),
-      () => `<span class="info">Unpacking J1NX core engine...</span>`,
-      () => progressBar(2, percent2),
+      () => `<span class="sys">[BOOT]</span> Launching <b>PromptForge Underground</b> (v4.22)`,
+      () => `<span class="cmd">sudo apt-get insta11 promptforge-core</span>`,
+      () => `<span class="info">Authenticating as root@${randomIP()} ...</span>`,
+      () => `<span class="warn">WARNING: Unstable kernel detected (patched)</span>`,
+      () => `<span class="cmd">mount /dev/sdz0 /mnt/ai_vault -o encrypted</span>`,
+      () => `<span class="err">Error: /dev/sdz0 not found, falling back...</span>`,
+      () => `<span class="cmd">mount /dev/sda1 /mnt/ai_vault -o encrypted</span>`,
+      () => `<span class="info">Vault mounted at /mnt/ai_vault</span>`,
+      () => `<span class="cmd">wget https://promptforge.online/pool/j1nx-ai_b3ta.deb</span>`,
+      () => `<span class="cmd">dpkg -i j1nx-ai_b3ta.deb</span>`,
+      () => `<span class="progress" id="progress1">Progress [=               ] 3%</span>`,
+      () => `<span class="info">Unpacking j1nx-core...</span>`,
+      () => `<span class="progress" id="progress2">Progress [====           ] 18%</span>`,
       () => `<span class="info">Injecting custom payload: <span class="sudo">${hexPayload()}</span></span>`,
-      () => `<span class="info">Linking meme-generator batch…</span>`,
-      () => progressBar(3, percent3),
+      () => `<span class="info">Linking meme-generator batch...</span>`,
+      () => `<span class="progress" id="progress3">Progress [============   ] 67%</span>`,
       () => `<span class="info">Bypassing AI filter protocols...</span>`,
-      () => `<span class="warn">UNFILTERED MODE ENABLED! Trace: cloaked</span>`,
-      () => `<span class="sys">Status: <span style="color:#ffec4b;">ALL SYSTEMS GREEN</span></span>`,
+      () => `<span class="warn">[WARN] Unfiltered mode enabled. Trace: masked.</span>`,
+      () => `<span class="sys">System Ready: <span style="color:#ffec4b;">ALL SYSTEMS GREEN</span></span>`,
       () => `<span class="info">Type '<b>main</b>' to unlock PromptForge, or '<b>help</b>' for commands.</span>`,
       () => `<span class="info">Available: help, about, contact, clear, passkey, main</span>`
     ];
-    function animateProgress(varName, end, speed) {
-      let i = setInterval(() => {
-        window[varName]++;
-        if(window[varName] > end) {
-          window[varName] = end;
-          clearInterval(i);
+    let progressSteps = [3,18,67,100];
+    let progressBars = [0,0,0]; // percent for each bar
+    function animateProgressBar(idx, elId, from, to, speed, cb) {
+      let curr = from;
+      function tick() {
+        if (curr < to) {
+          curr += 1;
+          progressBars[idx] = curr;
+          const barLen = Math.floor(curr/5);
+          const spaces = 16 - barLen;
+          let html = `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${curr}%`;
+          let el = document.getElementById(elId);
+          if (el) el.innerHTML = html;
+          setTimeout(tick, speed);
+        } else {
+          progressBars[idx] = to;
+          if(cb) cb();
         }
-        updateFakery();
-      }, speed);
-      progressIntervals.push(i);
+      }
+      tick();
     }
-    let lineIdx = 0, interval, isBooted = false;
+    let lineIdx = 0, isBooted = false;
     const fakeryEl = document.getElementById('fakery');
     const cmdHintsEl = document.getElementById('cmdHints');
     const input = document.getElementById('terminalInput');
-    function updateFakery() {
-      let out = [];
-      for(let i=0; i<bootLines.length; ++i) {
-        if(i === 10)      out.push(progressBar(1, percent1));
-        else if(i === 12) out.push(progressBar(2, percent2));
-        else if(i === 15) out.push(progressBar(3, percent3));
-        else if(i<lineIdx) out.push(typeof bootLines[i]==="function"?bootLines[i]():bootLines[i]);
-      }
-      if (isBooted) {
-        if (percent1 < 100) out.push(progressBar(1, percent1));
-        if (percent2 < 100) out.push(progressBar(2, percent2));
-        if (percent3 < 100) out.push(progressBar(3, percent3));
-        if (percent1 < 100 || percent2 < 100 || percent3 < 100)
-          out.push('<span class="info">Continuing to optimize system…</span>');
-      }
-      fakeryEl.innerHTML = out.join('<br>');
-      fakeryEl.scrollTop = fakeryEl.scrollHeight;
-    }
     function showNextLine() {
       if (lineIdx < bootLines.length) {
-        if(lineIdx===10) animateProgress('percent1', 100, 112);
-        if(lineIdx===12) animateProgress('percent2', 100, 137);
-        if(lineIdx===15) animateProgress('percent3', 100, 122);
-        updateFakery();
+        let out = [];
+        for(let i=0; i<lineIdx; ++i) out.push(typeof bootLines[i]==="function"?bootLines[i]():bootLines[i]);
+        // Only show one progress bar at a time
+        if(lineIdx===10) setTimeout(()=>animateProgressBar(0,"progress1",3,38,58,()=>{}),280);
+        if(lineIdx===12) setTimeout(()=>animateProgressBar(1,"progress2",18,82,49,()=>{}),210);
+        if(lineIdx===14) setTimeout(()=>animateProgressBar(2,"progress3",67,100,44,()=>{}),180);
+        out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
+        fakeryEl.innerHTML = out.join('<br>');
+        fakeryEl.scrollTop = fakeryEl.scrollHeight;
         lineIdx++;
-        let delay = 810 + Math.random()*880;
-        if (lineIdx===10||lineIdx===12||lineIdx===15) delay = 420;
-        interval = setTimeout(showNextLine, delay);
+        let delay = 1200 + Math.random()*1200;
+        if([10,12,14].includes(lineIdx)) delay = 700;
+        setTimeout(showNextLine, delay);
       } else {
         isBooted = true;
-        updateFakery();
-        cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
-        input.disabled = false;
-        input.focus();
+        setTimeout(()=>{
+          // After all lines, clean up progress bars for "System Ready"
+          fakeryEl.innerHTML = bootLines.map(f=>(typeof f==="function"?f():f)).join('<br>');
+          fakeryEl.scrollTop = fakeryEl.scrollHeight;
+          cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
+          input.disabled = false;
+          input.focus();
+        },1500);
       }
     }
     input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
