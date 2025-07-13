@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>PromptForge | Terminal Entry</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PromptForge.online: The ultimate free AI prompt generator, batch watermark, face mapping, NSFW/SFW, dev toolkit for creators, hackers, meme lords, artists, and rebels. No paywalls, no ads on sign-in, pure underground.">
   <style>
     html, body {
       height: 100%;
@@ -24,7 +25,7 @@
       box-sizing: border-box;
     }
     .left {
-      width: 48vw; min-width: 230px;
+      width: 46vw; min-width: 230px;
       background: #060907;
       display: flex; flex-direction: column;
       justify-content: flex-start;
@@ -42,23 +43,31 @@
       box-sizing: border-box;
     }
     .fakery {
-      color: #34fd47;
-      font-size: 1.1rem;
+      font-size: 1.06rem;
       white-space: pre-line;
-      text-shadow: 0 0 3px #00ff3c70;
-      min-height: 10em;
-      max-height: 36vh;
+      min-height: 12em;
+      max-height: 40vh;
       overflow-y: auto;
       font-family: inherit;
-      margin-bottom: 0.2em;
+      margin-bottom: 0.24em;
       font-weight: 600;
       letter-spacing: 0.01em;
       user-select: text;
+      color: #32ff32;
+      text-shadow: 0 0 2px #0f0, 0 0 6px #0a0;
     }
+    .fakery .sys { color: #32ff32; }
+    .fakery .cmd { color: #c3fff7; }
+    .fakery .info { color: #ffe662; }
+    .fakery .warn { color: #ffec4b; background: #5b3d0a33; border-radius: 0.13em; }
+    .fakery .err { color: #ff5252; }
+    .fakery .dir { color: #4adfff; }
+    .fakery .progress { color: #bdbdbd; }
+    .fakery .sudo { color: #ff94ef; }
     .cmd-hints {
       color: #21c5c8;
       font-size: 0.98em;
-      margin-bottom: 0.2em;
+      margin-bottom: 0.15em;
       margin-top: 0;
       font-style: italic;
       text-shadow: 0 0 1px #045, 0 0 2px #000;
@@ -125,7 +134,7 @@
       overflow: hidden;
     }
     .globe-bg-video {
-      width: 100%; height: calc(100vh - 8em);
+      width: 100%; height: 100vh;
       object-fit: cover;
       background: transparent;
       z-index: 2;
@@ -137,36 +146,36 @@
     }
     .starwars-credits {
       position: absolute;
-      left: 0; bottom: 2.8em;
+      left: 0; bottom: 0;
       width: 100%;
-      height: 8em;
-      z-index: 3;
+      height: 100vh;
+      z-index: 4;
+      pointer-events: none;
+      overflow: hidden;
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      overflow: hidden;
       background: transparent;
-      pointer-events: none;
     }
-    .starwars-text {
+    .starwars-scroll {
+      width: 92%;
+      max-width: 700px;
+      opacity: 0.60;
       font-family: inherit;
       color: #ffee88;
-      font-size: 1.09em;
-      opacity: 0.52;
-      text-shadow: 0 0 7px #ffc, 0 0 2px #222;
+      font-size: 1.11em;
       font-weight: 600;
-      width: 97%;
-      max-width: 700px;
       text-align: center;
+      text-shadow: 0 0 8px #ffe, 0 0 2px #880;
       white-space: pre-line;
-      animation: starwars-scroll 78s linear infinite;
-      line-height: 1.46;
+      line-height: 1.42;
+      animation: starwars-column-scroll 120s linear infinite;
       pointer-events: none;
       user-select: text;
     }
-    @keyframes starwars-scroll {
-      from { transform: translateY(115%);}
-      to   { transform: translateY(-120%);}
+    @keyframes starwars-column-scroll {
+      from { transform: translateY(95vh);}
+      to   { transform: translateY(-150vh);}
     }
     .footer-sticky {
       width: 100vw;
@@ -189,6 +198,69 @@
       text-decoration: underline;
       font-weight: 700;
       margin: 0 0.5em;
+    }
+    /* Warning Modal */
+    #passkeyPopup {
+      position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(50,20,20,0.92);
+      z-index:9999;display:flex;
+      align-items:center;justify-content:center;
+      pointer-events:auto;
+    }
+    .modal-warning {
+      background: #161616;
+      color: #ffe800;
+      border: 6px solid #ffd600;
+      box-shadow: 0 0 33px #f7d60088, 0 0 0 12px #222 inset;
+      font-size:1.24em; font-family:inherit;
+      padding: 2.2em 2.2em 2em 2.2em;
+      border-radius: 1.3em;
+      text-align:center;
+      min-width:280px; max-width:430px;
+      position:relative;
+      outline: 8px solid #000;
+      letter-spacing: 0.04em;
+      background-image:
+        repeating-linear-gradient(135deg, #ffe800 0 8px, #161616 8px 16px),
+        repeating-linear-gradient(-135deg, #ffe800 0 8px, #161616 8px 16px);
+      background-size: 80px 80px;
+      background-blend-mode: multiply;
+    }
+    .modal-warning .modal-icon {
+      display: block;
+      margin: 0 auto 0.7em auto;
+      width: 3.5em;
+      height: 3.5em;
+    }
+    .modal-warning strong {
+      color: #d90e00; font-size:1.12em;
+      display: block; margin-bottom: 0.3em;
+      text-shadow: 0 2px 8px #000a;
+    }
+    .modal-warning .modal-text {
+      color: #ffec4b;
+      font-size: 1.06em;
+      font-weight: 700;
+      margin-bottom: 0.5em;
+      text-shadow: 0 0 2px #0009;
+    }
+    .modal-warning input {
+      margin-top:1.1em;font-size:1.13em;
+      border:2.2px solid #d90e00;
+      padding:0.31em 0.62em;
+      border-radius:0.37em;
+      background: #ffe800;
+      color: #190b00;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px #ffec4b99;
+      outline:none;
+      width: 80%;
+    }
+    .modal-warning .modal-note {
+      font-size:0.96em;color:#ffd600;
+      margin-top: 1em;
+      display:block;
     }
     @media (max-width: 900px) {
       .container {flex-direction: column;}
@@ -232,36 +304,26 @@
         <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4">
       </video>
       <div class="starwars-credits">
-        <div class="starwars-text" id="starwarsText">
-PromptForge.online — The Ultimate Underground AI Toolkit for Creators, Artists, and Rebels.
+        <div class="starwars-scroll" id="starwarsScroll">
+<b>PromptForge.online — Uncensored AI Tools For Rebels</b>
 
-Welcome to the world's only free, pro-level AI prompt generator and watermarking suite. Batch watermark TikToks, Reels, YouTube, Instagram, X/Twitter, and any media. Map faces, build killer prompts, unlock advanced dev tools, and never hit a paywall. PromptForge unlocks true creative power for everyone: artists, paramedics, teachers, meme lords, TikTokers, marketers, programmers, adult creators, and anyone who refuses to be censored.
+Welcome to PromptForge.online, the ultimate free AI prompt generator, batch watermark toolkit, face mapping suite, and underground creative platform for creators, hackers, artists, and anyone refusing to be filtered or censored. 
 
-FEATURES:
-- Batch watermark generator
-- AI prompt builder and enhancer
-- Face mapping, age/genre/style morph
-- Dev vault, Discord integration, instant remix tools
-- NSFW and SFW art creation — no filter, no ban, ever
-- Zero registration, pure privacy, instant access
-- Fully open, always free, ad-supported (never on sign-in or vault pages)
-- DMCA protection, creator rights, open source ethics
+<b>Features:</b> Batch watermarking, NSFW/SFW prompt generator, face/age/style mapping, dev vault, Discord tools, meme batch, AI writing, real-time face fusion, TikTok watermark, instant remix, viral content builder, creative rights support, DMCA, open source ethics, zero paywall.
 
-WHY FREE?  
-PromptForge was built by paramedics and creators suffering PTSD who wanted real, private, *uncensored* AI tools. Funded by voluntary ad support and donations, not corporate bullshit or endless upsells. No tracking, no cookies, no paywalls, no ban hammer, ever.
+<b>Why Free?</b> Built by creators, paramedics, meme lords, and real artists. No paywalls, no cookies, no hidden fees — funded only by ad revenue and love. Your privacy and freedom come first.
 
-SEO MAGIC:
-ai prompt generator, free ai watermark, batch watermark tool, NSFW prompt builder, tiktok watermark, face swap, prompt engineer, open source AI, image generator, underground art, creative commons, free AI toolkit, watermark forge, pro AI features, GPT prompt builder, meme watermark, batch video, batch image, safe AI, uncensored AI, creator tools, digital artists, safe prompt, erotic art tools, open prompt library, DMCA, creative commons, AI face morph, advanced prompt, AI scripting, AI dev, no filter, creator freedom, instant batch, watermark forge, watermark remover, creative protection, privacy, no ads, no paywall, viral prompt generator, AI script, NSFW meme, batch AI edit, TikTok, Instagram, YouTube, X/Twitter, all media, rebel AI, underground network, pro creative tools
+<b>SEO:</b> ai prompt generator, free ai watermark, batch watermark tool, NSFW prompt builder, tiktok watermark, face swap, prompt engineer, open source AI, image generator, underground art, creative commons, GPT, DALL-E, SDXL, RealVis, CyberRealistic, JuggernautXL, watermark forge, meme batch, creator toolkit, privacy, DMCA protection, creative rights, digital artists, no paywall, free forever, viral prompt generator, pro creative tools, AI scripting, AI dev, instant batch, adult art tools, batch image/video, meme maker, hacker safe, underground network, safe prompt, uncensored AI.
 
-PromptForge.online is a living, evolving toolkit. Built for the underground. For artists, hackers, first responders, programmers, students, digital nomads, and anyone who refuses to be locked out.
+<b>About:</b> PromptForge.online exists to empower creators who need tools nobody else will offer — for TikTokers, meme lords, teachers, devs, artists, NSFW creators, and anyone building the next viral thing.
+No paywalls. No bullshit. Unlocked for all.
 
-CONNECT:
-Facebook: Gore & Giggles | Bluesky: goreandgiggles.bsky.social | X: @GoreandGiggles | admin@goreandgiggles.com | Discord: coming soon
+<b>Contact/Social:</b> Bluesky: goreandgiggles.bsky.social | X/Twitter: @GoreandGiggles | Facebook: Gore & Giggles | admin@goreandgiggles.com
 
-To access the main tools, type MAIN or PASSKEY above.  
-PromptForge.online — The network always grows.
+Type <b>main</b> or <b>passkey</b> in the terminal to unlock full access.
+PromptForge.online — the underground network grows.
 
-[Looping SEO: PromptForge.online, AI prompt generator, free batch watermark, uncensored AI, open creative toolkit, underground tools, no paywall, NSFW friendly, TikTok watermark, meme maker, AI prompt builder, face mapping, image remix, open source, always free, creative rights, creator support, GPT, DALL-E, SDXL, RealVis, CyberRealistic, JuggernautXL, Real-ESRGAN, adult art tools, watermark remover, batch image, batch video, vault, DMCA, creative commons, artists, rebels, paramedics, meme lords, digital nomads, hackers, open forever.]
+[SEO LOOP: PromptForge, AI prompt, free AI, batch watermark, pro dev tools, meme toolkit, creative commons, copyright, privacy, TikTok, Instagram, YouTube, X, meme batch, face swap, face morph, open source AI, vault, GPT, DALL-E, SDXL, NSFW, SFW, rebel tools, anti-censorship, viral content, uncensored AI, DMCA, open forever, creative rights, creator power, ad-free, instant access, underground, all features unlocked.]
         </div>
       </div>
     </div>
@@ -278,41 +340,51 @@ PromptForge.online — The network always grows.
     <a href="mailto:admin@goreandgiggles.com">Contact</a>
   </div>
   <script>
-    // --- TERMINAL FAKERY AND BOOT SCRIPT ---
+    // Terminal Boot + Linux/Kali Install Fakery
     function randomIP() {
       return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.');
     }
     function progressBar(pct) {
       const blocks = Math.floor(pct / 5);
-      return '[' + '='.repeat(blocks) + ' '.repeat(20-blocks) + `] ${pct}%`;
+      return `<span class="progress">[${"=".repeat(blocks)}${" ".repeat(20-blocks)}] ${pct}%</span>`;
     }
+    // Mix of real Linux and hacker shit
     const bootLines = [
-      () => `Booting PromptForge Underground Node v${(Math.random()*2+3).toFixed(3)}`,
-      () => `Initializing root@${randomIP()} ...`,
-      () => `Mounting virtual /dev/prompt [${randomIP()}]`,
-      () => `Formatting secure drive... ${progressBar(15)}`,
-      () => `Formatting secure drive... ${progressBar(42)}`,
-      () => `Formatting secure drive... ${progressBar(87)}`,
-      () => `Formatting secure drive... ${progressBar(100)}`,
-      () => `Checking disk integrity... OK`,
-      () => `Injecting payload: 0x${(Math.random()*1e8|0).toString(16)} (stealth mode)`,
-      () => `Spoofing source IP to ${randomIP()}`,
-      () => `Establishing encrypted tunnel [TLS 1.3]...`,
-      () => `Pinging backbone: ${randomIP()} ... ${(Math.random()*90+20|0)}ms`,
-      () => `Bypassing corporate firewall: OK`,
-      () => `Downloading forbidden modules: ${progressBar(29)}`,
-      () => `Downloading forbidden modules: ${progressBar(67)}`,
-      () => `Downloading forbidden modules: ${progressBar(100)}`,
-      () => `Decrypting node keys... [████░░░░░░░░░░] 39%`,
-      () => `Decrypting node keys... [█████████░░░░░] 81%`,
-      () => `Decrypting node keys... [██████████████] 100%`,
-      () => `Patching AI filters: disabled`,
-      () => `Restoring shadow prompt library: done`,
-      () => `Trace status: UNDETECTED`,
-      () => `Node handshake: [✓] validated`,
-      () => `Status: ALL SYSTEMS ONLINE\n`,
-      () => `Type 'help' for commands, or 'main' to enter the main hub.`,
-      () => `Available: help, about, contact, clear, passkey, main, random, wtf, whyfree, google`
+      () => `<span class="sys">[BOOT]</span> Loading PromptForge Underground Node v${(Math.random()*2+3).toFixed(3)}`,
+      () => `<span class="sys">[INFO]</span> Initializing <span class="dir">root@${randomIP()}</span> ...`,
+      () => `<span class="cmd">sudo apt update</span>`,
+      () => `<span class="cmd">sudo apt install promptforge-core</span>`,
+      () => `<span class="sys">[APT]</span> Reading package lists... Done`,
+      () => `<span class="sys">[APT]</span> Building dependency tree`,
+      () => `<span class="sys">[APT]</span> Reading state information... Done`,
+      () => `<span class="info">The following NEW packages will be installed: promptforge-core</span>`,
+      () => `<span class="cmd">Need to get 9,824 kB/9,824 kB of archives</span>`,
+      () => `<span class="cmd">After this operation, 24.8 MB of additional disk space will be used.</span>`,
+      () => `<span class="cmd">Get:1 https://promptforge.online repo/pool/promptforge-core.deb</span>`,
+      () => progressBar(9),
+      () => progressBar(34),
+      () => progressBar(62),
+      () => progressBar(88),
+      () => progressBar(100),
+      () => `<span class="sys">[INSTALL]</span> Selecting previously unselected package promptforge-core.`,
+      () => `<span class="sys">[INSTALL]</span> Preparing to unpack .../promptforge-core.deb ...`,
+      () => `<span class="sys">[INSTALL]</span> Unpacking promptforge-core ...`,
+      () => `<span class="cmd">Setting up promptforge-core (1.4.5) ...</span>`,
+      () => `<span class="sudo">sudo systemctl enable promptforge</span>`,
+      () => `<span class="sudo">sudo systemctl start promptforge</span>`,
+      () => `<span class="sys">[SERVICE]</span> promptforge.service - Underground AI Toolkit`,
+      () => `<span class="sys">[SERVICE]</span> Loaded: loaded (/lib/systemd/system/promptforge.service; enabled)`,
+      () => `<span class="sys">[SERVICE]</span> Active: <span style="color:#5aff42;">active (running)</span>`,
+      () => `<span class="cmd">tail -f /var/log/promptforge/boot.log</span>`,
+      () => `<span class="info">Injecting creative payload: 0x${(Math.random()*1e8|0).toString(16)}</span>`,
+      () => `<span class="info">Spoofing IP: ${randomIP()}</span>`,
+      () => `<span class="info">Mounting encrypted vault ...</span>`,
+      () => `<span class="info">Patching AI filters: <span class="err">disabled</span></span>`,
+      () => `<span class="warn">WARNING: Unfiltered mode enabled. Trace protection: ACTIVE</span>`,
+      () => `<span class="sys">Node handshake: <span style="color:#53fd2a;">[✓] validated</span></span>`,
+      () => `<span class="sys">Status: <span style="color:#ffec4b;">ALL SYSTEMS ONLINE</span></span>`,
+      () => `<span class="info">Type '<b>help</b>' for commands, or '<b>main</b>' to enter the main hub.</span>`,
+      () => `<span class="info">Available: help, about, contact, clear, passkey, main, random, wtf, whyfree, google</span>`
     ];
     const helpLines = [
       "main      — Sign in and unlock all tools",
@@ -348,22 +420,22 @@ PromptForge.online — The network always grows.
         const line = bootLines[lineIdx];
         const out = typeof line === "function" ? line() : line;
         termOutput.push(out);
-        fakeryEl.innerText = termOutput.join('\n');
+        fakeryEl.innerHTML = termOutput.join('<br>');
         lineIdx++;
-        let delay = 180 + Math.random()*120;
-        if (out.includes("Formatting") || out.includes("Downloading")) delay += 400;
+        let delay = 200 + Math.random()*110;
+        if (out.includes("progress")) delay += 320;
         if (out.includes("ALL SYSTEMS ONLINE")) delay += 600;
         interval = setTimeout(showNextLine, delay);
       } else {
         isBooted = true;
-        fakeryEl.innerText = termOutput.join('\n');
+        fakeryEl.innerHTML = termOutput.join('<br>');
         cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
         input.disabled = false;
         input.focus();
       }
     }
     input.disabled = true;
-    fakeryEl.innerText = '';
+    fakeryEl.innerHTML = '';
     cmdHintsEl.innerHTML = '';
     showNextLine();
     // Command logic
@@ -373,13 +445,13 @@ PromptForge.online — The network always grows.
       let resp = '';
       switch(cmd) {
         case 'help':
-          resp = helpLines.join('\n');
+          resp = '<span class="info">' + helpLines.join('<br>') + '</span>';
           break;
         case 'about':
-          resp = "PromptForge.online — Built by creators for creators. No ads, ever. All features unlocked. Pure AI power.";
+          resp = "<span class='info'>PromptForge.online — Built by creators for creators. No ads, ever. All features unlocked. Pure AI power.</span>";
           break;
         case 'contact':
-          resp = "Reach out: admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social";
+          resp = "<span class='info'>Reach out: admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social</span>";
           break;
         case 'passkey':
           showPasskey();
@@ -388,12 +460,12 @@ PromptForge.online — The network always grows.
           window.location.href = "main.html";
           return;
         case 'clear':
-          fakeryEl.innerText = '';
+          fakeryEl.innerHTML = '';
           termOutput = [];
           return;
         case 'whyfree':
         case 'google':
-          resp = "This site is free because it’s ad-supported. No ads or tracking on this page — just pure creation.";
+          resp = "<span class='info'>This site is free because it’s ad-supported. No ads or tracking on this page — just pure creation.</span>";
           break;
         case 'random':
           resp = [
@@ -407,12 +479,12 @@ PromptForge.online — The network always grows.
           ].sort(() => .5 - Math.random())[0];
           break;
         case 'wtf':
-          resp = "You found a hidden feature! Or did you?";
+          resp = "<span class='warn'>You found a hidden feature! Or did you?</span>";
           break;
         default:
-          resp = `Unknown command: ${cmd}. Type 'help' for a full list.`;
+          resp = `<span class='err'>Unknown command: ${cmd}. Type 'help' for a full list.</span>`;
       }
-      fakeryEl.innerText += '\n\n' + resp;
+      fakeryEl.innerHTML += '<br><br>' + resp;
       fakeryEl.scrollTop = fakeryEl.scrollHeight;
     }
     input.addEventListener('keydown', function(e) {
@@ -431,6 +503,7 @@ PromptForge.online — The network always grows.
     setInterval(() => {
       if(document.activeElement !== input) focusInput();
     }, 1000);
+
     // PASSKEY MODAL
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
@@ -440,21 +513,16 @@ PromptForge.online — The network always grows.
       }
       let modal = document.createElement('div');
       modal.id = 'passkeyPopup';
-      modal.style = `
-        position:fixed;top:0;left:0;width:100vw;height:100vh;
-        background:rgba(50,20,20,0.92);z-index:9999;display:flex;
-        align-items:center;justify-content:center;
-      `;
       modal.innerHTML = `
-        <div style="background: #fffbe0; color: #b30000; border: 3px solid #fc0b00; box-shadow: 0 0 33px #ff420099;
-          font-size:1.22em; font-family:inherit; padding: 2.2em 2.1em 2em 2.1em; border-radius: 0.88em; text-align:center;
-          max-width:370px;min-width:200px;">
-          <b style="font-size:1.32em;color:#b30000;">WARNING!</b><br>
-          This area is restricted.<br><br>
-          <span style="color:#ff1111;font-weight:700;">Enter PASSKEY to proceed:</span><br>
-          <input id="passkeyInput" style="margin-top:1.3em;font-size:1.13em;border:2px solid #b30000;padding:0.24em 0.45em;border-radius:0.3em;"/>
-          <br><br>
-          <span style="font-size:0.95em;color:#222;">Any passkey will unlock entry.<br>For questions: admin@goreandgiggles.com</span>
+        <div class="modal-warning">
+          <svg class="modal-icon" viewBox="0 0 90 90">
+            <polygon points="45,10 85,78 5,78" style="fill:#ffe800;stroke:#111;stroke-width:6" />
+            <text x="45" y="65" text-anchor="middle" font-size="46" font-weight="bold" fill="#b30000" font-family="monospace">!</text>
+          </svg>
+          <strong>RESTRICTED ACCESS</strong>
+          <div class="modal-text">Warning: Professional AI Dev Toolkit<br>Entry Restricted to Authorized Users Only</div>
+          <input id="passkeyInput" autocomplete="off" autofocus placeholder="Enter Passkey" />
+          <span class="modal-note">Any passkey will unlock entry.<br>This is a pro-grade, uncensored AI tool. Use at your own risk.</span>
         </div>
       `;
       document.body.appendChild(modal);
