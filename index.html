@@ -305,7 +305,7 @@ PromptForge.online — for creators who refuse to be censored.
         let html = `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${percent}%`;
         let el = document.getElementById(id);
         if (el) el.innerHTML = html;
-        if (percent < 100) setTimeout(tick, 8 + Math.random()*11); // super fast for 35% boost
+        if (percent < 100) setTimeout(tick, 8 + Math.random()*11); // 35% boost
         else { progressBars[idx]=100; if(cb) setTimeout(cb,150); }
       }
       tick();
@@ -323,7 +323,7 @@ PromptForge.online — for creators who refuse to be censored.
           fakeryEl.innerHTML = out.join('<br>');
           fakeryEl.scrollTop = fakeryEl.scrollHeight;
           lineIdx++;
-          let delay = 650 + Math.random()*670; // 35% faster
+          let delay = 650 + Math.random()*670;
           setTimeout(showNextLine, delay);
         } else {
           out.push(typeof bootLines[lineIdx]==="function"?bootLines[lineIdx]():bootLines[lineIdx]);
@@ -441,7 +441,7 @@ PromptForge.online — for creators who refuse to be censored.
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
     setInterval(() => { if(document.activeElement !== input && !document.getElementById('passkeyPopup')) focusInput(); }, 800);
 
-    // PASSKEY MODAL — PRO DEV ACCESS, FULLY FIXED
+    // PASSKEY MODAL — FINAL, WORKS EVERYWHERE
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         let passInput = document.getElementById('passkeyInput');
@@ -472,7 +472,6 @@ PromptForge.online — for creators who refuse to be censored.
       setTimeout(() => { passInput.focus(); passInput.setSelectionRange(passInput.value.length, passInput.value.length); }, 100);
 
       function checkInput() {
-        // Always force numbers only (fixes all device bugs)
         passInput.value = passInput.value.replace(/\D/g, '');
         if(passInput.value.length===6) {
           accessBtn.disabled = false;
@@ -485,23 +484,27 @@ PromptForge.online — for creators who refuse to be censored.
       passInput.addEventListener('input', checkInput);
       passInput.addEventListener('keydown', function(e){
         checkInput();
-        if(e.key === 'Enter' && !accessBtn.disabled) closePasskey();
+        if(e.key === 'Enter' && !accessBtn.disabled) {
+          doClosePasskey();
+        }
       });
       accessBtn.addEventListener('click', function() {
-        if (!accessBtn.disabled) closePasskey();
+        if (!accessBtn.disabled) doClosePasskey();
       });
-      // Stop background focus when modal open
-      document.body.addEventListener('focusin', modalFocusTrap, true);
+
+      // Focus trap
       function modalFocusTrap(e) {
         if(document.getElementById('passkeyPopup') && !modal.contains(e.target)){
           passInput.focus();
         }
       }
-    }
-    function closePasskey() {
-      document.body.removeEventListener('focusin', modalFocusTrap, true);
-      document.getElementById('passkeyPopup').remove();
-      window.location.href = "main.html";
+      document.body.addEventListener('focusin', modalFocusTrap, true);
+
+      function doClosePasskey() {
+        document.body.removeEventListener('focusin', modalFocusTrap, true);
+        document.getElementById('passkeyPopup').remove();
+        window.location.href = "main.html";
+      }
     }
   </script>
 </body>
