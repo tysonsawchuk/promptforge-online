@@ -42,6 +42,7 @@
     .fakery .err { color: #ff5252; }
     .fakery .dir { color: #4adfff; }
     .fakery .progress { color: #e3e3e3; }
+    .fakery .progress.complete { color: #ff4242; font-weight: 900;}
     .fakery .sudo { color: #ff94ef; }
     .cmd-hints {
       color: #21c5c8; font-size: 0.98em; margin-bottom: 0.11em;
@@ -257,17 +258,17 @@ PromptForge.online — for creators who refuse to be censored.
     let scrollPos = 0;
     function doStarwarsScroll() {
       let textH = starwars.scrollHeight;
-      scrollPos += 0.52; // 35% faster
+      scrollPos += 0.52;
       if (scrollPos > textH/2) scrollPos = 0;
       starwars.style.transform = `translateY(${-scrollPos}px)`;
       requestAnimationFrame(doStarwarsScroll);
     }
     doStarwarsScroll();
 
-    // Terminal Fakery — 35% faster, progress always to 100%
+    // Terminal Fakery — 35% faster, progress always to 100%, red and "COMPLETE"
     function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
     function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
-    let progressBars = [0,0,0];
+    let progressStatus = [false,false,false];
     const bootLines = [
       () => `<span class="sys">[BOOT]</span> Launching <b>PromptForge Underground</b> (v4.22)`,
       () => `<span class="cmd">sudo apt-get insta11 promptforge-core</span>`,
@@ -296,17 +297,21 @@ PromptForge.online — for creators who refuse to be censored.
     const cmdHintsEl = document.getElementById('cmdHints');
     const input = document.getElementById('terminalInput');
     function updateProgressBar(idx, id, cb) {
-      let percent = progressBars[idx];
+      let percent = 0;
       function tick() {
         percent++;
-        progressBars[idx] = percent;
         let barLen = Math.floor(percent/5);
         let spaces = 20 - barLen;
-        let html = `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${percent}%`;
+        let html = percent<100 ?
+          `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${percent}%` :
+          `<span class="complete">Progress [${'='.repeat(20)}] 100% — COMPLETE</span>`;
         let el = document.getElementById(id);
         if (el) el.innerHTML = html;
-        if (percent < 100) setTimeout(tick, 8 + Math.random()*11); // 35% boost
-        else { progressBars[idx]=100; if(cb) setTimeout(cb,150); }
+        if (percent < 100) setTimeout(tick, 8 + Math.random()*11);
+        else {
+          progressStatus[idx]=true;
+          if(cb) setTimeout(cb,450); // stays for 450ms after complete
+        }
       }
       tick();
     }
@@ -441,7 +446,7 @@ PromptForge.online — for creators who refuse to be censored.
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
     setInterval(() => { if(document.activeElement !== input && !document.getElementById('passkeyPopup')) focusInput(); }, 800);
 
-    // PASSKEY MODAL — FINAL, WORKS EVERYWHERE
+    // PASSKEY MODAL — FINAL, WORKS EVERYWHERE, BUG-FREE
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         let passInput = document.getElementById('passkeyInput');
@@ -482,6 +487,21 @@ PromptForge.online — for creators who refuse to be censored.
         }
       }
       passInput.addEventListener('input', checkInput);
+
+      // Trap focus in modal
+      function modalFocusTrap(e) {
+        if(document.getElementById('passkeyPopup') && !modal.contains(e.target)){
+          passInput.focus();
+        }
+      }
+      document.body.addEventListener('focusin', modalFocusTrap, true);
+
+      // Single closure handles both Enter key and button click
+      function doClosePasskey() {
+        document.body.removeEventListener('focusin', modalFocusTrap, true);
+        document.getElementById('passkeyPopup').remove();
+        window.location.href = "main.html";
+      }
       passInput.addEventListener('keydown', function(e){
         checkInput();
         if(e.key === 'Enter' && !accessBtn.disabled) {
@@ -491,20 +511,6 @@ PromptForge.online — for creators who refuse to be censored.
       accessBtn.addEventListener('click', function() {
         if (!accessBtn.disabled) doClosePasskey();
       });
-
-      // Focus trap
-      function modalFocusTrap(e) {
-        if(document.getElementById('passkeyPopup') && !modal.contains(e.target)){
-          passInput.focus();
-        }
-      }
-      document.body.addEventListener('focusin', modalFocusTrap, true);
-
-      function doClosePasskey() {
-        document.body.removeEventListener('focusin', modalFocusTrap, true);
-        document.getElementById('passkeyPopup').remove();
-        window.location.href = "main.html";
-      }
     }
   </script>
 </body>
