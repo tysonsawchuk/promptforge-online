@@ -69,37 +69,63 @@
       display: inline-block; user-select: none;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
-    /* Globe & Star Wars Scroll */
+    /* Star Wars SEO Scroll over globe */
     .right {
       flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
       background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden;
+    }
+    .starwars-scroll {
+      width: 96%; max-width: 880px; opacity: 0.52;
+      font-family: inherit; color: #ffee88; font-size: 1.22em; font-weight: 700;
+      text-align: center; text-shadow: 0 0 8px #ffe, 0 0 2px #880;
+      white-space: pre-line; line-height: 1.5;
+      position: absolute; left: 2%; top: 0; z-index: 7;
+      animation: starwars-scroll 75s linear infinite;
+      pointer-events: none; user-select: text;
+      filter: drop-shadow(0 2px 14px #000a);
+      /* fade out at top: */
+      -webkit-mask-image: linear-gradient(to top, #000 90%, transparent 100%);
+      mask-image: linear-gradient(to top, #000 90%, transparent 100%);
+    }
+    @keyframes starwars-scroll {
+      0% { transform: translateY(100vh);}
+      100% { transform: translateY(-140vh);}
     }
     .globe-bg-video {
       width: 100%; height: 100vh; object-fit: cover; background: transparent; z-index: 3;
       position: absolute; top: 0; left: 0; border: none; filter: none; pointer-events: none;
       opacity: 0.88;
     }
-    .starwars-scroll {
-      width: 96%; max-width: 880px; opacity: 0.52;
-      font-family: inherit; color: #ffee88; font-size: 1.27em; font-weight: 700;
-      text-align: center; text-shadow: 0 0 8px #ffe, 0 0 2px #880;
-      white-space: pre-line; line-height: 1.5;
-      position: absolute; left: 2%; top: 0; z-index: 7;
-      animation: starwars-column-scroll 110s linear infinite;
-      pointer-events: none; user-select: text;
-      filter: drop-shadow(0 2px 14px #000a);
-    }
-    @keyframes starwars-column-scroll {
-      from { transform: translateY(100vh);}
-      to   { transform: translateY(-170vh);}
-    }
     .footer-sticky {
-      width: 100vw; background: #182523e7; color: #aeeef7; font-size: 1.08em; text-align: center;
-      position: fixed; left: 0; bottom: 0; padding: 0.45em 0 0.19em 0;
+      width: 100vw; background: #182523e7; color: #21c5c8; font-size: 1em; text-align: center;
+      position: fixed; left: 0; bottom: 0; padding:0 0 0.1em 0;
       border-top: 2px solid #fa4242; z-index: 1001; font-family: inherit;
-      box-shadow: 0 -2px 14px #111b; line-height: 1.12; user-select: none;
+      box-shadow: 0 -2px 14px #111b; line-height: 1.08; user-select: text;
+      letter-spacing: -0.01em;
     }
-    .footer-sticky a { color: #11ffc9; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
+    .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
+    .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
+    @media (max-width: 900px) {
+      .container {flex-direction: column;}
+      .left, .right {width: 100vw; max-width: 100vw; min-width: 0;}
+      .globe-bg-video {height: 35vh;}
+      .starwars-scroll {font-size:1.01em;}
+      .fakery {max-width: 97vw;}
+      #terminalInput {width: 67vw;}
+    }
+    @media (max-width: 700px) {
+      .terminal-inner {padding: 1vw 0 0 1vw;}
+      .globe-bg-video {height: 22vh;}
+      .starwars-scroll {font-size:0.92em;}
+    }
+    @media (min-device-width: 1848px) and (max-device-width: 2960px) {
+      .container {flex-direction: row;}
+      .left { width: 46vw; }
+      .right { width: 54vw; }
+      .globe-bg-video { height: calc(100vh - 7.3em);}
+      .starwars-scroll { font-size: 1.23em;}
+    }
+    /* Passkey Modal and 3D Self-Destruct Button */
     #passkeyPopup {
       position:fixed;top:0;left:0;width:100vw;height:100vh;
       background:rgba(50,20,20,0.93);z-index:9999;display:flex;
@@ -133,29 +159,33 @@
       padding:0.31em 0.62em; border-radius:0.37em;
       background: #ffe800; color: #190b00; font-weight: bold; letter-spacing: 0.12em;
       box-shadow: 0 2px 8px #ffec4b99; outline:none; width: 81%; text-align: center;
+      margin-bottom: 1em;
     }
     .modal-warning .modal-note {
       font-size:0.96em;color:#ffd600; margin-top: 1em; display:block; user-select: none;
     }
-    @media (max-width: 900px) {
-      .container {flex-direction: column;}
-      .left, .right {width: 100vw; max-width: 100vw; min-width: 0;}
-      .globe-bg-video {height: 35vh;}
-      .starwars-scroll {font-size:1.01em;}
-      .fakery {max-width: 97vw;}
-      #terminalInput {width: 67vw;}
+    .self-destruct-btn {
+      display: inline-block;
+      padding: 0.55em 1.9em;
+      background: radial-gradient(circle at 60% 40%, #ff4949 0%, #ff2323 78%, #b80d0d 100%);
+      border: 3.2px solid #eaa;
+      border-radius: 1.7em;
+      font-size: 1.17em;
+      font-family: inherit;
+      color: #fff2f2;
+      box-shadow: 0 0 16px #ff353570, 0 2px 0 #7c0707, inset 0 6px 12px #ff5959bb;
+      cursor: pointer;
+      font-weight: 800;
+      text-shadow: 0 0 6px #a00, 0 0 1px #fff;
+      letter-spacing: 0.04em;
+      margin-top: 0.1em;
+      margin-bottom: 0.1em;
+      transition: transform 0.11s, box-shadow 0.18s, background 0.13s;
     }
-    @media (max-width: 700px) {
-      .terminal-inner {padding: 1vw 0 0 1vw;}
-      .globe-bg-video {height: 22vh;}
-      .starwars-scroll {font-size:0.92em;}
-    }
-    @media (min-device-width: 1848px) and (max-device-width: 2960px) {
-      .container {flex-direction: row;}
-      .left { width: 46vw; }
-      .right { width: 54vw; }
-      .globe-bg-video { height: calc(100vh - 7.3em);}
-      .starwars-scroll { font-size: 1.23em;}
+    .self-destruct-btn:hover, .self-destruct-btn:active {
+      background: radial-gradient(circle at 50% 50%, #ff1a1a 0%, #b80d0d 100%);
+      transform: scale(1.08);
+      box-shadow: 0 0 28px #ff1818, 0 2px 0 #700707, 0 0 4px #fff7;
     }
   </style>
 </head>
@@ -191,28 +221,41 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
       </video>
     </div>
   </div>
-  <!-- Footer -->
-  <div class="footer-sticky">
-    <b>Sign-in page only — No ads will run here.</b> Google: index for SEO only.<br>
-    To access tools and main features, type <b>main</b> or <b>passkey</b> above.<br>
-    <a href="main.html">Main Hub</a>
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-    <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
-    <a href="mailto:admin@goreandgiggles.com">Contact</a>
+  <!-- Footer (clean ASCII + SEO + socials + coffee only) -->
+  <div class="footer-sticky" style="padding:0 0 0.12em 0;">
+    <pre style="color:#21c5c8;font-size:1em;line-height:1.1;margin:0 0 0 0;letter-spacing:-0.03em;">
+ 888888ba                                          dP   .8888b                                    
+ 88    `8b                                         88   88   "                                    
+a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b. .d8888b. .d8888b.
+ 88        88'  `88 88'  `88 88'`88'`88 88'  `88   88   88     88'  `88 88'  `88 88'  `88 88ooood8
+ 88        88       88.  .88 88  88  88 88.  .88   88   88     88.  .88 88       88.  .88 88.  ...
+ dP        dP       `88888P' dP  dP  dP 88Y888P'   dP   dP     `88888P' dP       `8888P88 `88888P'
+                                        88                                            .88         
+                                        dP                                        d8888P          
+    </pre>
+    <div style="color:#99fff3;font-size:1em;margin:0.13em 0 0 0;">
+      <span class="for-google">
+        Index page: sign-in gateway for PromptForge.online. For all tools, proceed to <a href="main.html">main site</a>. No ads here.
+      </span>
+      <span style="display:block;">
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> | 
+        <a href="https://x.com/GoreandGiggles" target="_blank">X</a> | 
+        <a href="mailto:admin@goreandgiggles.com">Contact</a> | 
+        <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Buy Me a Coffee</a>
+      </span>
+    </div>
   </div>
   <script>
-    // -------- HOLLYWOOD TERMINAL FAKERY ---------
+    // Terminal Fakery (30% faster)
     function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
     function randomMAC() { return "6f:" + Array(5).fill(0).map(()=>Math.floor(Math.random()*256).toString(16).padStart(2,'0')).join(':'); }
     function hexPayload() { return "0x" + (Math.random()*1e8|0).toString(16).padStart(7,'0'); }
-    // Progress bars: Track state so we can animate after boot!
     let percent1 = 0, percent2 = 0, percent3 = 0;
     let progressIntervals = [];
     function progressBar(idx, pct) {
       let bar = `[${"=".repeat(Math.floor(pct/5))}${" ".repeat(20-Math.floor(pct/5))}] ${pct}%`;
       return `<span class="progress">Process ${idx}: ${bar}</span>`;
     }
-    // Boot sequence
     const bootLines = [
       () => `<span class="sys">[BOOT]</span> Initializing <b>PromptForge</b>: underground AI suite`,
       () => `<span class="cmd">sudo -S systemctl start j1nx-ai</span>`,
@@ -236,7 +279,6 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
       () => `<span class="info">Type '<b>main</b>' to unlock PromptForge, or '<b>help</b>' for commands.</span>`,
       () => `<span class="info">Available: help, about, contact, clear, passkey, main</span>`
     ];
-    // Progress animates after boot, lingers on screen
     function animateProgress(varName, end, speed) {
       let i = setInterval(() => {
         window[varName]++;
@@ -253,7 +295,6 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
     const cmdHintsEl = document.getElementById('cmdHints');
     const input = document.getElementById('terminalInput');
     function updateFakery() {
-      // Redraw with latest percent bars
       let out = [];
       for(let i=0; i<bootLines.length; ++i) {
         if(i === 10)      out.push(progressBar(1, percent1));
@@ -261,7 +302,6 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
         else if(i === 15) out.push(progressBar(3, percent3));
         else if(i<lineIdx) out.push(typeof bootLines[i]==="function"?bootLines[i]():bootLines[i]);
       }
-      // Add "continuing to work..." effect when finished
       if (isBooted) {
         if (percent1 < 100) out.push(progressBar(1, percent1));
         if (percent2 < 100) out.push(progressBar(2, percent2));
@@ -274,13 +314,13 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
     }
     function showNextLine() {
       if (lineIdx < bootLines.length) {
-        if(lineIdx===10) animateProgress('percent1', 100, 160);   // 0.16s/step => ~16s to 100%
-        if(lineIdx===12) animateProgress('percent2', 100, 200);   // 0.2s/step  => ~20s to 100%
-        if(lineIdx===15) animateProgress('percent3', 100, 170);   // 0.17s/step => ~17s to 100%
+        if(lineIdx===10) animateProgress('percent1', 100, 112);
+        if(lineIdx===12) animateProgress('percent2', 100, 137);
+        if(lineIdx===15) animateProgress('percent3', 100, 122);
         updateFakery();
         lineIdx++;
-        let delay = 1150 + Math.random()*1200; // 1.15–2.35s between lines
-        if (lineIdx===10||lineIdx===12||lineIdx===15) delay = 680; // Progress lines show up a bit faster
+        let delay = 810 + Math.random()*880;
+        if (lineIdx===10||lineIdx===12||lineIdx===15) delay = 420;
         interval = setTimeout(showNextLine, delay);
       } else {
         isBooted = true;
@@ -293,7 +333,7 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
     input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
     showNextLine();
 
-    // ------ Terminal Command Logic ------
+    // Terminal Command Logic (snark, SEO, core cmds)
     input.value = '';
     const snarkyCmds = [
       "Access denied: Only true hackers can run that command.",
@@ -366,7 +406,6 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
           fakeryEl.innerHTML = '';
           return;
         default:
-          // random funny/pro/hacker response
           let idx = Math.floor(Math.random()*snarkyCmds.length);
           resp = `<span class='err'>${snarkyCmds[idx]}</span>`;
       }
@@ -388,7 +427,7 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
     setInterval(() => { if(document.activeElement !== input) focusInput(); }, 800);
 
-    // PASSKEY MODAL
+    // Passkey Modal w/ 3D Self-Destruct Button
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         document.getElementById('passkeyPopup').style.display = 'flex';
@@ -406,19 +445,30 @@ Type "main" in the terminal to enter. PromptForge: the most powerful AI prompt s
           <strong>RESTRICTED ACCESS</strong>
           <div class="modal-text">Professional AI Dev Toolkit<br>Entry restricted to authorized users.<br>Enter passkey to continue.</div>
           <input id="passkeyInput" autocomplete="off" autofocus placeholder="6-digit Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+          <button class="self-destruct-btn" id="selfDestructBtn" disabled>SELF-DESTRUCT / ENTER</button>
           <span class="modal-note">Access without authorization is strictly prohibited.<br>Security protocols are in effect.</span>
         </div>
       `;
       document.body.appendChild(modal);
       let passInput = document.getElementById('passkeyInput');
+      let selfBtn = document.getElementById('selfDestructBtn');
       setTimeout(() => passInput.focus(), 80);
-      passInput.addEventListener('input', function(){
-        if(this.value.length>6) this.value=this.value.slice(0,6);
-      });
-      passInput.addEventListener('keydown', function(e){
-        if(e.key === 'Enter' && this.value.length === 6 && /^\d{6}$/.test(this.value)) {
-          closePasskey();
+      function checkInput() {
+        if(passInput.value.length===6 && /^\d{6}$/.test(passInput.value)) {
+          selfBtn.disabled = false;
+          selfBtn.style.opacity = "1";
+        } else {
+          selfBtn.disabled = true;
+          selfBtn.style.opacity = "0.55";
         }
+      }
+      passInput.addEventListener('input', checkInput);
+      passInput.addEventListener('keydown', function(e){
+        checkInput();
+        if(e.key === 'Enter' && !selfBtn.disabled) closePasskey();
+      });
+      selfBtn.addEventListener('click', function() {
+        if (!selfBtn.disabled) closePasskey();
       });
     }
     function closePasskey() {
