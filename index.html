@@ -7,9 +7,7 @@
   <meta name="description" content="PromptForge.online: Underground AI toolkit for hackers, creators, and rebels. Free, pro-level, uncensored AI prompt generation, watermarking, face mapping, NSFW, SFW, creative dev vault, and more. No paywalls. No ads on sign-in.">
   <style>
     html, body {
-      height: 100%;
-      margin: 0; padding: 0;
-      width: 100vw;
+      height: 100%; margin: 0; padding: 0; width: 100vw;
       background: #0a0d0c;
       font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
       color: #1aff87;
@@ -17,43 +15,22 @@
     }
     body { min-height: 100vh; }
     .container {
-      display: flex;
-      flex-direction: row;
-      height: 100vh;
-      min-height: 100vh;
-      width: 100vw;
-      box-sizing: border-box;
+      display: flex; flex-direction: row;
+      height: 100vh; min-height: 100vh; width: 100vw; box-sizing: border-box;
     }
     .left {
-      width: 46vw; min-width: 230px;
-      background: #060907;
-      display: flex; flex-direction: column;
-      justify-content: flex-start;
-      align-items: stretch;
-      border-right: 2px solid #101c15;
-      position: relative;
-      z-index: 2;
+      width: 46vw; min-width: 230px; background: #060907;
+      display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch;
+      border-right: 2px solid #101c15; position: relative; z-index: 2;
     }
     .terminal-inner {
-      display: flex; flex-direction: column;
-      flex: 1 1 0;
-      padding: 2vh 0 0 2vw;
-      height: calc(100vh - 4em);
-      min-height: 0;
-      box-sizing: border-box;
+      display: flex; flex-direction: column; flex: 1 1 0;
+      padding: 2vh 0 0 2vw; height: calc(100vh - 4em); min-height: 0; box-sizing: border-box;
     }
     .fakery {
-      font-size: 1.06rem;
-      white-space: pre-line;
-      min-height: 12em;
-      max-height: 40vh;
-      overflow-y: auto;
-      font-family: inherit;
-      margin-bottom: 0.24em;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-      user-select: text;
-      color: #32ff32;
+      font-size: 1.09rem; white-space: pre-line; min-height: 11em; max-height: 33vh; overflow-y: auto;
+      font-family: inherit; margin-bottom: 0.18em; font-weight: 600;
+      letter-spacing: 0.01em; user-select: text; color: #32ff32;
       text-shadow: 0 0 2px #0f0, 0 0 6px #0a0;
     }
     .fakery .sys { color: #32ff32; }
@@ -65,172 +42,77 @@
     .fakery .progress { color: #bdbdbd; }
     .fakery .sudo { color: #ff94ef; }
     .cmd-hints {
-      color: #21c5c8;
-      font-size: 0.98em;
-      margin-bottom: 0.15em;
-      margin-top: 0;
-      font-style: italic;
-      text-shadow: 0 0 1px #045, 0 0 2px #000;
-      user-select: none;
+      color: #21c5c8; font-size: 0.98em; margin-bottom: 0.15em; margin-top: 0;
+      font-style: italic; text-shadow: 0 0 1px #045, 0 0 2px #000; user-select: none;
     }
     .input-row {
-      display: flex;
-      align-items: center;
-      margin: 0;
-      width: 100%;
-      background: transparent;
-      font-size: 1.11rem;
-      z-index: 10;
-      padding-bottom: 0.18em;
+      display: flex; align-items: center; margin: 0; width: 100%; background: transparent;
+      font-size: 1.11rem; z-index: 10; padding-bottom: 0.18em;
     }
     #prompt {
-      color: #fa4242;
-      font-weight: 700;
-      margin-right: 0.15em;
-      font-size: 1.15rem;
-      letter-spacing: 0.01em;
-      user-select: none;
+      color: #fa4242; font-weight: 700; margin-right: 0.15em;
+      font-size: 1.15rem; letter-spacing: 0.01em; user-select: none;
     }
     #terminalInput {
-      background: transparent;
-      color: #fd6161;
-      border: none;
-      outline: none;
-      font-family: inherit;
-      font-size: 1.13rem;
-      width: 22vw; min-width: 100px; max-width: 370px;
-      caret-color: #ff3030;
-      font-weight: bold;
-      letter-spacing: 0.01em;
-      z-index: 11;
-      position: relative;
-      padding: 0;
-      margin: 0;
+      background: transparent; color: #fd6161; border: none; outline: none; font-family: inherit;
+      font-size: 1.13rem; width: 22vw; min-width: 100px; max-width: 370px;
+      caret-color: #ff3030; font-weight: bold; letter-spacing: 0.01em;
+      z-index: 11; position: relative; padding: 0; margin: 0;
     }
     #fakeCursor {
-      color: #ff3131;
-      font-size: 1.17em;
-      font-weight: 900;
-      margin-left: -0.11em;
-      animation: blink 1s steps(2, start) infinite;
-      position: relative;
-      left: 0;
-      top: 0.10em;
-      display: inline-block;
-      user-select: none;
+      color: #ff3131; font-size: 1.17em; font-weight: 900; margin-left: -0.11em;
+      animation: blink 1s steps(2, start) infinite; position: relative; left: 0; top: 0.10em;
+      display: inline-block; user-select: none;
     }
     @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
     /* Right: Globe & Scrolling Text */
     .right {
-      flex: 1 1 0; min-width: 180px;
-      height: 100vh;
-      position: relative;
-      background: #050607;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      align-items: center;
-      overflow: hidden;
+      flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
+      background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden;
     }
     .globe-bg-video {
-      width: 100%; height: 100vh;
-      object-fit: cover;
-      background: transparent;
-      z-index: 2;
-      position: absolute;
-      top: 0; left: 0;
-      border: none;
-      filter: none;
-      pointer-events: none;
+      width: 100%; height: 100vh; object-fit: cover; background: transparent; z-index: 2; position: absolute; top: 0; left: 0; border: none; filter: none; pointer-events: none;
     }
     .starwars-credits {
-      position: absolute;
-      left: 0; bottom: 0;
-      width: 100%;
-      height: 100vh;
-      z-index: 3;
-      pointer-events: none;
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      background: transparent;
+      position: absolute; left: 0; bottom: 0; width: 100%; height: 100vh; z-index: 3; pointer-events: none;
+      overflow: hidden; display: flex; align-items: flex-end; justify-content: center; background: transparent;
     }
     .starwars-scroll {
-      width: 92%;
-      max-width: 700px;
-      opacity: 0.62;
-      font-family: inherit;
-      color: #ffee88;
-      font-size: 1.14em;
-      font-weight: 600;
-      text-align: center;
-      text-shadow: 0 0 8px #ffe, 0 0 2px #880;
-      white-space: pre-line;
-      line-height: 1.43;
+      width: 92%; max-width: 700px; opacity: 0.62; font-family: inherit; color: #ffee88; font-size: 1.14em; font-weight: 600;
+      text-align: center; text-shadow: 0 0 8px #ffe, 0 0 2px #880;
+      white-space: pre-line; line-height: 1.43;
       animation: starwars-column-scroll 120s linear infinite;
-      pointer-events: none;
-      user-select: text;
+      pointer-events: none; user-select: text;
     }
     @keyframes starwars-column-scroll {
       from { transform: translateY(100vh);}
       to   { transform: translateY(-170vh);}
     }
     .footer-sticky {
-      width: 100vw;
-      background: #182523e7;
-      color: #aeeef7;
-      font-size: 1.07em;
-      text-align: center;
-      position: fixed;
-      left: 0; bottom: 0;
-      padding: 0.45em 0 0.18em 0;
-      border-top: 2px solid #fa4242;
-      z-index: 1001;
-      font-family: inherit;
-      box-shadow: 0 -2px 14px #111b;
-      line-height: 1.12;
-      user-select: none;
+      width: 100vw; background: #182523e7; color: #aeeef7; font-size: 1.07em; text-align: center;
+      position: fixed; left: 0; bottom: 0; padding: 0.45em 0 0.18em 0;
+      border-top: 2px solid #fa4242; z-index: 1001; font-family: inherit;
+      box-shadow: 0 -2px 14px #111b; line-height: 1.12; user-select: none;
     }
-    .footer-sticky a {
-      color: #11ffc9;
-      text-decoration: underline;
-      font-weight: 700;
-      margin: 0 0.5em;
-    }
-    /* Warning Modal */
+    .footer-sticky a { color: #11ffc9; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
     #passkeyPopup {
       position:fixed;top:0;left:0;width:100vw;height:100vh;
-      background:rgba(50,20,20,0.92);
-      z-index:9999;display:flex;
-      align-items:center;justify-content:center;
-      pointer-events:auto;
+      background:rgba(50,20,20,0.92);z-index:9999;display:flex;
+      align-items:center;justify-content:center;pointer-events:auto;
     }
     .modal-warning {
-      background: #161616;
-      color: #ffe800;
+      background: #161616; color: #ffe800;
       border: 6px solid #ffd600;
       box-shadow: 0 0 33px #f7d60088, 0 0 0 12px #222 inset;
       font-size:1.24em; font-family:inherit;
-      padding: 2.2em 2.2em 2em 2.2em;
-      border-radius: 1.3em;
-      text-align:center;
-      min-width:280px; max-width:430px;
-      position:relative;
-      outline: 8px solid #000;
-      letter-spacing: 0.04em;
-      background-image:
-        repeating-linear-gradient(135deg, #ffe800 0 8px, #161616 8px 16px),
+      padding: 2.2em 2.2em 2em 2.2em; border-radius: 1.3em; text-align:center;
+      min-width:280px; max-width:430px; position:relative; outline: 8px solid #000; letter-spacing: 0.04em;
+      background-image: repeating-linear-gradient(135deg, #ffe800 0 8px, #161616 8px 16px),
         repeating-linear-gradient(-135deg, #ffe800 0 8px, #161616 8px 16px);
-      background-size: 80px 80px;
-      background-blend-mode: multiply;
+      background-size: 80px 80px; background-blend-mode: multiply;
     }
     .modal-warning .modal-icon {
-      display: block;
-      margin: 0 auto 0.7em auto;
-      width: 3.5em;
-      height: 3.5em;
+      display: block; margin: 0 auto 0.7em auto; width: 3.5em; height: 3.5em;
     }
     .modal-warning strong {
       color: #d90e00; font-size:1.12em;
@@ -238,32 +120,17 @@
       text-shadow: 0 2px 8px #000a;
     }
     .modal-warning .modal-text {
-      color: #ffec4b;
-      font-size: 1.06em;
-      font-weight: 700;
-      margin-bottom: 0.5em;
-      text-shadow: 0 0 2px #0009;
+      color: #ffec4b; font-size: 1.06em; font-weight: 700; margin-bottom: 0.5em; text-shadow: 0 0 2px #0009;
     }
     .modal-warning input {
       margin-top:1.1em;font-size:1.13em;
       border:2.2px solid #d90e00;
-      padding:0.31em 0.62em;
-      border-radius:0.37em;
-      background: #ffe800;
-      color: #190b00;
-      font-weight: bold;
-      letter-spacing: 0.02em;
-      box-shadow: 0 2px 8px #ffec4b99;
-      outline:none;
-      width: 80%;
-      text-align: center;
-      letter-spacing: 0.14em;
+      padding:0.31em 0.62em; border-radius:0.37em;
+      background: #ffe800; color: #190b00; font-weight: bold; letter-spacing: 0.02em;
+      box-shadow: 0 2px 8px #ffec4b99; outline:none; width: 80%; text-align: center; letter-spacing: 0.14em;
     }
     .modal-warning .modal-note {
-      font-size:0.96em;color:#ffd600;
-      margin-top: 1em;
-      display:block;
-      user-select: none;
+      font-size:0.96em;color:#ffd600; margin-top: 1em; display:block; user-select: none;
     }
     @media (max-width: 900px) {
       .container {flex-direction: column;}
@@ -343,111 +210,93 @@ PromptForge.online — the underground network grows.
     <a href="mailto:admin@goreandgiggles.com">Contact</a>
   </div>
   <script>
-    // Terminal Boot + Linux/Kali Install Fakery
-    function randomIP() {
-      return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.');
+    // -------- HOLLYWOOD FAKERY ---------
+    function randomIP() { return Array(4).fill(0).map(()=>Math.floor(Math.random()*256)).join('.'); }
+    // Progress bars: Track state so we can animate after boot!
+    let percent1 = 0, percent2 = 0, percent3 = 0;
+    let progressIntervals = [];
+    function progressBar(idx, pct) {
+      let bar = `[${"=".repeat(Math.floor(pct/5))}${" ".repeat(20-Math.floor(pct/5))}] ${pct}%`;
+      return `<span class="progress">Process ${idx}: ${bar}</span>`;
     }
-    function progressBar(pct) {
-      const blocks = Math.floor(pct / 5);
-      return `<span class="progress">[${"=".repeat(blocks)}${" ".repeat(20-blocks)}] ${pct}%</span>`;
-    }
+    // New: Only the most convincing, short and sweet
     const bootLines = [
-      () => `<span class="sys">[BOOT]</span> Loading PromptForge Underground Node v${(Math.random()*2+3).toFixed(3)}`,
-      () => `<span class="sys">[INFO]</span> Initializing <span class="dir">root@${randomIP()}</span> ...`,
-      () => `<span class="cmd">sudo apt update</span>`,
-      () => `<span class="cmd">sudo apt install promptforge-core</span>`,
-      () => `<span class="sys">[APT]</span> Reading package lists... Done`,
-      () => `<span class="sys">[APT]</span> Building dependency tree`,
-      () => `<span class="sys">[APT]</span> Reading state information... Done`,
-      () => `<span class="info">The following NEW packages will be installed: promptforge-core</span>`,
-      () => `<span class="cmd">Need to get 9,824 kB/9,824 kB of archives</span>`,
-      () => `<span class="cmd">After this operation, 24.8 MB of additional disk space will be used.</span>`,
-      () => `<span class="cmd">Get:1 https://promptforge.online repo/pool/promptforge-core.deb</span>`,
-      () => progressBar(9),
-      () => progressBar(34),
-      () => progressBar(62),
-      () => progressBar(88),
-      () => progressBar(100),
-      () => `<span class="sys">[INSTALL]</span> Selecting previously unselected package promptforge-core.`,
-      () => `<span class="sys">[INSTALL]</span> Preparing to unpack .../promptforge-core.deb ...`,
-      () => `<span class="sys">[INSTALL]</span> Unpacking promptforge-core ...`,
-      () => `<span class="cmd">Setting up promptforge-core (1.4.5) ...</span>`,
-      () => `<span class="sudo">sudo systemctl enable promptforge</span>`,
-      () => `<span class="sudo">sudo systemctl start promptforge</span>`,
-      () => `<span class="sys">[SERVICE]</span> promptforge.service - Underground AI Toolkit`,
-      () => `<span class="sys">[SERVICE]</span> Loaded: loaded (/lib/systemd/system/promptforge.service; enabled)`,
-      () => `<span class="sys">[SERVICE]</span> Active: <span style="color:#5aff42;">active (running)</span>`,
-      () => `<span class="cmd">tail -f /var/log/promptforge/boot.log</span>`,
-      () => `<span class="info">Injecting creative payload: 0x${(Math.random()*1e8|0).toString(16)}</span>`,
-      () => `<span class="info">Spoofing IP: ${randomIP()}</span>`,
-      () => `<span class="info">Mounting encrypted vault ...</span>`,
-      () => `<span class="info">Patching AI filters: <span class="err">disabled</span></span>`,
-      () => `<span class="warn">WARNING: Unfiltered mode enabled. Trace protection: ACTIVE</span>`,
-      () => `<span class="sys">Node handshake: <span style="color:#53fd2a;">[✓] validated</span></span>`,
+      () => `<span class="sys">[BOOT]</span> Initializing PromptForge v${(Math.random()*2+3).toFixed(3)} on <span class="dir">root@${randomIP()}</span>`,
+      () => `<span class="cmd">sudo apt-get update && sudo apt-get install promptforge-core -y</span>`,
+      () => `<span class="info">Authenticating with AI registry...</span>`,
+      () => `<span class="info">Verifying license signature: <span class="sys">OK</span></span>`,
+      () => `<span class="cmd">mount /dev/sda1 /vault -o encrypted</span>`,
+      () => `<span class="info">Encrypted vault mounted at /vault</span>`,
+      () => progressBar(1, percent1),
+      () => `<span class="info">Fetching latest AI core modules...</span>`,
+      () => progressBar(2, percent2),
+      () => `<span class="cmd">systemctl start promptforge</span>`,
+      () => `<span class="sys">[SERVICE]</span> promptforge.service <span style="color:#5aff42;">active (running)</span>`,
+      () => `<span class="warn">WARNING: Unfiltered mode enabled. Trace: PROTECTED</span>`,
+      () => progressBar(3, percent3),
       () => `<span class="sys">Status: <span style="color:#ffec4b;">ALL SYSTEMS ONLINE</span></span>`,
-      () => `<span class="info">Type '<b>help</b>' for commands, or '<b>main</b>' to enter the main hub.</span>`,
-      () => `<span class="info">Available: help, about, contact, clear, passkey, main, random, wtf, whyfree, google</span>`
+      () => `<span class="info">Type '<b>main</b>' to unlock, or '<b>help</b>' for commands.</span>`,
+      () => `<span class="info">Available: help, about, contact, clear, passkey, main</span>`
     ];
-    const helpLines = [
-      "main      — Sign in and unlock all tools",
-      "help      — Show this help menu",
-      "about     — What is PromptForge?",
-      "contact   — How to reach the team",
-      "passkey   — Enter passkey for access",
-      "clear     — Clear terminal output",
-      "random    — Print a random fun fact",
-      "promo     — See latest underground promo codes",
-      "vault     — Access the secret vault (404)",
-      "wtf       — Show a hidden feature",
-      "discord   — Link to the underground Discord",
-      "sudo      — Access admin mode",
-      "easteregg — Hidden message",
-      "reset     — Reboot the terminal",
-      "fortune   — Get a fortune cookie (soon)",
-      "whoami    — Identify yourself",
-      "whyfree   — Why is this actually free?",
-      "google    — Why no ads?",
-      "faq       — See frequently asked questions",
-      "paranoia  — Is this a honeypot?",
-      "404       — Get lost"
-    ];
+    // Progress animates after boot, lingers on screen
+    function animateProgress(idx, varName, end, speed) {
+      let i = setInterval(() => {
+        window[varName]++;
+        if(window[varName] > end) {
+          window[varName] = end;
+          clearInterval(i);
+        }
+        updateFakery();
+      }, speed);
+      progressIntervals.push(i);
+    }
     let lineIdx = 0, interval, isBooted = false;
+    let termOutput = [];
     const fakeryEl = document.getElementById('fakery');
     const cmdHintsEl = document.getElementById('cmdHints');
     const input = document.getElementById('terminalInput');
-    const cursor = document.getElementById('fakeCursor');
-    let termOutput = [];
+    function updateFakery() {
+      // Redraw with latest percent bars
+      let out = [];
+      let pi = 0;
+      for(let i=0; i<bootLines.length; ++i) {
+        if(i === 6)      out.push(progressBar(1, percent1));
+        else if(i === 8) out.push(progressBar(2, percent2));
+        else if(i === 12)out.push(progressBar(3, percent3));
+        else if(i<lineIdx) out.push(typeof bootLines[i]==="function"?bootLines[i]():bootLines[i]);
+      }
+      fakeryEl.innerHTML = out.join('<br>');
+      fakeryEl.scrollTop = fakeryEl.scrollHeight;
+    }
     function showNextLine() {
       if (lineIdx < bootLines.length) {
-        const line = bootLines[lineIdx];
-        const out = typeof line === "function" ? line() : line;
-        termOutput.push(out);
-        fakeryEl.innerHTML = termOutput.join('<br>');
+        if(lineIdx===6) animateProgress(1, 'percent1', 100, 40+Math.random()*30);
+        if(lineIdx===8) animateProgress(2, 'percent2', 100, 62+Math.random()*40);
+        if(lineIdx===12)animateProgress(3, 'percent3', 100, 50+Math.random()*60);
+        // progress lines are filled in updateFakery()
+        updateFakery();
         lineIdx++;
-        let delay = 200 + Math.random()*110;
-        if (out.includes("progress")) delay += 320;
-        if (out.includes("ALL SYSTEMS ONLINE")) delay += 600;
+        let delay = 330 + Math.random()*130;
+        if (lineIdx===6||lineIdx===8||lineIdx===12) delay = 320;
         interval = setTimeout(showNextLine, delay);
       } else {
         isBooted = true;
-        fakeryEl.innerHTML = termOutput.join('<br>');
+        updateFakery();
         cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
         input.disabled = false;
         input.focus();
       }
     }
-    input.disabled = true;
-    fakeryEl.innerHTML = '';
-    cmdHintsEl.innerHTML = '';
+    input.disabled = true; fakeryEl.innerHTML = ''; cmdHintsEl.innerHTML = '';
     showNextLine();
-    // Command logic
+    // Command logic (unchanged)
     input.value = '';
     function processCommand(cmd) {
       cmd = cmd.trim().toLowerCase();
       let resp = '';
       switch(cmd) {
         case 'help':
-          resp = '<span class="info">' + helpLines.join('<br>') + '</span>';
+          resp = '<span class="info">main — Sign in | help — Show help | about — Info | contact — Contact | passkey — Dev pass | clear — Clear</span>';
           break;
         case 'about':
           resp = "<span class='info'>PromptForge.online — Built by creators for creators. All features unlocked. Pure AI power.</span>";
@@ -465,24 +314,6 @@ PromptForge.online — the underground network grows.
           fakeryEl.innerHTML = '';
           termOutput = [];
           return;
-        case 'whyfree':
-        case 'google':
-          resp = "<span class='info'>This site is free because it’s ad-supported. No ads or tracking on this page — just pure creation.</span>";
-          break;
-        case 'random':
-          resp = [
-            "AI eats 10TB of data per day.",
-            "No prompt is ever truly lost.",
-            "This terminal is 97% legit.",
-            "You’re through the looking glass.",
-            "There is no spoon.",
-            "All hacks are real here.",
-            "Underground only.",
-          ].sort(() => .5 - Math.random())[0];
-          break;
-        case 'wtf':
-          resp = "<span class='warn'>You found a hidden feature!</span>";
-          break;
         default:
           resp = `<span class='err'>Unknown command: ${cmd}. Type 'help' for a full list.</span>`;
       }
@@ -502,11 +333,9 @@ PromptForge.online — the underground network grows.
     }
     window.onclick = focusInput;
     input.addEventListener('blur', () => setTimeout(focusInput, 60));
-    setInterval(() => {
-      if(document.activeElement !== input) focusInput();
-    }, 1000);
+    setInterval(() => { if(document.activeElement !== input) focusInput(); }, 1000);
 
-    // PASSKEY MODAL (serious, 6 digits)
+    // PASSKEY MODAL
     function showPasskey() {
       if(document.getElementById('passkeyPopup')) {
         document.getElementById('passkeyPopup').style.display = 'flex';
@@ -528,8 +357,12 @@ PromptForge.online — the underground network grows.
         </div>
       `;
       document.body.appendChild(modal);
-      setTimeout(() => document.getElementById('passkeyInput').focus(), 80);
-      document.getElementById('passkeyInput').addEventListener('keydown', function(e){
+      let passInput = document.getElementById('passkeyInput');
+      setTimeout(() => passInput.focus(), 80);
+      passInput.addEventListener('input', function(){
+        if(this.value.length>6) this.value=this.value.slice(0,6);
+      });
+      passInput.addEventListener('keydown', function(e){
         if(e.key === 'Enter' && this.value.length === 6 && /^\d{6}$/.test(this.value)) {
           closePasskey();
         }
