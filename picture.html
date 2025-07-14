@@ -2,224 +2,398 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge Picture Forge — Pro AI Art, Photo Prompts, NSFW, Magic</title>
-  <meta name="description" content="PromptForge Picture Forge: The most powerful AI art/picture prompt builder. Keywords, negatives, help, J1NX chat, and more.">
+  <title>PromptForge Pic Prompt Generator — Create Legendary AI Image Prompts</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta property="og:title" content="PromptForge Picture Forge — Pro Art/Photo Prompts">
-  <meta property="og:description" content="Ultimate AI art prompt builder: picture/photo/illustration/portrait, with tips, negatives, J1NX, sliders, and more.">
-  <meta property="og:image" content="/assets/promptforge-og-picture.png">
-  <link rel="stylesheet" href="/assets/main.css?v=20">
-  <link rel="icon" href="/assets/favicon.ico">
+  <meta name="description" content="PromptForge Pic Maker: Instantly create safe, viral, or ultra-detailed AI art prompts for any site. Randomize, clean, save, favorite, and chat with J1nx. Free, no login.">
+  <meta property="og:title" content="PromptForge Pic Prompt Generator">
+  <meta property="og:description" content="The ultimate free AI art prompt cleaner & builder. Randomize, auto-clean, save, copy, J1nx chat, AdSense, and more. No watermark, no paywall.">
+  <meta property="og:image" content="/assets/promptforge-og-pic.png">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <link rel="stylesheet" href="/assets/main.css?v=22">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    body { background: #0a0b11; color: #e2e2ed; font-family: 'JetBrains Mono', 'Consolas', 'Menlo', monospace; margin:0; }
-    .main-wrap { max-width: 720px; margin: 28px auto 60px auto; padding: 2.5em 2em 3em 2em; background: rgba(10,14,28,0.98); border-radius: 2em; box-shadow: 0 8px 42px #0008;}
-    .section { margin-bottom: 2em; }
-    h1, h2 { font-weight: 800; letter-spacing:0.03em; color: #86e3fc; margin: 0 0 0.45em 0;}
-    h2 { font-size:1.3em; color:#ffe47a;}
-    .breadcrumbs { margin: 0 0 1.2em 0; font-size: 1em;}
-    .breadcrumbs a { color: #50e3c2; text-decoration:none; font-weight:bold; }
-    .breadcrumbs a:hover { color:#ffe47a; }
-    .prompt-label { color: #5ce3c7; font-weight:700; letter-spacing:0.02em;}
-    .prompt-group { display:flex; align-items:center; gap:0.6em; margin-bottom:0.7em;}
-    .prompt-group input[type=text], .prompt-group textarea { flex:1; background:#171926; color:#86e3fc; border:1.5px solid #444; border-radius:8px; font-size:1.04em; padding:0.4em 0.7em; font-family:inherit;}
-    .prompt-group button, .slider-btn, .popup-btn { background:#252841; color:#fff; font-size:1em; padding:0.35em 1em; border-radius:7px; border:none; font-weight:700; cursor:pointer; transition:.15s;}
-    .prompt-group button:hover, .slider-btn:hover, .popup-btn:hover { background:#86e3fc; color:#0a0a11;}
-    .slider-row { display:flex; align-items:center; gap:1em; margin-bottom:1.2em;}
-    .slider-label { min-width: 4.2em; font-size:1.03em; color:#ffe47a;}
-    .slider { flex:1; }
-    input[type=range] { width:100%; accent-color: #86e3fc;}
-    .neg-label { color:#ff3171; font-weight:600;}
-    .neg-group textarea { min-height:2.3em;}
-    .help-tip { cursor: pointer; font-size:1em; margin-left:0.35em; color:#5ce3c7; }
-    .help-popup { display:none; position:absolute; left:110%; top:-.7em; background:#161924; color:#fffa; border-radius:1em; font-size:1em; padding:.7em 1em; max-width:260px; box-shadow: 0 0 12px #000a; z-index: 80;}
-    .help-tip:hover + .help-popup, .help-tip:focus + .help-popup { display:block; }
-    .links-bar { margin:1.5em 0 1.2em 0; text-align:center;}
-    .links-bar a { color:#fff; background:#232742; border-radius:6px; font-size:1em; font-weight:600; margin:0 0.6em 0 0; padding:0.28em 1em; display:inline-block; text-decoration:none;}
-    .links-bar a:hover { background:#86e3fc; color:#252841;}
-    .bmc-btn { background: #ffe47a; color: #181c29; font-size: 1.15em; border-radius: 1em; padding: 0.5em 1.7em; margin:1.2em auto 0 auto; display: block; font-weight: bold; text-decoration:none; box-shadow:0 0 2px #0a0;}
-    .adsense-bar { position:fixed; left:0; bottom:0; width:100vw; background:#23263b; text-align:center; z-index:300; padding:0.5em 0;}
-    .j1nx-bot { position:fixed; right:1.6vw; bottom:5vw; z-index:999; }
-    .j1nx-img { background:url('/assets/j1nx_cutout.png') no-repeat center/contain; width:70px; height:70px; margin:auto;}
-    .j1nx-chatbox { background:#252841fa; color:#fff; border-radius:1.5em 1.5em 1.6em 1.6em; min-width:248px; max-width:330px; padding:1.1em; margin-top:-1.2em; font-size:1.14em; box-shadow:0 5px 16px #000c;}
-    .j1nx-messages { min-height:3.1em;}
-    .j1nx-row { display:flex; gap:0.45em; margin-top:.7em;}
-    .j1nx-input { flex:1; border-radius:7px; border:1px solid #555; font-size:1.02em; background:#191a24; color:#86e3fc; padding:.45em 1em;}
-    .j1nx-send { background:#ffe47a; border:none; border-radius:8px; color:#181c29; font-size:1.2em; font-weight:700; padding:0 1.15em;}
-    .j1nx-18 { margin-left:0.8em; font-size:1.09em; color:#5ce3c7; cursor:pointer;}
-    .j1nx-chatbox.nsfw { background:#2e1223fa; color:#fff0fa; box-shadow:0 0 18px #f69e;}
-    .j1nx-chatbox.celebrate { background:#211b13fa; color:#ffe47a;}
-    .j1nx-chatbox.fun { background:#142a2efa; color:#aefcff;}
-    .j1nx-chatbox.danger { background:#3c0b14fa; color:#ff4c4c;}
-    .j1nx-chatbox.help, .j1nx-chatbox.support { background:#14395afa; color:#89f2ff;}
-    .j1nx-chatbox.safe { background:#232841fa;}
-    @media (max-width:900px){ .adsense-bar{position:static!important;}.j1nx-bot{bottom:88px!important;} }
-    @media (max-width:600px){ .main-wrap{padding:1em .4em;} .j1nx-bot{bottom:110px!important;min-width:98vw!important;right:0!important;} }
+    body { background: #12171e; color: #e6ffee; font-family: 'Fira Mono', 'JetBrains Mono', Consolas, Menlo, monospace; margin:0; }
+    .header { background: #172325f7; border-bottom: 4px solid #39ff14; font-weight: 900; font-size: 1.13em; display: flex; align-items: center; justify-content: space-between; padding: 1.1em 2.2em 1.1em 1.2em; }
+    .header .brand { color: #39ff14; font-size: 1.19em; letter-spacing: -0.02em; font-family: inherit; }
+    .navlinks { display: flex; gap: 1.15em; align-items: center;}
+    .navlinks a { color: #8efeff; text-decoration: none; font-weight: 700; }
+    .navlinks a.active { color: #fff000; text-shadow: 0 0 8px #ffee88, 0 0 2px #222; }
+    .navlinks a:hover { color: #39ff14; }
+    .hero-title { font-size: 2.5em; font-weight: 900; text-align: center; margin: 2.2em 0 0.4em 0; color: #ffee88; letter-spacing: -0.02em; text-shadow: 0 0 18px #39ff14, 0 0 2px #000; }
+    .hero-sub { text-align: center; font-size: 1.32em; font-weight: 700; color: #99fff0; margin: 0 0 2.1em 0; text-shadow: 0 0 3px #011;}
+    .feature-blurb { max-width: 670px; margin: 0 auto 2.3em auto; background: #191e29; border-radius: 19px; padding: 1.5em 2.2em; color: #ffe47a; font-size: 1.13em; box-shadow: 0 4px 22px #39ff1420; line-height: 1.52; }
+    @media (max-width: 900px){
+      .header{flex-direction:column;gap:.7em;}
+      .hero-title{font-size:2em;}
+      .feature-blurb{padding:1.1em .9em;}
+    }
   </style>
 </head>
 <body>
-  <div class="breadcrumbs"><a href="/main.html">Home</a> &gt; <span>Picture Forge</span></div>
-  <div class="main-wrap">
-    <h1>🖼️ PromptForge <span style="color:#86e3fc;">Picture Forge</span></h1>
-    <div class="section">
-      <div class="prompt-label">Describe Your Image <span class="help-tip" tabindex="0">?</span>
-        <span class="help-popup">Describe a photo, portrait, illustration, or wild scene. Try: “A sad girl under purple neon rain, close-up, wet hair, soft focus”.<br>Click <b>‘Keywords’</b> for ideas!</span>
-      </div>
-      <div class="prompt-group">
-        <input id="picSceneInput" type="text" placeholder="Type your photo or art scene...">
-        <button class="popup-btn" onclick="showPicKeywordPopup()">Keywords</button>
-      </div>
-      <div class="prompt-label">Prompt Summary</div>
-      <div class="prompt-group">
-        <textarea id="picPromptSummary" placeholder="Summary will appear here..." readonly></textarea>
-        <button onclick="summarizePicPrompt()">Summarize</button>
-      </div>
-      <div class="prompt-label neg-label">Negative Prompt <span class="help-tip" tabindex="0">?</span>
-        <span class="help-popup">What to <b>avoid</b> in the picture. Ex: “No blur, no logo, no extra limbs, no missing fingers, no low quality, no text”.</span>
-      </div>
-      <div class="neg-group prompt-group">
-        <textarea id="picNegativeInput" placeholder="Describe things to avoid..."></textarea>
-      </div>
+  <div class="header">
+    <div class="brand">PromptForge</div>
+    <div class="navlinks">
+      <a href="index.html">Terminal</a>
+      <a href="watermark.html">Watermark</a>
+      <a href="j1nx.html">J1nx</a>
+      <a href="compare.html">Compare</a>
+      <a href="picprompt.html" class="active">Pic Prompt</a>
+      <a href="movieprompt.html">Movie Prompt</a>
+      <a href="main.html">Main Hub</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+      <a href="https://x.com/GoreandGiggles" target="_blank">X</a>
+      <a href="https://discord.gg/YourDiscordInvite" target="_blank" style="color:#a5c6ff;"><i class="fa-brands fa-discord"></i> Discord</a>
+      <a href="mailto:admin@goreandgiggles.com">Contact</a>
+      <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Coffee</a>
     </div>
-    <div class="section">
-      <h2>🎚️ Picture Controls</h2>
-      <div class="slider-row">
-        <span class="slider-label">Realism</span>
-        <input class="slider" id="realismSlider" type="range" min="0" max="10" value="8">
-        <span id="realismVal">8</span>
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Color</span>
-        <input class="slider" id="colorSlider" type="range" min="0" max="10" value="7">
-        <span id="colorVal">7</span>
-      </div>
-      <div class="slider-row">
-        <span class="slider-label">Risk/NSFW</span>
-        <input class="slider" id="picNsfwSlider" type="range" min="0" max="10" value="2">
-        <span id="picNsfwVal">2</span>
-      </div>
-      <button class="slider-btn" onclick="generatePicPrompt()">Generate Picture Prompt</button>
-    </div>
-    <div class="section">
-      <h2>Useful Links</h2>
-      <div class="links-bar">
-        <a href="https://openart.ai/" target="_blank">OpenArt</a>
-        <a href="https://lexica.art/" target="_blank">Lexica</a>
-        <a href="https://civitai.com/" target="_blank">CivitAI</a>
-        <a href="https://krea.ai/" target="_blank">KREA</a>
-        <a href="https://www.artbreeder.com/" target="_blank">Artbreeder</a>
-        <a href="/movie.html">Movie Prompt Maker</a>
-        <a href="/main.html">Main</a>
-      </div>
-    </div>
-    <a class="bmc-btn" href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Buy Me a Coffee</a>
   </div>
-  <div class="adsense-bar">
+  <div class="hero-title">🖼️ Pic Prompt Generator</div>
+  <div class="hero-sub">Ultra-detailed, Clean, Viral Prompts — for Any AI Art Platform.<br>
+    <span style="color:#fff000">Randomize, clean, favorite, copy, and chat. All free, all pro.</span>
+  </div>
+  <div class="feature-blurb">
+    Instantly create, clean, or randomize image prompts for <b>ANY AI art site</b>. Add negatives, NSFW toggle, choose genre or art style, and get a pro-level, platform-safe result every time.<br><br>
+    Copy to clipboard. Save favorites. J1nx guides you every step. AdSense-ready, Discord & community built-in.<br>
+    <span style="color:#39ff14;">No login needed. No paywalls. No watermark on your prompt—ever.</span>
+  </div>
+<!-- next: all main controls/features go here... -->
+  <div class="main-wrap" style="max-width: 750px; margin: 24px auto 84px auto; padding: 2.1em 1.2em 2em 1.2em; background: #10141eec; border-radius: 1.9em; box-shadow: 0 8px 42px #000a;">
+    <form id="promptForm" autocomplete="off" onsubmit="event.preventDefault(); cleanAndShowPrompt();">
+      <!-- Prompt Input -->
+      <div class="section">
+        <label for="picInput" class="prompt-label">Describe Your Image
+          <span class="help-tip" tabindex="0">?</span>
+          <span class="help-popup">Type anything: subject, style, mood, camera, emotion.<br>Try: <i>Portrait of a woman, fantasy, dramatic lighting, colorful bokeh</i>.</span>
+        </label>
+        <div class="prompt-group">
+          <textarea id="picInput" rows="2" placeholder="Type your art/image prompt here..." required></textarea>
+          <button type="button" class="popup-btn" onclick="fillRandomPrompt()">Random</button>
+        </div>
+      </div>
+      <!-- SFW/NSFW Switch -->
+      <div class="section" style="margin-bottom:0.9em;">
+        <label for="sfwSwitch" class="prompt-label">Safe Mode (SFW)
+          <span class="help-tip" tabindex="0">?</span>
+          <span class="help-popup">Toggle to filter or allow risky/explicit words. Keeps prompts platform safe.</span>
+        </label>
+        <input type="checkbox" id="sfwSwitch" checked>
+      </div>
+      <!-- Art Style Dropdown -->
+      <div class="section" style="margin-bottom:0.9em;">
+        <label class="prompt-label" for="styleSelect">Art Style
+          <span class="help-tip" tabindex="0">?</span>
+          <span class="help-popup">Choose a style for your art—affects cleaned prompt.</span>
+        </label>
+        <select id="styleSelect">
+          <option>Any</option>
+          <option>Realism</option>
+          <option>Anime</option>
+          <option>Fantasy</option>
+          <option>Cyberpunk</option>
+          <option>Portrait</option>
+          <option>Landscape</option>
+          <option>Cartoon</option>
+          <option>Watercolor</option>
+          <option>3D Render</option>
+          <option>Impressionism</option>
+          <option>Surrealism</option>
+          <option>Pop Art</option>
+          <option>Photograph</option>
+        </select>
+      </div>
+      <!-- Negative Prompts (with suggestion button) -->
+      <div class="section">
+        <label class="prompt-label neg-label">Negative Prompt
+          <span class="help-tip" tabindex="0">?</span>
+          <span class="help-popup">What to avoid in output (e.g., watermark, bad anatomy, text, extra limbs, distortions).</span>
+        </label>
+        <div class="prompt-group">
+          <input id="negativeInput" type="text" placeholder="(Optional) e.g. watermark, blurry, bad anatomy...">
+          <button type="button" class="popup-btn" onclick="fillNegatives()">Add Common</button>
+        </div>
+      </div>
+      <!-- Pro Sliders -->
+      <div class="section" style="margin-bottom:1.7em;">
+        <label class="prompt-label">Pro Controls</label>
+        <div class="slider-row">
+          <span class="slider-label">Creativity</span>
+          <input class="slider" id="creativitySlider" type="range" min="0" max="10" value="6">
+          <span id="creativityVal">6</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Detail</span>
+          <input class="slider" id="detailSlider" type="range" min="0" max="10" value="8">
+          <span id="detailVal">8</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">Risk/NSFW</span>
+          <input class="slider" id="nsfwSlider" type="range" min="0" max="10" value="3">
+          <span id="nsfwVal">3</span>
+        </div>
+      </div>
+      <!-- Action Buttons -->
+      <div class="section" style="display:flex;align-items:center;gap:1.2em;margin-bottom:1.7em;">
+        <button type="submit" class="slider-btn" style="font-size:1.16em;padding:.54em 1.9em;">Clean & Generate Prompt</button>
+        <button type="button" class="slider-btn" onclick="copyPrompt()" style="background:#39ff14;color:#222;">Copy</button>
+        <button type="button" class="slider-btn" onclick="saveFavorite()" style="background:#ffd600;color:#444;"><i class="fa fa-star"></i> Fav</button>
+      </div>
+      <!-- Cleaned Prompt Output -->
+      <div class="section">
+        <label class="prompt-label">Cleaned/Enhanced Image Prompt
+          <span class="help-tip" tabindex="0">?</span>
+          <span class="help-popup">Auto-cleaned and detailed prompt, ready to paste anywhere, always platform safe.</span>
+        </label>
+        <textarea id="cleanedOutput" rows="4" readonly placeholder="Your cleaned image prompt will appear here..."></textarea>
+      </div>
+      <!-- Prompt History & Favorites -->
+      <div class="section" id="promptHistorySection">
+        <label class="prompt-label">Prompt History</label>
+        <div id="promptHistory" style="margin-top:0.4em;font-size:1.03em;color:#89fffa;"></div>
+        <label class="prompt-label" style="margin-top:1em;">Favorites</label>
+        <div id="favoritesList" style="margin-top:0.4em;font-size:1.03em;color:#ffd600;"></div>
+      </div>
+      <!-- Where to Use This Prompt Dropdown -->
+      <div class="section">
+        <label class="prompt-label">Where to Use This Prompt
+          <span class="help-tip" tabindex="0">?</span>
+          <span class="help-popup">Jump to top AI art/image sites with your cleaned prompt copied!</span>
+        </label>
+        <select id="siteSelect" onchange="openSiteWithPrompt()">
+          <option value="">Select a site...</option>
+          <option value="https://promptforge.online/">PromptForge (You’re Here!)</option>
+          <option value="https://openart.ai/create">OpenArt</option>
+          <option value="https://krea.ai/create">KREA</option>
+          <option value="https://www.artbreeder.com/">Artbreeder</option>
+          <option value="https://app.leonardo.ai/">Leonardo</option>
+          <option value="https://deepdreamgenerator.com/">DeepDream</option>
+          <option value="https://www.bing.com/images/create">Bing/DALL-E</option>
+          <option value="https://midjourney.com/app/">Midjourney</option>
+          <option value="https://perchance.org/ai-text-to-image-generator">Perchance</option>
+          <option value="https://discord.gg/YourDiscordInvite">PromptForge Discord</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <!-- MINI J1NX BOT (unified, always-on) -->
+  <div id="j1nx-mini-camper" style="position:fixed;right:22px;bottom:108px;z-index:99;display:flex;align-items:flex-end;gap:9px;">
+    <img id="j1nx-mini-art" src="/j1nx/j1nx_cutout.png" alt="J1nx" style="width:68px;height:90px;border-radius:19px 19px 39px 39px/24px 24px 69px 69px;box-shadow:0 2px 16px #39ff1477,0 0 0 2px #ffee88;object-fit:contain;background:#18101a;border:2.5px solid #39ff14;">
+    <div id="j1nx-mini-bubble-wrap" style="min-width:230px;max-width:340px;">
+      <div id="j1nx-mini-bubble" style="background:linear-gradient(105deg,#101c19 78%,#39ff1422 100%);color:#c2ffdf;font-family:'Fira Mono',Consolas,monospace;font-size:1.09em;border-radius:14px 16px 20px 22px/15px 17px 27px 29px;box-shadow:0 2px 20px #39ff1460;padding:12px 16px 10px 15px;margin-bottom:9px;max-width:330px;min-width:150px;max-height:144px;overflow-y:auto;word-break:break-word;line-height:1.37;border:2.5px solid #39ff14;">
+        <div id="j1nx-bubble-log"></div>
+        <div style="width:100%;display:flex;margin-top:5px;">
+          <textarea id="j1nx-mini-bubble-input" placeholder="Type here & hit Enter…" maxlength="160"
+            style="background:#141824;border:1.2px solid #39ff14;color:#b8f6e9;width:100%;font-size:1em;outline:none;resize:none;min-height:1.4em;max-height:48px;border-radius:8px;padding:7px 10px;font-family:'Fira Mono',Consolas,monospace;box-shadow:0 1px 8px #39ff1433;"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();j1nxChatMini();}"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Google AdSense (after content, above ANSI footer) -->
+  <div style="max-width:650px;margin:34px auto 16px auto;">
     <ins class="adsbygoogle"
       style="display:block"
       data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="31313131"
+      data-ad-slot="4315819721"
       data-ad-format="auto"
       data-full-width-responsive="true"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
-  <!-- J1NX BRAIN -->
-  <script src="/assets/j1nx_brain.js"></script>
-  <!-- MONSTER GENERATOR -->
-  <script src="/assets/generator.js"></script>
-  <!-- MINI J1NX BOT -->
-  <div class="j1nx-bot" id="j1nxBot" data-mood="safe">
-    <div class="j1nx-img"></div>
-    <div class="j1nx-chatbox safe" id="j1nxChatbox">
-      <div class="j1nx-messages" id="j1nxMessages">👾 Hi! I’m J1NX. Type for help, advice, or anything…</div>
-      <div class="j1nx-row">
-        <input class="j1nx-input" id="j1nxInput" placeholder="Type to J1NX, hit Enter...">
-        <button class="j1nx-send" id="j1nxSend" title="Send"><i class="fa-solid fa-arrow-up"></i></button>
-        <div class="j1nx-18" id="j1nx18" title="Toggle 18+ mode"><i class="fa-solid fa-lock"></i></div>
-      </div>
+
+  <!-- ANSI ART FOOTER (your brand, all links) -->
+  <div class="footer-ansi" style="width:100vw;background:#171720;color:#aaffd7;font-size:1.08em;font-family:'Fira Mono','Consolas',monospace;text-align:center;padding:22px 0 6px 0;border-top:2.5px solid #39ff14;box-shadow:0 -2px 19px #111b;letter-spacing:0.02em;z-index:1002;position:fixed;left:0;bottom:0;">
+    <span class="ansi-art" style="color:#39ff14;font-family:'Fira Mono',monospace;white-space:pre;font-size:1em;line-height:1.09;margin-bottom:6px;display:block;text-shadow:0 0 7px #39ff1430,0 0 2px #000;">
+ 888888ba                                          dP   .8888b                                    
+ 88    `8b                                         88   88   "                                    
+a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b. .d8888b. .d8888b.
+ 88        88'  `88 88'  `88 88'`88'`88 88'  `88   88   88     88'  `88 88'  `88 88'  `88 88ooood8
+ 88        88       88.  .88 88  88  88 88.  .88   88   88     88.  .88 88       88.  .88 88.  ...
+ dP        dP       `88888P' dP  dP  dP 88Y888P'   dP   dP     `88888P' dP       `8888P88 `88888P'
+                                        88                                            .88         
+                                        dP                                        d8888P          
+    </span>
+    <div class="links" style="margin-top:0.3em;font-size:1.13em;">
+      <a href="index.html">Terminal</a> |
+      <a href="watermark.html">Watermark</a> |
+      <a href="j1nx.html">J1nx</a> |
+      <a href="compare.html">Compare</a> |
+      <a href="picprompt.html" style="color:#fff000;">Pic Prompt</a> |
+      <a href="movieprompt.html">Movie Prompt</a> |
+      <a href="main.html">Main Hub</a> |
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
+      <a href="https://x.com/GoreandGiggles" target="_blank">X</a> |
+      <a href="https://discord.gg/YourDiscordInvite" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a> |
+      <a href="mailto:admin@goreandgiggles.com">Contact</a> |
+      <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Buy Me a Coffee</a>
+    </div>
+    <div style="color:#8fffd9;font-size:0.97em;margin:0.3em 0 0.1em 0;">
+      &copy; 2025 PromptForge.online — Free for creators. No paywalls. No watermark on your prompt.
     </div>
   </div>
+
+  <!-- LOAD J1NX BRAIN LOGIC (array-style support) -->
+  <script src="/assets/j1nx_brain.js"></script>
   <script>
-    // J1NX Chat logic (identical to movie.html)
-    let j1nxMode18 = false;
-    const j1nxChatbox = document.getElementById('j1nxChatbox');
-    const j1nxMessages = document.getElementById('j1nxMessages');
-    const j1nxInput = document.getElementById('j1nxInput');
-    const j1nxSend = document.getElementById('j1nxSend');
-    const j1nx18 = document.getElementById('j1nx18');
-    function handleJ1nxInput(val) {
-      if (!window.j1nxBrain) {
-        j1nxMessages.innerHTML = "<span style='color:#ff3171'>J1NX brain file missing or invalid. No responses possible.</span>";
-        return;
-      }
-      let matched = null, rawInput = val.toLowerCase();
-      for(let i=0;i<j1nxBrain.length;i++) {
-        if((j1nxMode18 || j1nxBrain[i].safe !== false) && j1nxBrain[i].match.test(val)) {
-          matched = j1nxBrain[i];
-          break;
+    // Adapter for array-style J1nx brains (window.j1nxBrainArray)
+    if (window.j1nxBrain && Array.isArray(window.j1nxBrain)) {
+      window.j1nxBrainArray = window.j1nxBrain;
+      window.j1nxBrain = {
+        reply: function(msg) {
+          let m = msg.toLowerCase();
+          for (let entry of window.j1nxBrainArray) {
+            if (entry.match && entry.match.test(m)) return entry.text;
+          }
+          return "Try keywords like: prompt, picture, watermark, or just say hi!";
         }
-      }
-      if(matched) {
-        j1nxMessages.textContent = matched.text;
-        if(matched.mood){
-          j1nxChatbox.className = "j1nx-chatbox "+matched.mood;
-        }
-        if(matched.nsfw || (j1nxMode18 && matched.nsfw)) {
-          j1nxChatbox.classList.add('nsfw'); j1nxChatbox.classList.remove('safe');
-        } else {
-          j1nxChatbox.classList.add('safe'); j1nxChatbox.classList.remove('nsfw');
-        }
-      } else {
-        j1nxMessages.textContent = "J1NX: ...";
-        j1nxChatbox.classList.add('safe'); j1nxChatbox.classList.remove('nsfw');
-      }
+      };
     }
-    function submitJ1nx() {
-      let val = j1nxInput.value.trim();
-      if(val) handleJ1nxInput(val);
-      j1nxInput.value = '';
+    // --- Mini J1nx chat logic ---
+    const j1nxLog = document.getElementById('j1nx-bubble-log');
+    const j1nxInput = document.getElementById('j1nx-mini-bubble-input');
+    let j1nxHistory = [
+      {who:"j1nx",text:"Hi! I’m J1nx—need help? Type below!"}
+    ];
+    function j1nxChatMini() {
+      let txt = j1nxInput.value.trim();
+      if(!txt) return;
+      j1nxHistory.push({who:"user",text:txt});
+      j1nxInput.value = "";
+      j1nxScroll();
+      setTimeout(()=>{
+        let reply = window.j1nxBrain
+          ? window.j1nxBrain.reply(txt)
+          : "I'm here to help you with anything on PromptForge!";
+        j1nxHistory.push({who:"j1nx",text:reply});
+        j1nxScroll();
+      },400);
     }
-    j1nxInput.addEventListener('keydown', function(e){ if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); submitJ1nx(); }});
-    j1nxSend.addEventListener('click', submitJ1nx);
-    j1nx18.addEventListener('click', function(){
-      j1nxMode18 = !j1nxMode18;
-      j1nx18.classList.toggle('on', j1nxMode18);
-      handleJ1nxInput(j1nxInput.value || '');
+    function j1nxScroll() {
+      if (!j1nxLog) return;
+      j1nxLog.innerHTML = "";
+      j1nxHistory.slice(-6).forEach(msg=>{
+        let div = document.createElement('div');
+        div.innerHTML = `<b>${msg.who==="j1nx"?"J1nx":"You"}:</b> ${msg.text}`;
+        div.style.color = msg.who==="j1nx"?"#39ff14":"#fff2fd";
+        div.style.marginBottom="2px";
+        j1nxLog.appendChild(div);
+      });
+      j1nxLog.scrollTop = j1nxLog.scrollHeight;
+    }
+    j1nxScroll();
+
+    // PROMPT LOGIC (auto-clean, copy, random, history, favorites, negatives, sliders, site jump)
+    let promptHistory = JSON.parse(localStorage.getItem('picPromptHistory')||'[]');
+    let favorites = JSON.parse(localStorage.getItem('picPromptFavorites')||'[]');
+
+    function fillRandomPrompt() {
+      const examples = [
+        "Ultra-detailed portrait, green eyes, freckles, cinematic lighting, soft focus",
+        "Futuristic cityscape, neon colors, rain, cyberpunk style, wide angle",
+        "Vibrant autumn forest, golden sunlight, magical realism, bokeh, mist",
+        "Anime girl, wind in hair, school uniform, cherry blossoms, dynamic pose",
+        "Surreal landscape, floating islands, waterfalls, glowing crystals, epic scale",
+        "Photorealistic kitten, blue eyes, playful, studio lighting, macro",
+        "Still life, glass vase, tulips, soft window light, oil painting style",
+        "Ancient castle ruins, sunset, fantasy, moss, dramatic sky",
+        "Moody street at night, reflections, rain, film noir style"
+      ];
+      document.getElementById('picInput').value = examples[Math.floor(Math.random()*examples.length)];
+    }
+
+    function fillNegatives() {
+      const defaults = ["watermark","text","bad anatomy","extra limbs","distorted faces","blurry","boring lighting","oversaturated"];
+      document.getElementById('negativeInput').value = defaults.join(", ");
+    }
+
+    function cleanAndShowPrompt() {
+      const scene = document.getElementById('picInput').value.trim();
+      const style = document.getElementById('styleSelect').value;
+      const negatives = document.getElementById('negativeInput').value.trim();
+      const creativity = +document.getElementById('creativitySlider').value;
+      const detail = +document.getElementById('detailSlider').value;
+      const nsfw = +document.getElementById('nsfwSlider').value;
+      const sfw = document.getElementById('sfwSwitch').checked;
+      if (!scene) return;
+      // Auto-clean: Remove forbidden words if SFW, up the magic if NSFW
+      let cleaned = scene;
+      if (sfw) {
+        cleaned = cleaned.replace(/\b(nude|sex|fuck|pussy|cock|orgy|vagina|penis|boobs|tits|ejaculate|masturbat[a-z]*|sperm|suck|dick|cum|asshole|anal|rape|molest|incest|cumshot|clit|clitoris|dildo|penetrat[a-z]*)\b/gi, "[redacted]");
+      }
+      if (style && style !== "Any") cleaned += `\nStyle: ${style}`;
+      if (negatives) cleaned += `\nNegative Prompt: ${negatives}`;
+      cleaned += `\nCreativity: ${creativity}/10, Detail: ${detail}/10, NSFW: ${nsfw}/10`;
+      document.getElementById('cleanedOutput').value = cleaned;
+
+      // Add to prompt history
+      promptHistory.unshift({scene, cleaned, ts: Date.now()});
+      if (promptHistory.length>7) promptHistory = promptHistory.slice(0,7);
+      localStorage.setItem('picPromptHistory', JSON.stringify(promptHistory));
+      renderPromptHistory();
+    }
+
+    function renderPromptHistory() {
+      const hist = promptHistory.slice(0,5).map(
+        p => `<div style="margin:0.3em 0;">
+          <span style="color:#39ff14;cursor:pointer;" onclick="showOldPrompt('${encodeURIComponent(p.cleaned)}')">[show]</span>
+          ${p.scene.length>60?p.scene.slice(0,59)+"…":p.scene}
+        </div>`
+      ).join('');
+      document.getElementById('promptHistory').innerHTML = hist || "<span style='color:#888'>No prompt history yet.</span>";
+      renderFavorites();
+    }
+
+    function showOldPrompt(cleaned) {
+      document.getElementById('cleanedOutput').value = decodeURIComponent(cleaned);
+    }
+
+    function saveFavorite() {
+      const cleaned = document.getElementById('cleanedOutput').value.trim();
+      if (!cleaned) return;
+      if (!favorites.includes(cleaned)) favorites.unshift(cleaned);
+      if (favorites.length>7) favorites = favorites.slice(0,7);
+      localStorage.setItem('picPromptFavorites', JSON.stringify(favorites));
+      renderFavorites();
+    }
+
+    function renderFavorites() {
+      const fav = favorites.slice(0,5).map(
+        f => `<div style="margin:0.3em 0;"><span style="color:#ffd600;cursor:pointer;" onclick="showOldPrompt('${encodeURIComponent(f)}')">★</span> ${f.length>60?f.slice(0,59)+"…":f}</div>`
+      ).join('');
+      document.getElementById('favoritesList').innerHTML = fav || "<span style='color:#888'>No favorites yet.</span>";
+    }
+
+    function copyPrompt() {
+      const txt = document.getElementById('cleanedOutput').value;
+      if (!txt) return;
+      navigator.clipboard.writeText(txt);
+      document.getElementById('cleanedOutput').select();
+    }
+
+    // Sliders update
+    document.getElementById('creativitySlider').addEventListener('input',e=>document.getElementById('creativityVal').textContent=e.target.value);
+    document.getElementById('detailSlider').addEventListener('input',e=>document.getElementById('detailVal').textContent=e.target.value);
+    document.getElementById('nsfwSlider').addEventListener('input',e=>document.getElementById('nsfwVal').textContent=e.target.value);
+
+    // "Where to use this prompt"
+    function openSiteWithPrompt() {
+      const site = document.getElementById('siteSelect').value;
+      const prompt = encodeURIComponent(document.getElementById('cleanedOutput').value.trim());
+      if (!site || !prompt) return;
+      navigator.clipboard.writeText(document.getElementById('cleanedOutput').value.trim());
+      window.open(site, '_blank');
+      setTimeout(()=>document.getElementById('siteSelect').selectedIndex=0,500);
+    }
+
+    // Micro-help hover
+    document.querySelectorAll('.help-tip').forEach(tip=>{
+      tip.addEventListener('focus',e=>{tip.nextElementSibling.style.display='block';});
+      tip.addEventListener('blur',e=>{tip.nextElementSibling.style.display='none';});
+      tip.addEventListener('mouseenter',e=>{tip.nextElementSibling.style.display='block';});
+      tip.addEventListener('mouseleave',e=>{tip.nextElementSibling.style.display='none';});
     });
 
-    // SLIDERS - display value
-    document.getElementById('realismSlider').addEventListener('input',e=>document.getElementById('realismVal').textContent=e.target.value);
-    document.getElementById('colorSlider').addEventListener('input',e=>document.getElementById('colorVal').textContent=e.target.value);
-    document.getElementById('picNsfwSlider').addEventListener('input',e=>document.getElementById('picNsfwVal').textContent=e.target.value);
-
-    // Popups for help and keywords
-    function showPicKeywordPopup() {
-      alert("Picture keywords:\nportrait, dramatic lighting, neon, girl, emotion, fantasy, ultra-real, close-up, pov, silhouette, backlight, moody, bokeh, rain, tears, dreamy, vintage, abstract, synthwave, fog, cinematic, sharp focus, etc.");
-    }
-    function summarizePicPrompt() {
-      const scene = document.getElementById('picSceneInput').value;
-      const realism = document.getElementById('realismSlider').value;
-      const color = document.getElementById('colorSlider').value;
-      const nsfw = document.getElementById('picNsfwSlider').value;
-      let summary = `Image: ${scene}\nRealism: ${realism}/10\nColor: ${color}/10\nNSFW: ${nsfw}/10`;
-      document.getElementById('picPromptSummary').value = summary;
-    }
-    // Generate prompt using generator.js (must match your generator’s interface)
-    function generatePicPrompt() {
-      if(typeof window.generatePicturePrompt === "function") {
-        const scene = document.getElementById('picSceneInput').value;
-        const neg = document.getElementById('picNegativeInput').value;
-        const realism = +document.getElementById('realismSlider').value;
-        const color = +document.getElementById('colorSlider').value;
-        const nsfw = +document.getElementById('picNsfwSlider').value;
-        let prompt = window.generatePicturePrompt(scene, {negative:neg, realism, color, nsfw});
-        document.getElementById('picPromptSummary').value = prompt || "Prompt generated. (Check output)";
-      } else {
-        document.getElementById('picPromptSummary').value = "Picture Generator not available.";
-      }
-    }
+    // Initial history/favs
+    renderPromptHistory();
   </script>
-  <!-- Google AdSense async -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
 </body>
 </html>
