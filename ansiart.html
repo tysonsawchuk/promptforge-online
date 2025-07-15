@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Legendary ANSI Art Gallery & Code Bible — PromptForge</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="The world’s biggest open archive of ANSI art, ASCII art, BBS hacks, old-school code, memes, and text games — free, interactive, 100% PromptForge.">
+  <meta property="og:title" content="The Legendary ANSI Art Gallery & Code Bible — PromptForge">
+  <meta property="og:description" content="Explore, create, and download legendary ANSI art, ASCII art, BBS hacks, and retro code — play, remix, copy, and share for free.">
+  <meta property="og:image" content="/assets/promptforge-og-ansiart.png">
+  <link rel="icon" href="/assets/pf-fav.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body { background: #16151b; color: #fff2fd; font-family:'Fira Mono','Segoe UI',monospace; margin:0; }
+    a { color:#82e8ff; text-decoration:none; }
+    a:hover { color:#39ff14; }
+    /* Responsive utilities & scrollbars */
+    ::-webkit-scrollbar { width:9px; background:#24243a; }
+    ::-webkit-scrollbar-thumb { background:#1f473b; border-radius:5px; }
+    @media (max-width:800px){
+      body { font-size:0.96em; }
+      #ansi-header-wrap { height:auto; min-height:160px; }
+    }
+  </style>
+</head>
+<body>
+<!-- ===== BLOCK 1: Legendary Header, Matrix Rain, Animated Console, SVG Logo ===== -->
+<div id="ansi-header-wrap" style="position:relative;overflow:hidden;background:#121314;padding-bottom:0;box-shadow:0 9px 28px #1bff0955;">
+  <!-- Matrix Rain Background (can be toggled on/off) -->
+  <canvas id="matrixRain" style="position:absolute;top:0;left:0;width:100%;height:220px;z-index:1;pointer-events:none;"></canvas>
+
+  <!-- SVG "PromptForge" ANSI Banner Logo -->
+  <div id="promptforge-logo" style="z-index:2;position:relative;display:flex;justify-content:center;align-items:center;height:170px;">
+    <svg viewBox="0 0 1200 200" width="99%" height="92%" style="max-width:1300px;">
+      <defs>
+        <linearGradient id="ansiGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#00ff97"/>
+          <stop offset="20%" stop-color="#00ffd0"/>
+          <stop offset="50%" stop-color="#32fff6"/>
+          <stop offset="80%" stop-color="#8efeff"/>
+          <stop offset="100%" stop-color="#ffe44f"/>
+        </linearGradient>
+        <filter id="ansiGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="5" result="glow"/>
+          <feMerge>
+            <feMergeNode in="glow"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <!-- Main Banner Text -->
+      <text x="50%" y="49%" text-anchor="middle" fill="url(#ansiGrad)" font-size="98" font-family="Fira Mono,Consolas,monospace" filter="url(#ansiGlow)" font-weight="bold" letter-spacing="3">
+        The Legendary ANSI Art Gallery
+      </text>
+      <text x="50%" y="79%" text-anchor="middle" fill="#e0ffe7" font-size="30" font-family="Fira Mono,Consolas,monospace" opacity="0.93" font-weight="600" letter-spacing="1">
+        & Code Bible — PromptForge 2025
+      </text>
+    </svg>
+  </div>
+  <!-- Boot-up Console Tagline Animation -->
+  <div id="console-tagline" style="z-index:3;position:relative;display:flex;justify-content:center;margin:0 auto 0.9em auto;font-family:'Fira Mono','Consolas',monospace;font-size:1.18em;color:#44ff98;text-shadow:0 0 9px #13ff9350,0 0 1px #000;letter-spacing:1.2px;">
+    <span id="typewriter"></span><span id="blinker" style="display:inline-block;width:14px;">█</span>
+  </div>
+  <!-- Toggle Matrix Rain Button -->
+  <button id="toggleRain" style="z-index:10;position:absolute;top:13px;right:22px;background:#181b1d;color:#00ff97;border:none;padding:7px 14px;border-radius:9px;font-family:'Fira Mono',monospace;font-size:1.03em;box-shadow:0 1px 8px #11ff9880;cursor:pointer;opacity:0.89;">Toggle Matrix Rain</button>
+</div>
+<script>
+/* --- Matrix Rain BG --- */
+(function matrixRainInit(){
+  const canvas = document.getElementById('matrixRain');
+  if(!canvas) return;
+  function resizeMatrix(){
+    canvas.width = window.innerWidth;
+    canvas.height = 210;
+  }
+  resizeMatrix();
+  window.addEventListener('resize',resizeMatrix);
+
+  let ctx = canvas.getContext('2d');
+  let letters = "アカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()-_=+".split('');
+  let fontSize = 18, columns = Math.floor(window.innerWidth / fontSize), drops = [];
+  for(let x=0;x<columns;x++) drops[x]=1;
+  let active = true;
+  function draw(){
+    if(!active) return;
+    ctx.fillStyle="rgba(16,24,24,0.13)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.font = fontSize+"px Fira Mono,monospace";
+    ctx.fillStyle="#00FF97";
+    for(let i=0;i<drops.length;i++){
+      let text = letters[Math.floor(Math.random()*letters.length)];
+      ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+      if(drops[i]*fontSize > canvas.height && Math.random()>0.975){ drops[i]=0; }
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.toggleRain = ()=>{
+    active = !active;
+    if(active) draw();
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  };
+  document.getElementById('toggleRain').onclick=window.toggleRain;
+})();
+/* --- Typewriter Boot-up Tagline --- */
+(function bootTypewriter(){
+  const lines = [
+    "Loading: ANSI, ASCII, BBS, and code art legends…",
+    "Every font, style, hack, and meme — all-in-one.",
+    "Upload, remix, animate, and share ANSI instantly.",
+    "Explore: code snippets, batch tools, BBS lore, memes.",
+    "J1nx bot live for art/code help — ask in the corner!",
+    "100% Free. Retro. Built for creators. No paywall.",
+    "Type 'ascii' for a surprise…"
+  ];
+  let i=0, j=0, cur="", el=document.getElementById('typewriter'), blink=document.getElementById('blinker');
+  function nextLine(){
+    cur = ""; j=0; if(++i>=lines.length) i=0;
+    setTimeout(type,600);
+  }
+  function type(){
+    if(!el) return;
+    cur += lines[i].charAt(j++);
+    el.textContent = cur;
+    if(j < lines[i].length) setTimeout(type,31+Math.random()*54);
+    else setTimeout(nextLine,1800+Math.random()*700);
+  }
+  type();
+  setInterval(()=>{blink.style.opacity=blink.style.opacity==="0"?"1":"0";},420);
+})();
+/* --- Easter Egg: type 'ascii' for a logo effect --- */
+(function asciiEasterEgg(){
+  let logo = document.getElementById('promptforge-logo');
+  window.addEventListener('keydown', function(e){
+    window.__egg ||= "";
+    window.__egg += (e.key || '').toLowerCase();
+    if(window.__egg.endsWith("ascii")){
+      // Animate logo colors
+      let svg = logo && logo.querySelector('svg');
+      if(svg){
+        let grad = svg.querySelector('linearGradient');
+        if(grad){
+          grad.innerHTML = `
+            <stop offset="0%" stop-color="#ff4fd4"/>
+            <stop offset="12%" stop-color="#4fa0ff"/>
+            <stop offset="28%" stop-color="#3aff5b"/>
+            <stop offset="46%" stop-color="#fff748"/>
+            <stop offset="65%" stop-color="#ff8718"/>
+            <stop offset="82%" stop-color="#ffd13a"/>
+            <stop offset="100%" stop-color="#ff4fd4"/>
+          `;
+        }
+      }
+      // Flash the logo
+      logo.style.filter="drop-shadow(0 0 18px #fff) brightness(1.22)";
+      setTimeout(()=>{logo.style.filter="";},700);
+      window.__egg = "";
+    } else if(window.__egg.length > 8) {
+      window.__egg = window.__egg.slice(-6);
+    }
+  });
+})();
+</script>
+<!-- ===== BLOCK 2: NAV, BREADCRUMBS, INTRO BLURB, MICRO-SEO, J1NX MINI-AVATAR ===== -->
+<nav id="ansi-nav" style="background:#181b22;border-bottom:3px solid #39ff14;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1.5em;padding:0.85em 0 0.75em 0;box-shadow:0 2px 16px #19ff1480;z-index:21;">
+  <a href="main.html" style="color:#ffe44f;font-weight:800;">Main Hub</a>
+  <a href="index.html">Terminal Fun</a>
+  <a href="picprompt.html">Pic Prompt</a>
+  <a href="movieprompt.html">Movie Prompt</a>
+  <a href="watermark.html">Watermark</a>
+  <a href="aihacks.html">AI Hacks</a>
+  <a href="compare.html">Compare</a>
+  <a href="ansiart.html" class="active" style="color:#39ff14;text-shadow:0 0 8px #39ff14,0 0 1px #000;">ANSI Art</a>
+  <a href="j1nx.html">J1nx</a>
+  <a href="https://discord.gg/YourDiscordInvite" target="_blank" style="color:#91b3ff;"><i class="fa-brands fa-discord"></i> Discord</a>
+  <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+  <a href="https://x.com/GoreandGiggles" target="_blank">X</a>
+  <a href="mailto:admin@goreandgiggles.com">Contact</a>
+  <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Coffee</a>
+</nav>
+<!-- Breadcrumbs (for SEO & UX) -->
+<div id="ansi-breadcrumbs" style="background:#11161a;color:#fffcc0;font-size:1.04em;padding:5px 0 6px 2vw;letter-spacing:.03em;font-family:'Fira Mono',monospace;box-shadow:0 2px 12px #39ff1425;">
+  <a href="main.html" style="color:#ffe44f;">PromptForge</a> &raquo;
+  <a href="ansiart.html" style="color:#39ff14;font-weight:bold;">ANSI Art Gallery</a>
+  <span style="color:#c3fff1;font-weight:400;">/ Code Bible</span>
+</div>
+
+<!-- Page Intro Blurb & J1nx Avatar Intro -->
+<div id="ansi-intro-wrap" style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:3vw;padding:3vw 2vw 1.7em 2vw;max-width:1250px;margin:0 auto;">
+  <div style="flex:4 1 390px;min-width:230px;">
+    <h1 style="font-size:2.2em;color:#00ff97;margin:0 0 0.22em 0;text-shadow:0 0 14px #00ffb880,0 0 2px #000;">Welcome to the Legendary ANSI & ASCII Art Gallery</h1>
+    <div style="color:#e3ffe6;font-size:1.19em;font-weight:700;max-width:700px;line-height:1.34;margin:0 0 1em 0;text-shadow:0 0 5px #003,0 0 1px #000;">
+      Dive into the world’s most complete, open, and interactive archive of ANSI, ASCII, BBS, and code art.<br>
+      <span style="color:#39ff14;font-weight:900;">Features:</span> live art tools, animated text, meme bibles, upload/remix/share, micro-tutorials, all fonts and symbols, code hacks, rare retro assets, and more. <b>Copy. Remix. Download. Learn. Create.</b><br>
+      <span style="color:#ffe44f;">100% Free — No paywalls, no watermark.</span>
+    </div>
+    <!-- Micro-SEO for search bots & sidebar crawlers -->
+    <div style="font-size:0.98em;color:#c9ffd9;max-width:700px;line-height:1.29;margin-bottom:0.4em;opacity:0.89;">
+      <b>SEO:</b> ANSI art, ASCII art, text art, BBS art, retro code, NFO, DIZ, memes, copypasta, ZZT, code snippets, font generators, batch hacks, VT100/TTY, Unicode, old-school internet, hacker culture, programming art, code typography, emoticons, classic tools, script bibles, Commodore, Amiga, C64, DOS, Win95, Linux, open source, shareware, TXT art, IRC, Demoscene, art packs, gallery, Discord, 2025.
+    </div>
+  </div>
+  <div style="flex:1 1 160px;display:flex;flex-direction:column;align-items:center;min-width:116px;max-width:196px;">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx the bot" style="width:88px;height:114px;border-radius:20px 20px 46px 40px/23px 23px 88px 66px;box-shadow:0 2px 18px #3f0,0 0 0 3px #ffe44f;object-fit:contain;background:#18101a;margin-bottom:7px;border:3.2px solid #39ff14;">
+    <div id="j1nx-mini-greeting" style="background:linear-gradient(100deg,#121f1a 73%,#39ff1422 100%);color:#c2ffdf;font-family:'Fira Mono',Consolas,monospace;font-size:1.05em;border-radius:11px 17px 22px 22px/13px 19px 33px 26px;box-shadow:0 2px 14px #39ff1440;padding:12px 16px 8px 15px;max-width:170px;min-width:90px;line-height:1.31;border:2.5px solid #39ff14;text-align:center;">
+      <span style="font-size:1.05em;font-weight:700;color:#39ff14;">J1nx says:</span><br>
+      “Type or paste your ANSI/ASCII code, remix classic art, or ask me for art help or an old-school meme.<br>Need help? I’m in the corner, 24/7!”
+    </div>
+  </div>
+</div>
+<!-- ===== BLOCK 3: MEGA ANSI/ASCII ART GALLERY + SEARCH & CREATION TOOLS ===== -->
+<div id="ansiart-main-wrap" style="max-width:1350px;margin:0 auto 60px auto;padding:2.5vw 2vw 0 2vw;">
+
+  <!-- Search + Filler Bar -->
+  <div style="display:flex;flex-wrap:wrap;gap:1.7em 2.6em;align-items:center;justify-content:space-between;margin-bottom:1.3em;">
+    <div style="flex:2 1 360px;min-width:180px;">
+      <input id="ansi-search" type="text" placeholder="🔍 Search art, memes, tags, titles, code…" style="width:100%;max-width:420px;padding:11px 14px 11px 16px;border-radius:12px;border:none;font-size:1.15em;background:#141e1c;color:#eaffff;font-family:'Fira Mono',monospace;box-shadow:0 2px 13px #0f5;">
+    </div>
+    <div style="flex:1 1 220px;min-width:140px;display:flex;gap:0.9em;">
+      <button id="galleryRandomBtn" style="background:#39ff14;color:#181c10;font-weight:900;font-size:1.03em;border-radius:11px;border:none;padding:9px 17px;box-shadow:0 1px 12px #39ff1444;cursor:pointer;">
+        🎲 Random Art
+      </button>
+      <button id="galleryUploadBtn" style="background:#ffe44f;color:#1b1c1b;font-weight:900;font-size:1.03em;border-radius:11px;border:none;padding:9px 17px;box-shadow:0 1px 10px #ffe44f80;cursor:pointer;">
+        ⬆️ Upload
+      </button>
+      <button id="galleryCreateBtn" style="background:#00ff97;color:#161c1b;font-weight:900;font-size:1.03em;border-radius:11px;border:none;padding:9px 17px;box-shadow:0 1px 10px #00ff9780;cursor:pointer;">
+        ✏️ Make Art
+      </button>
+    </div>
+    <div style="flex:1 1 220px;min-width:160px;">
+      <span style="background:#181b1c;color:#98ffe1;font-size:1.03em;border-radius:11px;padding:7px 17px;box-shadow:0 0 8px #181b1c99;">
+        <b>Total pieces:</b> <span id="ansiTotal">Loading…</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Main Gallery Grid -->
+  <div id="ansi-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:32px 22px;margin-bottom:2.3em;">
+    <!-- Example Art Card (repeat for many) -->
+    <div class="ansi-art-card" style="background:#171d26;border-radius:13px;box-shadow:0 2px 14px #191a28aa;padding:1.17em 1.4em 1.14em 1.4em;display:flex;flex-direction:column;align-items:flex-start;position:relative;">
+      <div class="ansi-art-title" style="font-weight:900;font-size:1.11em;color:#ffe44f;text-shadow:0 0 5px #ffe44f55,0 0 1px #000;margin-bottom:6px;">
+        <span>✨ Matrix Portal</span>
+      </div>
+      <pre class="ansi-art-text" style="font-family:'Fira Mono','Consolas',monospace;font-size:1.03em;color:#00ff97;background:none;line-height:1.14;margin:0 0 8px 0;user-select:all;overflow-x:auto;">
+/\    /\  
+  \  /  \ 
+   \/    \
+  [==MATRIX==]
+   /\    /
+  /  \  / 
+ /\    /\
+      </pre>
+      <div style="display:flex;gap:1.1em;margin-top:4px;">
+        <button onclick="copyArt(this)" style="background:#39ff14;color:#121c15;border:none;border-radius:8px;font-weight:700;padding:6px 16px;box-shadow:0 1px 8px #39ff1440;cursor:pointer;">Copy</button>
+        <button onclick="downloadArt(this)" style="background:#ffe44f;color:#161616;border:none;border-radius:8px;font-weight:700;padding:6px 16px;box-shadow:0 1px 7px #ffe44f60;cursor:pointer;">Download</button>
+        <button onclick="shareArt(this)" style="background:#00ff97;color:#151c18;border:none;border-radius:8px;font-weight:700;padding:6px 16px;box-shadow:0 1px 6px #00ff9744;cursor:pointer;">Share</button>
+      </div>
+      <div class="ansi-art-meta" style="color:#c9ffd9;font-size:0.96em;margin-top:5px;">#matrix #green #portal — <b>by PromptForge user</b></div>
+      <div class="ansi-art-help" style="font-size:0.93em;color:#77ffdc;margin-top:3px;">
+        <span style="cursor:pointer;" onclick="showHelp('matrix')">What is ANSI art?</span>
+      </div>
+    </div>
+    <!-- More art cards are loaded in by JS; demo only! -->
+  </div>
+
+  <!-- Mini Help Section -->
+  <div style="background:#181b21;border-radius:13px;padding:1.3em 1.1em 1.18em 1.1em;margin:1.7em 0 1.9em 0;box-shadow:0 2px 14px #181b21bb;max-width:940px;">
+    <b style="color:#ffe44f;">Micro-help:</b>
+    Search for keywords (“dragon”, “logo”, “nfo”, “ASCII dog”, etc), copy/download any art, upload new, or remix with “Make Art.” Click “What is ANSI art?” for a quick guide.
+  </div>
+</div>
+<!-- ===== BLOCK 4: MAKE ART / REMIX TOOLS / ASCII GENERATOR ===== -->
+<div id="ansiart-create-wrap" style="max-width:1100px;margin:0 auto 60px auto;padding:2.5vw 2vw 0 2vw;">
+
+  <div style="font-size:1.25em;font-weight:900;color:#ffe44f;margin-bottom:.44em;text-shadow:0 0 6px #ffe44f44;">✏️ Create, Remix, or Convert Text to ANSI/ASCII Art</div>
+  <div style="display:flex;flex-wrap:wrap;gap:2.2em;align-items:flex-start;">
+
+    <!-- INPUT/EDITOR -->
+    <div style="flex:2 1 430px;min-width:260px;">
+      <textarea id="asciiInput" placeholder="Type, paste, or remix here…" rows="5" style="width:100%;font-size:1.18em;min-height:80px;max-height:300px;background:#1b1e29;color:#c2ffdf;border-radius:12px;border:2px solid #39ff14;font-family:'Fira Mono','Consolas',monospace;padding:13px 15px 13px 15px;resize:vertical;box-shadow:0 2px 14px #1b1e2944;"></textarea>
+      <div style="margin-top:10px;display:flex;gap:1em;align-items:center;">
+        <label for="fontDropdown" style="font-size:1.05em;color:#ffb1ef;">Font/Style:</label>
+        <select id="fontDropdown" style="padding:7px 15px;font-size:1.07em;border-radius:10px;background:#161c19;color:#eaffff;">
+          <option value="block">Block</option>
+          <option value="banner">Banner</option>
+          <option value="doom">Doom</option>
+          <option value="slant">Slant</option>
+          <option value="ghost">Ghost</option>
+          <option value="bubble">Bubble</option>
+          <option value="ogre">Ogre</option>
+          <option value="acrobatic">Acrobatic</option>
+          <option value="ANSI_Shadow">ANSI Shadow</option>
+          <option value="starwars">Star Wars</option>
+          <option value="mini">Mini</option>
+          <option value="rectangles">Rectangles</option>
+          <option value="rounded">Rounded</option>
+          <option value="epic">Epic</option>
+        </select>
+        <label for="colorDropdown" style="font-size:1.05em;color:#ffb1ef;margin-left:1.5em;">Color:</label>
+        <select id="colorDropdown" style="padding:7px 15px;font-size:1.07em;border-radius:10px;background:#161c19;color:#eaffff;">
+          <option value="#39ff14" style="color:#39ff14;">Green (ANSI)</option>
+          <option value="#ffe44f" style="color:#ffe44f;">Yellow</option>
+          <option value="#ffb1ef" style="color:#ffb1ef;">Pink</option>
+          <option value="#8efeff" style="color:#8efeff;">Cyan</option>
+          <option value="#fff2fd" style="color:#fff2fd;">White</option>
+          <option value="#1bff72" style="color:#1bff72;">Mint</option>
+          <option value="#8fffd9" style="color:#8fffd9;">Aqua</option>
+          <option value="#ff6a00" style="color:#ff6a00;">Orange</option>
+          <option value="#c2ffdf" style="color:#c2ffdf;">Light Green</option>
+        </select>
+        <label for="sizeDropdown" style="font-size:1.05em;color:#ffb1ef;margin-left:1.5em;">Size:</label>
+        <select id="sizeDropdown" style="padding:7px 15px;font-size:1.07em;border-radius:10px;background:#161c19;color:#eaffff;">
+          <option value="1">Small</option>
+          <option value="1.2">Medium</option>
+          <option value="1.5">Large</option>
+          <option value="2">X-Large</option>
+        </select>
+      </div>
+      <div style="margin-top:1.2em;display:flex;gap:1.1em;">
+        <button onclick="asciiPreview()" style="background:#39ff14;color:#121c15;font-weight:900;font-size:1.08em;border-radius:10px;border:none;padding:9px 20px;box-shadow:0 1px 12px #39ff1444;cursor:pointer;">Preview</button>
+        <button onclick="copyAscii()" style="background:#ffe44f;color:#161616;font-weight:900;font-size:1.08em;border-radius:10px;border:none;padding:9px 20px;box-shadow:0 1px 10px #ffe44f80;cursor:pointer;">Copy</button>
+        <button onclick="downloadAscii()" style="background:#8efeff;color:#181c1b;font-weight:900;font-size:1.08em;border-radius:10px;border:none;padding:9px 20px;box-shadow:0 1px 10px #8efeff80;cursor:pointer;">Download</button>
+        <button onclick="shareAscii()" style="background:#ffb1ef;color:#181c19;font-weight:900;font-size:1.08em;border-radius:10px;border:none;padding:9px 20px;box-shadow:0 1px 10px #ffb1ef80;cursor:pointer;">Share</button>
+      </div>
+      <div style="margin-top:0.8em;font-size:.97em;color:#8fffd9;">
+        <b>Tips:</b> Try remixing your fav meme, poem, or <a href="#ansi-gallery-grid" style="color:#ffe44f;">grab an old-school logo</a> and give it your spin. Experiment with <b>fonts &amp; colors</b>. Want a “.NFO” look? Pick “block” or “ansi shadow.”
+      </div>
+    </div>
+
+    <!-- PREVIEW OUTPUT -->
+    <div style="flex:1 1 330px;min-width:200px;background:#191d28;border-radius:14px;padding:1.3em 1.2em;box-shadow:0 2px 15px #191d28a2;">
+      <div style="font-size:1.08em;font-weight:700;color:#ffe44f;margin-bottom:.55em;">
+        <span>Live Preview</span>
+      </div>
+      <pre id="asciiPreviewBox" style="font-family:'Fira Mono','Consolas',monospace;font-size:1.15em;line-height:1.13;color:#39ff14;background:none;white-space:pre;min-height:90px;max-width:100%;overflow-x:auto;user-select:all;margin:0;"></pre>
+      <div style="font-size:.98em;color:#b8fff1;margin-top:0.5em;">
+        Double-click preview to copy! <span style="color:#ffe44f;">(Or use Copy/Download/Share)</span>
+      </div>
+    </div>
+  </div>
+  <!-- MICRO-HELP -->
+  <div style="margin-top:1.6em;background:#181b21;border-radius:13px;padding:1.14em 1em 1.14em 1em;box-shadow:0 2px 14px #181b21bb;">
+    <b style="color:#ffe44f;">Micro-help:</b>
+    <ul style="color:#8fffd9;margin:9px 0 0 0;padding-left:1.2em;font-size:1.01em;">
+      <li>Type, paste, or remix anything (even emoji or ASCII memes).</li>
+      <li>Choose a <b>font</b> for cool effects. Try “starwars” or “block” for headers, “ghost” for fun, “ogre” for weirdness.</li>
+      <li>Pick a <b>color</b> to stand out. “Green” is classic ANSI; pink or yellow pops for memes.</li>
+      <li>Set <b>size</b> for your preview, then copy, download, or share with one click.</li>
+      <li>All output is pure text! No spyware, no watermarks, just art.</li>
+      <li>Want to submit your art to the gallery? Use the Upload button or <a href="#ansi-gallery-grid" style="color:#ffe44f;">send to us here</a>!</li>
+    </ul>
+  </div>
+</div>
+<!-- ===== BLOCK 5: CLASSIC GALLERY / SHOWROOM / HISTORY / PACKS ===== -->
+<div id="ansi-gallery-wrap" style="max-width:1100px;margin:0 auto 60px auto;padding:2vw 2vw 0 2vw;">
+  <div style="font-size:1.27em;font-weight:900;color:#ffe44f;margin-bottom:.56em;text-shadow:0 0 7px #ffe44f44;">
+    🎨 ANSI & ASCII Gallery — Explore, Download, Remix!
+  </div>
+  <!-- THEME TABS -->
+  <div style="display:flex;gap:2em;margin-bottom:1.2em;">
+    <button class="ansi-tab-btn" onclick="showGalleryTab('classics')" style="background:#39ff14;color:#181b19;font-weight:800;border-radius:10px;padding:7px 23px;border:none;margin-right:.7em;">Classics</button>
+    <button class="ansi-tab-btn" onclick="showGalleryTab('fonts')" style="background:#ffe44f;color:#181b19;font-weight:800;border-radius:10px;padding:7px 23px;border:none;margin-right:.7em;">Fonts/Styles</button>
+    <button class="ansi-tab-btn" onclick="showGalleryTab('packs')" style="background:#8efeff;color:#181b19;font-weight:800;border-radius:10px;padding:7px 23px;border:none;margin-right:.7em;">Download Packs</button>
+    <button class="ansi-tab-btn" onclick="showGalleryTab('history')" style="background:#ffb1ef;color:#181b19;font-weight:800;border-radius:10px;padding:7px 23px;border:none;">History & How-To</button>
+  </div>
+
+  <!-- TABS CONTENT -->
+  <div id="ansi-gallery-tabs" style="background:#181b26;border-radius:13px;padding:2.1em 2vw 1.5em 2vw;box-shadow:0 2px 14px #181b26cc;">
+    <!-- CLASSICS TAB -->
+    <div class="gallery-tab-content" id="tab-classics">
+      <div style="font-size:1.12em;color:#ffe44f;margin-bottom:.7em;font-weight:700;">👑 All-Time Classic ANSI & ASCII Art</div>
+      <div id="ansi-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:22px;">
+        <!-- Examples, some adapted from real classics (you can add more)— -->
+        <div class="ansi-gallery-card" style="background:#131822;border-radius:12px;padding:14px 16px;box-shadow:0 2px 13px #39ff1422;">
+<pre style="color:#39ff14;font-size:1em;line-height:1.14em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+      ____  _             _     
+     / ___|| |_ __ _ _ __| |_   
+     \___ \| __/ _` | '__| __|  
+      ___) | || (_| | |  | |_   
+     |____/ \__\__,_|_|   \__|  
+</pre>
+          <div style="color:#ffe44f;font-size:.97em;margin:7px 0 0 0;">"PromptForge" Block Font</div>
+        </div>
+        <div class="ansi-gallery-card" style="background:#131822;border-radius:12px;padding:14px 16px;box-shadow:0 2px 13px #39ff1422;">
+<pre style="color:#ffb1ef;font-size:1.1em;line-height:1.14em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+ /$$$$$$  /$$                               /$$            
+ /$$__  $$| $$                              | $$            
+| $$  \__/| $$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$    /$$$$$$ 
+|  $$$$$$ | $$__  $$ |____  $$ /$$_____/ |_  $$_/   /$$__  $$
+ \____  $$| $$  \ $$  /$$$$$$$|  $$$$$$    | $$    | $$  \ $$
+ /$$  \ $$| $$  | $$ /$$__  $$ \____  $$   | $$ /$$| $$  | $$
+|  $$$$$$/| $$$$$$$/|  $$$$$$$ /$$$$$$$/   |  $$$$/|  $$$$$$$
+ \______/ |_______/  \_______/|_______/     \___/   \____  $$
+                                                    /$$  \ $$
+                                                   |  $$$$$$/
+                                                    \______/ 
+</pre>
+          <div style="color:#ffb1ef;font-size:.97em;margin:7px 0 0 0;">"PromptForge" Banner Font</div>
+        </div>
+        <!-- Add more classics or popular ASCII/ANSI memes below: -->
+        <div class="ansi-gallery-card" style="background:#131822;border-radius:12px;padding:14px 16px;box-shadow:0 2px 13px #39ff1422;">
+<pre style="color:#8efeff;font-size:1.14em;line-height:1.14em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+   (\__/)
+   (•ㅅ•)
+   / 　 づ
+</pre>
+          <div style="color:#8efeff;font-size:.97em;margin:7px 0 0 0;">"Bunny" Meme (Japanese ASCII)</div>
+        </div>
+        <div class="ansi-gallery-card" style="background:#131822;border-radius:12px;padding:14px 16px;box-shadow:0 2px 13px #39ff1422;">
+<pre style="color:#ffe44f;font-size:1em;line-height:1.14em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+           ,#####,
+           #_   _#
+           |a` `a|
+           |  u  |
+           \  =  /
+           |\___/|
+        ___)/:=:(\___
+      .'   \\     /   `.
+     /      )    (      \
+    /   .-'      '-.     \
+   |   /            \     |
+   |  |              |    |
+</pre>
+          <div style="color:#ffe44f;font-size:.97em;margin:7px 0 0 0;">"Classic Face" (NFO Style)</div>
+        </div>
+      </div>
+      <div style="color:#8fffd9;font-size:.98em;margin-top:1.1em;">
+        <b>Want more?</b> <a href="https://www.asciiart.eu/" target="_blank" style="color:#39ff14;">Explore more at asciiart.eu</a> or <a href="#ansiart-create-wrap" style="color:#ffe44f;">remix your own!</a>
+      </div>
+    </div>
+
+    <!-- FONTS TAB -->
+    <div class="gallery-tab-content" id="tab-fonts" style="display:none;">
+      <div style="font-size:1.12em;color:#ffe44f;margin-bottom:.7em;font-weight:700;">📝 Font/Style Showroom</div>
+      <div id="font-demo-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:20px;">
+        <div style="background:#131822;border-radius:12px;padding:14px 16px;">
+          <div style="font-size:1.07em;color:#39ff14;margin-bottom:3px;">Block</div>
+<pre style="color:#39ff14;font-size:1.05em;line-height:1.16em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+ ██████╗ ██████╗ ███████╗
+██╔════╝ ██╔══██╗██╔════╝
+██║  ███╗██████╔╝█████╗  
+██║   ██║██╔══██╗██╔══╝  
+╚██████╔╝██║  ██║███████╗
+ ╚═════╝ ╚═╝  ╚═╝╚══════╝
+</pre>
+        </div>
+        <div style="background:#131822;border-radius:12px;padding:14px 16px;">
+          <div style="font-size:1.07em;color:#ffe44f;margin-bottom:3px;">Banner</div>
+<pre style="color:#ffe44f;font-size:1em;line-height:1.16em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+ #     #   ###   #     # 
+ #     #  #   #  ##    # 
+ #     # #     # # #   # 
+ ####### #     # #  #  # 
+ #     # #     # #   # # 
+ #     #  #   #  #    ## 
+ #     #   ###   #     # 
+</pre>
+        </div>
+        <div style="background:#131822;border-radius:12px;padding:14px 16px;">
+          <div style="font-size:1.07em;color:#ffb1ef;margin-bottom:3px;">Bubble</div>
+<pre style="color:#ffb1ef;font-size:1em;line-height:1.16em;white-space:pre;font-family:'Fira Mono',Consolas,monospace;">
+ _     _     _     _     _     _ 
+( )   ( )   ( )   ( )   ( )   ( )
+| |   | |   | |   | |   | |   | |
+| |___| |___| |___| |___| |___| |
+(_______(_______(_______(_______(
+</pre>
+        </div>
+        <!-- ...more fonts, show at least 10+ with color and labels... -->
+        <!-- Steal examples from figlet/font demos, or .nfo packs for accuracy -->
+      </div>
+      <div style="color:#8fffd9;font-size:.98em;margin-top:1.1em;">
+        <b>Tip:</b> Try each font in the “Make Your Own” editor above!
+      </div>
+    </div>
+
+    <!-- PACKS TAB -->
+    <div class="gallery-tab-content" id="tab-packs" style="display:none;">
+      <div style="font-size:1.12em;color:#ffe44f;margin-bottom:.7em;font-weight:700;">📦 Download Classic Packs & Font Files</div>
+      <ul style="color:#8efeff;font-size:1.06em;line-height:1.49em;">
+        <li><a href="https://github.com/xero/figlet-fonts" target="_blank" style="color:#39ff14;">Figlet Font Mega-Pack (400+ fonts, open source)</a></li>
+        <li><a href="https://int10h.org/oldschool-pc-fonts/download/" target="_blank" style="color:#ffe44f;">Old-School DOS/PC Fonts (TrueType, open)</a></li>
+        <li><a href="https://www.asciiart.eu/" target="_blank" style="color:#8efeff;">ASCII Art Gallery (huge free archive)</a></li>
+        <li><a href="https://patorjk.com/software/taag/#p=display&h=2&f=ANSI%20Shadow&t=PromptForge" target="_blank" style="color:#ffb1ef;">Online Text-to-ASCII Generator (TAAG)</a></li>
+        <li><a href="https://www.ascii-generator.site/" target="_blank" style="color:#39ff14;">ASCII Image Converter (turn images to art)</a></li>
+      </ul>
+      <div style="color:#8fffd9;font-size:.98em;margin-top:1.1em;">
+        <b>Bonus:</b> All packs above are free. For the **PromptForge Gallery Pack**, <a href="#ansi-gallery-upload" style="color:#ffe44f;">upload your art</a> to help us build the biggest archive ever!
+      </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div class="gallery-tab-content" id="tab-history" style="display:none;">
+      <div style="font-size:1.12em;color:#ffe44f;margin-bottom:.7em;font-weight:700;">⌛ ANSI/ASCII Art: A Quick History & How-To</div>
+      <div style="color:#fff2fd;font-size:1.03em;line-height:1.56em;margin-bottom:1em;">
+        <b>What is ANSI/ASCII Art?</b><br>
+        <ul>
+          <li><b>ASCII Art</b> uses keyboard characters (letters, numbers, punctuation) to make pictures, logos, and memes—dating back to 1960s printers and BBSes.</li>
+          <li><b>ANSI Art</b> adds color, animation, and wild text tricks—exploded in the 1980s/90s thanks to PC BBSes, .NFO files, and cracktros.</li>
+          <li>From <b>dial-up hacker boards</b> to today’s memes, ASCII/ANSI lives on! Most <b>emojis</b> and even Discord memes started this way.</li>
+        </ul>
+        <b>How To Make It (in 2025):</b><br>
+        <ul>
+          <li>Use the <a href="#ansiart-create-wrap" style="color:#39ff14;">“Make Art” tool above</a> for instant results.</li>
+          <li>Try online tools: <a href="https://patorjk.com/software/taag/" target="_blank" style="color:#ffe44f;">TAAG</a>, <a href="https://www.ascii-generator.site/" target="_blank" style="color:#8efeff;">ascii-generator.site</a>.</li>
+          <li>Hand-draw in a code editor (use “Fira Mono” or “Consolas” font, disable word wrap for best effect).</li>
+          <li>Steal inspiration from the <a href="#ansi-gallery-grid" style="color:#ffe44f;">classics above</a>, then remix with your own flavor!</li>
+        </ul>
+      </div>
+      <div style="font-size:.99em;color:#8fffd9;">
+        <b>Why Save ANSI/ASCII?</b> This artform is pure code, *no copyright, no spyware, no “NFTs”—just imagination and keyboard power. PromptForge aims to save, share, and remix it forever. <br>
+        <span style="color:#ffe44f;">Want to help? <a href="#ansi-gallery-upload" style="color:#ffe44f;">Submit your art here!</a></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS: GALLERY TAB SWITCHER -->
+<script>
+function showGalleryTab(tab) {
+  document.querySelectorAll('.gallery-tab-content').forEach(el=>el.style.display='none');
+  document.getElementById('tab-'+tab).style.display='block';
+  document.querySelectorAll('.ansi-tab-btn').forEach(btn=>btn.style.boxShadow='none');
+  let idx = ['classics','fonts','packs','history'].indexOf(tab);
+  if (idx!==-1) document.querySelectorAll('.ansi-tab-btn')[idx].style.boxShadow='0 2px 12px #ffe44f80';
+}
+showGalleryTab('classics');
+</script>
+<!-- ===== BLOCK 6: UPLOAD, REMIX, BONUS ===== -->
+<div id="ansi-gallery-upload" style="max-width:1100px;margin:0 auto 60px auto;padding:2vw 2vw 0 2vw;">
+  <div style="font-size:1.27em;font-weight:900;color:#39ff14;margin-bottom:.56em;text-shadow:0 0 7px #39ff1466;">
+    🚀 Submit Your Art, Enter Remix Challenges, & Win Bonus Packs!
+  </div>
+  <div style="background:#181b26;border-radius:13px;padding:2.1em 2vw 1.5em 2vw;box-shadow:0 2px 14px #181b26cc;">
+
+    <!-- UPLOAD/ SUBMIT ART FORM -->
+    <div style="margin-bottom:2em;">
+      <form id="ansi-art-upload-form" enctype="multipart/form-data" style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;">
+        <div style="flex:2;">
+          <label style="color:#ffe44f;font-size:1.04em;font-weight:700;" for="upload-art-file">Upload ANSI/ASCII Art File:</label>
+          <input type="file" id="upload-art-file" accept=".txt,.ans,.nfo,.asc" style="margin-top:7px;color:#39ff14;background:#10131b;border-radius:7px;border:1px solid #39ff1455;padding:7px;width:100%;">
+        </div>
+        <div style="flex:1;">
+          <label style="color:#8efeff;font-size:1.04em;font-weight:700;" for="upload-art-title">Title:</label>
+          <input type="text" id="upload-art-title" maxlength="80" placeholder="Give it a name..." style="margin-top:7px;color:#181b26;background:#8efeff33;border-radius:7px;border:1px solid #8efeff66;padding:7px;width:100%;">
+        </div>
+        <div style="flex:1;">
+          <label style="color:#ffb1ef;font-size:1.04em;font-weight:700;" for="upload-art-privacy">Visibility:</label>
+          <select id="upload-art-privacy" style="margin-top:7px;color:#ffb1ef;background:#ffb1ef33;border-radius:7px;border:1px solid #ffb1ef66;padding:7px;width:100%;">
+            <option value="public">Public (add to gallery!)</option>
+            <option value="private">Private (only you, link required)</option>
+          </select>
+        </div>
+        <div style="flex:1;">
+          <button type="submit" style="margin-top:26px;font-weight:800;background:#39ff14;color:#181b26;border-radius:10px;padding:11px 33px;font-size:1.07em;border:none;box-shadow:0 2px 13px #39ff1422;cursor:pointer;">Upload Art</button>
+        </div>
+      </form>
+      <div id="upload-art-msg" style="margin-top:9px;color:#ffb1ef;font-size:.98em;font-weight:600;"></div>
+    </div>
+    
+    <!-- REMIX CHALLENGES -->
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.14em;color:#ffe44f;font-weight:700;margin-bottom:.7em;">🔥 Weekly Remix Challenge</div>
+      <div style="color:#fff2fd;font-size:1.03em;line-height:1.52em;margin-bottom:1.1em;">
+        <b>How it works:</b> Every week, a classic ANSI/ASCII piece or prompt is posted here. Anyone can download, remix, and re-upload their version.<br>
+        <span style="color:#39ff14;">Winners</span> (by votes/downloads) get a <b>secret bonus pack</b> and get featured in the main gallery!
+      </div>
+      <div style="background:#131822;border-radius:9px;padding:16px;">
+        <div style="color:#8efeff;font-size:.97em;margin-bottom:.7em;"><b>This Week’s Challenge:</b></div>
+        <div style="font-family:'Fira Mono',monospace;font-size:1.06em;color:#ffe44f;white-space:pre;">
+ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+██                              ██
+██   Draw your best “old-school” ██
+██  PromptForge logo in ANSI!    ██
+██   (Use any font, colors, or   ██
+██      remix style you want)    ██
+██▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄██
+        </div>
+        <a href="#ansi-gallery-upload" style="display:inline-block;margin-top:14px;color:#ffb1ef;font-weight:700;">Upload Your Remix &rarr;</a>
+      </div>
+      <div style="color:#8fffd9;font-size:.98em;margin-top:.8em;">
+        <b>Tip:</b> You can remix <a href="#ansi-gallery-grid" style="color:#39ff14;">anything in the gallery</a>, just give credit!
+      </div>
+    </div>
+    
+    <!-- BONUS PACKS -->
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.14em;color:#8efeff;font-weight:700;margin-bottom:.7em;">💾 Secret & Bonus Packs</div>
+      <ul style="color:#39ff14;font-size:1.08em;line-height:1.6em;">
+        <li><b>PromptForge ANSI Remix Mega-Pack:</b> <a href="#" onclick="alert('Pack coming soon—help us build it!')" style="color:#ffe44f;">Download</a> (free, user-contributed)</li>
+        <li><b>Rare .NFO Cracktro Classics:</b> <a href="https://www.defacto2.net/nfo_driven" target="_blank" style="color:#8efeff;">Open Pack</a></li>
+        <li><b>1990s PC Fonts & BBS Art:</b> <a href="https://16colo.rs/" target="_blank" style="color:#ffb1ef;">16colo.rs archive</a></li>
+        <li><b>Weekly Winners Collection:</b> <a href="#" onclick="alert('Pack available to challenge winners!')" style="color:#39ff14;">(private, contest-only)</a></li>
+        <li><b>ASCII Art for Print & Shirts:</b> <a href="https://asciiart.club/" target="_blank" style="color:#ffe44f;">asciiart.club</a></li>
+        <li><b>Bonus: Easter Eggs Pack</b> <a href="#" onclick="alert('You found a secret! Email admin@promptforge.online for a code.')" style="color:#ffb1ef;">(hidden unlock)</a></li>
+      </ul>
+      <div style="color:#8fffd9;font-size:.98em;margin-top:1.1em;">
+        <b>Want to submit your own pack?</b> <a href="#ansi-gallery-upload" style="color:#ffe44f;">Upload here</a> (curated, no spam, credit given).
+      </div>
+    </div>
+    
+    <!-- EASTER EGGS / SECRET CODES / FUN -->
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.14em;color:#ffb1ef;font-weight:700;margin-bottom:.7em;">🥚 Easter Eggs & Hidden Surprises</div>
+      <ul style="color:#ffe44f;font-size:1.07em;line-height:1.5em;">
+        <li><b>Konami Code:</b> ↑ ↑ ↓ ↓ ← → ← → B A — Unlocks "ANSI rave mode" for 1 minute.</li>
+        <li><b>/ascii command in search bar:</b> Shows 3 random art pieces.</li>
+        <li><b>Secret Admin Login:</b> Type “j1nx” in search for a surprise greeting from our mascot!</li>
+        <li><b>Bonus:</b> Try clicking the logo above…👀</li>
+      </ul>
+    </div>
+
+    <!-- MICRO HELP: HOW TO SUBMIT / REMIX / DOWNLOAD -->
+    <div style="font-size:.99em;color:#8fffd9;">
+      <b>How to Use This Page:</b><br>
+      - <b>Upload</b> your art above (txt/ans/nfo)<br>
+      - <b>Remix</b> classic pieces, post yours, or just grab packs<br>
+      - <b>All art can be previewed, downloaded, or remixed—no login required!</b><br>
+      - <b>Voting & rating</b> (coming soon) will help feature the best art<br>
+      - <b>Questions?</b> See help section below or <a href="mailto:admin@promptforge.online" style="color:#ffe44f;">contact us</a>
+    </div>
+  </div>
+</div>
+
+<!-- UPLOAD HANDLING JS: (Nonfunctional—placeholder for your backend) -->
+<script>
+document.getElementById('ansi-art-upload-form').onsubmit = function(e){
+  e.preventDefault();
+  document.getElementById('upload-art-msg').innerText =
+    "Uploading art... (Feature coming soon: will save file to gallery!)";
+  setTimeout(()=>document.getElementById('upload-art-msg').innerText =
+    "Art uploaded! Thank you for contributing to PromptForge!", 2000);
+};
+</script>
+<!-- BLOCK 8A: IMAGE TO ASCII ART (MEGA FEATURE SECTION) -->
+<div id="ascii-img-section" style="background:#201C29;margin:2.8em 0 2em 0;padding:2.2em 1.7em 2.4em 1.7em;border-radius:22px;box-shadow:0 2px 18px #39ff1435;">
+  <div style="display:flex;align-items:center;gap:1.3em;margin-bottom:2.1em;">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" style="width:60px;height:78px;border-radius:15px 25px 35px 50px/15px 18px 30px 50px;box-shadow:0 2px 14px #39ff1475,0 0 0 2px #ffee88;background:#18101a;border:2px solid #39ff14;">
+    <div>
+      <h2 style="margin:0 0 7px 0;color:#ffe065;font-size:2em;letter-spacing:.02em;">🖼️ Image to ANSI/ASCII Art Generator</h2>
+      <div style="color:#cafffe;font-size:1.07em;font-weight:600;">
+        Upload any image (JPG, PNG, GIF, or paste a URL) and instantly turn it into beautiful colored ANSI/ASCII art—no server needed!  
+        <span style="color:#39ff14;font-weight:800;">All in your browser, 100% private.</span>
+      </div>
+    </div>
+  </div>
+  <!-- Micro-help / tips -->
+  <div style="margin:0 0 1.3em 0;color:#9af6e3;font-size:1em;">
+    <b>How to use:</b> Upload or drag in your photo, adjust settings, and hit “Convert.”  
+    <span style="color:#ffee88;">Tip:</span> Use small, high-contrast images for best ANSI art results.
+    <br><b>Share your creations below or remix others' images!</b>
+  </div>
+  <!-- Upload box + settings -->
+  <div style="display:flex;flex-wrap:wrap;gap:2em;">
+    <div style="flex:1 1 300px;min-width:220px;max-width:350px;">
+      <input type="file" id="asciiImgInput" accept="image/*" style="margin-bottom:12px;">
+      <input type="text" id="asciiImgUrl" placeholder="Paste image URL here…" style="width:96%;padding:6px 8px;font-size:1em;margin-bottom:12px;border-radius:6px;border:1px solid #39ff14;background:#232341;color:#aafff3;">
+      <div style="margin-bottom:13px;">
+        <label>Width: <input type="number" id="asciiWidth" min="30" max="250" value="90" style="width:60px;margin-right:13px;"></label>
+        <label>Charset:
+          <select id="asciiCharset" style="margin-right:13px;">
+            <option value="block">Blocks ▓▒░</option>
+            <option value="complex">@%#*+=-:. </option>
+            <option value="simple">#*+=-:. </option>
+            <option value="oldschool">O0o0lI|</option>
+            <option value="emoji">😀😎😁😂🤣😍</option>
+          </select>
+        </label>
+        <label>Color:
+          <select id="asciiColor" style="margin-right:13px;">
+            <option value="color">Color</option>
+            <option value="bw">Black/White</option>
+            <option value="invert">Invert</option>
+          </select>
+        </label>
+      </div>
+      <button onclick="convertAsciiImg()" style="background:#39ff14;color:#232;font-weight:800;padding:8px 22px;border-radius:11px;border:none;margin-bottom:12px;">Convert</button>
+      <button onclick="downloadAsciiImg()" style="background:#39ff14;color:#232;font-weight:700;padding:8px 18px;border-radius:10px;border:none;margin-left:1.2em;">Download .TXT</button>
+      <div style="margin-top:10px;">
+        <span id="asciiImgMsg" style="color:#ffee88;"></span>
+      </div>
+    </div>
+    <!-- ASCII output -->
+    <div id="asciiImgOutputWrap" style="flex:2 1 340px;min-width:190px;max-width:540px;overflow:auto;background:#1b1928;border-radius:12px;padding:18px 10px 15px 13px;box-shadow:0 0 12px #39ff1430 inset;">
+      <pre id="asciiImgOutput" style="font-family:monospace,'Fira Mono','Consolas';font-size:11.9px;line-height:1.09;white-space:pre;overflow-x:auto;color:#fafafa;background:none;margin:0;"></pre>
+    </div>
+  </div>
+  <!-- Mini Gallery -->
+  <div style="margin-top:1.7em;">
+    <h3 style="color:#ffe065;font-size:1.18em;">User Gallery (Best Recent ANSI Art)</h3>
+    <div id="asciiImgGallery" style="display:flex;flex-wrap:wrap;gap:18px;margin-top:9px;">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- JS FOR BLOCK 8A (Image to ASCII Art) -->
+<script>
+// Utility functions for ASCII conversion
+function getAsciiCharset(sel) {
+  switch(sel) {
+    case 'block': return '▓▒░ ';
+    case 'complex': return '@%#*+=-:. ';
+    case 'simple': return '#*+=-:. ';
+    case 'oldschool': return 'O0o0lI| ';
+    case 'emoji': return '😀😎😁😂🤣😍 ';
+    default: return '@%#*+=-:. ';
+  }
+}
+// Main image to ASCII
+function convertAsciiImg() {
+  let msg = document.getElementById('asciiImgMsg');
+  let width = parseInt(document.getElementById('asciiWidth').value)||90;
+  let charset = getAsciiCharset(document.getElementById('asciiCharset').value);
+  let colorMode = document.getElementById('asciiColor').value;
+  let fileInput = document.getElementById('asciiImgInput');
+  let urlInput = document.getElementById('asciiImgUrl').value.trim();
+  msg.textContent = "Converting…";
+  let img = new window.Image();
+  img.crossOrigin = "Anonymous";
+  img.onload = function() {
+    // Draw to canvas
+    let scale = width / img.width;
+    let h = Math.floor(img.height * scale * 0.5); // Adjust for font aspect
+    let canvas = document.createElement('canvas');
+    canvas.width = width; canvas.height = h;
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, h);
+    let d = ctx.getImageData(0,0,width,h).data;
+    let ascii = '';
+    for(let y=0;y<h;y++) {
+      for(let x=0;x<width;x++) {
+        let idx = (y*width + x)*4;
+        let r=d[idx],g=d[idx+1],b=d[idx+2],a=d[idx+3];
+        let lum = 0.2126*r + 0.7152*g + 0.0722*b;
+        if (colorMode==='invert') lum = 255-lum;
+        let ch = charset[Math.floor((lum/255)*(charset.length-1))];
+        if(colorMode==='color') {
+          ascii += `<span style="color:rgb(${r},${g},${b})">${ch}</span>`;
+        } else if(colorMode==='bw') {
+          let gray = lum>128?'#fff':'#222';
+          ascii += `<span style="color:${gray}">${ch}</span>`;
+        } else { // invert
+          let gray = lum>128?'#222':'#fff';
+          ascii += `<span style="color:${gray}">${ch}</span>`;
+        }
+      }
+      ascii += '\n';
+    }
+    document.getElementById('asciiImgOutput').innerHTML = ascii;
+    msg.textContent = "Done! (Click Download for .txt)";
+    // Save last to mini-gallery:
+    let html = `<div style="background:#18171f;padding:10px 7px 7px 7px;border-radius:10px;max-width:160px;overflow-x:auto;"><pre style="font-size:10.7px;line-height:1.09;">${ascii}</pre></div>`;
+    let g = document.getElementById('asciiImgGallery');
+    g.insertAdjacentHTML('afterbegin', html);
+    if(g.childNodes.length>5) g.removeChild(g.lastChild);
+  };
+  if(urlInput) {
+    img.src = urlInput;
+  } else if(fileInput.files[0]) {
+    let reader = new FileReader();
+    reader.onload = function(e){ img.src = e.target.result; };
+    reader.readAsDataURL(fileInput.files[0]);
+  } else {
+    msg.textContent = "Please upload a file or paste a URL.";
+  }
+}
+function downloadAsciiImg() {
+  let ascii = document.getElementById('asciiImgOutput').innerText;
+  if (!ascii) return;
+  let blob = new Blob([ascii], {type:'text/plain'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ascii-art.txt';
+  a.click();
+}
+</script>
+<!-- BLOCK 8B: ANIMATED GIF/MP4 TO ANIMATED ASCII ART -->
+<div id="ascii-anim-section" style="background:#191926;margin:2.7em 0 2em 0;padding:2.2em 1.7em 2.6em 1.7em;border-radius:22px;box-shadow:0 2px 18px #39ff1430;">
+  <div style="display:flex;align-items:center;gap:1.2em;margin-bottom:2.1em;">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" style="width:56px;height:74px;border-radius:17px 23px 28px 42px/13px 17px 24px 41px;box-shadow:0 2px 13px #39ff1485,0 0 0 2px #ffee88;background:#18101a;border:2px solid #39ff14;">
+    <div>
+      <h2 style="margin:0 0 7px 0;color:#ffe065;font-size:2em;letter-spacing:.02em;">🎬 GIF/MP4 to Animated ASCII/ANSI Art</h2>
+      <div style="color:#cafffe;font-size:1.08em;font-weight:600;">
+        <span style="color:#39ff14;font-weight:800;">Upload a GIF or MP4</span> — turn any short video into animated ASCII/ANSI art right in your browser.<br>
+        Instantly preview, adjust settings, and download as HTML/ZIP. <span style="color:#ffe88e;">No upload. 100% private.</span>
+      </div>
+    </div>
+  </div>
+  <!-- Micro-help / tips -->
+  <div style="margin:0 0 1.4em 0;color:#9af6e3;font-size:1em;">
+    <b>How to use:</b> Choose a GIF/MP4, tweak width and speed, and click “Animate.”<br>
+    <span style="color:#ffee88;">Tip:</span> Works best with short (max 5s) clips, bold shapes, and simple backgrounds.
+  </div>
+  <!-- Upload box + settings -->
+  <div style="display:flex;flex-wrap:wrap;gap:2em;">
+    <div style="flex:1 1 310px;min-width:220px;max-width:380px;">
+      <input type="file" id="asciiAnimInput" accept="image/gif,video/mp4,video/webm" style="margin-bottom:12px;">
+      <input type="text" id="asciiAnimUrl" placeholder="Paste GIF/MP4 URL here…" style="width:96%;padding:6px 8px;font-size:1em;margin-bottom:12px;border-radius:6px;border:1px solid #39ff14;background:#232341;color:#aafff3;">
+      <div style="margin-bottom:13px;">
+        <label>Width: <input type="number" id="asciiAnimWidth" min="24" max="120" value="54" style="width:55px;margin-right:13px;"></label>
+        <label>Speed:
+          <select id="asciiAnimFps" style="margin-right:13px;">
+            <option value="5">5 FPS (slow)</option>
+            <option value="8" selected>8 FPS (default)</option>
+            <option value="12">12 FPS</option>
+            <option value="15">15 FPS</option>
+          </select>
+        </label>
+        <label>Charset:
+          <select id="asciiAnimCharset" style="margin-right:13px;">
+            <option value="block">▓▒░ </option>
+            <option value="complex">@%#*+=-:. </option>
+            <option value="simple">#*+=-:. </option>
+            <option value="emoji">😀😎😁😂🤣😍 </option>
+          </select>
+        </label>
+        <label>Color:
+          <select id="asciiAnimColor" style="margin-right:13px;">
+            <option value="color">Color</option>
+            <option value="bw">Black/White</option>
+            <option value="invert">Invert</option>
+          </select>
+        </label>
+      </div>
+      <button onclick="convertAsciiAnim()" style="background:#39ff14;color:#232;font-weight:800;padding:8px 22px;border-radius:11px;border:none;margin-bottom:12px;">Animate</button>
+      <button onclick="downloadAsciiAnim()" style="background:#39ff14;color:#232;font-weight:700;padding:8px 18px;border-radius:10px;border:none;margin-left:1.2em;">Download HTML/ZIP</button>
+      <div style="margin-top:10px;">
+        <span id="asciiAnimMsg" style="color:#ffee88;"></span>
+      </div>
+    </div>
+    <!-- ASCII Animation output -->
+    <div id="asciiAnimOutputWrap" style="flex:2 1 350px;min-width:200px;max-width:580px;overflow:auto;background:#16161f;border-radius:12px;padding:19px 10px 15px 13px;box-shadow:0 0 14px #39ff1430 inset;">
+      <pre id="asciiAnimOutput" style="font-family:monospace,'Fira Mono','Consolas';font-size:12.2px;line-height:1.09;white-space:pre;overflow-x:auto;color:#fafafa;background:none;margin:0;"></pre>
+    </div>
+  </div>
+  <div style="margin-top:1.8em;">
+    <h3 style="color:#ffe065;font-size:1.16em;">Best Community-Shared Animated ASCII Art</h3>
+    <div id="asciiAnimGallery" style="display:flex;flex-wrap:wrap;gap:18px;margin-top:8px;">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- JS FOR BLOCK 8B (Animated GIF/MP4 to ASCII Art) -->
+<script>
+// Use gif.js (lightweight) for GIFs, and browser <video> for MP4/webm. (If no library, fallback to first frame as static.)
+let asciiAnimFrames = [];
+let asciiAnimInterval;
+function getAsciiAnimCharset(sel) {
+  switch(sel) {
+    case 'block': return '▓▒░ ';
+    case 'complex': return '@%#*+=-:. ';
+    case 'simple': return '#*+=-:. ';
+    case 'emoji': return '😀😎😁😂🤣😍 ';
+    default: return '@%#*+=-:. ';
+  }
+}
+// --- MAIN ---
+function convertAsciiAnim() {
+  let msg = document.getElementById('asciiAnimMsg');
+  let width = parseInt(document.getElementById('asciiAnimWidth').value)||54;
+  let charset = getAsciiAnimCharset(document.getElementById('asciiAnimCharset').value);
+  let colorMode = document.getElementById('asciiAnimColor').value;
+  let fps = parseInt(document.getElementById('asciiAnimFps').value)||8;
+  let fileInput = document.getElementById('asciiAnimInput');
+  let urlInput = document.getElementById('asciiAnimUrl').value.trim();
+  msg.textContent = "Processing animation…";
+  asciiAnimFrames = [];
+
+  // Use browser for GIFs; fallback: static image only for mp4/webm
+  let isGif = false, isVideo = false;
+  let srcUrl = "";
+  if (urlInput) {
+    srcUrl = urlInput;
+    isGif = srcUrl.toLowerCase().endsWith('.gif');
+    isVideo = srcUrl.toLowerCase().endsWith('.mp4') || srcUrl.toLowerCase().endsWith('.webm');
+  } else if (fileInput.files[0]) {
+    let name = fileInput.files[0].name.toLowerCase();
+    isGif = name.endsWith('.gif');
+    isVideo = name.endsWith('.mp4') || name.endsWith('.webm');
+  }
+
+  // Simple GIF decode using gif.js library if present, otherwise fallback
+  if (isGif) {
+    // Show a loader for a sec
+    msg.textContent = "Decoding GIF… (may take 10s for large files)";
+    let reader = new FileReader();
+    reader.onload = function(e){
+      let gif = new window.SuperGif({ gif: document.createElement('img'), auto_play: false, loop_mode:false });
+      gif.load_raw(e.target.result, function(){
+        let frames = gif.get_length();
+        asciiAnimFrames = [];
+        for (let i = 0; i < frames; i++) {
+          gif.move_to(i);
+          let c = gif.get_canvas();
+          asciiAnimFrames.push(canvasToAscii(c, width, charset, colorMode));
+        }
+        playAsciiAnim(fps);
+        msg.textContent = "Done! Animation previewed below.";
+        addAnimToGallery();
+      });
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+    return;
+  }
+
+  // Video/MP4 - Just sample a few frames (simple fallback)
+  if (isVideo) {
+    msg.textContent = "Sampling video frames…";
+    let video = document.createElement('video');
+    video.muted = true;
+    video.crossOrigin = "anonymous";
+    let source = document.createElement('source');
+    if(urlInput) { source.src = urlInput; }
+    else {
+      let url = URL.createObjectURL(fileInput.files[0]);
+      source.src = url;
+    }
+    video.appendChild(source);
+    document.body.appendChild(video);
+    video.currentTime = 0.01;
+    let frames = [];
+    video.onloadeddata = function(){
+      let dur = Math.min(video.duration, 5.5); // Only sample 5s
+      let total = Math.floor(dur*fps);
+      let canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = Math.floor(video.videoHeight*width/video.videoWidth*0.5);
+      let ctx = canvas.getContext('2d');
+      let captureFrame = (i) => {
+        if(i>=total) {
+          asciiAnimFrames = frames;
+          playAsciiAnim(fps);
+          msg.textContent = "Done! Animation previewed below.";
+          addAnimToGallery();
+          document.body.removeChild(video);
+          return;
+        }
+        video.currentTime = i/fps;
+        video.onseeked = function() {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          frames.push(canvasToAscii(canvas, width, charset, colorMode));
+          captureFrame(i+1);
+        };
+      };
+      captureFrame(0);
+    };
+    video.load();
+    return;
+  }
+
+  // Static fallback (single image frame)
+  msg.textContent = "Using first frame only.";
+  let img = new window.Image();
+  img.crossOrigin = "Anonymous";
+  img.onload = function() {
+    let canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = Math.floor(img.height*width/img.width*0.5);
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    asciiAnimFrames = [canvasToAscii(canvas, width, charset, colorMode)];
+    playAsciiAnim(1);
+    msg.textContent = "Done! (Static frame only)";
+    addAnimToGallery();
+  };
+  if(urlInput) img.src = urlInput;
+  else if(fileInput.files[0]) {
+    let reader = new FileReader();
+    reader.onload = function(e){ img.src = e.target.result; };
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+}
+function canvasToAscii(canvas, width, charset, colorMode) {
+  let ctx = canvas.getContext('2d');
+  let w = canvas.width, h = canvas.height;
+  let d = ctx.getImageData(0,0,w,h).data;
+  let ascii = '';
+  for(let y=0;y<h;y++) {
+    for(let x=0;x<w;x++) {
+      let idx = (y*w + x)*4;
+      let r=d[idx],g=d[idx+1],b=d[idx+2],a=d[idx+3];
+      let lum = 0.2126*r + 0.7152*g + 0.0722*b;
+      let ch = charset[Math.floor((lum/255)*(charset.length-1))];
+      if(colorMode==='color') {
+        ascii += `<span style="color:rgb(${r},${g},${b})">${ch}</span>`;
+      } else if(colorMode==='bw') {
+        let gray = lum>128?'#fff':'#222';
+        ascii += `<span style="color:${gray}">${ch}</span>`;
+      } else {
+        let gray = lum>128?'#222':'#fff';
+        ascii += `<span style="color:${gray}">${ch}</span>`;
+      }
+    }
+    ascii += '\n';
+  }
+  return ascii;
+}
+function playAsciiAnim(fps) {
+  let out = document.getElementById('asciiAnimOutput');
+  let i = 0;
+  clearInterval(asciiAnimInterval);
+  if (!asciiAnimFrames.length) return;
+  asciiAnimInterval = setInterval(function(){
+    out.innerHTML = asciiAnimFrames[i];
+    i = (i+1)%asciiAnimFrames.length;
+  }, 1000/fps);
+}
+function downloadAsciiAnim() {
+  if (!asciiAnimFrames.length) return;
+  // Save as HTML file with auto animation
+  let html = `<html><body style="background:#191926;color:#fff;"><pre id="anim"></pre><script>
+  let f = ${JSON.stringify(asciiAnimFrames)};
+  let i=0;setInterval(()=>{document.getElementById('anim').innerHTML=f[i];i=(i+1)%f.length;},100);
+  </script></body></html>`;
+  let blob = new Blob([html], {type:'text/html'});
+  let a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'animated-ascii-art.html';
+  a.click();
+}
+function addAnimToGallery() {
+  let g = document.getElementById('asciiAnimGallery');
+  let preview = asciiAnimFrames.length ? asciiAnimFrames[0] : '';
+  let html = `<div style="background:#18171f;padding:10px 7px 7px 7px;border-radius:10px;max-width:160px;overflow-x:auto;">
+    <pre style="font-size:10.7px;line-height:1.09;">${preview}</pre>
+    <div style="color:#39ff14;font-size:.97em;margin-top:2px;">${asciiAnimFrames.length}f</div>
+  </div>`;
+  g.insertAdjacentHTML('afterbegin', html);
+  if(g.childNodes.length>5) g.removeChild(g.lastChild);
+}
+</script>
+
+  <!-- ===== BLOCK 7: HELP, FAQ, TROUBLESHOOTING, TUTORIALS ===== -->
+<div id="ansi-help-faq" style="max-width:1000px;margin:0 auto 55px auto;padding:2vw 2vw 2vw 2vw;">
+  <div style="font-size:1.29em;font-weight:900;color:#ffe44f;margin-bottom:.7em;text-shadow:0 0 7px #ffe44f77;">
+    💡 Help, Troubleshooting & FAQ — Everything You Need to Become an ANSI/ASCII Pro!
+  </div>
+  <div style="background:#1b1e29;border-radius:13px;padding:2.1em 2vw 1.7em 2vw;box-shadow:0 2px 14px #181b26cc;">
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#8efeff;font-weight:700;margin-bottom:.7em;">🎨 What is ANSI/ASCII Art?</div>
+      <div style="color:#fff2fd;font-size:1.06em;line-height:1.57em;">
+        ANSI/ASCII art is computer art made only with text and keyboard symbols. It can be static, animated, or even interactive. ANSI uses color and box-drawing, ASCII is pure text. Both are part of internet & hacker history, seen on BBSes, cracktros, old demos, games, and now the modern web!
+      </div>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#ffe44f;font-weight:700;margin-bottom:.7em;">🖥️ How Do I View ANSI/ASCII Art Correctly?</div>
+      <ul style="color:#8efeff;font-size:1.03em;line-height:1.7em;">
+        <li><b>Web:</b> This site auto-renders everything! For offline: use Chrome, Firefox, Edge, or Safari—zoom to 100% for best look.</li>
+        <li><b>Windows:</b> Download <a href="https://ansilove.github.io/" target="_blank" style="color:#ffe44f;">Ansilove</a> (free), or use <b>Notepad++</b> (set font to 'Terminal' or 'Fira Mono').</li>
+        <li><b>Mac:</b> Use <b>TextEdit</b> (set plain text mode) or <b>iTerm2</b> for colors.</li>
+        <li><b>Linux:</b> Try <b>cat</b>, <b>less</b>, <b>nano</b>, or <a href="https://github.com/ansilove/ansilove" target="_blank" style="color:#39ff14;">ansilove</a>.</li>
+        <li><b>Mobile:</b> Best with our site! Offline: try <a href="https://play.google.com/store/apps/details?id=eu.ansilove.viewer" target="_blank" style="color:#39ff14;">ANSI/ASCII Viewer</a> for Android.</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#ffb1ef;font-weight:700;margin-bottom:.7em;">⚙️ Why Does My Art Look Wrong / Spaced Out?</div>
+      <ul style="color:#ffb1ef;font-size:1.02em;line-height:1.6em;">
+        <li>Always use a **monospaced font** (“Fira Mono”, “Consolas”, “Courier”, “Terminal”).</li>
+        <li>Zoom to 100% or “Actual Size.”</li>
+        <li>If colors are missing, try Chrome or Firefox, or upload to our site for instant fix!</li>
+        <li>On Mac/Windows, don’t use Word or Pages! Stick to Notepad, Notepad++, or plain-text editors.</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#8fffd9;font-weight:700;margin-bottom:.7em;">📲 How Do I Download, Save, or Print Art?</div>
+      <ul style="color:#8fffd9;font-size:1.02em;line-height:1.6em;">
+        <li><b>Download:</b> Use the download button in the gallery, or right-click and “Save As”.</li>
+        <li><b>Save:</b> Save as .txt, .ans, or .nfo (plain text format). Keep filenames short and no spaces.</li>
+        <li><b>Print:</b> Open in Notepad (Windows) or TextEdit (Mac) and print. Or use “Print to PDF” for digital artbooks!</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#ffe44f;font-weight:700;margin-bottom:.7em;">🔊 My Animation/Sound/Share Feature Isn’t Working?</div>
+      <ul style="color:#ffe44f;font-size:1.02em;line-height:1.6em;">
+        <li>Animations need Chrome, Firefox, Edge, or Safari. Refresh if stuck.</li>
+        <li>Sound & TTS: Your browser/device must allow auto-play. Try clicking anywhere first to “unlock” sound.</li>
+        <li>Some features may be desktop-only or need permissions. See help in each tool.</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#ffb1ef;font-weight:700;margin-bottom:.7em;">🖌️ How Do I Make My Own ANSI/ASCII Art?</div>
+      <ul style="color:#ffb1ef;font-size:1.02em;line-height:1.6em;">
+        <li><b>Simple: Use our built-in editor</b> (above), or try classic tools below.</li>
+        <li><b>Windows:</b> <a href="https://ansiedit.com/" target="_blank" style="color:#ffe44f;">ANSIedit</a> (modern), <a href="https://www.pablodraw.com/" target="_blank" style="color:#8efeff;">PabloDraw</a> (classic, free), <a href="https://github.com/madnight/office-viewer" target="_blank" style="color:#39ff14;">MadNight’s NFO Viewer</a>.</li>
+        <li><b>Web:</b> <a href="https://emojicombos.com/" target="_blank" style="color:#ffe44f;">EmojiCombos</a> (ASCII), <a href="https://www.asciiart.eu/" target="_blank" style="color:#8efeff;">asciiart.eu</a> (browse/make), <a href="https://textkool.com/en/ascii-art-generator" target="_blank" style="color:#39ff14;">TextKool Generator</a>, <a href="https://manytools.org/hacker-tools/convert-images-to-ascii-art/" target="_blank" style="color:#ffe44f;">ManyTools Image2ASCII</a>.</li>
+        <li><b>Mac/Linux:</b> Any plain-text editor, or <a href="https://ansilove.github.io/" target="_blank" style="color:#39ff14;">Ansilove</a>.</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#ffe44f;font-weight:700;margin-bottom:.7em;">🌐 SEO/Advanced: Where Can I Share or Sell My Art?</div>
+      <ul style="color:#ffe44f;font-size:1.02em;line-height:1.6em;">
+        <li><b>PromptForge Gallery:</b> Use the <a href="#ansi-gallery-upload" style="color:#8efeff;">upload</a> above!</li>
+        <li><b>16colo.rs:</b> <a href="https://16colo.rs/" target="_blank" style="color:#8efeff;">Legendary BBS archive</a></li>
+        <li><b>ASCII Art Club:</b> <a href="https://asciiart.club/" target="_blank" style="color:#ffb1ef;">Print, shirts, more</a></li>
+        <li><b>Discord:</b> <a href="https://discord.gg/YourDiscordInvite" target="_blank" style="color:#39ff14;">PromptForge Discord</a></li>
+        <li><b>Instagram:</b> <a href="https://www.instagram.com/explore/tags/asciiart/" target="_blank" style="color:#ffe44f;">#asciiart</a></li>
+        <li><b>Twitter/X:</b> <a href="https://twitter.com/search?q=%23asciiart" target="_blank" style="color:#ffe44f;">#asciiart</a></li>
+        <li><b>BuyMeACoffee:</b> <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:#39ff14;">Donate/support PromptForge</a></li>
+      </ul>
+    </div>
+    
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#ffb1ef;font-weight:700;margin-bottom:.7em;">❓ Quick Troubleshooting Table</div>
+      <table style="width:100%;border-collapse:collapse;font-size:.99em;color:#fff;margin-top:.5em;background:#191f29;border-radius:11px;box-shadow:0 2px 7px #181b2660;">
+        <tr style="background:#232946;color:#ffe44f;">
+          <th style="padding:7px 7px;">Problem</th>
+          <th style="padding:7px 7px;">Fix</th>
+        </tr>
+        <tr>
+          <td style="padding:6px;">Art looks weird</td>
+          <td style="padding:6px;">Set browser/editor font to monospaced. Zoom to 100%.</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">No color in art</td>
+          <td style="padding:6px;">Try Chrome, Firefox, or our site’s gallery preview.</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">Art won’t upload</td>
+          <td style="padding:6px;">Check filetype (.txt, .ans, .nfo). Try smaller file.</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">Sound/animation missing</td>
+          <td style="padding:6px;">Click anywhere to unlock audio. Refresh browser.</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">I want to print/share art</td>
+          <td style="padding:6px;">Download as .txt, open in Notepad/TextEdit, then print or share.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="margin-bottom:2em;">
+      <div style="font-size:1.13em;color:#8efeff;font-weight:700;margin-bottom:.7em;">🦄 Advanced Tricks & Hidden Features</div>
+      <ul style="color:#8efeff;font-size:1.02em;line-height:1.7em;">
+        <li>Click the logo/header for a surprise! 🎲</li>
+        <li>Type “/ascii” in the search to get random art.</li>
+        <li>“Konami code” unlocks special color modes.</li>
+        <li>Download the <b>Mega-Pack</b> and get lost in a weekend of art!</li>
+        <li>Remix any piece, submit your version, get featured.</li>
+        <li>J1nx in the corner can answer your questions and help find art/tools!</li>
+      </ul>
+    </div>
+    <div style="color:#ffe44f;font-size:1.04em;font-weight:800;margin-bottom:.1em;">
+      Still stuck? <a href="mailto:admin@promptforge.online" style="color:#8efeff;">Contact our team</a> or join the <a href="https://discord.gg/YourDiscordInvite" target="_blank" style="color:#39ff14;">PromptForge Discord</a>!
+    </div>
+  </div>
+</div>
