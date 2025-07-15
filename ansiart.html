@@ -1154,3 +1154,164 @@ function addAnimToGallery() {
     </div>
   </div>
 </div>
+<!-- J1NX CORNER BOT: Always-on Floating Assistant -->
+<div id="j1nx-corner-bot" style="position:fixed;bottom:110px;right:32px;z-index:9999;display:flex;flex-direction:column;align-items:center;">
+  <img src="/j1nx/j1nx_cutout.png" alt="J1nx Mascot" style="width:70px;height:93px;border-radius:28px 28px 60px 60px/37px 37px 70px 70px;box-shadow:0 2px 14px #39ff1477,0 0 0 2px #ffee88;background:#18101a;border:2.5px solid #39ff14;object-fit:contain;cursor:pointer;transition:transform 0.19s cubic-bezier(.64,-0.13,.51,1.33);" onclick="toggleJ1nxPanel()" title="Click to chat with J1nx!">
+  <div id="j1nx-corner-chat" style="display:none;flex-direction:column;align-items:center;background:linear-gradient(120deg,#101c19 80%,#39ff1427 100%);border-radius:18px 22px 24px 32px/17px 21px 41px 38px;box-shadow:0 2px 21px #39ff1440;padding:14px 15px 13px 16px;margin-top:10px;max-width:330px;min-width:155px;border:2.5px solid #39ff14;">
+    <div id="j1nx-corner-log" style="font-family:'Fira Mono',Consolas,monospace;font-size:1.08em;color:#d0ffe7;max-height:108px;overflow-y:auto;margin-bottom:7px;"></div>
+    <textarea id="j1nx-corner-input" placeholder="Ask me anything, prank, tip, help..." maxlength="180" style="width:100%;padding:7px 8px;background:#181a28;color:#ffeefc;border-radius:7px;border:1.3px solid #39ff14;resize:none;outline:none;font-size:1em;margin-bottom:5px;" onkeydown="if(event.key==='Enter'){event.preventDefault();cornerJ1nxSend();}"></textarea>
+    <button onclick="cornerJ1nxSend()" style="background:#39ff14;color:#18131c;font-weight:700;border-radius:8px;padding:6px 14px;border:none;">Send</button>
+  </div>
+</div>
+<script>
+  // Minimal J1nx corner bot logic (calls same brain as main J1nx)
+  function toggleJ1nxPanel() {
+    let c = document.getElementById('j1nx-corner-chat');
+    c.style.display = (c.style.display === "none" || c.style.display === "") ? "flex" : "none";
+    if (c.style.display === "flex") renderCornerJ1nx();
+  }
+  let cornerJ1nxHistory = [{who:"j1nx",text:"Yo, I'm J1nx. Need a hack or tip? Ask me!"}];
+  function renderCornerJ1nx() {
+    let log = document.getElementById('j1nx-corner-log');
+    log.innerHTML = "";
+    cornerJ1nxHistory.slice(-6).forEach(msg=>{
+      let div = document.createElement('div');
+      div.innerHTML = `<b>${msg.who==="j1nx"?"J1nx":"You"}:</b> ${msg.text}`;
+      div.style.color = msg.who==="j1nx"?"#39ff14":"#fff2fd";
+      div.style.marginBottom="2px";
+      log.appendChild(div);
+    });
+    log.scrollTop = log.scrollHeight;
+  }
+  function cornerJ1nxSend() {
+    let inp = document.getElementById('j1nx-corner-input');
+    let txt = inp.value.trim();
+    if(!txt) return;
+    cornerJ1nxHistory.push({who:"user",text:txt});
+    inp.value = "";
+    renderCornerJ1nx();
+    setTimeout(()=>{
+      let reply = window.j1nxBrain && window.j1nxBrain.reply
+        ? window.j1nxBrain.reply(txt)
+        : "Ask for a prank, tip, ASCII, or just say hi!";
+      cornerJ1nxHistory.push({who:"j1nx",text:reply});
+      renderCornerJ1nx();
+      // Optional: Speak out loud
+      if(window.speechSynthesis){
+        let utter = new SpeechSynthesisUtterance(reply);
+        utter.rate=1.07; utter.pitch=1.05; utter.volume=1;
+        window.speechSynthesis.speak(utter);
+      }
+    },320);
+  }
+  // Hide bot when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!document.getElementById('j1nx-corner-bot').contains(e.target) && document.getElementById('j1nx-corner-chat').style.display==="flex") {
+      document.getElementById('j1nx-corner-chat').style.display="none";
+    }
+  });
+</script>
+
+<!-- ADSENSE BLOCK: Side/Bottom integration, visible but subtle -->
+<div style="width:100vw;max-width:830px;margin:32px auto 0 auto;display:flex;justify-content:center;align-items:center;">
+  <ins class="adsbygoogle"
+    style="display:block;min-width:320px;max-width:700px;width:100%;height:90px;background:#0d0e13;border-radius:18px;box-shadow:0 2px 17px #111a;overflow:hidden;"
+    data-ad-client="ca-pub-4963053724895140"
+    data-ad-slot="4315819721"
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- BONUS / EASTER EGG: Secret Konami ASCII Popup -->
+<script>
+  let konamiBuffer = [];
+  const konamiCode = [38,38,40,40,37,39,37,39,66,65]; // ↑↑↓↓←→←→BA
+  document.addEventListener('keydown', function(e){
+    konamiBuffer.push(e.keyCode);
+    if(konamiBuffer.length > konamiCode.length) konamiBuffer.shift();
+    if(JSON.stringify(konamiBuffer) === JSON.stringify(konamiCode)){
+      konamiBuffer = [];
+      showKonamiAscii();
+    }
+  });
+  function showKonamiAscii() {
+    let k = document.createElement('div');
+    k.innerHTML = `
+      <div style="position:fixed;left:0;top:0;width:100vw;height:100vh;background:rgba(22,19,41,.97);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <pre style="font-size:2.1em;color:#39ff14;font-family:'Fira Mono',Consolas,monospace;text-shadow:0 0 14px #0f0,0 0 2px #000;">LEGENDARY HACKER UNLOCKED
+.------..------..------..------..------..------..------..------.
+|P.--. ||F.--. ||O.--. ||R.--. ||G.--. ||E.--. ||!.-.  ||!.-.  |
+| :/\: || :(): || :/\: || :(): || :/\: || :/\: ||     ||     |
+| (__) || (__) || :\/: || (__) || :/\: || (__) ||     ||     |
+| '--' || '--' || '--' || '--' || '--' || '--' ||     ||     |
+'------''------''------''------''------''------''------''------'
+        </pre>
+        <div style="font-size:1.13em;color:#ffee88;font-weight:700;margin:1em 0 2em 0;">You found the secret! Thanks for being a real one.</div>
+        <button onclick="this.parentElement.parentElement.remove()" style="background:#39ff14;color:#18131c;font-weight:800;padding:13px 44px;border-radius:18px;font-size:1.21em;box-shadow:0 2px 19px #39ff1440;border:none;">Back to the Matrix</button>
+      </div>
+    `;
+    document.body.appendChild(k);
+  }
+</script>
+
+<!-- ANSI FOOTER: Your Signature + Full Nav + Copyright -->
+<div class="footer-ansi" style="width:100vw;background:#171720;color:#aaffd7;font-size:1.08em;font-family:'Fira Mono','Consolas',monospace;text-align:center;padding:22px 0 6px 0;border-top:2.5px solid #39ff14;box-shadow:0 -2px 19px #111b;letter-spacing:0.02em;z-index:1002;position:relative;">
+  <span class="ansi-art" style="color:#39ff14;font-family:'Fira Mono',monospace;white-space:pre;font-size:1em;line-height:1.09;margin-bottom:6px;display:block;text-shadow:0 0 7px #39ff1430,0 0 2px #000;">
+ 888888ba                                          dP   .8888b                                    
+ 88    `8b                                         88   88   "                                    
+a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b. .d8888b. .d8888b.
+ 88        88'  `88 88'  `88 88'`88'`88 88'  `88   88   88     88'  `88 88'  `88 88'  `88 88ooood8
+ 88        88       88.  .88 88  88  88 88.  .88   88   88     88.  .88 88       88.  .88 88.  ...
+ dP        dP       `88888P' dP  dP  dP 88Y888P'   dP   dP     `88888P' dP       `8888P88 `88888P'
+                                        88                                            .88         
+                                        dP                                        d8888P          
+  </span>
+  <div class="links" style="margin-top:0.3em;font-size:1.13em;">
+    <a href="main.html">Main Hub</a> |
+    <a href="index.html">Terminal Fun</a> |
+    <a href="picprompt.html">Pic Prompt</a> |
+    <a href="movieprompt.html">Movie Prompt</a> |
+    <a href="watermark.html">Watermark</a> |
+    <a href="aihacks.html" style="color:#fff000;">AI Hacks</a> |
+    <a href="ansiart.html">ANSI Art</a> |
+    <a href="compare.html">Compare</a> |
+    <a href="j1nx.html">J1nx</a> |
+    <a href="https://discord.gg/YourDiscordInvite" target="_blank"><i class="fa-brands fa-discord"></i> Discord</a> |
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
+    <a href="https://x.com/GoreandGiggles" target="_blank">X</a> |
+    <a href="mailto:admin@goreandgiggles.com">Contact</a> |
+    <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Coffee</a>
+  </div>
+  <div style="color:#8fffd9;font-size:0.97em;margin:0.3em 0 0.1em 0;">
+    &copy; 2025 PromptForge.online — Free for pranksters. No paywalls. No watermark. BC Canada 🇨🇦
+  </div>
+</div>
+
+<!-- HIDDEN SEO BLOCK (supercharged keywords, not visible to users) -->
+<div style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+  <h2>AI Pranks, ASCII Art Tools, Voice Assistant Games, Old-School Terminal Fun — PromptForge Encyclopedia</h2>
+  <p>
+    Alexa pranks, Siri tricks, Google Assistant hacks, ChatGPT games, Bing secrets, Gemini, Meta AI, Replika, Character.ai, ElevenLabs, Poe, Jasper, NightCafe, Perchance, deep learning humor, smart speaker memes, TTS tools, ASCII conversion, emoji hacks, batch commands, prank roulette, chatbot roasts, phone fun, Discord bots, Easter eggs, Konami code, ASCII animations, 3D art, ANSI, text games, GPT-4, Stable Diffusion, LLM, NSFW tricks, safe mode, voice firehose, open-source scripts, user submissions, old-school BBS, zines, download guides, privacy tips, and more.
+  </p>
+  <ul>
+    <li>ASCII art generators</li>
+    <li>AI prank encyclopedia</li>
+    <li>Chatbot tricks 2025</li>
+    <li>J1nx mascot</li>
+    <li>Canadian AI site</li>
+    <li>Prank submission gallery</li>
+    <li>Batch TTS copy</li>
+    <li>Terminal games</li>
+    <li>Smart speaker hacks</li>
+    <li>How to break Alexa/Siri/Google</li>
+    <li>Discord AI prank community</li>
+    <li>Animated ASCII upload</li>
+    <li>AI voice games</li>
+    <li>GPT-4 meme triggers</li>
+    <li>All old-school codes</li>
+    <li>PromptForge encyclopedia</li>
+    <li>Canada paramedic PTSD support</li>
+    <!-- Stack more if you want for SEO. -->
+  </ul>
+</div>
