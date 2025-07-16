@@ -22,7 +22,6 @@
     .feature-link:hover {box-shadow:0 2px 22px #b488ff33;background:#242b2f;}
     .feature-link h2 {font-size:1.22em;color:#b488ff;margin-bottom:.23em;font-family:'Fira Mono',monospace;}
     .feature-link p {font-size:1.03em;color:#e4e2dd;}
-    /* J1nx floating cutout + speech bubble (NO box) */
     .j1nx-wrap {display:flex;align-items:flex-end;justify-content:center;gap:2.2em;margin:2.5em 0 0 0;}
     .j1nx-cutout {width:192px;min-width:90px;max-width:33vw;border-radius:24px;box-shadow:0 0 25px #98ffb066;background:#22262e;z-index:2;}
     .j1nx-bubble {position:relative;min-width:0;flex:1;max-width:480px;background:#1b1922;border-radius:16px;padding:1.3em 1.5em .8em 1.5em;box-shadow:0 1px 13px #b488ff38;display:flex;flex-direction:column;}
@@ -55,23 +54,21 @@
   <header>
     <div class="breadcrumbs">/main /promptforge</div>
     <div class="banner">LEGENDARY AI TOOLBOX • PROMPTFORGE v2.0</div>
-    <!-- ANSI ART WITH MOVING EYES (GUARANTEED RENDER) -->
     <div class="ansi-art" id="ansiArt"></div>
     <script>
-      // Absolutely guarantee ANSI art renders with eyes!
+      // ANSI ART with eyes (now absolutely forced)
       document.addEventListener('DOMContentLoaded', function(){
-        const ansiArt = document.getElementById('ansiArt');
-        let txt = `
+        var ansi = `
  ))    ))       .-.   \\    /// ))   (o)__(o)         .-.     ))       \\/         
 (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
  | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
  | .-' |  .'/ /|_|_|\\ \\||\\\\//||  | .-'   )(  .' __)/ /|_|_|\\ \\ |  .'/ /|_|_\\ .' __)
  |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  
-  \\)  (/  \\)'. `---' .`||    ||   \\)     )/  )/    '. `---' .`(/  \\)'.   \\) \\`.__) 
-  (    )      `-...-' (_/    \\_)  (     (   (        `-...-'   )      `-.(_.'      
-`;
-        let html = txt.replace(/[oO0]/g, () => `<span class="eye"><span class="pupil"></span></span>`);
-        ansiArt.innerHTML = html;
+  \\)  (/  \\)'. \`---' .\`||    ||   \\)     )/  )/    '. \`---' .\`(/  \\)'.   \\) \\\`.__) 
+  (    )      \`-...-' (_/    \\_)  (     (   (        \`-...-'   )      \`-.(_.'      
+        `;
+        var html = ansi.replace(/[oO0]/g, '<span class="eye"><span class="pupil"></span></span>');
+        document.getElementById('ansiArt').innerHTML = html;
       });
       document.addEventListener('mousemove', function(e){
         var eyes=document.querySelectorAll('.eye'),ww=window.innerWidth,wh=window.innerHeight;
@@ -94,7 +91,6 @@
     </div>
   </header>
   <main style="max-width:1120px; margin:0 auto 2.3em auto; display:flex; flex-direction:column; gap:2.1em;">
-    <!-- Feature Grid -->
     <section class="feature-grid">
       <a class="feature-link" href="pic.html"><h2>🧩 Image Prompt Builder</h2><p>Pro AI image prompts—huge dropdowns, face/pose locks, NSFW unlocked. Works everywhere (OpenArt, RealVis, Juggernaut, SDXL, Gemini, more).</p></a>
       <a class="feature-link" href="movie.html"><h2>🎬 Video Prompt Builder</h2><p>Write detailed AI video/animation prompts. Sora, Gemini, Stable Video, & more. Taboo features included.</p></a>
@@ -104,8 +100,6 @@
       <a class="feature-link" href="watermark.html"><h2>💧 Watermark & Stealth Tool</h2><p>Protect your AI art with subtle watermarks, overlays, and privacy tools. Pro settings, export in 4K, free forever.</p></a>
       <a class="feature-link" href="compare.html"><h2>📊 Compare AI Models</h2><p>Test, compare, and review major image/video AI models—side-by-side. Live scores, real user reviews, and best picks.</p></a>
     </section>
-
-    <!-- Partner/Resource Links -->
     <section style="background:#23231f;border-radius:16px;padding:1.05em 1.5em 1em 1.5em;box-shadow:0 1.2px 11px #b488ff12;margin-bottom:1.1em;">
       <h2 style="color:#98ffb0;font-size:1.08em;letter-spacing:.04em;margin:0 0 .44em 0;font-family:'Fira Mono',monospace;font-weight:700;">🛠 Essential AI Art & Prompt Resources</h2>
       <div style="display:flex;flex-wrap:wrap;gap:.82em 2em;justify-content:center;">
@@ -123,8 +117,6 @@
         <b>Pro tip:</b> Our prompt outputs work with every site above. See <a href="aihacks.html" style="color:#98ffb0;">AI Hacks</a> for hundreds of ready-made voice commands & tricks for each platform.
       </div>
     </section>
-
-    <!-- J1nx: Floating Cutout + Speech Bubble -->
     <section class="j1nx-wrap">
       <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
       <div class="j1nx-bubble" id="j1nxBox" data-mood="chill">
@@ -137,7 +129,7 @@
     </section>
     <script src="assets/j1nx_brain.js"></script>
     <script>
-      // J1nx: real replies, mood coloring, auto-scroll
+      // J1nx logic (if j1nx_brain.js not present, fallback response)
       const box = document.getElementById('j1nxBox');
       const msgLog = document.getElementById('j1nxMessages');
       const input = document.getElementById('j1nxInput');
@@ -179,15 +171,11 @@
       };
       input.addEventListener('keydown',e=>{if(e.key==="Enter")send.onclick();});
     </script>
-
-    <!-- Buy Me a Coffee / Donate (Official Icon) -->
     <div style="max-width:700px;margin:1.1em auto 2em auto;text-align:center;">
       <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">
         <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" style="height:43px;box-shadow:0 2px 12px #0004; border-radius:7px;">
       </a>
     </div>
-
-    <!-- AdSense: Blend into page -->
     <div style="max-width:700px;margin:1.2em auto;">
       <ins class="adsbygoogle"
         style="display:block; text-align:center; min-width:320px; min-height:80px;"
@@ -197,8 +185,6 @@
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
   </main>
-
-  <!-- FOOTER: YOUR ASCII ART -->
   <footer style="margin:2em 0 0 0; background:transparent;">
     <pre style="font-family:monospace; font-size:1em; line-height:1.13; letter-spacing:1.2px; text-align:center; color:#e6e5e1; margin:0 0 0.6em 0; user-select:none;">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -216,10 +202,9 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         <a href="terms.html" style="color:#bdb687;text-decoration:underline;">Legal</a>
       </span>
     </div>
-    <!-- CAMOUFLAGE BAND (animated, realtree-inspired ANSI) -->
     <div id="camoBar"></div>
     <script>
-      // Micro-animated Realtree-style ANSI camo
+      // Camouflage bar
       const camoBar = document.getElementById('camoBar');
       const chars = "▒░▓▞▚█▉▊▇▆▅▃▂▁▖▗▘▙▛▜▞▚";
       const colors = ["#242813","#b488ff","#ffe266","#9ee37d","#a0a09a","#31234c","#4c4621","#3b4030"];
