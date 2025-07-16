@@ -13,7 +13,6 @@
     .breadcrumbs { color:#a7a073; font-size:1em; font-family:'Fira Mono',monospace; margin:1.3em 0 0.2em 2em;}
     .banner { color:#fff; font-weight:800; font-size:1.16em; margin-top:.08em; margin-bottom:.38em; letter-spacing:0.05em; background:linear-gradient(90deg,#98ffb0 10%,#b488ff 80%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
     .ansi-art { font-family:monospace,'Fira Mono',Consolas,'Menlo','Courier New',monospace; white-space:pre; font-size:1.18em; line-height:1.12; letter-spacing:0.025em; margin:1.23em auto 0.33em auto; text-align:center; user-select:none; pointer-events:auto; color:#d1cfa8; max-width:99vw; background:transparent !important; }
-    .ansi-art.error { color: #ff3b3b; background:#1b191a; padding:1em; border-radius:8px; font-size:1.22em;}
     .eye { display:inline-block; width:1.2em; height:1.2em; background:#fff; border-radius:50%; border:2.3px solid #b488ff; position:relative; margin:0 2.3px; vertical-align:middle; box-shadow:0 0 13px #b488ff44;}
     .pupil { width:.44em; height:.44em; background:#b488ff; border-radius:50%; position:absolute; top:0.35em; left:0.35em; transition:all .16s cubic-bezier(.23,1.16,.5,1.08);}
     h1 { text-align:center; margin:.02em 0 0.11em 0; font-size:2.13em; letter-spacing:0.075em; font-family:'Fira Mono','Segoe UI',monospace,sans-serif; background:linear-gradient(90deg,#c9d26d 0%,#a7f3a0 70%,#bdb687 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:800; user-select:none;}
@@ -56,11 +55,13 @@
   <header>
     <div class="breadcrumbs">/main /promptforge</div>
     <div class="banner">LEGENDARY AI TOOLBOX • PROMPTFORGE v2.0</div>
-    <!-- HEADER ANSI ART WITH MOVING EYES, DEBUG IF NOT SHOWN -->
-    <div class="ansi-art" id="ansiArt">[LOADING ANSI ART...]</div>
+    <!-- ANSI ART WITH MOVING EYES (GUARANTEED RENDER) -->
+    <div class="ansi-art" id="ansiArt"></div>
     <script>
-      // YOUR HEADER ANSI ART (with moving eyes)
-      const headerAnsi = `
+      // Absolutely guarantee ANSI art renders with eyes!
+      document.addEventListener('DOMContentLoaded', function(){
+        const ansiArt = document.getElementById('ansiArt');
+        let txt = `
  ))    ))       .-.   \\    /// ))   (o)__(o)         .-.     ))       \\/         
 (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
  | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
@@ -68,17 +69,9 @@
  |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  
   \\)  (/  \\)'. `---' .`||    ||   \\)     )/  )/    '. `---' .`(/  \\)'.   \\) \\`.__) 
   (    )      `-...-' (_/    \\_)  (     (   (        `-...-'   )      `-.(_.'      
-      `;
-      function eyeHTML() {
-        return `<span class="eye"><span class="pupil"></span></span>`;
-      }
-      window.addEventListener('DOMContentLoaded', function(){
-        const art = document.getElementById('ansiArt');
-        try {
-          art.innerHTML = headerAnsi.replace(/[oO0]/g, eyeHTML);
-        } catch (e) {
-          art.innerHTML = '<div class="ansi-art error">ANSI ART NOT LOADED</div>';
-        }
+`;
+        let html = txt.replace(/[oO0]/g, () => `<span class="eye"><span class="pupil"></span></span>`);
+        ansiArt.innerHTML = html;
       });
       document.addEventListener('mousemove', function(e){
         var eyes=document.querySelectorAll('.eye'),ww=window.innerWidth,wh=window.innerHeight;
@@ -103,7 +96,6 @@
   <main style="max-width:1120px; margin:0 auto 2.3em auto; display:flex; flex-direction:column; gap:2.1em;">
     <!-- Feature Grid -->
     <section class="feature-grid">
-      <!-- ... your feature links as before ... -->
       <a class="feature-link" href="pic.html"><h2>🧩 Image Prompt Builder</h2><p>Pro AI image prompts—huge dropdowns, face/pose locks, NSFW unlocked. Works everywhere (OpenArt, RealVis, Juggernaut, SDXL, Gemini, more).</p></a>
       <a class="feature-link" href="movie.html"><h2>🎬 Video Prompt Builder</h2><p>Write detailed AI video/animation prompts. Sora, Gemini, Stable Video, & more. Taboo features included.</p></a>
       <a class="feature-link" href="aihacks.html"><h2>🤖 AI Prank, Hack & Encyclopedia</h2><p>650+ AI pranks, prompt hacks, secret commands, jailbreaks & fun voice tricks for Alexa, Siri, Gemini, J1nx & more.</p></a>
