@@ -1,37 +1,53 @@
-<script>
-  try {
-    var ansiBlock = "\n ))    ))       .-.   \\    /// ))   (o)__(o)         .-.     ))       \\/         \n(o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  \n | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ \n | .-' |  .'/ /|_|_|\\ \\||\\\\//||  | .-'   )(  .' __)/ /|_|_|\\ \\ |  .'/ /|_|_\\ .' __)\n |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  \n  \\)  (/  \\)'. `---' .`||    ||   \\)     )/  )/    '. `---' .`(/  \\)'.   \\) \\`.__) \n  (    )      `-...-' (_/    \\_)  (     (   (        `-...-'   )      `-.(_.'      \n      ";
-    function makeEyes(str) {
-      return str.replace(/[oO0]/g, '<span class=\"eye\"><span class=\"pupil\"></span></span>');
-    }
-    document.getElementById('ansiArt').innerHTML = makeEyes(ansiBlock);
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ANSI Art Inline Debug</title>
+  <style>
+    body { background:#181b15; color:#e6e5e1;}
+    .ansi-art { font-family:monospace,'Fira Mono',Consolas; white-space:pre; font-size:1.13em; text-align:center; color:#d1cfa8; margin:1.7em auto 0.5em auto; }
+    .eye { display:inline-block; width:1.2em; height:1.2em; background:#fff; border-radius:50%; border:2.2px solid #b488ff; position:relative; margin:0 2.1px; vertical-align:middle;}
+    .pupil { width:.44em; height:.44em; background:#b488ff; border-radius:50%; position:absolute; top:0.35em; left:0.35em;}
+  </style>
+</head>
+<body>
+  <div class="ansi-art" id="ansiArt">If you see this, JS didn’t run.</div>
+  <div id="errorMsg" style="color:red;text-align:center;margin-top:1em;"></div>
+  <script>
+    try {
+      var ansiBlock = "\n ))    ))       .-.   \\    /// ))   (o)__(o)         .-.     ))       \\/         \n(o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  \n | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ \n | .-' |  .'/ /|_|_|\\ \\||\\\\//||  | .-'   )(  .' __)/ /|_|_|\\ \\ |  .'/ /|_|_\\ .' __)\n |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  \n  \\)  (/  \\)'. `---' .`||    ||   \\)     )/  )/    '. `---' .`(/  \\)'.   \\) \\`.__) \n  (    )      `-...-' (_/    \\_)  (     (   (        `-...-'   )      `-.(_.'      \n      ";
+      function makeEyes(str) {
+        return str.replace(/[oO0]/g, '<span class=\"eye\"><span class=\"pupil\"></span></span>');
+      }
+      document.getElementById('ansiArt').innerHTML = makeEyes(ansiBlock);
 
-    function moveEyes(e){
-      var eyes=document.querySelectorAll('.eye');
-      var ww=window.innerWidth, wh=window.innerHeight;
-      for(var i=0;i<eyes.length;i++){
-        var pupil=eyes[i].querySelector('.pupil');
-        var cx=eyes[i].getBoundingClientRect().left+eyes[i].offsetWidth/2;
-        var cy=eyes[i].getBoundingClientRect().top+eyes[i].offsetHeight/2;
-        var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
-        var px= Math.max(-.32, Math.min(.32, dx));
-        var py= Math.max(-.32,Math.min(.32, dy));
-        pupil.style.left=0.35+px*0.38+'em';
-        pupil.style.top=0.35+py*0.38+'em';
-        // DEBUG: Make the pupil flash red for 0.1s
-        pupil.style.background = "#ff3d3d";
-        setTimeout(function(p){ p.style.background="#b488ff"; }, 100, pupil);
+      function moveEyes(e){
+        var eyes=document.querySelectorAll('.eye');
+        var ww=window.innerWidth, wh=window.innerHeight;
+        for(var i=0;i<eyes.length;i++){
+          var pupil=eyes[i].querySelector('.pupil');
+          var cx=eyes[i].getBoundingClientRect().left+eyes[i].offsetWidth/2;
+          var cy=eyes[i].getBoundingClientRect().top+eyes[i].offsetHeight/2;
+          var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
+          var px= Math.max(-.32, Math.min(.32, dx));
+          var py= Math.max(-.32,Math.min(.32, dy));
+          pupil.style.left=0.35+px*0.38+'em';
+          pupil.style.top=0.35+py*0.38+'em';
+          // DEBUG: Make the pupil flash red for 0.1s
+          pupil.style.background = "#ff3d3d";
+          setTimeout(function(p){ p.style.background="#b488ff"; }, 100, pupil);
+        }
       }
+      document.addEventListener('mousemove', moveEyes);
+      document.addEventListener('touchmove', function(e){
+        if(e.touches.length){
+          var fakeEvent = {clientX: e.touches[0].clientX, clientY: e.touches[0].clientY};
+          moveEyes(fakeEvent);
+        }
+      });
+    } catch(e) {
+      document.getElementById('errorMsg').textContent = "JS ERROR: " + e;
     }
-    document.addEventListener('mousemove', moveEyes);
-    // For mobile, try touch as well:
-    document.addEventListener('touchmove', function(e){
-      if(e.touches.length){
-        var fakeEvent = {clientX: e.touches[0].clientX, clientY: e.touches[0].clientY};
-        moveEyes(fakeEvent);
-      }
-    });
-  } catch(e) {
-    document.getElementById('ansiArt').innerText = "JS ERROR: "+e;
-  }
-</script>
+  </script>
+</body>
+</html>
