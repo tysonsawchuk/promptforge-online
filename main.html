@@ -1,34 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge.online – Ultimate AI Prompt, Hack & Art Toolbox</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="PromptForge.online – Underground AI prompt generator, tool hacks, forbidden art, NSFW support. The ultimate AI & coding resource for devs, rebels, and creators.">
-  <meta name="robots" content="index, follow">
-  <link rel="stylesheet" href="/assets/fonts.css">
+  <title>ANSI Art Test</title>
   <style>
-    body { margin:0; font-family:'Fira Mono','Segoe UI',monospace,sans-serif; background:#181b15; color:#e6e5e1;}
-    .ansi-art { font-family:monospace,'Fira Mono',Consolas,'Menlo','Courier New'; white-space:pre; font-size:1.12em; text-align:center; color:#d1cfa8; margin:1.3em auto 0.5em auto; }
+    body { background:#181b15; color:#e6e5e1; }
+    .ansi-art { font-family:monospace,'Fira Mono',Consolas; white-space:pre; font-size:1.12em; text-align:center; color:#d1cfa8; margin:1.3em auto 0.5em auto; }
     .eye { display:inline-block; width:1.2em; height:1.2em; background:#fff; border-radius:50%; border:2.2px solid #b488ff; position:relative; margin:0 2.1px; vertical-align:middle; }
     .pupil { width:.44em; height:.44em; background:#b488ff; border-radius:50%; position:absolute; top:0.35em; left:0.35em; transition:all .16s;}
-    /* ...rest of your CSS for page here (cut for brevity, add feature grid, j1nx, footer, etc) ... */
-    .j1nx-wrap {display:flex;align-items:flex-end;justify-content:center;gap:2.2em;margin:2.5em 0 0 0;}
-    .j1nx-cutout {width:192px;max-width:33vw;border-radius:24px;box-shadow:0 0 25px #98ffb066;background:#22262e;}
-    .j1nx-bubble {flex:1;max-width:480px;background:#1b1922;border-radius:16px;padding:1.3em 1.5em .8em 1.5em;}
-    .j1nx-messages {max-height:168px;overflow-y:auto;font-size:1.08em;line-height:1.43;margin-bottom:.6em;}
-    .j1nx-msg-bot {color:#ffe266;}
-    .j1nx-msg-you {color:#b488ff;}
-    .j1nx-input-row {display:flex;gap:.6em;}
-    .j1nx-input {flex:1;font-size:1em;padding:.7em 1.1em;border-radius:9px;border:1px solid #b488ff44;background:#252834;color:#ffe266;}
-    .j1nx-send {font-size:1em;padding:.7em 1.4em;background:linear-gradient(90deg,#98ffb0,#b488ff);color:#171a26;border:none;border-radius:9px;font-weight:700;cursor:pointer;}
   </style>
 </head>
 <body>
-  <!-- ===== ANSI ART BLOCK (renders FIRST) ===== -->
   <div class="ansi-art" id="ansiArt"></div>
   <script>
-    // Rock-solid, zero-dependency, no magic: Render ANSI art with moving eyes
     var ansiBlock = `
  ))    ))       .-.   \\    /// ))   (o)__(o)         .-.     ))       \\/         
 (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -54,77 +37,5 @@
       }
     });
   </script>
-
-  <!-- ===== PAGE HEADER & DESC ===== -->
-  <h1 style="text-align:center;">PromptForge.online</h1>
-  <div class="desc" style="text-align:center;">
-    <b>PromptForge</b> is the <span style="color:#b488ff;">underground AI prompt, hack & art toolkit</span> for rebels and devs.<br>
-    <span style="color:#ffe266;">No limits. No filters. All features unlocked. </span><br>
-    <b>Pro image & video prompts, watermark tools, ASCII/ANSI generators, jailbreaks, and more.</b><br>
-    <i>Unfiltered. Modern. <b>Forever free.</b> NSFW/forbidden prompt support. <span style="color:#98ffb0;">Built in BC, Canada.</span></i>
-  </div>
-
-  <!-- ====== FEATURE GRID, PARTNER LINKS, ETC (INSERT YOUR BLOCKS HERE) ====== -->
-  <!-- ...Feature grid, partner links, J1nx chat as previous... -->
-
-  <!-- ===== J1NX BLOCK (floating cutout + chat) ===== -->
-  <div class="j1nx-wrap">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
-    <div class="j1nx-bubble" id="j1nxBox" data-mood="chill">
-      <div class="j1nx-messages" id="j1nxMessages"></div>
-      <div class="j1nx-input-row">
-        <input class="j1nx-input" id="j1nxInput" placeholder="Type to chat with J1nx..."/>
-        <button class="j1nx-send" id="j1nxSend">Send</button>
-      </div>
-    </div>
-  </div>
-  <script src="assets/j1nx_brain.js"></script>
-  <script>
-    // J1nx chat logic (as above, will work if brain is a function)
-    const box = document.getElementById('j1nxBox');
-    const msgLog = document.getElementById('j1nxMessages');
-    const input = document.getElementById('j1nxInput');
-    const send = document.getElementById('j1nxSend');
-    let chat = [{from:'j1nx',text:"Hey, I'm <b>J1nx</b>. Need hacks, ideas, NSFW, or just wanna prank your AI? I'm your muse. Ask me anything."}];
-    function render(){
-      msgLog.innerHTML = chat.map(
-        c=>`<div style="margin-bottom:.18em;"><span class="${c.from==='you'?'j1nx-msg-you':'j1nx-msg-bot'}">${c.from==='you'?'You':'J1nx'}:</span> <span>${c.text}</span></div>`
-      ).slice(-18).join('');
-      msgLog.scrollTop = msgLog.scrollHeight;
-    }
-    function mood(val) {
-      if(/nsfw|sex|nude|xxx|fuck|nasty|dick|pussy|horny|porn|cum|cock|naked|ass/i.test(val)) return "nsfw";
-      if(/help|how|instructions|info|guide|broken|stuck|wtf|lost/i.test(val)) return "help";
-      if(/jailbreak|hack|prompt|break|jail/i.test(val)) return "hack";
-      return "chill";
-    }
-    async function getReply(val) {
-      if(window.j1nxBrain && typeof window.j1nxBrain === "function") {
-        try { return await window.j1nxBrain(val) || "(No reply from J1nx brain)"; }
-        catch(e) { return "(Error in J1nx brain)"; }
-      } else {
-        return "<span style='color:red'>J1nx brain not loaded</span>";
-      }
-    }
-    render();
-    send.onclick = async function() {
-      let val = input.value.trim();
-      if (!val) return;
-      chat.push({from:'you', text:val});
-      let m = mood(val);
-      box.setAttribute("data-mood",m);
-      render();
-      let reply = await getReply(val);
-      chat.push({from:'j1nx',text:reply});
-      box.setAttribute("data-mood", mood(reply));
-      render();
-      input.value = '';
-    };
-    input.addEventListener('keydown',e=>{if(e.key==="Enter")send.onclick();});
-  </script>
-
-  <!-- ...rest of your partner/resource links, buymeacoffee, adsense, and footer... -->
-
-  <!-- FOOTER ART AND CAMO GOES HERE (unchanged from previous) -->
 </body>
 </html>
