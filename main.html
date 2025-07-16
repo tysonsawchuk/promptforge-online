@@ -3,228 +3,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PromptForge.online – Underground AI Prompt & Hack Toolbox</title>
-  <meta name="description" content="PromptForge.online: Underground AI prompt builder, art tool, hack encyclopedia. ANSI art, watermark, model compare, NSFW unlock. The devs-only toolkit for 2025."/>
+  <meta name="description" content="PromptForge.online – The underground dev toolbox for AI prompts, hacks, forbidden art, watermark, face swap, ASCII/ANSI, and more. Pro-grade. NSFW unlocked.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <title>PromptForge.online – Legendary AI Prompt, Hack & Art Toolbox</title>
+  <!-- AdSense (top-level, block loads later) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/assets/fonts.css">
   <style>
-    html,body { margin:0; padding:0; background:linear-gradient(135deg,#191a22 0%,#252722 100%); min-height:100vh; color:#e9e8e4; font-family:'Fira Mono','Segoe UI',monospace,sans-serif; }
-    header { background:rgba(22,24,18,0.96); border-bottom:1.5px solid #b488ff33; box-shadow:0 1px 14px #0a090c4a; padding-bottom:.2em;}
-    .breadcrumbs { color:#bdb687; font-size:.97em; margin:.7em 0 -.25em 1.4em; letter-spacing:.06em; }
-    .ansi-art-top { font-family:monospace,'Fira Mono','Consolas'; white-space:pre; font-size:1.18em; line-height:1.09; letter-spacing:0.017em; margin:1.1em 0 .35em 0; text-align:center; user-select:none; pointer-events:none; color:#b488ff; width:100vw; }
-    .eye { display:inline-block; width:1.12em; height:1.12em; background:#ffe266; border-radius:50%; border:2.2px solid #b488ff; position:relative; margin:0 2.2px; vertical-align:middle; box-shadow:0 0 13px #b488ff40;}
-    .pupil { width:.45em; height:.45em; background:#b488ff; border-radius:50%; position:absolute; top:0.33em; left:0.34em; box-shadow:0 0 6px #b488ff99,0 0 3px #fff; transition:all .15s;}
-    h1 { text-align:center; margin:.07em 0 .13em 0; font-size:2.28em; font-family:'Fira Mono','Segoe UI',monospace,sans-serif; background:linear-gradient(88deg,#b488ff 18%,#ffe266 68%,#98ffb0 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:800; letter-spacing:.07em; }
-    .desc { max-width:820px; margin:0 auto 1.8em auto; text-align:center; font-size:1.15em; color:#efecc8; line-height:1.65; padding:0 1.5em; font-weight:450;}
-    .feature-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(254px,1fr));gap:1.33em 1.2em; margin:2em 0 1.3em 0;}
-    .feature {background:#24271d;border-radius:15px;padding:1.22em 1.13em;box-shadow:0 1.2px 14px #b488ff15; transition:transform .16s;}
-    .feature:hover {transform:scale(1.036);}
-    .feature-title {font-size:1.26em;color:#b488ff;margin-bottom:.18em;font-family:'Fira Mono',monospace;}
-    .feature-desc {font-size:1.07em;}
-    .feature a { color:#9ee37d;text-decoration:underline;font-weight:600;}
-    /* Partner/resource bar */
-    .partner-bar {background:#1f2018;border-radius:16px;padding:1.05em 1.5em 1.14em 1.5em;box-shadow:0 1.2px 10px #b488ff12;margin:1.2em 0 1.4em 0;}
-    .partner-bar h2 {color:#98ffb0;font-size:1.14em;letter-spacing:.04em;margin:0 0 .44em 0;font-family:'Fira Mono',monospace;}
-    .partner-links {display:flex;flex-wrap:wrap;gap:.86em 1.7em;justify-content:center;}
-    .partner-links a { color:#b488ff;font-weight:600;}
-    /* J1nx chat block */
-    .j1nx-wrap { position:relative; width:360px; max-width:97vw; margin:2em auto 2.5em auto; display:flex; align-items:flex-end; gap:1.2em;}
-    .j1nx-cutout { width:72px; height:94px; object-fit:contain; z-index:2; margin-bottom:-6px; margin-left:.1em;}
-    .j1nx-chat {background:#191b21;border-radius:16px;padding:1.3em 1.13em 1.13em 1.1em;box-shadow:0 2px 17px #b488ff28;min-height:96px;flex:1 1 180px;display:flex;flex-direction:column;}
-    .j1nx-bubble { font-size:1.08em; color:#e4e0fb; padding:.55em .89em; border-radius:13px; background:#31234c; box-shadow:0 0 9px #b488ff25; margin-bottom:.7em; transition:background .13s;}
-    .j1nx-bubble.mood-nsfw {background:#7c163a;color:#ffe0e7;}
-    .j1nx-bubble.mood-help {background:#204f8a;color:#c6e4ff;}
-    .j1nx-bubble.mood-happy {background:#368d4f;color:#f2ffe0;}
-    .j1nx-bubble.mood-default {background:#31234c;color:#e4e0fb;}
-    .j1nx-input-row { display:flex; gap:.4em; align-items:center;}
-    .j1nx-textinput { flex:1; padding:.5em .7em; border-radius:8px; border:1.1px solid #b488ff55; background:#171724; color:#fff; font-size:1em;}
-    .j1nx-sendbtn { padding:.48em 1.13em; border-radius:8px; border:1px solid #98ffb0; background:#191b21; color:#98ffb0; font-family:'Fira Mono',monospace; font-weight:700; cursor:pointer;}
-    .j1nx-sendbtn:hover {background:#b488ff;color:#191b21;}
-    /* Ad / donate */
-    .adsense-wrap {max-width:700px;margin:1.2em auto;}
-    .coffee-wrap {max-width:700px;margin:1em auto 2em auto;text-align:center;}
-    .bmc-btn {background:#ffdd00 !important;border-radius:7px;padding:.37em 1.3em;text-decoration:none;display:inline-block;font-weight:700;color:#111 !important;font-family:'Fira Mono',monospace;font-size:1.07em;}
-    .bmc-btn img {height:27px;vertical-align:middle;margin-right:9px;}
-    /* Footer */
-    footer {margin:2.5em 0 0 0; background:transparent;}
-    .ascii-footer {font-family:monospace;font-size:1.1em;line-height:1.08;letter-spacing:1.15px;background:transparent;color:#ffe266;text-align:center;margin:.4em 0 0 0;}
-    #camoBar {height:21px;width:100vw;overflow:hidden;margin:-.5em 0 0 0;}
-    @media (max-width:650px){
-      .feature-grid {grid-template-columns:1fr;}
-      .j1nx-wrap {flex-direction:column; align-items:center;}
-      .j1nx-cutout {margin-bottom:0;}
+    :root {
+      --bg: #171914;
+      --surface: #23231f;
+      --accent1: #b488ff;
+      --accent2: #9ee37d;
+      --accent3: #ffe266;
+      --camo1: #363a2c;
+      --camo2: #232922;
+      --camo3: #8f8c6e;
+      --text: #eae9df;
+      --muted: #bdb687;
+      --danger: #f26d7d;
+      --info: #66bfff;
+      --help: #7ac6ef;
+    }
+    html, body {
+      margin:0; padding:0; font-family:'Fira Mono','Segoe UI',monospace,sans-serif;
+      background: var(--bg); color: var(--text); min-height:100vh;
+      box-sizing: border-box;
+    }
+    a { color: var(--accent2); text-decoration:none; font-weight:600; transition:.2s;}
+    a:hover, a:focus { color: var(--accent1); text-decoration:underline;}
+    .header, .footer { width:100%; background:var(--surface);}
+    .breadcrumbs { color:var(--muted); font-size:.96em; padding:1em 1.6em 0.2em;}
+    .banner { color:var(--accent2); font-weight:700; font-size:1.09em; letter-spacing:.03em; padding-left:1.6em;}
+    h1 { margin:0.8em 0 0.38em 0; font-size:2.0em; text-align:center; font-weight:800; color:var(--accent1);}
+    .desc { max-width:700px; margin:0 auto 2.1em auto; text-align:center; font-size:1.13em; color:var(--muted);}
+    nav.nav-row { display:flex; gap:1em; justify-content:center; margin-bottom:1.2em;}
+    .nav-btn {
+      background:var(--camo2); color:var(--text); font-size:1.04em; font-family:'Fira Mono',monospace;
+      padding:0.7em 1.1em; border-radius:8px; border:1.3px solid var(--camo1); box-shadow:0 2px 10px #0002;
+      font-weight:600; letter-spacing:.02em; margin:0 1.5px; transition:.18s;
+    }
+    .nav-btn.active { background:linear-gradient(92deg,var(--accent2) 0%,var(--accent1) 100%); color:var(--bg);}
+    .nav-btn:hover { background:var(--accent1); color:var(--bg);}
+    @media (max-width:600px){
+      h1{font-size:1.2em;}
+      .desc{font-size:0.97em;}
+      nav.nav-row{flex-wrap:wrap;gap:0.3em;}
+      .nav-btn{font-size:0.97em; padding:0.47em 0.84em;}
     }
   </style>
 </head>
 <body>
-  <header>
+  <!-- HEADER / NAV / ANSI ART -->
+  <header class="header">
     <div class="breadcrumbs">/main /promptforge</div>
-    <!-- ANSI ART WITH MOVING EYES -->
-    <div class="ansi-art-top" id="ansiArt"></div>
+    <div class="banner">LEGENDARY AI TOOLBOX • PROMPTFORGE v2.0</div>
+    <!-- YOUR ANSI ART WITH MOVING EYES -->
+    <div id="ansiArt" style="text-align:center; margin: 1.1em 0 0.1em 0; font-family:monospace,'Fira Mono',Consolas,Menlo,'Courier New',monospace;font-size:1.13em;line-height:1.07;letter-spacing:0.02em;user-select:none;">
+    </div>
     <script>
-      // ANSI art with moving eyes
-      const rawAnsi = `
-   ))    ))       .-.   \\\    /// ))   (o)__(o)         .-.     ))       \\/         
-  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
-   | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
-   | .-' |  .'/ /|_|_|\\ \\||\\\\//||  | .-'   )(  .' __)/ /|_|_|\\ \\ |  .'/ /|_|_\\ .' __)
-   |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  
-    \\)  (/  \\)'. \`---' .\`||    ||   \\)     )/  )/    '. \`---' .\`(/  \\)'.   \\) \\`.__) 
-    (    )      \`-...-' (_/    \\_)  (     (   (        \`-...-'   )      \`-.(_.'      
+      // YOUR ANSI with O/o/0 replaced by glowing moving eyes
+      const topAnsi = `
+ ))    ))       .-.   \\    /// ))   (o)__(o)         .-.     ))       \\/         
+(o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
+ | (_))| (_)),'.---.`, | \\  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
+ | .-' |  .'/ /|_|_|\\ \\||\\\\//||  | .-'   )(  .' __)/ /|_|_|\\ \\ |  .'/ /|_|_\\ .' __)
+ |(    )|\\\\ | \\_____/ ||| \\/ ||  |(     (  )(  _)  | \\_____/ | )|\\\\ | \\_.--.(  _)  
+  \\)  (/  \\)'. `---' .`||    ||   \\)     )/  )/    '. `---' .`(/  \\)'.   \\) \\`.__) 
+  (    )      `-...-' (_/    \\_)  (     (   (        `-...-'   )      `-.(_.'      
 `;
       function eyeHTML() {
-        return `<span class="eye"><span class="pupil"></span></span>`;
+        // Glowing, moving eyes for O/o/0
+        return `<span class="eye" style="display:inline-block;width:1.1em;height:1.1em;vertical-align:middle;position:relative;">
+                  <span class="pupil" style="width:.41em;height:.41em;background:radial-gradient(circle at 40% 40%,#ffe266,#b488ff 45%,#191 99%);border-radius:50%;position:absolute;top:0.33em;left:0.33em;box-shadow:0 0 9px #ffe26677,0 0 2px #b488ff;"></span>
+                </span>`;
       }
-      document.getElementById('ansiArt').innerHTML = rawAnsi.replace(/[oO0]/g, eyeHTML);
+      document.addEventListener("DOMContentLoaded", function(){
+        document.getElementById('ansiArt').innerHTML =
+          topAnsi.replace(/[Oo0]/g, eyeHTML);
+      });
       document.addEventListener('mousemove', function(e){
         var eyes=document.querySelectorAll('.eye'),ww=window.innerWidth,wh=window.innerHeight;
         eyes.forEach(function(eye){
           var pupil=eye.querySelector('.pupil');
           var cx=eye.getBoundingClientRect().left+eye.offsetWidth/2,cy=eye.getBoundingClientRect().top+eye.offsetHeight/2;
           var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
-          var px= Math.max(-.33, Math.min(.33, dx)), py=Math.max(-.33,Math.min(.33, dy));
-          pupil.style.left=0.33+px*0.41+'em';
-          pupil.style.top=0.33+py*0.41+'em';
+          var px= Math.max(-.32, Math.min(.32, dx)), py=Math.max(-.32,Math.min(.32, dy));
+          pupil.style.left=0.33+px*0.36+'em';
+          pupil.style.top=0.33+py*0.36+'em';
         });
       });
     </script>
     <h1>PromptForge.online</h1>
     <div class="desc">
-      <b>PromptForge</b> is the <span style="color:#b488ff;">legendary underground AI prompt, hack & art toolkit</span> for rebels and devs. <br>
-      <span style="color:#ffe266;">No limits. No filters. All features, unlocked. </span> <br>
-      From <b>pro image & video prompts</b> to watermark tools, ASCII/ANSI generators, jailbreaks, and more.<br>
-      <i>Unfiltered. Modern. <b>Forever free</b>. NSFW/forbidden prompt support. <span style="color:#98ffb0;">Built in BC, Canada.</span></i>
+      The underground dev toolbox for AI creators, hackers, and rebels.<br>
+      <b>PromptForge</b> is your one-stop pro platform for image/video prompt engineering, jailbreaks, watermarking, ASCII/ANSI art, and more.<br>
+      <span style="color:var(--accent2);">Legendary features. NSFW/unfiltered. Always free.</span>
     </div>
+    <nav class="nav-row">
+      <a class="nav-btn active" href="main.html">Main</a>
+      <a class="nav-btn" href="picture.html">Picture</a>
+      <a class="nav-btn" href="movie.html">Movie</a>
+      <a class="nav-btn" href="compare.html">Compare</a>
+      <a class="nav-btn" href="watermark.html">Watermark</a>
+      <a class="nav-btn" href="aihacks.html">AI Hacks</a>
+      <a class="nav-btn" href="ansiart.html">ANSI Art</a>
+      <a class="nav-btn" href="j1nx.html">J1nx</a>
+      <a class="nav-btn" href="terms.html">Legal</a>
+    </nav>
   </header>
-  <main style="max-width:1120px; margin:0 auto 2.3em auto;">
-    <!-- FEATURE GRID -->
-    <section class="feature-grid">
-      <div class="feature"><span class="feature-title">🧩 <a href="picture.html">Image Prompt Builder</a></span>
-        <div class="feature-desc">Pro-grade AI image prompt builder—huge dropdowns, face/pose locks, NSFW unlock. Works with OpenArt, SDXL, Gemini, RealVis, more.</div>
-      </div>
-      <div class="feature"><span class="feature-title">🎬 <a href="movie.html">Video Prompt Builder</a></span>
-        <div class="feature-desc">Scene-by-scene AI video/animation prompt creation. Sora, Gemini, Stable Video & more supported. Taboo/experimental features built in.</div>
-      </div>
-      <div class="feature"><span class="feature-title">🤖 <a href="aihacks.html">AI Hacks & Pranks</a></span>
-        <div class="feature-desc">Over 650 pranks, voice tricks, jailbreaks, and secret commands for every AI (Siri, Alexa, Gemini, J1nx...). Indexed, with TTS & guides.</div>
-      </div>
-      <div class="feature"><span class="feature-title">📊 <a href="compare.html">Compare AI Models</a></span>
-        <div class="feature-desc">Test, rate, and review AI art/video models side-by-side. Live scores, user reviews, dev/NSFW picks.</div>
-      </div>
-      <div class="feature"><span class="feature-title">💧 <a href="watermark.html">Watermark Tool</a></span>
-        <div class="feature-desc">Subtle overlays, privacy tools, and export for your AI art. Stealth mode, pro settings, 4K output. Free forever.</div>
-      </div>
-      <div class="feature"><span class="feature-title">🎨 <a href="ansiart.html">ANSI/ASCII Art Generator</a></span>
-        <div class="feature-desc">Instantly convert images, video, or text into classic ANSI/ASCII art. Animated, with retro fonts, matrix mode & bonus dev tricks.</div>
-      </div>
-      <div class="feature"><span class="feature-title">🧑‍🎤 <a href="j1nx.html">J1nx AI Chat</a></span>
-        <div class="feature-desc">Live “dirty muse” chat companion. Real attitude, built-in brain. Pranks, help, ideas, NSFW, more. <i>Clippy meets Stripper.EXE.</i></div>
-      </div>
-    </section>
-    <!-- PARTNER / RESOURCE LINKS -->
-    <section class="partner-bar">
-      <h2>🛠 Essential AI Art & Prompt Resources</h2>
-      <div class="partner-links">
-        <a href="https://openart.ai/" target="_blank" rel="noopener">OpenArt</a>
-        <a href="https://www.krea.ai/" target="_blank" rel="noopener">Krea</a>
-        <a href="https://gemini.google.com/" target="_blank" rel="noopener">Gemini</a>
-        <a href="https://www.bing.com/images/create/" target="_blank" rel="noopener">Bing Create</a>
-        <a href="https://huggingface.co/spaces" target="_blank" rel="noopener">Hugging Face</a>
-        <a href="https://www.asciiart.eu/" target="_blank" rel="noopener">ASCIIArt.eu</a>
-        <a href="https://ascii-animator.com/" target="_blank" rel="noopener">ASCII Animator</a>
-        <a href="https://chat.openai.com/" target="_blank" rel="noopener">ChatGPT</a>
-        <a href="https://perchance.org/" target="_blank" rel="noopener">Perchance</a>
-      </div>
-      <div style="margin-top:.7em;font-size:.99em;color:#ada573;">
-        <b>Pro tip:</b> PromptForge prompts work on every site above. <a href="aihacks.html" style="color:#98ffb0;">AI Hacks</a> = hundreds of voice commands/tricks for every platform.
-      </div>
-    </section>
-    <!-- J1NX CHAT BLOCK -->
-    <section class="j1nx-wrap">
-      <img src="assets/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout" />
-      <div class="j1nx-chat">
-        <div id="j1nxBubble" class="j1nx-bubble mood-default">Hey, I'm J1nx.<br>Ask me about prompts, hacks, features, or just say something dirty…</div>
-        <div class="j1nx-input-row">
-          <input class="j1nx-textinput" id="j1nxInput" placeholder="Type to chat with J1nx…">
-          <button class="j1nx-sendbtn" id="j1nxSend">Send</button>
-        </div>
-      </div>
-      <script src="assets/j1nx_brain.js"></script>
-      <script>
-        // Real J1nx chat logic using loaded brain function, bubble changes color by mood
-        const bubble = document.getElementById('j1nxBubble');
-        const input = document.getElementById('j1nxInput');
-        const sendBtn = document.getElementById('j1nxSend');
-        function getMood(txt) {
-          txt = txt.toLowerCase();
-          if(/fuck|nsfw|bitch|dirty|slut|nude|sex|porn|pussy|dick/.test(txt)) return "mood-nsfw";
-          if(/help|how|instructions|faq|guide|lost|stuck/.test(txt)) return "mood-help";
-          if(/hi|thanks|love|cool|yo|happy|cheer|nice/.test(txt)) return "mood-happy";
-          return "mood-default";
-        }
-        sendBtn.onclick = async function() {
-          let val = input.value.trim();
-          if (!val) return;
-          bubble.innerHTML = `<b>You:</b> ${val}<br><b>J1nx:</b> ...`;
-          let mood = getMood(val);
-          bubble.className = `j1nx-bubble ${mood}`;
-          input.value = '';
-          let reply = "(No brain loaded)";
-          if(window.j1nxBrain && typeof window.j1nxBrain === "function") {
-            try { reply = await window.j1nxBrain(val); }
-            catch(e) { reply = "(Error in J1nx brain)"; }
-          } else { reply = "(J1nx brain not loaded)"; }
-          bubble.innerHTML = `<b>You:</b> ${val}<br><b>J1nx:</b> ${reply}`;
-          let replyMood = getMood(reply);
-          bubble.className = `j1nx-bubble ${replyMood}`;
-        };
-        input.addEventListener('keydown',e=>{if(e.key==="Enter")sendBtn.onclick();});
-      </script>
-    </section>
-    <!-- AD / DONATE -->
-    <div class="adsense-wrap">
-      <ins class="adsbygoogle"
-        style="display:block; text-align:center; min-width:320px; min-height:80px;"
-        data-ad-client="ca-pub-4963053724895140"
-        data-ad-slot="auto"
-        data-ad-format="auto"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<main style="max-width:1120px; margin:0 auto 2.3em auto; display:flex; flex-direction:column; gap:2.1em;">
+  <!-- Feature Grid -->
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.45em 1.4em; margin:2.2em 0 1.2em 0;">
+    <a href="picture.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">🧩 Image Prompt Builder</h2>
+      <p style="font-size:1.04em;">Pro AI image prompts—huge dropdowns, face/pose locks, NSFW unlocked. Works with OpenArt, RealVis, Juggernaut, SDXL, Gemini, more.</p>
+    </a>
+    <a href="movie.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">🎬 Video Prompt Builder</h2>
+      <p style="font-size:1.04em;">Write detailed AI video/animation prompts. Ready for Stable Video, Sora, Gemini Video, & next-gen models. Unlock taboo features.</p>
+    </a>
+    <a href="aihacks.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">🤖 AI Prank, Hack & Encyclopedia</h2>
+      <p style="font-size:1.04em;">650+ AI pranks, prompt hacks, secret commands, jailbreaks & fun voice tricks for Alexa, Siri, Gemini, J1nx & more.</p>
+    </a>
+    <a href="ansiart.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">🎨 ANSI & ASCII Art Generator</h2>
+      <p style="font-size:1.04em;">Convert images, video, or your own text to classic ANSI/ASCII art or animation. Includes retro fonts, color, “matrix” mode & more.</p>
+    </a>
+    <a href="j1nx.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">🧑‍🎤 J1nx AI Chat Companion</h2>
+      <p style="font-size:1.04em;">Meet J1nx—the always-on, attitude-packed prompt muse. Ask anything, prank, hack, or just talk dirty. Personality upgrades, always in the corner.</p>
+    </a>
+    <a href="watermark.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">💧 Watermark & Stealth Tool</h2>
+      <p style="font-size:1.04em;">Protect your AI art with subtle watermarks, overlays, and privacy tools. Pro settings, free forever, export in 4K.</p>
+    </a>
+    <a href="compare.html" style="background:var(--surface);border-radius:15px;padding:1.3em 1.2em;box-shadow:0 1.2px 11px #b488ff19; color:inherit; text-decoration:none; display:block; transition:.2s; border:1.2px solid #29292d;">
+      <h2 style="font-size:1.22em;color:var(--accent1);margin-bottom:.3em;font-family:'Fira Mono',monospace;">📊 Compare AI Models</h2>
+      <p style="font-size:1.04em;">Test, compare, and review all major image/video AI models—side-by-side. Live scores, real user reviews, best picks.</p>
+    </a>
+  </section>
+  <!-- Partner / Resource / Utility Links -->
+  <section style="background:var(--surface2,#22211a);border-radius:16px;padding:1.2em 1.7em 1.15em 1.7em;box-shadow:0 1.2px 11px #b488ff0d;margin-bottom:1.3em;">
+    <h2 style="color:var(--accent1,#b488ff);font-size:1.07em;letter-spacing:.03em;margin:0 0 .47em 0;font-family:'Fira Mono',monospace;font-weight:700;">🛠 Top AI Art & Prompt Resources</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:.85em 2.1em;justify-content:center;">
+      <a href="https://openart.ai/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">OpenArt</a>
+      <a href="https://www.krea.ai/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">Krea</a>
+      <a href="https://gemini.google.com/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">Gemini</a>
+      <a href="https://www.bing.com/images/create/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">Bing Create</a>
+      <a href="https://huggingface.co/spaces" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">Hugging Face Spaces</a>
+      <a href="https://www.asciiart.eu/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">ASCIIArt.eu</a>
+      <a href="https://ascii-animator.com/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">ASCII Animator</a>
+      <a href="https://chat.openai.com/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">ChatGPT</a>
+      <a href="https://perchance.org/" target="_blank" rel="noopener" style="color:#b488ff;font-weight:600;">Perchance</a>
     </div>
-    <div class="coffee-wrap">
-      <a class="bmc-btn" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">
-        <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee"/>
-        <span>Buy Me a Coffee</span>
-      </a>
+    <div style="margin-top:.8em;font-size:.96em;color:#ada573;">
+      <b>Pro tip:</b> Our prompt outputs work with every site above.<br>
+      See <a href="aihacks.html" style="color:#98ffb0;">AI Hacks</a> for hundreds of ready-made voice commands & tricks for each platform.
     </div>
-    <!-- SEO SITEMAP / HIDDEN FAQ -->
+  </section>
+
+  <!-- Hidden SEO + Quick Help Section -->
+  <section style="background:var(--surface2,#191815);border-radius:12px;padding:1em 1.4em 0.6em 1.4em;box-shadow:0 1px 6px #b488ff06;">
+    <h2 style="color:#bdb687;font-size:1.04em;font-family:'Fira Mono',monospace;margin-bottom:.41em;">🛟 How to Use PromptForge</h2>
+    <ul style="margin:0 0 .8em 1.1em;padding:0;font-size:.99em;color:#f6f3e2;">
+      <li>Pick a tool above (image, video, hacks, ANSI art, etc).</li>
+      <li>Paste or type your idea, or use dropdowns for pro options.</li>
+      <li>Copy your finished prompt—then paste into any AI model or site!</li>
+      <li>Need ideas? Try <a href="aihacks.html" style="color:#b488ff;">AI Hacks</a> for pranks & expert prompt ideas.</li>
+      <li>Questions? <a href="j1nx.html" style="color:#9ee37d;">Ask J1nx</a>—our live AI muse is always in the corner.</li>
+    </ul>
+    <div style="color:#a7a073;font-size:.97em;margin-bottom:.13em;">
+      💡 <b>Underground Guarantee:</b> No limits, no filters. Taboo, NSFW, forbidden prompts? We don't judge. PromptForge is built for real creators—no gatekeeping.
+    </div>
     <div style="display:none;">
-      <nav id="sitemap">
-        <a href="main.html">Main</a>
-        <a href="picture.html">Image Prompt Builder</a>
-        <a href="movie.html">Video Prompt Builder</a>
-        <a href="aihacks.html">AI Hacks/Pranks</a>
-        <a href="ansiart.html">ANSI/ASCII Art Generator</a>
-        <a href="j1nx.html">J1nx Chat</a>
-        <a href="watermark.html">Watermark</a>
-        <a href="compare.html">Compare</a>
-        <a href="terms.html">Terms/Legal</a>
-      </nav>
-      <div>
-        <h3>How to use PromptForge?</h3>
-        <ul>
-          <li>Pick your tool (image, video, hacks, ANSI art…)</li>
-          <li>Paste/type your idea or use dropdowns.</li>
-          <li>Copy your finished prompt to any AI/website.</li>
-          <li>Stuck? Click “J1nx” or visit AI Hacks for help.</li>
-        </ul>
-      </div>
-      <div>PromptForge.online – built by real devs, in BC, Canada. Unfiltered, pro, NSFW/forbidden art unlocked. 2025.</div>
+      PromptForge: #1 free AI art, prompt & hack toolbox for 2025. Stable Diffusion, OpenArt, SDXL, Gemini, Sora, ASCII/ANSI, jailbreak, watermark, no gatekeeping, Canadian-made.
     </div>
-  </main>
-  <footer>
-    <!-- YOUR PROMPTFORGE ASCII ART -->
-    <div class="ascii-footer">
-      <pre>
+  </section>
+</main>
+<!-- J1nx Chat Bubble (Unified, Standalone Block) -->
+<div id="j1nxWrap" style="position:fixed;bottom:24px;right:24px;z-index:90;display:flex;flex-direction:row;align-items:flex-end;">
+  <img src="assets/j1nx_cutout.png" alt="J1nx" style="width:64px;height:96px;object-fit:contain;margin-right:-10px;z-index:1;filter:drop-shadow(0 2px 8px #28242a88);" id="j1nxCutout">
+  <div id="j1nxBubble" style="min-width:230px;max-width:340px;padding:1em 1em 0.7em 1.2em;background:linear-gradient(106deg,#161622 65%,#b488ff15 100%);color:#f8f8fa;border-radius:1.3em 1.2em 1.1em 1.7em;box-shadow:0 2px 18px #0005,0 1.2px 0 #b488ff22;border:2px solid #282244; font-family:'Fira Mono',monospace;font-size:1.03em;display:flex;flex-direction:column;gap:.65em;transition:background .35s,border .25s;">
+    <div id="j1nxLog" style="max-height:180px;overflow:auto;scrollbar-width:thin;margin-bottom:.3em;"></div>
+    <div style="display:flex;gap:.4em;">
+      <input id="j1nxInput" style="flex:1;background:#232035;border-radius:.7em;border:1px solid #48437b;color:#fafafa;font-size:1em;padding:.44em .7em;" placeholder="Type to chat with J1nx..." autocomplete="off">
+      <button id="j1nxSend" style="background:#b488ff;border:none;border-radius:.7em;padding:.42em 1.1em;color:#19181c;font-weight:700;font-size:.97em;cursor:pointer;">Send</button>
+    </div>
+  </div>
+</div>
+<script src="assets/j1nx_brain.js"></script>
+<script>
+  // Mood coloring by keyword (dirty, happy, help, angry, default)
+  const moodColors = {
+    'default':  {bg:'linear-gradient(106deg,#161622 65%,#b488ff15 100%)',border:'#282244'},
+    'nsfw':     {bg:'linear-gradient(100deg,#2a0018 65%,#b488ff36 100%)',border:'#d44b8b'},
+    'happy':    {bg:'linear-gradient(106deg,#181d14 60%,#98ffb055 100%)',border:'#6ebd70'},
+    'help':     {bg:'linear-gradient(106deg,#0e1a25 60%,#98d8ff66 100%)',border:'#37bcd7'},
+    'angry':    {bg:'linear-gradient(100deg,#320a00 65%,#b488ff22 100%)',border:'#ff5c46'}
+  };
+  let j1nxChat = [
+    {from:'j1nx', text:"Hey, I'm J1nx! Ask me about PromptForge, prompt tricks, hacks, or just mess around. (NSFW? I'm not shy.)"}
+  ];
+  function renderJ1nx() {
+    const log = document.getElementById('j1nxLog');
+    log.innerHTML = j1nxChat.map(c =>
+      `<div style="margin-bottom:.23em;"><b style="color:${c.from==='you'?'#98ffb0':'#b488ff'}">${c.from==='you'?'You':'J1nx'}:</b> <span>${c.text}</span></div>`
+    ).slice(-12).join('');
+    log.scrollTop = log.scrollHeight;
+  }
+  function moodFrom(txt) {
+    if(/fuck|nsfw|nude|naked|sex|porn|horny|dick|pussy|bitch|slut|suck|ass|cock|boob|fetish|anal|cum|wet|orgasm|hot|dirty|taboo|xxx|erotic|spank|bdsm|choke|whip|fetish/i.test(txt)) return 'nsfw';
+    if(/help|how|?|\bwtf\b|explain|info|instructions|use|why|who|what|where|when|trouble|problem|broken|not working/i.test(txt)) return 'help';
+    if(/angry|fuck you|hate|shit|bitch|idiot|mad|rage|annoy/i.test(txt)) return 'angry';
+    if(/happy|thx|thanks|cool|fun|lol|nice|great|lmao|love|genius|hello|hi|hey|yo|sweet/i.test(txt)) return 'happy';
+    return 'default';
+  }
+  async function getJ1nxReply(val) {
+    if(window.j1nxBrain && typeof window.j1nxBrain === 'function') {
+      try { return await window.j1nxBrain(val) || "(No reply from J1nx brain)"; }
+      catch(e) { return "(Error in J1nx brain)"; }
+    } else {
+      return "(J1nx brain not loaded)";
+    }
+  }
+  renderJ1nx();
+  document.getElementById('j1nxSend').onclick = async function() {
+    let val = document.getElementById('j1nxInput').value.trim();
+    if (!val) return;
+    j1nxChat.push({from:'you', text:val});
+    let mood = moodFrom(val);
+    let bubble = document.getElementById('j1nxBubble');
+    bubble.style.background = moodColors[mood].bg;
+    bubble.style.borderColor = moodColors[mood].border;
+    renderJ1nx();
+    let reply = await getJ1nxReply(val);
+    let replyMood = moodFrom(reply);
+    bubble.style.background = moodColors[replyMood].bg;
+    bubble.style.borderColor = moodColors[replyMood].border;
+    j1nxChat.push({from:'j1nx', text:reply});
+    renderJ1nx();
+    document.getElementById('j1nxInput').value = '';
+  };
+  document.getElementById('j1nxInput').addEventListener('keydown',function(e){if(e.key==="Enter")document.getElementById('j1nxSend').onclick();});
+</script>
+<footer style="margin:2em 0 0 0; background:transparent;">
+  <!-- Your Custom PROMPTFORGE ANSI Art -->
+  <pre style="font-family:monospace; font-size:1em; line-height:1.13; letter-spacing:1.2px; text-align:center; color:#e6e5e1; margin:0 0 0.6em 0; user-select:none;">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
 U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
 \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
@@ -232,41 +258,20 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
 (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
-      </pre>
-    </div>
-    <!-- ANIMATED CAMO BAR -->
-    <div id="camoBar"></div>
-    <script>
-      // Micro-animated "Realtree" ANSI camo
-      const camoBar = document.getElementById('camoBar');
-      const chars = "▒░▓▞▚█▉▊▇▆▅▃▂▁▖▗▘▙▛▜▞▚";
-      const colors = ["#242813","#b488ff","#ffe266","#9ee37d","#a0a09a","#31234c","#4c4621","#3b4030"];
-      function makeCamo(w,h){
-        let html='';
-        for(let i=0;i<h;i++){
-          for(let j=0;j<w;j++){
-            let ch=chars[Math.floor(Math.random()*chars.length)];
-            let c=colors[Math.floor(Math.random()*colors.length)];
-            html+=`<span style="color:${c};font-size:1.14em;">${ch}</span>`;
-          }
-          html+="<br/>";
-        }
-        return html;
-      }
-      function updateCamo(){
-        let width = Math.max(64,Math.floor(window.innerWidth/14));
-        camoBar.innerHTML=makeCamo(width,1);
-      }
-      setInterval(updateCamo, 440);
-      window.addEventListener('resize',updateCamo);
-      updateCamo();
-    </script>
-    <div style="text-align:center;font-size:1.07em;color:#bdb687;margin:.45em 0 1.7em 0;">
-      <span>Made underground in BC, Canada &bull; #PromptForge &bull; 
-        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#bdb687;">Bluesky</a> &bull; 
-        <a href="https://x.com/GoreandGiggles" style="color:#bdb687;">Twitter/X</a>
-      </span>
-    </div>
-  </footer>
-</body>
-</html>
+  </pre>
+  <!-- Social Links / Contact -->
+  <div style="text-align:center;font-size:1.07em;color:#bdb687; margin-bottom:1.3em;">
+    <span>Made underground in BC, Canada &bull; #PromptForge &bull;
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#bdb687;text-decoration:underline;">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles" style="color:#bdb687;text-decoration:underline;">Twitter/X</a> &bull;
+      <a href="terms.html" style="color:#bdb687;text-decoration:underline;">Legal</a>
+    </span>
+  </div>
+  <!-- Sharper Realtree-Inspired Camo (compressed for style, but tweakable) -->
+  <pre style="font-family:monospace; font-size:.82em; line-height:.89; letter-spacing:1.6px; text-align:center; background:transparent; color:#7d775f; margin:0; padding:0; width:100vw; user-select:none;">
+▒▓▒░░▓▒▒▒▒░▓▒░▒▓▒▒▒░▒░▓▒░▒░▒▓▓▒▒▒▒░▒▓░▒▓▒░▒░▓▒▒▒▒▒▒░▓▒▒▓▒▒▒▒░▓▒▒▒▒░▓▒▒▒▒░▒▒▓▒▒
+▒░░▒▒▒▒▒▓▒▓▒░▒▓▒▒▓▒▒▒▒▒░▓▒▒▒▒░▓▒░▒░▓▒▒▓▒▒▒▒▒▓▒░▒▓▒▒▓▒░▒▒▓▒▒▒▒▒░▓▒▒▒▒░▓▒░▒▓▒▒▓▒
+▓▒▒▒▒▒▓▒▒▓▒▒▒▓▒▒▒░▓▒▒▒▒▒▒▓▒▒▓▒▒▓▒▒▒▓▒▒▒▒▒▓▒▒▓▒▒▒▒▒▓▒▒▒▓▒▒▒▒▒▒▓▒▒▒▒▒▓▒▒▒▓▒▒▒▒▒
+▒▓▒▒▒░▒▓▒░▒▓▒▒░░▓▓▒▒▒░▓▓░▒▓░▒▒░▓▒▒▒░▒▓▒▒▒░▓▒░▒▒▓▒░▒▓░▒░░▒▓▓▒▒▒░░▓▓▒▒▒░▓▓░▒▓░░
+  </pre>
+</footer>
