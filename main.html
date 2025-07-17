@@ -1,7 +1,7 @@
 <!--
-  PromptForge.online Main – v1.7.2
-  J1nx: true cutout, floating, with speech bubble/panel below—no black box, no overlap.
-  Full file, copy-paste and deploy.
+  PromptForge.online Main – v2.0.0
+  J1nx: fully alive, floating, with real "brain" (regex+trigger+smart mood).
+  - Just copy this AND assets/j1nx_brain.js (your original, unchanged!)
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -351,7 +351,7 @@
 </head>
 <body>
   <header>
-    <span class="version">v1.7.2</span>
+    <span class="version">v2.0.0</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -402,7 +402,7 @@
     </div>
   </header>
 
-  <!-- ======= J1nx: True cutout, floating, with chat bubble/panel below ======= -->
+  <!-- ======= J1nx: True cutout, floating, SMART with "brain" ======= -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -410,7 +410,7 @@
         <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
       </div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="60" autocomplete="off">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off">
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
@@ -422,6 +422,7 @@
       </div>
     </div>
   </div>
+  <script src="assets/j1nx_brain.js"></script>
   <script>
     // Position J1nx above the footer
     function adjustJ1nxFloatTrue() {
@@ -441,55 +442,71 @@
     window.addEventListener('resize', adjustJ1nxFloatTrue);
     setTimeout(adjustJ1nxFloatTrue, 700);
 
-    // Mood handling (aura and message)
+    // ==== J1nx BRAIN LOGIC ====
+    // Your massive smart regex array/brain is now used for ALL responses!
+    let chat = [];
+    let defaultMood = 0;
     let moods = [
-      {glow: "#64f2e3", text: "Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"},
-      {glow: "#fa528e", text: "Wicked mode: You’d be amazed what I can suggest… Try me."},
-      {glow: "#be9cff", text: "Sultry muse activated. I make prompt ideas sizzle…"},
-      {glow: "#ffd166", text: "Oops! You caught me slacking. Ask for a secret prompt…"}
+      {glow: "#64f2e3"},
+      {glow: "#fa528e"},
+      {glow: "#be9cff"},
+      {glow: "#ffd166"}
     ];
-    let moodIndex = 0, lastTap = 0;
+    // moodIdx: 0 = default/cheer, 1 = wicked, 2 = sultry, 3 = caught/slack
+
+    // Use your real brain!
+    // Expects: window.j1nxBrain(input) returns {reply, mood} or just string
+    function getJ1nxReply(val) {
+      if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+        let res = window.j1nxBrain(val, chat.length);
+        // If brain returns string only, wrap it.
+        if(typeof res === "string") return {reply: res, mood: 0};
+        if(typeof res === "object" && res.reply) return res;
+        // fallback
+        return {reply: "(I have no clue... bug?)", mood: 0};
+      }
+      return {reply: "(Brain not loaded)", mood: 0};
+    }
     function setJ1nxMood(idx) {
+      // Limit idx to known moods
+      idx = Math.max(0, Math.min(idx, moods.length-1));
       document.getElementById("j1nxCutoutTrue").style.boxShadow = "0 0 55px 8px "+moods[idx].glow+",0 0 12px #64f2e3cc";
       document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
-      document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + moods[idx].text;
     }
-    function cycleJ1nxMood() {
-      moodIndex = (moodIndex + 1) % moods.length;
-      setJ1nxMood(moodIndex);
-    }
-    // Double-tap to change mood
+    // Double-tap to "cycle" mood manually for fun
+    let moodIndex = 0, lastTap = 0;
     document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
       let now = Date.now();
-      if (now - lastTap < 400) { cycleJ1nxMood(); }
+      if (now - lastTap < 400) {
+        moodIndex = (moodIndex + 1) % moods.length;
+        setJ1nxMood(moodIndex);
+      }
       lastTap = now;
     });
 
-    // Simple chat logic
-    let chat = [moods[0].text];
+    // ==== Chat logic ====
     function renderJ1nxChat() {
       document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+    }
+    function chatReset() {
+      chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+      setJ1nxMood(defaultMood);
+      renderJ1nxChat();
     }
     document.getElementById("j1nxSendTrue").onclick = function(){
       let val = document.getElementById("j1nxInputTrue").value.trim();
       if (!val) return;
-      if (val.toLowerCase().includes("unlock")) {
-        moodIndex = 2;
-        setJ1nxMood(moodIndex);
-        chat.push("NSFW mode activated… (Not really! But you tried. Check my page for secrets.)");
-      } else {
-        chat.push("You: "+val);
-      }
+      let res = getJ1nxReply(val);
+      chat.push(val);
+      chat.push(res.reply);
+      setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
       renderJ1nxChat();
       document.getElementById("j1nxInputTrue").value = "";
     };
     document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
       if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
     });
-    document.getElementById("j1nxClearTrue").onclick = function(){
-      chat = [moods[moodIndex].text];
-      renderJ1nxChat();
-    };
+    document.getElementById("j1nxClearTrue").onclick = chatReset;
     document.getElementById("j1nxSaveTrue").onclick = function(){
       let text = chat.join('\n');
       let blob = new Blob([text], {type:"text/plain"});
@@ -501,8 +518,8 @@
       a.click();
       setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
     };
-    // Init mood
-    setJ1nxMood(0);
+    chatReset(); // init
+
   </script>
 
   <main>
