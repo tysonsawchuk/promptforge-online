@@ -1,8 +1,6 @@
 <!--
-  PromptForge.online Main – v1.7.0
-  J1nx: Real floating module, cutout, speech bubble, chat, options, hint.
-  Directly extracted from your J1nx page—preserved layout.
-  Copy-paste ready, full file.
+  PromptForge.online Main – v1.7.1
+  J1nx: floating block, cutout 4× bigger (344px), preserved chat/options/hint.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -22,8 +20,6 @@
       --footer-bg: #131413;
       --gold: #ffe266;
       --j1nx-glow: #be9cff;
-      --j1nx-glow-nsfw: #fa528e;
-      --j1nx-glow-pg: #64f2e3;
     }
     html, body {
       width: 100vw; max-width: 100vw; min-width: 0;
@@ -249,7 +245,7 @@
       user-select: none;
       transition: bottom .2s;
       min-width: 320px;
-      max-width: 340px;
+      max-width: 370px;
     }
     .j1nx-bubble-main {
       background: rgba(30,30,38,0.98);
@@ -267,16 +263,18 @@
       transition: box-shadow .23s, border-color .18s;
     }
     .j1nx-bubble-main .j1nx-cutout-main {
-      width: 86px;
-      height: 86px;
-      margin-top: -64px;
-      margin-bottom: -9px;
-      border-radius: 17px;
+      width: 344px;
+      height: 344px;
+      margin-top: -236px;
+      margin-bottom: -27px;
+      border-radius: 32px;
       object-fit: contain;
-      box-shadow: 0 0 45px 8px var(--aqua), 0 0 11px #be9cff;
+      box-shadow: 0 0 95px 20px var(--aqua), 0 0 24px #be9cff;
       background: none;
       position: relative;
       z-index: 2;
+      pointer-events: auto;
+      transition: box-shadow .24s;
     }
     .j1nx-bubble-text-main {
       font-size: 1.05em;
@@ -338,18 +336,21 @@
       box-shadow: 0 3px 13px #be9cff28;
       font-weight: 600;
     }
+    @media (max-width: 900px) {
+      .j1nx-float-wrap {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-bubble-main .j1nx-cutout-main {width: 120px; height: 120px; margin-top: -64px;}
+    }
     @media (max-width: 700px) {
-      .j1nx-float-wrap {
-        right: 1vw; min-width: 97vw; max-width: 99vw; bottom: calc(4vh + 120px);
-      }
+      .j1nx-float-wrap {min-width: 99vw; max-width: 99vw; right: 1vw;}
       .j1nx-bubble-main {min-width: 98vw; max-width: 99vw;}
-      .j1nx-bubble-main .j1nx-cutout-main {width: 57px; height: 57px; margin-top: -39px;}
+      .j1nx-bubble-main .j1nx-cutout-main {width: 66px; height: 66px; margin-top: -36px;}
     }
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v1.7.0</span>
+    <span class="version">v1.7.1</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -400,7 +401,7 @@
     </div>
   </header>
 
-  <!-- ======= J1nx: Floating Real Mascot Block ======= -->
+  <!-- ======= J1nx: Floating Real Mascot Block, cutout 4× bigger ======= -->
   <div class="j1nx-float-wrap" id="j1nxFloatWrap">
     <div class="j1nx-bubble-main" id="j1nxBubbleMain">
       <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout-main" id="j1nxCutoutMain"/>
@@ -448,7 +449,7 @@
     ];
     let moodIndex = 0, lastTap = 0;
     function setJ1nxMood(idx) {
-      document.getElementById("j1nxCutoutMain").style.boxShadow = "0 0 45px 8px "+moods[idx].glow+",0 0 11px #be9cff";
+      document.getElementById("j1nxCutoutMain").style.boxShadow = "0 0 95px 20px "+moods[idx].glow+",0 0 24px #be9cff";
       document.getElementById("j1nxBubbleMain").style.boxShadow = "0 4px 32px "+moods[idx].glow+"bb,0 0 0 5px #23231f";
       document.getElementById("j1nxBubbleTextMain").innerHTML = "<b>J1nx:</b> " + moods[idx].text;
     }
