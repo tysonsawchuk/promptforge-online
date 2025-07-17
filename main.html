@@ -1,6 +1,7 @@
 <!--
-  PromptForge.online Main – v1.7.1
-  J1nx: floating block, cutout 4× bigger (344px), preserved chat/options/hint.
+  PromptForge.online Main – v1.7.2
+  J1nx: true cutout, floating, with speech bubble/panel below—no black box, no overlap.
+  Full file, copy-paste and deploy.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -232,8 +233,9 @@
       overflow-x: auto;
       user-select: none;
     }
-    /* ==== J1nx Floating Block ==== */
-    .j1nx-float-wrap {
+
+    /* ==== J1nx TRUE CUTOUT Widget ==== */
+    .j1nx-float-true {
       position: fixed;
       z-index: 1400;
       right: 2vw;
@@ -243,16 +245,29 @@
       align-items: center;
       pointer-events: all;
       user-select: none;
-      transition: bottom .2s;
-      min-width: 320px;
-      max-width: 370px;
+      min-width: 0;
+      max-width: 360px;
     }
-    .j1nx-bubble-main {
-      background: rgba(30,30,38,0.98);
-      border-radius: 19px;
-      box-shadow: 0 4px 32px #be9cff66, 0 0 0 5px #23231f;
-      border: 2.1px solid var(--aqua);
+    .j1nx-true-cutout-img {
+      width: 320px;
+      height: 320px;
+      object-fit: contain;
+      border-radius: 32px;
+      box-shadow: 0 0 55px 8px #be9cffcc, 0 0 12px #64f2e3cc;
+      background: transparent !important;
+      margin-bottom: -30px;
+      position: relative;
+      z-index: 9;
+      pointer-events: auto;
+      transition: box-shadow .2s;
+    }
+    .j1nx-bubble-true-main {
+      background: rgba(22,23,31,0.97);
+      border-radius: 17px;
+      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
+      border: 2px solid var(--aqua);
       padding: 1.1em 1.3em 1em 1.3em;
+      margin-top: 0;
       margin-bottom: 0.3em;
       display: flex;
       flex-direction: column;
@@ -260,55 +275,41 @@
       min-width: 290px;
       max-width: 330px;
       position: relative;
-      transition: box-shadow .23s, border-color .18s;
+      z-index: 1;
     }
-    .j1nx-bubble-main .j1nx-cutout-main {
-      width: 344px;
-      height: 344px;
-      margin-top: -236px;
-      margin-bottom: -27px;
-      border-radius: 32px;
-      object-fit: contain;
-      box-shadow: 0 0 95px 20px var(--aqua), 0 0 24px #be9cff;
-      background: none;
-      position: relative;
-      z-index: 2;
-      pointer-events: auto;
-      transition: box-shadow .24s;
-    }
-    .j1nx-bubble-text-main {
+    .j1nx-bubble-text-true {
       font-size: 1.05em;
       color: #fff;
-      margin: 0.52em 0 0.27em 0;
+      margin: 0.42em 0 0.20em 0;
       text-align: center;
       font-weight: 600;
       text-shadow: 0 1px 11px #1e1111cc;
-      line-height: 1.25;
+      line-height: 1.22;
       z-index: 1;
     }
-    .j1nx-bubble-row-main {
+    .j1nx-bubble-row-true {
       width: 100%;
       display: flex;
       justify-content: center;
       gap: 7px;
-      margin: 0.2em 0 0.18em 0;
+      margin: 0.13em 0 0.10em 0;
     }
-    .j1nx-input-main {
+    .j1nx-input-true {
       flex: 1;
       font-size: 1em;
-      border-radius: 9px;
+      border-radius: 8px;
       padding: 7px 12px;
       border: 1px solid var(--aqua);
       background: #171b22;
       color: var(--aqua);
       min-width: 0;
     }
-    .j1nx-btn-main {
-      font-size: .99em;
+    .j1nx-btn-true {
+      font-size: .98em;
       padding: 6.5px 14px;
       border-radius: 8px;
       background: #22252b;
-      border: 1.4px solid var(--aqua);
+      border: 1.3px solid var(--aqua);
       color: var(--aqua);
       font-family: inherit;
       font-weight: 600;
@@ -316,12 +317,12 @@
       transition: background .13s, color .13s, border .13s;
       box-shadow: 0 1.5px 9px #be9cff33;
     }
-    .j1nx-btn-main:hover {
+    .j1nx-btn-true:hover {
       background: var(--aqua);
       color: #171b22;
       border-color: #fff;
     }
-    .j1nx-easteregg-main {
+    .j1nx-easteregg-true {
       font-size: .91em;
       color: #be9cff;
       background: #171b22e6;
@@ -337,20 +338,20 @@
       font-weight: 600;
     }
     @media (max-width: 900px) {
-      .j1nx-float-wrap {min-width: 99vw; max-width: 99vw; right: 1vw;}
-      .j1nx-bubble-main {min-width: 97vw; max-width: 99vw;}
-      .j1nx-bubble-main .j1nx-cutout-main {width: 120px; height: 120px; margin-top: -64px;}
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 112px; height: 112px;}
     }
     @media (max-width: 700px) {
-      .j1nx-float-wrap {min-width: 99vw; max-width: 99vw; right: 1vw;}
-      .j1nx-bubble-main {min-width: 98vw; max-width: 99vw;}
-      .j1nx-bubble-main .j1nx-cutout-main {width: 66px; height: 66px; margin-top: -36px;}
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 66px; height: 66px;}
     }
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v1.7.1</span>
+    <span class="version">v1.7.2</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -401,30 +402,30 @@
     </div>
   </header>
 
-  <!-- ======= J1nx: Floating Real Mascot Block, cutout 4× bigger ======= -->
-  <div class="j1nx-float-wrap" id="j1nxFloatWrap">
-    <div class="j1nx-bubble-main" id="j1nxBubbleMain">
-      <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-cutout-main" id="j1nxCutoutMain"/>
-      <div class="j1nx-bubble-text-main" id="j1nxBubbleTextMain">
+  <!-- ======= J1nx: True cutout, floating, with chat bubble/panel below ======= -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
         <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
       </div>
-      <div class="j1nx-bubble-row-main">
-        <input class="j1nx-input-main" id="j1nxInputMain" placeholder="Say something to J1nx..." maxlength="60" autocomplete="off">
-        <button class="j1nx-btn-main" id="j1nxSendMain">Send</button>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="60" autocomplete="off">
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
-      <div class="j1nx-bubble-row-main">
-        <button class="j1nx-btn-main" id="j1nxClearMain">Clear Chat</button>
-        <button class="j1nx-btn-main" id="j1nxSaveMain">Save Chat</button>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
       </div>
-      <div class="j1nx-easteregg-main" id="j1nxEasterEggMain">
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
         Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
       </div>
     </div>
   </div>
   <script>
     // Position J1nx above the footer
-    function adjustJ1nxFloat() {
-      const widget = document.getElementById('j1nxFloatWrap');
+    function adjustJ1nxFloatTrue() {
+      const widget = document.getElementById('j1nxFloatTrue');
       const footer = document.querySelector('footer');
       if (!widget || !footer) return;
       const footerRect = footer.getBoundingClientRect();
@@ -436,9 +437,9 @@
         widget.style.bottom = 'calc(2.8vh + 125px)';
       }
     }
-    window.addEventListener('scroll', adjustJ1nxFloat);
-    window.addEventListener('resize', adjustJ1nxFloat);
-    setTimeout(adjustJ1nxFloat, 700);
+    window.addEventListener('scroll', adjustJ1nxFloatTrue);
+    window.addEventListener('resize', adjustJ1nxFloatTrue);
+    setTimeout(adjustJ1nxFloatTrue, 700);
 
     // Mood handling (aura and message)
     let moods = [
@@ -449,16 +450,16 @@
     ];
     let moodIndex = 0, lastTap = 0;
     function setJ1nxMood(idx) {
-      document.getElementById("j1nxCutoutMain").style.boxShadow = "0 0 95px 20px "+moods[idx].glow+",0 0 24px #be9cff";
-      document.getElementById("j1nxBubbleMain").style.boxShadow = "0 4px 32px "+moods[idx].glow+"bb,0 0 0 5px #23231f";
-      document.getElementById("j1nxBubbleTextMain").innerHTML = "<b>J1nx:</b> " + moods[idx].text;
+      document.getElementById("j1nxCutoutTrue").style.boxShadow = "0 0 55px 8px "+moods[idx].glow+",0 0 12px #64f2e3cc";
+      document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+      document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + moods[idx].text;
     }
     function cycleJ1nxMood() {
       moodIndex = (moodIndex + 1) % moods.length;
       setJ1nxMood(moodIndex);
     }
     // Double-tap to change mood
-    document.getElementById("j1nxBubbleMain").addEventListener("click", function(e){
+    document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
       let now = Date.now();
       if (now - lastTap < 400) { cycleJ1nxMood(); }
       lastTap = now;
@@ -467,10 +468,10 @@
     // Simple chat logic
     let chat = [moods[0].text];
     function renderJ1nxChat() {
-      document.getElementById("j1nxBubbleTextMain").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
     }
-    document.getElementById("j1nxSendMain").onclick = function(){
-      let val = document.getElementById("j1nxInputMain").value.trim();
+    document.getElementById("j1nxSendTrue").onclick = function(){
+      let val = document.getElementById("j1nxInputTrue").value.trim();
       if (!val) return;
       if (val.toLowerCase().includes("unlock")) {
         moodIndex = 2;
@@ -480,16 +481,16 @@
         chat.push("You: "+val);
       }
       renderJ1nxChat();
-      document.getElementById("j1nxInputMain").value = "";
+      document.getElementById("j1nxInputTrue").value = "";
     };
-    document.getElementById("j1nxInputMain").addEventListener('keydown',e=>{
-      if(e.key==="Enter")document.getElementById("j1nxSendMain").onclick();
+    document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+      if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
     });
-    document.getElementById("j1nxClearMain").onclick = function(){
+    document.getElementById("j1nxClearTrue").onclick = function(){
       chat = [moods[moodIndex].text];
       renderJ1nxChat();
     };
-    document.getElementById("j1nxSaveMain").onclick = function(){
+    document.getElementById("j1nxSaveTrue").onclick = function(){
       let text = chat.join('\n');
       let blob = new Blob([text], {type:"text/plain"});
       let url = URL.createObjectURL(blob);
