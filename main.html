@@ -1,6 +1,6 @@
 <!--
-  PromptForge.online Main – v1.5.0
-  J1nx: static floating mascot, mood glow, Easter egg hint (no chat box).
+  PromptForge.online Main – v1.6.0
+  The real J1nx: floating mascot widget, mood aura, chat bubble, clear/save, Easter egg text.
   FULL FILE. Copy-paste and deploy.
 -->
 <!DOCTYPE html>
@@ -20,8 +20,6 @@
       --panel-deep: #23231f;
       --footer-bg: #131413;
       --gold: #ffe266;
-      --shadow: 0 2px 16px #21cfcf28;
-      --shadow-hover: 0 4px 24px #4dfff355;
       --j1nx-happy: #62f7c6;
       --j1nx-wicked: #fa528e;
       --j1nx-sultry: #be9cff;
@@ -131,7 +129,7 @@
     .feature-tile {
       background: #21261e;
       border-radius: 11px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 2px 16px #21cfcf28;
       border: 1.5px solid var(--aqua)28;
       flex: 1 1 322px;
       max-width: 340px;
@@ -145,7 +143,7 @@
       transition: box-shadow .13s, border-color .12s;
     }
     .feature-tile:hover {
-      box-shadow: var(--shadow-hover);
+      box-shadow: 0 4px 24px #4dfff355;
       border-color: var(--gold);
       background: #232922;
     }
@@ -238,12 +236,12 @@
       overflow-x: auto;
       user-select: none;
     }
-    /* J1nx Mascot */
-    .j1nx-mascot-float {
+    /* J1nx Widget */
+    .j1nx-widget-float {
       position: fixed;
       z-index: 1400;
       right: 2vw;
-      bottom: calc(2.8vh + 100px);
+      bottom: calc(2.8vh + 128px);
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -251,55 +249,110 @@
       user-select: none;
       transition: bottom .2s;
       opacity: 1;
-      /* Easter egg hint slides up on hover */
     }
-    .j1nx-mascot-cutout {
-      width: 84px; height: 84px;
-      border-radius: 20px;
+    .j1nx-widget-cutout {
+      width: 76px; height: 76px;
+      border-radius: 16px;
       object-fit: contain;
-      box-shadow: 0 0 45px 10px var(--j1nx-happy);
+      box-shadow: 0 0 38px 10px var(--j1nx-happy);
       background: none !important;
-      margin-bottom: -10px;
+      margin-bottom: -12px;
       position: relative;
       transition: box-shadow .24s;
       cursor: pointer;
     }
-    .j1nx-mood-happy { box-shadow: 0 0 44px 11px var(--j1nx-happy); }
-    .j1nx-mood-wicked { box-shadow: 0 0 44px 14px var(--j1nx-wicked); }
-    .j1nx-mood-sultry { box-shadow: 0 0 44px 16px var(--j1nx-sultry);}
-    .j1nx-mood-caught { box-shadow: 0 0 34px 13px var(--j1nx-caught);}
-    .j1nx-mascot-easteregg {
-      display: block;
-      font-size: .95em;
-      color: #fa528e;
-      background: #191a2aee;
-      border-radius: 8px 12px 16px 14px;
-      margin-top: 4px;
+    .j1nx-mood-happy { box-shadow: 0 0 38px 12px var(--j1nx-happy); }
+    .j1nx-mood-wicked { box-shadow: 0 0 38px 14px var(--j1nx-wicked); }
+    .j1nx-mood-sultry { box-shadow: 0 0 38px 16px var(--j1nx-sultry);}
+    .j1nx-mood-caught { box-shadow: 0 0 32px 13px var(--j1nx-caught);}
+    .j1nx-widget-bubble {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      min-width: 186px;
+      max-width: 290px;
+      font-size: 0.97em;
+      background: #191f21f9;
+      border-radius: 11px 15px 21px 15px;
+      box-shadow: 0 0 17px 3px var(--j1nx-happy)44;
+      padding: 0.45em 1em 0.9em 1.1em;
+      margin-right: 7px;
       margin-bottom: 0;
-      padding: 7px 14px 7px 16px;
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(14px);
-      transition: opacity .18s, transform .2s;
-      box-shadow: 0 3px 13px #fa528e25;
+      border: 2px solid var(--j1nx-happy);
+      color: #e9efe7;
       position: relative;
+      bottom: 0;
       right: 0;
-      max-width: 232px;
+      margin-top: 1px;
+      transition: box-shadow .22s, border-color .18s;
+      pointer-events: all;
     }
-    .j1nx-mascot-float:hover .j1nx-mascot-easteregg,
-    .j1nx-mascot-float:focus-within .j1nx-mascot-easteregg {
-      opacity: 1; transform: translateY(0);
+    .j1nx-bubble-speech {
+      font-size: 1.07em;
+      color: #fff;
+      margin-bottom: .36em;
+      font-weight: 600;
+      line-height: 1.22;
+      text-shadow: 0 1px 10px #0005;
+    }
+    .j1nx-bubble-row { display: flex; gap: 6px; margin-bottom: 2px; }
+    .j1nx-btn {
+      font-size: .92em;
+      padding: 3.3px 14px;
+      border-radius: 7px;
+      background: #191f21;
+      border: 1px solid var(--aqua);
+      color: var(--aqua);
+      margin-right: 3px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .13s, color .13s, border .13s;
+      box-shadow: 0 0 7px #64f2e324;
+    }
+    .j1nx-btn:hover {
+      background: var(--aqua);
+      color: #191f21;
+      border-color: #fff;
+    }
+    .j1nx-bubble-input {
+      font-size: .97em;
+      border-radius: 7px;
+      padding: 3.2px 9px;
+      border: 1px solid var(--aqua);
+      background: #13161c;
+      color: var(--aqua);
+      width: 80px;
+      margin-right: 2px;
+    }
+    .j1nx-easteregg-hint {
+      display: block;
+      font-size: .89em;
+      color: #be9cff;
+      background: #191a2aee;
+      border-radius: 8px 14px 11px 14px;
+      margin-top: 6px;
+      margin-bottom: 0;
+      padding: 6px 13px 7px 12px;
+      opacity: .83;
+      pointer-events: none;
+      max-width: 232px;
+      line-height: 1.24;
+      text-align: right;
+      user-select: none;
+      box-shadow: 0 3px 13px #be9cff22;
     }
     @media (max-width: 700px) {
-      .j1nx-mascot-cutout {width: 52px; height: 52px; margin-bottom: -7px;}
-      .j1nx-mascot-float {right: 1vw; bottom: calc(4.2vh + 95px);}
-      .j1nx-mascot-easteregg {font-size: .78em; max-width: 96vw;}
+      .j1nx-widget-cutout {width: 47px; height: 47px; margin-bottom: -7px;}
+      .j1nx-widget-float {right: 1vw; bottom: calc(4.2vh + 115px);}
+      .j1nx-widget-bubble {font-size: .81em; min-width: 112px; max-width: 94vw;}
+      .j1nx-easteregg-hint {font-size: .72em; max-width: 93vw;}
     }
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v1.5.0</span>
+    <span class="version">v1.6.0</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -350,51 +403,114 @@
     </div>
   </header>
 
-  <!-- ======= Floating J1nx Mascot: static, with mood glow, Clippy style ======= -->
-  <div class="j1nx-mascot-float" id="j1nxMascotFloat" tabindex="0">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" id="j1nxMascot" class="j1nx-mascot-cutout j1nx-mood-happy"/>
-    <span class="j1nx-mascot-easteregg" id="j1nxEasterEggHint">Psst… double-tap me to change my mood, or visit my <a href="j1nx.html" style="color:#be9cff;text-decoration:underline;">J1nx page</a> for secrets!</span>
+  <!-- ======= J1nx: Real mascot widget, mood aura, chat bubble, clear/save, hint ======= -->
+  <div class="j1nx-widget-float" id="j1nxWidgetFloat">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" id="j1nxWidgetCutout" class="j1nx-widget-cutout j1nx-mood-happy"/>
+    <div class="j1nx-widget-bubble" id="j1nxWidgetBubble">
+      <div class="j1nx-bubble-speech" id="j1nxSpeech">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row">
+        <input class="j1nx-bubble-input" id="j1nxInput" placeholder="Say something to J1nx..." maxlength="60" autocomplete="off">
+        <button class="j1nx-btn" id="j1nxSend">Send</button>
+      </div>
+      <div class="j1nx-bubble-row">
+        <button class="j1nx-btn" id="j1nxClear">Clear Chat</button>
+        <button class="j1nx-btn" id="j1nxSave">Save Chat</button>
+      </div>
+    </div>
+    <span class="j1nx-easteregg-hint" id="j1nxEasterEggHint">Double-tap the chat bubble or type 'unlock' to reveal NSFW mode…</span>
   </div>
   <script>
     // Adjust J1nx above footer
-    function adjustJ1nxMascot() {
-      const mascot = document.getElementById('j1nxMascotFloat');
+    function adjustJ1nxWidget() {
+      const widget = document.getElementById('j1nxWidgetFloat');
       const footer = document.querySelector('footer');
-      if (!mascot || !footer) return;
+      if (!widget || !footer) return;
       const footerRect = footer.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const overlap = windowHeight - footerRect.top;
       if (overlap > 0) {
-        mascot.style.bottom = (overlap + 16) + 'px';
+        widget.style.bottom = (overlap + 16) + 'px';
       } else {
-        mascot.style.bottom = 'calc(2.8vh + 100px)';
+        widget.style.bottom = 'calc(2.8vh + 128px)';
       }
     }
-    window.addEventListener('scroll', adjustJ1nxMascot);
-    window.addEventListener('resize', adjustJ1nxMascot);
-    setTimeout(adjustJ1nxMascot, 700);
+    window.addEventListener('scroll', adjustJ1nxWidget);
+    window.addEventListener('resize', adjustJ1nxWidget);
+    setTimeout(adjustJ1nxWidget, 700);
 
-    // J1nx Easter egg: double-tap = mood changes
-    let lastTap = 0;
-    let moods = ["j1nx-mood-happy","j1nx-mood-wicked","j1nx-mood-sultry","j1nx-mood-caught"];
-    let moodTips = [
-      "Feeling cute. Ask me for inspiration on <a href='j1nx.html'>my page</a>.",
-      "Wicked mood: bet you can't guess my favorite prompt…",
-      "Sultry muse mode… I inspire the forbidden. 😉",
-      "Oops! Caught sneaking—visit <a href='j1nx.html'>J1nx page</a> for secrets!"
+    // J1nx moods for aura
+    let moods = [
+      {cls: "j1nx-mood-happy", tip: "Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"},
+      {cls: "j1nx-mood-wicked", tip: "Heh, wicked mode: You’d be amazed what I can suggest… Try me."},
+      {cls: "j1nx-mood-sultry", tip: "Sultry muse activated. I make prompt ideas sizzle…"},
+      {cls: "j1nx-mood-caught", tip: "Oops! You caught me slacking. Ask for a secret prompt…"}
     ];
     let moodIndex = 0;
-    document.getElementById("j1nxMascot").addEventListener("click", function(e){
+    // Double tap changes mood
+    let lastTap = 0;
+    function cycleJ1nxMood() {
+      moodIndex = (moodIndex + 1) % moods.length;
+      document.getElementById("j1nxWidgetCutout").className = "j1nx-widget-cutout " + moods[moodIndex].cls;
+      document.getElementById("j1nxWidgetBubble").style.boxShadow =
+        "0 0 17px 3px var(--" + moods[moodIndex].cls.replace('j1nx-mood-','j1nx-') + ")";
+      document.getElementById("j1nxSpeech").innerHTML = "<b>J1nx:</b> " + moods[moodIndex].tip;
+    }
+    document.getElementById("j1nxWidgetCutout").addEventListener("click", function(e){
       let now = Date.now();
       if (now - lastTap < 400) {
-        moodIndex = (moodIndex + 1) % moods.length;
-        let mascot = document.getElementById("j1nxMascot");
-        mascot.className = "j1nx-mascot-cutout " + moods[moodIndex];
-        let hint = document.getElementById("j1nxEasterEggHint");
-        hint.innerHTML = moodTips[moodIndex];
+        cycleJ1nxMood();
       }
       lastTap = now;
     });
+    document.getElementById("j1nxWidgetBubble").addEventListener("click", function(e){
+      let now = Date.now();
+      if (now - lastTap < 400) {
+        cycleJ1nxMood();
+      }
+      lastTap = now;
+    });
+
+    // Simple chat logic
+    let chat = [
+      "Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"
+    ];
+    function renderJ1nxChat() {
+      document.getElementById("j1nxSpeech").innerHTML =
+        "<b>J1nx:</b> " + chat[chat.length-1];
+    }
+    document.getElementById("j1nxSend").onclick = function(){
+      let val = document.getElementById("j1nxInput").value.trim();
+      if (!val) return;
+      if (val.toLowerCase().includes("unlock")) {
+        moodIndex = 2; // Sultry
+        cycleJ1nxMood();
+        chat.push("NSFW mode activated… (Not really! But you tried. Check my page for secrets.)");
+      } else {
+        chat.push("You: "+val);
+      }
+      renderJ1nxChat();
+      document.getElementById("j1nxInput").value = "";
+    };
+    document.getElementById("j1nxInput").addEventListener('keydown',e=>{
+      if(e.key==="Enter")document.getElementById("j1nxSend").onclick();
+    });
+    document.getElementById("j1nxClear").onclick = function(){
+      chat = [moods[moodIndex].tip];
+      renderJ1nxChat();
+    };
+    document.getElementById("j1nxSave").onclick = function(){
+      let text = chat.join('\n');
+      let blob = new Blob([text], {type:"text/plain"});
+      let url = URL.createObjectURL(blob);
+      let a = document.createElement("a");
+      a.href = url;
+      a.download = "j1nx_chat.txt";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+    };
   </script>
 
   <main>
