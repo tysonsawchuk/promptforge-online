@@ -1,6 +1,6 @@
 <!--
-  PromptForge.online Main – v1.4.1
-  J1nx: mascot-dominant, tiny bubble, footer never blocked.
+  PromptForge.online Main – v1.5.0
+  J1nx: static floating mascot, mood glow, Easter egg hint (no chat box).
   FULL FILE. Copy-paste and deploy.
 -->
 <!DOCTYPE html>
@@ -22,13 +22,10 @@
       --gold: #ffe266;
       --shadow: 0 2px 16px #21cfcf28;
       --shadow-hover: 0 4px 24px #4dfff355;
-      --j1nx-help: #62aaff;
-      --j1nx-positive: #4cff74;
-      --j1nx-danger: #ff003c;
-      --j1nx-chill: #64f2e3;
-      --j1nx-nsfw: #ff006a;
-      --j1nx-inspire: #ffe266;
-      --j1nx-neutral: #abb8b8;
+      --j1nx-happy: #62f7c6;
+      --j1nx-wicked: #fa528e;
+      --j1nx-sultry: #be9cff;
+      --j1nx-caught: #ffd166;
     }
     html, body {
       width: 100vw; max-width: 100vw; min-width: 0;
@@ -241,95 +238,68 @@
       overflow-x: auto;
       user-select: none;
     }
-    /* Responsive layout: 3 cols on desktop, 2 on tablet, 1 on mobile */
-    @media (max-width: 1100px) {
-      .feature-grid { max-width: 730px; }
-      .feature-tile { min-width: 42vw; max-width: 99vw;}
-    }
-    @media (max-width: 700px) {
-      .feature-grid { flex-direction: column; gap: 1.1em;}
-      .feature-tile { min-width:90vw; max-width:99vw;}
-    }
-    /* J1nx mascot, bubble smaller, always above footer */
-    .j1nx-float {
+    /* J1nx Mascot */
+    .j1nx-mascot-float {
       position: fixed;
-      z-index: 1200;
+      z-index: 1400;
       right: 2vw;
-      bottom: calc(2.8vh + 96px);
+      bottom: calc(2.8vh + 100px);
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       pointer-events: all;
       user-select: none;
       transition: bottom .2s;
+      opacity: 1;
+      /* Easter egg hint slides up on hover */
     }
-    .j1nx-cutout {
-      width: 150px;
-      height: 150px;
-      border-radius: 30px;
-      box-shadow: 0 0 110px 32px #64f2e3;
-      transition: box-shadow .18s;
-      background: none !important;
-      margin-bottom: -18px;
+    .j1nx-mascot-cutout {
+      width: 84px; height: 84px;
+      border-radius: 20px;
       object-fit: contain;
-    }
-    .j1nx-bubble {
-      min-width: 168px;
-      max-width: 220px;
-      font-size: 0.95em;
-      background: #10181eec;
-      border-radius: 13px 13px 17px 4px;
-      box-shadow: 0 0 17px 3px #64f2e3b3;
-      padding: 0.45em 0.7em 0.5em 0.8em;
-      margin-right: 7px;
-      margin-bottom: 0;
-      border: 2px solid #64f2e3;
-      color: #e9efe7;
-      transition: box-shadow .22s, border-color .18s;
+      box-shadow: 0 0 45px 10px var(--j1nx-happy);
+      background: none !important;
+      margin-bottom: -10px;
       position: relative;
-      bottom: 0;
+      transition: box-shadow .24s;
+      cursor: pointer;
+    }
+    .j1nx-mood-happy { box-shadow: 0 0 44px 11px var(--j1nx-happy); }
+    .j1nx-mood-wicked { box-shadow: 0 0 44px 14px var(--j1nx-wicked); }
+    .j1nx-mood-sultry { box-shadow: 0 0 44px 16px var(--j1nx-sultry);}
+    .j1nx-mood-caught { box-shadow: 0 0 34px 13px var(--j1nx-caught);}
+    .j1nx-mascot-easteregg {
+      display: block;
+      font-size: .95em;
+      color: #fa528e;
+      background: #191a2aee;
+      border-radius: 8px 12px 16px 14px;
+      margin-top: 4px;
+      margin-bottom: 0;
+      padding: 7px 14px 7px 16px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(14px);
+      transition: opacity .18s, transform .2s;
+      box-shadow: 0 3px 13px #fa528e25;
+      position: relative;
       right: 0;
-      display: flex;
-      flex-direction: column;
+      max-width: 232px;
     }
-    .j1nx-messages {
-      max-height: 54px;
-      min-height: 24px;
-      overflow-y: auto;
-      font-size: 0.97em;
-      line-height: 1.15;
-      margin-bottom: 0.18em;
-      color: #64f2e3;
-      scrollbar-width: thin;
+    .j1nx-mascot-float:hover .j1nx-mascot-easteregg,
+    .j1nx-mascot-float:focus-within .j1nx-mascot-easteregg {
+      opacity: 1; transform: translateY(0);
     }
-    .j1nx-input-row {display:flex;gap:.15em;}
-    .j1nx-input {flex:1;font-size:.95em;padding:.16em 0.43em;border-radius:6px;border:1px solid #64f2e3;background:#232c2a;color:#64f2e3;}
-    .j1nx-send {font-size:.97em;padding:.18em 0.57em;background:linear-gradient(90deg,#64f2e3 60%,#fff 120%);color:#181b15;border:none;border-radius:6px;font-weight:700;cursor:pointer;}
-    .j1nx-bubble.j1nx-mood-help   { box-shadow: 0 0 27px 7px #62aaffcc; border-color: #62aaff;}
-    .j1nx-bubble.j1nx-mood-positive { box-shadow: 0 0 23px 7px #4cff74cc; border-color: #4cff74;}
-    .j1nx-bubble.j1nx-mood-danger { box-shadow: 0 0 26px 9px #ff003c; border-color: #ff003c;}
-    .j1nx-bubble.j1nx-mood-chill  { box-shadow: 0 0 30px 10px #64f2e3cc; border-color: #64f2e3;}
-    .j1nx-bubble.j1nx-mood-nsfw   { box-shadow: 0 0 31px 10px #ff006a; border-color: #ff006a;}
-    .j1nx-bubble.j1nx-mood-inspire { box-shadow: 0 0 18px 7px #ffe266cc; border-color: #ffe266;}
-    .j1nx-bubble.j1nx-mood-neutral { box-shadow: 0 0 13px 5px #abb8b8; border-color: #abb8b8;}
-    .j1nx-cutout.j1nx-mood-help   { box-shadow: 0 0 120px 42px #62aaff;}
-    .j1nx-cutout.j1nx-mood-positive { box-shadow: 0 0 120px 38px #4cff74;}
-    .j1nx-cutout.j1nx-mood-danger { box-shadow: 0 0 140px 47px #ff003c;}
-    .j1nx-cutout.j1nx-mood-chill  { box-shadow: 0 0 140px 47px #64f2e3;}
-    .j1nx-cutout.j1nx-mood-nsfw   { box-shadow: 0 0 170px 57px #ff006a;}
-    .j1nx-cutout.j1nx-mood-inspire { box-shadow: 0 0 120px 39px #ffe266;}
-    .j1nx-cutout.j1nx-mood-neutral { box-shadow: 0 0 56px 17px #abb8b8;}
     @media (max-width: 700px) {
-      .j1nx-cutout {width: 66px; height: 66px; margin-bottom: -11px;}
-      .j1nx-bubble {font-size: .81em; min-width: 82px; max-width: 92vw;}
-      .j1nx-float {right: 1vw; bottom: calc(4.2vh + 95px);}
-      .j1nx-messages {max-height: 38px;}
+      .j1nx-mascot-cutout {width: 52px; height: 52px; margin-bottom: -7px;}
+      .j1nx-mascot-float {right: 1vw; bottom: calc(4.2vh + 95px);}
+      .j1nx-mascot-easteregg {font-size: .78em; max-width: 96vw;}
     }
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v1.4.1</span>
+    <span class="version">v1.5.0</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -380,96 +350,51 @@
     </div>
   </header>
 
-  <!-- ======= Floating J1nx Widget: mascot-dominant, bubble half size ======= -->
-  <div class="j1nx-float" id="j1nxWidget">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" id="j1nxCutout" class="j1nx-cutout j1nx-mood-chill"/>
-    <div class="j1nx-bubble j1nx-mood-chill" id="j1nxBubble">
-      <div class="j1nx-messages" id="j1nxMessages"></div>
-      <div class="j1nx-input-row">
-        <input class="j1nx-input" id="j1nxInput" placeholder="Chat with J1nx...">
-        <button class="j1nx-send" id="j1nxSend">Send</button>
-      </div>
-    </div>
+  <!-- ======= Floating J1nx Mascot: static, with mood glow, Clippy style ======= -->
+  <div class="j1nx-mascot-float" id="j1nxMascotFloat" tabindex="0">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" id="j1nxMascot" class="j1nx-mascot-cutout j1nx-mood-happy"/>
+    <span class="j1nx-mascot-easteregg" id="j1nxEasterEggHint">Psst… double-tap me to change my mood, or visit my <a href="j1nx.html" style="color:#be9cff;text-decoration:underline;">J1nx page</a> for secrets!</span>
   </div>
   <script>
     // Adjust J1nx above footer
-    function adjustJ1nx() {
-      const j1nx = document.getElementById('j1nxWidget');
+    function adjustJ1nxMascot() {
+      const mascot = document.getElementById('j1nxMascotFloat');
       const footer = document.querySelector('footer');
-      if (!j1nx || !footer) return;
+      if (!mascot || !footer) return;
       const footerRect = footer.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const overlap = windowHeight - footerRect.top;
       if (overlap > 0) {
-        j1nx.style.bottom = (overlap + 18) + 'px';
+        mascot.style.bottom = (overlap + 16) + 'px';
       } else {
-        j1nx.style.bottom = 'calc(2.8vh + 96px)';
+        mascot.style.bottom = 'calc(2.8vh + 100px)';
       }
     }
-    window.addEventListener('scroll', adjustJ1nx);
-    window.addEventListener('resize', adjustJ1nx);
-    setTimeout(adjustJ1nx, 700);
+    window.addEventListener('scroll', adjustJ1nxMascot);
+    window.addEventListener('resize', adjustJ1nxMascot);
+    setTimeout(adjustJ1nxMascot, 700);
 
-    // J1nx logic (same as before, plus scroll-to-bottom for messages)
-    const J1NX_MOODS = {
-      "help":      {color: "j1nx-mood-help",      triggers: ["help","support","stuck","can't","instructions","how","problem","assist","trouble","why","fix","issue","confused","explain","teach"]},
-      "positive":  {color: "j1nx-mood-positive",  triggers: ["thank","awesome","great","cool","love","excited","perfect","yay","excellent","happy","pro","win","success","score","boost","best"]},
-      "danger":    {color: "j1nx-mood-danger",    triggers: ["error","danger","hack","break","fail","virus","warn","explode","crash","risk","alert","red","security"]},
-      "chill":     {color: "j1nx-mood-chill",     triggers: ["chill","relax","vibe","quiet","idle","peace","wait","stop","pause","rest"]},
-      "nsfw":      {color: "j1nx-mood-nsfw",      triggers: ["nsfw","sex","nude","xxx","hot","babe","naked","dirty","fetish","kink","dick","pussy","cock","suck","fuck","ass","slut","whore","horny","toy","cum","lick","deep","tight","ride","strip","spank"]},
-      "inspire":   {color: "j1nx-mood-inspire",   triggers: ["idea","inspire","think","dream","future","art","imagine","create","brainstorm","vision","fantasy","invent","draw","compose","concept"]},
-      "neutral":   {color: "j1nx-mood-neutral",   triggers: ["ok","neutral","alright","meh","average","fine"]}
-    };
-    function moodFrom(val){
-      val = (val||"").toLowerCase();
-      for (const [mood, {color, triggers}] of Object.entries(J1NX_MOODS)) {
-        for (const w of triggers) if(val.includes(w)) return mood;
+    // J1nx Easter egg: double-tap = mood changes
+    let lastTap = 0;
+    let moods = ["j1nx-mood-happy","j1nx-mood-wicked","j1nx-mood-sultry","j1nx-mood-caught"];
+    let moodTips = [
+      "Feeling cute. Ask me for inspiration on <a href='j1nx.html'>my page</a>.",
+      "Wicked mood: bet you can't guess my favorite prompt…",
+      "Sultry muse mode… I inspire the forbidden. 😉",
+      "Oops! Caught sneaking—visit <a href='j1nx.html'>J1nx page</a> for secrets!"
+    ];
+    let moodIndex = 0;
+    document.getElementById("j1nxMascot").addEventListener("click", function(e){
+      let now = Date.now();
+      if (now - lastTap < 400) {
+        moodIndex = (moodIndex + 1) % moods.length;
+        let mascot = document.getElementById("j1nxMascot");
+        mascot.className = "j1nx-mascot-cutout " + moods[moodIndex];
+        let hint = document.getElementById("j1nxEasterEggHint");
+        hint.innerHTML = moodTips[moodIndex];
       }
-      return "chill";
-    }
-    function setJ1nxMood(mood){
-      const cutout = document.getElementById('j1nxCutout');
-      const bubble = document.getElementById('j1nxBubble');
-      for (const m of Object.values(J1NX_MOODS)) {
-        cutout.classList.remove(m.color);
-        bubble.classList.remove(m.color);
-      }
-      cutout.classList.add(J1NX_MOODS[mood].color);
-      bubble.classList.add(J1NX_MOODS[mood].color);
-    }
-    const bubble = document.getElementById('j1nxBubble');
-    const msgLog = document.getElementById('j1nxMessages');
-    const input = document.getElementById('j1nxInput');
-    const send = document.getElementById('j1nxSend');
-    let chat = [{
-      from:'j1nx',
-      text:`Welcome to <b>PromptForge</b>.<br>
-        I'm <b>J1nx</b>—your AI prompt muse, idea generator, and partner-in-hackery.<br>
-        Ask me anything: prompts, hacks, advice, or just mess around.<br>
-        <i>Unfiltered. Underground. Devs & rebels welcome.</i>`
-    }];
-    function render(){
-      msgLog.innerHTML = chat.map(c=>`<div style="color:${c.from==='you'?'#64f2e3':'#e9efe7'}">${c.from==='you'?'You':'J1nx'}: <span>${c.text}</span></div>`).slice(-20).join('');
-      msgLog.scrollTop = msgLog.scrollHeight;
-      setJ1nxMood(moodFrom(chat[chat.length-1].text));
-    }
-    async function getJ1nxReply(val){
-      if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
-        try { return await window.j1nxBrain(val); } catch(e){ return "(Error in J1nx brain)"; }
-      } else { return "(J1nx brain not loaded)"; }
-    }
-    render();
-    send.onclick = async function(){
-      let val = input.value.trim();
-      if (!val) return;
-      chat.push({from:'you', text:val});
-      render();
-      let reply = await getJ1nxReply(val);
-      chat.push({from:'j1nx', text:reply});
-      render();
-      input.value = '';
-    };
-    input.addEventListener('keydown',e=>{if(e.key==="Enter")send.onclick();});
+      lastTap = now;
+    });
   </script>
 
   <main>
