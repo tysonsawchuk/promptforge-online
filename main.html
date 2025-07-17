@@ -1,6 +1,6 @@
 <!-- 
   PromptForge.online Main
-  Version: 1.3.0
+  Version: 1.3.1
   Last updated: 2025-07-16
 -->
 <!DOCTYPE html>
@@ -26,6 +26,13 @@
       --j1nx-nsfw: #ff006a;
       --j1nx-inspire: #ffe266;
       --j1nx-neutral: #abb8b8;
+      --gold: #ffe266;
+      --hotpurple: #be00ff;
+      --army: #7afe98;
+      --blue: #62aaff;
+      --lightpurple: #d1aaff;
+      --shadow: 0 1.3px 8px #222c  , 0 0 7px #222b;
+      --shadow-hover: 0 2.2px 14px #64f2e388, 0 0 6px #ffe26677;
     }
     html, body {
       width: 100vw; max-width: 100vw; min-width: 0;
@@ -114,42 +121,40 @@
     }
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(245px,1fr));
-      gap: 1em 1em;
-      margin: 0.15em 0 0.9em 0;
-      padding: 0 0.2em;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.1em 1.1em;
+      margin: 0.2em 0 1.1em 0;
+      padding: 0 1em;
       width: 100%;
+      align-items: stretch;
+      justify-items: stretch;
     }
     .feature-tile {
       background: #20261e;
-      border-radius: 11px;
-      padding: .92em 0.7em 0.6em 0.7em;
-      box-shadow: 0 1.3px 8px var(--aqua)18, 0 0 6px #33525a12;
-      border: 1px solid var(--aqua)40;
-      display: flex; flex-direction: column;
-      transition: box-shadow .09s, border-color .07s;
-      min-height: 100px;
+      border-radius: 14px;
+      padding: 1.13em 1.2em 1.05em 1.2em;
+      box-shadow: var(--shadow);
+      border: 1.4px solid var(--aqua)36;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-height: 124px;
+      transition: box-shadow .10s, border-color .09s;
     }
     .feature-tile:hover {
-      box-shadow: 0 2.2px 12px var(--aqua)54, 0 0 6px #2bb8a0;
-      border-color: var(--aqua);
-      background: #262922;
+      box-shadow: var(--shadow-hover);
+      border-color: var(--gold);
+      background: #232922;
     }
-    .feature-title {
-      font-size: .97em;
-      font-weight: 700;
-      color: var(--aqua);
-      text-shadow: 0 0 5px var(--aqua)40;
-      letter-spacing: 0.03em;
-      margin-bottom: 0.05em;
-    }
-    .feature-desc {
-      margin-top:.10em;
-      font-size:.96em;
-      color:var(--offwhite);
-      line-height:1.23;
-      font-weight:400;
-    }
+    /* Alternating title colors for separation (repeats every 5) */
+    .feature-title      {font-size: 1.09em;font-weight: 700;letter-spacing: .02em;margin-bottom: .16em;}
+    .feature-title:nth-child(1) { color: var(--aqua);}
+    .feature-title:nth-child(2) { color: var(--gold);}
+    .feature-title:nth-child(3) { color: var(--hotpurple);}
+    .feature-title:nth-child(4) { color: var(--army);}
+    .feature-title:nth-child(5) { color: var(--blue);}
+    .feature-title:nth-child(n+6) { color: var(--aqua);}
+    .feature-desc {margin-top:.05em;font-size:.97em;color:var(--offwhite);line-height:1.23;font-weight:400;}
     .partner-block {
       background: #1d1e19;
       border-radius: 8px;
@@ -223,60 +228,66 @@
     @media (max-width:900px){
       .feature-grid{grid-template-columns:1fr;}
       .desc{font-size:.95em;}
+      .feature-tile{min-width:80vw;}
     }
-    /* J1nx floating widget unified */
+    /* J1nx floating widget unified, BIGGER and NO BLACK BOX */
     .j1nx-float {
       position: fixed;
       z-index: 1111;
       right: 2vw;
-      bottom: 2vh;
+      bottom: 2.5vh;
       display: flex;
       align-items: flex-end;
-      gap: 0.6em;
+      gap: 1.2em;
       pointer-events: all;
       user-select: none;
+      /* No background */
     }
     .j1nx-cutout {
-      width: 64px;
-      max-width: 19vw;
-      border-radius: 14px;
-      box-shadow: 0 0 22px 8px var(--aqua);
+      width: 132px;
+      max-width: 28vw;
+      border-radius: 19px;
+      box-shadow: 0 0 46px 16px var(--aqua);
       transition: box-shadow .18s;
+      background: none !important;
+      margin-bottom: 2px;
     }
     .j1nx-bubble {
       flex:1;
-      max-width: 228px;
-      background:#181d23e0;
-      border-radius:11px;
-      box-shadow: 0 0 10px 2px var(--aqua);
-      transition: box-shadow .19s;
-      padding:0.42em 0.56em 0.36em 0.56em;
-      border: 2.3px solid var(--aqua);
+      max-width: 425px;
+      background:#181d23f3;
+      border-radius:17px;
+      box-shadow: 0 0 22px 7px var(--aqua);
+      transition: box-shadow .22s, border-color .18s;
+      padding:1.18em 1.25em 1.11em 1.25em;
+      border: 2.9px solid var(--aqua);
       color: var(--offwhite);
+      font-size: 1.12em;
     }
-    .j1nx-messages {max-height:53px;overflow-y:auto;font-size:.92em;line-height:1.18;margin-bottom:.13em;color:var(--aqua);}
-    .j1nx-input-row {display:flex;gap:.13em;}
-    .j1nx-input {flex:1;font-size:.87em;padding:.17em 0.28em;border-radius:4px;border:1px solid var(--aqua);background:#22271c;color:var(--aqua);}
-    .j1nx-send {font-size:.89em;padding:.15em 0.45em;background:linear-gradient(90deg,var(--aqua) 60%,#fff 120%);color:#181b15;border:none;border-radius:5px;font-weight:700;cursor:pointer;}
-    .j1nx-mood-help   { box-shadow: 0 0 18px 8px var(--j1nx-help); border-color: var(--j1nx-help);}
-    .j1nx-mood-positive { box-shadow: 0 0 18px 8px var(--j1nx-positive); border-color: var(--j1nx-positive);}
-    .j1nx-mood-danger { box-shadow: 0 0 24px 10px var(--j1nx-danger); border-color: var(--j1nx-danger);}
-    .j1nx-mood-chill  { box-shadow: 0 0 22px 8px var(--aqua); border-color: var(--aqua);}
-    .j1nx-mood-nsfw   { box-shadow: 0 0 24px 11px var(--j1nx-nsfw); border-color: var(--j1nx-nsfw);}
-    .j1nx-mood-inspire { box-shadow: 0 0 22px 8px var(--j1nx-inspire); border-color: var(--j1nx-inspire);}
-    .j1nx-mood-neutral { box-shadow: 0 0 13px 4px var(--j1nx-neutral); border-color: var(--j1nx-neutral);}
-    .j1nx-cutout.j1nx-mood-help   { box-shadow: 0 0 32px 9px var(--j1nx-help);}
-    .j1nx-cutout.j1nx-mood-positive { box-shadow: 0 0 32px 9px var(--j1nx-positive);}
-    .j1nx-cutout.j1nx-mood-danger { box-shadow: 0 0 34px 11px var(--j1nx-danger);}
-    .j1nx-cutout.j1nx-mood-chill  { box-shadow: 0 0 32px 9px var(--aqua);}
-    .j1nx-cutout.j1nx-mood-nsfw   { box-shadow: 0 0 36px 13px var(--j1nx-nsfw);}
-    .j1nx-cutout.j1nx-mood-inspire { box-shadow: 0 0 32px 9px var(--j1nx-inspire);}
-    .j1nx-cutout.j1nx-mood-neutral { box-shadow: 0 0 13px 4px var(--j1nx-neutral);}
+    .j1nx-messages {max-height:120px;overflow-y:auto;font-size:1.03em;line-height:1.33;margin-bottom:.17em;color:var(--aqua);}
+    .j1nx-input-row {display:flex;gap:.21em;}
+    .j1nx-input {flex:1;font-size:1.03em;padding:.33em 0.78em;border-radius:7px;border:1px solid var(--aqua);background:#22271c;color:var(--aqua);}
+    .j1nx-send {font-size:1.03em;padding:.35em 0.88em;background:linear-gradient(90deg,var(--aqua) 60%,#fff 120%);color:#181b15;border:none;border-radius:8px;font-weight:700;cursor:pointer;}
+    /* Mood glows */
+    .j1nx-mood-help   { box-shadow: 0 0 38px 14px var(--j1nx-help); border-color: var(--j1nx-help);}
+    .j1nx-mood-positive { box-shadow: 0 0 36px 12px var(--j1nx-positive); border-color: var(--j1nx-positive);}
+    .j1nx-mood-danger { box-shadow: 0 0 38px 15px var(--j1nx-danger); border-color: var(--j1nx-danger);}
+    .j1nx-mood-chill  { box-shadow: 0 0 42px 18px var(--aqua); border-color: var(--aqua);}
+    .j1nx-mood-nsfw   { box-shadow: 0 0 44px 17px var(--j1nx-nsfw); border-color: var(--j1nx-nsfw);}
+    .j1nx-mood-inspire { box-shadow: 0 0 38px 14px var(--j1nx-inspire); border-color: var(--j1nx-inspire);}
+    .j1nx-mood-neutral { box-shadow: 0 0 15px 6px var(--j1nx-neutral); border-color: var(--j1nx-neutral);}
+    .j1nx-cutout.j1nx-mood-help   { box-shadow: 0 0 60px 23px var(--j1nx-help);}
+    .j1nx-cutout.j1nx-mood-positive { box-shadow: 0 0 60px 23px var(--j1nx-positive);}
+    .j1nx-cutout.j1nx-mood-danger { box-shadow: 0 0 66px 26px var(--j1nx-danger);}
+    .j1nx-cutout.j1nx-mood-chill  { box-shadow: 0 0 66px 23px var(--aqua);}
+    .j1nx-cutout.j1nx-mood-nsfw   { box-shadow: 0 0 70px 27px var(--j1nx-nsfw);}
+    .j1nx-cutout.j1nx-mood-inspire { box-shadow: 0 0 60px 23px var(--j1nx-inspire);}
+    .j1nx-cutout.j1nx-mood-neutral { box-shadow: 0 0 27px 8px var(--j1nx-neutral);}
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v1.3.0</span>
+    <span class="version">v1.3.1</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -327,7 +338,7 @@
     </div>
   </header>
 
-  <!-- ======= Floating J1nx Widget Unified ======= -->
+  <!-- ======= Floating J1nx Widget Unified, 2x Size, Pro Look ======= -->
   <div class="j1nx-float" id="j1nxWidget">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" id="j1nxCutout" class="j1nx-cutout j1nx-mood-chill"/>
     <div class="j1nx-bubble j1nx-mood-chill" id="j1nxBubble">
@@ -339,7 +350,7 @@
     </div>
   </div>
   <script>
-    // Unified J1nx Widget (drop on any page)
+    // Unified J1nx Widget (drop on any page, double size, glow, better intro)
     const J1NX_MOODS = {
       "help":      {color: "j1nx-mood-help",      triggers: ["help","support","stuck","can't","instructions","how","problem","assist","trouble","why","fix","issue","confused","explain","teach"]},
       "positive":  {color: "j1nx-mood-positive",  triggers: ["thank","awesome","great","cool","love","excited","perfect","yay","excellent","happy","pro","win","success","score","boost","best"]},
@@ -354,7 +365,6 @@
       for (const [mood, {color, triggers}] of Object.entries(J1NX_MOODS)) {
         for (const w of triggers) if(val.includes(w)) return mood;
       }
-      // Fallback: nsfw words, then help, then chill, then neutral
       return "chill";
     }
     function setJ1nxMood(mood){
@@ -371,7 +381,13 @@
     const msgLog = document.getElementById('j1nxMessages');
     const input = document.getElementById('j1nxInput');
     const send = document.getElementById('j1nxSend');
-    let chat = [{from:'j1nx',text:"I'm J1nx—your underground muse, helper, and idea machine. Ask anything, try a hack, or just vibe."}];
+    let chat = [{
+      from:'j1nx',
+      text:`Welcome to <b>PromptForge</b>.<br>
+        I'm <b>J1nx</b>—your AI prompt muse, idea generator, and partner-in-hackery.<br>
+        Ask me anything: prompts, hacks, advice, or just mess around. <br>
+        <i>Unfiltered. Underground. Devs & rebels welcome.</i>`
+    }];
     function render(){
       msgLog.innerHTML = chat.map(c=>`<div style="color:${c.from==='you'?'var(--aqua)':'var(--offwhite)'}">${c.from==='you'?'You':'J1nx'}: <span>${c.text}</span></div>`).slice(-20).join('');
       msgLog.scrollTop = msgLog.scrollHeight;
