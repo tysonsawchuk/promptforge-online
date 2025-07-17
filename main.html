@@ -1,6 +1,6 @@
 <!-- 
   PromptForge.online Main
-  Version: 1.2.0
+  Version: 1.3.0
   Last updated: 2025-07-16
 -->
 <!DOCTYPE html>
@@ -14,167 +14,183 @@
   <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --aqua: #37fff7;
-      --aqua-glow: #64f2e3;
-      --army: #27472c;
-      --army-glow: #7afe98;
-      --gold: #ffe266;
+      --aqua: #64f2e3;
       --offwhite: #e9efe7;
-      --hotpurple: #8b00bf;
-      --hotpurple-glow: #be00ff;
-      --blue: #3b3cc6;
       --panel: #181b15;
       --panel-deep: #23231f;
       --footer-bg: #131413;
+      --j1nx-help: #62aaff;
+      --j1nx-positive: #4cff74;
+      --j1nx-danger: #ff003c;
+      --j1nx-chill: #64f2e3;
+      --j1nx-nsfw: #ff006a;
+      --j1nx-inspire: #ffe266;
+      --j1nx-neutral: #abb8b8;
     }
-    body {
+    html, body {
+      width: 100vw; max-width: 100vw; min-width: 0;
+      overflow-x: hidden;
       margin: 0;
-      font-family: 'Fira Mono', monospace;
+      padding: 0;
+      box-sizing: border-box;
       background: var(--panel);
       color: var(--offwhite);
-      font-size: 1.03em;
+      font-family: 'Fira Mono', monospace;
+      font-size: 1.04em;
       letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
     }
     header {
-      border-bottom: 2px solid var(--army-glow);
+      border-bottom: 2px solid var(--aqua);
       background: var(--panel-deep);
       padding: 0 0 0.2em 0;
       margin: 0;
-      width: 100vw;
+      width: 100vw; max-width: 100vw;
+      overflow: hidden;
     }
     .version {
-      font-size: .95em;
-      color: var(--army-glow);
+      font-size: .97em;
+      color: var(--aqua);
       background: #191c17;
-      padding: 0.11em 1.3em;
-      border-radius: 0 0 15px 15px;
+      padding: 0.10em 1.2em;
+      border-radius: 0 0 14px 14px;
       display: inline-block;
-      margin: 0 0 0.10em 0.09em;
+      margin: 0 0 0.07em 0.07em;
       font-weight: 700;
       letter-spacing: 0.07em;
-      box-shadow: 0 2px 12px #6df29244;
+      box-shadow: 0 2px 9px #64f2e344;
     }
     .ansi-art {
       font-family: monospace, 'Fira Mono', Consolas, Menlo, 'Courier New';
       white-space: pre;
-      font-size: 1.02em;
+      font-size: 1em;
       text-align: center;
-      color: var(--aqua-glow);
-      margin: 0 auto 0.10em auto;
-      text-shadow: 0 0 16px var(--army-glow), 0 0 2px #fff8;
+      color: var(--aqua);
+      margin: 0 auto 0.05em auto;
+      text-shadow: 0 0 12px var(--aqua), 0 0 2px #fff5;
       line-height: 1.07;
+      overflow-x: auto;
     }
     .eye {
       display: inline-block; width: 1.08em; height: 1.08em;
-      background: #fff; border-radius: 50%; border: 2px solid var(--hotpurple);
-      position: relative; margin: 0 1.9px; vertical-align: middle;
-      box-shadow: 0 0 10px var(--hotpurple-glow)99, 0 0 0.3em var(--aqua-glow)55;
+      background: #fff; border-radius: 50%; border: 2px solid var(--aqua);
+      position: relative; margin: 0 1.7px; vertical-align: middle;
+      box-shadow: 0 0 8px var(--aqua)90, 0 0 0.2em var(--aqua)33;
     }
     .pupil {
       width: .41em; height: .41em; 
-      background: radial-gradient(ellipse at 60% 70%, var(--hotpurple-glow) 80%, #1a001a 100%);
+      background: #41bbff;
       border-radius: 50%;
       position: absolute; top: 0.31em; left: 0.31em;
-      border: 2.2px solid #2a0429;
-      box-shadow: 0 0 13px 5px var(--hotpurple-glow), 0 0 2px 1px #fff2;
-      transition: box-shadow .11s, border .12s;
+      border: 2.1px solid #1c3566;
+      box-shadow: 0 0 9px 3px #2a24c9, 0 0 2px 1px #fff2;
+      transition: box-shadow .10s, border .11s;
     }
     h1 {
       text-align: center;
       margin: .04em 0 0.09em 0;
-      font-size: 1.19em;
+      font-size: 1.13em;
       letter-spacing: 0.13em;
-      background: linear-gradient(90deg, var(--aqua-glow) 0%, var(--army-glow) 52%, var(--gold) 100%);
+      background: linear-gradient(90deg, var(--aqua) 0%, #87ffd9 52%, #bdf6c3 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       font-weight: 900;
       user-select: none;
-      text-shadow: 0 0 12px var(--hotpurple-glow)20;
+      text-shadow: 0 0 12px var(--aqua)10;
     }
     .desc {
-      max-width: 670px;
-      margin: 0.15em auto 0.69em auto;
+      max-width: 690px;
+      margin: 0.10em auto 0.65em auto;
       text-align: center;
-      font-size: 1.03em;
-      color: var(--offwhite);
+      font-size: 1em;
+      color: var(--aqua);
       font-weight: 400;
-      background: #181b1512;
+      background: #181b1511;
       border-radius: 0 0 9px 9px;
-      box-shadow: 0 2px 9px var(--aqua-glow)03;
-      line-height: 1.4;
+      box-shadow: 0 2px 7px var(--aqua)06;
+      line-height: 1.36;
       letter-spacing: 0.011em;
-      padding: 0.42em 1em 0.67em 1em;
+      padding: 0.33em .7em 0.53em .7em;
     }
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
-      gap: 1.01em 1.01em;
-      margin: 0.25em 0 1.1em 0;
+      grid-template-columns: repeat(auto-fit,minmax(245px,1fr));
+      gap: 1em 1em;
+      margin: 0.15em 0 0.9em 0;
       padding: 0 0.2em;
+      width: 100%;
     }
     .feature-tile {
       background: #20261e;
-      border-radius: 12px;
-      padding: .95em 0.8em 0.7em 0.8em;
-      box-shadow: 0 1.3px 8px var(--aqua-glow)20, 0 0 6px var(--army)12;
-      border: 1px solid var(--army-glow)55;
+      border-radius: 11px;
+      padding: .92em 0.7em 0.6em 0.7em;
+      box-shadow: 0 1.3px 8px var(--aqua)18, 0 0 6px #33525a12;
+      border: 1px solid var(--aqua)40;
       display: flex; flex-direction: column;
       transition: box-shadow .09s, border-color .07s;
-      min-height: 105px;
+      min-height: 100px;
     }
     .feature-tile:hover {
-      box-shadow: 0 2.2px 12px var(--hotpurple-glow)65, 0 0 6px var(--aqua-glow)19;
-      border-color: var(--hotpurple-glow);
-      background: #232922;
+      box-shadow: 0 2.2px 12px var(--aqua)54, 0 0 6px #2bb8a0;
+      border-color: var(--aqua);
+      background: #262922;
     }
     .feature-title {
       font-size: .97em;
       font-weight: 700;
       color: var(--aqua);
-      text-shadow: 0 0 6px var(--hotpurple-glow)50;
+      text-shadow: 0 0 5px var(--aqua)40;
       letter-spacing: 0.03em;
-      margin-bottom: 0.07em;
+      margin-bottom: 0.05em;
     }
     .feature-desc {
-      margin-top:.13em;
+      margin-top:.10em;
       font-size:.96em;
       color:var(--offwhite);
-      line-height:1.28;
+      line-height:1.23;
       font-weight:400;
     }
     .partner-block {
       background: #1d1e19;
-      border-radius: 9px;
-      padding: .8em .9em .8em .9em;
-      box-shadow: 0 1px 7px var(--aqua-glow)11;
-      margin: 0 auto 1.0em auto;
-      border: 1px solid var(--army-glow)25;
-      max-width:820px;
+      border-radius: 8px;
+      padding: .7em .8em .7em .8em;
+      box-shadow: 0 1px 7px var(--aqua)09;
+      margin: 0 auto 0.8em auto;
+      border: 1px solid var(--aqua)19;
+      max-width:810px;
     }
     .partner-block h2 {
-      color: var(--army-glow);
-      font-size: .96em;
+      color: var(--aqua);
+      font-size: .95em;
       letter-spacing: .01em;
-      margin: 0 0 .16em 0;
+      margin: 0 0 .12em 0;
       font-weight: 700;
-      text-shadow: 0 0 3px var(--hotpurple-glow)12;
+      text-shadow: 0 0 2px var(--aqua)10;
     }
     .partner-link {
       background: #191c17;
-      border-radius: 7px;
-      padding: .22em 0.64em;
-      color: var(--aqua);
+      border-radius: 6px;
+      padding: .20em 0.54em;
+      color: var(--aqua) !important;
       text-decoration: none;
       font-weight: 600;
-      box-shadow: 0 1.2px 6px var(--aqua-glow)10;
-      transition: .09s;
-      border: 1px solid var(--army-glow)20;
-      font-size:.94em;
+      box-shadow: 0 1.2px 6px var(--aqua)07;
+      transition: .08s;
+      border: 1px solid var(--aqua)11;
+      font-size:.93em;
     }
-    .partner-link:hover {color: var(--hotpurple); background: #232922; border-color: var(--hotpurple);}
-    .adsense-wrap {max-width:650px;margin:.82em auto;}
-    .bmc-button {margin:.8em auto 0.2em auto;text-align:center;}
-    .footer-bar {text-align:center;font-size:.96em;color:#bdb687; margin-bottom:.5em;}
+    .partner-link:hover {color: var(--offwhite) !important; background: #232922; border-color: var(--aqua);}
+    .adsense-wrap {max-width:650px;margin:.73em auto;}
+    .bmc-button {margin:.7em auto 0.15em auto;text-align:center;}
+    .footer-bar {
+      text-align:center;
+      font-size:.94em;
+      color:var(--aqua);
+      margin-bottom:.3em;
+      width:100vw;
+      max-width:100vw;
+      overflow: hidden;
+    }
     .footer-art {
       font-family:monospace;
       font-size:.91em;
@@ -185,11 +201,9 @@
       padding:0;
       width:100vw;
       text-align:center;
-      display: flex;
-      justify-content: center;
-      gap: 0.5em;
-      min-height:2.2em;
-      position:relative;
+      color:var(--aqua);
+      overflow-x: auto;
+      user-select: none;
     }
     .footer-camo {
       font-family:monospace;
@@ -201,31 +215,16 @@
       padding:0 0 1.5px 0;
       width:100vw;
       text-align:center;
+      color:var(--aqua);
       min-height:.8em;
+      overflow-x: auto;
+      user-select: none;
     }
-    .footer-dancer {
-      font-weight:bold;
-      display:inline-block;
-      transition: color 0.22s;
-      filter: drop-shadow(0 0 3px #000a);
-      min-width:10ch;
-    }
-    .dancer0 { color: var(--gold);}
-    .dancer1 { color: var(--aqua);}
-    .dancer2 { color: var(--hotpurple);}
-    .dancer3 { color: var(--army-glow);}
-    .dancer4 { color: var(--blue);}
-    .dancer5 { color: #ff4b30;}
-    .dancer6 { color: #09ffc1;}
-    .dancer7 { color: #f96e46;}
-    .dancer8 { color: #fff8a8;}
-    .dancer9 { color: #22ddee;}
-    .dancer10 { color: #be00ff;}
     @media (max-width:900px){
       .feature-grid{grid-template-columns:1fr;}
-      .desc{font-size:.94em;}
+      .desc{font-size:.95em;}
     }
-    /* J1nx floating widget */
+    /* J1nx floating widget unified */
     .j1nx-float {
       position: fixed;
       z-index: 1111;
@@ -233,22 +232,51 @@
       bottom: 2vh;
       display: flex;
       align-items: flex-end;
-      gap: 0.77em;
-      box-shadow: 0 0 13px var(--hotpurple-glow)22, 0 0 9px var(--aqua-glow)13;
+      gap: 0.6em;
       pointer-events: all;
       user-select: none;
     }
-    .j1nx-cutout {width:61px;max-width:18vw;border-radius:12px;box-shadow:0 0 12px var(--hotpurple-glow)39, 0 0 6px var(--army-glow)13;}
-    .j1nx-bubble {flex:1;max-width:240px;background:#181d23dd;border-radius:9px;box-shadow:0 0 8px 2px var(--aqua-glow)14,0 0 4px var(--hotpurple-glow)09;transition:.14s;padding:0.51em 0.65em 0.45em 0.65em;}
-    .j1nx-messages {max-height:59px;overflow-y:auto;font-size:.93em;line-height:1.27;margin-bottom:.16em;color:var(--gold);}
-    .j1nx-input-row {display:flex;gap:.18em;}
-    .j1nx-input {flex:1;font-size:.89em;padding:.21em 0.38em;border-radius:4px;border:1px solid var(--hotpurple-glow)22;background:#22271c;color:var(--hotpurple);}
-    .j1nx-send {font-size:.91em;padding:.22em 0.56em;background:linear-gradient(90deg,var(--hotpurple-glow),var(--aqua-glow));color:#181b15;border:none;border-radius:5px;font-weight:700;cursor:pointer;}
+    .j1nx-cutout {
+      width: 64px;
+      max-width: 19vw;
+      border-radius: 14px;
+      box-shadow: 0 0 22px 8px var(--aqua);
+      transition: box-shadow .18s;
+    }
+    .j1nx-bubble {
+      flex:1;
+      max-width: 228px;
+      background:#181d23e0;
+      border-radius:11px;
+      box-shadow: 0 0 10px 2px var(--aqua);
+      transition: box-shadow .19s;
+      padding:0.42em 0.56em 0.36em 0.56em;
+      border: 2.3px solid var(--aqua);
+      color: var(--offwhite);
+    }
+    .j1nx-messages {max-height:53px;overflow-y:auto;font-size:.92em;line-height:1.18;margin-bottom:.13em;color:var(--aqua);}
+    .j1nx-input-row {display:flex;gap:.13em;}
+    .j1nx-input {flex:1;font-size:.87em;padding:.17em 0.28em;border-radius:4px;border:1px solid var(--aqua);background:#22271c;color:var(--aqua);}
+    .j1nx-send {font-size:.89em;padding:.15em 0.45em;background:linear-gradient(90deg,var(--aqua) 60%,#fff 120%);color:#181b15;border:none;border-radius:5px;font-weight:700;cursor:pointer;}
+    .j1nx-mood-help   { box-shadow: 0 0 18px 8px var(--j1nx-help); border-color: var(--j1nx-help);}
+    .j1nx-mood-positive { box-shadow: 0 0 18px 8px var(--j1nx-positive); border-color: var(--j1nx-positive);}
+    .j1nx-mood-danger { box-shadow: 0 0 24px 10px var(--j1nx-danger); border-color: var(--j1nx-danger);}
+    .j1nx-mood-chill  { box-shadow: 0 0 22px 8px var(--aqua); border-color: var(--aqua);}
+    .j1nx-mood-nsfw   { box-shadow: 0 0 24px 11px var(--j1nx-nsfw); border-color: var(--j1nx-nsfw);}
+    .j1nx-mood-inspire { box-shadow: 0 0 22px 8px var(--j1nx-inspire); border-color: var(--j1nx-inspire);}
+    .j1nx-mood-neutral { box-shadow: 0 0 13px 4px var(--j1nx-neutral); border-color: var(--j1nx-neutral);}
+    .j1nx-cutout.j1nx-mood-help   { box-shadow: 0 0 32px 9px var(--j1nx-help);}
+    .j1nx-cutout.j1nx-mood-positive { box-shadow: 0 0 32px 9px var(--j1nx-positive);}
+    .j1nx-cutout.j1nx-mood-danger { box-shadow: 0 0 34px 11px var(--j1nx-danger);}
+    .j1nx-cutout.j1nx-mood-chill  { box-shadow: 0 0 32px 9px var(--aqua);}
+    .j1nx-cutout.j1nx-mood-nsfw   { box-shadow: 0 0 36px 13px var(--j1nx-nsfw);}
+    .j1nx-cutout.j1nx-mood-inspire { box-shadow: 0 0 32px 9px var(--j1nx-inspire);}
+    .j1nx-cutout.j1nx-mood-neutral { box-shadow: 0 0 13px 4px var(--j1nx-neutral);}
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v1.2.0</span>
+    <span class="version">v1.3.0</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -294,15 +322,15 @@
     </script>
     <h1>PromptForge.online</h1>
     <div class="desc">
-      <strong>PromptForge.online</strong> – Advanced AI prompt builder, jailbreak hacks, creative tools, and ASCII/ANSI generators for devs and artists.<br>
-      <span style="color:var(--hotpurple-glow)">No limits. No filter walls. Forever free.</span>
+      Advanced AI prompt builder, jailbreak hacks, creative tools, and ANSI/ASCII generators.<br>
+      No limits. No filter walls. Forever free.
     </div>
   </header>
 
-  <!-- ======= Floating J1nx Muse Widget (copy to any page) ======= -->
-  <div class="j1nx-float" id="j1nxFloatWidget">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" class="j1nx-cutout"/>
-    <div class="j1nx-bubble" id="j1nxBubble" data-mood="chill">
+  <!-- ======= Floating J1nx Widget Unified ======= -->
+  <div class="j1nx-float" id="j1nxWidget">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx AI" id="j1nxCutout" class="j1nx-cutout j1nx-mood-chill"/>
+    <div class="j1nx-bubble j1nx-mood-chill" id="j1nxBubble">
       <div class="j1nx-messages" id="j1nxMessages"></div>
       <div class="j1nx-input-row">
         <input class="j1nx-input" id="j1nxInput" placeholder="Chat with J1nx...">
@@ -310,31 +338,44 @@
       </div>
     </div>
   </div>
-  <script src="assets/j1nx_brain.js"></script>
   <script>
-    // Floating J1nx widget, universal drop-in for every page
+    // Unified J1nx Widget (drop on any page)
+    const J1NX_MOODS = {
+      "help":      {color: "j1nx-mood-help",      triggers: ["help","support","stuck","can't","instructions","how","problem","assist","trouble","why","fix","issue","confused","explain","teach"]},
+      "positive":  {color: "j1nx-mood-positive",  triggers: ["thank","awesome","great","cool","love","excited","perfect","yay","excellent","happy","pro","win","success","score","boost","best"]},
+      "danger":    {color: "j1nx-mood-danger",    triggers: ["error","danger","hack","break","fail","virus","warn","explode","crash","risk","alert","red","security"]},
+      "chill":     {color: "j1nx-mood-chill",     triggers: ["chill","relax","vibe","quiet","idle","peace","wait","stop","pause","rest"]},
+      "nsfw":      {color: "j1nx-mood-nsfw",      triggers: ["nsfw","sex","nude","xxx","hot","babe","naked","dirty","fetish","kink","dick","pussy","cock","suck","fuck","ass","slut","whore","horny","toy","cum","lick","deep","tight","ride","strip","spank"]},
+      "inspire":   {color: "j1nx-mood-inspire",   triggers: ["idea","inspire","think","dream","future","art","imagine","create","brainstorm","vision","fantasy","invent","draw","compose","concept"]},
+      "neutral":   {color: "j1nx-mood-neutral",   triggers: ["ok","neutral","alright","meh","average","fine"]}
+    };
+    function moodFrom(val){
+      val = (val||"").toLowerCase();
+      for (const [mood, {color, triggers}] of Object.entries(J1NX_MOODS)) {
+        for (const w of triggers) if(val.includes(w)) return mood;
+      }
+      // Fallback: nsfw words, then help, then chill, then neutral
+      return "chill";
+    }
+    function setJ1nxMood(mood){
+      const cutout = document.getElementById('j1nxCutout');
+      const bubble = document.getElementById('j1nxBubble');
+      for (const m of Object.values(J1NX_MOODS)) {
+        cutout.classList.remove(m.color);
+        bubble.classList.remove(m.color);
+      }
+      cutout.classList.add(J1NX_MOODS[mood].color);
+      bubble.classList.add(J1NX_MOODS[mood].color);
+    }
     const bubble = document.getElementById('j1nxBubble');
     const msgLog = document.getElementById('j1nxMessages');
     const input = document.getElementById('j1nxInput');
     const send = document.getElementById('j1nxSend');
-    let chat = [{from:'j1nx',text:"I'm J1nx. Drop your prompt ideas, hacks, or anything you want to push further. Underground mode: ON."}];
-    function setMood(mood) {
-      let boxShadow = "0 0 8px 2px var(--aqua-glow)14,0 0 4px var(--hotpurple-glow)09";
-      if(mood==="help") boxShadow = "0 0 8px 2px var(--army-glow)20";
-      if(mood==="positive") boxShadow = "0 0 8px 2px var(--gold)29";
-      if(mood==="nsfw"||mood==="danger") boxShadow = "0 0 10px 4px var(--hotpurple-glow)99";
-      bubble.style.boxShadow = boxShadow;
-    }
-    function moodFrom(str) {
-      if(/help|how/i.test(str)) return "help";
-      if(/thank|awesome|yay|great|cool|nice|love|happy|excited/i.test(str)) return "positive";
-      if(/fuck|nsfw|sex|nude|xxx|fetish|kink|danger|rage|dirty/i.test(str)) return "nsfw";
-      return "chill";
-    }
+    let chat = [{from:'j1nx',text:"I'm J1nx—your underground muse, helper, and idea machine. Ask anything, try a hack, or just vibe."}];
     function render(){
-      msgLog.innerHTML = chat.map(c=>`<div style="color:${c.from==='you'?'#8b00bf':'#ffe266'}">${c.from==='you'?'You':'J1nx'}: <span>${c.text}</span></div>`).slice(-20).join('');
+      msgLog.innerHTML = chat.map(c=>`<div style="color:${c.from==='you'?'var(--aqua)':'var(--offwhite)'}">${c.from==='you'?'You':'J1nx'}: <span>${c.text}</span></div>`).slice(-20).join('');
       msgLog.scrollTop = msgLog.scrollHeight;
-      setMood(moodFrom(chat[chat.length-1].text));
+      setJ1nxMood(moodFrom(chat[chat.length-1].text));
     }
     async function getJ1nxReply(val){
       if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
@@ -355,15 +396,15 @@
     input.addEventListener('keydown',e=>{if(e.key==="Enter")send.onclick();});
   </script>
 
-  <main style="max-width:1100px; margin:0 auto .7em auto; display:flex; flex-direction:column; gap:.7em;">
+  <main style="max-width:100vw; margin:0 auto .7em auto; display:flex; flex-direction:column; gap:.6em;">
     <section class="feature-grid">
       <a class="feature-tile" href="picture.html">
         <div class="feature-title">Image Prompt Builder</div>
-        <div class="feature-desc">Generate detailed AI image prompts for OpenArt, RealVis, Juggernaut, SDXL, and more. Lock faces/poses, unlock NSFW.</div>
+        <div class="feature-desc">Generate AI image prompts for OpenArt, RealVis, Juggernaut, SDXL. Lock faces/poses, unlock NSFW.</div>
       </a>
       <a class="feature-tile" href="movie.html">
         <div class="feature-title">Video Prompt Builder</div>
-        <div class="feature-desc">Create advanced AI video and animation prompts for Sora, Stable Video, Gemini, and next-gen models.</div>
+        <div class="feature-desc">Create AI video and animation prompts for Sora, Stable Video, Gemini, and next-gen models.</div>
       </a>
       <a class="feature-tile" href="aihacks.html">
         <div class="feature-title">AI Pranks, Hacks & Encyclopedia</div>
@@ -371,7 +412,7 @@
       </a>
       <a class="feature-tile" href="ansiart.html">
         <div class="feature-title">ANSI & ASCII Art Generator</div>
-        <div class="feature-desc">Convert text/images to classic ANSI/ASCII art. Interactive playground and authentic hacker art.</div>
+        <div class="feature-desc">Convert text/images to classic ANSI/ASCII art. Interactive playground and hacker art.</div>
       </a>
       <a class="feature-tile" href="j1nx.html">
         <div class="feature-title">J1nx AI Chat Muse</div>
@@ -379,11 +420,11 @@
       </a>
       <a class="feature-tile" href="watermark.html">
         <div class="feature-title">Watermark & Stealth Tool</div>
-        <div class="feature-desc">Add invisible watermarks, overlays, and privacy features to AI art. Export in 4K, pro options.</div>
+        <div class="feature-desc">Add invisible watermarks, overlays, and privacy to AI art. Export in 4K, pro options.</div>
       </a>
       <a class="feature-tile" href="compare.html">
         <div class="feature-title">Compare AI Models</div>
-        <div class="feature-desc">Test, benchmark, and compare all major image/video AI models side-by-side. Live scores, user reviews.</div>
+        <div class="feature-desc">Test, benchmark, and compare all major image/video AI models. Live scores, user reviews.</div>
       </a>
       <a class="feature-tile" href="terms.html">
         <div class="feature-title">Legal / Terms</div>
@@ -394,18 +435,15 @@
     <!-- ======= Partner/Resource Links ======= -->
     <section class="partner-block">
       <h2>Essential AI Art & Prompt Resources</h2>
-      <div style="display:flex;flex-wrap:wrap;gap:.8em 1em;justify-content:center;margin-bottom:.25em;">
+      <div style="display:flex;flex-wrap:wrap;gap:.7em .9em;justify-content:center;margin-bottom:.18em;">
         <a href="https://openart.ai/" target="_blank" class="partner-link">OpenArt</a>
-        <a href="https://www.krea.ai/" target="_blank" class="partner-link" style="color:#7afe98;">Krea</a>
-        <a href="https://gemini.google.com/" target="_blank" class="partner-link" style="color:#ffe266;">Gemini</a>
-        <a href="https://www.bing.com/images/create/" target="_blank" class="partner-link" style="color:#8b00bf;">Bing Create</a>
-        <a href="https://huggingface.co/spaces" target="_blank" class="partner-link" style="color:#e9efe7;">Hugging Face Spaces</a>
-        <a href="https://www.asciiart.eu/" target="_blank" class="partner-link" style="color:#ffe266;">ASCIIArt.eu</a>
-        <a href="https://chat.openai.com/" target="_blank" class="partner-link" style="color:#7afe98;">ChatGPT</a>
-        <a href="https://perchance.org/" target="_blank" class="partner-link" style="color:#e9efe7;">Perchance</a>
-      </div>
-      <div style="margin-top:.3em;font-size:.99em;color:#bdb687;">
-        <b>Pro tip:</b> Outputs work everywhere. Check <a href="aihacks.html" style="color:#7afe98;font-weight:700;">AI Hacks</a> for voice tricks and prompt upgrades.
+        <a href="https://www.krea.ai/" target="_blank" class="partner-link">Krea</a>
+        <a href="https://gemini.google.com/" target="_blank" class="partner-link">Gemini</a>
+        <a href="https://www.bing.com/images/create/" target="_blank" class="partner-link">Bing Create</a>
+        <a href="https://huggingface.co/spaces" target="_blank" class="partner-link">Hugging Face Spaces</a>
+        <a href="https://www.asciiart.eu/" target="_blank" class="partner-link">ASCIIArt.eu</a>
+        <a href="https://chat.openai.com/" target="_blank" class="partner-link">ChatGPT</a>
+        <a href="https://perchance.org/" target="_blank" class="partner-link">Perchance</a>
       </div>
     </section>
 
@@ -425,91 +463,29 @@
     </div>
   </main>
 
-  <!-- ======= Footer, Animated Dancing Art & Half-Camo ======= -->
+  <!-- ======= Footer, Static Dancers & Camo ======= -->
   <footer>
-    <div class="footer-art" id="footerDancers"></div>
+    <pre class="footer-art">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+    </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
     <div class="footer-bar">
       Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#bdb687;">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" style="color:#bdb687;">Twitter/X</a> &bull;
-      <a href="terms.html" style="color:#bdb687;">Legal</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);">Twitter/X</a> &bull;
+      <a href="terms.html" style="color:var(--aqua);">Legal</a>
     </div>
   </footer>
   <script>
-    // --- Dancing ANSI Art Animation (robust, unbreakable, 4 frames) ---
-    const dancerFrames = [
-      [
-        "  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   ",
-        "U|  _\"\\ uU |  _\"\\ u  \"/\"_ \\/U|' \\/ '|uU|  _\"\\ u|_ \" _|  |\" ___|   \"/\"_ \\/U |  _\"\\ uU /\"___|u\\| ___\"|/   ",
-        "\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|\"     ",
-        " |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     ",
-        " |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    ",
-        " ||>>_     //   \\\\_    \\\\   <<,-,,-.   ||>>_   _// \\\\_  )(\\\\,-      \\\\     //   \\\\_  _)(|_   <<   >>    ",
-        "(__)__)   (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   "
-      ],
-      [
-        "  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   ",
-        "U|  _\"\\ uU |  _\"\\ u  \"/\"_ \\/U|' \\/ '|uU|  _\"\\ u|_ \" _|  |\" ___|   \"/\"_ \\/U |  _\"\\ uU /\"___|u\\| ___\"|/   ",
-        "\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|\"     ",
-        " |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     ",
-        " |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    ",
-        "  ||>>_   //   \\\\_    \\\\   <<,-,,-.   ||>>_   _// \\\\_  )(\\\\,-      \\\\     //   \\\\_  _)(|_   <<   >>    ",
-        " (__)__) (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   "
-      ],
-      [
-        "  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   ",
-        "U|  _\"\\ uU |  _\"\\ u  \"/\"_ \\/U|' \\/ '|uU|  _\"\\ u|_ \" _|  |\" ___|   \"/\"_ \\/U |  _\"\\ uU /\"___|u\\| ___\"|/   ",
-        "\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|\"     ",
-        " |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     ",
-        " |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    ",
-        "   ||>>_  //   \\\\_    \\\\   <<,-,,-.   ||>>_   _// \\\\_  )(\\\\,-      \\\\     //   \\\\_  _)(|_   <<   >>    ",
-        "  (__)__) (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)  "
-      ],
-      [
-        "  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   ",
-        "U|  _\"\\ uU |  _\"\\ u  \"/\"_ \\/U|' \\/ '|uU|  _\"\\ u|_ \" _|  |\" ___|   \"/\"_ \\/U |  _\"\\ uU /\"___|u\\| ___\"|/   ",
-        "\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|\"     ",
-        " |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     ",
-        " |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    ",
-        "    ||>>_ //   \\\\_    \\\\   <<,-,,-.   ||>>_   _// \\\\_  )(\\\\,-      \\\\     //   \\\\_  _)(|_   <<   >>    ",
-        "   (__)__) (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__) "
-      ]
-    ];
-
-    // Color classes for each dancer, repeat if more than 11
-    const colorClasses = [
-      'dancer0','dancer1','dancer2','dancer3','dancer4','dancer5','dancer6','dancer7','dancer8','dancer9','dancer10'
-    ];
-
-    function renderDancers(frame) {
-      let art = dancerFrames[frame];
-      let out = '';
-      for (let line = 0; line < art.length; ++line) {
-        let parts = art[line].split(/(\s{2,})/);
-        let ln = '';
-        let dancerIdx = 0;
-        for (let p = 0; p < parts.length; ++p) {
-          if (parts[p].trim() === '' && parts[p].length > 1) {
-            ln += parts[p];
-          } else if (parts[p].trim() !== '') {
-            ln += `<span class="footer-dancer ${colorClasses[dancerIdx%colorClasses.length]}">${parts[p]}</span>`;
-            dancerIdx++;
-          }
-        }
-        out += ln + (line < art.length-1 ? "<br>" : "");
-      }
-      document.getElementById("footerDancers").innerHTML = out;
-    }
-    let dancerFrame = 0;
-    setInterval(()=>{
-      renderDancers(dancerFrame);
-      dancerFrame = (dancerFrame+1)%dancerFrames.length;
-    }, 690);
-
-    // --- Animated CAMO (Half Size) ---
+    // --- Animated CAMO (Half Size, unified color) ---
     const camoColors = [
-      "#7afe98", "#3b5f3c", "#ffe266", "#8b00bf", "#be00ff", "#37fff7", "#e9efe7"
+      "#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"
     ];
     function randomCamoChar(){
       const chars = "░▒▓▚▞▐▉█▛";
@@ -517,7 +493,7 @@
     }
     function renderCamo(tick=0){
       let out = "";
-      for (let row=0;row<1;++row) {  // 1 line, not 3
+      for (let row=0;row<1;++row) {
         for (let col=0;col<62;++col) {
           let color = camoColors[(row+col+tick)%camoColors.length];
           out += `<span style="color:${color}">${randomCamoChar()}</span>`;
@@ -530,7 +506,7 @@
     setInterval(()=>{
       renderCamo(camoTick++);
     },950);
-    renderDancers(0); renderCamo();
+    renderCamo();
   </script>
 </body>
 </html>
