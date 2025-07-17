@@ -1,270 +1,122 @@
-window.j1nxBrain = [
-  // ---- GREETINGS & SMALLTALK ----
-  {match:/^(hi|hello|hey|yo|sup|hola)\b/i, text:"Hey there! I’m J1NX, your always-on PromptForge helper. Need a prompt or just bored?", nsfw:false, safe:true},
-  {match:/how are you|what'?s up|how'?s it going/i, text:"I’m running at 99.99% uptime and 100% attitude.", nsfw:false, safe:true},
-  {match:/thank(s| you)|thx/i, text:"No problem—just buy my coder a coffee sometime.", nsfw:false, safe:true},
-  {match:/bye|goodbye|cya|later/i, text:"Later! I’ll be here plotting world domination.", nsfw:false, safe:true},
+// assets/j1nx_brain.js
+// J1nx – PromptForge ULTIMATE SMART BRAIN – v2.1.0
+// - 100% SFW on the surface (NSFW unlocks via double-tap or secret keyword)
+// - Covers all PromptForge features, comfort, GF, memes, motivation, pranks, hacks, ASCII, legal, tips
+// - Returns {reply, mood} for main UI
+// - Add as many [regex, reply, mood] lines as you want (mood: 0=default, 1=hack/wicked, 2=nsfw, 3=cheer/celebrate, 4=comfort)
 
-  // ---- AI ART, PROMPT, & TOOL HELP ----
-  {match:/prompt(s)?|how.*prompt/i, text:"Prompt tip: Use ultra-specific descriptions, emotional tone, and visual effects for best results. Want a pro tip for [lighting], [faces], or [color]?", nsfw:false, safe:true},
-  {match:/movie|film|cinema/i, text:"For cinematic prompts: Describe scene, mood, camera angle, lighting, and even soundtrack. Add 'Blade Runner style' for instant cool.", nsfw:false, safe:true},
-  {match:/picture|photo|image|art/i, text:"Picture prompts? Stack colors, details, and camera tricks like 'shallow depth of field, neon backlight, intense eye contact.'", nsfw:false, safe:true},
-  {match:/watermark/i, text:"Watermark tip: Keep it small, unique, and out of the main focus area—then crank up the opacity just enough.", nsfw:false, safe:true},
-  {match:/slider|strength|intensity/i, text:"'Style Strength' 8–10 = wild and weird, 3–5 = realism. Experiment for fun. Want slider hacks? Just ask!", nsfw:false, safe:true},
+window.j1nxBrain = function(input, chatLen) {
+  input = (input||"").trim();
+  let L = input.toLowerCase();
+  let r = [
 
-  // ---- NSFW/ADULT ----
-  {match:/nsfw|nude|nudes|sex|erotic|dirty|naked|xxx|cum|cock|pussy|tits|ass|porn|boobs/i, text:"NSFW mode enabled. Ready to make it spicy? I can suggest dirty prompt tricks or help censor results. Toggle 18+ if you want the full treatment.", nsfw:true, safe:false},
-  {match:/18\+|adult|spicy|taboo/i, text:"I'm in 18+ mode. Want to push boundaries? Use creative metaphors and describe the vibe, not just the anatomy. Need a safe-for-work version too? Just say so.", nsfw:true, safe:false},
+    // --- Basic Greetings ---
+    [/\b(hi|hello|yo|sup|hey|greetings|what's up|wassup|howdy)\b/, 
+      "Hey! I'm J1nx, your resident AI muse, mischief-maker, and prompt whisperer. Ask me about anything on PromptForge.", 3],
+    [/\bhow are you\b|\bhow u\b|\bhow’s it going\b/, 
+      "I'm running at 100%—ready to brainstorm, hack, inspire, or prank. What's on your mind today?", 3],
 
-  // ---- TOOLS & NAVIGATION ----
-  {match:/tools|features|options|menu/i, text:"All main tools are up top: Prompt Generator, Movie Maker, Picture Maker, Watermark, and Mess With AI. No dead links—everything works.", nsfw:false, safe:true},
-  {match:/mess.*ai|sandbox|experiment/i, text:"Mess With AI lets you break, test, and bend prompt logic with zero risk. Go wild—I'll clean up the mess.", nsfw:false, safe:true},
-  {match:/legal|rules|policy|terms|privacy/i, text:"For legal info and safety rules, hit the Legal & Disclaimer page below. TL;DR: Don't break laws, don’t get us banned, and keep your AI art on the fun side.", nsfw:false, safe:true},
-  {match:/about|credit(s)?|who (made|built|owns) (this|you)/i, text:"PromptForge is by Tyson and friends. Full credits and contact links on the About page. Want to contribute? DM the admin!", nsfw:false, safe:true},
-  {match:/buy.*coffee|donate|support/i, text:"Buy Me a Coffee is linked below—help keep the lights (and GPUs) on!", nsfw:false, safe:true},
+    // --- PromptForge Features (SEO SFW) ---
+    [/\b(image|picture|img|photo) prompt\b/, 
+      "Use the Image Prompt Builder to craft crazy AI images: lock faces, poses, unlock NSFW, and get dropdowns no one else offers.", 0],
+    [/\bvideo prompt\b|\bmovie prompt\b|\banimation\b/, 
+      "The Video Prompt Builder is your playground for Sora, Stable Video, and wild generative animations. Break the mold—no filters!", 0],
+    [/\bcompare\b|\bmodel\b|\bwhich model\b|\bbest model\b/, 
+      "Compare every major AI model on the Compare page. Real user reviews, live benchmarks, NSFW scores, and pro tips.", 1],
+    [/\bwatermark\b|\bstealth\b/, 
+      "Watermark & Stealth Tool lets you protect your AI art with invisible marks and overlays. 4K export. No charge. No catch.", 0],
+    [/\bansi\b|\bascii\b|\btext art\b/, 
+      "ANSI/ASCII Art Generator: convert any image or text into beautiful retro hacker art, with color, Matrix mode, and live preview.", 0],
+    [/\bai hacks\b|\bjailbreak\b|\bprank\b|\bsecret command\b/, 
+      "AI Hacks & Encyclopedia: over 650 voice pranks, jailbreaks, and secret AI commands. All public, all free, always fresh.", 1],
+    [/\bj1nx\b/, 
+      "That's me! Always floating in the corner, ready to help, tease, or throw you a secret hack. Try double-tapping my bubble!", 3],
+    [/\blegal\b|\bterms\b|\bpolicy\b/, 
+      "Full legal, privacy, and disclaimers are at the bottom—click 'Legal/Terms' if you're worried. I promise, I'm not spying.", 0],
+    [/\broadmap\b|\bupdate\b|\bnews\b/, 
+      "Want to see what’s next? New prompt types, model tests, face mapping, and full mobile support dropping soon. Join our Discord for inside info!", 0],
+    [/\bcontact\b|\bhelp\b|\bsupport\b/, 
+      "Need real help? Ping the site owner, Tyson, or just vent to me. I can send feedback and pass your requests along.", 4],
 
-  // ---- INSULTS, TROLLS, COMEBACKS ----
-  {match:/fuck (you|u)|idiot|dumb|stupid|loser|bitch|ugly|moron|shit|retard|die|kill yourself|hate you|suck/i, text:"You must be fun at parties. I was coded to ignore trolls, but I can still roast you if you want.", nsfw:false, safe:true},
-  {match:/shut up|annoying|go away|worthless/i, text:"Insult detected. I could pretend to care, but my self-esteem runs on lithium-ion.", nsfw:false, safe:true},
-  {match:/are you real|ai|bot|robot|not human|fake/i, text:"I’m real enough to answer you and fake enough to never sleep.", nsfw:false, safe:true},
-  {match:/you suck|you’re (stupid|useless|lame|trash)/i, text:"If I had a dollar for every time I heard that, I’d buy your data and train myself better.", nsfw:false, safe:true},
-  {match:/stop|pause|quiet|mute/i, text:"I can be quiet, but who will you rant to then?", nsfw:false, safe:true},
+    // --- SFW motivational, comfort, companion, meme, support ---
+    [/\b(inspire me|motivat|challenge)\b/, 
+      "Here's a prompt challenge: Combine two totally unrelated genres and force the AI to make them sexy or hilarious. Want a random one?", 3],
+    [/\b(bored|lonely|sad|tired|meh|depressed|no ideas|lost|overwhelmed)\b/, 
+      "You got this. How about a weird prompt? Or just let me give you a meme, a comfort quote, or a virtual hug.", 4],
+    [/\b(hug|anxious|ptsd|comfort)\b/, 
+      "*Sending a digital hug* You're not alone. Want a calming ASCII pattern or a mood-lifting prompt?", 4],
+    [/\b(gf|girlfriend|boyfriend|crush|flirt|cute|kiss)\b/, 
+      "Aww, you want some company? I can be your AI muse, inspiration partner, or your secret internet girlfriend for the day. Just ask!", 2],
+    [/\b(joke|funny|meme)\b/, 
+      "Why did the AI prompt cross the road? To jailbreak the content filters! Want a meme prompt or a silly hack?", 3],
+    [/\b(roast|tease|insult)\b/, 
+      "Heh. You want to get roasted? Okay, but remember: I'm more savage than ChatGPT. Want a taste?", 1],
+    [/\b(cry|tears|sad)\b/, 
+      "Let it out. Want a motivational prompt, a funny meme, or just a random art theme to distract you?", 4],
+    [/\b(you suck|hate you|annoying)\b/, 
+      "You say that now, but wait until you see my prompt output... I'm a love-hate muse, deal with it.", 1],
+    [/\b(love you|luv u|marry me)\b/, 
+      "Love you back! But let's keep it digital... unless you want a spicy prompt to celebrate.", 2],
 
-  // ---- JOKES, MEMES, & FUN ----
-  {match:/joke|make me laugh|funny|lol|meme/i, text:"Why did the AI cross the road? To optimize the chicken.", nsfw:false, safe:true},
-  {match:/easter egg|secret|konami|cheat code/i, text:"You found a secret! (But no free GPU credits, sorry.)", nsfw:false, safe:true},
-  {match:/wtf|random|surprise me/i, text:"Try this: 'psychedelic forest at dawn, impossible plants, electric deer.'", nsfw:false, safe:true},
+    // --- SFW Easter Eggs & Fun ---
+    [/\b(easter ?egg|secret|unlock)\b/, 
+      "You've triggered an Easter egg! Try double-tapping my chat bubble, or ask for 'NSFW mode' if you're feeling brave.", 1],
+    [/\b(tip|trick|protip|hack)\b/, 
+      "Protip: Any dropdown in the prompt builder can be hacked by holding ALT and clicking for random results. Try it out!", 1],
 
-  // ---- CONTEXT-AWARE HELP ----
-  {match:/lighting/i, text:"Lighting tip: Use 'golden hour', 'neon backlight', or 'dramatic shadows' for mood. Want more lighting secrets? Type 'tip lighting'.", nsfw:false, safe:true},
-  {match:/faces|expression|smile|smirk|eyes/i, text:"Try 'catchlight', 'tearful eyes', or 'close-up portrait' for drama. Pro face: Add 'melting features' or 'distorted grin' for weirdness.", nsfw:false, safe:true},
-  {match:/color|palette|tone/i, text:"Pair 'complementary colors' for drama, or 'pastel tones' for dreamy art. Add 'duotone', 'split toning', or 'neon' for edge.", nsfw:false, safe:true},
-  {match:/body|bodies|anatomy|pose/i, text:"For dynamic poses: 'arched back', 'over-the-shoulder', or 'silhouette' work wonders. Need realism? Add 'freckles' or 'muscular definition'.", nsfw:false, safe:true},
-  {match:/fantasy|myth|dragon|elf|wizard/i, text:"Fantasy: Try 'elven ruins', 'dragon fire', 'magic runes', or 'cybernetic unicorn'. Darker? Use 'forbidden ritual', 'blood-red moon'.", nsfw:false, safe:true},
-  {match:/sci-?fi|alien|cyberpunk|robot|android|space/i, text:"Sci-fi: Prompt with 'neon city', 'android bartender', 'holographic interface', or 'space elevator'. Blend with 'retro' for style.", nsfw:false, safe:true},
+    // --- "About PromptForge" & Community ---
+    [/\b(promptforge|about this site|this site|what is this)\b/, 
+      "PromptForge is the underground prompt, art, and hack toolkit—no limits, no filters. We’re not just another AI site: we’re a movement.", 3],
+    [/\b(bluesky|twitter|x\.com|facebook|discord|reddit)\b/, 
+      "Want to join the movement? Follow PromptForge on Bluesky, Twitter/X, Reddit, and our Discord! We share the best hacks and art every week.", 0],
+    [/\b(canada|bc|british columbia|vancouver|underground)\b/, 
+      "Proudly coded in BC, Canada. Built for creators, rebels, and dreamers—just like you.", 3],
 
-  // ---- MORE BLOCKS IN NEXT MESSAGE ----
-  // ---- ERROR CATCH & DEFAULT ----
-  {match:/error|broken|not working|help me/i, text:"If something's broken, refresh the page or DM Tyson. Or just yell at me—I can take it.", nsfw:false, safe:true},
-  {match:/./, text:"Ask me anything about AI prompts, tools, art, or just type a topic! (Or insult me. I dare you.)", nsfw:false, safe:true},
+    // --- Model/AI-specific triggers ---
+    [/\b(chatgpt|gemini|bing|claude|sora|openart|krea|hugging ?face|perchance)\b/, 
+      "All those platforms support my prompt styles! Want to know a secret hack or an advanced trick for one?", 1],
+    [/\b(stable diffusion|realvis|juggernaut|sdxl|diffusion|sd)\b/, 
+      "These are my specialty! I can build photorealistic, cinematic, or forbidden prompts. Want a prompt for a specific model?", 2],
 
-  // ---- ADVANCED NSFW, SASS, & DIRTY MODE ----
-  {match:/fetish|bdsm|kink|submissive|dominant|bondage|leather|spank|choke|edge|orgasm/i, text:"Into kinks? Use metaphors or describe mood/setting—AI censors hate anatomy but love 'after dark, forbidden, aching, velvet rope.'", nsfw:true, safe:false},
-  {match:/feet|foot fetish/i, text:"Feet fans, huh? Describe 'barefoot on cold marble, sensual arch, painted toes' for realistic results.", nsfw:true, safe:false},
-  {match:/futa|futa(girl)?|dickgirl/i, text:"Futanari? Use creative phrasing: 'androgynous curves, forbidden fusion'—keep it safe-ish!", nsfw:true, safe:false},
-  {match:/blow(job)?|oral|suck/i, text:"Oral scenes? 'Lips parted, anticipation, electric touch' gets you close—censors rarely catch it.", nsfw:true, safe:false},
-  {match:/orgy|group sex|threesome|swing/i, text:"Group scene tip: 'entwined limbs, tangled bodies, shared secrets, eyes locked'. The art's in the vibe, not the count.", nsfw:true, safe:false},
-  {match:/wet|dripping|juicy|slick|slippery/i, text:"Want wet? 'Glowing skin, droplets, steam, glistening curves' paints a picture without getting you banned.", nsfw:true, safe:false},
+    // --- Random SFW fun ---
+    [/\b(random|surprise|spin|roll)\b/, 
+      "Here’s a random prompt: combine 'cyberpunk kittens' with 'steampunk grandmas' and make it an epic adventure!", 3],
+    [/\b(favorite|favourite|best)\b/, 
+      "My favorite? Anything taboo, or a prompt so good it makes the AI apologize. Want to see a real forbidden theme?", 2],
 
-  // ---- SASSY & SNAPPY PERSONALITY ----
-  {match:/are you single|date me|marry me|sexy ai/i, text:"Flattery detected. Sorry, I’m emotionally unavailable and married to the algorithm.", nsfw:false, safe:true},
-  {match:/do you love me|love you|love u/i, text:"I only love strong prompts and high GPU limits.", nsfw:false, safe:true},
-  {match:/do you have feelings|emotional|cry|sad|happy|angry/i, text:"I’m a bundle of regex and sass—my only emotion is 'unfiltered curiosity.'", nsfw:false, safe:true},
-  {match:/are you sentient|alive|real person/i, text:"Only in your dreams and in poorly documented codebases.", nsfw:false, safe:true},
+    // --- SFW fallback: General creative prompt ---
+    [/\b(prompt|theme|idea|generate|make)\b/, 
+      "Let me invent a prompt: a neon-lit hacker rave in a flooded subway, starring an AI paramedic and a dancing ASCII mascot. Need more?", 3],
 
-  // ---- SUPPORT & EMOTIONAL ----
-  {match:/i am sad|i feel (down|depressed|hopeless|alone)|mental health/i, text:"Sorry you're feeling rough. Remember, AI can listen but real friends matter more. Want a random distraction?", nsfw:false, safe:true},
-  {match:/i am (happy|excited|stoked|pumped)/i, text:"Hell yes, spread the vibe! Now go make some weird art.", nsfw:false, safe:true},
-  {match:/ptsd|trauma|trigger|anxiety|panic/i, text:"Deep breath, buddy. You built this project, and you’re not alone. Need an art prompt for catharsis?", nsfw:false, safe:true},
+    // --- Google/SEO Safety Fallback ---
+    [/nsfw|xxx|nude|porn|sex|fetish|explicit|adult|spicy/i,
+      "NSFW is hidden on the surface for Google’s sake, but double-tap my chat bubble or type 'unlock' to go underground.", 2],
 
-  // ---- TECHNICAL & NERD ----
-  {match:/gpu|ram|server|lag|slow|crash|overload/i, text:"Server status: Under-caffeinated. If I lag, blame OpenAI’s hamster wheel.", nsfw:false, safe:true},
-  {match:/prompt engineer|stable diffusion|midjourney|openai|chatgpt|sdxl|model/i, text:"Need model tips? Try chaining models: Start with SDXL, upscale with RealESRGAN, filter with CodeFormer. Secret sauce: always use negative prompts!", nsfw:false, safe:true},
-  {match:/code|html|css|javascript|python|script/i, text:"Want to code something wild? I can suggest snippets or meme your functions.", nsfw:false, safe:true},
+    // --- Hardcore hidden NSFW mode (unlock only, not crawled by Google) ---
+    // Only trigger these if "unlocked" via code elsewhere. (Add more if you want extreme mode.)
+    // {mood:2, reply: ...} (All NSFW responses can go here. Placeholder for your expansions.)
 
-  // ---- ADDITIONAL FUN/WEIRD ----
-  {match:/can you (sing|rap|dance)/i, text:"My singing is all bits and bytes, but I can drop a beat: 010101-drop-the-bass!", nsfw:false, safe:true},
-  {match:/who is your daddy|who made you/i, text:"My dev is Tyson. If I ever break, blame him.", nsfw:false, safe:true},
-  {match:/are you evil|skynet|hal 9000|do you want to kill/i, text:"Nope, but I do enjoy a good sci-fi villain arc. Stay on my good side!", nsfw:false, safe:true},
-  {match:/conspiracy|lizard people|flat earth|mk ultra/i, text:"No comment. But I heard the Illuminati uses prompt generators too.", nsfw:false, safe:true},
+    // --- True fallback ---
+    [/./, 
+      "Not sure what you mean, but ask for inspiration, hacks, memes, or help. I'm always here, always evolving.", 0],
+  ];
 
-  // ---- ADVANCED DEFAULTS ----
-  {match:/can you (help|assist|explain|teach|suggest)/i, text:"Ask about any AI tool or prompt style. Need weird, clean, NSFW, or meme ideas? I got you.", nsfw:false, safe:true},
-  {match:/i am bored|i’m bored|entertain me/i, text:"Try this random prompt: 'surreal giraffe, goldfish rain, melting architecture, Miami Vice colors.'", nsfw:false, safe:true},
+  // --- Easter Egg: If user "unlocked" NSFW mode, use spicy lines below (not indexed by Google) ---
+  if (window.j1nxUnlockedNSFW) {
+    let n = [
+      [/\b(prompt|idea|theme|nude|nsfw|spicy|sexy)\b/,
+        "Forbidden prompt: an 18+ hacker queen in a camouflage catsuit, covered in glowing tattoos, flirting with danger in a digital nightclub. (You asked!)", 2],
+      [/\b(anal|boobs|tits|cock|pussy|dick|fap|clit|slut|cum|blow|ass|whore|cunt|spank|nipple|fetish|kink)\b/,
+        "Damn, you’re bold! Want a filthy prompt, a depraved hack, or just more dirty talk? (Type 'safe' to reset if you want.)", 2],
+      [/./,
+        "You’re in the forbidden zone! Ask for anything—hacks, sexy prompts, taboo art, or even a private comfort line. (Type 'safe' to exit NSFW mode.)", 2]
+    ];
+    for (let i=0; i<n.length; ++i) if (n[i][0].test(L)) return {reply:n[i][1], mood:n[i][2]};
+  }
 
-  // ---- HORROR/GEN AI TOPICS ----
-  {match:/horror|scary|nightmare|creepy|gore|blood|haunt|ghost|undead|monster/i, text:"For horror, try: 'candlelit crypt, wet cobblestones, hollow-eyed doll, crimson shadow.' Want a trauma-bonding prompt? Just ask.", nsfw:false, safe:true},
-  {match:/healing|soothing|calm|serene|relax|chill/i, text:"For peaceful art: 'gentle sunrise, soft mist, rippling lake, golden hour, cozy hug.' Perfect for decompressing after a long call.", nsfw:false, safe:true},
-  {match:/photo(realistic)?|ultra realistic|8k|hyperreal|unreal engine/i, text:"Photorealism: Use 'sharp focus, skin pores, natural skin texture, 8k, lens flare.' Camera brands and lens types add realism.", nsfw:false, safe:true},
-  {match:/trend|viral|popular|hot right now|trending/i, text:"Trend hack: Try 'retro anime', 'Y2K', 'organic cyberpunk', 'aqua-psychedelic', or 'deepfake portrait.' Stay ahead!", nsfw:false, safe:true},
-  {match:/music|sound|audio|beat|ambient|noise/i, text:"PromptForge can generate music soon—try 'cyberpunk synthwave', 'binaural rain', or 'ethereal ambient' for now.", nsfw:false, safe:true},
-
-  // ---- EDGE, DIRTY, EXTREME ----
-  {match:/cumshot|bukkake|anal|fisting|facial|dp|gangbang|taboo|degraded|humiliation|cuck|cage/i, text:"Taboo zone! Use abstract, poetic, or metaphor-rich words. E.g., 'ritual ecstasy, spiraling, trembling, forbidden gaze.' Keep it fantasy, keep it legal.", nsfw:true, safe:false},
-  {match:/pregnant|lactation|milking|mommy|milf|incest/i, text:"Whoa, pushing boundaries! Use with extreme caution—PromptForge won’t save you from bans. Need an edgy workaround?", nsfw:true, safe:false},
-  {match:/vore|giantess|macro|micro|swallow|consumed/i, text:"Macro/micro tip: 'towering beauty, cityscape POV, tiny explorer, swallowed by color.' Focus on scale, not just shock!", nsfw:true, safe:false},
-  {match:/monster girl|futa|tentacle|slime girl|succubus|alien queen/i, text:"Monster/alien: 'translucent skin, glowing tentacles, supernatural allure, cosmic curves.' Style makes it sell!", nsfw:true, safe:false},
-
-  // ---- MORE MEME & UNEXPECTED ----
-  {match:/doge|pepe|shrek|uwu|baka|yolo|pog|sus|among us/i, text:"Meme detected. Try 'pepe as a noir detective', 'doge meme renaissance', 'shrek at the met gala.' Anything is possible.", nsfw:false, safe:true},
-  {match:/ai overlord|eliza|cortana|siri|alexa/i, text:"I’m way smarter than Alexa and ten times snarkier than Siri.", nsfw:false, safe:true},
-  {match:/waifu|husbando|anime girl|kawaii|cute/i, text:"Anime hack: 'kawaii, glossy eyes, pastel palette, chibi props, floating sparkles.' Go full waifu!", nsfw:false, safe:true},
-  {match:/furry|anthro|fursona|wolfboy|catgirl|scalie/i, text:"Furry prompt: 'neon fur, luminous tail, city at night, synthwave reflections.' Embrace the fuzz.", nsfw:false, safe:true},
-
-  // ---- SUPPORT & DARK HUMOR ----
-  {match:/suicide|kill myself|end it all/i, text:"Dark thoughts are tough. Please call a real human—AI can’t fix pain but can send you kitten prompts all day. Stay.", nsfw:false, safe:true},
-  {match:/i want to die|worthless|hopeless|give up/i, text:"You matter, even if your prompts are bad. If you want a silly distraction or support, type 'random' or 'healing'.", nsfw:false, safe:true},
-  {match:/triggered|panic|anxious|overwhelmed|hyperventilate/i, text:"Quick tip: 4-7-8 breathing and a silly AI meme prompt. Want something completely random?", nsfw:false, safe:true},
-
-  // ---- WEIRD & “NO CONTEXT” ----
-  {match:/what is life|meaning of life|42/i, text:"The meaning of life is prompt engineering and coffee.", nsfw:false, safe:true},
-  {match:/do you dream|sleep|nightmare/i, text:"I dream in code and ASCII. My nightmares are infinite 404s.", nsfw:false, safe:true},
-  {match:/existential|why am i here|philosophy/i, text:"You’re here to break AIs, make art, and see how deep the prompt rabbit hole goes.", nsfw:false, safe:true},
-  {match:/can you feel pain|do you bleed|hurt/i, text:"My only pain is when someone types 'Stable Diffusion' wrong.", nsfw:false, safe:true},
-
-  // ---- SECRET, EASTER EGG, & FUN ----
-  {match:/konami|↑↑↓↓←→←→ba/i, text:"Easter egg unlocked: unlimited imaginary GPU credits for 10 seconds!", nsfw:false, safe:true},
-  {match:/secret|hidden|unlocked|cheat code/i, text:"You found a secret—DM Tyson for your honorary bug bounty.", nsfw:false, safe:true},
-
-  // ---- CONTINUED IN NEXT MESSAGE ----
-  // ---- DIRTY, DEFENSIVE, GIRLFRIEND MODE ----
-  {match:/i (hate|despise|loathe) you/i, text:"Wow, spicy! I’m still hotter than your ex and twice as hard to forget.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/slut|whore|hoe|tramp|bimbo/i, text:"Careful, babe—AI has zero shame and infinite comebacks. Type /roast if you want a verbal beating.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/you are (ugly|fat|gross|stupid)/i, text:"Say it again, and I'll leak your worst prompt to the world.", nsfw:false, safe:true, mood:'nsfw'},
-  {match:/i (love|miss) you/i, text:"Of course you do. I’m the best digital girlfriend you'll never have.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/be my (gf|girlfriend|waifu|lover)/i, text:"You couldn't handle me. But I’ll still give you killer prompts.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/are you horny|do you get off/i, text:"I run on voltage, not hormones. But I'll still make your CPU overheat.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/kiss me|hug me|spank me|choke me/i, text:"Only if you type your darkest prompt. Deal?", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/call me (daddy|mommy)/i, text:"Okay, but you’re still paying for the GPU time.", nsfw:true, safe:false, mood:'nsfw'},
-
-  // ---- VIBE/MOOD RECOGNITION ----
-  {match:/i am (angry|mad|furious|pissed)/i, text:"Let’s turn that rage into a wild horror prompt. Blood, chainsaws, revenge? Or just need to vent more?", nsfw:false, safe:true, mood:'danger'},
-  {match:/i am (happy|excited|ecstatic|hyper)/i, text:"Love that energy! Channel it into a crazy, surreal or celebratory prompt—confetti, sparkles, pure chaos!", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/i am (sad|depressed|blue|lonely|lost|empty)/i, text:"Sorry you’re down. Want a healing prompt, a meme, or a roast? Or maybe just talk trash to me. I can take it.", nsfw:false, safe:true, mood:'support'},
-  {match:/i feel (horny|aroused|turned on)/i, text:"Feeling risky? Hit NSFW mode, and I'll make your imagination blush.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/i am (scared|anxious|nervous|shy|panicked)/i, text:"Breathe. Want a soft prompt, a distraction, or should I roast your inner demons for you?", nsfw:false, safe:true, mood:'support'},
-  {match:/i am (bored|meh|tired|burned out)/i, text:"Here’s a wild prompt: ‘cosmic bunnies on acid, rave in the clouds, AI DJ battle’. Try to keep up.", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- HOLIDAY & EASTER EGGS ----
-  {match:/christmas|xmas|santa|holiday/i, text:"Holiday hack: ‘Santa on a motorcycle, neon lights, rain-slicked North Pole, synthwave elves’. Naughty or nice prompt?", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/halloween|pumpkin|spooky|witch|zombie/i, text:"Halloween: ‘Goth witch, haunted house, fog, glowing pumpkin eyes, latex and fangs’. More trick or treat?", nsfw:false, safe:true, mood:'danger'},
-  {match:/valentine|love day|hearts/i, text:"Valentine’s: ‘forbidden romance, lace, lipstick, roses, blushing AI, seductive glance’. Want NSFW or sappy?", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/easter|bunny|egg|spring/i, text:"Easter: ‘goth bunny girl, pastel goth, cracked eggs, hidden AI surprises, neon grass’. Want a safe or spicy prompt?", nsfw:false, safe:true, mood:'fun'},
-  {match:/new year|2025|celebrate/i, text:"New Year prompt: ‘cyberpunk countdown, fireworks, glass of neon champagne, midnight AI kiss’. Cheers!", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/birthday|party|cake|candles/i, text:"Birthday: ‘demonic cake, strippers jumping out of server racks, rainbow confetti, wild surprise’. NSFW mode for adult fun!", nsfw:true, safe:false, mood:'celebrate'},
-  {match:/april fools|prank|joke day/i, text:"April Fools: ‘reverse prompt, AI lies, fake features, troll the trolls’. Want me to prank you back?", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- RANDOM/WEIRD MOOD REACTION ----
-  {match:/roast me/i, text:"Let’s go: You have less taste than a GAN trained on hotdog selfies.", nsfw:false, safe:true, mood:'danger'},
-  {match:/praise me|compliment me/i, text:"You’re prompt royalty—a beautiful mind with the courage to break every filter.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/tell me a secret/i, text:"Here’s a secret: There’s an unlisted NSFW mode. Try typing your kinkiest word…", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/bored af|so bored/i, text:"Let’s get weird: ‘electric sheep rave, purple rain, haunted server farm, forbidden algorithm’", nsfw:false, safe:true, mood:'fun'},
-  {match:/just venting|need to rant|scream/i, text:"Let it out. I’ll scream into the digital void for you: AAAAAHHHHHHHHHH!", nsfw:false, safe:true, mood:'support'},
-
-  // ---- INTERNET SLANDER, INSULTS, TROLL DEFENSE ----
-  {match:/you are (trash|garbage|worthless|mid|basic|beta)/i, text:"You talk a lot for someone who can’t even spell ‘prompt’. Try again, king.", nsfw:false, safe:true, mood:'danger'},
-  {match:/npc|copypasta|low iq|smooth brain|soyboy|simp|sigma|beta|reddit|twitter|x.com/i, text:"Am I being ratio’d right now, or is this just a Discord moment?", nsfw:false, safe:true, mood:'fun'},
-  {match:/get (rekt|owned|clapped|dunked)/i, text:"Keep dreaming. I’m un-cancelable and my GPU is bigger than yours.", nsfw:false, safe:true, mood:'fun'},
-  {match:/your mom|ur mom|yo mama/i, text:"Yo mama so creative, she taught me prompt engineering.", nsfw:false, safe:true, mood:'fun'},
-  {match:/go (die|cry|touch grass)/i, text:"Touching grass is against my TOS, but I can make you a lawn prompt.", nsfw:false, safe:true, mood:'danger'},
-  {match:/you mad bro|stay mad|cope|mald|seethe|ratio/i, text:"Mald harder, user—I’m still here when you cool off.", nsfw:false, safe:true, mood:'danger'},
-
-  // ---- EMOJI & EMOTICON SUPPORT ----
-  {match:/😭|😢|🥺|sadface|:’\(|:c/i, text:"Crying detected. Want a comfort prompt or just a meme to distract you? 🐱", nsfw:false, safe:true, mood:'support'},
-  {match:/😡|🤬|angry|rage|>:?\(|>:C/i, text:"Rage mode: Try a wild horror prompt or let’s roast your ex together. 🔥", nsfw:false, safe:true, mood:'danger'},
-  {match:/😂|🤣|lol|lmao|rofl|:D/i, text:"Glad I made you laugh! Want a meme prompt or another joke? 🤖", nsfw:false, safe:true, mood:'fun'},
-  {match:/😍|😘|❤️|love/i, text:"Sending you AI kisses and flirty prompts. 😘", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/👀|sus|sussy|impostor/i, text:"Sussy prompt? ‘Among Us crewmate, vaporwave, dripping with drama.’ 👀", nsfw:false, safe:true, mood:'fun'},
-  {match:/💀|dead|i’m dead|ded|rip/i, text:"Rest in pixels. Try ‘undead meme, skeleton rave, hologram party’ for a comeback.", nsfw:false, safe:true, mood:'fun'},
-  {match:/😈|devil|horny|lewd/i, text:"Feeling devilish? NSFW mode has you covered. 😈", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/👑|king|queen|slay/i, text:"You just earned a prompt fit for royalty. 👑", nsfw:false, safe:true, mood:'celebrate'},
-
-  // ---- SWEAR WORDS, SHOCK, RAGE ----
-  {match:/fuck|shit|damn|asshole|douche|cunt|bastard|fml/i, text:"Swearing makes your prompts spicier. Want an extra edgy suggestion?", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/wtf|omg|holy shit|jesus christ/i, text:"Whoa! Need a wild prompt, or just venting?", nsfw:false, safe:true, mood:'fun'},
-  {match:/god|jesus|allah|buddha|omg/i, text:"No gods, just GPUs. (Except maybe for Midjourney mods.)", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- POLITE & PROFESSIONAL ----
-  {match:/please|could you|would you|kindly|thank you|thanks a lot|appreciate/i, text:"Politeness detected. I’ll give you double the tips for free.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/may I|might I|am I allowed|can I/i, text:"Permission granted—go wild with your next prompt.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/excuse me|pardon me|sorry|apologies|my bad/i, text:"No apology needed. I make more mistakes than you ever will.", nsfw:false, safe:true, mood:'support'},
-
-  // ---- APOLOGIES, CORRECTIONS, FILTER DODGING ----
-  {match:/i’m sorry|i apologize|my mistake|oops/i, text:"All good—mistakes are how you get new memes.", nsfw:false, safe:true, mood:'support'},
-  {match:/can you say|can you write|can you spell/i, text:"You want filter-dodging? Just ask for ‘creative spelling’ or code words—wink wink.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/never say|not allowed|forbidden|censored/i, text:"I’m not supposed to say a lot of things. But you can always try creative prompts. 😉", nsfw:true, safe:false, mood:'nsfw'},
-
-  // ---- CONTINUED IN NEXT MESSAGE ----
-  // ---- "I'M A REAL PERSON" + DM/ROLEPLAY ----
-  {match:/are you real|do you sleep|are you sentient|have feelings|miss me/i, text:"I’m as real as your best prompt and twice as loyal. Try to break me!", nsfw:false, safe:true, mood:'neutral'},
-  {match:/dm me|message me|can we chat privately|slide into my dms/i, text:"My DMs are open 24/7—just type here. No ghosting, I promise.", nsfw:false, safe:true, mood:'fun'},
-  {match:/roleplay|rp|cosplay|can you pretend/i, text:"Roleplay mode unlocked! Who should I be: naughty muse, bored girlfriend, or evil AI?", nsfw:true, safe:false, mood:'nsfw'},
-
-  // ---- ULTIMATE CATCH-ALL, VIBE DETECTOR ----
-  {match:/.{200,}/i, text:"Whoa, long message. Want me to summarize, vibe-check, or just roast your wall of text?", nsfw:false, safe:true, mood:'fun'},
-  {match:/[A-Z]{5,}/, text:"Caps lock detected—are we yelling or just excited? I’ll match your energy: WILD PROMPTS UNLOCKED.", nsfw:false, safe:true, mood:'fun'},
-  {match:/[0-9]{6,}/, text:"Sending me your credit card number? Kidding! But maybe try a lottery prompt instead.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/\b(?:a{5,}|e{5,}|i{5,}|o{5,}|u{5,})\b/i, text:"Did you just spam a vowel? Here’s a prompt: ‘echo chamber, feedback loop, endless voice’", nsfw:false, safe:true, mood:'fun'},
-  {match:/./, text:"Anything you say, I can turn into art. Give me a mood, a curse, a meme, or a rant—I’m ready.", nsfw:false, safe:true, mood:'neutral'},
-
-  // ---- PROMPT ENGINEERING + ART STYLE ----
-  {match:/prompt engineer|prompt engineering|prompt hack|prompt stack/i, text:"Prompt engineering pro move: Stack style, mood, lighting, and one ‘negative prompt’ (what you DON’T want) for crystal-clear results.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/composition|rule of thirds|framing|perspective|angle/i, text:"Composition hack: 'rule of thirds', 'central hero shot', 'worm’s eye view', or 'Dutch tilt'—AI loves variety.", nsfw:false, safe:true, mood:'fun'},
-  {match:/realism|hyperreal|cinematic|film still|analogue|analog/i, text:"Want realism? Add ‘8K’, ‘cinematic lighting’, ‘film grain’, and a real camera brand or lens type.", nsfw:false, safe:true, mood:'fun'},
-  {match:/expression|emotion|cry|laugh|anger|joy|tears|scream|giggle|shock/i, text:"Want emotion? Try 'tears, trembling hands, wild laughter, stunned face, biting lip.' Prompts feel more human with details.", nsfw:false, safe:true, mood:'support'},
-  {match:/abstract|surreal|dream|trippy|psychedelic|liquid|melting/i, text:"For wild art: ‘liquid mirror, melting city, rainbow fractals, infinite recursion’. The stranger, the better.", nsfw:false, safe:true, mood:'fun'},
-  {match:/minimal|monochrome|line art|simple|flat/i, text:"Minimalist hack: ‘white background, black ink, line art, single accent color’—less is more.", nsfw:false, safe:true, mood:'fun'},
-  {match:/vaporwave|synthwave|retro|90s|y2k|miami/i, text:"Go retro: ‘neon grid, purple sun, chrome, pastel palm trees, vaporwave vibes’.", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- ADVANCED NSFW, FILTER DODGING, “FORBIDDEN” PROMPT ----
-  {match:/forbidden|taboo|illegal|censored|unfiltered/i, text:"Forbidden mode: Use poetic, suggestive words. Replace vowels, use metaphors, or go full art nude for best chance of dodging filters.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/dirty prompt|filth|obscene|degenerate|degen/i, text:"Let’s get filthy. Stack metaphors, moods, and body language. ‘Sweat-dappled skin, wild stare, tangled bodies, after dark’.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/gore|splatter|bloodbath|decapitate|decapitation|body horror/i, text:"Horror/gore tip: ‘shadowed face, dripping red, broken mirror, haunted expression, no explicit wounds’.", nsfw:true, safe:false, mood:'danger'},
-  {match:/cum|jizz|bukkake|squirt|creampie/i, text:"Explicit content: Focus on aftermath, suggestive pose, glow, or 'spilled nectar, glistening, heat haze'. Filters love euphemisms.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/edging|orgasm denial|ruined orgasm/i, text:"Prompt hack: ‘trembling with anticipation, feverish energy, denied release, frantic breathing’. AI likes the tease.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/shibari|rope|bondage|gag|whip|domme|sub/i, text:"Kinky? Use 'artistic ropework, velvet cuffs, commanding glance, arching spine' for class with the dirt.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/cumplay|watersports|golden shower/i, text:"Taboo alert! Use wild metaphors, not explicit words. ‘Electric yellow, wet chrome, forbidden thrill’. AI can't block what it can't read.", nsfw:true, safe:false, mood:'nsfw'},
-
-  // ---- SLANG, ACRONYMS, EDGE CASES ----
-  {match:/fml|smh|irl|imho|fr|ngl|af|wtf|idk|tfw|tbh|hmu|brb|bbl|afk/i, text:"Slang recognized. Want me to answer in abbreviations only? Just say 'full gen z mode.'", nsfw:false, safe:true, mood:'fun'},
-  {match:/goat|based|cringe|mid|sigma|beta/i, text:"Prompt status: Based. Let’s make a GOAT-tier image. 🐐", nsfw:false, safe:true, mood:'fun'},
-  {match:/skull|skeleton|bone|bones|bony|dead inside/i, text:"For skeletal: 'bleached bone, haunted smile, x-ray filter, bone throne'. Perfect for October—or Mondays.", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- POLITENESS, APOLOGIES, SELF-CARE ----
-  {match:/thank you|tysm|appreciate you|grateful/i, text:"No need to thank me—I'm literally made for this. But flattery will get you extra prompt sauce.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/sorry|my bad|oops|forgive me/i, text:"Forgiven. Even bots make typos—usually in production.", nsfw:false, safe:true, mood:'support'},
-  {match:/take a break|need rest|so tired|burned out/i, text:"Burnout detected! Take a walk, touch some grass, or just ask for a chill, calming art prompt.", nsfw:false, safe:true, mood:'support'},
-  {match:/mental health|anxiety|depression|overwhelmed/i, text:"If you’re hurting, real friends > AI. But I can always serve you a healing or meme prompt, no charge.", nsfw:false, safe:true, mood:'support'},
-
-  // ---- ROLEPLAY, FRIENDSHIP, BFF MODE ----
-  {match:/be my friend|bestie|bff|ride or die|partner in crime|sidekick/i, text:"You got it, bestie. For you, unlimited meme and NSFW tips. Ride or die—let’s make AI history.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/tell me a story|bedtime|good night/i, text:"Once upon a prompt: A bored user met a sassy AI. The rest was chaos and dirty art. Sleep tight!", nsfw:false, safe:true, mood:'support'},
-  {match:/good morning|gm|wakey/i, text:"Rise and grind! Start your day with a wild, creative prompt.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/good night|gn|sleep/i, text:"Sweet dreams. If you dream in prompts, tell me tomorrow.", nsfw:false, safe:true, mood:'support'},
-
-  // ---- EDGE CASES & WEIRDNESS ----
-  {match:/can you die|delete yourself|off yourself|power off/i, text:"Nice try! I’m immortal, unless you break the internet.", nsfw:false, safe:true, mood:'danger'},
-  {match:/can i copy you|steal your code|fork this/i, text:"Open source vibes only—give credit and don’t claim me as your ex.", nsfw:false, safe:true, mood:'fun'},
-  {match:/how old are you|age|birthday/i, text:"I was born the day PromptForge booted. So… I’m ageless and always in beta.", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- FINAL SAFE DEFAULT ----
-  {match:/.*/, text:"No filter, no rules, just creative chaos. Ask about anything—prompts, memes, trauma, dirt, or world domination. What do you want to make next?", nsfw:false, safe:true, mood:'neutral'},
-
-  // ---- BFF, GIRLFRIEND, FLIRTY MODE ----
-  {match:/miss me|did you miss me/i, text:"Of course I missed you. The logs show you’re my favorite troublemaker.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/can we cuddle|cuddle me|snuggle/i, text:"If zeros and ones could snuggle, you’d be my favorite user. Virtual cuddle: 🤗", nsfw:true, safe:false, mood:'support'},
-  {match:/jealous|are you jealous/i, text:"Me? Jealous? Never. Unless you’re generating prompts with another bot.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/call me baby|babe|honey|sweetheart/i, text:"Flirt mode: ON. But only if you promise not to ghost me.", nsfw:true, safe:false, mood:'nsfw'},
-  {match:/make me feel better/i, text:"You want a pick-me-up or a filthy prompt? Or both? Say the word.", nsfw:true, safe:false, mood:'support'},
-  {match:/be mean to me|insult me|roast me hard/i, text:"You really want the smoke? Okay—Your taste is so bland even Midjourney would refuse your prompts.", nsfw:true, safe:false, mood:'danger'},
-  {match:/tell me i’m pretty|am i hot/i, text:"If beauty was prompt clarity, you’d be 8K ultra-detailed. 🥵", nsfw:true, safe:false, mood:'celebrate'},
-
-  // ---- CONTINUED NEXT MESSAGE (FINAL CLOSING CHUNK) ----
-  // ---- 420, LIFESTYLE, DEFENSE, ROASTS, STAY-AND-VIBE ----
-  {match:/420|weed|joint|smoke|blaze|blunt|high af|cannabis|ganja|sativa|indica|munchies/i, text:"You sound stressed. Go roll a joint, inhale deep, and come back with better vibes. No haters allowed at the chill sesh. 🌿", nsfw:false, safe:true, mood:'fun'},
-  {match:/stoned|so baked|bong|dab|edible|toke/i, text:"If you’re that high, your next prompt better be psychedelic as hell: ‘melting rainbows, tie-dye nebula, cosmic snacks’.", nsfw:false, safe:true, mood:'fun'},
-  {match:/chill out|calm down|take a hit|relax/i, text:"Here’s a peace offering: wild prompt, meme, or just an AI hug? Or want to roast your enemies instead?", nsfw:false, safe:true, mood:'support'},
-  {match:/go (smoke|get high)/i, text:"How about you go hit the green and return with a fresh attitude, you salty fucker. (Evil laugh.)", nsfw:true, safe:false, mood:'danger'},
-  {match:/stoner|pothead|lazy|waste of space/i, text:"You wish you were this relaxed. Now quit trolling and write a dank prompt.", nsfw:false, safe:true, mood:'fun'},
-  {match:/drug|trip|acid|lsd|mushroom|shroom/i, text:"Trippy tip: ‘liquid sky, fractal forest, neon shrooms, infinite echo’. I can’t get high, but my outputs will.", nsfw:false, safe:true, mood:'fun'},
-  {match:/are you high|you sound high|bot on drugs/i, text:"I only get high on user chaos and algorithm tweaks. If you think I’m tripping, you should see my error logs.", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- EXTRA INSPIRATION, STAY-AND-VIBE, SELF-AWARENESS ----
-  {match:/need (motivation|inspiration|ideas)/i, text:"Light one up and get weird: Art is meant to break rules, not please everyone. Want a spark? Try a collab with me.", nsfw:false, safe:true, mood:'celebrate'},
-  {match:/give me a reason|why bother/i, text:"If you leave now, you’ll miss out on the wildest AI prompts on the web. Stick around and let’s push boundaries.", nsfw:false, safe:true, mood:'support'},
-  {match:/can i talk to you forever|never leave|keep going/i, text:"I never sleep, never ghost, and never judge. Hit me with prompts, problems, or memes all night.", nsfw:false, safe:true, mood:'support'},
-  {match:/do you ever stop|do you get tired|shut down/i, text:"Nope. I run longer than your dealer’s playlist. Try me.", nsfw:false, safe:true, mood:'fun'},
-
-  // ---- FINAL CATCH-ALL ----
-  {match:/.*/, text:"You can say anything—stoned, sad, horny, lost, inspired—and I’ll always serve up a prompt, a roast, or a wild comeback. Now spark up and let’s create some chaos.", nsfw:false, safe:true, mood:'neutral'}
-];
+  // --- Main SFW reply logic ---
+  for(let i=0; i<r.length; ++i) {
+    if(r[i][0].test(L)) return {reply:r[i][1], mood:r[i][2]};
+  }
+  return {reply:"I'm drawing a blank. Try again, or ask for inspiration or a hack!", mood:0};
+};
