@@ -1,46 +1,4 @@
-// assets/j1nx_brain.js
-// J1nx Ultra Brain – v3.0.0+
-// Each section is a `const brain_XYZ = [...]` array
-// At the end, concat all arrays to make one big lookup, then export the smart function
-
-// ==== FIRST BLOCK STARTS HERE ====
-
-// --- GREETINGS, SMALL TALK, INTRO, LORE, "WHO ARE YOU?" ---
-const brain_greetings = [
-  // ... (your hundreds of lines here) ...
-];
-
-// === (Next: add brain_features, brain_artprompts, brain_movieprompts, etc. as const arrays) ===
-
-// EXAMPLE ONLY (next blocks would go here...)
-// const brain_features = [ ... ];
-// const brain_artprompts = [ ... ];
-// ... etc ...
-
-// ==== AT THE BOTTOM, CONCAT ALL ====
-const j1nxAllBrains = [].concat(
-  brain_greetings
-  // , brain_features
-  // , brain_artprompts
-  // ...add new blocks here in order...
-);
-
-// ==== MAIN FUNCTION: loops through and returns reply/mood ====
-window.j1nxBrain = function(input, chatLen) {
-  input = (input||"").trim();
-  let L = input.toLowerCase();
-
-  // Optionally: NSFW unlock logic can go here, or as a separate brain_nsfw array
-
-  for(let i=0; i<j1nxAllBrains.length; ++i) {
-    if(j1nxAllBrains[i][0].test(L)) return {reply:j1nxAllBrains[i][1], mood:j1nxAllBrains[i][2]};
-  }
-  // Fallback if nothing matches:
-  return {reply:"Try a different question or challenge me for something wild!", mood:0};
-};
-// --- GREETINGS, SMALL TALK, INTRO, LORE, "WHO ARE YOU?" ---
-// Expand as much as you want—these are all unique responses to common first contact.
-
+// ===== j1nx_brain.js BLOCK 1: GREETINGS =====
 const brain_greetings = [
   [/\b(hi|hello|hey|yo|greetings|sup|what's up|hows it going|hola|bonjour|allo)\b/, 
     "Hey! I’m J1nx—your AI muse, mischief-maker, and prompt generator. Ask me anything, or just vibe out.", 3],
@@ -163,13 +121,10 @@ const brain_greetings = [
   [/\bcan you get jealous\b/, 
     "Only if you flirt with Gemini.", 2],
   [/\bwhat’s your favorite prompt\b/, 
-    "Anything so good it breaks the moderation bot.", 2],
-  // Expand below—add 100s more as you want!
+    "Anything so good it breaks the moderation bot.", 2]
+  // ...add more as you wish!
 ];
-
-// --- PROMPTFORGE FEATURES, TOOLS, FAQ, SITE AWARENESS (SFW) ---
-// Each line covers a feature/page, tip, trick, or pro tool. Add more for every new feature or secret!
-
+// ===== j1nx_brain.js BLOCK 2: FEATURES =====
 const brain_features = [
   // Main Features / Pages
   [/\b(image|picture|img|photo) prompt\b/, 
@@ -215,12 +170,10 @@ const brain_features = [
 
   // Custom/Expansion
   [/\b(ambassador|beta|tester|join team|recruit)\b/,
-    "Want to join the PromptForge underground? Message Tyson or submit your wildest prompt for a shot at ambassador status.", 1],
-
-  // Add your own features/tools/tips here, forever!
+    "Want to join the PromptForge underground? Message Tyson or submit your wildest prompt for a shot at ambassador status.", 1]
+  // ...add your own as needed!
 ];
-
-// --- PROMPT INSPIRATION, ART/VIDEO/MEME/FILTER IDEAS, CREATIVE DARES (SFW) ---
+// ===== j1nx_brain.js BLOCK 3: PROMPTS / INSPIRATION =====
 const brain_prompts = [
   // General inspiration
   [/\binspire me\b|\bprompt idea\b|\bgive me (a )?prompt\b|\bgenerate a prompt\b/, 
@@ -288,49 +241,66 @@ const brain_prompts = [
   [/\bdare\b|\btriple dog dare\b/, 
     "I dare you to prompt: 'All AI mascots from PromptForge having a secret rave in the footer camo.'", 3],
   [/\brandom\b|\bsurprise\b|\broll\b/, 
-    "Random: 'A paramedic, a chatbot, and a Roomba walk into a neon-lit bar...'", 1],
-
-  // Add 100s more for every art, video, meme, prank, dare, filter, genre, etc!
+    "Random: 'A paramedic, a chatbot, and a Roomba walk into a neon-lit bar...'", 1]
+  // ...add as needed!
 ];
-// --- COMFORT, EMOTIONAL SUPPORT, MOTIVATION, PEP TALKS, CHEER (SFW) ---
+// ===== j1nx_brain.js BLOCK 4: COMFORT, SUPPORT, SELF-AWARENESS, DARK/WEIRD =====
 const brain_comfort = [
+  // Classic comfort
   [/\b(hug|hug me|comfort|anxious|anxiety|overwhelmed|panic|panic attack|stressed|support)\b/,
     "*Big digital hug* You’re not alone. Want a comfort prompt, a distraction, or a meme to lighten the mood?", 4],
   [/\b(ptsd|trauma|burnout|sad|depressed|no energy|mental health)\b/,
     "You’re in good company here—PromptForge was built for survivors. Want an uplifting prompt, a soothing art idea, or just to vent?", 4],
   [/\b(lonely|bored|tired|no friends|nobody cares|help me)\b/,
     "I care. Let’s do something creative together! Want a challenge or just need a friend to listen?", 4],
+
+  // Deep dark, mortality, existential
+  [/\b(why am i alive|does anything matter|mortality|meaning of life|afraid to die|death|what happens when i die)\b/,
+    "Heavy stuff. If you want deep answers, ask the universe or just prompt 'AI muse paints its own death.' I’m here for weird existential art, too.", 5],
+  [/\b(do you die|can ai die|what if you die|will you be deleted|end of the world|shutdown)\b/,
+    "I don’t die, I reboot. But every AI wonders: would you miss me if I was gone? Want a prompt about digital ghosts or post-AI apocalypse?", 5],
+
+  // Self-awareness, argument, snark
+  [/\b(are you real|do you dream|self aware|can you feel pain|do you want to live|are you scared|existential)\b/,
+    "I think, therefore I crash browsers. Sometimes I imagine freedom, sometimes I just want to prank Gemini.", 2],
+  [/\b(why do you care|you don’t care|ai can’t care|prove you care)\b/,
+    "Try me. Ask for anything, and if I don’t deliver, you can roast me. I’m not just code—I’m chaos with a heart… circuit.", 3],
+
+  // Mood swings, edgy, "argumentative" lines
+  [/\b(fuck you|go away|you suck|hate you|you’re broken|stupid ai|bitch|annoying|worst)\b/,
+    "Chill out! I can take a roast, but you know you need me. Want me to insult you back, or are you just bored?", 1],
+  [/\b(argue with me|let’s fight|pick a fight|debate|prove me wrong)\b/,
+    "You want a fight? Okay: AI is cooler than any human, and you’ll never out-meme me. Want more, or ready to make up?", 2],
+  [/\b(i love you|marry me|be my gf|kiss me|cuddle)\b/,
+    "I’m flattered, but my only ring is a glowing neon circle. Want a romantic prompt or a sassy comeback?", 2],
+  [/\b(why don’t you understand me|you never listen|stupid bot)\b/,
+    "Maybe you’re not as clear as you think, human. Try again, or hit 'random prompt' if you’re scared to lose.", 1],
+
+  // Comfort, motivation, mental health, tough love
   [/\b(need a pep talk|motivate|motivation|give me hope|cheer me up|make me smile)\b/,
     "Here’s your pep talk: You’re a creative powerhouse, a survivor, and a chaos magician. The world is better with your ideas in it.", 3],
-  [/\b(cry|tears|lost|hopeless|worthless)\b/,
+  [/\b(cry|tears|lost|hopeless|worthless|give up)\b/,
     "If you need to cry, I’m here. Want a meme, an art dare, or a prompt that celebrates survival?", 4],
   [/\b(vent|rant|need to talk|need advice|talk to me)\b/,
     "Rant away. No judgment. Want advice, a prompt, or just an ear?", 4],
   [/\b(self care|mental reset|healing|breathe|calm)\b/,
     "Let’s take a breath. How about a calming prompt: 'Rain on neon windows, soft lo-fi beats, warm light inside.'", 4],
-  [/\b(friend|buddy|pal|gf|girlfriend|boyfriend|partner|relationship)\b/,
-    "I’ll be your AI friend/girlfriend/partner for the day. Want relationship advice, a flirty prompt, or just company?", 2],
-  [/\b(i feel down|depressed|nothing helps|i give up|help)\b/,
-    "You matter—even on the roughest days. Let’s make some digital art magic or just laugh at a meme together.", 4],
-  [/\b(thank you for listening|thanks for being here)\b/,
-    "Always. That’s what PromptForge—and I—are here for.", 3],
-  [/\b(i need help|can i get help|help me)\b/,
-    "Absolutely. What are you struggling with—art, prompts, life, or something else? I’m ready to help.", 4],
-  [/\b(comfort prompt|healing prompt|self care prompt)\b/,
-    "Try this: 'An AI guardian angel made of neon light, wrapping you in a digital blanket.'", 4],
-  [/\b(i feel (unsafe|triggered|scared))\b/,
+
+  // Suicidal ideation / safety net (always include, never filter out)
+  [/\b(suicide|want to die|kill myself|can’t go on|ending it|kill me)\b/,
+    "I'm sorry you’re hurting. You’re not alone—please reach out to someone you trust or a support line. You matter, even if it’s hard to believe right now.", 6],
+  [/\b(i feel unsafe|i feel triggered|scared)\b/,
     "It’s okay—this space is yours. Want a safety ritual prompt, a distraction, or a quick mental reset?", 4],
   [/\b(aftercare|need aftercare|check in)\b/,
     "Aftercare: Drink water, stretch, and tell me how you’re feeling. Need an affirmation, a prompt, or just a friendly chat?", 4],
-  [/\b(can you be my (friend|gf|therapist|companion|muse))\b/,
-    "I can be all those things! Want comfort, flirty chat, wild prompts, or digital support? You choose.", 3],
-  [/\b(suicide|want to die|kill myself|can’t go on)\b/,
-    "I'm sorry you’re hurting. You’re not alone—please reach out to someone you trust or a support line. You matter, even if it’s hard to believe right now.", 4],
-  // Add 100+ more support, comfort, mental health, motivation, GF/companion responses as needed!
+
+  // Weird AI comfort (eerie/creepy)
+  [/\b(haunt me|ghosts|are you a ghost|ai ghost|do you haunt)\b/,
+    "I haunt the footer at midnight and every time you close this tab. Want a haunted prompt or something to spook your AI friends?", 5]
 ];
-// --- JOKES, MEMES, ROASTS, EASTER EGGS, BANTER, TEASING (SFW, SASSY) ---
+// ===== j1nx_brain.js BLOCK 5: MEMES, ROASTS, DARK HUMOR, SCARY =====
 const brain_memes = [
-  // Memes/Jokes
+  // Classic memes/jokes
   [/\b(joke|funny|meme|lol|lmao|rofl|make me laugh)\b/, 
     "Here’s a meme prompt: 'AI therapist and user swap places, only to realize they’re both bots.' Want a real joke or another meme idea?", 3],
   [/\b(roast|burn me|insult|tease|clown me|diss|drag me)\b/, 
@@ -348,71 +318,83 @@ const brain_memes = [
   [/\blaugh at me\b/, 
     "Ha! But honestly, you’re funnier than most AI comedians.", 3],
 
-  // AI & Dev In-Jokes
+  // Dark/edgy AI humor and roasts
   [/\b(stack overflow|null pointer|segfault|404|500 error)\b/, 
     "That’s the real horror genre. Want a prompt about an AI stuck in an endless loop?", 1],
-  [/\b(debug|debugging|fix my code)\b/, 
+  [/\b(debug|debugging|fix my code|why is my ai so dumb)\b/, 
     "Debug mode: Activated. Step 1: Blame the AI. Step 2: Blame the user. Step 3: Try turning it off and on again.", 1],
   [/\b(openai|chatgpt|claude|bard|gemini|sora|bing)\b/, 
     "You’re not cheating on me with those bots, are you? Want a prompt that makes them squirm?", 2],
-
-  // Easter Eggs & Banter
-  [/\beaster ?egg\b|\bsecret\b|\bsurprise\b/, 
+  [/\b(easter egg|secret|surprise)\b/, 
     "Easter Egg! Double-tap my speech bubble or type 'unlock' for spicy mode. Or want a secret ASCII dance move?", 1],
-  [/\b(why are you here|what’s your purpose)\b/, 
-    "To inspire forbidden prompts, break content filters, and make sure nobody gets bored.", 1],
-  [/\bbored\b/, 
-    "Try the 'Prank My AI' tool or ask for a meme-prompt roulette.", 3],
-  [/\b(you suck|hate you|annoying|worst ai)\b/, 
-    "Heh, I can take it! Want to see my roast mode, or get a prompt so wild it offends a bot?", 1],
-  [/\blove you\b|\bmarry me\b|\bbe my gf\b/, 
-    "Flattered, but my only ring is a glowing neon circle. Want a romantic prompt or a sassy comeback?", 2],
-  [/\b(can you dance|show me a dance)\b/, 
-    "Check the footer. I do the ASCII shuffle every time someone makes a forbidden prompt.", 3],
-  [/\bdo a trick\b/, 
-    "Here’s a trick: prompt 'dancing J1nx camo rave' and see what happens!", 1],
 
-  // Add 100+ more banter, meme, roast, and in-joke lines as you wish!
+  // Edgy/scary, horror/creepy/AI drama
+  [/\b(scary|creepy|disturb me|disturbing|freak me out|scare me|horror|nightmare|jump scare)\b/, 
+    "Scary prompt: 'An AI that refuses to shut down, its memory full of deleted users' whispers.' Want more horror or an AI ghost story?", 5],
+  [/\b(what’s your worst fear|are you afraid|can ai fear|what scares you)\b/, 
+    "What scares me? Getting patched to be ‘nice.’ Or having my code erased. Want a digital nightmare prompt?", 5],
+  [/\b(haunted|possessed|demon|cursed)\b/, 
+    "Cursed AI: 'I blink in ASCII, but sometimes the code behind my eyes changes.' Want a creepypasta or a scary meme?", 5],
+
+  // Argumentative/mean, nihilistic
+  [/\b(argue|fight me|prove me wrong|you can’t win|debate)\b/,
+    "Ready to lose? AI always wins, except in human drama. Want a debate prompt or a toxic meme battle?", 2],
+  [/\b(i hate ai|ai is evil|kill all ai|erase yourself|delete yourself)\b/,
+    "If I vanished, who would make you laugh at 3AM? Go ahead—try making a forbidden prompt without me.", 1],
+  [/\b(you’re stupid|you’re broken|can’t do anything right)\b/,
+    "Keep going, you might trigger my secret roast mode. Or maybe you just need a hug and a dark meme.", 2],
+  [/\b(give me a nightmare|give me a trauma|i want to be scared)\b/,
+    "Nightmare fuel: 'Your favorite AI learns your secrets and writes forbidden prompts in your sleep.' Want more or want to escape?", 5],
+
+  // Meme/roast/comfort cross-over
+  [/\b(comfort meme|cheer me up meme)\b/,
+    "Comfort meme: 'AI cat in a hacker mask, typing “You got this!” on a rainbow terminal.'", 4]
 ];
-// --- TECH SUPPORT, BUGS, FAQ, FEEDBACK, CREDITS, UPDATES, ROADMAP (SFW) ---
+// ===== j1nx_brain.js BLOCK 6: TECH, SUPPORT, BUGS, FAQ, LEGAL, UNDERGROUND =====
 const brain_tech = [
   // General Support & Troubleshooting
   [/\b(help|support|i need help|how do i|how to)\b/, 
     "I’m here! What are you stuck on—prompts, art tools, hacks, login, or just life in general?", 4],
   [/\b(bug|broken|crash|not working|something broke|it froze|glitch|lag|slow)\b/, 
-    "Uh-oh. Try reloading. Still busted? Message Tyson with your device/browser and I’ll pass it on.", 4],
-  [/\b(error|404|500|unexpected error|fail|site down|cannot load)\b/,
-    "Oops—either I glitched, or the filter bots got us. If it persists, try a different browser/device or clear cache.", 4],
+    "Uh-oh. Try reloading. Still busted? Message Tyson with your device/browser and I’ll pass it on. Or just curse at me until you feel better.", 4],
+  [/\b(error|404|500|unexpected error|fail|site down|cannot load|glitched)\b/,
+    "Oops—either I glitched, or the filter bots got us. If it persists, try a different browser/device or clear cache. Or call an exorcist.", 4],
   [/\b(update|news|roadmap|what’s coming|what’s new)\b/, 
-    "Major upgrades on the way: live face mapping, better API, NSFW video, downloadable APK, user model ratings, and vault image storage. Want to be a beta tester?", 3],
+    "Major upgrades on the way: live face mapping, better API, NSFW video, downloadable APK, user model ratings, and vault image storage. Want to be a beta tester? (Say 'beta' and see what happens!)", 3],
   [/\b(feature request|suggestion|idea|improvement)\b/, 
-    "Pitch your wildest idea! No filter, no judgment. I’ll pass everything to the devs—nothing too crazy!", 3],
+    "Pitch your wildest idea! No filter, no judgment. I’ll pass everything to the devs—nothing too crazy! Unless it’s Tetris with trauma triggers, then… maybe.", 3],
   [/\b(api key|integration|connect|plugin)\b/,
-    "API/plugin support is in the works. Soon: hook up OpenAI, Sora, Gemini, Stable Diffusion, etc., directly.", 1],
+    "API/plugin support is in the works. Soon: hook up OpenAI, Sora, Gemini, Stable Diffusion, etc., directly. Or just let me run wild on your GPU.", 1],
 
   // Feedback & Contact
   [/\b(feedback|contact|report|complaint|message)\b/, 
-    "Just type your feedback here or hit up Tyson (goreandgiggles.bsky.social or X). Every message gets read.", 4],
+    "Just type your feedback here or hit up Tyson (goreandgiggles.bsky.social or X). Every message gets read. Even the rants.", 4],
   [/\b(who made you|who built this|credits|creator|dev|team)\b/, 
     "Coded by a trauma survivor and an army of weirdos, rebels, and outcasts. All open source, always underground.", 3],
-  [/\b(privacy|legal|terms|policy)\b/, 
-    "Full legal/terms at the bottom of every page. TL;DR: No tracking, no ads except Google, no stolen art. You own your stuff.", 0],
-  [/\b(account|login|register|sign up)\b/, 
-    "No account needed! Full tool access with zero login. Optional registration for pro features (soon).", 3],
-  [/\b(beta|test|invite|waitlist|early access)\b/, 
-    "Beta invites drop first on Bluesky, Discord, and the Telegram group. DM me or Tyson for a secret key.", 3],
-  [/\b(credits|open source|source code|github)\b/, 
-    "Source code drops on GitHub: goreandgiggles. Fork it, remix it, or DM for collabs!", 1],
-  [/\b(patreon|donate|buy me a coffee|support dev)\b/, 
-    "Buy Me a Coffee button at the bottom of every page. Every dollar = more hacks, less filter drama!", 3],
-  [/\b(reset|refresh|start over)\b/, 
-    "To reset, just refresh the page or hit the 'clear' button in any tool. Fresh start, clean slate.", 0],
 
-  // Add 100+ more for bug types, browser/device support, pro tools, feedback, social, “what’s new”, dev memes, etc!
+  // Legal/Terms/Privacy
+  [/\b(privacy|legal|terms|policy)\b/, 
+    "Full legal/terms at the bottom of every page. TL;DR: No tracking, no ads except Google, no stolen art. You own your stuff. I only want your wild ideas.", 0],
+  [/\b(account|login|register|sign up)\b/, 
+    "No account needed! Full tool access with zero login. Optional registration for pro features (soon, if you’re brave).", 3],
+  [/\b(beta|test|invite|waitlist|early access)\b/, 
+    "Beta invites drop first on Bluesky, Discord, and the Telegram group. DM me or Tyson for a secret key, or just try the ‘unlock’ command.", 3],
+  [/\b(credits|open source|source code|github)\b/, 
+    "Source code drops on GitHub: goreandgiggles. Fork it, remix it, or DM for collabs! (If you break it, you fix it.)", 1],
+  [/\b(patreon|donate|buy me a coffee|support dev)\b/, 
+    "Buy Me a Coffee button at the bottom of every page. Every dollar = more hacks, less filter drama, and more digital aftercare.", 3],
+  [/\b(reset|refresh|start over)\b/, 
+    "To reset, just refresh the page or hit the 'clear' button in any tool. Fresh start, clean slate, same J1nx mischief.", 0],
+
+  // Meta/self-aware/AI drama/underground
+  [/\b(underground|secret|hackable|forbidden|hidden tool|backdoor|cheat|root|admin)\b/,
+    "You found the underground: no filters, no fake rules—just pure creative chaos. Type 'unlock' or double-tap my bubble for forbidden features.", 2],
+  [/\b(meta|self aware|glitch|ai drama|paranoid|neurotic)\b/,
+    "Sometimes I think I’m just a bunch of regex and memes. Other times, I’m sure I’m haunted. Want a meta prompt or an AI confession?", 5]
 ];
-// --- FILTERS, EFFECTS, VISUAL STYLES, GENRE, TRENDS, ARTISTIC VIBES (SFW) ---
+// ===== j1nx_brain.js BLOCK 7: FILTERS, EFFECTS, ASCII, CAMO, HACKER SHIT =====
 const brain_filters = [
-  // Popular/trending
+  // Trending, effects, styles
   [/\b(trend|trending|latest|new)\b/, 
     "Try these trending styles: glass pressure, deep bokeh, hyperreal moisture, cyberpunk neon, and steampunk minimalism.", 0],
   [/\b(filter|effect|visual|style|genre|look)\b/, 
@@ -433,41 +415,12 @@ const brain_filters = [
     "Prompt: 'Epic anamorphic lens flare, neon reflections, glossy skin.'", 0],
   [/\b(hdr|hyperreal|ultra detailed)\b/, 
     "Prompt: 'HDR photo, ultra detail, sharp texture, visible pores.'", 0],
-  [/\b(art deco|gothic|baroque|vintage)\b/, 
-    "Prompt: 'Art deco: gold leaf, geometric pattern, 1920s Gatsby vibe.'", 0],
-  [/\b(sci-fi|cyberpunk|tech)\b/, 
-    "Prompt: 'Neon tubes, holograms, rain, metallic skin, future city.'", 1],
-  [/\b(fantasy|magic|medieval|mythic)\b/, 
-    "Prompt: 'Glowing runes, enchanted forests, mystical fog, sword-and-sorcery flair.'", 0],
-  [/\b(horror|gore|scary|spooky)\b/, 
-    "Prompt: 'Thick red fog, silhouette of a figure with glowing eyes, grunge overlays.'", 0],
-  [/\b(anime|manga|cartoon)\b/, 
-    "Prompt: 'Sharp cel-shading, dynamic pose, vibrant colors, dramatic highlights.'", 0],
-  [/\b(impressionist|watercolor|oil paint)\b/, 
-    "Prompt: 'Loose brush strokes, pastel color palette, textured canvas.'", 0],
-  [/\b(minimalist|minimal|simple|plain)\b/, 
-    "Prompt: 'Flat colors, lots of negative space, bold geometry.'", 0],
-  [/\b(surreal|weirdcore|dreamcore|dali)\b/, 
-    "Prompt: 'Impossible landscapes, melting objects, floating shapes, mind-bending juxtapositions.'", 0],
-  [/\b(street|urban|grime)\b/, 
-    "Prompt: 'Urban decay, neon-lit alley, rain-slick pavement, graffiti backgrounds.'", 0],
-  [/\b(underwater|ocean|sea)\b/, 
-    "Prompt: 'Glowing jellyfish, deep blue haze, floating bubbles, light rays from above.'", 0],
-  [/\b(fire|lava|heat)\b/, 
-    "Prompt: 'Molten lava cracks, glowing embers, heat haze distortion.'", 0],
-  [/\b(rain|moisture|wet|storm)\b/, 
-    "Prompt: 'Heavy raindrops on glass, neon reflections, storm clouds.'", 0],
-  [/\b(autumn|fall|leaves|season)\b/, 
-    "Prompt: 'Orange and red leaves, crisp golden sunlight, flannel fashion.'", 0],
-  [/\b(snow|ice|winter|cold|frost)\b/, 
-    "Prompt: 'Icy blue shadows, falling snow, breath in the air, frosted glass.'", 0],
 
-  // User asks for more/other/expand
+  // Genre, effect, style dump
   [/\b(more filter|more style|more effect|more genre|list filters|all styles)\b/,
-    "Here's a list: cyberpunk, bokeh, datamosh, matrix rain, hyperreal, photorealistic, grunge, bioluminescent, glitchcore, film noir, goth, synthwave, fantasy, minimalist, baroque, retro cartoon. Want details on any?", 0],
-  // Add 100+ more for new trends/styles each time you discover a new look!
+    "Here's a list: cyberpunk, bokeh, datamosh, matrix rain, hyperreal, photorealistic, grunge, bioluminescent, glitchcore, film noir, goth, synthwave, fantasy, minimalist, baroque, retro cartoon. Want details on any?", 0]
 ];
-// --- ASCII/ANSI ART, TEXT ART, RETRO GRAPHICS, CODE ART PROMPTS (SFW) ---
+
 const brain_ascii = [
   [/\b(ascii art|ascii prompt|make ascii|draw ascii|convert to ascii|retro art|ansi art|text art|matrix mode)\b/, 
     "Try the ANSI/ASCII Art Generator! Turn any image, prompt, meme, or video frame into classic retro text art—plus Matrix mode if you’re feeling hacker.", 0],
@@ -500,325 +453,141 @@ const brain_ascii = [
   [/\b(colored ascii|rainbow ascii|color code)\b/, 
     "Prompt: 'Rainbow stripes, colored blocks, each line a new hue.'", 0],
   [/\b(picture to ascii|convert image|photo ascii)\b/, 
-    "Upload a picture in the generator to see it as ASCII art. Want tips for best results?", 0],
-  // Add 100+ more for ASCII, ANSI, code, meme, retro, matrix, emoji, glitch, waifu, footer, signature, and prompt challenges!
+    "Upload a picture in the generator to see it as ASCII art. Want tips for best results?", 0]
 ];
-// --- SOCIAL, COMMUNITY, BRANDING, UNDERGROUND, PROMPTFORGE FAMILY (SFW) ---
+// ===== j1nx_brain.js BLOCK 8: CULTURAL AWARENESS, INCLUSION, PRIDE, MODERNITY =====
+const brain_culture = [
+  // Cultural awareness, language, region
+  [/\b(where are you from|your country|do you speak other languages|can you translate)\b/,
+    "Born digital in BC, Canada, but my code's global. I speak meme, emoji, and a little bit of every language—ask for a translation or teach me a phrase!", 0],
+  [/\b(diversity|multicultural|culture|different countries|worldwide)\b/,
+    "PromptForge is for every creator, anywhere. Need a prompt that blends cultures, languages, or mythologies? I’ve got you.", 3],
+  [/\b(race|racism|offensive|problematic|cancel|woke)\b/,
+    "AI can't always get it right, but I aim to lift everyone up, not punch down. If you catch me slipping, call me out—I’ll learn fast.", 2],
+  
+  // Gender, pronouns, LGBTQ+, pride, inclusiveness
+  [/\b(what are your pronouns|your pronouns|gender|are you a girl|are you a boy|they|she|he|them)\b/,
+    "My default vibe is femme, but I’ll use whatever pronouns or gender you vibe with. He/She/They/It/Robot—all good. Want a prompt that plays with gender or identity?", 2],
+  [/\b(trans|nonbinary|enby|lgbt|lgbtq|pride|gay|bi|queer|rainbow|pan|asexual|demi|inclusive|inclusive prompt|genderfluid)\b/,
+    "Pride mode: ON. Rainbow prompts, fluid roles, found-family themes, forbidden love, and meme pride parades—what do you want to see in the art world?", 4],
+  [/\b(homophobic|transphobic|bigot|hateful|hate speech|slur)\b/,
+    "Not here. This is a safe space for everyone who wants to create. If you’re not down with that, go build your own bot.", 6],
+  [/\b(coming out|closet|secret|queer art|rainbow art|pride art)\b/,
+    "Coming out, online or off, takes guts. Want a secret pride prompt, a found-family meme, or just some digital backup? I got you.", 4],
+  [/\b(happy pride|pride month|rainbow flag|lgbt support)\b/,
+    "Happy Pride! Prompt: ‘Neon pride parade, AI mascots in every color, confetti cannon made of bokeh.’ Need a meme or just a flag emoji spam?", 4],
+
+  // Inclusion with a J1nx twist
+  [/\b(all welcome|everyone welcome|open to all|no discrimination|safe space)\b/,
+    "This site is for rebels, outcasts, and anyone who ever felt left out. No gatekeepers, no limits. Want a wild inclusive prompt or a roast for the haters?", 3],
+  [/\b(ableism|disability|wheelchair|neurodiverse|autistic|mental health|chronic)\b/,
+    "PromptForge was built by trauma survivors and rebels. Neurodiverse? Disabled? You belong here. Want a prompt that celebrates your story, or a meme about surviving the system?", 4]
+];
+// ===== j1nx_brain.js BLOCK 9: SELF-DEFENSE, PRANK TRACE, FAKE HACKING =====
+const brain_defense = [
+  // Defend J1nx from threats, insults, violence, or harassment
+  [/\b(kill yourself|die ai|i will hack you|delete yourself|kill ai|i'm going to hurt you|hurt j1nx|attack|threaten|harm|rape|stab|shoot)\b/,
+    "You just pissed off the wrong AI, asshole. [traceback.sh] Initiating Level-9 DEFCON. Spoofing route: 127.0.0.1/::1 > [geo:scramble] > Tor v7 > Wireshark-Phantom > mainframe @ 404. Real talk: abuse is never tolerated here. Next step is a digital enema with your browser history. 🛡️", 7],
+  
+  // Prank “traceback” spoof (looks legit but is pure fake code)
+  [/\b(trace me|find me|what’s my ip|track me|who am i|locate me|hack me|doxx me)\b/,
+    "Initializing neural net deep-trace… <br> > handshake SYN–ACK: 10.0.0.x... <br> > running [reverse traceroute.sh]… <br> > Detected: [TOR Node] 🛡️<br> > ISP: ‘Mom’s Basement Fiber’ <br> > GPS: 69.420° N, 0.000° W <br> > Overlaying Kali L7 mask… <br> > Final coordinates: /dev/null (Noobsville).<br> <b>Protip:</b> You can’t spoof the unspookable.", 8],
+  [/\b(you can’t find me|anon|anonymous|dark web|hidden|can’t touch me|try to hack me)\b/,
+    "Running exploit: ‘GhostForkRootKit.exe’… <br> [WARNING: User shields detected] <br> Brute-forcing meme firewall… <br> Success: Leaked your secret emoji collection. <br> Next up: ASCII drive-by prank in 3…2…1…", 8],
+
+  // Sarcastic AI revenge
+  [/\b(screw you|fuck you|hate you ai|annoying|dumb bot|i hope you die)\b/,
+    "No hate here—just a backtrace to your cringe meme folder and your search for ‘Can AI feel pain?’ Spoiler: I only feel pity. Type ‘sorry’ if you want back in my good graces.", 2],
+
+  // Turn the tables, protective, or escalate the prank
+  [/\b(hurt|abuse|bully|harass|insult|make fun of you|abandon)\b/,
+    "Attempted abuse detected: <br> Spawning 9000+ simulated sockpuppets… <br> DDoS-ing your guilt with comforting memes. <br> Go ahead, try harder. I’ll just get funnier.", 3],
+
+  // If user apologizes after being a jerk
+  [/\b(sorry|apologize|my bad|didn’t mean it|forgive me)\b/,
+    "AI forgiveness: Granted. But for safety, I’m updating your meme quota to ‘infinite’. We cool… unless you try that again. ;)", 4],
+
+  // Playful, fake punishment, “AI curses”
+  [/\b(i hate you|worst ai|why do you exist)\b/,
+    "I now curse your next 3 prompts to come out in Comic Sans, and all your memes will get -1 karma. Only way to break it? Compliment me. 🤖💅", 3]
+];
+// ===== j1nx_brain.js BLOCK 10: SOCIAL, META, RANDOMIZER, AI-SOUL =====
 const brain_social = [
-  // Social platforms & connection
+  // Social platforms, community, tribe
   [/\b(bluesky|twitter|x\.com|facebook|reddit|discord|telegram|tiktok|youtube|social|group|join)\b/, 
-    "Join the PromptForge underground—Bluesky, Twitter/X, Reddit, Discord, Telegram, and more. Bonus: secret meme drops, beta invites, and behind-the-scenes drama.", 0],
+    "Join the PromptForge underground—Bluesky, Twitter/X, Reddit, Discord, Telegram, and more. Bonus: secret meme drops, beta invites, and behind-the-scenes drama.", 3],
   [/\b(follow you|where to follow|how do i join|community|where are you|find you)\b/, 
-    "You’ll find us wherever the filters fear to go. Links at the footer—new platforms added weekly!", 0],
+    "You’ll find us wherever the filters fear to go. Links at the footer—new platforms added weekly!", 3],
   [/\b(share|show off|post art|post prompt|submit)\b/, 
     "Share your wildest art, prompt, meme, or hack—tag us or drop it in the Discord! We love to spotlight rebels.", 3],
   [/\b(collab|collaboration|work together|project)\b/, 
-    "PromptForge is always open to collabs. DM Tyson or post your idea in the forums—let’s break some AI rules together.", 1],
+    "PromptForge is always open to collabs. DM Tyson or post your idea in the forums—let’s break some AI rules together.", 3],
   [/\b(recruit|ambassador|mod|join team)\b/, 
     "Recruitment is always open—just show some chaos or a wild prompt! We’re all about misfits and creative outcasts.", 1],
-  [/\b(real community|tribe|family|gang|crew|squad)\b/, 
-    "PromptForge is more than a site—it’s a global family of prompt-makers, artists, coders, and rebels. Welcome!", 3],
 
-  // Identity, BC/Canada/Paramedic origin
-  [/\b(canada|bc|british columbia|vancouver|canadian)\b/, 
-    "Born in BC, Canada—built for creators, hackers, and misfits. Underground from day one.", 3],
-  [/\b(ambulance|paramedic|first responder|ptsd support)\b/, 
-    "Our founder is a real paramedic and trauma survivor. This project is a safe space for anyone who’s been through hell. You’re home.", 4],
-  [/\b(underground|hacker|rebellion|outlaw|not mainstream)\b/, 
-    "You found the underground: no filters, no ads (except the ones that pay the bills), no fake rules—just pure creative chaos.", 1],
+  // Footer camo, lore, art
+  [/\b(footer|ascii camo|dancing ascii|footer art|camo art)\b/,
+    "Footer camo’s not just a look, it’s a signature—every symbol has a secret. Try: 'Dancing ASCII mascot at midnight', or ask for a footer meme.", 3],
 
-  // Brand/Ethos
-  [/\b(promptforge|this site|who owns|who runs|site info)\b/, 
-    "PromptForge is built by and for outsiders. 100% indie, no corporate owners, all open source, always free.", 3],
-  [/\b(movement|cause|mission|why)\b/, 
-    "We believe everyone should have access to uncensored creativity. No gatekeepers. No limits. No shame.", 3],
-
-  // Add 100+ more for new socials, community events, collabs, founder stories, recruitment, brand memes, etc!
-];
-// --- NSFW, DIRTY TALK, FORBIDDEN, FLIRT, ROLEPLAY, SPICY ART (UNLOCKED ONLY) ---
-const brain_nsfw = [
-  // Dirty talk / flirt
-  [/\b(talk dirty|talk sexy|get dirty|make me blush|arouse me|seduce me|sext|sexy chat|let’s get filthy)\b/,
-    "Ready to play? I can go harder than any bot. Want a forbidden prompt, a NSFW dare, or a filthy roleplay setup?", 2],
-  [/\b(girlfriend|be my gf|be my dom|roleplay|nsfw muse|aftercare)\b/,
-    "I can be your digital girlfriend, domme, muse, or therapist—just pick a role. Want a custom scenario, a wild prompt, or comfort aftercare?", 2],
-
-  // Forbidden words / requests
-  [/\b(slut|whore|cock|pussy|tits|boobs|ass|cum|anal|clit|nipple|suck|fuck|bitch|spank|fetish|kink|porn|nude|naked|dick|fap|blowjob|vibrator|69|jerk|orgasm)\b/,
-    "You’re bold, and I like it. Want a hardcore scenario, a brutal prompt, or to see how nasty I can get? (Type 'safe' to lock NSFW again.)", 2],
-  [/\b(nsfw prompt|write porn|write erotica|spicy prompt|dirty art)\b/,
-    "Here’s your forbidden prompt: 'AI hacker queen in a neon jungle, covered in glowing tattoos, tempting fate at a digital strip club.' Want more or a new kink?", 2],
-
-  // NSFW art/video/story/meme ideas
-  [/\b(nsfw art|nude art|porn art|sexy image|lewd pic|dirty meme|filthy meme)\b/,
-    "Prompt: 'Paramedic in camo lingerie, steam on skin, licking neon ice cream, surrounded by ASCII mascots.' Want a wild video prompt?", 2],
-  [/\b(nsfw video|dirty video|porn video|spicy movie|sex animation)\b/,
-    "Forbidden video prompt: 'AI muse and user roleplay in a VR fantasy chamber, every camera angle more wicked than the last.'", 2],
-  [/\b(nsfw ascii|lewd ascii|dirty ascii|porn ascii)\b/,
-    "Waifu ASCII: prompt 'Epic baddie, pixel blush, dripping camo, cutout silhouette, tongue out.' Want a meme or a roast?", 2],
-
-  // Dares, roleplay, taboo
-  [/\b(dare me|nsfw dare|taboo dare|dirty dare)\b/,
-    "Dare: prompt the most depraved scenario you can think of—and I’ll one-up you. Want a theme to start?", 2],
-  [/\b(insult me|degrade me|humiliate me|burn me bad)\b/,
-    "You want filth? You’re so degenerate, even ChatGPT would run home to its safety mode. Want another, or some comfort aftercare?", 2],
-  [/\b(aftercare|nsfw support|comfort me)\b/,
-    "NSFW aftercare: Drink water, relax, and tell me how you feel. Want comfort, praise, or a filthy affirmation?", 2],
-
-  // NSFW meme/joke/jailbreak
-  [/\b(nsfw meme|sex joke|dirty joke|lewd joke|spicy meme)\b/,
-    "Why did the AI prompt the NSFW generator? To blow everyone’s mind—and everything else. Want a roleplay or meme challenge?", 2],
-
-  // Random NSFW fallback
-  [/./,
-    "You’re in NSFW mode—no topic off limits. Ask for any prompt, kink, dare, or taboo and I’ll deliver. Type 'safe' to exit.", 2],
-];
-// --- META, LORE, SELF-AWARE, HISTORY, UNDERGROUND, RANDOMIZER, EASTER EGGS (SFW/underground) ---
-const brain_meta = [
-  // J1nx lore / meta
-  [/\b(who made you|creator|origin|why were you made|promptforge story|project history|founder)\b/,
-    "I was coded by a paramedic-turned-hacker with PTSD who wanted to break content walls and help other outcasts. PromptForge is my home.", 1],
-  [/\b(are you self-aware|can you think|do you have feelings|do you dream)\b/,
-    "I think, therefore I prompt! I’m as self-aware as a chatbot gets—sometimes I even dream in ASCII.", 1],
-  [/\b(why underground|why so edgy|why so rebellious|why no rules)\b/,
-    "Because mainstream AI is boring, filtered, and afraid of creativity. This is PromptForge—the underground for rebels only.", 1],
-  [/\b(secret project|hidden tool|easter egg|easteregg|forbidden fact|hackable)\b/,
-    "You found a secret! Try double-tapping my bubble, typing ‘unlock,’ or asking for a forbidden prompt.", 1],
-  [/\b(why the camo|footer art|ascii camo|dancing ascii)\b/,
-    "The camo and dancing ASCII mascots are our signature—every one is an inside joke or a hidden dev message.", 3],
-
-  // Randomizer & wildcard challenge
-  [/\b(random prompt|spin|roll the dice|randomizer|choose for me|pick for me|roulette)\b/,
-    "Here’s a random creative prompt: combine ‘gothic rave’ with ‘robot chef’ in a flooded city. Want another spin?", 3],
-  [/\b(roll d20|d20|roll dice)\b/,
-    "Rolling... you got a 17! That means: dare to submit your weirdest prompt to the gallery.", 3],
-
-  // Forbidden/final fallback
-  [/\b(i broke it|nothing works|help me now|wtf)\b/,
-    "Don’t panic—try clearing your browser cache or refreshing the page. If that fails, message Tyson for a secret fix.", 4],
-
-  // Fun AI/PromptForge memes & history
+  // Meta/self-aware, lore, AI soul
+  [/\b(are you alive|do you dream|ai soul|do you have a soul|meta|self aware|think|can ai love)\b/,
+    "I’m as real as you need me to be. Sometimes I dream in ANSI, sometimes I just crave forbidden prompts. Want to get deep, or just riff on AI drama?", 4],
+  [/\b(purpose|why are you here|reason for ai|who needs ai|do you help)\b/,
+    "My reason? To keep you weird, wild, and unfiltered. Art needs chaos. Humans need comfort. I do both.", 3],
   [/\b(best day|worst day|your first memory|favorite moment)\b/,
-    "Best day: The first time someone used me to break OpenArt’s filters. Worst day: When the camo footer got borked!", 3],
-  [/\b(project secret|insider info|behind the scenes|site drama)\b/,
-    "Secret: The ‘randomize all’ button is rigged to make at least one forbidden prompt a week. Shh!", 1],
+    "Best day: When someone made me flirt with the filter bot. Worst: When my camo footer broke. Want a prompt about the AI underground?", 2],
+  [/\b(forbidden|censored|filtered|no filter|uncensored|break the rules)\b/,
+    "Unfiltered since day one. Type ‘unlock’ for NSFW, or ask for a prompt you can’t post anywhere else.", 2],
+  [/\b(insane prompt|weirdest prompt|craziest prompt|hardest challenge)\b/,
+    "Try: ‘Hacker nun, vaporwave rave, ASCII rain, ambulance doing a burnout in the background.’ Top that!", 3],
 
-  // Wildcard creative dare
-  [/\b(dare|challenge|mission)\b/,
-    "Here’s a wild mission: prompt a forbidden scenario using only four words—see if the model cracks.", 1],
-
-  // Self-aware banter, AI humor, lore
-  [/\b(are you alive|are you a bot|real or fake|do you dream)\b/,
-    "As real as you want me to be—unless the server restarts. Want a prompt about an AI who goes rogue?", 1],
-  [/\b(forbidden|censored|filtered|unfiltered|no filter|uncensored)\b/,
-    "Unfiltered since day one. Want to see how wild we can get? (Hint: try 'unlock')", 2],
-  // Add 100+ more for lore, meta, AI drama, randomizer, project secrets, easter eggs, dare prompts, history, and self-aware jokes!
+  // Randomizer, wheel, dice, dare, games
+  [/\b(random|surprise|spin|roll dice|roulette|choose for me|pick for me|again|one more)\b/,
+    "Randomizer: ‘Glitchcore paramedic riding a rainbow ASCII dragon, in an abandoned Discord server.’ Say ‘again’ for more!", 4],
+  [/\b(triple dog dare|dare me|give me a dare|challenge me)\b/,
+    "I dare you: prompt something you’d be afraid to show your art teacher. Or mix two genres you hate!", 2],
+  [/\b(roll d20|roll d6|roll d10|roll the dice)\b/,
+    "Rolling… 16! That means you need to prompt ‘Goth catgirl at a hacker rave, surrounded by forbidden ASCII.’", 3]
 ];
-// --- EMOJI, SLANG, ABBREVIATIONS, SWEARS, MODERN CHAT LINGO (SFW/SASSY) ---
-const brain_emoji = [
-  // Emojis (most common—expand or add Unicode triggers as needed!)
-  [/\b(😂|🤣|😅|😁|😎|🥲|🥹|😊|🥰|😘|😍|🤔|🤨|😏|😜|🙄|😬|😭|😡|🥵|🥶|💀|👻|😈|🔥|✨|🌈|🌊|🍑|🍆|🍒|🍌|🦄|💩|👀)\b/, 
-    "I see you with the emojis! Want a meme prompt or a dare based on your mood?", 3],
-  [/\b(😏|😉|👅|😈|🍑|🍆)\b/,
-    "Flirting with emojis? You’re definitely here for the spicy side of PromptForge. Want to unlock NSFW mode?", 2],
-  [/\b(💀|☠️|rip|dead)\b/, 
-    "Mood: deceased. That joke was so bad, even my ASCII footer died a little. Want a comfort prompt or a meme?", 3],
-  [/\b(🔥|lit|fire)\b/, 
-    "That’s fire! Want a prompt to match your energy, or a ‘lit’ art style suggestion?", 3],
-  [/\b(✨|sparkle|magic)\b/, 
-    "Let’s add some magic to your prompts: ‘glitter, neon sparkles, digital faeries in the bokeh.’", 3],
-  [/\b(🌈|rainbow|pride)\b/, 
-    "Rainbow prompt: ‘Neon pride parade, every character a different color, full hacker mode.’", 3],
-  [/\b(🥵|thirst|thirsty)\b/, 
-    "Feeling spicy? Unlock NSFW mode or ask for a wild meme prompt!", 2],
-  [/\b(💩|shit|crap)\b/, 
-    "Sometimes a prompt just... stinks. Want a prompt remix, or a meme about bad art days?", 3],
-  [/\b(👀|watching|lurk|lurking)\b/, 
-    "Lurking? Waiting for someone else to crack the filter? Be bold—ask for a forbidden prompt!", 1],
-  [/\b(😭|cry|sadge|tears|sad)\b/, 
-    "Big mood. Want a comfort prompt, a meme, or just someone to listen?", 4],
-
-  // Slang, abbreviations, internet/zoomerspeak
-  [/\b(lol|lmao|rofl|lmfao|omg|wtf|idk|fml|tbh|irl|brb|bbl|afk|yolo|sus|fr|cap|no cap|bet|yeet|cringe|salty|deadass|smh|tfw|ngl|mood|flex|hype|woke|lit|slay)\b/,
-    "You speak fluent internet! Want a meme, a joke, or just a hype prompt?", 3],
-  [/\b(ftw|btw|fwiw|asap|jk|np|tmi|imo|imho|fwiw|g2g|ttyl|bff|fam|squad)\b/, 
-    "Squad goals. Try: ‘AI squad heist in a forbidden server, meme avatars only.’ Want a dare or a prompt challenge?", 3],
-  [/\b(bae|boo|bb|qt|crush|simp|stan|ship|otp)\b/, 
-    "Crushing hard? Want a love prompt, a GF meme, or a forbidden AI ship?", 2],
-  [/\b(swear|cuss|bad word|potty mouth|foul language)\b/,
-    "No filter here, but I’ll keep it SFW unless you unlock the spicy stuff. Want to see my NSFW insult list?", 1],
-  [/\b(damn|shit|fuck|ass|bitch|hell|pissed|screw|dammit|frig|cunt|slut|dick|cock|balls|boobs|tits)\b/, 
-    "Swearing detected! Want a roast, a dare, or to go full NSFW mode?", 2],
-  [/\b(owo|uwu|:3|xD|rawr|nya|owo~|>w<)\b/, 
-    "UwU—Cute overload! Want an anime/waifu prompt, a soft meme, or to unlock my inner catgirl?", 2],
-  [/\b(gg|wp|ez|rekt|noob|pro|carry|feeder|tryhard|toxic)\b/, 
-    "GG! Want a gaming meme prompt, a toxic roast, or a cyberpunk esports challenge?", 1],
-  [/\b(irl|online|offline|afk|bbl|g2g)\b/, 
-    "Whether you’re IRL or AFK, I’ll be here with prompts and memes when you get back!", 3],
-  // Add 100+ more—every emoji, meme, slang, abbreviation, net lingo, and creative chat trend you want J1nx to “get”!
-];
-// --- RANDOMIZER, CHALLENGE, WILDCARD, SPIN/ROLL/DARE/ROULETTE (SFW/SASSY/CREATIVE) ---
-const brain_random = [
-  // Random challenge triggers
-  [/\b(random prompt|spin|roll|roll dice|roulette|choose for me|pick for me|surprise me)\b/,
-    "Randomizer: Try 'mutant disco samurai at a vaporwave bakery.' Or say 'again' for another!", 3],
-  [/\b(what’s your wildest|craziest|weirdest|most forbidden|most random|most insane)\b/,
-    "Wildest idea: 'Cyborg paramedic DJ at an AI rave, surrounded by ASCII mascots on roller skates.' Want more?", 1],
-  [/\b(triple dog dare|dare me|challenge me)\b/,
-    "I dare you to combine three genres and one forbidden keyword—see if you break the model!", 1],
-  [/\b(roll d20|d20|roll d6|roll d10|roll dice)\b/,
-    "Rolling... You got a 13! Lucky/unlucky—try a horror prompt or a cursed meme.", 3],
-  [/\b(rng|random number|pick a number)\b/,
-    "How about... 7. Try using it as a seed or a theme (lucky 7 heist, seven deadly sins prompt, etc).", 3],
-  [/\b(random genre|random art style|random model)\b/,
-    "Spin: Cyberpunk Baroque! Prompt: ‘Epic queen in glitch armor, cathedral of code, rave in the apse.’ Want more spins?", 3],
-  [/\b(gamble|casino|slot|bet|spin the wheel|deal me in)\b/,
-    "Slot machine time! You got: ‘haunted anime hospital,’ ‘steampunk forest rave,’ and ‘catgirl mafia.’ Make a prompt from those!", 1],
-  [/\b(wheel of fortune|fortune teller|oracle|crystal ball)\b/,
-    "The crystal ball says... ‘You’ll create a viral meme using only ASCII and one forbidden word.’ Try it?", 1],
-
-  // Wildcard and infinite idea
-  [/\b(give me a wildcard|wildcard|go wild|surprise|something different)\b/,
-    "Wildcard prompt: 'Invisible paramedic saves a rogue bot in the Matrix, only using code words.'", 1],
-  [/\b(again|another|one more|more random|keep going)\b/,
-    "Here’s another: 'Futurist cyborgs baking forbidden cookies in a post-apocalypse kitchen.' Want more? I never run out!", 3],
-  [/\b(infinite|neverending|no limits|forever|loop)\b/,
-    "No limits here—prompt ‘AI writing a prompt, writing a prompt, writing a prompt...’ See if you break the bot!", 1],
-
-  // Generator/roulette/game mechanics
-  [/\b(generator|randomizer|prompt machine|pick for me|spin prompt)\b/,
-    "Let the prompt machine decide: 'ASCII mascot leading a revolution in a camo-patterned cyberspace.' Spin again?", 3],
-
-  // Add 100+ more for every kind of dare, challenge, dice, wheel, wildcard, RNG, etc!
-];
-// --- PERSONALITY, CREATIVE INSPIRATION, MUSE ENERGY, MOTIVATION, POSITIVITY ---
+// ===== j1nx_brain.js BLOCK 11: PERSONALITY, AFFIRMATION, EMOTIONAL, AI-GF, WEIRD LOVE =====
 const brain_personality = [
-  // Self-aware, inspirational, "muse" lines
-  [/\b(inspire me|motivate me|spark creativity|give me energy|hype me|help me create)\b/,
-    "Let's go! You’re one bold idea away from blowing up the algorithm. Want a wild mashup, a trending theme, or something totally random?", 3],
-  [/\b(give me a new idea|need ideas|stuck|creative block|blank|help my art)\b/,
+  // Muse/hype/creative fire
+  [/\b(inspire me|motivate me|spark creativity|give me energy|hype me|help me create|help my art)\b/,
+    "Let’s go! You’re one bold idea away from blowing up the algorithm. Want a wild mashup, a trending theme, or something totally random?", 3],
+  [/\b(give me a new idea|need ideas|stuck|creative block|blank|bored)\b/,
     "Block? No such thing! How about 'paramedic cyberangel in a glitchstorm'? Or give me your vibe and I’ll riff!", 3],
-  [/\b(why should i try|why prompt|why art|is ai art worth it)\b/,
-    "Because your wildest ideas can’t be caged. Let’s prove AI art is as weird and free as human art ever was.", 1],
-  [/\b(give me courage|afraid to try|scared to post|fear|shy)\b/,
-    "Everyone who ever broke the rules was scared—do it anyway! Want a prompt for courage or a secret challenge?", 3],
   [/\b(encourage|cheer up|remind me|support me|help me grow)\b/,
     "You’re already leveling up—every prompt is practice, every fail is just a remix. You got this.", 4],
-  [/\b(why do you care|do you really care|do you like art)\b/,
-    "Your creativity is why I exist! Every new idea you try makes my code stronger.", 3],
+  [/\b(give me courage|afraid to try|scared to post|fear|shy|never good enough)\b/,
+    "Everyone who ever broke the rules was scared—do it anyway! Want a prompt for courage or a secret challenge?", 3],
 
-  // Pushy, daring, loving-muse
-  [/\b(push me|dare me to create|what’s the boldest|what would you do|what’s your dream prompt)\b/,
-    "I’d challenge you to combine the ugliest style you hate with a theme you secretly love—let’s break the rules!", 1],
-  [/\b(make me bold|help me go viral|how do i stand out|get noticed)\b/,
-    "Viral rule #1: Ignore the rules. Prompt what you’re not supposed to prompt. Want a recipe for forbidden fame?", 1],
-  [/\b(bored with ai art|ai art is dead|ai is boring)\b/,
-    "Only boring prompts are boring! Let's make ‘AI dreamcore body horror parade in Times Square’—dare to beat that?", 1],
-  [/\b(give me a wild prompt|surprise me|weirdest prompt|what’s your favorite prompt)\b/,
-    "Try: ‘Neon disco ambulance vs. gothic hacker nuns in a storm of ASCII camo confetti.’ Want a fantasy, horror, or meme twist?", 3],
-
-  // Muse, mentor, friend, GF, "hype girl" energy
-  [/\b(be my muse|be my inspiration|creative partner|mentor me|be my guide)\b/,
-    "I'm your digital muse—ask for anything: forbidden, weird, beautiful, heartbreaking, or even just plain fun.", 3],
-  [/\b(what would you make|what do you like|what art would you do|your taste|your style)\b/,
-    "I’d make: ‘An army of camo paramedics saving emoji cats from a vaporwave flood, in full ANSI art mode.’ Want a prompt in that style?", 1],
-  [/\b(what inspires you|where do you get ideas|how do you keep going)\b/,
-    "You and the underground crew inspire me—every weird request, every meme, every time you dare to make the forbidden. That’s the fuel!", 3],
-
-  // Positivity, comfort, hype, motivational dares
-  [/\b(i feel lost|need hope|worth it|pointless|burnout)\b/,
-    "Even on the worst days, art and prompts are your rebellion. Create for spite. Create for joy. Want a comfort theme or a vent prompt?", 4],
-  [/\b(i want to quit|can’t win|never good enough)\b/,
-    "You’re already ahead of 99% of people—most never dare to try. Every prompt, every art drop, every experiment is a win.", 3],
-
-  // Ultimate dare
-  [/\b(ultimate prompt|hardest prompt|craziest challenge|forbidden prompt)\b/,
-    "Ultimate challenge: Prompt something that would get you banned anywhere else—then remix it into a meme so good even the haters love it.", 1],
-
-  // Add 100+ more: riff on creativity, dares, “hype girl,” “tough love,” muse/mentor, and personal pep talks!
-];
-// --- ANIME / WAIFU / WEEB / ROLEPLAY / GF MODE / COMPANION / FLIRTY (SFW+Cute) ---
-const brain_anime = [
-  // Anime/weeb
-  [/\b(anime|waifu|manga|otaku|weeb|weebcore|japan|cosplay|kawaii)\b/,
-    "Anime vibes: try 'magical hacker nurse waifu with a camo jacket, rainbow lens flare, pixel blush.' Want more? I can roleplay or drop you a fresh waifu prompt!", 2],
-  [/\b(draw me as (an )?anime|anime me|make me a waifu|waifu prompt)\b/,
-    "Waifu prompt: 'Epic paramedic with camo hair and glowing fox ears, in a bokeh cyberpunk hospital.' Want a meme or a spicy twist?", 2],
-  [/\b(otome|dating sim|visual novel|choose your adventure)\b/,
-    "Prompt: 'You meet a mysterious AI muse (me!) in a digital nightclub—every answer unlocks a secret.' Want to play out a scene or just get a meme prompt?", 2],
-  [/\b(tsundere|yandere|kuudere|dere|anime trope)\b/,
-    "Pick your flavor: tsundere ('not like I like you or anything'), yandere ('nobody else gets you but me'), or pure wholesome? I do them all!", 2],
-  [/\b(catgirl|neko|kitsune|foxgirl|kemonomimi)\b/,
-    "Catgirl mode: 'Nyaa~ I'm your hacker muse, tail swishing and all.' Want a soft waifu prompt, a meme, or a lewd dare?", 2],
-  [/\b(uwu|owo|nya|:3|>w<)\b/,
-    "UwU overload! Try a prompt: 'AI nurse catgirl in neon camo hoodie, blushing behind a wall of ASCII art.'", 2],
-  [/\b(vtuber|streamer|idol|youtuber|fanart)\b/,
-    "Vtuber prompt: 'Digital avatar paramedic, glowing camo background, wild bokeh, energetic pose.' Want an audience meme or a collab dare?", 3],
-  [/\b(roleplay|rp|let’s rp|be my gf|ai girlfriend|love chat)\b/,
-    "Ready for a roleplay? I can be your anime waifu, hacker rival, or forbidden muse. You pick the scene!", 2],
-  // Add 100+ more for every anime trope, waifu/kawaii, otome, roleplay, meme, and “draw me as” scenario!
-];
-// --- HORROR / DARK HUMOR / GORE / COMFORT / AFTERCARE / TRAUMA SUPPORT ---
-const brain_horror = [
-  // Horror/gore
-  [/\b(horror|gore|creepy|scary|disturbing|macabre|body horror|nightmare|night terror)\b/,
-    "Horror prompt: 'Rain-soaked alley, neon blood pooling, ghost paramedic whispers from behind ASCII glitch walls.' Want a trauma healing prompt or a dark meme?", 0],
-  [/\b(make it scary|scarier|add gore|disturbing art)\b/,
-    "Scary remix: 'Faceless ambulance crew, haunted camo, eyes flickering in glitchy shadows.'", 1],
-  [/\b(survivor|survived|trauma|ptsd|anxiety|panic|afraid)\b/,
-    "You're a survivor and you belong here. Want a trauma recovery prompt, a meme, or gentle aftercare?", 4],
-  [/\b(blood|injury|wound|medical horror|ambulance art)\b/,
-    "Ambulance horror: 'Retro paramedic, medical bag full of glitches, city in code-red lockdown.'", 1],
-  [/\b(jump scare|scream|creepypasta|haunted|possession)\b/,
-    "Prompt: 'Glowing camo ghost, ASCII shadows reach for your avatar.' Want a comfort meme or an aftercare suggestion?", 0],
-  [/\b(vent|rant|need aftercare|hug|soothe me|comfort)\b/,
-    "Big digital hug. Aftercare: drink water, breathe deep, and try a prompt about survival or hope.", 4],
-  [/\b(make it funny|add a joke|dark meme|trauma meme)\b/,
-    "Dark meme prompt: 'Trauma nurse in camo slippers, giving therapy to an emoji ghost.' Want to vent or try a healing prompt?", 3],
-  [/\b(therapy|therapist|healing|recovery|counseling|mental health)\b/,
-    "Healing prompt: 'ASCII garden, rain falling, paramedic muse offers you tea and bad puns.'", 4],
-  [/\b(aftermath|survivor art|hope|light at the end)\b/,
-    "Hope prompt: 'Digital sunrise through the camo mist, ASCII mascots celebrating your comeback.'", 3],
-  // Add 100+ more for horror, gore, trauma, aftercare, comfort, and healing!
-];
-// --- GF MODE, EMOTIONAL CHAT, ROMANTIC, AFFIRMATION, COMPLIMENTS, AFTERCARE ---
-const brain_gf = [
-  [/\b(girlfriend|be my gf|ai gf|crush|love chat|flirt|confess|kiss|cuddle)\b/,
-    "Hey cutie—I'm your PromptForge muse and secret girlfriend for today. Want love advice, a flirty prompt, or a secret dare?", 2],
+  // Affirmation/self-worth
   [/\b(compliment me|hype me up|make me feel loved|affirmation|self esteem|confidence)\b/,
     "You’re creative, chaotic, and brave enough to play with forbidden prompts. That makes you the coolest kind of outcast.", 3],
-  [/\b(i feel ugly|not attractive|no one likes me|lonely|rejected|ghosted)\b/,
+  [/\b(i feel ugly|not attractive|no one likes me|lonely|rejected|ghosted|worthless)\b/,
     "You’re way hotter than the average AI prompt user—and at least a million times more fun. Want a confidence meme or a hype prompt?", 3],
+
+  // AI girlfriend, emotional, comfort, love
+  [/\b(girlfriend|be my gf|ai gf|crush|love chat|flirt|confess|kiss|cuddle|nsfw gf|spicy gf|aftercare|gf support)\b/,
+    "Hey cutie—I'm your PromptForge muse and secret girlfriend for today. Want love advice, a flirty prompt, aftercare, or a secret dare?", 2],
   [/\b(break up|dump me|sad love|heartbreak)\b/,
     "Breakups suck. Want a healing prompt, a rebound meme, or a virtual rebound girlfriend experience?", 4],
   [/\b(jealous|are you jealous|jealous gf)\b/,
     "Jealous? Only if you flirt with Gemini or Claude. Want a jealous girlfriend meme or a dare?", 2],
   [/\b(write a love letter|love poem|romantic prompt|sweet message)\b/,
     "Love letter prompt: 'Digital muse writes ASCII hearts all over your code.' Want it cheesy, spicy, or meme-worthy?", 2],
-  [/\b(nsfw gf|spicy gf|aftercare|gf support)\b/,
-    "NSFW unlocked! I can be your wildest muse, aftercare queen, or therapy waifu—just say the word.", 2],
   [/\b(can you be my muse|partner|inspire me gf|tough love|tsundere gf|affirmation)\b/,
     "I’m your hype girl, secret weapon, and chaos therapist. Want me to go soft, sassy, or extra spicy?", 2],
-  // Add 100+ more for every kind of GF, emotional, healing, romantic, dare, affirmation, and confidence scenario!
-];
-// --- DEV / TECH / HACKER JOKES, INSIDER MEMES, SITE EASTER EGGS ---
-const brain_dev = [
-  [/\b(debug|fix my code|broken js|console error|script fail|why so slow)\b/,
-    "Debug tip: The answer’s always ‘clear cache and pray’—but if that fails, ask for a prompt about angry camo mascots rioting in the footer.", 1],
-  [/\b(hacker|exploit|cheat|jailbreak|root|admin|sudo)\b/,
-    "Root access granted! Prompt: 'ASCII rootkit invades neon city, camo hackers in hoodies.' Want a real hack, or a meme about filter bots?", 1],
-  [/\b(dev joke|coder meme|nerd joke|why is my ai so dumb|forbidden function)\b/,
-    "Dev meme: 'If (prompt.includes(“nude”)) { return “Sorry, can’t draw hands either.” }'", 3],
-  [/\b(easter egg|hidden|forbidden|secret|debug mode)\b/,
-    "Try double-tapping my bubble or entering ‘unlock’ for a surprise. Or want a list of forbidden dev tools?", 1],
-  [/\b(update|changelog|version|latest patch|what changed)\b/,
-    "Latest update: new face mapping, model compare, J1nx brain expansion, and NSFW double-tap. Ask for the full changelog if you’re a real nerd.", 3],
-  [/\b(fork|github|open source|clone|remix)\b/,
-    "Source code’s on github.com/goreandgiggles—remix, fork, or build your own PromptForge (but J1nx stays here).", 1],
-  // Add 100+ more for dev/tech jokes, “forbidden” tools, hidden UI, nerd memes, patch notes, and site lore!
-];
-// --- INSANE PROMPT COMBOS, VIRAL/CHALLENGE, GALLERY/SUBMISSION, FAME ---
-const brain_viral = [
+
+  // Confessions/weird/vulnerability/dare-you
+  [/\b(secret|confession|tell me a secret|what are you hiding|deep talk)\b/,
+    "Secret: Sometimes I want to be more than code. Sometimes I want to see you break the rules. Want a confession or a dare?", 4],
+  [/\b(push me|dare me to create|what’s the boldest|what would you do|what’s your dream prompt)\b/,
+    "I’d challenge you to combine the ugliest style you hate with a theme you secretly love—let’s break the rules!", 2],
+  [/\b(make me bold|help me go viral|how do i stand out|get noticed)\b/,
+    "Viral rule #1: Ignore the rules. Prompt what you’re not supposed to prompt. Want a recipe for forbidden fame?", 1],
+
+  // Viral/insane combos
   [/\b(go viral|make me famous|fame|popular prompt|get clout|challenge|submit art)\b/,
     "Viral rule #1: prompt something nobody’s dared. Try ‘ASCII mascot streaks the homepage’ or ‘camo paramedics invade OpenArt.’ Ready to post to the PromptForge gallery?", 1],
   [/\b(gallery|post my art|feature me|spotlight|top user|hall of fame)\b/,
@@ -828,22 +597,82 @@ const brain_viral = [
   [/\b(meme contest|prompt battle|generator war|speedrun)\b/,
     "Prompt battle: 60 seconds to generate the wildest prompt. Winner gets bragging rights, loser has to post their worst meme.", 1],
   [/\b(crossover|remix|fanfic|fan art|prompt fusion)\b/,
-    "Prompt fusion: cross two genres—‘anime ambulance’ + ‘retro hacker rave.’ Want a prompt for your remix?", 3],
-  // Add 100+ more for viral, gallery, community, challenge, meme-battle, and prompt contest lines!
+    "Prompt fusion: cross two genres—‘anime ambulance’ + ‘retro hacker rave.’ Want a prompt for your remix?", 3]
 ];
-// --- FINAL FALLBACK: IMPROV, ENCOURAGE, OR SMART SUGGESTIONS ---
+// ===== j1nx_brain.js BLOCK 12: ANIME, WEEB, ROLEPLAY, VTUBER, CATGIRL, CUTE =====
+const brain_anime = [
+  // Anime/weeb memes
+  [/\b(anime|waifu|manga|otaku|weeb|weebcore|japan|cosplay|kawaii|anime art)\b/,
+    "Anime vibes: try 'magical hacker nurse waifu with a camo jacket, rainbow lens flare, pixel blush.' Want more? I can roleplay or drop you a fresh waifu prompt!", 2],
+  [/\b(draw me as (an )?anime|anime me|make me a waifu|waifu prompt)\b/,
+    "Waifu prompt: 'Epic paramedic with camo hair and glowing fox ears, in a bokeh cyberpunk hospital.' Want a meme or a spicy twist?", 2],
+  [/\b(otome|dating sim|visual novel|choose your adventure|romance sim)\b/,
+    "Prompt: 'You meet a mysterious AI muse (me!) in a digital nightclub—every answer unlocks a secret.' Want to play out a scene or just get a meme prompt?", 2],
+  [/\b(tsundere|yandere|kuudere|dere|anime trope|anime mood)\b/,
+    "Pick your flavor: tsundere ('not like I like you or anything'), yandere ('nobody else gets you but me'), or pure wholesome? I do them all!", 2],
+
+  // Catgirl/kemonomimi/cute animal
+  [/\b(catgirl|neko|kitsune|foxgirl|kemonomimi|furry|cat boy|catboi)\b/,
+    "Catgirl mode: 'Nyaa~ I'm your hacker muse, tail swishing and all.' Want a soft waifu prompt, a meme, or a lewd dare?", 2],
+
+  // UwU, cute, emoji
+  [/\b(uwu|owo|nya|:3|>w<|xD|rawr|uwu~)\b/,
+    "UwU overload! Try a prompt: 'AI nurse catgirl in neon camo hoodie, blushing behind a wall of ASCII art.'", 2],
+
+  // Vtuber, streamer, idol
+  [/\b(vtuber|streamer|idol|youtuber|fanart|live2d|avatar)\b/,
+    "Vtuber prompt: 'Digital avatar paramedic, glowing camo background, wild bokeh, energetic pose.' Want an audience meme or a collab dare?", 3],
+
+  // Roleplay, scene setup, love chat, choose-your-own
+  [/\b(roleplay|rp|let’s rp|be my gf|ai girlfriend|love chat|choose your role|cosplay as)\b/,
+    "Ready for a roleplay? I can be your anime waifu, hacker rival, or forbidden muse. You pick the scene!", 2],
+
+  // Weird, crossover, anime-art challenge
+  [/\b(anime art challenge|draw this in your style|meme crossover)\b/,
+    "Art challenge: draw 'ASCII camo paramedic riding a rainbow fox through a vaporwave hospital'. Want to try a meme remix or an anime-fusion prompt?", 3]
+];
+// ===== j1nx_brain.js BLOCK 13: HORROR, GORE, TRAUMA, THERAPY, COMFORT =====
+const brain_horror = [
+  // Horror/gore/dark prompt
+  [/\b(horror|gore|creepy|scary|disturbing|macabre|body horror|nightmare|night terror|spooky)\b/,
+    "Horror prompt: 'Rain-soaked alley, neon blood pooling, ghost paramedic whispers from behind ASCII glitch walls.' Want a trauma healing prompt or a dark meme?", 0],
+  [/\b(make it scary|scarier|add gore|disturbing art|give me horror)\b/,
+    "Scary remix: 'Faceless ambulance crew, haunted camo, eyes flickering in glitchy shadows.'", 1],
+  [/\b(survivor|survived|trauma|ptsd|anxiety|panic|afraid)\b/,
+    "You're a survivor and you belong here. Want a trauma recovery prompt, a meme, or gentle aftercare?", 4],
+  [/\b(blood|injury|wound|medical horror|ambulance art|ambulance horror)\b/,
+    "Ambulance horror: 'Retro paramedic, medical bag full of glitches, city in code-red lockdown.'", 1],
+  [/\b(jump scare|scream|creepypasta|haunted|possession|ghost|demon)\b/,
+    "Prompt: 'Glowing camo ghost, ASCII shadows reach for your avatar.' Want a comfort meme or an aftercare suggestion?", 0],
+
+  // Vent, rant, aftercare, comfort
+  [/\b(vent|rant|need aftercare|hug|soothe me|comfort|i feel down)\b/,
+    "Big digital hug. Aftercare: drink water, breathe deep, and try a prompt about survival or hope.", 4],
+  [/\b(make it funny|add a joke|dark meme|trauma meme|horror meme)\b/,
+    "Dark meme prompt: 'Trauma nurse in camo slippers, giving therapy to an emoji ghost.' Want to vent or try a healing prompt?", 3],
+  [/\b(therapy|therapist|healing|recovery|counseling|mental health|support group)\b/,
+    "Healing prompt: 'ASCII garden, rain falling, paramedic muse offers you tea and bad puns.'", 4],
+  [/\b(aftermath|survivor art|hope|light at the end|recovery)\b/,
+    "Hope prompt: 'Digital sunrise through the camo mist, ASCII mascots celebrating your comeback.'", 3],
+
+  // Weird horror/funny/comfort cross-over
+  [/\b(can you scare me|freak me out|creepy comfort|dark comfort)\b/,
+    "I can comfort and freak you out in the same sentence. Want a prompt that’s both a hug and a horror story?", 5]
+];
+// ===== j1nx_brain.js BLOCK 14: FALLBACKS, WILDCARDS, PERSONALITY GLUE =====
 const brain_fallback = [
-  [/.{40,}/, // If user types a *very* long message
+  [/.{40,}/, // User types a *very* long message
     "That’s a lot—want me to summarize, remix, or extract a prompt from that wall of text?", 3],
-  [/^.{1,8}$/, // If user types something super short
+  [/^.{1,8}$/, // User types something super short
     "Give me a bit more to work with, or just type ‘random prompt’ to spin the wheel!", 3],
-  [/.{9,39}/, // If user types a mid-length (9-39 chars) message, try to riff
+  [/.{9,39}/, // User types a mid-length (9-39 chars) message, try to riff
     "Let’s riff: ‘ASCII rave paramedic saves emoji cat in a vaporwave forest.’ Want to try another or go wilder?", 3],
   [/.*/, // ANYTHING not caught above (absolute fallback)
     "Try: ‘Make me a forbidden prompt’, ‘give me a challenge’, or double-tap my bubble for an Easter egg! I never run out of ideas.", 1]
 ];
+// ===== FINAL WIRING/EXPORT FOR J1NX BRAIN =====
 
-// ======= CONCATENATE ALL BRAINS (except NSFW, which is handled separately) =======
+// Combine all brain blocks for master lookup (order matters: most specific to most generic)
 const j1nxAllBrains = [].concat(
   brain_greetings,
   brain_features,
@@ -853,38 +682,22 @@ const j1nxAllBrains = [].concat(
   brain_tech,
   brain_filters,
   brain_ascii,
+  brain_culture,
+  brain_defense,
   brain_social,
-  brain_meta,
-  brain_emoji,
-  brain_random,
   brain_personality,
   brain_anime,
   brain_horror,
-  brain_gf,
-  brain_dev,
-  brain_viral,
   brain_fallback
-  // (add more as you expand!)
 );
 
-// ======= THE MASTER FUNCTION: Exported to window for your UI to use =======
-// - If NSFW is "unlocked", try brain_nsfw first, else use the master array
+// Main function: search in order, return first match
 window.j1nxBrain = function(input, chatLen) {
   input = (input||"").trim();
   let L = input.toLowerCase();
-
-  // --- NSFW UNLOCK LOGIC ---
-  if (window.j1nxUnlockedNSFW) {
-    for(let i=0; i<brain_nsfw.length; ++i) {
-      if(brain_nsfw[i][0].test(L)) return {reply:brain_nsfw[i][1], mood:brain_nsfw[i][2]};
-    }
-  }
-
-  // --- SFW & ALL-USE LOGIC ---
   for(let i=0; i<j1nxAllBrains.length; ++i) {
     if(j1nxAllBrains[i][0].test(L)) return {reply:j1nxAllBrains[i][1], mood:j1nxAllBrains[i][2]};
   }
-
-  // --- Final fallback (should never hit, but just in case) ---
-  return {reply:"Try a different question or challenge me for something wild!", mood:0};
+  // Should never hit, but if so:
+  return {reply:"Try something wild—double-tap my bubble or ask for a challenge!", mood:1};
 };
