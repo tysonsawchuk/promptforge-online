@@ -842,6 +842,7 @@ const brain_fallback = [
   [/.*/, // ANYTHING not caught above (absolute fallback)
     "Try: ‘Make me a forbidden prompt’, ‘give me a challenge’, or double-tap my bubble for an Easter egg! I never run out of ideas.", 1]
 ];
+
 // ======= CONCATENATE ALL BRAINS (except NSFW, which is handled separately) =======
 const j1nxAllBrains = [].concat(
   brain_greetings,
@@ -851,7 +852,6 @@ const j1nxAllBrains = [].concat(
   brain_memes,
   brain_tech,
   brain_filters,
-  brain_model,
   brain_ascii,
   brain_social,
   brain_meta,
