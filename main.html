@@ -411,7 +411,7 @@
         <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
       </div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
@@ -423,9 +423,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Load the brain script -->
   <script src="assets/j1nx_brain.js"></script>
+
   <script>
-    // Position J1nx above the footer
+    // Position J1nx widget above footer dynamically
     function adjustJ1nxFloatTrue() {
       const widget = document.getElementById('j1nxFloatTrue');
       const footer = document.querySelector('footer');
@@ -443,19 +446,16 @@
     window.addEventListener('resize', adjustJ1nxFloatTrue);
     setTimeout(adjustJ1nxFloatTrue, 700);
 
-    // ==== J1nx BRAIN LOGIC ====
-    // SESSION MASTER: Use only window.j1nxBrain from assets/j1nx_brain.js!
+    // === Chat logic with brain integration ===
     let chat = [];
-    let defaultMood = 0;
-    let moods = [
+    const defaultMood = 0;
+    const moods = [
       {glow: "#64f2e3"},
       {glow: "#fa528e"},
       {glow: "#be9cff"},
       {glow: "#ffd166"}
     ];
-    // moodIdx: 0 = default/cheer, 1 = wicked, 2 = sultry, 3 = caught/slack
 
-    // Use your real brain! (always window.j1nxBrain)
     function getJ1nxReply(val) {
       if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
         let res = window.j1nxBrain(val, chat.length);
@@ -465,61 +465,67 @@
       }
       return {reply: "(Brain not loaded)", mood: 0};
     }
+
     function setJ1nxMood(idx) {
-      // Limit idx to known moods
-      idx = Math.max(0, Math.min(idx, moods.length-1));
-      // Only set bubble, NOT cutout image
-      document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
-      // No glow on cutout, ever
-      document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      idx = Math.max(0, Math.min(idx, moods.length - 1));
+      document.getElementById("j1nxBubbleTrueMain").style.boxShadow = `0 4px 22px ${moods[idx].glow}bb,0 0 0 3px #23231f`;
+      document.getElementById("j1nxCutoutTrue").style.boxShadow = "none"; // NO glow on image
     }
-    // Double-tap to "cycle" mood manually for fun
+
+    // Double-tap bubble cycles moods
     let moodIndex = 0, lastTap = 0;
-    document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+    document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(){
       let now = Date.now();
-      if (now - lastTap < 400) {
+      if(now - lastTap < 400) {
         moodIndex = (moodIndex + 1) % moods.length;
         setJ1nxMood(moodIndex);
       }
       lastTap = now;
     });
 
-    // ==== Chat logic ====
     function renderJ1nxChat() {
-      document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length - 1];
     }
+
     function chatReset() {
       chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
       setJ1nxMood(defaultMood);
       renderJ1nxChat();
     }
-    document.getElementById("j1nxSendTrue").onclick = function(){
+
+    document.getElementById("j1nxSendTrue").onclick = function() {
       let val = document.getElementById("j1nxInputTrue").value.trim();
-      if (!val) return;
+      if(!val) return;
       let res = getJ1nxReply(val);
       chat.push(val);
       chat.push(res.reply);
-      setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+      setJ1nxMood(typeof res.mood === "number" ? res.mood : defaultMood);
       renderJ1nxChat();
       document.getElementById("j1nxInputTrue").value = "";
     };
-    document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
-      if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+
+    document.getElementById("j1nxInputTrue").addEventListener("keydown", function(e) {
+      if(e.key === "Enter") document.getElementById("j1nxSendTrue").click();
     });
+
     document.getElementById("j1nxClearTrue").onclick = chatReset;
-    document.getElementById("j1nxSaveTrue").onclick = function(){
-      let text = chat.join('\n');
-      let blob = new Blob([text], {type:"text/plain"});
+
+    document.getElementById("j1nxSaveTrue").onclick = function() {
+      let text = chat.join("\n");
+      let blob = new Blob([text], {type: "text/plain"});
       let url = URL.createObjectURL(blob);
       let a = document.createElement("a");
       a.href = url;
       a.download = "j1nx_chat.txt";
       document.body.appendChild(a);
       a.click();
-      setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 1000);
     };
-    chatReset(); // init
 
+    chatReset();
   </script>
 
   <main>
@@ -558,7 +564,6 @@
       </a>
     </section>
 
-    <!-- ======= Partner/Resource Links ======= -->
     <section class="partner-block">
       <h2>Essential AI Art & Prompt Resources</h2>
       <div style="display:flex;flex-wrap:wrap;gap:.7em .9em;justify-content:center;margin-bottom:.18em;">
@@ -589,7 +594,6 @@
     </div>
   </main>
 
-  <!-- ======= Footer, Static Dancers & Camo ======= -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -635,4 +639,4 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     renderCamo();
   </script>
 </body>
- </html>
+</html>
