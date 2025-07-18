@@ -6,6 +6,10 @@ const brain_features = [
   [/\b(feature|tool)\b/, "Check out all my wild PromptForge tools!", 1]
 ];
 
+const brain_prompts = [
+  [/\b(prompt|inspire|give me a prompt|idea)\b/, "Let’s get weird! Want art, video, meme, or something forbidden? Ask away.", 2]
+];
+
 const brain_fallback = [
   [/.*/, "Fallback working.", 1]
 ];
@@ -13,6 +17,7 @@ const brain_fallback = [
 const j1nxAllBrains = [].concat(
   brain_greetings,
   brain_features,
+  brain_prompts,
   brain_fallback
 );
 
