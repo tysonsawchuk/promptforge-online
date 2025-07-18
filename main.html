@@ -1,7 +1,7 @@
 <!--
-  PromptForge.online Main – v2.0.0
-  J1nx: fully alive, floating, with real "brain" (regex+trigger+smart mood).
-  - Just copy this AND assets/j1nx_brain.js (your original, unchanged!)
+  SESSION MASTER: do not partially edit, keep in sync with latest session.
+  PromptForge.online Main – v2.0.0 (J1nx + Real Brain, NO cutout glow)
+  Just copy this AND assets/j1nx_brain.js (unchanged, full session brain)
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -253,13 +253,14 @@
       height: 320px;
       object-fit: contain;
       border-radius: 32px;
-      box-shadow: 0 0 55px 8px #be9cffcc, 0 0 12px #64f2e3cc;
+      /* === NO GLOW/SHADOW AROUND J1NX IMAGE! === */
       background: transparent !important;
       margin-bottom: -30px;
       position: relative;
       z-index: 9;
       pointer-events: auto;
       transition: box-shadow .2s;
+      box-shadow: none !important; /* force NO glow! */
     }
     .j1nx-bubble-true-main {
       background: rgba(22,23,31,0.97);
@@ -443,7 +444,7 @@
     setTimeout(adjustJ1nxFloatTrue, 700);
 
     // ==== J1nx BRAIN LOGIC ====
-    // Your massive smart regex array/brain is now used for ALL responses!
+    // SESSION MASTER: Use only window.j1nxBrain from assets/j1nx_brain.js!
     let chat = [];
     let defaultMood = 0;
     let moods = [
@@ -454,15 +455,12 @@
     ];
     // moodIdx: 0 = default/cheer, 1 = wicked, 2 = sultry, 3 = caught/slack
 
-    // Use your real brain!
-    // Expects: window.j1nxBrain(input) returns {reply, mood} or just string
+    // Use your real brain! (always window.j1nxBrain)
     function getJ1nxReply(val) {
       if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
         let res = window.j1nxBrain(val, chat.length);
-        // If brain returns string only, wrap it.
         if(typeof res === "string") return {reply: res, mood: 0};
         if(typeof res === "object" && res.reply) return res;
-        // fallback
         return {reply: "(I have no clue... bug?)", mood: 0};
       }
       return {reply: "(Brain not loaded)", mood: 0};
@@ -470,8 +468,10 @@
     function setJ1nxMood(idx) {
       // Limit idx to known moods
       idx = Math.max(0, Math.min(idx, moods.length-1));
-      document.getElementById("j1nxCutoutTrue").style.boxShadow = "0 0 55px 8px "+moods[idx].glow+",0 0 12px #64f2e3cc";
+      // Only set bubble, NOT cutout image
       document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+      // No glow on cutout, ever
+      document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
     }
     // Double-tap to "cycle" mood manually for fun
     let moodIndex = 0, lastTap = 0;
