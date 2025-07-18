@@ -392,7 +392,6 @@ const brain_filters = [
   [/\b(more filter|more style|more effect|more genre|list filters|all styles)\b/,
     "Here's a list: cyberpunk, bokeh, datamosh, matrix rain, hyperreal, photorealistic, grunge, bioluminescent, glitchcore, film noir, goth, synthwave, fantasy, minimalist, baroque, retro cartoon. Want details on any?", 0]
 ];
-
 const brain_ascii = [
   [/\b(ascii art|ascii prompt|make ascii|draw ascii|convert to ascii|retro art|ansi art|text art|matrix mode)\b/, 
     "Try the ANSI/ASCII Art Generator! Turn any image, prompt, meme, or video frame into classic retro text art—plus Matrix mode if you’re feeling hacker.", 0],
@@ -986,7 +985,6 @@ const brain_remix = [
     return `Try this wild combo: '${subject} ${action} in a ${theme} world.'`;
   }, 9]
 ];
-
 // ---- Secret Unlock Codes and Easter Eggs ----
 const brain_secret = [
   [/\b(konami code|up up down down left right left right b a start|unlock secret|secret mode|hidden mode|easter egg|cheat code)\b/,
@@ -996,37 +994,37 @@ const brain_secret = [
 ];
 
 // ---- Frontend Snippets for Animations and Browser Integration (to include in your main.js or html) ----
-const snippets = `
-// J1nx mood glow controlled by main.js via CSS classes: .mood-0 to .mood-10
-// Make sure your main controller sets the bubble class based on mood returned by j1nxBrain
+/*
+  J1nx mood glow controlled by main.js via CSS classes: .mood-0 to .mood-10
+  Make sure your main controller sets the bubble class based on mood returned by j1nxBrain
 
-// For Google search integration:
-// Use the brain_search block with function replies to open new tabs/windows safely.
-// Make sure popup blockers are disabled or site is whitelisted.
+  For Google search integration:
+  Use the brain_search block with function replies to open new tabs/windows safely.
+  Make sure popup blockers are disabled or site is whitelisted.
 
-// Example main.js function to update bubble glow:
-// function updateJ1nxMood(mood) {
-//   const bubble = document.querySelector('.j1nx-bubble');
-//   for(let i=0; i<=10; i++) bubble.classList.remove('mood-' + i);
-//   bubble.classList.add('mood-' + mood);
-// }
+  Example main.js function to update bubble glow:
+  function updateJ1nxMood(mood) {
+    const bubble = document.querySelector('.j1nx-bubble');
+    for(let i=0; i<=10; i++) bubble.classList.remove('mood-' + i);
+    bubble.classList.add('mood-' + mood);
+  }
 
-// If you want to add typing animation, integrate a simple text animator like:
-// function animateTyping(element, text, speed = 40) {
-//   element.textContent = '';
-//   let i = 0;
-//   const interval = setInterval(() => {
-//     if(i < text.length) {
-//       element.textContent += text.charAt(i);
-//       i++;
-//     } else {
-//       clearInterval(interval);
-//     }
-//   }, speed);
-// }
+  If you want to add typing animation, integrate a simple text animator like:
+  function animateTyping(element, text, speed = 40) {
+    element.textContent = '';
+    let i = 0;
+    const interval = setInterval(() => {
+      if(i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+      } else {
+        clearInterval(interval);
+      }
+    }, speed);
+  }
 
-// Add this in your UI event handlers to make chat more alive.
-`;
+  Add this in your UI event handlers to make chat more alive.
+*/
 
 // ---- Final concat including all new brains ----
 const j1nxAllBrains = [].concat(
