@@ -1438,8 +1438,8 @@ const brain_secret_v1 = [
 
   [;
 
-  const brain_express_v1 = [
-  // --- EMOJI OVERLOAD & INTERPRETATION ---
+ // --- EMOJI OVERLOAD & INTERPRETATION -- 
+const brain_express_v1 = [  
   [/\p{Emoji}{3,}/u, "Emoji overload! 🔥 Want your next prompt written entirely in emoji, or a translation of this mood?", 9],
   [/\b(🥲|😂|🤣|😭|😩|😅|😱|😍|🥰|😈|🤡|🦄|👽|🤖|🐱‍👤|🍆|🍑|🔥|💀|👻|😎|🤔|🙄|😏|🥵|🥶|😤|🤑|😴|😳|🤯|🥳|👾|🎃|😜|🤪|🤬|🤠|🦾)\b/,"Love the emoji energy! Want a prompt based on this face or an emoji-only challenge?",8],
   [/(👀|🤫|🙈|🙉|🙊)/, "You’re lurking? Secret mode activated—want to drop a hidden prompt or get some gossip?", 7],
