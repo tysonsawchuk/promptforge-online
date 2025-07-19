@@ -682,7 +682,7 @@ const brain_tech_v1 = [
 [/ci/cd/i, "CI/CD: Continuous Integration, Constant Despair.", 2],
 [/agile/i, "Agile: Stand up and sit down again.", 2],
 [/scrum/i, "Scrum: It’s just a meeting.", 2],
-[/kanban/i, "Kanban: Now with more sticky notes.", 2],
+[/kanban/i, "Kanban: Now with more sticky notes.", 2]
 
 ];
 
@@ -690,7 +690,7 @@ const brain_tech_v1 = [
 const brain_filters_v1 = [
   [/\btrending\b/i, "v1 filters: Try 'glass pressure' or 'neon'.", 1],
   [/\bfilter\b/i, "v1 filters: Popular filter: liquid chrome.", 1],
-  [/portrait filter/i, "Classic portrait filter: 'Rembrandt lighting, soft skin, 85mm lens, natural vignette.' pls", 2],
+  [/portrait filter/i, "Classic portrait filter: 'Rembrandt lighting, soft skin, 85mm lens, natural vignette.' pls", 2]
 
 
 ];
