@@ -1529,7 +1529,7 @@ const j1nxAllBrains = [].concat(
   brain_persona_v1,
   brain_remix_v1,
   brain_secret_v1,
-  brain_express_v1,
+  brain_express_v1
   
 );
 
