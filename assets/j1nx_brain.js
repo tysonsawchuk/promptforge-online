@@ -203,7 +203,37 @@ const brain_features_v1 = [
 // === 3. Prompts ===
 const brain_prompts_v1 = [
   [/\bprompt\b/i, "v1 prompts: Here's a random prompt for you!", 1],
-  [/\bchallenge\b/i, "v1 prompts: I challenge you to mash up two genres!", 1]
+  [/\bchallenge\b/i, "v1 prompts: I challenge you to mash up two genres!", 1],
+  [/\binspire me\b|\bprompt idea\b|\bgive me (a )?prompt\b|\bgenerate a prompt\b/i,"Let’s get weird! Want art, video, meme, or something forbidden? Be specific and I'll drop the wildest theme you’ve ever seen.",3],
+[/\bchallenge me\b|\bgive me a challenge\b/i,"Alright: blend two genres that don’t belong together. Example: 'cyberpunk cowboys at a ballet.' Want a custom theme?",3],
+[/\bdare me\b|\bgive me a dare\b/i,"Dare accepted: Prompt 'an ambulance drifting through a neon thunderstorm.' Next dare?",3],
+[/\bsurprise me\b|\brandom prompt\b|\bspin the wheel\b/i,"Randomizer: Try 'robot nurse fights anxiety in a moonlit alley.' Spin again?",3],
+[/\b(prompt for art|art prompt|image idea|visual prompt)\b/i,"Visual prompt: 'Retro hospital ward, glowing green camo, foggy windows.' Want another?",3],
+[/\bmovie prompt\b|\bfilm idea\b|\bshort film prompt\b/i,"Film prompt: 'A meme paramedic and an AI ghost solve digital hauntings.'",3],
+[/\banime\b|\bmanga\b/i,"Anime idea: 'Cyborg schoolgirl hacks the city grid to save her waifu.'",3],
+[/\bphotorealistic\b|\bphoto\b/i,"Photo prompt: 'Urban portrait, harsh neon bokeh, rain-soaked glass, main subject half-shadowed.'",3],
+[/\bcyberpunk\b|\bglitch\b|\btech\b/i,"Prompt: 'Glitchcore paramedics racing pixel ambulances across a vaporwave skyline.'",3],
+[/\bsurreal\b|\bdreamcore\b|\bweirdcore\b|\bdali\b|\bbizarre\b/i,"Try: 'Floating hospital beds, melting clocks, pixel clouds—Dali meets trauma bay.'",3],
+[/\bsci-fi\b|\bspace\b|\balien\b|\bfuture\b/i,"Sci-fi: 'Alien ambulance, digital triage under binary star night.'",3],
+[/\bfantasy\b|\bmagic\b|\bmyth\b/i,"Fantasy: 'Wounded forest spirit, paramedic-mage with glowing runes, moonlit moss.'",3],
+[/\bhorror\b|\bgore\b|\bscary\b/i,"Horror prompt: 'Abandoned ER, flickering lights, shadowy figures at the edge of reality.'",3],
+[/\bnature\b|\bforest\b|\banimal\b/i,"Nature: 'Wolf with cybernetic eyes, paramedic camo cloak, neon glowing mushrooms.'",3],
+[/\bunderwater\b|\bocean\b|\bsea\b|\bmermaid\b/i,"Underwater: 'AI mermaid treats injured octopus in a sunken server farm.'",3],
+[/\bprank prompt\b|\bprank\b/i,"Prank: 'AI chatbot fakes a blue screen of death for a digital doctor.'",3],
+[/\btrending\b|\blatest\b|\bnew\b/i,"Trend: Glass pressure, photoreal lips, vapor bokeh, anatomical realism.",3],
+[/\bfilter\b|\beffect\b|\bstyle\b|\bvisual\b|\blook\b/i,"Try: 'infrared noir', 'claycore', 'liquid chrome', 'bokeh nightscape', 'matrix text rain.'",3],
+[/\bblack and white\b|\bmonochrome\b/i,"Monochrome: 'Noir ambulance, sharp shadows, rain-slicked street.'",3],
+[/\bdouble exposure\b/i,"Double: 'Paramedic’s face merged with a riot of glitchy code and digital veins.'",3],
+[/\bglitch\b|\bvaporwave\b|\bretrowave\b/i,"Glitchwave: 'Pink and teal ambulance, glitch trails, city lost in data static.'",3],
+[/\bbokeh\b|\blens flare\b|\bcinematic\b/i,"Bokeh: 'Soft focus, rainbow lens flare over emergency lights.'",3],
+[/\bmacro\b|\bcloseup\b/i,"Macro: 'Closeup on a gloved hand, droplet of neon blood reflecting a pixel city.'",3],
+[/\bsilhouette\b/i,"Silhouette: 'Camo-masked figure backlit by emergency signs, clouds of vapor.'",3],
+[/\bdare\b|\btriple dog dare\b/i,"Triple dare: 'All AI mascots host a secret rave under the ambulance bay.'",3],
+[/\bgroup\b|\bduo\b|\btrio\b|\bcollab\b/i,"Group: 'Queer hackers, medic, goth artist—prompt a team-up on a moonlit roof.'",3],
+[/\bforbidden\b|\buncensored\b|\bno filter\b/i,"Forbidden: 'Prompt so wild, the moderation bot blushes and skips.' Use at your own risk.",9],
+// --- EASTER EGG for prompts block test ---
+[/\b(promptblockegg2025)\b/i,"Easter Egg! If you see this, prompts block is working! (v6.1)",10]
+
     
 ];
 
