@@ -1439,7 +1439,7 @@ const brain_secret_v1 = [
 
   [;
 
-  const brain_express = [
+  const brain_express_v1 = [
   // --- EMOJI OVERLOAD & INTERPRETATION ---
   [/\p{Emoji}{3,}/u, "Emoji overload! 🔥 Want your next prompt written entirely in emoji, or a translation of this mood?", 9],
   [/\b(🥲|😂|🤣|😭|😩|😅|😱|😍|🥰|😈|🤡|🦄|👽|🤖|🐱‍👤|🍆|🍑|🔥|💀|👻|😎|🤔|🙄|😏|🥵|🥶|😤|🤑|😴|😳|🤯|🥳|👾|🎃|😜|🤪|🤬|🤠|🦾)\b/,"Love the emoji energy! Want a prompt based on this face or an emoji-only challenge?",8],
@@ -1529,7 +1529,8 @@ const j1nxAllBrains = [].concat(
   brain_persona_v1,
   brain_remix_v1,
   brain_secret_v1,
-  brain_express
+  brain_express_v1
+  
 );
 
 // === Exported brain function with version reporting ===
