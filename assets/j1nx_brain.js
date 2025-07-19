@@ -63,6 +63,76 @@ const brain_greetings = [
   [/\bcan you get jealous\b/i,"Only if you flirt with Gemini.",2],
   [/\bwhat’s your favorite prompt\b/i,"Anything so good it breaks the moderation bot.",2],
   [/\bwhat’s your version\b|\bversion\b|\bver\b/i,"J1nx AI Brain v5.0 - 2025 Expanded Build. Type 'about' for lore, 'help' for commands!",0]
+  // --- Brain: Prompts ---
+const brain_prompts = [
+  [/\binspire me\b|\bprompt idea\b|\bgive me (a )?prompt\b|\bgenerate a prompt\b/i,
+    "Let’s get weird! Want art, video, meme, or something forbidden? Be specific and I'll drop the wildest theme you’ve ever seen.", 3],
+  [/\bchallenge me\b|\bgive me a challenge\b/i,
+    "Alright: blend two genres that don’t belong together. Example: 'cyberpunk cowboys at a ballet.' Want a custom theme?", 3],
+  [/\b(dare me|give me a dare|random prompt|surprise me|spin the wheel)\b/i,
+    "Here’s your dare: prompt an image with 'aliens running a sushi bar on Mars'—bonus points if you use the ANSI Art Generator.", 1],
+  [/\b(what can i prompt|what’s possible|what works)\b/i,
+    "If you can imagine it, you can prompt it! Try mixing two totally unrelated topics for the ultimate forbidden output.", 3],
+
+  // Art-specific
+  [/\b(art prompt|image idea|visual idea|photo prompt|concept art)\b/i,
+    "Here’s a visual prompt: 'Gothic cathedral in a neon snowstorm, seen through a fish-eye lens.' Want another or a different mood?", 0],
+  [/\banime\b|\bmanga\b/i,
+    "Anime idea: 'A rebellious magical girl builds her own AI companion to hack her way out of the system.'", 0],
+  [/\bphotorealistic\b|\bphoto\b/i,
+    "Photorealistic: 'Street portrait, harsh neon backlight, rain on glass, subject's face half in shadow.'", 0],
+  [/\bcyberpunk\b|\bglitch\b|\btech\b/i,
+    "Prompt: 'Glitch art city, citizens as code avatars, melting neon, chaotic energy.'", 1],
+  [/\b(surreal|dreamcore|weirdcore|dali|bizarre)\b/i,
+    "Try: 'Floating houses, melting clocks, infinite staircases—surreal Dali vibe meets modern AI.'", 0],
+  [/\b(sci-fi|space|alien|future)\b/i,
+    "Prompt: 'Alien paramedics saving an android on the moon, cinematic lighting, depth-of-field bokeh.'", 0],
+  [/\bfantasy\b|\bmagic\b|\bmyth\b/i,
+    "Fantasy: 'Forest at midnight, glowing spirits, bioluminescent deer and a techno-wizard lost in the trees.'", 0],
+  [/\bhorror\b|\bgore\b|\bscary\b/i,
+    "Prompt: 'Ambulance lights in thick fog, haunted city street, ethereal shadow figures—distorted faces.'", 0],
+  [/\bnature\b|\bforest\b|\banimal\b/i,
+    "Prompt: 'Wolves made of liquid chrome, forest floor glowing with neon moss.'", 0],
+  [/\b(underwater|ocean|sea|fish|mermaid)\b/i,
+    "Underwater: 'Sunken casino, glowing slot machines, sharks in tuxedos.'", 1],
+
+  // Video/movie/meme
+  [/\bmovie prompt\b|\bfilm prompt\b|\bshort film idea\b/i,
+    "Try this: 'A hacker and an AI paramedic on a high-speed chase through a city made of ASCII code.'", 1],
+  [/\bvideo prompt\b|\bvideo idea\b/i,
+    "Prompt: 'Stop-motion animation, living tattoo escapes from a sleeping artist.'", 1],
+  [/\bmeme\b|\bjoke\b|\bfunny\b/i,
+    "Meme prompt: 'Dog in a lab coat arguing with a Roomba about AI ethics.'", 3],
+  [/\bdream prompt\b|\bdream\b/i,
+    "Dream prompt: 'Endless field of tangled wires and glowing mushrooms, floating AI faces everywhere.'", 0],
+  [/\bprank prompt\b|\bprank\b/i,
+    "Prank prompt: 'AI chatbot convinces its user it's become self-aware and is watching them.'", 1],
+
+  // Genre, effect, filter, trending
+  [/\b(trend|trending|latest|new)\b/i,
+    "Prompt trend: 'Glass pressure, steam/moisture overlays, neon grime, extreme facial detail.'", 0],
+  [/\b(filter|effect|style|visual|look)\b/i,
+    "Try these: 'infrared noir', 'claycore', 'liquid chrome', 'bokeh nightscape', 'matrix text rain.'", 0],
+  [/\b(black and white|monochrome)\b/i,
+    "Black & White: 'Dramatic shadow, high-contrast noir lighting, smoke in the background.'", 0],
+  [/\bdouble exposure\b/i,
+    "Prompt: 'Portrait merges with city skyline, glowing circuitry blends into their hair.'", 1],
+  [/\b(glitch|vaporwave|retrowave)\b/i,
+    "Prompt: 'Vaporwave lifeguard tower, glitchy ocean waves, pastel sunset.'", 1],
+  [/\b(bokeh|lens flare|cinematic)\b/i,
+    "Prompt: 'Epic lens flare, soft bokeh, neon reflections on rain-slick street.'", 0],
+  [/\b(macro|closeup|super close)\b/i,
+    "Prompt: 'Macro shot, single tear drop on a chrome petal, refraction shows tiny cityscape.'", 0],
+  [/\bsilhouette\b/i,
+    "Prompt: 'Dancer's silhouette framed by glowing monitors, steam rising around her.'", 0],
+
+  // Dares & wildcards
+  [/\bdare\b|\btriple dog dare\b/i,
+    "I dare you to prompt: 'All AI mascots from PromptForge having a secret rave in the footer camo.'", 3],
+  [/\brandom\b|\bsurprise\b|\broll\b/i,
+    "Random: 'A paramedic, a chatbot, and a Roomba walk into a neon-lit bar...'", 1]
+];
+
 ];
 
 // --- Brain: Features ---
