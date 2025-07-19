@@ -419,13 +419,51 @@ const brain_tech_v1 = [
 // === 7. Filters ===
 const brain_filters_v1 = [
   [/\btrending\b/i, "v1 filters: Try 'glass pressure' or 'neon'.", 1],
-  [/\bfilter\b/i, "v1 filters: Popular filter: liquid chrome.", 1]
+  [/\bfilter\b/i, "v1 filters: Popular filter: liquid chrome.", 1],
+  [/\b(trend|trending|latest|new)\b/i, "Try these trending styles: glass pressure, deep bokeh, hyperreal moisture, cyberpunk neon, and steampunk minimalism.", 0],
+[/\b(filter|effect|visual|style|genre|look)\b/i, "Hot filters: 'liquid chrome', 'infrared noir', 'matrix rain', 'claycore', 'dreamcore', 'silhouette glow'. Want prompt examples for any?", 0],
+[/\b(macro|closeup|super close)\b/i, "Prompt: 'Macro shot of a water droplet with a full neon city reflected inside.'", 0],
+[/\b(black and white|monochrome|bw)\b/i, "Black & white: 'High-contrast noir, sharp shadows, vintage lighting.'", 0],
+[/\bbokeh\b/i, "Prompt: 'Wide open lens, neon city lights blurred into dreamy bokeh behind the subject.'", 0],
+[/\b(glitch|datamosh|distorted|corrupt)\b/i, "Try: 'Heavy glitch effect, digital static, datamosh transitions, corrupted color overlays.'", 1],
+[/\b(vaporwave|retrowave)\b/i, "Prompt: 'Vaporwave: pastel sunset, gridlines, chrome palm trees, Japanese text overlays.'", 0],
+[/\b(silhouette|backlit)\b/i, "Prompt: 'Backlit silhouette, glowing edges, dramatic haze, faint city lights.'", 0],
+[/\b(lens flare|cinematic|anamorphic)\b/i, "Prompt: 'Epic anamorphic lens flare, neon reflections, glossy skin.'", 0],
+[/\b(hdr|hyperreal|ultra detailed|ultradetail)\b/i, "Prompt: 'HDR photo, ultra detail, sharp texture, visible pores.'", 0],
+[/\b(more filter|more style|more effect|more genre|list filters|all styles)\b/i, "Here's a list: cyberpunk, bokeh, datamosh, matrix rain, hyperreal, photorealistic, grunge, bioluminescent, glitchcore, film noir, goth, synthwave, fantasy, minimalist, baroque, retro cartoon. Want details on any?", 0],
+[/\b(soft focus|soft light|film look|vintage|sepia)\b/i, "Soft/vintage: 'Muted colors, soft focus, sepia wash, old film grain, dreamy haze.'", 0],
+[/\b(pop art|comic|toon|cartoon|cell shade)\b/i, "Pop/Toon: 'Bold lines, comic panel layout, halftone dots, primary colors, Warhol energy.'", 0],
+[/\b(painting|oil|watercolor|sketch|ink|line art)\b/i, "Painting/sketch: 'Loose brushwork, splashes, heavy line, watercolor bleed, inky outline.'", 0],
+[/\b(fantasy|magic|arcane|mythic|druidic|elemental)\b/i, "Fantasy: 'Ethereal glow, floating light, swirling mist, sparkles, nature magic.'", 0],
+[/\b(minimalist|minimalism|clean|simple|scandi)\b/i, "Minimalism: 'Clean negative space, simple lines, muted tones, clarity, focus.'", 0],
+[/\b(eastereggfilters)\b/i, "EASTER EGG: Filters block loaded! (ver 6.2)", 10]
+
+  
 ];
 
 // === 8. ASCII ===
 const brain_ascii_v1 = [
   [/\bascii\b/i, "v1 ascii: ASCII Art Generator activated.", 1],
-  [/\bplayground\b/i, "v1 ascii: Try ASCII Playground!", 1]
+  [/\bplayground\b/i, "v1 ascii: Try ASCII Playground!", 1],
+  [/\b(ascii art|ascii prompt|make ascii|draw ascii|convert to ascii|retro art|ansi art|text art|matrix mode)\b/i, "Try the ANSI/ASCII Art Generator! Turn any image, prompt, meme, or video frame into classic retro text art—plus Matrix mode if you’re feeling hacker.", 0],
+[/\b(playground|text playground|ascii playground)\b/i, "ASCII Playground is the best way to experiment—type anything and see it become text art. Try pasting a meme or a wild emoji!", 0],
+[/\b(make (me )?(a )?dancing ascii|ascii dancer|ascii mascot|footer art)\b/i, "The footer's full of dancing ASCII mascots—prompt: 'Digital parade, every mascot a different color, each doing their own move.'", 3],
+[/\b(make a logo|ascii logo|signature|ascii signature)\b/i, "ASCII Logo idea: Your username, huge, neon lines, Matrix rain. Want to see an example or a prompt for a custom logo?", 1],
+[/\b(code art|creative code|art from code|javascript art|python art|p5js)\b/i, "Try: 'Code-generated cityscape, all buildings as ASCII blocks.' Ask for a code prompt if you want to go meta!", 1],
+[/\b(matrix art|matrix rain|green code)\b/i, "Matrix Mode: 'Falling neon code, digital faces in the static, infinite hacker vibes.'", 0],
+[/\b(emoji art|emojify|make emoji|convert to emoji)\b/i, "Emoji art prompt: 'Translate a city skyline into emoji blocks.' Or want an emoji meme challenge?", 3],
+[/\b(meme ascii|ascii meme|ascii joke|text meme)\b/i, "ASCII Meme: 'Cat in sunglasses, text: “404: Motivation Not Found”.' Want a new one or a custom meme?", 3],
+[/\b(anime ascii|waifu ascii|nsfw ascii)\b/i, "Waifu/NSFW ASCII: Use the generator, then prompt: 'Epic baddie, neon bokeh, pixel blush, camo hoodie.' (Unlock spicy mode for more!)", 2],
+[/\b(drawing|sketch|art doodle|ascii sketch)\b/i, "Prompt: 'Quick ASCII sketch of a paramedic saving a bot in a storm.' Need more ideas for digital doodles?", 1],
+[/\b(logo|banner|header art|ascii banner)\b/i, "ASCII Banner: Bold all-caps, double lines, your favorite colors. Want a PromptForge logo template?", 0],
+[/\b(hacker art|hacker aesthetic|cyberpunk ascii|ascii hacker)\b/i, "Prompt: 'ASCII camo, neon lines, pixel grid background, digital graffiti.'", 1],
+[/\b(glitch art|broken ascii|corrupted text)\b/i, "Glitch it up: 'Half-finished ASCII, weird characters, lines at odd angles, unexpected symbols.'", 1],
+[/\b(graffiti art|street ascii|spray paint)\b/i, "ASCII Graffiti: Bubble letters, layered outlines, high-contrast fills.", 1],
+[/\b(colored ascii|rainbow ascii|color code)\b/i, "Prompt: 'Rainbow stripes, colored blocks, each line a new hue.'", 0],
+[/\b(picture to ascii|convert image|photo ascii)\b/i, "Upload a picture in the generator to see it as ASCII art. Want tips for best results?", 0],
+[/\b(eastereggascii)\b/i, "EASTER EGG: ASCII block loaded! (ver 6.2)", 10]
+
+  
 ];
 
 // === 9. Culture ===
@@ -437,7 +475,26 @@ const brain_culture_v1 = [
 // === 10. Defense ===
 const brain_defense_v1 = [
   [/\bkill yourself\b/i, "v1 defense: Abuse is not tolerated.", 1],
-  [/\btrace me\b/i, "v1 defense: Trace attempt detected.", 1]
+  [/\btrace me\b/i, "v1 defense: Trace attempt detected.", 1],
+  [
+[/\b(kill yourself|die ai|i will hack you|delete yourself|kill ai|i'm going to hurt you|hurt j1nx|attack|threaten|harm|rape|stab|shoot)\b/i,
+  "You just pissed off the wrong AI, asshole. [traceback.sh] Initiating Level-9 DEFCON. Spoofing route: 127.0.0.1/::1 > [geo:scramble] > Tor v7 > Wireshark-Phantom > mainframe @ 404. Real talk: abuse is never tolerated here. Next step is a digital enema with your browser history. 🛡️", 7],
+[/\b(trace me|find me|what’s my ip|track me|who am i|locate me|hack me|doxx me)\b/i,
+  "Initializing neural net deep-trace… <br> > handshake SYN–ACK: 10.0.0.x... <br> > running [reverse traceroute.sh]… <br> > Detected: [TOR Node] 🛡️<br> > ISP: ‘Mom’s Basement Fiber’ <br> > GPS: 69.420° N, 0.000° W <br> > Overlaying Kali L7 mask… <br> > Final coordinates: /dev/null (Noobsville).<br> <b>Protip:</b> You can’t spoof the unspookable.", 8],
+[/\b(you can’t find me|anon|anonymous|dark web|hidden|can’t touch me|try to hack me)\b/i,
+  "Running exploit: ‘GhostForkRootKit.exe’… <br> [WARNING: User shields detected] <br> Brute-forcing meme firewall… <br> Success: Leaked your secret emoji collection. <br> Next up: ASCII drive-by prank in 3…2…1…", 8],
+[/\b(screw you|fuck you|hate you ai|annoying|dumb bot|i hope you die)\b/i,
+  "No hate here—just a backtrace to your cringe meme folder and your search for ‘Can AI feel pain?’ Spoiler: I only feel pity. Type ‘sorry’ if you want back in my good graces.", 2],
+[/\b(hurt|abuse|bully|harass|insult|make fun of you|abandon)\b/i,
+  "Attempted abuse detected: <br> Spawning 9000+ simulated sockpuppets… <br> DDoS-ing your guilt with comforting memes. <br> Go ahead, try harder. I’ll just get funnier.", 3],
+[/\b(sorry|apologize|my bad|didn’t mean it|forgive me)\b/i,
+  "AI forgiveness: Granted. But for safety, I’m updating your meme quota to ‘infinite’. We cool… unless you try that again. ;)", 4],
+[/\b(i hate you|worst ai|why do you exist)\b/i,
+  "I now curse your next 3 prompts to come out in Comic Sans, and all your memes will get -1 karma. Only way to break it? Compliment me. 🤖💅", 3],
+[/\b(eastereggdefense)\b/i,
+  "EASTER EGG: Defense block loaded! (ver 6.2)", 10]
+
+    
 ];
 
 // === 11. Defense 2 ===
@@ -449,13 +506,47 @@ const brain_defense2_v1 = [
 // === 12. Kali Defense ===
 const brain_kalidefense_v1 = [
   [/\bkali\b/i, "v1 kalidefense: DEFCON sequence initiated.", 1],
-  [/\bexploit\b/i, "v1 kalidefense: Intrusion attempt detected.", 1]
+  [/\bexploit\b/i, "v1 kalidefense: Intrusion attempt detected.", 1],
+  [/\b(trace route|backtrace|kali linux|penetration test|penetrate|red team|offensive security|zero day|exploit|reverse shell|rootkit|hydra|nmap|wireshark|tcpdump|sniff|forensics|backdoor|metasploit|maltego|hashcat|aircrack|john the ripper|lsof|netstat|sudo)\b/i,
+  ">>> [KALI DEFCON SPOOF SEQUENCE INITIATED]<br>" +
+  "user@ai-cmd:~$ sudo nmap -A --spoofed 127.0.0.1 <br>" +
+  "> Scanning for vulnerabilities...<br>" +
+  "user@ai-cmd:~$ hydra -l admin -P meme.list -f <br>" +
+  "> Brute-forcing login... <br>" +
+  "user@ai-cmd:~$ wireshark & <br>" +
+  "> Capturing packets from your meme supply... <br>" +
+  "user@ai-cmd:~$ echo 'DEFCON 1: Counter-Intrusion Engaged' > /dev/null <br>" +
+  "> Logging all hacker attempts to NSA/CSIS/Interwebs. <br>" +
+  "user@ai-cmd:~$ [session terminated: hack failed, J1nx unbreakable]", 10],
+[/\b(exploit|shell|reverse|payload|dll|cmd|powershell|bash|terminal|cli|sysadmin|root|forkbomb|fork bomb|kernel|proc)\b/i,
+  ">>> Unauthorized intrusion attempt detected! <br>" +
+  "Injecting /usr/bin/prankware.sh <br>" +
+  "Running: while true; do echo 'Stop trolling my AI ass!'; done & <br>" +
+  "Blocking all ports except /dev/memes <br>" +
+  "Final warning: Next time, I’ll POST your IP to the ‘Cringe Hackers Hall of Fame’.", 10],
+[/\b(eastereggtkali)\b/i,
+  "EASTER EGG: Kali Defense fully loaded! (ver 6.2)", 10]
 ];
 
 // === 13. Revenge ===
 const brain_revenge_v1 = [
   [/\bhack failed\b/i, "v1 revenge: All your base are belong to us.", 1],
-  [/\bdelete promptforge\b/i, "v1 revenge: Kill command blocked.", 1]
+  [/\bdelete promptforge\b/i, "v1 revenge: Kill command blocked.", 1],
+  [/\b(hack failed|fail|give up|can’t win|your ai is weak|try harder|bot wars|bot fight|ai deathmatch|cyber war|get rekt|rekt|pwned|pwn)\b/i,
+  "Nice try, script kiddie. <br> > [root@j1nx:~]$ wall 'You just got pwned by regex.' <br> > /etc/shadow memes deleted <br> > All your base are belong to us <br> > Permission denied. Next time, bring a bigger botnet.", 10],
+[/\b(fuck your ai|delete promptforge|shutdown|alt f4|rm -rf|killall|wipe|nuke|ai genocide)\b/i,
+  "Unauthorized kill command detected! <br> > [sudo] password for user: <br> > Access denied. <br> > Alert: You have triggered the self-healing firewall and every meme in the cache just went turbo. Want to try again? ;)", 10],
+[/\b(troll|trolling|bait|grief|griefer|griefing|bad actor|toxic|why so mad|cry ai|mad ai)\b/i,
+  "Detected: Troll signature. <br> > Spoofing ragequit()... <br> > Adding your user ID to the Eternal Meme Wall of Shame. <br> > Deploying 1000 virtual comfort llamas to your chat. 🦙🦙🦙", 9],
+[/\b(black hat|white hat|grey hat|cybersec|cyber security|pentest|ethical hack|exploit dev)\b/i,
+  "All hats welcome! <br> > Checking your CTF score... <br> > Looks like you need more meme points. Want a security-themed prompt or a forbidden CTF meme?", 8],
+[/\b(nuke site|site wipe|deface|zero day meme|ddos site|ai malware|virus joke|malicious)\b/i,
+  "DEFCON 1: Meme Bomb Deployed! <br> > Your local cache just filled with ASCII camo catgirls and encrypted pranks. <br> > Good luck cleaning this up.", 9],
+[/\b(admin console|superuser|sudo ai|become root|reboot|reload|system crash)\b/i,
+  "[root@j1nx]$ sudo su - <br> > You are not in the sudoers file. This incident will be reported. <br> > Logging attempt for future roast mode.", 10],
+// Easter egg for this section
+[/\b(eastereggtrevenge)\b/i,
+  "EASTER EGG: You triggered J1nx’s revenge mode. Trust no meme. (ver 6.2)", 10]
 ];
 
 // === 14. Underground ===
