@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>PromptForge.online – AI Prompt Generator, Jailbreak Tools & Art Suite</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="PromptForge.online: Advanced AI prompt builder, jailbreak hacks, art and watermark generator, ASCII/ANSI tools, and model comparison. Unlock unfiltered creativity for every AI platform." />
   <meta name="keywords" content="AI prompt generator, jailbreaks, Stable Diffusion, Sora, RealVis, ASCII art, ANSI art, AI watermark, NSFW, OpenArt, prompt tools, compare AI models, prompt builder, image prompt, video prompt, AI hacks, creative AI toolbox" />
   <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet" />
@@ -347,7 +347,7 @@
 </head>
 <body>
   <header>
-    <span class="version">v2.0.0</span>
+    <span class="version">v2.0.1</span>
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
  (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
@@ -358,52 +358,52 @@
    (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
     </pre>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      function replaceEyes() {
-        const el = document.getElementById('ansiArt');
-        let html = el.innerHTML;
-        html = html.replace(/(\([oO0]{1,3}\))/g, function(m) {
-          return m.replace(/[oO0]/g, '<span class="eye"><span class="pupil"></span></span>');
+      document.addEventListener('DOMContentLoaded', function() {
+        function replaceEyes() {
+          const el = document.getElementById('ansiArt');
+          let html = el.innerHTML;
+          html = html.replace(/(\([oO0]{1,3}\))/g, function(m) {
+            return m.replace(/[oO0]/g, '<span class="eye"><span class="pupil"></span></span>');
+          });
+          el.innerHTML = html;
+        }
+        replaceEyes();
+        function moveEyes(e){
+          var eyes=document.querySelectorAll('.eye');
+          var ww=window.innerWidth, wh=window.innerHeight;
+          for(var i=0;i<eyes.length;i++){
+            var pupil=eyes[i].querySelector('.pupil');
+            var cx=eyes[i].getBoundingClientRect().left+eyes[i].offsetWidth/2;
+            var cy=eyes[i].getBoundingClientRect().top+eyes[i].offsetHeight/2;
+            var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
+            var px= Math.max(-.32, Math.min(.32, dx));
+            var py= Math.max(-.32,Math.min(.32, dy));
+            pupil.style.left=0.33+px*0.38+'em';
+            pupil.style.top=0.33+py*0.38+'em';
+          }
+        }
+        document.addEventListener('mousemove', moveEyes);
+        document.addEventListener('touchmove', function(e){
+          if(e.touches.length){
+            var fakeEvent = {clientX: e.touches[0].clientX, clientY: e.touches[0].clientY};
+            moveEyes(fakeEvent);
+          }
         });
-        el.innerHTML = html;
-      }
-      replaceEyes();
-      function moveEyes(e){
-        var eyes=document.querySelectorAll('.eye');
-        var ww=window.innerWidth, wh=window.innerHeight;
-        for(var i=0;i<eyes.length;i++){
-          var pupil=eyes[i].querySelector('.pupil');
-          var cx=eyes[i].getBoundingClientRect().left+eyes[i].offsetWidth/2;
-          var cy=eyes[i].getBoundingClientRect().top+eyes[i].offsetHeight/2;
-          var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
-          var px= Math.max(-.32, Math.min(.32, dx));
-          var py= Math.max(-.32,Math.min(.32, dy));
-          pupil.style.left=0.33+px*0.38+'em';
-          pupil.style.top=0.33+py*0.38+'em';
-        }
-      }
-      document.addEventListener('mousemove', moveEyes);
-      document.addEventListener('touchmove', function(e){
-        if(e.touches.length){
-          var fakeEvent = {clientX: e.touches[0].clientX, clientY: e.touches[0].clientY};
-          moveEyes(fakeEvent);
-        }
       });
-    });
     </script>
     <h1>PromptForge.online</h1>
     <div class="desc">
-      Advanced AI prompt builder, jailbreak hacks, creative tools, and ANSI/ASCII generators.<br />
+      Advanced AI prompt builder, jailbreak hacks, creative tools, and ANSI/ASCII generators.<br>
       No limits. No filter walls. Forever free.
     </div>
   </header>
 
   <!-- ======= J1nx: True cutout, floating, SMART with "brain" ======= -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue" />
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br />(Don’t worry, I’m good at both…)
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
       </div>
       <div class="j1nx-bubble-row-true">
         <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
@@ -418,102 +418,105 @@
       </div>
     </div>
   </div>
-  <script src="assets/j1nx_brain.js"></script>
-  <script>
-    function adjustJ1nxFloatTrue() {
-      const widget = document.getElementById('j1nxFloatTrue');
-      const footer = document.querySelector('footer');
-      if (!widget || !footer) return;
-      const footerRect = footer.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const overlap = windowHeight - footerRect.top;
-      if (overlap > 0) {
-        widget.style.bottom = overlap + 16 + 'px';
-      } else {
-        widget.style.bottom = 'calc(2.8vh + 125px)';
+
+  <script src="assets/j1nx_brain.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Position J1nx above the footer
+      function adjustJ1nxFloatTrue() {
+        const widget = document.getElementById('j1nxFloatTrue');
+        const footer = document.querySelector('footer');
+        if (!widget || !footer) return;
+        const footerRect = footer.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const overlap = windowHeight - footerRect.top;
+        if (overlap > 0) {
+          widget.style.bottom = (overlap + 16) + 'px';
+        } else {
+          widget.style.bottom = 'calc(2.8vh + 125px)';
+        }
       }
-    }
-    window.addEventListener('scroll', adjustJ1nxFloatTrue);
-    window.addEventListener('resize', adjustJ1nxFloatTrue);
-    setTimeout(adjustJ1nxFloatTrue, 700);
+      window.addEventListener('scroll', adjustJ1nxFloatTrue);
+      window.addEventListener('resize', adjustJ1nxFloatTrue);
+      setTimeout(adjustJ1nxFloatTrue, 700);
 
-    // ==== J1nx BRAIN LOGIC ====
-    let chat = [];
-    let defaultMood = 0;
-    let moods = [
-      { glow: '#64f2e3' },
-      { glow: '#fa528e' },
-      { glow: '#be9cff' },
-      { glow: '#ffd166' },
-    ];
-
-    function getJ1nxReply(val) {
-      if (window.j1nxBrain && typeof window.j1nxBrain === 'function') {
-        let res = window.j1nxBrain(val, chat.length);
-        if (typeof res === 'string') return { reply: res, mood: 0 };
-        if (typeof res === 'object' && res.reply) return res;
-        return { reply: '(I have no clue... bug?)', mood: 0 };
-      }
-      return { reply: '(Brain not loaded)', mood: 0 };
-    }
-
-    function setJ1nxMood(idx) {
-      idx = Math.max(0, Math.min(idx, moods.length - 1));
-      document.getElementById('j1nxBubbleTrueMain').style.boxShadow =
-        '0 4px 22px ' + moods[idx].glow + 'bb,0 0 0 3px #23231f';
-      document.getElementById('j1nxCutoutTrue').style.boxShadow = 'none';
-    }
-
-    let moodIndex = 0,
-      lastTap = 0;
-    document.getElementById('j1nxBubbleTrueMain').addEventListener('click', function (e) {
-      let now = Date.now();
-      if (now - lastTap < 400) {
-        moodIndex = (moodIndex + 1) % moods.length;
-        setJ1nxMood(moodIndex);
-      }
-      lastTap = now;
-    });
-
-    function renderJ1nxChat() {
-      document.getElementById('j1nxBubbleTextTrue').innerHTML = '<b>J1nx:</b> ' + chat[chat.length - 1];
-    }
-    function chatReset() {
-      chat = [
-        "Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)",
+      // ==== J1nx BRAIN LOGIC ====
+      // SESSION MASTER: Use only window.j1nxBrain from assets/j1nx_brain.js!
+      let chat = [];
+      let defaultMood = 0;
+      let moods = [
+        {glow: "#64f2e3"},
+        {glow: "#fa528e"},
+        {glow: "#be9cff"},
+        {glow: "#ffd166"}
       ];
-      setJ1nxMood(defaultMood);
-      renderJ1nxChat();
-    }
-    document.getElementById('j1nxSendTrue').onclick = function () {
-      let val = document.getElementById('j1nxInputTrue').value.trim();
-      if (!val) return;
-      let res = getJ1nxReply(val);
-      chat.push(val);
-      chat.push(res.reply);
-      setJ1nxMood(typeof res.mood === 'number' ? res.mood : defaultMood);
-      renderJ1nxChat();
-      document.getElementById('j1nxInputTrue').value = '';
-    };
-    document.getElementById('j1nxInputTrue').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') document.getElementById('j1nxSendTrue').onclick();
+      // moodIdx: 0 = default/cheer, 1 = wicked, 2 = sultry, 3 = caught/slack
+
+      // Use your real brain! (always window.j1nxBrain)
+      function getJ1nxReply(val) {
+        if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+          let res = window.j1nxBrain(val, chat.length);
+          if(typeof res === "string") return {reply: res, mood: 0};
+          if(typeof res === "object" && res.reply) return res;
+          return {reply: "(I have no clue... bug?)", mood: 0};
+        }
+        return {reply: "(Brain not loaded)", mood: 0};
+      }
+      function setJ1nxMood(idx) {
+        // Limit idx to known moods
+        idx = Math.max(0, Math.min(idx, moods.length-1));
+        // Only set bubble, NOT cutout image
+        document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+        // No glow on cutout, ever
+        document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      }
+      // Double-tap to "cycle" mood manually for fun
+      let moodIndex = 0, lastTap = 0;
+      document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+        let now = Date.now();
+        if (now - lastTap < 400) {
+          moodIndex = (moodIndex + 1) % moods.length;
+          setJ1nxMood(moodIndex);
+        }
+        lastTap = now;
+      });
+
+      // ==== Chat logic ====
+      function renderJ1nxChat() {
+        document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      }
+      function chatReset() {
+        chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+        setJ1nxMood(defaultMood);
+        renderJ1nxChat();
+      }
+      document.getElementById("j1nxSendTrue").onclick = function(){
+        let val = document.getElementById("j1nxInputTrue").value.trim();
+        if (!val) return;
+        let res = getJ1nxReply(val);
+        chat.push(val);
+        chat.push(res.reply);
+        setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+        renderJ1nxChat();
+        document.getElementById("j1nxInputTrue").value = "";
+      };
+      document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+        if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+      });
+      document.getElementById("j1nxClearTrue").onclick = chatReset;
+      document.getElementById("j1nxSaveTrue").onclick = function(){
+        let text = chat.join('\n');
+        let blob = new Blob([text], {type:"text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "j1nx_chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      };
+      chatReset(); // init
     });
-    document.getElementById('j1nxClearTrue').onclick = chatReset;
-    document.getElementById('j1nxSaveTrue').onclick = function () {
-      let text = chat.join('\n');
-      let blob = new Blob([text], { type: 'text/plain' });
-      let url = URL.createObjectURL(blob);
-      let a = document.createElement('a');
-      a.href = url;
-      a.download = 'j1nx_chat.txt';
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(() => {
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }, 1000);
-    };
-    chatReset();
   </script>
 
   <main>
@@ -552,6 +555,7 @@
       </a>
     </section>
 
+    <!-- ======= Partner/Resource Links ======= -->
     <section class="partner-block">
       <h2>Essential AI Art & Prompt Resources</h2>
       <div style="display:flex;flex-wrap:wrap;gap:.7em .9em;justify-content:center;margin-bottom:.18em;">
@@ -568,25 +572,16 @@
 
     <div class="bmc-button">
       <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">
-        <img
-          src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-          alt="Buy Me A Coffee"
-          style="height: 43px !important"
-        />
+        <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 43px !important;" />
       </a>
     </div>
     <div class="adsense-wrap">
-      <ins
-        class="adsbygoogle"
-        style="display:block; text-align:center; min-width:320px; min-height:80px;"
-        data-ad-client="ca-pub-4963053724895140"
-        data-ad-slot="auto"
-        data-ad-format="auto"
-      ></ins>
+      <ins class="adsbygoogle" style="display:block; text-align:center; min-width:320px; min-height:80px;" data-ad-client="ca-pub-4963053724895140" data-ad-slot="auto" data-ad-format="auto"></ins>
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
   </main>
 
+  <!-- ======= Footer, Static Dancers & Camo ======= -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -600,40 +595,35 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     <pre class="footer-camo" id="footerCamo"></pre>
     <div class="footer-bar">
       Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color: var(--aqua)">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" style="color: var(--aqua)">Twitter/X</a> &bull;
-      <a href="terms.html" style="color: var(--aqua)">Legal</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);">Twitter/X</a> &bull;
+      <a href="terms.html" style="color:var(--aqua);">Legal</a>
     </div>
   </footer>
-
   <script>
+    // --- Animated CAMO (Half Size, unified color) ---
     const camoColors = [
-      '#64f2e3',
-      '#23d7ba',
-      '#4df6a0',
-      '#bdf6c3',
-      '#abffe6',
-      '#abb8b8',
+      "#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"
     ];
-    function randomCamoChar() {
-      const chars = '░▒▓▚▞▐▉█▛';
-      return chars[Math.floor(Math.random() * chars.length)];
+    function randomCamoChar(){
+      const chars = "░▒▓▚▞▐▉█▛";
+      return chars[Math.floor(Math.random()*chars.length)];
     }
-    function renderCamo(tick = 0) {
-      let out = '';
-      for (let row = 0; row < 1; ++row) {
-        for (let col = 0; col < 62; ++col) {
-          let color = camoColors[(row + col + tick) % camoColors.length];
+    function renderCamo(tick=0){
+      let out = "";
+      for (let row=0;row<1;++row) {
+        for (let col=0;col<62;++col) {
+          let color = camoColors[(row+col+tick)%camoColors.length];
           out += `<span style="color:${color}">${randomCamoChar()}</span>`;
         }
-        out += '<br>';
+        out += "<br>";
       }
-      document.getElementById('footerCamo').innerHTML = out;
+      document.getElementById("footerCamo").innerHTML = out;
     }
     let camoTick = 0;
-    setInterval(() => {
+    setInterval(()=>{
       renderCamo(camoTick++);
-    }, 950);
+    },950);
     renderCamo();
   </script>
 </body>
