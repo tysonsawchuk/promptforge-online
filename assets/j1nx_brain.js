@@ -203,7 +203,7 @@ const brain_features_v1 = [
 // === 3. Prompts ===
 const brain_prompts_v1 = [
   [/\bprompt\b/i, "v1 prompts: Here's a random prompt for you!", 1],
-  [/\bchallenge\b/i, "v1 prompts: I challenge you to mash up two genres!", 1],
+  [/\bchallenge\b/i, "v1 prompts: I challenge you to mash up two genres!", 1]
     
 ];
 
