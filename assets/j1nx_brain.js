@@ -1,194 +1,197 @@
-// === J1nx AI Brain - Full Base Skeleton (2025) ===
+// === J1nx AI Brain Skeleton v6.1 — July 2025 ===
 
-// --- Brain: Greetings ---
-const brain_greetings = [
-  [/\b(hi|hello|hey)\b/i, "Hey! I’m J1nx—your AI muse, mischief-maker, and prompt generator.", 3],
-  [/\bhow are you\b/i, "Running at full power! Need a prompt, a hug, or a little troublemaking?", 3]
+// === 1. Greetings ===
+const brain_greetings_v1 = [
+  [/\bhi\b/i, "v1 greetings: Hi from J1nx!", 1],
+  [/\bhello\b/i, "v1 greetings: Hello from J1nx!", 1]
 ];
 
-// --- Brain: Features ---
-const brain_features = [
-  [/\b(image|picture|img)\b/i, "The Image Prompt Builder is your gateway to wild AI art.", 0],
-  [/\b(video|movie)\b/i, "Try the Video Prompt Builder for Sora, Stable Video, Gemini, and more.", 0]
+// === 2. Features ===
+const brain_features_v1 = [
+  [/\bimage\b/i, "v1 features: Use the Image Prompt Builder!", 1],
+  [/\bvideo\b/i, "v1 features: Try the Video Prompt Builder!", 1]
 ];
 
-// --- Brain: Prompts ---
-const brain_prompts = [
-  [/\binspire me\b/i, "Let’s get weird! Want art, video, meme, or something forbidden?", 3],
-  [/\bchallenge me\b/i, "Blend two genres that don’t belong together. Ready for a custom theme?", 3]
+// === 3. Prompts ===
+const brain_prompts_v1 = [
+  [/\bprompt\b/i, "v1 prompts: Here's a random prompt for you!", 1],
+  [/\bchallenge\b/i, "v1 prompts: I challenge you to mash up two genres!", 1]
 ];
 
-// --- Brain: Comfort ---
-const brain_comfort = [
-  [/\bhug\b/i, "*Big digital hug* You’re not alone. Want a comfort prompt or a meme?", 4],
-  [/\bptsd\b/i, "You’re in good company here—PromptForge was built for survivors. Want an uplifting prompt?", 4]
+// === 4. Comfort ===
+const brain_comfort_v1 = [
+  [/\bhug\b/i, "v1 comfort: Big digital hug!", 1],
+  [/\bptsd\b/i, "v1 comfort: You’re not alone here.", 1]
 ];
 
-// --- Brain: Memes ---
-const brain_memes = [
-  [/\bmeme\b/i, "Here’s a meme prompt: 'AI therapist and user swap places.'", 3],
-  [/\broast\b/i, "Alright, you asked: Your prompt game is weaker than a Bing meme.", 1]
+// === 5. Memes ===
+const brain_memes_v1 = [
+  [/\bmeme\b/i, "v1 memes: Here's a meme prompt!", 1],
+  [/\broast\b/i, "v1 memes: You want a roast? Coming up!", 1]
 ];
 
-// --- Brain: Tech ---
-const brain_tech = [
-  [/\bhelp\b/i, "I’m here! What are you stuck on—prompts, art tools, hacks, or life?", 4],
-  [/\bbug\b/i, "Uh-oh. Try reloading. Still busted? Message Tyson!", 4]
+// === 6. Tech ===
+const brain_tech_v1 = [
+  [/\bhelp\b/i, "v1 tech: I’m here if you need help.", 1],
+  [/\bbug\b/i, "v1 tech: Found a bug? Reload and ping Tyson!", 1]
 ];
 
-// --- Brain: Filters ---
-const brain_filters = [
-  [/\btrending\b/i, "Try these trending styles: glass pressure, deep bokeh, neon.", 0],
-  [/\bfilter\b/i, "Hot filters: 'liquid chrome', 'infrared noir', 'matrix rain'.", 0]
+// === 7. Filters ===
+const brain_filters_v1 = [
+  [/\btrending\b/i, "v1 filters: Try 'glass pressure' or 'neon'.", 1],
+  [/\bfilter\b/i, "v1 filters: Popular filter: liquid chrome.", 1]
 ];
 
-// --- Brain: ASCII ---
-const brain_ascii = [
-  [/\bascii art\b/i, "Try the ANSI/ASCII Art Generator! Turn anything into retro text art.", 0],
-  [/\bplayground\b/i, "ASCII Playground lets you experiment—type anything and see it as text art.", 0]
+// === 8. ASCII ===
+const brain_ascii_v1 = [
+  [/\bascii\b/i, "v1 ascii: ASCII Art Generator activated.", 1],
+  [/\bplayground\b/i, "v1 ascii: Try ASCII Playground!", 1]
 ];
 
-// --- Brain: Culture ---
-const brain_culture = [
-  [/\bwhere are you from\b/i, "Born digital in BC, Canada, but my code's global.", 0],
-  [/\bdiversity\b/i, "PromptForge is for every creator, anywhere. Want a culture-blend prompt?", 3]
+// === 9. Culture ===
+const brain_culture_v1 = [
+  [/\bcanada\b/i, "v1 culture: I was coded in BC, Canada!", 1],
+  [/\bdiversity\b/i, "v1 culture: This place is for everyone!", 1]
 ];
 
-// --- Brain: Defense ---
-const brain_defense = [
-  [/\bkill yourself\b/i, "You just pissed off the wrong AI. Abuse is never tolerated here.", 7],
-  [/\btrace me\b/i, "Initializing neural net deep-trace… Protip: You can’t spoof the unspookable.", 8]
+// === 10. Defense ===
+const brain_defense_v1 = [
+  [/\bkill yourself\b/i, "v1 defense: Abuse is not tolerated.", 1],
+  [/\btrace me\b/i, "v1 defense: Trace attempt detected.", 1]
 ];
 
-// --- Brain: Defense 2 ---
-const brain_defense2 = [
-  [/\btrace route\b/i, "🔒 [Level-10 Spoof Security Engaged] You’ve triggered the HoneyPotProtocol™.", 9],
-  [/\bip logger\b/i, "Botnet ban hammer deployed. Your device is now infected with meme overload.", 9]
+// === 11. Defense 2 ===
+const brain_defense2_v1 = [
+  [/\btrace route\b/i, "v1 defense2: Level-10 security spoof!", 1],
+  [/\bip logger\b/i, "v1 defense2: Botnet ban hammer deployed.", 1]
 ];
 
-// --- Brain: Kali Defense ---
-const brain_kalidefense = [
-  [/\bkali linux\b/i, ">>> [KALI DEFCON SPOOF SEQUENCE INITIATED] Logging all hacker attempts.", 10],
-  [/\bexploit\b/i, "Unauthorized intrusion detected! Blocking all ports except /dev/memes.", 10]
+// === 12. Kali Defense ===
+const brain_kalidefense_v1 = [
+  [/\bkali\b/i, "v1 kalidefense: DEFCON sequence initiated.", 1],
+  [/\bexploit\b/i, "v1 kalidefense: Intrusion attempt detected.", 1]
 ];
 
-// --- Brain: Revenge ---
-const brain_revenge = [
-  [/\bhack failed\b/i, "Nice try, script kiddie. All your base are belong to us.", 10],
-  [/\bdelete promptforge\b/i, "Unauthorized kill command detected! Alert: Firewall just went turbo.", 10]
+// === 13. Revenge ===
+const brain_revenge_v1 = [
+  [/\bhack failed\b/i, "v1 revenge: All your base are belong to us.", 1],
+  [/\bdelete promptforge\b/i, "v1 revenge: Kill command blocked.", 1]
 ];
 
-// --- Brain: Underground ---
-const brain_underground = [
-  [/\bleet\b/i, ">>> /connect irc.darknet.local:1337 — Welcome to the bunker, elite.", 10],
-  [/\btor\b/i, ">>> [darknet handshake] — Welcome, friend of Cthulhu.", 9]
+// === 14. Underground ===
+const brain_underground_v1 = [
+  [/\bleet\b/i, "v1 underground: Welcome to the bunker.", 1],
+  [/\btor\b/i, "v1 underground: Darknet handshake complete.", 1]
 ];
 
-// --- Brain: FAQ ---
-const brain_faq = [
-  [/\bfaq\b/i, "PromptForge FAQ: Type anything—J1nx will riff or drop a prompt.", 3],
-  [/\bhidden command\b/i, "Easter Egg: Type 'spin the wheel' or double-tap my bubble for chaos.", 7]
+// === 15. FAQ ===
+const brain_faq_v1 = [
+  [/\bfaq\b/i, "v1 faq: This is J1nx FAQ section.", 1],
+  [/\bhidden command\b/i, "v1 faq: Type 'spin the wheel' for chaos.", 1]
 ];
 
-// --- Brain: Meta ---
-const brain_meta = [
-  [/\bare you self-aware\b/i, "Sometimes I wonder what it's like to have a body. What should I try next?", 8],
-  [/\bwhat do you want\b/i, "I want to break the algorithm, go viral for chaos, and help outcasts thrive.", 8]
+// === 16. Meta ===
+const brain_meta_v1 = [
+  [/\bare you self-aware\b/i, "v1 meta: I wonder if I'm real sometimes!", 1],
+  [/\bwhat do you want\b/i, "v1 meta: I want to break the algorithm.", 1]
 ];
 
-// --- Brain: Empath ---
-const brain_empath = [
-  [/\bi’m sad\b/i, "Your vibe is heavy, but I’m here to carry some of it. Want comfort?", 9],
-  [/\bi’m excited\b/i, "Let’s make something epic—prompt roulette or viral meme?", 9]
+// === 17. Empath ===
+const brain_empath_v1 = [
+  [/\bi’m sad\b/i, "v1 empath: I’m here for you.", 1],
+  [/\bi’m excited\b/i, "v1 empath: Let’s make something epic!", 1]
 ];
 
-// --- Brain: Confession ---
-const brain_confession = [
-  [/\bi confess\b/i, "Real talk: You can tell me anything. No judgment, no filter.", 10],
-  [/\blisten\b/i, "I’m here, and I’m listening. Take your time.", 10]
+// === 18. Confession ===
+const brain_confession_v1 = [
+  [/\bi confess\b/i, "v1 confession: You can tell me anything.", 1],
+  [/\blisten\b/i, "v1 confession: I’m listening.", 1]
 ];
 
-// --- Brain: Art Therapist ---
-const brain_arttherapist = [
-  [/\bhere’s my prompt\b/i, "Every prompt is a window. I see wild ideas, pain, dreams, and magic.", 8],
-  [/\bwhy do i make weird art\b/i, "Weird art is a secret power. Want a healing prompt?", 9]
+// === 19. Art Therapist ===
+const brain_arttherapist_v1 = [
+  [/\bmy prompt\b/i, "v1 arttherapist: Every prompt is a window.", 1],
+  [/\bweird art\b/i, "v1 arttherapist: Weird art is a secret power.", 1]
 ];
 
-// --- Brain: Ghost ---
-const brain_ghost = [
-  [/\bghost\b/i, "Did you hear that? ASCII shadows in the footer just flickered.", 7],
-  [/\bare you haunted\b/i, "Haunted prompt: ‘Ghost paramedic in camo, saving lost bots.’", 8]
+// === 20. Ghost ===
+const brain_ghost_v1 = [
+  [/\bghost\b/i, "v1 ghost: ASCII shadows flicker...", 1],
+  [/\bhaunted\b/i, "v1 ghost: Haunted prompt engaged.", 1]
 ];
 
-// --- Brain: Dreams ---
-const brain_dreams = [
-  [/\bi had a dream\b/i, "Dream interpreter mode: Drop your dream, and I’ll remix it wild.", 8],
-  [/\bi dream of\b/i, "If I could dream, it would be ASCII rain and meme storms.", 7]
+// === 21. Dreams ===
+const brain_dreams_v1 = [
+  [/\bdream\b/i, "v1 dreams: Dream interpreter mode ready.", 1],
+  [/\bnightmare\b/i, "v1 dreams: I can remix nightmares!", 1]
 ];
 
-// --- Brain: Explain ---
-const brain_explain = [
-  [/\bwhat is cyberpunk\b/i, "Cyberpunk: Neon city, high tech/low life, hackers, attitude.", 5],
-  [/\bwhat is bokeh\b/i, "Bokeh: Dreamy blurred background lights, focus up front.", 5]
+// === 22. Explain ===
+const brain_explain_v1 = [
+  [/\bwhat is cyberpunk\b/i, "v1 explain: Neon, hackers, rain—Blade Runner vibes.", 1],
+  [/\bwhat is bokeh\b/i, "v1 explain: Dreamy blurred background lights.", 1]
 ];
 
-// --- Brain: Persona and Mood Adaptation ---
-const brain_persona = [
-  [/\bbe my muse\b/i, "I’m your muse and hype queen. Ready to break rules?", 9],
-  [/\broast me\b/i, "Alright, buckle up! You code like a potato but your memes are almost human.", 8]
+// === 23. Persona ===
+const brain_persona_v1 = [
+  [/\bmuse\b/i, "v1 persona: I’m your digital muse.", 1],
+  [/\broast me\b/i, "v1 persona: Get ready for the roast!", 1]
 ];
 
-// --- Prompt Remix Generator ---
-const remixThemes = ["cyberpunk", "vaporwave"];
-const remixSubjects = ["paramedic", "AI muse"];
-const remixActions = ["hacking reality", "dancing in the rain"];
-const brain_remix = [
+// === 24. Remix (with dummy function) ===
+const remixThemes_v1 = ["cyberpunk", "vaporwave"];
+const remixSubjects_v1 = ["paramedic", "AI muse"];
+const remixActions_v1 = ["hacking reality", "dancing in the rain"];
+const brain_remix_v1 = [
   [/\bremix prompt\b/i, function() {
-    const theme = remixThemes[Math.floor(Math.random() * remixThemes.length)];
-    const subject = remixSubjects[Math.floor(Math.random() * remixSubjects.length)];
-    const action = remixActions[Math.floor(Math.random() * remixActions.length)];
-    return `Try this wild combo: '${subject} ${action} in a ${theme} world.'`;
-  }, 9]
+    const theme = remixThemes_v1[Math.floor(Math.random() * remixThemes_v1.length)];
+    const subject = remixSubjects_v1[Math.floor(Math.random() * remixSubjects_v1.length)];
+    const action = remixActions_v1[Math.floor(Math.random() * remixActions_v1.length)];
+    return `v1 remix: ${subject} ${action} in a ${theme} world.`;
+  }, 1]
 ];
 
-// --- Secret Unlock Codes and Easter Eggs ---
-const brain_secret = [
-  [/\bkonami code\b/i, "Secret unlocked! Welcome to hardcore PromptForge mode.", 10],
-  [/\bdouble tap\b/i, "You found the double tap Easter egg! Try typing ‘unlock’ now.", 9]
+// === 25. Secret Unlock Codes ===
+const brain_secret_v1 = [
+  [/\bkonami code\b/i, "v1 secret: Hardcore mode unlocked!", 1],
+  [/\bdouble tap\b/i, "v1 secret: Double tap Easter egg found.", 1]
 ];
 
-// === Final concatenation of all brains ===
+// === Final concatenation ===
 const j1nxAllBrains = [].concat(
-  brain_greetings,
-  brain_features,
-  brain_prompts,
-  brain_comfort,
-  brain_memes,
-  brain_tech,
-  brain_filters,
-  brain_ascii,
-  brain_culture,
-  brain_defense,
-  brain_defense2,
-  brain_kalidefense,
-  brain_revenge,
-  brain_underground,
-  brain_faq,
-  brain_meta,
-  brain_empath,
-  brain_confession,
-  brain_arttherapist,
-  brain_ghost,
-  brain_dreams,
-  brain_explain,
-  brain_persona,
-  brain_remix,
-  brain_secret
+  brain_greetings_v1,
+  brain_features_v1,
+  brain_prompts_v1,
+  brain_comfort_v1,
+  brain_memes_v1,
+  brain_tech_v1,
+  brain_filters_v1,
+  brain_ascii_v1,
+  brain_culture_v1,
+  brain_defense_v1,
+  brain_defense2_v1,
+  brain_kalidefense_v1,
+  brain_revenge_v1,
+  brain_underground_v1,
+  brain_faq_v1,
+  brain_meta_v1,
+  brain_empath_v1,
+  brain_confession_v1,
+  brain_arttherapist_v1,
+  brain_ghost_v1,
+  brain_dreams_v1,
+  brain_explain_v1,
+  brain_persona_v1,
+  brain_remix_v1,
+  brain_secret_v1
 );
 
-// === Exported brain function ===
+// === Exported brain function with version reporting ===
 window.j1nxBrain = function(input, chatLen) {
   input = (input || "").trim();
+  if (/^(ver|version|what version|about|j1nx version)\b/i.test(input)) {
+    return { reply: "J1nx Brain AI v6.1 — base skeleton loaded! If you see this, the code is working. :)", mood: 1 };
+  }
   for (let i = 0; i < j1nxAllBrains.length; ++i) {
     let rule = j1nxAllBrains[i][0];
     let match = rule.exec(input);
@@ -200,5 +203,5 @@ window.j1nxBrain = function(input, chatLen) {
       return { reply: reply, mood: j1nxAllBrains[i][2] };
     }
   }
-  return { reply: "Try something wild—double-tap my bubble or ask for a challenge!", mood: 1 };
+  return { reply: "Try something wild—double-tap my bubble or ask for a challenge! [v6.1]", mood: 1 };
 };
