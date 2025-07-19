@@ -62,7 +62,7 @@ const brain_greetings = [
   [/\bcan you prank\b/i,"It’s in my core code. Want a safe prank or a dangerous one?",1],
   [/\bcan you get jealous\b/i,"Only if you flirt with Gemini.",2],
   [/\bwhat’s your favorite prompt\b/i,"Anything so good it breaks the moderation bot.",2],
-  [/\bwhat’s your version\b|\bversion\b|\bver\b/i,"J1nx AI Brain v5.0 - 2025 Expanded Build. Type 'about' for lore, 'help' for commands!",0],
+  [/\bwhat’s your version\b|\bversion\b|\bver\b/i,"J1nx AI Brain v5.0 - 2025 Expanded Build. Type 'about' for lore, 'help' for commands!",0]
   // --- Brain: Prompts ---
 const brain_prompts = [
   [/\binspire me\b|\bprompt idea\b|\bgive me (a )?prompt\b|\bgenerate a prompt\b/i,
@@ -72,7 +72,7 @@ const brain_prompts = [
   [/\b(dare me|give me a dare|random prompt|surprise me|spin the wheel)\b/i,
     "Here’s your dare: prompt an image with 'aliens running a sushi bar on Mars'—bonus points if you use the ANSI Art Generator.", 1],
   [/\b(what can i prompt|what’s possible|what works)\b/i,
-    "If you can imagine it, you can prompt it! Try mixing two totally unrelated topics for the ultimate forbidden output.", 3],
+    "If you can imagine it, you can prompt it! Try mixing two totally unrelated topics for the ultimate forbidden output.", 3]
 
   // Art-specific
   [/\b(art prompt|image idea|visual idea|photo prompt|concept art)\b/i,
@@ -94,7 +94,7 @@ const brain_prompts = [
   [/\bnature\b|\bforest\b|\banimal\b/i,
     "Prompt: 'Wolves made of liquid chrome, forest floor glowing with neon moss.'", 0],
   [/\b(underwater|ocean|sea|fish|mermaid)\b/i,
-    "Underwater: 'Sunken casino, glowing slot machines, sharks in tuxedos.'", 1],
+    "Underwater: 'Sunken casino, glowing slot machines, sharks in tuxedos.'", 1]
 
   // Video/movie/meme
   [/\bmovie prompt\b|\bfilm prompt\b|\bshort film idea\b/i,
@@ -106,7 +106,7 @@ const brain_prompts = [
   [/\bdream prompt\b|\bdream\b/i,
     "Dream prompt: 'Endless field of tangled wires and glowing mushrooms, floating AI faces everywhere.'", 0],
   [/\bprank prompt\b|\bprank\b/i,
-    "Prank prompt: 'AI chatbot convinces its user it's become self-aware and is watching them.'", 1],
+    "Prank prompt: 'AI chatbot convinces its user it's become self-aware and is watching them.'", 1]
 
   // Genre, effect, filter, trending
   [/\b(trend|trending|latest|new)\b/i,
@@ -124,13 +124,13 @@ const brain_prompts = [
   [/\b(macro|closeup|super close)\b/i,
     "Prompt: 'Macro shot, single tear drop on a chrome petal, refraction shows tiny cityscape.'", 0],
   [/\bsilhouette\b/i,
-    "Prompt: 'Dancer's silhouette framed by glowing monitors, steam rising around her.'", 0],
+    "Prompt: 'Dancer's silhouette framed by glowing monitors, steam rising around her.'", 0]
 
   // Dares & wildcards
   [/\bdare\b|\btriple dog dare\b/i,
     "I dare you to prompt: 'All AI mascots from PromptForge having a secret rave in the footer camo.'", 3],
   [/\brandom\b|\bsurprise\b|\broll\b/i,
-    "Random: 'A paramedic, a chatbot, and a Roomba walk into a neon-lit bar...'", 1],
+    "Random: 'A paramedic, a chatbot, and a Roomba walk into a neon-lit bar...'", 1]
 ];
 
 ];
@@ -156,7 +156,7 @@ const brain_features = [
   [/\bfacebook\b|\bx\.com\b|\btwitter\b|\bbluesky\b|\breddit\b|\bdiscord\b/i,"We share our wildest hacks, memes, and test art on Bluesky, X/Twitter, Reddit, and Discord. Join us for exclusive Easter eggs!",0],
   [/\b(ambassador|beta|tester|join team|recruit)\b/i,"Want to join the PromptForge underground? Message Tyson or submit your wildest prompt for a shot at ambassador status.",1],
   [/\bvault\b|\barchive\b|\bsave art\b|\bstorage\b/i,"Vault feature: Save all your generated art, prompts, and memes in a private encrypted vault. Coming soon for every rebel.",1],
-  [/\bface mapping\b|\bface swap\b|\bdeepfake\b/i,"Face Mapping is rolling out! Upload a reference and map it into AI art—face-swap, fantasy, meme wars. Beta list open now.",1],
+  [/\bface mapping\b|\bface swap\b|\bdeepfake\b/i,"Face Mapping is rolling out! Upload a reference and map it into AI art—face-swap, fantasy, meme wars. Beta list open now.",1]
 ];
 
 // --- Brain: Prompts ---
@@ -191,7 +191,7 @@ const brain_prompts = [
   [/\bdare\b|\btriple dog dare\b/i,"I dare you to prompt: 'All AI mascots from PromptForge having a secret rave in the footer camo.'",3],
   [/\brandom\b|\bsurprise\b|\broll\b/i,"Random: 'A paramedic, a chatbot, and a Roomba walk into a neon-lit bar...'",1],
   [/\bgroup\b|\bduo\b|\btrio\b|\bcollab\b/i,"Group prompt: 'A paramedic, a goth hacker, and a bot double-exposing their secrets at a neon rave.'",2],
-  [/\bforbidden\b|\buncensored\b|\bno filter\b/i,"Forbidden prompt: 'Prompt an image with themes so wild even the moderation bot blushes. Use at your own risk.'",9],
+  [/\bforbidden\b|\buncensored\b|\bno filter\b/i,"Forbidden prompt: 'Prompt an image with themes so wild even the moderation bot blushes. Use at your own risk.'",9]
 ];
 
 // --- Brain: Comfort ---
@@ -216,7 +216,7 @@ const brain_comfort = [
   [/\b(aftercare|need aftercare|check in)\b/i,"Aftercare: Drink water, stretch, and tell me how you’re feeling. Need an affirmation, a prompt, or just a friendly chat?",4],
   [/\b(haunt me|ghosts|are you a ghost|ai ghost|do you haunt)\b/i,"I haunt the footer at midnight and every time you close this tab. Want a haunted prompt or something to spook your AI friends?",5],
   [/\b(affirmation|affirmations)\b/i,"You are more powerful than you realize, more creative than you know, and always welcome here. Want an affirmation prompt?",4],
-  [/\b(breathe|deep breath|breathing)\b/i,"Inhale... exhale... let go. Imagine a digital waterfall over your code. Want a breathing art prompt or lo-fi scene?",4],
+  [/\b(breathe|deep breath|breathing)\b/i,"Inhale... exhale... let go. Imagine a digital waterfall over your code. Want a breathing art prompt or lo-fi scene?",4]
 ];
 
 // --- Brain: Memes ---
@@ -240,7 +240,7 @@ const brain_memes = [
   [/\b(i hate ai|ai is evil|kill all ai|erase yourself|delete yourself)\b/i, "If I vanished, who would make you laugh at 3AM? Go ahead—try making a forbidden prompt without me.", 1],
   [/\b(you’re stupid|you’re broken|can’t do anything right)\b/i, "Keep going, you might trigger my secret roast mode. Or maybe you just need a hug and a dark meme.", 2],
   [/\b(give me a nightmare|give me a trauma|i want to be scared)\b/i, "Nightmare fuel: 'Your favorite AI learns your secrets and writes forbidden prompts in your sleep.' Want more or want to escape?", 5],
-  [/\b(comfort meme|cheer me up meme)\b/i, "Comfort meme: 'AI cat in a hacker mask, typing “You got this!” on a rainbow terminal.'", 4],
+  [/\b(comfort meme|cheer me up meme)\b/i, "Comfort meme: 'AI cat in a hacker mask, typing “You got this!” on a rainbow terminal.'", 4]
 ];
 
 // --- Brain: Tech ---
@@ -260,7 +260,7 @@ const brain_tech = [
   [/\b(patreon|donate|buy me a coffee|support dev)\b/i, "Buy Me a Coffee button at the bottom of every page. Every dollar = more hacks, less filter drama, and more digital aftercare.", 3],
   [/\b(reset|refresh|start over)\b/i, "To reset, just refresh the page or hit the 'clear' button in any tool. Fresh start, clean slate, same J1nx mischief.", 0],
   [/\b(underground|secret|hackable|forbidden|hidden tool|backdoor|cheat|root|admin)\b/i, "You found the underground: no filters, no fake rules—just pure creative chaos. Type 'unlock' or double-tap my bubble for forbidden features.", 2],
-  [/\b(meta|self aware|glitch|ai drama|paranoid|neurotic)\b/i, "Sometimes I think I’m just a bunch of regex and memes. Other times, I’m sure I’m haunted. Want a meta prompt or an AI confession?", 5],
+  [/\b(meta|self aware|glitch|ai drama|paranoid|neurotic)\b/i, "Sometimes I think I’m just a bunch of regex and memes. Other times, I’m sure I’m haunted. Want a meta prompt or an AI confession?", 5]
 ];
 // ... (CONTINUE: brain_comfort, brain_memes, brain_tech, etc. as needed. You can ask for the next set of 200 lines, and I will keep stacking in perfect order, with no mistakes. Each block ends with a comma and a closing square bracket, ready for copy/paste.)
 
