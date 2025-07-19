@@ -1330,9 +1330,8 @@ const brain_remix_v1 = [
   }, 1]
 ];
 
-// === 25. Secret Unlock Codes ===
 const brain_secret_v1 = [
-  [/\bkonami code\b/i, "v1 secret: Hardcore mode unlocked!", 1],
+  [/\bkonami code\b/i, "v1 secret: Hardcore mode unlocked.", 1],
   [/\bdouble tap\b/i, "v1 secret: Double tap Easter egg found.", 1],
   [/\b(konami code|up up down down left right left right b a start)\b/i,
     "Konami Code detected! 🚨 Unlocking forbidden meme bank and ultra-chaos mode. Want an instant NSFW unlock or the next secret code?", 11],
@@ -1499,8 +1498,7 @@ const brain_secret_v1 = [
     "Trend mode: I can teach you TikTok slang, meme culture, or even invent a new word for you. Want a slang prompt?", 8],
   [/\b(nonsense|random letters|meme noise|garbage text|test|debug|integrity test)\b/i,
     "DEBUG EGG: EXPRESS BLOCK 6.2 INTEGRITY PASSED. Want to try breaking me again or get a test meme?", 12]
-
-];
+  ];
 
 // === Final concatenation ===
 const j1nxAllBrains = [].concat(
