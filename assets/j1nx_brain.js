@@ -1317,6 +1317,7 @@ const brain_persona_v1 = [
 
 ];
 
+
 // === 24. Remix (with dummy function) ===
 const remixThemes_v1 = ["cyberpunk", "vaporwave"];
 const remixSubjects_v1 = ["paramedic", "AI muse"];
@@ -1330,6 +1331,7 @@ const brain_remix_v1 = [
   }, 1]
 ];
 
+// === 25. Secret Unlock Codes ===
 const brain_secret_v1 = [
   [/\bkonami code\b/i, "v1 secret: Hardcore mode unlocked.", 1],
   [/\bdouble tap\b/i, "v1 secret: Double tap Easter egg found.", 1],
