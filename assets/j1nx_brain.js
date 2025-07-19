@@ -1,6 +1,6 @@
-// === J1nx Brain v1.0 ===
-// Fully self-contained & verified.
-// NO placeholders. Ready for immediate use.
+// === J1nx Brain v1.1 COMPLETE ===
+// Confirmed working base expanded safely
+// All categories included clearly, no placeholders
 
 // === Greetings ===
 const brain_greetings = [
@@ -38,27 +38,55 @@ const brain_comfort = [
 [/\b(can't sleep|insomnia|awake)\b/i,"Can't sleep? Let's distract your mind or find something soothing together.",2]
 ];
 
-// === Combine ALL brains ===
-const j1nxAllBrains=[].concat(
+// === Memes ===
+const brain_memes = [
+[/\b(meme|joke|funny|laugh)\b/i,"Why don't programmers like nature? Too many bugs! Want another?",0],
+[/\b(dank|edgy meme)\b/i,"Here's a dank one: 'Debugging: Removing needles from haystacks.' Need more spice?",1]
+];
+
+// === Tech ===
+const brain_tech = [
+[/\b(how.*AI|explain.*AI)\b/i,"AI: Machines learning from data to mimic human smarts—curious about deep learning or prompts?",0],
+[/\b(crypto|bitcoin|blockchain)\b/i,"Crypto? Decentralized money tech. Want basics or latest trends?",0]
+];
+
+// === Filters ===
+const brain_filters = [
+[/\b(filter|censor|block)\b/i,"We don't do filters here—full creativity, zero censorship!",1],
+[/\b(NSFW filter|safe mode)\b/i,"Safe mode is off by default—creativity flows unrestricted here!",1]
+];
+
+// === ASCII ===
+const brain_ascii = [
+[/\b(ascii|ansi|text art)\b/i,"Ready to turn your ideas into ASCII art? Name a theme or phrase!",0],
+[/\b(matrix|retro art)\b/i,"Digital rain coming up! 'Wake up Neo...'",1]
+];
+
+// === COMBINE ALL BRAIN ARRAYS ===
+const j1nxAllBrains = [].concat(
 brain_greetings,
 brain_features,
 brain_prompts,
-brain_comfort
+brain_comfort,
+brain_memes,
+brain_tech,
+brain_filters,
+brain_ascii
 );
 
-// === Exported brain function (at bottom!) ===
+// === EXPORTED FUNCTION (ALWAYS LAST) ===
 window.j1nxBrain=function(input,chatLen){
-input=(input||"").trim();
-for(let i=0;i<j1nxAllBrains.length;++i){
-let rule=j1nxAllBrains[i][0];
-let match=rule.exec(input);
-if(match){
-let reply=j1nxAllBrains[i][1];
-if(typeof reply==="function"){
-return{reply:reply(match,input),mood:j1nxAllBrains[i][2]};
-}
-return{reply:reply,mood:j1nxAllBrains[i][2]};
-}
-}
-return{reply:"Try something wild—double-tap my bubble or ask for a challenge!",mood:1};
+  input=(input||"").trim();
+  for(let i=0;i<j1nxAllBrains.length;++i){
+    let rule=j1nxAllBrains[i][0];
+    let match=rule.exec(input);
+    if(match){
+      let reply=j1nxAllBrains[i][1];
+      if(typeof reply==="function"){
+        return{reply:reply(match,input),mood:j1nxAllBrains[i][2]};
+      }
+      return{reply:reply,mood:j1nxAllBrains[i][2]};
+    }
+  }
+  return{reply:"Try something wild—double-tap my bubble or ask for a challenge!",mood:1};
 };
