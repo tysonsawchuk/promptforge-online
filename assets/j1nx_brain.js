@@ -105,7 +105,7 @@ const brain_greetings_v1 = [
   [/\bcan you roast me\b/i, "You sure? I go hard!", 2],
   [/\bcan you vibe\b/i, "Vibes are my middle name.", 3],
   [/\beaster ?egg\b/i, "Easter egg unlocked! Greetings block v6.2 — this block is working. Add more lines as you wish!", 9]
-]
+
 ];
 
 // === 2. Features ===
