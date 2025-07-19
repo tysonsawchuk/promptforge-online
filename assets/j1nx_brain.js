@@ -1,5 +1,9 @@
+// === J1nx AI Brain - Starter Block ===
+
+// Just the loader and a mini-test, so you know it works!
 const brain_greetings = [
-  [/\b(hi|hello)\b/i, "Hello from J1nx!", 1]
+  [/\b(hi|hello|hey|yo|greetings|sup|what's up|hola|bonjour|allo)\b/i,"Hey! I’m J1nx—your AI muse. Ask me anything, or just vibe out.",3],
+  [/\bping\b/i, "J1nx is live!", 3]
 ];
 
 const j1nxAllBrains = [].concat(brain_greetings);
@@ -17,5 +21,5 @@ window.j1nxBrain = function(input, chatLen) {
       return { reply: reply, mood: j1nxAllBrains[i][2] };
     }
   }
-  return { reply: "Try something wild!", mood: 1 };
+  return { reply: "Try something wild—double-tap my bubble or ask for a challenge!", mood: 1 };
 };
