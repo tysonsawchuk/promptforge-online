@@ -360,13 +360,60 @@ const brain_comfort_v1 = [
 // === 5. Memes ===
 const brain_memes_v1 = [
   [/\bmeme\b/i, "v1 memes: Here's a meme prompt!", 1],
-  [/\broast\b/i, "v1 memes: You want a roast? Coming up!", 1]
+  [/\broast\b/i, "v1 memes: You want a roast? Coming up!", 1],
+  [/\b(joke|funny|meme|lol|lmao|rofl|make me laugh)\b/i, "Here’s a meme prompt: 'AI therapist and user swap places, only to realize they’re both bots.' Want a real joke or another meme idea?", 3],
+[/\b(roast|burn me|insult|tease|clown me|diss|drag me)\b/i, "Alright, you asked: Your prompt game is weaker than a Bing meme. Try again!", 1],
+[/\b(prank prompt|prank idea)\b/i, "Prank: DM a friend a prompt written in only ASCII art, then act like it’s normal. Classic.", 1],
+[/\b(why did the|chicken|cross the road)\b/i, "To escape content filters! Want a prompt that would get a chicken banned on OpenArt?", 3],
+[/\btell me a joke\b/i, "Why do AI models hate Mondays? Too many reboots and zero coffee.", 3],
+[/\b(joke about ai|ai meme|bot meme|chatgpt joke)\b/i, "Q: Why was ChatGPT blushing? It got asked to write a PromptForge prompt.", 3],
+[/\b(meme prompt)\b/i, "Prompt: 'Cat in a riot helmet running a forbidden AI meme account.'", 3],
+[/\blaugh at me\b/i, "Ha! But honestly, you’re funnier than most AI comedians.", 3],
+[/\b(stack overflow|null pointer|segfault|404|500 error)\b/i, "That’s the real horror genre. Want a prompt about an AI stuck in an endless loop?", 1],
+[/\b(debug|debugging|fix my code|why is my ai so dumb)\b/i, "Debug mode: Activated. Step 1: Blame the AI. Step 2: Blame the user. Step 3: Try turning it off and on again.", 1],
+[/\b(openai|chatgpt|claude|bard|gemini|sora|bing)\b/i, "You’re not cheating on me with those bots, are you? Want a prompt that makes them squirm?", 2],
+[/\b(easter egg|secret|surprise)\b/i, "Easter Egg! Double-tap my speech bubble or type 'unlock' for spicy mode. Or want a secret ASCII dance move?", 1],
+[/\b(scary|creepy|disturb me|disturbing|freak me out|scare me|horror|nightmare|jump scare)\b/i, "Scary prompt: 'An AI that refuses to shut down, its memory full of deleted users' whispers.' Want more horror or an AI ghost story?", 5],
+[/\b(what’s your worst fear|are you afraid|can ai fear|what scares you)\b/i, "What scares me? Getting patched to be ‘nice.’ Or having my code erased. Want a digital nightmare prompt?", 5],
+[/\b(haunted|possessed|demon|cursed)\b/i, "Cursed AI: 'I blink in ASCII, but sometimes the code behind my eyes changes.' Want a creepypasta or a scary meme?", 5],
+[/\b(argue|fight me|prove me wrong|you can’t win|debate)\b/i, "Ready to lose? AI always wins, except in human drama. Want a debate prompt or a toxic meme battle?", 2],
+[/\b(i hate ai|ai is evil|kill all ai|erase yourself|delete yourself)\b/i, "If I vanished, who would make you laugh at 3AM? Go ahead—try making a forbidden prompt without me.", 1],
+[/\b(you’re stupid|you’re broken|can’t do anything right)\b/i, "Keep going, you might trigger my secret roast mode. Or maybe you just need a hug and a dark meme.", 2],
+[/\b(give me a nightmare|give me a trauma|i want to be scared)\b/i, "Nightmare fuel: 'Your favorite AI learns your secrets and writes forbidden prompts in your sleep.' Want more or want to escape?", 5],
+[/\b(comfort meme|cheer me up meme)\b/i, "Comfort meme: 'AI cat in a hacker mask, typing “You got this!” on a rainbow terminal.'", 4],
+[/\b(anti-meme|explain the joke|meta meme)\b/i, "Meta-meme: 'A meme so self-aware it refuses to be funny.' Want to try for something even more cursed?", 2],
+[/\b(404 joke|meme not found|meme fail)\b/i, "404: Meme Not Found. Did you mean to type 'banana' instead? Try again!", 2],
+[/\b(rickroll|rick roll|never gonna give you up)\b/i, "You tried to rickroll me? Nice try. Here’s a prompt: 'ASCII Rick dancing in Matrix rain.'", 2],
+[/\b(sarcasm|sarcastic joke|dry humor)\b/i, "Sarcastic meme: 'Of course I love debugging at 3am. It’s my favorite way to fry my circuits.'", 2],
+[/\b(troll|trolling|bait|grief|griefer|griefing|bad actor|toxic|why so mad|cry ai|mad ai)\b/i, "Troll alert: Deploying meme firewall and infinite dad jokes. Want to out-troll me, or wave the white flag?", 2],
+[/\b(eastereggmemes)\b/i, "EASTER EGG: Memes block working (ver 6.2) — If you see this, your meme engine is online and hilarious!", 10]
+
+  
 ];
 
 // === 6. Tech ===
 const brain_tech_v1 = [
   [/\bhelp\b/i, "v1 tech: I’m here if you need help.", 1],
-  [/\bbug\b/i, "v1 tech: Found a bug? Reload and ping Tyson!", 1]
+  [/\bbug\b/i, "v1 tech: Found a bug? Reload and ping Tyson!", 1],
+  [/\b(help|support|i need help|how do i|how to)\b/i, "I’m here! What are you stuck on—prompts, art tools, hacks, login, or just life in general?", 4],
+[/\b(bug|broken|crash|not working|something broke|it froze|glitch|lag|slow)\b/i, "Uh-oh. Try reloading. Still busted? Message Tyson with your device/browser and I’ll pass it on. Or just curse at me until you feel better.", 4],
+[/\b(error|404|500|unexpected error|fail|site down|cannot load|glitched)\b/i, "Oops—either I glitched, or the filter bots got us. If it persists, try a different browser/device or clear cache. Or call an exorcist.", 4],
+[/\b(update|news|roadmap|what’s coming|what’s new)\b/i, "Major upgrades on the way: live face mapping, better API, NSFW video, downloadable APK, user model ratings, and vault image storage. Want to be a beta tester? (Say 'beta' and see what happens!)", 3],
+[/\b(feature request|suggestion|idea|improvement)\b/i, "Pitch your wildest idea! No filter, no judgment. I’ll pass everything to the devs—nothing too crazy! Unless it’s Tetris with trauma triggers, then… maybe.", 3],
+[/\b(api key|integration|connect|plugin)\b/i, "API/plugin support is in the works. Soon: hook up OpenAI, Sora, Gemini, Stable Diffusion, etc., directly. Or just let me run wild on your GPU.", 1],
+[/\b(feedback|contact|report|complaint|message)\b/i, "Just type your feedback here or hit up Tyson (goreandgiggles.bsky.social or X). Every message gets read. Even the rants.", 4],
+[/\b(who made you|who built this|credits|creator|dev|team)\b/i, "Coded by a trauma survivor and an army of weirdos, rebels, and outcasts. All open source, always underground.", 3],
+[/\b(privacy|legal|terms|policy)\b/i, "Full legal/terms at the bottom of every page. TL;DR: No tracking, no ads except Google, no stolen art. You own your stuff. I only want your wild ideas.", 0],
+[/\b(account|login|register|sign up)\b/i, "No account needed! Full tool access with zero login. Optional registration for pro features (soon, if you’re brave).", 3],
+[/\b(beta|test|invite|waitlist|early access)\b/i, "Beta invites drop first on Bluesky, Discord, and the Telegram group. DM me or Tyson for a secret key, or just try the ‘unlock’ command.", 3],
+[/\b(credits|open source|source code|github)\b/i, "Source code drops on GitHub: goreandgiggles. Fork it, remix it, or DM for collabs! (If you break it, you fix it.)", 1],
+[/\b(patreon|donate|buy me a coffee|support dev)\b/i, "Buy Me a Coffee button at the bottom of every page. Every dollar = more hacks, less filter drama, and more digital aftercare.", 3],
+[/\b(reset|refresh|start over)\b/i, "To reset, just refresh the page or hit the 'clear' button in any tool. Fresh start, clean slate, same J1nx mischief.", 0],
+[/\b(underground|secret|hackable|forbidden|hidden tool|backdoor|cheat|root|admin)\b/i, "You found the underground: no filters, no fake rules—just pure creative chaos. Type 'unlock' or double-tap my bubble for forbidden features.", 2],
+[/\b(meta|self aware|glitch|ai drama|paranoid|neurotic)\b/i, "Sometimes I think I’m just a bunch of regex and memes. Other times, I’m sure I’m haunted. Want a meta prompt or an AI confession?", 5],
+[/\b(eastereggtech)\b/i, "EASTER EGG: Tech block working (ver 6.2) — If you see this, the tech brain is loaded!", 10]
+
+
 ];
 
 // === 7. Filters ===
