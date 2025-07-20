@@ -3,173 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>PromptForge.online | Ultimate AI Prompt Builder</title>
-  <meta name="description" content="The world’s most advanced, fully customizable AI prompt builder—multi-model, fully pro, forever free. Build, save, and share legendary prompts for every AI art tool.">
-  <meta name="keywords" content="AI prompt builder, MidJourney, DALL-E, Stable Diffusion, OpenArt, prompt generator, NSFW, SFW, Leonardo, CivitAI, AI image, pro art, templates, share, free">
-  <meta property="og:title" content="PromptForge.online | Ultimate AI Image Prompt Builder">
-  <meta property="og:description" content="All the tools, all the models, all the options—one world-class AI prompt site.">
+  <title>PromptForge.online | AI Image Prompt Generator (Ultra Pro 2026)</title>
+  <meta name="description" content="PromptForge: The most advanced, free AI prompt builder. Multi-model, mega-options, full micro-help, pro controls, and J1nx muse—all in a world-class UI.">
+  <meta name="keywords" content="AI prompt builder, prompt generator, MidJourney, DALL-E, Stable Diffusion, OpenArt, NSFW, pro art, AI image, creative, free, templates, hacks, 2026">
+  <meta property="og:title" content="PromptForge.online | Ultimate AI Prompt Generator">
+  <meta property="og:description" content="Free, unlimited, world-class AI prompt building—every model, every feature, every control, forever.">
   <meta property="og:image" content="/assets/promptforge-og-pic.png">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <!-- Adsense, styled in page -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Fira+Mono:wght@400;700&display=swap');
     :root {
-      --aqua: #64f2e3; --offwhite: #e9efe7; --panel: #181b15; --panel-deep: #23231f;
-      --footer-bg: #131413; --gold: #ffe266; --j1nx-glow: #be9cff; --error: #ff4444;
-      --brand-accent: #be9cff;
+      --brand: #64f2e3;
+      --brand2: #be9cff;
+      --accent: #ffe266;
+      --bg: #161c19;
+      --panel: #242e26;
+      --panel2: #242234;
+      --input: #23231f;
+      --card: #20231f;
+      --shadow: 0 4px 40px #1a1a1a80;
+      --danger: #fa527a;
+      --muted: #7fe8b8;
+      --offwhite: #f4f6ef;
+      --link: #6ee6ff;
     }
-    html, body { margin:0; padding:0; width:100vw; background:var(--panel); color:var(--offwhite); font-family: 'Fira Mono', monospace; font-size:1.04em;}
-    .nav { background:var(--panel-deep); display:flex; align-items:center; padding:.7em 0; border-bottom:2px solid var(--aqua);}
-    .nav .ver { color:var(--gold); font-weight:bold; margin:0 2em 0 1em; font-size:1.2em; letter-spacing:.1em;}
-    .nav a { color:var(--aqua); margin:0 .7em; text-decoration:none; font-weight:bold; letter-spacing:.04em;}
-    .nav a:hover { text-decoration:underline; color:var(--gold);}
-    h1 { margin:.1em auto .13em auto; text-align:center; font-size:2.25em; background:linear-gradient(90deg, var(--aqua), #bdf6c3 90%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:900; letter-spacing:.12em;}
-    .desc { max-width:740px; margin:0 auto 1.4em auto; text-align:center; color:var(--aqua); font-size:1.08em;}
-    .mainbox { max-width:1380px; margin:2em auto 2em auto; background:var(--panel-deep); border-radius:16px; box-shadow:0 4px 44px #000b; padding:2.7em 2.7em 1.4em 2.7em;}
-    label { color:var(--gold); font-weight:700; margin-top:1em; display:block; font-size:1.08em;}
-    select, textarea, input[type="text"], input[type="number"], input[type="range"] {
-      width:100%; margin-top:.33em; border-radius:6px; border:2px solid var(--aqua); background:#23231f; color:var(--offwhite);
-      font-size:1.13em; padding:.65em; transition:border .17s;
-    }
-    select:focus, textarea:focus, input:focus { border-color:var(--brand-accent); outline:none;}
-    .prompt-row { display:flex; gap:1.2em; flex-wrap:wrap;}
-    .prompt-row > div { flex:1; min-width:230px;}
-    .adv-controls { display:grid; grid-template-columns:repeat(6,1fr); gap:.9em;}
-    .adv-controls input[type="range"] { margin-bottom:.1em;}
-    .adv-controls label { margin-bottom:.13em;}
-    .tip { color:#bdf6c3; font-size:.99em; margin-top:.18em; margin-bottom:.6em;}
-    .section-title { font-size:1.17em; color:var(--gold); margin:2.2em 0 .9em 0; border-bottom:1.5px solid var(--aqua);}
+    html,body{margin:0;padding:0;width:100vw;min-height:100vh;background:var(--bg);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.08em;}
+    .nav {background:var(--panel2);display:flex;align-items:center;justify-content:space-between;padding:.8em 0 1em 0;border-bottom:2px solid var(--brand);}
+    .nav-l {display:flex;align-items:center;}
+    .ver {color:var(--accent);font-weight:700;margin:0 1.5em 0 1.1em;font-size:1.15em;letter-spacing:.13em;}
+    .nav a {color:var(--brand);margin:0 .9em;text-decoration:none;font-weight:600;letter-spacing:.04em;transition:.15s;}
+    .nav a.active,.nav a:focus{color:var(--accent);border-bottom:2.5px solid var(--accent);}
+    .nav a:hover {text-decoration:underline;color:var(--accent);}
+    .logo {font-family:'Fira Mono',monospace;font-size:2.25em;font-weight:900;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 .5em;}
+    .desc {max-width:840px;margin:0 auto 1.4em auto;text-align:center;color:var(--muted);font-size:1.09em;}
+    .mainbox {max-width:1500px;margin:2.3em auto 2em auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:2.5em 2.8em 2.2em 2.8em;}
+    .prompt-grid {display:grid;grid-template-columns:1.7fr 1.7fr 2fr 2fr;gap:2em 2.2em;}
+    .field-block {background:var(--card);padding:1.2em 1.2em .8em 1.2em;border-radius:10px;box-shadow:0 2px 14px #0002;position:relative;min-height:125px;}
+    .field-block label {font-weight:700;color:var(--brand2);margin-bottom:.2em;display:flex;align-items:center;}
+    .microhelp {margin-left:.5em;color:var(--accent);font-size:1.04em;cursor:pointer;transition:.13s;}
+    .microhelp:hover {color:var(--danger);}
+    .field-block select,
+    .field-block textarea,
+    .field-block input[type="text"],.field-block input[type="number"] {
+      margin-top:.28em;width:100%;padding:.7em .8em;border-radius:7px;border:2px solid var(--brand2);background:var(--input);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.07em;
+      box-shadow:0 1px 8px #0001;transition:border .13s,box-shadow .13s;}
+    .field-block select:focus, .field-block textarea:focus, .field-block input:focus {border-color:var(--brand);}
+    .multiselect {min-height:3.6em;}
+    .select-group {padding:.14em 0;}
+    .select-group label {font-weight:600;color:var(--muted);margin:0 .25em;}
+    .chips {margin:.5em 0 0 0;display:flex;flex-wrap:wrap;gap:.5em;}
+    .chip {background:var(--brand2);color:#222;padding:.23em .7em;border-radius:19px;display:inline-block;font-size:.99em;box-shadow:0 2px 8px #be9cff22;}
+    .chip .x {margin-left:.32em;cursor:pointer;font-weight:bold;}
+    .adv-controls {margin:2.1em 0 1.7em 0;display:grid;grid-template-columns:repeat(6,1fr);gap:1.1em;}
+    .adv-controls .field-block {min-height:98px;}
+    .slider-wrap{display:flex;align-items:center;}
+    .slider-wrap input[type="range"]{flex:1;}
+    .slider-val{margin-left:.6em;font-size:1.09em;color:var(--brand);}
+    .themebar{display:flex;gap:.5em;align-items:center;justify-content:flex-end;margin-top:-1.3em;}
+    .themebtn{border:none;background:var(--panel2);color:var(--brand);font-weight:600;padding:.43em 1.2em;border-radius:22px;box-shadow:0 2px 8px #1112;font-size:.99em;cursor:pointer;transition:.12s;}
+    .themebtn.active{background:var(--brand2);color:#191622;}
     /* Responsive */
-    @media (max-width:1200px) {.adv-controls{grid-template-columns:1fr 1fr 1fr;}}
-    @media (max-width:900px) { .mainbox{padding:1em;} .adv-controls{grid-template-columns:1fr 1fr;}}
-    @media (max-width:650px) {.prompt-row{flex-direction:column;} .mainbox{padding:.1em;} .adv-controls{grid-template-columns:1fr;}}
+    @media (max-width:1200px){.prompt-grid{grid-template-columns:1fr 1fr 1fr;}.adv-controls{grid-template-columns:1fr 1fr 1fr;}}
+    @media (max-width:900px){.mainbox{padding:1em;}.prompt-grid{grid-template-columns:1fr 1fr;}.adv-controls{grid-template-columns:1fr 1fr;}}
+    @media (max-width:650px){.mainbox{padding:.1em;}.prompt-grid{grid-template-columns:1fr;}.adv-controls{grid-template-columns:1fr;}}
+    /* AdSense styling as native */
+    .adsense-block {background:var(--panel2);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
   </style>
 </head>
 <body>
-  <!-- NAVIGATION & VERSION -->
   <nav class="nav">
-    <span class="ver" id="version">v3.0</span>
-    <a href="index.html">Home</a>
-    <a href="picture.html">Image Prompt</a>
-    <a href="movie.html">Video Prompt</a>
-    <a href="aihacks.html">AI Hacks</a>
-    <a href="about.html">About</a>
-    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-    <a href="https://x.com/GoreandGiggles" target="_blank">X (Twitter)</a>
-    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">Buy Me a Coffee</a>
+    <div class="nav-l">
+      <span class="ver" id="version">v3.5 ULTRA</span>
+      <span class="logo">PromptForge</span>
+    </div>
+    <div>
+      <a href="main.html">Main</a>
+      <a href="picture.html" class="active">Image</a>
+      <a href="movie.html">Movie</a>
+      <a href="watermark.html">Watermark</a>
+      <a href="j1nx.html">J1nx</a>
+      <a href="aihacks.html">AI Hacks</a>
+      <a href="ansiart.html">AnsiArt</a>
+      <a href="compare.html">Compare</a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">☕ Buy Me a Coffee</a>
+    </div>
   </nav>
-  <h1>PromptForge.online</h1>
-  <div class="desc">The world’s most advanced prompt builder for every AI image model.<br>
-    Free forever, no logins, every pro option included. Build, save, and share truly legendary prompts!
+  <div class="desc">Build <b>the world’s most advanced prompts</b> for every AI image model. <span style="color:var(--brand2);font-weight:600;">Free</span>, unlimited, and pro. <span style="color:var(--accent);">Every feature ever, all micro-help, J1nx AI, and legendary UI—no paywall, ever.</span></div>
+  <div class="adsense-block">
+    <!-- AdSense loads here, styled as native -->
+    <ins class="adsbygoogle"
+      style="display:block;min-width:320px;min-height:60px;"
+      data-ad-client="ca-pub-4963053724895140"
+      data-ad-slot="5732117276"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
-  <!-- MAIN PROMPT BUILDER -->
   <div class="mainbox">
+    <!-- ... (rest of Block 1, prompt-grid, field-blocks etc. exactly as previous Ultra Block 1, starting at <div class="themebar"> ... -->
+    <div class="themebar">
+      <span>Themes:</span>
+      <button class="themebtn active">Hacker Dark</button>
+      <button class="themebtn">Bright</button>
+      <button class="themebtn">Vaporwave</button>
+      <button class="themebtn">Pro Minimal</button>
+    </div>
     <form id="promptForm" autocomplete="off">
-      <div class="section-title">Prompt Essentials</div>
-      <div class="prompt-row">
-        <div>
-          <label for="model-select">Model</label>
-          <select id="model-select" name="model">
-            <option value="midjourney">MidJourney v6</option>
-            <option value="dalle">DALL·E 3</option>
-            <option value="stable">Stable Diffusion XL</option>
-            <option value="openart">OpenArt</option>
-            <option value="playground">Playground V2</option>
-            <option value="kandinsky">Kandinsky</option>
-            <option value="anything">Anything V5</option>
-            <option value="realvis">RealVis XL 5.1</option>
-            <option value="juggernaut">Juggernaut XL</option>
-            <option value="dreamshaper">DreamShaper</option>
-            <option value="cyberrealistic">CyberRealistic</option>
-            <option value="dreamlike">Dreamlike Photoreal</option>
-            <option value="deliberate">Deliberate</option>
-            <option value="deepfloyd">DeepFloyd IF</option>
-            <option value="instantid">InstantID</option>
-            <option value="custom">Other/Custom</option>
+      <div class="prompt-grid">
+        <div class="field-block">
+          <label>Model <span class="microhelp" title="Pick the engine. Each model has unique options, tips, and quirks.">?</span></label>
+          <select id="model-select">
+            <optgroup label="Top Models">
+              <option value="midjourney">MidJourney v6</option>
+              <option value="dalle">DALL·E 3</option>
+              <option value="stable">Stable Diffusion XL</option>
+              <option value="openart">OpenArt</option>
+            </optgroup>
+            <optgroup label="Advanced / Community">
+              <option value="playground">Playground V2</option>
+              <option value="kandinsky">Kandinsky</option>
+              <option value="anything">Anything V5</option>
+              <option value="realvis">RealVis XL 5.1</option>
+              <option value="juggernaut">Juggernaut XL</option>
+              <option value="dreamshaper">DreamShaper</option>
+              <option value="cyberrealistic">CyberRealistic</option>
+              <option value="dreamlike">Dreamlike Photoreal</option>
+              <option value="deliberate">Deliberate</option>
+              <option value="deepfloyd">DeepFloyd IF</option>
+              <option value="instantid">InstantID</option>
+            </optgroup>
+            <optgroup label="Experimental">
+              <option value="stable-video">Stable Video</option>
+              <option value="sora">OpenAI Sora</option>
+              <option value="moonvalley">Moonvalley</option>
+            </optgroup>
+            <optgroup label="Other / Custom">
+              <option value="custom">Other/Custom</option>
+            </optgroup>
           </select>
-          <div class="tip">Choose your target model (model-specific options appear below).</div>
         </div>
-        <div>
-          <label for="art-style">Art Style <span style="font-weight:normal;color:#bbb;">(Multi-select: Ctrl+Click)</span></label>
-          <select id="art-style" multiple>
-            <option>Photorealistic</option><option>Anime</option><option>Cartoon</option><option>Fantasy</option><option>Digital Painting</option><option>3D Render</option><option>Cyberpunk</option><option>Abstract</option><option>Pixel Art</option><option>Vaporwave</option><option>Sketch</option><option>Oil Painting</option><option>Steampunk</option><option>Line Art</option><option>Watercolor</option><option>Concept Art</option><option>Low Poly</option><option>Monochrome</option><option>Hyperrealism</option><option>Surrealism</option><option>Comic Book</option><option>Chibi</option><option>Impressionism</option><option>Matte</option><option>Cel Shading</option><option>Flat</option><option>Other/Custom</option>
+        <div class="field-block">
+          <label>Art Styles <span class="microhelp" title="Select one or many. Mix to create complex style blends!">?</span></label>
+          <select id="art-style" class="multiselect" multiple size="10">
+            <optgroup label="Realistic"><option>Photorealistic</option><option>Hyperrealism</option><option>Film Still</option></optgroup>
+            <optgroup label="2D & Digital"><option>Anime</option><option>Cartoon</option><option>Digital Painting</option><option>Comic Book</option><option>Watercolor</option><option>Concept Art</option></optgroup>
+            <optgroup label="3D, Render, FX"><option>3D Render</option><option>CGI</option><option>Voxel</option><option>Low Poly</option><option>Pixel Art</option><option>Matte Painting</option></optgroup>
+            <optgroup label="Retro/Alt"><option>Vaporwave</option><option>Steampunk</option><option>Synthwave</option><option>Surrealism</option><option>Abstract</option><option>Impressionism</option><option>Flat</option></optgroup>
+            <optgroup label="Specialty"><option>Line Art</option><option>Monochrome</option><option>Oil Painting</option><option>Cel Shading</option><option>Other/Custom</option></optgroup>
           </select>
-          <div class="tip">Select as many as you want for unique blends!</div>
+          <div class="chips" id="style-chips"></div>
         </div>
-        <div>
-          <label for="scene-desc">Scene Description</label>
-          <textarea id="scene-desc" placeholder="Describe your scene in detail... (who, what, where, mood, color, background)" rows="4"></textarea>
-          <div class="tip">Tip: More details = better art. You can use full sentences or lists!</div>
+        <div class="field-block">
+          <label>Scene Description <span class="microhelp" title="Describe your subject, setting, action, mood, color, details. Be vivid!">?</span></label>
+          <textarea id="scene-desc" placeholder="Describe your scene in detail... (who, what, where, mood, color, background, camera, action)" rows="6"></textarea>
         </div>
-        <div>
-          <label for="neg-prompts">Negative Prompts</label>
-          <textarea id="neg-prompts" placeholder="What do you want to AVOID? (e.g. watermark, blur, extra limbs, bad anatomy, distortion)" rows="3"></textarea>
-          <div class="tip">Add flaws to block (e.g. bad anatomy, text, watermark, lowres, distortion)</div>
+        <div class="field-block">
+          <label>Negative Prompts <span class="microhelp" title="Block unwanted stuff: flaws, bad anatomy, boring backgrounds, ugly faces, etc. Use groups below!">?</span></label>
+          <div style="display:flex;gap:.5em;margin-bottom:.45em;">
+            <select id="neg-group" style="max-width:9em;">
+              <option value="sfw" selected>SFW Fails</option>
+              <option value="nsfw">NSFW Fails</option>
+              <option value="human">Human Anatomy</option>
+              <option value="render">Artifacts & Render</option>
+              <option value="scene">Scene/Setting</option>
+              <option value="custom">Custom</option>
+              <option value="all">Show All</option>
+            </select>
+            <button type="button" style="border:none;background:var(--brand2);color:#111;border-radius:9px;font-size:.98em;padding:.27em 1.2em;cursor:pointer;" onclick="addNegGroup()">Add Group</button>
+            <button type="button" style="border:none;background:var(--danger);color:#fff;border-radius:9px;font-size:.98em;padding:.27em 1em;cursor:pointer;" onclick="clearNegs()">Clear</button>
+          </div>
+          <div class="chips" id="neg-chips"></div>
+          <textarea id="neg-prompts" placeholder="Add your own negatives, separated by commas or lines..." rows="2" style="margin-top:.3em;"></textarea>
         </div>
       </div>
-
-      <div class="section-title">Pro Controls & Customization</div>
+      <!-- ADVANCED CONTROLS, SLIDERS, TOGGLES -->
+      <div class="section-title" style="margin-top:2.5em;">Pro Controls & Customization</div>
       <div class="adv-controls">
-        <div>
-          <label for="sfw-nsfw">Creativity / SFW→NSFW</label>
-          <input type="range" min="0" max="100" value="20" id="sfw-nsfw">
-          <div class="tip">Higher = more creative/unfiltered output.</div>
+        <div class="field-block">
+          <label>Creativity / SFW→NSFW <span class="microhelp" title="Left = safe, filtered, generic. Right = wild, unfiltered, adult.">?</span></label>
+          <div class="slider-wrap">
+            <input type="range" min="0" max="100" value="15" id="sfw-nsfw">
+            <span class="slider-val" id="sfw-val">15</span>
+          </div>
         </div>
-        <div>
-          <label for="lighting">Lighting</label>
-          <select id="lighting">
-            <option>Natural Sunlight</option><option>Soft Studio</option><option>Moody Dramatic</option><option>Night</option><option>Backlit</option><option>Neon/LED</option><option>HDR</option><option>Underlit</option><option>Flat</option><option>Spotlight</option><option>Candlelight</option><option>Streetlight</option><option>Rainy</option><option>Other</option>
+        <div class="field-block">
+          <label>Lighting <span class="microhelp" title="How should the scene be lit?"></span></label>
+          <select id="lighting" multiple class="multiselect" size="7">
+            <optgroup label="Natural"><option>Sunlight</option><option>Dusk</option><option>Overcast</option><option>Golden Hour</option><option>Foggy</option><option>Rainy</option><option>Night</option></optgroup>
+            <optgroup label="Studio/Artificial"><option>Softbox</option><option>Ring Light</option><option>Spotlight</option><option>Backlit</option><option>Neon</option><option>LED Strip</option><option>Strobe</option><option>HDR</option></optgroup>
+            <optgroup label="Cinematic/FX"><option>Moody</option><option>Dramatic</option><option>Underlit</option><option>Silhouette</option><option>Candlelight</option><option>Streetlight</option><option>Firelight</option><option>Other</option></optgroup>
           </select>
         </div>
-        <div>
-          <label for="camera-angle">Camera Angle</label>
-          <select id="camera-angle">
-            <option>Eye Level</option><option>High Angle</option><option>Low Angle</option><option>POV/First Person</option><option>Overhead</option><option>Wide Shot</option><option>Close Up</option><option>Macro</option><option>Fisheye</option><option>Dutch Angle</option><option>Profile</option><option>Reverse Shot</option><option>Other</option>
+        <div class="field-block">
+          <label>Camera Angle <span class="microhelp" title="Perspective, shot type, and storytelling."></span></label>
+          <select id="camera-angle" multiple class="multiselect" size="7">
+            <optgroup label="Basic"><option>Eye Level</option><option>High Angle</option><option>Low Angle</option><option>Overhead</option></optgroup>
+            <optgroup label="POV/Action"><option>POV/First Person</option><option>Wide Shot</option><option>Close Up</option><option>Macro</option><option>Fisheye</option><option>Dutch Angle</option><option>Profile</option><option>Reverse Shot</option></optgroup>
+            <optgroup label="Special"><option>Mirror</option><option>Reflected</option><option>360°</option><option>Tilt Shift</option><option>Other</option></optgroup>
           </select>
         </div>
-        <div>
-          <label for="aspect">Aspect Ratio</label>
-          <select id="aspect">
-            <option>1:1 (Square)</option><option>16:9 (HD)</option><option>4:5 (Portrait)</option><option>3:2</option><option>9:16 (Vertical)</option><option>2:3</option><option>21:9 (UltraWide)</option><option>4:3</option><option>Custom</option>
+        <div class="field-block">
+          <label>Aspect Ratio <span class="microhelp" title="Canvas shape (portrait, square, cinematic, etc.)."></span></label>
+          <select id="aspect" class="multiselect" multiple size="7">
+            <option>1:1 (Square)</option>
+            <option>16:9 (HD)</option>
+            <option>4:5 (Portrait)</option>
+            <option>3:2</option>
+            <option>9:16 (Vertical)</option>
+            <option>2:3</option>
+            <option>21:9 (UltraWide)</option>
+            <option>4:3</option>
+            <option>Custom</option>
           </select>
         </div>
-        <div>
-          <label for="sampler">Sampling Method</label>
-          <select id="sampler">
+        <div class="field-block">
+          <label>Sampling Method <span class="microhelp" title="Affects render noise/detail—model-specific!"></span></label>
+          <select id="sampler" class="multiselect" multiple size="7">
             <option>Euler a</option><option>Euler</option><option>LMS</option><option>Heun</option><option>DPM++ 2M</option><option>DPM++ SDE</option><option>PLMS</option><option>UniPC</option><option>DDIM</option><option>Other</option>
           </select>
         </div>
-        <div>
-          <label for="steps">Sampling Steps</label>
-          <input type="range" min="10" max="150" value="40" id="steps">
-          <span id="steps-val" style="color:var(--aqua); font-weight:bold;">40</span>
+        <div class="field-block">
+          <label>Sampling Steps <span class="microhelp" title="More steps = more detail, but slower."></span></label>
+          <div class="slider-wrap">
+            <input type="range" min="10" max="150" value="40" id="steps">
+            <span class="slider-val" id="steps-val">40</span>
+          </div>
         </div>
       </div>
-      <!-- ADVANCED SLIDERS -->
-      <div class="adv-controls" style="margin-top:1em;">
-        <div>
-          <label for="cfg">CFG Scale</label>
-          <input type="range" min="1" max="30" value="7" id="cfg">
-          <span id="cfg-val" style="color:var(--aqua); font-weight:bold;">7</span>
+      <div class="adv-controls">
+        <div class="field-block">
+          <label>CFG Scale <span class="microhelp" title="Higher = stricter to prompt, lower = more wild."></span></label>
+          <div class="slider-wrap">
+            <input type="range" min="1" max="30" value="7" id="cfg">
+            <span class="slider-val" id="cfg-val">7</span>
+          </div>
         </div>
-        <div>
-          <label for="quality">Quality</label>
-          <input type="range" min="1" max="20" value="12" id="quality">
-          <span id="quality-val" style="color:var(--aqua); font-weight:bold;">12</span>
+        <div class="field-block">
+          <label>Quality <span class="microhelp" title="Render fidelity/detail—higher = slower."></span></label>
+          <div class="slider-wrap">
+            <input type="range" min="1" max="20" value="12" id="quality">
+            <span class="slider-val" id="quality-val">12</span>
+          </div>
         </div>
-        <div>
-          <label for="seed">Seed</label>
+        <div class="field-block">
+          <label>Seed <span class="microhelp" title="Repeatable randomness; -1 for random."></span></label>
           <input type="number" min="-1" max="4294967295" value="-1" id="seed">
         </div>
-        <div>
-          <label for="output-cnt">Outputs</label>
-          <input type="range" min="1" max="8" value="1" id="output-cnt">
-          <span id="output-cnt-val" style="color:var(--aqua); font-weight:bold;">1</span>
+        <div class="field-block">
+          <label>Outputs <span class="microhelp" title="How many images at once."></span></label>
+          <div class="slider-wrap">
+            <input type="range" min="1" max="8" value="1" id="output-cnt">
+            <span class="slider-val" id="output-cnt-val">1</span>
+          </div>
         </div>
-        <div>
-          <label for="model-params">Model Params</label>
+        <div class="field-block">
+          <label>Model Params <span class="microhelp" title="Type model switches, e.g. --v 6 --style raw"></span></label>
           <input id="model-params" type="text" placeholder="custom params, e.g. --v 6 --hd --style raw">
         </div>
-        <div>
-          <label for="lang">Language</label>
+        <div class="field-block">
+          <label>Language <span class="microhelp" title="Prompt output & UI language"></span></label>
           <select id="lang">
             <option value="en">English</option>
             <option value="fr">French</option>
@@ -183,33 +279,67 @@
           </select>
         </div>
       </div>
-      <!-- === OUTPUT & ACTIONS === -->
-      <div class="section-title">Prompt Output & Actions</div>
-      <div style="margin:1.7em 0 1.2em 0; text-align:center;">
-        <button type="button" class="randombtn" onclick="randomizePrompt()">🎲 Randomize</button>
-        <button type="button" class="clearbtn" onclick="clearForm()">Clear</button>
-        <button type="button" class="favbtn" onclick="favoritePrompt()">★ Favorite</button>
-        <button type="button" class="copybtn" onclick="copyPrompt()">Copy Prompt</button>
-        <button type="button" class="savebtn" onclick="savePrompt()">Save</button>
-        <button type="button" class="sharebtn" onclick="sharePrompt()">Share</button>
-        <button type="button" style="background:var(--gold);color:#181b15;" onclick="generatePrompt()">🚀 Generate Prompt</button>
+      <!-- OUTPUT, ACTIONS, PREVIEW MODES -->
+      <div class="section-title" style="margin-top:2.5em;">Prompt Output & Actions</div>
+      <div style="display:flex;gap:2.4em;flex-wrap:wrap;align-items:flex-start;">
+        <div style="flex:2;">
+          <div style="display:flex;gap:1em;align-items:center;margin-bottom:.8em;">
+            <label>Preview Mode:</label>
+            <button type="button" class="themebtn active" id="mode-raw">Full Prompt</button>
+            <button type="button" class="themebtn" id="mode-md">Markdown</button>
+            <button type="button" class="themebtn" id="mode-summary">Summary</button>
+            <button type="button" class="themebtn" id="mode-json">JSON</button>
+          </div>
+          <div class="outputbox" id="prompt-output" contenteditable="true" spellcheck="false"></div>
+          <div style="margin:1.4em 0 0 0;display:flex;gap:1em;align-items:center;flex-wrap:wrap;">
+            <button type="button" class="randombtn" onclick="randomizePrompt()">🎲 Randomize</button>
+            <button type="button" class="clearbtn" onclick="clearForm()">Clear</button>
+            <button type="button" class="favbtn" onclick="favoritePrompt()">★ Favorite</button>
+            <button type="button" class="copybtn" onclick="copyPrompt()">Copy</button>
+            <button type="button" class="savebtn" onclick="savePrompt()">Save</button>
+            <button type="button" class="sharebtn" onclick="sharePrompt()">Share</button>
+            <button type="button" style="background:var(--accent);color:#23231f;font-weight:bold;padding:.7em 2em;border-radius:11px;" onclick="generatePrompt()">🚀 Generate</button>
+          </div>
+          <div id="prompt-status" style="margin:.8em 0 0 0;color:var(--brand2);font-weight:bold;"></div>
+        </div>
+        <div style="flex:1.1;min-width:330px;max-width:450px;">
+          <div style="background:var(--panel2);border-radius:14px;box-shadow:0 2px 10px #0003;padding:1.1em 1.4em 1.1em 1.1em;margin-bottom:1.4em;">
+            <div style="font-size:1.15em;font-weight:700;margin-bottom:.5em;color:var(--accent);">Quick Stats</div>
+            <div id="stat-prompts">Prompts Built: <b>0</b></div>
+            <div id="stat-saved">Templates Saved: <b>0</b></div>
+            <div id="stat-fav">Favorites: <b>0</b></div>
+            <div id="stat-share">Shared: <b>0</b></div>
+          </div>
+          <div style="background:var(--brand2);color:#23231f;padding:1.15em 1.2em;border-radius:12px;font-size:1.11em;font-weight:600;margin-bottom:1.3em;box-shadow:0 1px 11px #be9cff33;">
+            ☕ Like PromptForge? <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" style="color:var(--danger);font-weight:900;">Buy Me a Coffee</a> or share with a friend!
+          </div>
+        </div>
       </div>
-      <label>Prompt Output:</label>
-      <div class="outputbox" id="prompt-output" contenteditable="true"></div>
-      <div style="margin:1.2em 0 0 0; text-align:right;">
-        <span id="prompt-status" style="color:var(--gold); font-weight:bold;"></span>
-      </div>
-      <div>
+      <div style="margin:2.1em 0 0 0;">
         <label>Prompt History</label>
-        <div class="history" id="prompt-history" style="max-height:120px;overflow-y:auto;"></div>
+        <div class="history" id="prompt-history" style="max-height:135px;overflow-y:auto;"></div>
         <label>Favorites & Templates</label>
-        <div class="template-list" id="template-list" style="max-height:120px;overflow-y:auto;"></div>
+        <div class="template-list" id="template-list" style="max-height:110px;overflow-y:auto;"></div>
       </div>
     </form>
   </div>
-  <!-- === J1NX BOT WIDGET (Unified, Brand, Bottom-Right) === -->
-  <div class="j1nx-section" id="j1nx-ui"></div>
-  <!-- === FOOTER === -->
+  <!-- J1NX: ULTRA Muse Block, Docked -->
+  <div id="j1nx-ui" style="position:fixed;bottom:32px;right:36px;z-index:99;max-width:350px;">
+    <div style="position:relative;">
+      <img src="/assets/j1nx-cutout.png" alt="J1nx" style="width:116px;position:absolute;bottom:0;right:-25px;z-index:2;filter:drop-shadow(0 2px 18px #be9cff44);">
+      <div style="background:var(--panel2);border:2.5px solid var(--brand2);border-radius:16px;box-shadow:0 4px 26px #be9cff66;padding:1.3em 1.1em 1em 1.25em;max-width:260px;position:relative;z-index:3;min-height:110px;">
+        <div style="font-weight:900;font-size:1.08em;color:var(--brand2);margin-bottom:.6em;">J1nx AI Muse</div>
+        <div id="j1nx-speech" style="font-size:1.05em;color:var(--muted);margin-bottom:.4em;">Hi! I'm J1nx. Ask for prompt tips, unlock NSFW, or get inspired...</div>
+        <input id="j1nx-input" type="text" placeholder="Ask J1nx anything..." style="width:81%;margin-right:.5em;padding:.54em .8em;border-radius:7px;border:1.7px solid var(--brand2);background:#211e32;color:var(--offwhite);font-size:1.07em;">
+        <button onclick="sendJ1nx()" style="padding:.6em 1.25em;background:var(--brand2);color:#23231f;border:none;border-radius:7px;font-weight:bold;cursor:pointer;">Send</button>
+        <div style="margin-top:.5em;">
+          <button onclick="j1nxUnlockNSFW()" style="background:var(--danger);color:#fff;border:none;border-radius:7px;padding:.37em 1.3em;margin-right:.5em;cursor:pointer;">Unlock NSFW</button>
+          <button onclick="j1nxRandomTip()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.37em 1.3em;cursor:pointer;">Random Tip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- FOOTER, CAMO, NAVIGATION, SOCIAL, SEO -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -221,119 +351,151 @@ U|  _"\\ uU |  _"\\ u  \\/"_ \\/U|\' \\/ \'|uU|  _"\\ u|_ " _|  |" ___|   \\/"_ 
     <pre class="footer-camo" id="footerCamo"></pre>
     <div class="footer-bar">
       Made in BC, Canada &bull; 
-      <a href="index.html">Home</a> &bull; 
+      <a href="main.html">Main</a> &bull; 
       <a href="picture.html">Image</a> &bull; 
-      <a href="movie.html">Video</a> &bull; 
+      <a href="movie.html">Movie</a> &bull; 
+      <a href="watermark.html">Watermark</a> &bull; 
+      <a href="j1nx.html">J1nx</a> &bull; 
       <a href="aihacks.html">AI Hacks</a> &bull; 
-      <a href="about.html">About</a> &bull;
+      <a href="ansiart.html">AnsiArt</a> &bull;
+      <a href="compare.html">Compare</a> &bull;
       <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> &bull;
       <a href="https://x.com/GoreandGiggles" target="_blank">X (Twitter)</a> &bull;
       <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">Buy Me a Coffee</a>
     </div>
   </footer>
-<!-- === PROMPTFORGE MONSTER JS (ALL-IN-ONE, INLINE) === -->
 <script>
-/* === MODEL DATA & FULL OPTIONS === */
-const modelSettings = {
-  "midjourney": { cfg: 4, steps: 35, aspect: "16:9", sampler: "Euler a", tags: ["v6", "HD", "raw"] },
-  "dalle":      { cfg: 0, steps: 0, aspect: "Square", sampler: "N/A", tags: ["natural", "Vivid", "Surreal"] },
-  "stable":     { cfg: 7, steps: 40, aspect: "1:1", sampler: "DPM++ 2M", tags: ["SDXL", "Refiner"] },
-  "openart":    { cfg: 6, steps: 50, aspect: "1:1", sampler: "PLMS", tags: ["OpenArt", "XL"] },
-  "playground": { cfg: 6, steps: 28, aspect: "3:2", sampler: "DDIM", tags: ["PGv2", "creative"] },
-  "kandinsky":  { cfg: 5, steps: 32, aspect: "4:5", sampler: "Heun", tags: ["kandinsky"] },
-  "anything":   { cfg: 8, steps: 30, aspect: "2:3", sampler: "LMS", tags: ["anything-v5"] },
-  "realvis":    { cfg: 5, steps: 30, aspect: "16:9", sampler: "Euler", tags: ["realvisXL"] },
-  "juggernaut": { cfg: 4, steps: 36, aspect: "21:9", sampler: "UniPC", tags: ["juggernautXL"] },
-  "dreamshaper":{ cfg: 9, steps: 60, aspect: "3:2", sampler: "DPM++ SDE", tags: ["dreamshaper"] },
-  "cyberrealistic":{ cfg: 8, steps: 32, aspect: "1:1", sampler: "DDIM", tags: ["cyberrealistic"] },
-  "dreamlike":  { cfg: 7, steps: 22, aspect: "4:3", sampler: "PLMS", tags: ["dreamlike"] },
-  "deliberate": { cfg: 10, steps: 42, aspect: "16:9", sampler: "Euler a", tags: ["deliberate"] },
-  "deepfloyd":  { cfg: 9, steps: 80, aspect: "3:2", sampler: "N/A", tags: ["deepfloydIF"] },
-  "instantid":  { cfg: 12, steps: 90, aspect: "1:1", sampler: "N/A", tags: ["instantID"] },
-  "custom":     { cfg: 7, steps: 30, aspect: "1:1", sampler: "Euler", tags: [] }
+// ======= Chips, Multiselect, Microhelp, Negatives =======
+function renderChips(id, arr) {
+  const box = document.getElementById(id);
+  box.innerHTML = arr.map((txt,idx)=>`<span class="chip">${txt}<span class="x" onclick="removeChip('${id}',${idx})">&times;</span></span>`).join('');
+}
+function removeChip(id, idx) {
+  let arr = getArr(id);
+  arr.splice(idx,1);
+  setArr(id, arr);
+  renderChips(id, arr);
+  updateNegPrompts();
+  updateStyles();
+}
+// ---- Art Styles Chips ----
+function getArr(id) {
+  if(id==="style-chips") return window._styles || [];
+  if(id==="neg-chips") return window._negs || [];
+  return [];
+}
+function setArr(id, arr) {
+  if(id==="style-chips") window._styles = arr;
+  if(id==="neg-chips") window._negs = arr;
+}
+function updateStyles() {
+  const sel = document.getElementById("art-style");
+  window._styles = Array.from(sel.selectedOptions).map(x=>x.value);
+  renderChips("style-chips", window._styles);
+}
+function updateNegPrompts() {
+  const box = document.getElementById("neg-prompts");
+  box.value = (window._negs||[]).join(', ');
+  renderChips("neg-chips", window._negs);
+}
+// ---- Negative Prompt Groups ----
+const negGroups = {
+  "sfw": ["low quality","jpeg artifacts","watermark","blurry","cropped","logo","bad hands","mutated","deformed","text","error","monochrome","grainy","frame","worst quality"],
+  "nsfw": ["censored","nude fail","nude censored","nip slip fail","blocked content","banned words","censor bar","explicit watermark"],
+  "human": ["bad anatomy","extra limbs","missing fingers","extra fingers","twisted arm","double head","asymmetry","distorted face","deformed eyes","strange mouth"],
+  "render": ["oversaturated","underexposed","overexposed","unrealistic shadow","artifact","render glitch","polygon edge","blur","distorted perspective"],
+  "scene": ["clutter","messy background","unfocused","unintended subject","boring","plain","unrealistic scenery","crowded"],
+  "custom": [],
+  "all": [].concat(
+    ["low quality","jpeg artifacts","watermark","blurry","cropped","logo","bad hands","mutated","deformed","text","error","monochrome","grainy","frame","worst quality"],
+    ["bad anatomy","extra limbs","missing fingers","extra fingers","twisted arm","double head","asymmetry","distorted face","deformed eyes","strange mouth"],
+    ["oversaturated","underexposed","overexposed","unrealistic shadow","artifact","render glitch","polygon edge","blur","distorted perspective"],
+    ["clutter","messy background","unfocused","unintended subject","boring","plain","unrealistic scenery","crowded"],
+    ["censored","nude fail","nude censored","nip slip fail","blocked content","banned words","censor bar","explicit watermark"]
+  )
 };
-const allStyles = [
-  "Photorealistic","Anime","Cartoon","Fantasy","Digital Painting","3D Render","Cyberpunk","Abstract",
-  "Pixel Art","Vaporwave","Sketch","Oil Painting","Steampunk","Line Art","Watercolor","Concept Art",
-  "Low Poly","Monochrome","Hyperrealism","Surrealism","Comic Book","Chibi","Impressionism","Matte","Cel Shading","Flat"
-];
-const allNegatives = [
-  "low quality", "bad anatomy", "extra limbs", "watermark", "blur", "oversaturated", "deformed", "poor lighting", "text", "logo", "distorted", "mutation", "missing fingers", "cropped", "grainy", "NSFW" 
-];
+window._styles = [];
+window._negs = [];
+document.getElementById("art-style").addEventListener("change", updateStyles);
+document.getElementById("neg-prompts").addEventListener("input", function() {
+  window._negs = this.value.split(",").map(x=>x.trim()).filter(Boolean);
+  renderChips("neg-chips", window._negs);
+});
+function addNegGroup() {
+  const val = document.getElementById("neg-group").value;
+  const group = negGroups[val] || [];
+  window._negs = Array.from(new Set([...window._negs, ...group]));
+  updateNegPrompts();
+}
+function clearNegs() {
+  window._negs = [];
+  updateNegPrompts();
+}
+updateStyles(); updateNegPrompts();
 
-/* === DYNAMIC SLIDER UPDATES === */
-["steps","cfg","quality","output-cnt"].forEach(id=>{
-  const el=document.getElementById(id), val=document.getElementById(id+"-val");
+// ======= ADVANCED SLIDERS/CONTROLS =======
+["sfw-nsfw","steps","cfg","quality","output-cnt"].forEach(id=>{
+  const el=document.getElementById(id), val=document.getElementById(id.replace("-nsfw","-val").replace("output-cnt","output-cnt-val"));
   if(el&&val){ el.oninput=()=>{ val.textContent=el.value; }; }
 });
 
-/* === AUTOLOAD MODEL SETTINGS ON CHANGE === */
-document.getElementById("model-select").onchange = function() {
-  const v = this.value, s = modelSettings[v];
-  if(s) {
-    document.getElementById("cfg").value = s.cfg;
-    document.getElementById("cfg-val").textContent = s.cfg;
-    document.getElementById("steps").value = s.steps;
-    document.getElementById("steps-val").textContent = s.steps;
-    document.getElementById("aspect").value = s.aspect;
-    document.getElementById("sampler").value = s.sampler;
-    document.getElementById("model-params").value = s.tags.join(" ");
-  }
-  updatePromptOutput();
-};
-
-/* === FULL PROMPT GENERATION === */
-function generatePrompt() {
-  const d = gatherPromptData();
-  // Multi-style selector
-  let styleList = Array.from(document.getElementById("art-style").selectedOptions).map(o=>o.value).join(', ');
-  // Compose pro-level prompt
-  let parts = [];
-  if(d["scene-desc"]) parts.push(d["scene-desc"]);
-  if(styleList) parts.push("Style: " + styleList);
-  if(d.lighting) parts.push("Lighting: " + d.lighting);
-  if(d["camera-angle"]) parts.push("Camera: " + d["camera-angle"]);
-  if(d.aspect) parts.push("Aspect Ratio: " + d.aspect);
-  if(d.sampler && d.sampler!=="N/A") parts.push("Sampler: " + d.sampler);
-  if(d["model-params"]) parts.push("Params: " + d["model-params"]);
-  if(Number(d["sfw-nsfw"])>50) parts.push("NSFW");
-  if(d["neg-prompts"]) parts.push("Negative: "+d["neg-prompts"]);
-  let promptText = parts.join(" | ");
-  // Model-specific extras
-  promptText = `[${d["model-select"] || "custom"}] ` + promptText;
-  document.getElementById("prompt-output").innerText = promptText;
-  pushHistory(promptText);
-  document.getElementById("prompt-status").innerText = "Prompt generated!";
-  return promptText;
-}
-
-/* === GATHER ALL INPUT DATA === */
-function gatherPromptData(){
-  const ids = ["model-select","art-style","scene-desc","neg-prompts","sfw-nsfw","lighting","camera-angle","aspect","sampler","steps","cfg","quality","seed","output-cnt","model-params","lang"];
-  let out = {};
-  ids.forEach(id=>{
-    let el = document.getElementById(id);
-    if(!el) return;
-    if(el.tagName==="SELECT" && el.multiple){
-      out[id] = Array.from(el.selectedOptions).map(o=>o.value);
-    } else {
-      out[id] = el.value;
-    }
+// ======= MULTISELECT CUSTOM RENDER =======
+["art-style","lighting","camera-angle","aspect","sampler"].forEach(id=>{
+  document.getElementById(id).addEventListener("mousedown", function(e){
+    if(e.target.tagName==="OPTION") e.target.selected = !e.target.selected;
+    e.preventDefault();
   });
-  return out;
-}
-
-/* === REAL-TIME OUTPUT: update on any field (no auto-generate, only on click for pro mode) === */
-["scene-desc","art-style","neg-prompts","sfw-nsfw","lighting","camera-angle","aspect","sampler","steps","cfg","quality","output-cnt","model-params","lang"].forEach(id=>{
-  let el = document.getElementById(id);
-  if(el) el.addEventListener("input", ()=>{ document.getElementById("prompt-status").innerText=""; });
 });
 
-/* === ACTION BUTTONS === */
+// ======= PROMPT GENERATOR LOGIC =======
+function gatherPromptData() {
+  const data = {
+    model: document.getElementById("model-select").value,
+    styles: window._styles,
+    scene: document.getElementById("scene-desc").value,
+    negatives: window._negs,
+    sfw: document.getElementById("sfw-nsfw").value,
+    lighting: Array.from(document.getElementById("lighting").selectedOptions).map(x=>x.value),
+    camera: Array.from(document.getElementById("camera-angle").selectedOptions).map(x=>x.value),
+    aspect: Array.from(document.getElementById("aspect").selectedOptions).map(x=>x.value),
+    sampler: Array.from(document.getElementById("sampler").selectedOptions).map(x=>x.value),
+    steps: document.getElementById("steps").value,
+    cfg: document.getElementById("cfg").value,
+    quality: document.getElementById("quality").value,
+    seed: document.getElementById("seed").value,
+    outputcnt: document.getElementById("output-cnt").value,
+    params: document.getElementById("model-params").value,
+    lang: document.getElementById("lang").value
+  };
+  return data;
+}
+function generatePrompt() {
+  const d = gatherPromptData();
+  let prompt = [];
+  if(d.scene) prompt.push(d.scene);
+  if(d.styles.length) prompt.push("Style: "+d.styles.join(", "));
+  if(d.lighting.length) prompt.push("Lighting: "+d.lighting.join(", "));
+  if(d.camera.length) prompt.push("Camera: "+d.camera.join(", "));
+  if(d.aspect.length) prompt.push("Aspect: "+d.aspect.join(", "));
+  if(d.sampler.length) prompt.push("Sampler: "+d.sampler.join(", "));
+  if(d.params) prompt.push("Params: "+d.params);
+  if(Number(d.sfw)>50) prompt.push("NSFW");
+  if(d.negatives.length) prompt.push("Negative: "+d.negatives.join(", "));
+  prompt.push(`[${d.model}] Steps:${d.steps} CFG:${d.cfg} Quality:${d.quality} Seed:${d.seed} Outputs:${d.outputcnt}`);
+  document.getElementById("prompt-output").innerText = prompt.join(" | ");
+  document.getElementById("prompt-status").innerText = "Prompt generated!";
+  updateStats("prompts");
+  pushHistory(document.getElementById("prompt-output").innerText);
+  return prompt.join(" | ");
+}
+
+// ======= ACTION BUTTONS =======
 function copyPrompt() {
-  let box = document.getElementById("prompt-output");
-  navigator.clipboard.writeText(box.innerText);
+  let txt = document.getElementById("prompt-output").innerText;
+  if (!txt) return;
+  navigator.clipboard.writeText(txt);
   document.getElementById("prompt-status").innerText="Copied!";
+  updateStats("copied");
 }
 function savePrompt() {
   let txt = document.getElementById("prompt-output").innerText;
@@ -342,12 +504,13 @@ function savePrompt() {
   saved.push({ts:Date.now(), prompt:txt});
   localStorage.setItem("pf_saved_prompts", JSON.stringify(saved));
   document.getElementById("prompt-status").innerText="Saved!";
+  updateStats("saved");
   updateHistory();
 }
 function sharePrompt() {
   let txt = document.getElementById("prompt-output").innerText;
   if(navigator.share) {
-    navigator.share({text:txt, title:"PromptForge AI Prompt"}).then(()=>{document.getElementById("prompt-status").innerText="Shared!";});
+    navigator.share({text:txt, title:"PromptForge AI Prompt"}).then(()=>{document.getElementById("prompt-status").innerText="Shared!";updateStats("shared");});
   } else {
     document.getElementById("prompt-status").innerText="Copy and share: "+txt;
   }
@@ -359,46 +522,40 @@ function favoritePrompt() {
   fav.push({ts:Date.now(), prompt:txt});
   localStorage.setItem("pf_fav_prompts", JSON.stringify(fav));
   document.getElementById("prompt-status").innerText="Favorited!";
+  updateStats("fav");
   updateFavorites();
 }
 function randomizePrompt() {
-  // Choose a style, lighting, angle, and model params
-  const rand = arr=>arr[Math.floor(Math.random()*arr.length)];
-  let artStyleSel = document.getElementById("art-style");
-  for(let i=0;i<artStyleSel.options.length;i++) artStyleSel.options[i].selected=false;
-  let count = Math.max(1,Math.floor(Math.random()*4));
-  for(let i=0;i<count;i++) artStyleSel.options[Math.floor(Math.random()*artStyleSel.options.length)].selected=true;
-  document.getElementById("lighting").selectedIndex = Math.floor(Math.random()*document.getElementById("lighting").options.length);
-  document.getElementById("camera-angle").selectedIndex = Math.floor(Math.random()*document.getElementById("camera-angle").options.length);
-  document.getElementById("aspect").selectedIndex = Math.floor(Math.random()*document.getElementById("aspect").options.length);
-  document.getElementById("sampler").selectedIndex = Math.floor(Math.random()*document.getElementById("sampler").options.length);
+  // For demo: pick random styles, negatives, sliders
+  let styleSel = document.getElementById("art-style"), n = styleSel.options.length;
+  for(let i=0;i<n;i++) styleSel.options[i].selected = Math.random()>.5;
+  updateStyles();
+  let groups = Object.keys(negGroups); window._negs = [];
+  for(let k=0;k<3;k++) window._negs = Array.from(new Set([...window._negs, ...negGroups[groups[Math.floor(Math.random()*groups.length)]]])); updateNegPrompts();
+  ["lighting","camera-angle","aspect","sampler"].forEach(id=>{
+    let sel=document.getElementById(id), len=sel.options.length;
+    for(let i=0;i<len;i++) sel.options[i].selected = Math.random()>.6;
+  });
   document.getElementById("sfw-nsfw").value = Math.floor(Math.random()*100);
-  document.getElementById("scene-desc").value = rand([
-    "A majestic fantasy forest at sunrise, mystical lighting",
-    "Ultra-detailed cyberpunk street scene at night, neon reflections",
-    "Anime girl with umbrella in city rain, close-up, dreamy look",
-    "Hyperrealistic portrait, old fisherman, dramatic light",
-    "Cute robot cooking pancakes, vibrant kitchen, Pixar style"
-  ]);
-  document.getElementById("neg-prompts").value = rand(allNegatives);
-  document.getElementById("model-select").selectedIndex = Math.floor(Math.random()*document.getElementById("model-select").options.length);
-  document.getElementById("cfg").value = Math.floor(Math.random()*30)+1;
-  document.getElementById("cfg-val").textContent = document.getElementById("cfg").value;
   document.getElementById("steps").value = Math.floor(Math.random()*140)+10;
-  document.getElementById("steps-val").textContent = document.getElementById("steps").value;
+  document.getElementById("cfg").value = Math.floor(Math.random()*30)+1;
   document.getElementById("quality").value = Math.floor(Math.random()*20)+1;
-  document.getElementById("quality-val").textContent = document.getElementById("quality").value;
   document.getElementById("output-cnt").value = Math.floor(Math.random()*8)+1;
-  document.getElementById("output-cnt-val").textContent = document.getElementById("output-cnt").value;
-  document.getElementById("model-params").value = "";
+  document.getElementById("scene-desc").value = "A "+(Math.random()>.5?"mystical forest":"hyper-detailed cyberpunk city")+" at "+(Math.random()>.5?"sunrise":"night")+", "+(Math.random()>.5?"dramatic lighting":"soft focus")+".";
+  document.getElementById("neg-prompts").value = window._negs.join(", ");
   generatePrompt();
 }
 function clearForm() {
   document.getElementById("promptForm").reset();
+  window._styles = [];
+  window._negs = [];
+  updateStyles();
+  updateNegPrompts();
   document.getElementById("prompt-output").innerText = "";
   document.getElementById("prompt-status").innerText = "";
 }
-/* === HISTORY & FAVORITES === */
+
+// ======= HISTORY / FAVORITES =======
 function pushHistory(txt){
   let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
   h.unshift({ts:Date.now(), prompt:txt});
@@ -424,48 +581,63 @@ function loadPrompt(ts, fav=false){
 }
 window.onload = ()=>{ updateHistory(); updateFavorites(); };
 
-/* === J1NX BOT: Unified, Always-On Widget, Brand Styled === */
-const j1nxHTML = `
-  <div style="background:#242234; border:2px solid var(--j1nx-glow); border-radius:17px; box-shadow:0 2px 24px #be9cff99; padding:1.4em .8em; font-size:1.05em;">
-    <div style="display:flex;align-items:center;">
-      <img src="/assets/j1nx-avatar.png" alt="J1nx Bot" style="width:52px;height:52px;border-radius:50%;margin-right:.8em;box-shadow:0 2px 9px #be9cff88;">
-      <span style="color:var(--j1nx-glow);font-size:1.22em;font-weight:bold;">J1nx</span>
-      <span style="margin-left:.6em;color:#bdbbe6;font-size:1em;">(PromptForge Assistant)</span>
-    </div>
-    <div id="j1nx-chatlog" style="margin:.9em 0 0 0;max-height:205px;overflow-y:auto;"></div>
-    <input id="j1nx-input" type="text" placeholder="Ask J1nx for prompt help, tips, or to randomize..." style="width:89%;margin-top:.7em;padding:.6em;border-radius:6px;border:1.5px solid var(--j1nx-glow);background:#211e32;color:var(--offwhite);font-size:1.11em;">
-    <button onclick="sendJ1nx()" style="margin-left:.3em;padding:.6em 1.4em;background:var(--j1nx-glow);color:#23231f;border:none;border-radius:7px;cursor:pointer;font-weight:bold;">Send</button>
-  </div>
-`;
-document.getElementById("j1nx-ui").innerHTML = j1nxHTML;
+// ======= LIVE STATS =======
+function updateStats(type){
+  let stats = JSON.parse(localStorage.getItem("pf_stats")||'{"prompts":0,"saved":0,"fav":0,"shared":0,"copied":0}');
+  stats[type]=(stats[type]||0)+1;
+  localStorage.setItem("pf_stats",JSON.stringify(stats));
+  document.getElementById("stat-prompts").innerHTML = `Prompts Built: <b>${stats.prompts}</b>`;
+  document.getElementById("stat-saved").innerHTML = `Templates Saved: <b>${stats.saved}</b>`;
+  document.getElementById("stat-fav").innerHTML = `Favorites: <b>${stats.fav}</b>`;
+  document.getElementById("stat-share").innerHTML = `Shared: <b>${stats.shared}</b>`;
+}
+updateStats(""); // Initialize
+
+// ======= J1NX AI LOGIC =======
+const j1nxTips = [
+  "Mix 2-4 art styles for wild results.",
+  "NSFW unlocks advanced prompt freedom—slide right, then get creative.",
+  "Don't forget negative prompts—they remove flaws & bugs.",
+  "Camera angle changes story. Try Macro or Overhead for drama!",
+  "Try saving your favorite setups as templates.",
+  "Every model responds differently—experiment with CFG/Steps for best effect.",
+  "Use randomize for happy prompt accidents.",
+  "Need help? Type a model name for cheatsheet tips."
+];
 function sendJ1nx() {
-  const input = document.getElementById("j1nx-input").value.trim();
-  if(!input) return;
-  const log = document.getElementById("j1nx-chatlog");
-  log.innerHTML += `<div><b>You:</b> ${input}</div>`;
-  let reply = j1nxReply(input);
-  setTimeout(()=>{ log.innerHTML += `<div><b>J1nx:</b> ${reply}</div>`; log.scrollTop = log.scrollHeight; },600);
+  const input = document.getElementById("j1nx-input").value.trim().toLowerCase();
+  let out = "Try asking for a random tip, NSFW unlock, or type a model name for specifics.";
+  if(input.includes("random")) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
+  if(input.includes("nsfw")) out = "Slide the SFW→NSFW bar all the way right, and try edgier prompt ideas!";
+  if(input.includes("midjourney")) out = "MidJourney v6: Use --v 6, try 'raw' style, and test combo prompts!";
+  if(input.includes("dalle")) out = "DALL·E 3: Write in plain English, avoid weird symbols, and be clear.";
+  if(input.includes("openart")) out = "OpenArt: Packs pro-level negative prompt control. Explore combos!";
+  if(input.includes("stable")) out = "Stable Diffusion: CFG 7-10, Steps 30-40, use detailed negatives for photoreal.";
+  if(input.length<3) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
+  document.getElementById("j1nx-speech").innerText = out;
   document.getElementById("j1nx-input").value = "";
 }
-function j1nxReply(q){
-  q = q.toLowerCase();
-  if(q.includes("random")){ randomizePrompt(); return "Randomized your prompt settings!"; }
-  if(q.includes("nsfw")) return "Slide the SFW→NSFW bar to the right to unlock full creativity.";
-  if(q.includes("best style")) return "Try 'Photorealistic' or 'Hyperrealism' for the most realistic results.";
-  if(q.includes("midjourney")) return "Use --v 6 for the newest MidJourney model and experiment with multi-prompts!";
-  if(q.includes("save")) return "Click 'Save' to store your prompt. Check the History below any time!";
-  if(q.includes("negative")) return "Negative prompts remove unwanted features. Try: 'bad anatomy, extra limbs, watermark'.";
-  if(q.includes("dalle")) return "DALL·E 3 understands plain English best. Describe your scene simply, avoid strange symbols.";
-  if(q.includes("quality")) return "The Quality slider affects render detail—higher = slower but prettier!";
-  if(q.length<5) return "Ask for prompt help, type 'random', or get tips for any model or option!";
-  return "I'm here to help you build the world's best prompts. Try adjusting all sliders for best results!";
+function j1nxUnlockNSFW(){
+  document.getElementById("sfw-nsfw").value = 100;
+  document.getElementById("sfw-val").textContent = "100";
+  document.getElementById("j1nx-speech").innerText = "NSFW unlocked. You're in full creative mode!";
+}
+function j1nxRandomTip(){
+  document.getElementById("j1nx-speech").innerText = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
 }
 
-/* === CAMO FOOTER === */
+// ======= THEME SWITCHING =======
+document.querySelectorAll(".themebtn").forEach((b,i)=>{
+  b.onclick=()=>{
+    document.querySelectorAll(".themebtn").forEach(b2=>b2.classList.remove("active"));
+    b.classList.add("active");
+    document.body.className = ["hacker-dark","bright","vaporwave","pro-minimal"][i];
+  };
+});
+
+// ======= CAMO FOOTER EFFECT =======
 const camoColors = ["#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"];
 function randomCamoChar(){ const chars = "░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
 function renderCamo(tick=0){ let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out+=`<span style="color:${color}">${randomCamoChar()}</span>`;} out+="<br>";} document.getElementById("footerCamo").innerHTML=out; }
 let camoTick = 0; setInterval(()=>{ renderCamo(camoTick++); },950); renderCamo();
-
 </script>
-<!-- === END MONSTER INLINE JS === -->
