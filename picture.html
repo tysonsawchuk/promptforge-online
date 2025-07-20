@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="AI Art Prompt Generator for your next masterpiece.">
-  <meta name="keywords" content="AI, Art, Prompt Generator, Art Styles, AI Tools, Digital Art">
+  <meta name="description" content="AI Art Prompt Generator for your next masterpiece. Generate high-quality prompts with ease.">
+  <meta name="keywords" content="AI, Art, Prompt Generator, Art Styles, Digital Art, AI Tools, SFW, NSFW">
   <meta name="author" content="PromptForge">
   <title>PromptForge.online - AI Art Prompt Generator</title>
   <style>
@@ -89,6 +89,12 @@
       padding: 15px;
       display: none;
     }
+    /* Add some simple camouflage effects */
+    footer {
+      background-color: #333;
+      background-image: url('camouflage-pattern.png');
+      background-size: cover;
+    }
     @media (max-width: 768px) {
       body {
         padding: 10px;
@@ -99,11 +105,13 @@
     }
   </style>
   <script>
+    // Toggle J1nx chat
     function toggleJ1nx() {
       const j1nxBot = document.getElementById('j1nx-mini-camper');
       j1nxBot.style.display = (j1nxBot.style.display === 'block') ? 'none' : 'block';
     }
 
+    // Function to sanitize input and generate the final prompt
     function sanitizeInput(input) {
       const forbiddenWords = ['badword1', 'badword2']; // Replace with actual forbidden words
       let sanitized = input;
@@ -113,6 +121,7 @@
       return sanitized;
     }
 
+    // Generate the main prompt
     function generatePrompt() {
       const scene = document.getElementById("scene").value;
       const style = document.getElementById("style").value;
@@ -136,6 +145,7 @@
       document.getElementById("generated-prompt").textContent = prompt;
     }
 
+    // Generate random prompts for inspiration
     function generateRandomPrompt() {
       const randomScenes = ["A quiet forest at dusk", "A bustling city street in the rain", "A tranquil beach at sunrise"];
       const randomStyles = ["Photorealistic", "Anime", "Surreal"];
@@ -148,10 +158,17 @@
       const randomPrompt = `Scene: ${scene} | Style: ${style} | Mood: ${mood}`;
       document.getElementById("generated-prompt").textContent = randomPrompt;
     }
+
+    // Ensure that all functionality is in place for slider adjustments
+    function adjustSlider() {
+      const slider = document.getElementById("creativity-slider");
+      document.getElementById("creativity-value").textContent = slider.value;
+    }
   </script>
 </head>
 <body>
 
+  <!-- Header Section -->
   <header>
     <h1>PromptForge.online</h1>
     <nav>
@@ -163,11 +180,13 @@
   </header>
 
   <main>
+    <!-- Scene Description -->
     <section id="scene-description">
       <label for="scene">Describe your scene:</label>
       <textarea id="scene" rows="4" placeholder="E.g., A serene forest during golden hour..."></textarea>
     </section>
 
+    <!-- Art Style -->
     <section id="art-style">
       <label for="style">Choose an art style:</label>
       <select id="style">
@@ -184,11 +203,13 @@
       </select>
     </section>
 
+    <!-- Negative Prompts -->
     <section id="negative-prompts">
       <label for="negative">What do you *not* want in the image?</label>
       <textarea id="negative" rows="3" placeholder="E.g., No text, no blurriness, no watermark"></textarea>
     </section>
 
+    <!-- Advanced Settings -->
     <section id="settings">
       <label for="mood">Mood:</label>
       <input type="text" id="mood" placeholder="E.g., Melancholic, Playful, Dreamy">
@@ -204,21 +225,30 @@
         <option value="3:2">3:2</option>
         <option value="2:1">2:1</option>
       </select>
+
+      <!-- Creativity Slider (SFW/NSFW) -->
+      <label for="creativity">Creativity Level (SFW/NSFW):</label>
+      <input type="range" id="creativity-slider" min="1" max="100" value="50" step="1" oninput="adjustSlider()">
+      <p id="creativity-value">50</p>
     </section>
 
+    <!-- Generate Button -->
     <section id="actions">
       <button id="generate-btn" onclick="generatePrompt()">Generate Prompt</button>
       <button id="random-btn" onclick="generateRandomPrompt()">Generate Random Prompt</button>
     </section>
 
+    <!-- Result Area -->
     <section id="result">
       <h2>Your AI Prompt:</h2>
       <p id="generated-prompt">Your generated prompt will appear here...</p>
     </section>
   </main>
 
+  <!-- Footer Section with Google AdSense -->
   <footer>
     <p>&copy; 2025 AI Art Prompts. All rights reserved.</p>
+    <!-- Google AdSense here -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <ins class="adsbygoogle"
       style="display:block"
@@ -230,6 +260,7 @@
     </script>
   </footer>
 
+  <!-- J1nx Mini Chat -->
   <div id="j1nx-mini-camper">
     <button onclick="toggleJ1nx()">Toggle J1nx Chat</button>
     <div id="chat-output"></div>
