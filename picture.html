@@ -5,12 +5,114 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Generate the best AI art prompts to bring your imagination to life.">
   <title>AI Art Prompt Generator</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      margin-bottom: 20px;
+    }
+    textarea, input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+  <script>
+    // Function to sanitize input and generate the final prompt
+    function sanitizeInput(input) {
+      const forbiddenWords = ['badword1', 'badword2']; // Replace with actual forbidden words
+      let sanitized = input;
+      forbiddenWords.forEach(word => {
+        sanitized = sanitized.replace(new RegExp(word, 'gi'), '[FILTERED]');
+      });
+      return sanitized;
+    }
+
+    function generatePrompt() {
+      const scene = document.getElementById("scene").value;
+      const style = document.getElementById("style").value;
+      const negative = document.getElementById("negative").value;
+      const mood = document.getElementById("mood").value;
+      const lighting = document.getElementById("lighting").value;
+      const aspectRatio = document.getElementById("aspect-ratio").value;
+
+      // Sanitize inputs
+      const sanitizedScene = sanitizeInput(scene);
+      const sanitizedNegative = sanitizeInput(negative);
+
+      const prompt = `
+        Scene: ${sanitizedScene}
+        Style: ${style}
+        Negative Prompts: ${sanitizedNegative}
+        Mood: ${mood}
+        Lighting: ${lighting}
+        Aspect Ratio: ${aspectRatio}
+      `;
+
+      // Display the generated prompt
+      document.getElementById("generated-prompt").textContent = prompt;
+    }
+
+    // Random prompt generator
+    function generateRandomPrompt() {
+      const randomScenes = ["A quiet forest at dusk", "A bustling city street in the rain", "A tranquil beach at sunrise"];
+      const randomStyles = ["Photorealistic", "Anime", "Surreal"];
+      const randomMood = ["Melancholic", "Playful", "Dreamy"];
+
+      const scene = randomScenes[Math.floor(Math.random() * randomScenes.length)];
+      const style = randomStyles[Math.floor(Math.random() * randomStyles.length)];
+      const mood = randomMood[Math.floor(Math.random() * randomMood.length)];
+
+      const randomPrompt = `Scene: ${scene} | Style: ${style} | Mood: ${mood}`;
+      document.getElementById("generated-prompt").textContent = randomPrompt;
+    }
+  </script>
 </head>
 <body>
 
-  <!-- Main content section -->
+  <!-- Header -->
   <header>
     <h1>AI Art Prompt Generator</h1>
     <p>Craft the perfect prompt for your next masterpiece.</p>
@@ -33,6 +135,10 @@
         <option value="abstract">Abstract</option>
         <option value="digital">Digital Art</option>
         <option value="oil">Oil Painting</option>
+        <option value="pixel">Pixel Art</option>
+        <option value="graffiti">Graffiti</option>
+        <option value="cartoon">Cartoon</option>
+        <option value="vintage">Vintage</option>
       </select>
     </section>
 
@@ -55,19 +161,21 @@
         <option value="16:9">16:9</option>
         <option value="4:3">4:3</option>
         <option value="1:1">1:1</option>
+        <option value="3:2">3:2</option>
+        <option value="2:1">2:1</option>
       </select>
     </section>
 
     <!-- Generate Button -->
     <section id="actions">
-      <button id="generate-btn">Generate Prompt</button>
-      <button id="random-btn">Generate Random Prompt</button>
+      <button id="generate-btn" onclick="generatePrompt()">Generate Prompt</button>
+      <button id="random-btn" onclick="generateRandomPrompt()">Generate Random Prompt</button>
     </section>
 
     <!-- Result Area -->
     <section id="result">
       <h2>Your AI Prompt:</h2>
-      <p id="generated-prompt"></p>
+      <p id="generated-prompt">Your generated prompt will appear here...</p>
     </section>
   </main>
 
