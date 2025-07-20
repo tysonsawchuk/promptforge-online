@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Generate the best AI art prompts to bring your imagination to life.">
+  <meta name="description" content="Generate AI art prompts for your creative masterpiece.">
   <title>AI Art Prompt Generator</title>
   <style>
+    /* Global Styles */
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -14,18 +15,23 @@
     }
     header {
       background-color: #333;
-      color: #fff;
-      padding: 15px;
+      color: white;
+      padding: 20px;
       text-align: center;
     }
-    footer {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-      text-align: center;
-      position: fixed;
-      width: 100%;
-      bottom: 0;
+    header h1 {
+      margin: 0;
+    }
+    nav {
+      margin-top: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+    }
+    nav a:hover {
+      text-decoration: underline;
     }
     main {
       padding: 20px;
@@ -33,7 +39,7 @@
     section {
       margin-bottom: 20px;
     }
-    textarea, input, select {
+    label, input, select, textarea {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -52,14 +58,56 @@
     button:hover {
       background-color: #0056b3;
     }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+    }
+    /* Result Box */
     #result {
       background-color: #fff;
-      padding: 15px;
+      padding: 20px;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
+    /* Slider */
+    .slider {
+      width: 100%;
+    }
+    /* J1nx Mini Chat */
+    #j1nx-mini-camper {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 300px;
+      height: 400px;
+      background-color: #333;
+      color: white;
+      border-radius: 5px;
+      padding: 15px;
+      display: none; /* Hidden by default */
+    }
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      header {
+        padding: 15px;
+      }
+    }
   </style>
   <script>
+    // Show the mini J1nx bot
+    function toggleJ1nx() {
+      const j1nxBot = document.getElementById('j1nx-mini-camper');
+      j1nxBot.style.display = (j1nxBot.style.display === 'block') ? 'none' : 'block';
+    }
+
     // Function to sanitize input and generate the final prompt
     function sanitizeInput(input) {
       const forbiddenWords = ['badword1', 'badword2']; // Replace with actual forbidden words
@@ -70,6 +118,7 @@
       return sanitized;
     }
 
+    // Generate prompt from user input
     function generatePrompt() {
       const scene = document.getElementById("scene").value;
       const style = document.getElementById("style").value;
@@ -112,10 +161,15 @@
 </head>
 <body>
 
-  <!-- Header -->
+  <!-- Header Section with Navigation -->
   <header>
     <h1>AI Art Prompt Generator</h1>
-    <p>Craft the perfect prompt for your next masterpiece.</p>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Features</a>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+    </nav>
   </header>
 
   <main>
@@ -179,7 +233,7 @@
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer Section with Google AdSense -->
   <footer>
     <p>&copy; 2025 AI Art Prompts. All rights reserved.</p>
     <!-- Google AdSense here -->
@@ -193,6 +247,14 @@
       (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
   </footer>
+
+  <!-- J1nx Mini Chat -->
+  <div id="j1nx-mini-camper">
+    <button onclick="toggleJ1nx()">Toggle J1nx Chat</button>
+    <div id="chat-output"></div>
+    <textarea id="chat-input" placeholder="Ask J1nx anything..."></textarea>
+    <button onclick="sendMessage()">Send</button>
+  </div>
 
 </body>
 </html>
