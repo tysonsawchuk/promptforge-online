@@ -3,237 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PromptForge AI Prompt Generator — Create Legendary Art Prompts</title>
-  <meta name="description" content="PromptForge AI Builder: Create the best AI prompts for any image or video model. Customize lighting, style, camera angles, and more. Free access with advanced tools and features.">
-  <meta property="og:title" content="PromptForge AI Prompt Generator">
-  <meta property="og:description" content="The ultimate platform to create AI prompts for art, video, and more. All tools are free with customization options for every model and creative need.">
+  <title>PromptForge.online | Ultimate AI Prompt Builder</title>
+  <meta name="description" content="PromptForge is the most advanced, customizable AI art prompt builder with full multi-model support. Free, no login, and packed with pro options!">
+  <meta name="keywords" content="AI prompt, art prompt, generator, MidJourney, DALL-E, Stable Diffusion, OpenArt, NSFW, SFW, free AI, prompt builder, professional, templates">
+  <meta property="og:title" content="PromptForge.online | Ultimate AI Prompt Builder">
+  <meta property="og:description" content="Create, save, and share world-class AI prompts for every major image model. No login, no limits.">
   <meta property="og:image" content="/assets/promptforge-og-pic.png">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="stylesheet" href="/assets/main.css?v=22">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    /* Custom base styles */
     :root {
-      --aqua: #64f2e3;
-      --offwhite: #e9efe7;
-      --panel: #181b15;
-      --panel-deep: #23231f;
-      --footer-bg: #131413;
-      --gold: #ffe266;
-      --j1nx-glow: #be9cff;
+      --aqua: #64f2e3; --offwhite: #e9efe7; --panel: #181b15; --panel-deep: #23231f;
+      --footer-bg: #131413; --gold: #ffe266; --j1nx-glow: #be9cff;
     }
-    html, body {
-      width: 100vw; max-width: 100vw; min-width: 0;
-      overflow-x: hidden;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      background: var(--panel);
-      color: var(--offwhite);
-      font-family: 'Fira Mono', monospace;
-      font-size: 1.03em;
-      -webkit-font-smoothing: antialiased;
-    }
-    /* Header and version */
-    header {
-      border-bottom: 2px solid var(--aqua);
-      background: var(--panel-deep);
-      padding: 0 0 0.1em 0;
-      margin: 0;
-      width: 100vw;
-      max-width: 100vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5em 1.5em;
-    }
-    h1 {
-      text-align: center;
-      margin: 0.04em 0 0.09em 0;
-      font-size: 2em;
-      letter-spacing: 0.13em;
-      background: linear-gradient(90deg, var(--aqua) 0%, #87ffd9 52%, #bdf6c3 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-weight: 900;
-      user-select: none;
-      text-shadow: 0 0 12px var(--aqua)10;
-    }
-    .version {
-      font-size: 1em;
-      color: var(--gold);
-      background: #2b2f28;
-      padding: 0.3em;
-      border-radius: 5px;
-      font-weight: bold;
-    }
-    .desc {
-      max-width: 650px;
-      margin: 0.12em auto 0.55em auto;
-      text-align: center;
-      font-size: 1em;
-      color: var(--aqua);
-      font-weight: 400;
-      background: #181b1511;
-      border-radius: 0 0 8px 8px;
-      box-shadow: 0 2px 7px var(--aqua)06;
-      line-height: 1.29;
-      letter-spacing: 0.011em;
-      padding: 0.30em .6em 0.45em .6em;
-    }
-    /* Prompt builder main section */
-    .prompt-builder {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2em;
-      background-color: var(--panel-deep);
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-    .prompt-builder h2 {
-      text-align: center;
-      color: var(--aqua);
-      font-size: 1.6em;
-      margin-bottom: 1em;
-    }
-    .prompt-builder label {
-      display: block;
-      margin-top: 1em;
-      font-size: 1.1em;
-      color: var(--gold);
-    }
-    .prompt-builder textarea, .prompt-builder select, .prompt-builder input {
-      width: 100%;
-      padding: 0.8em;
-      margin-top: 0.5em;
-      border-radius: 6px;
-      border: 2px solid var(--aqua);
-      background: #2b2f28;
-      color: var(--offwhite);
-      font-size: 1.1em;
-    }
-    .prompt-builder input[type="range"] {
-      margin-top: 1em;
-      width: 100%;
-    }
-    .prompt-builder .options button {
-      background-color: var(--aqua);
-      color: #171b22;
-      padding: 0.7em 2em;
-      margin: 1em 0.3em;
-      font-size: 1.1em;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background-color 0.3s;
-    }
-    .prompt-builder .options button:hover {
-      background-color: #58c2c8;
-    }
-    /* Footer section */
-    .footer-bar {
-      text-align: center;
-      font-size: 0.9em;
-      color: var(--aqua);
-      margin-bottom: 1em;
-    }
-    .footer-bar a {
-      color: var(--gold);
-      text-decoration: none;
-      margin: 0 0.5em;
-      transition: color 0.2s;
-    }
-    .footer-bar a:hover {
-      color: var(--aqua);
-    }
-    .footer-art, .footer-camo {
-      font-family: monospace;
-      font-size: 1em;
-      line-height: 1.2;
-      text-align: center;
-      color: var(--aqua);
-    }
-    .footer-camo {
-      font-size: 0.85em;
-    }
-    /* Responsive Design */
-    @media (max-width: 800px) {
-      .prompt-builder {
-        padding: 1em;
-      }
-      .footer-bar {
-        font-size: 0.8em;
-      }
-    }
+    html, body { margin:0; padding:0; width:100vw; background:var(--panel); color:var(--offwhite); font-family: 'Fira Mono', monospace; }
+    .nav { background:var(--panel-deep); display:flex; align-items:center; padding:.7em 0; border-bottom:2px solid var(--aqua); }
+    .nav .ver { color:var(--gold); font-weight:bold; margin:0 2em 0 1em; }
+    .nav a { color:var(--aqua); margin:0 .7em; text-decoration:none; font-weight:bold; }
+    .nav a:hover { text-decoration:underline; color:var(--gold);}
+    h1 { margin:.1em auto .1em auto; text-align:center; font-size:2.2em; background:linear-gradient(90deg, var(--aqua), #bdf6c3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .desc { max-width:680px; margin:0 auto 1.1em auto; text-align:center; color:var(--aqua);}
+    .mainbox { max-width:1250px; margin:2em auto 2em auto; background:var(--panel-deep); border-radius:14px; box-shadow:0 4px 40px #000a; padding:2.5em 2.5em 1em 2.5em;}
+    label { color:var(--gold); font-weight:bold; margin-top:.9em; display:block;}
+    select, textarea, input[type="text"], input[type="range"] { width:100%; margin-top:.4em; border-radius:6px; border:2px solid var(--aqua); background:#23231f; color:var(--offwhite); font-size:1.13em; padding:.65em;}
+    .prompt-row { display:flex; gap:1.2em; flex-wrap:wrap;}
+    .prompt-row > div { flex:1; min-width:210px;}
+    .adv-controls { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:.9em;}
+    .outputbox { margin:2em 0 1.3em 0; background:#171d16; border-radius:10px; border:2px solid var(--aqua); min-height:90px; padding:1.3em; font-size:1.19em; word-break:break-all;}
+    .copybtn { background:var(--aqua); color:#171b22; font-weight:bold; border:none; border-radius:8px; padding:.7em 2em; margin:0 1em 0 0; font-size:1.12em; cursor:pointer;}
+    .copybtn:hover { background:var(--gold);}
+    .savebtn, .sharebtn { background:var(--gold); color:#181b18; font-weight:bold; border:none; border-radius:8px; padding:.7em 2em; margin:0 1em 0 0; font-size:1.12em; cursor:pointer;}
+    .j1nx-section { margin:2em 0 2em 0;}
+    .footer-art, .footer-camo { font-family:monospace; font-size:1em; text-align:center; color:var(--aqua);}
+    .footer-bar { text-align:center; color:var(--aqua); margin:.5em 0 1em 0;}
+    .footer-bar a { color:var(--gold); margin:0 .6em;}
+    @media (max-width:900px) { .mainbox{padding:1em;} .adv-controls{grid-template-columns:1fr 1fr;}}
+    @media (max-width:600px) { .prompt-row{flex-direction:column;} .mainbox{padding:.4em;} .adv-controls{grid-template-columns:1fr;}}
   </style>
 </head>
-
 <body>
-
-  <!-- Header -->
-  <header>
-    <h1>PromptForge.online</h1>
-    <div class="version">v2.1</div>
-  </header>
-
-  <!-- Main Content: Prompt Builder -->
-  <div class="prompt-builder">
-    <h2>Create Your Art Prompt</h2>
-
-    <!-- Scene Description -->
-    <label for="scene-description">Scene Description:</label>
-    <textarea id="scene-description" placeholder="Describe your scene here..." rows="5"></textarea>
-    
-    <!-- Art Style Dropdown -->
-    <label for="art-style">Art Style:</label>
-    <select id="art-style">
-      <option value="photorealistic">Photorealistic</option>
-      <option value="anime">Anime</option>
-      <option value="cartoon">Cartoon</option>
-      <option value="fantasy">Fantasy</option>
-      <option value="surrealism">Surrealism</option>
-      <option value="cyberpunk">Cyberpunk</option>
-      <option value="abstract">Abstract</option>
-    </select>
-    
-    <!-- Negative Prompts -->
-    <label for="negative-prompts">Negative Prompts:</label>
-    <textarea id="negative-prompts" placeholder="Any terms to avoid?" rows="3"></textarea>
-    
-    <!-- SFW/NSFW Slider -->
-    <label for="creativity-slider">Creativity (SFW to NSFW):</label>
-    <input type="range" id="creativity-slider" min="0" max="100" value="50">
-
-    <div id="summarized-prompt">
-      <p><strong>Summarized Prompt:</strong> <span id="short-summary">None</span></p>
-      <p><strong>Full Prompt:</strong> <span id="full-summary">None</span></p>
+  <!-- NAVIGATION & VERSION -->
+  <nav class="nav">
+    <span class="ver" id="version">v2.1</span>
+    <a href="index.html">Home</a>
+    <a href="picture.html">Image Prompt</a>
+    <a href="movie.html">Video Prompt</a>
+    <a href="aihacks.html">AI Hacks</a>
+    <a href="about.html">About</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles" target="_blank">X (Twitter)</a>
+    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">Buy Me a Coffee</a>
+  </nav>
+  <h1>PromptForge.online</h1>
+  <div class="desc">The most advanced prompt builder for every AI image model. Free forever, no logins, every pro option included. Build, save, and share truly legendary prompts!</div>
+  <!-- MAIN PROMPT BUILDER -->
+  <div class="mainbox">
+    <form id="promptForm" autocomplete="off">
+      <div class="prompt-row">
+        <div>
+          <label for="model-select">Model</label>
+          <select id="model-select" name="model">
+            <option value="midjourney">MidJourney</option>
+            <option value="dalle">DALL·E</option>
+            <option value="stable">Stable Diffusion</option>
+            <option value="openart">OpenArt</option>
+            <option value="playground">Playground V2</option>
+            <option value="kandinsky">Kandinsky</option>
+            <option value="anything">Anything V5</option>
+            <option value="realvis">RealVis XL 5.1</option>
+            <option value="juggernaut">Juggernaut XL</option>
+            <option value="dreamshaper">DreamShaper</option>
+            <option value="other">Other (custom)</option>
+          </select>
+        </div>
+        <div>
+          <label for="art-style">Art Style</label>
+          <select id="art-style">
+            <option value="photorealistic">Photorealistic</option>
+            <option value="anime">Anime</option>
+            <option value="cartoon">Cartoon</option>
+            <option value="fantasy">Fantasy</option>
+            <option value="digital-painting">Digital Painting</option>
+            <option value="3d">3D Render</option>
+            <option value="cyberpunk">Cyberpunk</option>
+            <option value="abstract">Abstract</option>
+            <option value="pixel">Pixel Art</option>
+            <option value="vaporwave">Vaporwave</option>
+            <option value="sketch">Sketch</option>
+            <option value="oil">Oil Painting</option>
+            <option value="realvis">Ultra RealVis</option>
+            <option value="other">Other/Custom</option>
+          </select>
+        </div>
+        <div>
+          <label for="scene-desc">Scene Description</label>
+          <textarea id="scene-desc" placeholder="Describe your scene in detail..." rows="4"></textarea>
+        </div>
+        <div>
+          <label for="neg-prompts">Negative Prompts</label>
+          <textarea id="neg-prompts" placeholder="What do you want to AVOID? e.g. blur, extra fingers, watermark" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="adv-controls">
+        <div>
+          <label for="sfw-nsfw">Creativity / SFW→NSFW</label>
+          <input type="range" min="0" max="100" value="25" id="sfw-nsfw">
+        </div>
+        <div>
+          <label for="lighting">Lighting</label>
+          <select id="lighting">
+            <option>Natural Sunlight</option>
+            <option>Soft Studio</option>
+            <option>Moody Dramatic</option>
+            <option>Night</option>
+            <option>Backlit</option>
+            <option>Neon/LED</option>
+            <option>HDR</option>
+            <option>Underlit</option>
+            <option>Flat</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="camera-angle">Camera Angle</label>
+          <select id="camera-angle">
+            <option>Eye Level</option>
+            <option>High Angle</option>
+            <option>Low Angle</option>
+            <option>POV/First Person</option>
+            <option>Overhead</option>
+            <option>Wide Shot</option>
+            <option>Close Up</option>
+            <option>Macro</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="aspect">Aspect Ratio</label>
+          <select id="aspect">
+            <option>1:1 (Square)</option>
+            <option>16:9 (HD)</option>
+            <option>4:5 (Portrait)</option>
+            <option>3:2</option>
+            <option>9:16 (Vertical)</option>
+            <option>2:3</option>
+            <option>Custom</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:1.2em; text-align:right;">
+        <label for="lang">Language:</label>
+        <select id="lang" style="width:auto;display:inline-block;">
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+          <option value="de">German</option>
+          <option value="ja">Japanese</option>
+          <option value="ru">Russian</option>
+          <option value="zh">Chinese</option>
+        </select>
+      </div>
+    </form>
+    <!-- OUTPUT -->
+    <div style="margin-top:2.3em;">
+      <label>Prompt Output:</label>
+      <div class="outputbox" id="prompt-output" contenteditable="true"></div>
+      <button class="copybtn" onclick="copyPrompt()">Copy Prompt</button>
+      <button class="savebtn" onclick="savePrompt()">Save</button>
+      <button class="sharebtn" onclick="sharePrompt()">Share</button>
+      <div id="prompt-status" style="margin-top:.7em; color:var(--gold); font-weight:bold;"></div>
     </div>
-
-    <!-- Save & Share Options -->
-    <div class="options">
-      <button id="save-prompt">Save as Template</button>
-      <button id="share-prompt">Share Prompt</button>
-    </div>
-
-    <!-- Multi-language Support -->
-    <label for="language-select">Language:</label>
-    <select id="language-select">
-      <option value="en">English</option>
-      <option value="es">Spanish</option>
-      <option value="fr">French</option>
-      <option value="de">German</option>
-      <option value="ja">Japanese</option>
-    </select>
   </div>
-
-  <!-- J1nx Bot Section -->
-  <div class="j1nx-bot">
-    <h3>Need Help? Chat with J1nx!</h3>
-    <iframe src="/j1nx.html" id="j1nx-chat"></iframe>
+  <!-- J1NX BOT -->
+  <div class="j1nx-section">
+    <iframe src="j1nx.html" id="j1nx-chat" style="width:100%;height:260px;border:none;border-radius:11px;box-shadow:0 2px 12px #be9cff44;"></iframe>
   </div>
-
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -244,41 +190,41 @@ U|  _"\\ uU |  _"\\ u  \\/"_ \\/U|\' \\/ \'|uU|  _"\\ u|_ " _|  |" ___|   \\/"_ 
     </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
     <div class="footer-bar">
-      Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color: inherit;">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" style="color: inherit;">Twitter/X</a> &bull;
-      <a href="https://www.buymeacoffee.com/goreandgiggles" style="color: inherit;">Buy Me A Coffee</a>
+      Made in BC, Canada &bull; <a href="index.html">Home</a> &bull; <a href="picture.html">Image</a> &bull; <a href="movie.html">Video</a> &bull; <a href="aihacks.html">AI Hacks</a> &bull; <a href="about.html">About</a> &bull;
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles" target="_blank">X (Twitter)</a> &bull;
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">Buy Me a Coffee</a>
     </div>
   </footer>
-
-  <!-- Scripts -->
-  <script src="/js/prompt-builder.js"></script>
-  <script src="/js/j1nx-bot.js"></script>
+  <!-- INTEGRATION SCRIPTS -->
+  <script src="js/generator.js"></script>
   <script>
-    // --- Animated CAMO (Half Size, unified color) ---
-    const camoColors = [
-      "#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"
-    ];
-    function randomCamoChar(){
-      const chars = "░▒▓▚▞▐▉█▛";
-      return chars[Math.floor(Math.random()*chars.length)];
+    // --- CAMO EFFECT ---
+    const camoColors = ["#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"];
+    function randomCamoChar(){ const chars = "░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
+    function renderCamo(tick=0){ let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out+=`<span style="color:${color}">${randomCamoChar()}</span>`;} out+="<br>";} document.getElementById("footerCamo").innerHTML=out; }
+    let camoTick = 0; setInterval(()=>{ renderCamo(camoTick++); },950); renderCamo();
+    // --- PROMPT GENERATION LOGIC (INTEGRATED TO GENERATOR.JS BRAIN) ---
+    const promptFields = ['model-select','art-style','scene-desc','neg-prompts','sfw-nsfw','lighting','camera-angle','aspect','lang'];
+    function gatherPromptData(){
+      return promptFields.reduce((out, id)=>{ let el=document.getElementById(id); out[id]=(el && el.value)||''; return out; },{});
     }
-    function renderCamo(tick=0){
-      let out = "";
-      for (let row=0;row<1;++row) {
-        for (let col=0;col<62;++col) {
-          let color = camoColors[(row+col+tick)%camoColors.length];
-          out += `<span style="color:${color}">${randomCamoChar()}</span>`;
-        }
-        out += "<br>";
-      }
-      document.getElementById("footerCamo").innerHTML = out;
+    function updatePromptOutput(){
+      let d = gatherPromptData();
+      // Assume generatePrompt is exposed from generator.js and accepts a prompt data object.
+      let promptText = (typeof generatePrompt==="function") ? generatePrompt(d) : `[PromptGen Error: generator.js not loaded]`;
+      document.getElementById("prompt-output").innerText = promptText;
+      document.getElementById("short-summary").innerText = promptText.slice(0,90)+"...";
+      document.getElementById("full-summary").innerText = promptText;
     }
-    let camoTick = 0;
-    setInterval(()=>{
-      renderCamo(camoTick++);
-    },950);
-    renderCamo();
+    // Attach input listeners for real-time preview:
+    promptFields.forEach(id=>{
+      let el=document.getElementById(id); if(el){ el.addEventListener('input',updatePromptOutput);}
+    });
+    // --- COPY, SAVE, SHARE (Stubbed for now, expand as needed) ---
+    function copyPrompt(){ let box=document.getElementById("prompt-output");navigator.clipboard.writeText(box.innerText); document.getElementById("prompt-status").innerText="Copied!";}
+    function savePrompt(){ document.getElementById("prompt-status").innerText="(Saving not implemented in this preview)"; }
+    function sharePrompt(){ document.getElementById("prompt-status").innerText="(Sharing not implemented in this preview)"; }
   </script>
 </body>
 </html>
