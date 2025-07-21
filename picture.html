@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>PromptForge.online | AI Image Prompt Builder</title>
+  <meta name="description" content="PromptForge: The world’s best free AI prompt builder. Live AI news, creative tools, all models, ultra-modern UI.">
+  <meta name="keywords" content="AI prompt builder, MidJourney, DALL-E, Stable Diffusion, OpenArt, creative, AI news, templates, tools">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>PromptForge.online | Ultimate AI Prompt Builder (NSFW-Ready)</title>
-  <meta name="description" content="PromptForge: The most advanced, pro-level AI prompt builder for images and more. Unlock hidden creative power.">
-  <meta name="keywords" content="AI prompt builder, prompt generator, MidJourney, DALL-E, Stable Diffusion, OpenArt, pro art, AI image, creative, templates, hacks, 2026">
-  <meta property="og:title" content="PromptForge.online | Ultimate AI Prompt Generator">
-  <meta property="og:description" content="Free, unlimited, world-class AI prompt building—every model, every feature, every control, forever.">
+  <meta property="og:title" content="PromptForge.online | AI Art Prompt Generator">
+  <meta property="og:description" content="Build prompts for every major model, get live AI news, explore templates, and stay creative. Free, unlimited, and pro-level.">
   <meta property="og:image" content="/assets/promptforge-og-pic.png">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <!-- Google AdSense (Styled in-page) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Fira+Mono:wght@400;700&display=swap');
@@ -19,115 +20,118 @@
       --accent: #ffe266;
       --bg: #161c19;
       --panel: #242e26;
-      --panel2: #23231f;
-      --input: #23231f;
       --card: #20231f;
       --shadow: 0 4px 40px #1a1a1a80;
-      --danger: #fa527a;
-      --muted: #7fe8b8;
       --offwhite: #f4f6ef;
       --link: #6ee6ff;
-      --j1nx-bubble: #201733;
-      --j1nx-bubble2: #bd9cff;
-      --j1nx-happy: #b5ffb7;
-      --j1nx-mischief: #fae266;
+      --danger: #fa527a;
+      --footer-bg: #191b19;
+      --menu-bg: #252628;
+      --menu-border: #363843;
+      --menu-hover: #1e293a;
     }
-    html,body{margin:0;padding:0;width:100vw;min-height:100vh;background:var(--bg);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.09em;}
-    .nav {background:var(--panel2);display:flex;align-items:center;justify-content:space-between;padding:.8em 0 1em 0;border-bottom:2px solid var(--brand);}
+    html,body{margin:0;padding:0;width:100vw;min-height:100vh;background:var(--bg);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.13em;}
+    .newsbar {
+      width:100vw; min-height:46px;
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(90deg,var(--bg),var(--footer-bg),var(--bg));
+      color:var(--brand2);font-weight:700;font-size:1.01em;
+      border-bottom:1.5px solid var(--brand2);
+      box-shadow:0 2px 10px #0004;
+      letter-spacing:.01em;
+      position:relative;z-index:20;
+    }
+    .newsbar .version {
+      margin-right:1.3em;padding:.16em .7em;background:var(--brand2);color:#24231f;
+      border-radius:8px;font-size:.97em;font-weight:700;vertical-align:middle;
+    }
+    .newsbar .ai-news {
+      margin:0 1.1em;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .newsbar a {color:var(--accent);text-decoration:none;}
+    .newsbar a:hover {color:var(--brand);}
+    .nav {background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:.85em 0 1.1em 0;}
     .nav-l {display:flex;align-items:center;}
-    .ver {color:var(--accent);font-weight:700;margin:0 1.5em 0 1.1em;font-size:1.12em;letter-spacing:.13em;}
-    .nav a {color:var(--brand);margin:0 .8em;text-decoration:none;font-weight:600;letter-spacing:.04em;transition:.15s;}
-    .nav a.active,.nav a:focus{color:var(--accent);border-bottom:2.5px solid var(--accent);}
-    .nav a:hover {text-decoration:underline;color:var(--accent);}
-    .logo {font-family:'Fira Mono',monospace;font-size:2.1em;font-weight:900;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 .5em;}
-    .desc {max-width:820px;margin:0 auto 1.5em auto;text-align:center;color:var(--muted);font-size:1.08em;}
-    .adsense-block {background:var(--panel2);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
-    .mainbox {max-width:1460px;margin:2.3em auto 2em auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:2.5em 2.8em 2.2em 2.8em;}
-    .section-title {font-size:1.21em;font-weight:900;color:var(--brand2);margin:2.1em 0 .8em 0;}
-    .prompt-sections {display:grid;grid-template-columns:1.8fr 1.5fr;gap:2.5em 2.6em;}
-    .field-card {background:var(--card);border-radius:13px;box-shadow:0 2px 14px #0002;padding:1.25em 1.2em .9em 1.2em;margin-bottom:1.3em;}
-    .field-card label {font-weight:700;color:var(--brand2);margin-bottom:.22em;display:flex;align-items:center;}
-    .microhelp {margin-left:.5em;color:var(--accent);font-size:1.03em;cursor:pointer;transition:.13s;}
-    .microhelp:hover {color:var(--danger);}
-    .chips {margin:.5em 0 0 0;display:flex;flex-wrap:wrap;gap:.5em;}
-    .chip {background:var(--brand2);color:#222;padding:.19em .7em;border-radius:18px;display:inline-block;font-size:.98em;box-shadow:0 2px 8px #be9cff22;}
-    .chip .x {margin-left:.29em;cursor:pointer;font-weight:bold;}
-    .multiselect {min-height:3.2em;}
-    .section-blocks {margin-top:1.2em;}
-    /* Group advanced controls in a secondary card */
-    .adv-controls {display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2em;}
-    .adv-controls .field-card {margin-bottom:0;}
-    .slider-wrap{display:flex;align-items:center;}
-    .slider-wrap input[type="range"]{flex:1;}
-    .slider-val{margin-left:.6em;font-size:1.08em;color:var(--brand);}
-    /* OUTPUT */
-    .outputbox {margin:1.7em 0 1.2em 0;background:#181d17;border-radius:10px;border:2px solid var(--brand);min-height:95px;padding:1.25em;font-size:1.14em;word-break:break-all;}
-    /* Stats/sidebar */
-    .side-stats {background:var(--panel2);border-radius:14px;box-shadow:0 2px 10px #0003;padding:1.1em 1.4em 1.1em 1.1em;margin-bottom:1.4em;}
-    /* THEME */
-    .themebar{display:flex;gap:.5em;align-items:center;justify-content:flex-end;margin-top:-1.3em;}
-    .themebtn{border:none;background:var(--panel2);color:var(--brand);font-weight:600;padding:.43em 1.2em;border-radius:22px;box-shadow:0 2px 8px #1112;font-size:.98em;cursor:pointer;transition:.12s;}
-    .themebtn.active{background:var(--brand2);color:#191622;}
-    /* J1nx dock */
-    #j1nx-ui {position:fixed;bottom:32px;right:36px;z-index:99;max-width:370px;transition:opacity .18s,transform .22s;}
-    #j1nx-ui.minimized {transform:translateY(75px) scale(.41);opacity:.67;pointer-events:auto;}
-    .j1nx-shell {position:relative;display:flex;align-items:flex-end;}
-    .j1nx-cutout {width:126px;position:relative;z-index:3;}
-    .j1nx-bubble {
-      background:var(--j1nx-bubble);
-      border:2.5px solid var(--brand2);
-      border-radius:18px 18px 24px 18px/18px 18px 42px 18px;
-      box-shadow:0 4px 22px #be9cff45;
-      padding:1.15em 1.1em .8em 1.19em;
-      min-height:108px;min-width:220px;max-width:265px;
-      position:relative;z-index:4;margin-bottom:14px;
-      color:var(--offwhite);font-size:1.09em;font-family:'Inter',sans-serif;
+    .nav .logo {font-family:'Fira Mono',monospace;font-size:2.08em;font-weight:900;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 .5em;}
+    .nav .breadcrumb {display:flex;gap:.95em;}
+    .nav .breadcrumb a {color:var(--brand);text-decoration:none;font-weight:600;letter-spacing:.04em;transition:.15s;}
+    .nav .breadcrumb a.active,.nav .breadcrumb a:focus {color:var(--accent);border-bottom:2.5px solid var(--accent);}
+    .nav .breadcrumb a:hover {color:var(--accent);}
+    .nav .socials {display:flex;gap:.85em;}
+    .nav .socials a {display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#2223;border-radius:7px;transition:.14s;}
+    .nav .socials a:hover {background:var(--brand2);}
+    .desc {max-width:820px;margin:0 auto 1.5em auto;text-align:center;color:var(--brand2);font-size:1.13em;}
+    .adsense-block {background:var(--panel);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
+    .mainbox {max-width:1420px;margin:2.3em auto 2em auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:2.5em 2.8em 2.2em 2.8em;}
+    /* Big scene input */
+    .scene-card {
+      background:var(--menu-bg);border-radius:16px;box-shadow:0 2px 14px #0003;margin-bottom:2em;padding:2em 2em 1.2em 2em;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
     }
-    .j1nx-bubble::after {
-      content:""; position:absolute;right:-20px;bottom:-7px;width:29px;height:35px;
-      background:radial-gradient(ellipse 22px 16px at 4px 33px,var(--j1nx-bubble2) 60%,#0000 100%);
-      border-radius:60% 80% 10% 80%;z-index:1;
-      transform:rotate(10deg);
+    .scene-card label {font-weight:800;color:var(--brand2);font-size:1.13em;margin-bottom:.5em;}
+    .scene-input {
+      min-width:340px;max-width:860px;width:90vw;
+      min-height:110px;max-height:350px;height:120px;
+      background:var(--card);color:var(--offwhite);border:2.2px solid var(--brand2);border-radius:11px;
+      font-size:1.19em;font-family:'Fira Mono',monospace;padding:1.1em 1.2em;margin-bottom:1em;
+      box-shadow:0 2px 18px #0002;resize:vertical;
+      transition:.16s;
     }
-    .j1nx-bubble .j1nx-name {font-weight:900;color:var(--brand2);font-size:1.07em;}
-    .j1nx-bubble .j1nx-mood {font-size:1.02em;margin-left:.5em;}
-    .j1nx-bubble .j1nx-min {position:absolute;top:6px;right:10px;background:#4442;padding:.13em .55em;border-radius:8px;color:var(--brand2);font-weight:900;cursor:pointer;}
-    .j1nx-bubble .j1nx-min:hover {background:var(--brand2);color:#222;}
-    .j1nx-btns{margin-top:.5em;}
-    .j1nx-btn{background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;margin-right:.7em;}
-    .j1nx-btn:last-child{margin-right:0;}
-    /* Responsive grid/cards */
-    @media (max-width:1200px){.prompt-sections{grid-template-columns:1fr 1fr;}.adv-controls{grid-template-columns:1fr 1fr;}}
-    @media (max-width:900px){.mainbox{padding:1.1em;}.prompt-sections{grid-template-columns:1fr;}.adv-controls{grid-template-columns:1fr;}}
-    @media (max-width:650px){.mainbox{padding:.22em;}.prompt-sections{grid-template-columns:1fr;}.adv-controls{grid-template-columns:1fr;}}
-    /* AdSense styling as native */
-    .adsense-block {background:var(--panel2);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
+    .scene-input:focus {outline:none;border-color:var(--brand);}
+    .microhelp {margin-left:.7em;color:var(--accent);font-size:1.12em;cursor:pointer;user-select:none;position:relative;}
+    /* Custom menu */
+    .custom-menu {
+      background:var(--menu-bg);border-radius:14px;box-shadow:0 4px 20px #0003;padding:1.1em 0;min-width:320px;max-width:460px;margin:2em auto 2.2em auto;
+      display:block;
+    }
+    .custom-menu .menu-section {padding:.4em 2em;}
+    .custom-menu .menu-title {font-weight:900;color:var(--brand2);margin-bottom:.7em;font-size:1.09em;}
+    .custom-menu .menu-item {
+      display:flex;align-items:center;gap:.9em;
+      padding:.56em 0;font-size:1.11em;border-radius:9px;transition:.11s;
+      cursor:pointer;color:var(--offwhite);
+      border-bottom:1.1px solid var(--menu-border);
+    }
+    .custom-menu .menu-item.active, .custom-menu .menu-item:hover {background:var(--brand2);color:#23231f;}
+    .custom-menu .menu-icon {width:1.23em;height:1.23em;display:inline-block;}
+    .custom-menu .menu-right {margin-left:auto;font-size:.99em;color:var(--brand2);}
+    .custom-menu .chips {margin-left:1.3em;}
+    .custom-menu .menu-item:last-child {border-bottom:none;}
+    @media (max-width:900px){
+      .mainbox{padding:1em;}
+      .custom-menu {min-width:94vw;}
+      .scene-input {min-width:90vw;}
+    }
   </style>
 </head>
 <body>
+  <div class="newsbar">
+    <span class="version">v4.5.1</span>
+    <span class="ai-news" id="ai-news-headline">Loading latest AI news...</span>
+  </div>
   <nav class="nav">
     <div class="nav-l">
-      <span class="ver" id="version">v4.0 FINAL NSFW J1NX</span>
       <span class="logo">PromptForge</span>
+      <span class="breadcrumb">
+        <a href="main.html">Main</a>
+        <a href="picture.html" class="active">Image</a>
+        <a href="movie.html">Movie</a>
+        <a href="watermark.html">Watermark</a>
+        <a href="j1nx.html">J1nx</a>
+        <a href="aihacks.html">AI Hacks</a>
+        <a href="ansiart.html">AnsiArt</a>
+        <a href="compare.html">Compare</a>
+      </span>
     </div>
-    <div>
-      <a href="main.html">Main</a>
-      <a href="picture.html" class="active">Image</a>
-      <a href="movie.html">Movie</a>
-      <a href="watermark.html">Watermark</a>
-      <a href="j1nx.html">J1nx</a>
-      <a href="aihacks.html">AI Hacks</a>
-      <a href="ansiart.html">AnsiArt</a>
-      <a href="compare.html">Compare</a>
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-      <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">☕ Buy Me a Coffee</a>
+    <div class="socials">
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
+      <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
     </div>
   </nav>
-  <div class="desc">Build <b>the world’s most advanced prompts</b> for every AI image model.<br>
-    <span style="color:var(--brand2);font-weight:600;">Free</span>, unlimited, and pro.<br>
-    <span style="color:var(--accent);">Unlock hidden creative power.<br>
-    Every feature, all micro-help, and J1nx muse—no paywall, ever.</span>
+  <div class="desc">
+    <b>Build the world's best AI art prompts.</b>
+    <span style="color:var(--accent);">Every model, every tool, live AI news, and pro workflow—no paywall, ever.</span>
   </div>
   <div class="adsense-block">
     <!-- AdSense loads here, styled as native -->
@@ -140,169 +144,154 @@
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
   <div class="mainbox">
-    <div class="themebar">
-      <span>Themes:</span>
-      <button class="themebtn active">Hacker Dark</button>
-      <button class="themebtn">Bright</button>
-      <button class="themebtn">Vaporwave</button>
-      <button class="themebtn">Pro Minimal</button>
+    <!-- Scene Input / Main Idea -->
+    <div class="scene-card">
+      <label for="scene-desc">Scene / Prompt Idea
+        <span class="microhelp" onclick="showHelp('scene')">?</span>
+      </label>
+      <textarea id="scene-desc" class="scene-input" placeholder="Describe your picture idea, subject, style, mood, color, background, camera, and action here..."></textarea>
     </div>
-    <div class="prompt-sections">
-      <!-- Left: Prompt Essentials -->
-      <div>
-        <div class="section-title">Prompt Essentials</div>
-        <div class="field-card">
-          <label>Model <span class="microhelp" title="Pick the AI engine. Each has unique settings and quirks.">?</span></label>
-          <select id="model-select">
-            <optgroup label="Top Models">
-              <option value="midjourney">MidJourney v6</option>
-              <option value="dalle">DALL·E 3</option>
-              <option value="stable">Stable Diffusion XL</option>
-              <option value="openart">OpenArt</option>
-            </optgroup>
-            <optgroup label="Advanced / Community">
-              <option value="playground">Playground V2</option>
-              <option value="kandinsky">Kandinsky</option>
-              <option value="anything">Anything V5</option>
-              <option value="realvis">RealVis XL 5.1</option>
-              <option value="juggernaut">Juggernaut XL</option>
-              <option value="dreamshaper">DreamShaper</option>
-              <option value="cyberrealistic">CyberRealistic</option>
-              <option value="dreamlike">Dreamlike Photoreal</option>
-              <option value="deliberate">Deliberate</option>
-              <option value="deepfloyd">DeepFloyd IF</option>
-              <option value="instantid">InstantID</option>
-            </optgroup>
-            <optgroup label="Experimental">
-              <option value="stable-video">Stable Video</option>
-              <option value="sora">OpenAI Sora</option>
-              <option value="moonvalley">Moonvalley</option>
-            </optgroup>
-            <optgroup label="Other / Custom">
-              <option value="custom">Other/Custom</option>
-            </optgroup>
-          </select>
-        </div>
-        <div class="field-card">
-          <label>Art Styles <span class="microhelp" title="Select as many as you like. Mix to create new visual flavors!">?</span></label>
-          <select id="art-style" class="multiselect" multiple size="10">
-            <optgroup label="Realistic"><option>Photorealistic</option><option>Hyperrealism</option><option>Film Still</option></optgroup>
-            <optgroup label="2D & Digital"><option>Anime</option><option>Cartoon</option><option>Digital Painting</option><option>Comic Book</option><option>Watercolor</option><option>Concept Art</option></optgroup>
-            <optgroup label="3D, Render, FX"><option>3D Render</option><option>CGI</option><option>Voxel</option><option>Low Poly</option><option>Pixel Art</option><option>Matte Painting</option></optgroup>
-            <optgroup label="Retro/Alt"><option>Vaporwave</option><option>Steampunk</option><option>Synthwave</option><option>Surrealism</option><option>Abstract</option><option>Impressionism</option><option>Flat</option></optgroup>
-            <optgroup label="Specialty"><option>Line Art</option><option>Monochrome</option><option>Oil Painting</option><option>Cel Shading</option><option>Other/Custom</option></optgroup>
-          </select>
-          <div class="chips" id="style-chips"></div>
-        </div>
-        <div class="field-card">
-          <label>Scene Description <span class="microhelp" title="Describe subject, setting, mood, color, etc. Be vivid!">?</span></label>
-          <textarea id="scene-desc" placeholder="Describe your scene in detail... (who, what, where, mood, color, background, camera, action)" rows="6"></textarea>
-        </div>
-        <div class="field-card">
-          <label>Negative Prompts <span class="microhelp" title="Block flaws and boring stuff. Use grouped negatives for pro results!">?</span></label>
-          <div style="display:flex;gap:.5em;margin-bottom:.45em;">
-            <select id="neg-group" style="max-width:9em;">
-              <option value="sfw" selected>SFW Fails</option>
-              <option value="nsfw">NSFW Fails</option>
-              <option value="human">Human Anatomy</option>
-              <option value="render">Artifacts & Render</option>
-              <option value="scene">Scene/Setting</option>
-              <option value="custom">Custom</option>
-              <option value="all">Show All</option>
-            </select>
-            <button type="button" style="border:none;background:var(--brand2);color:#111;border-radius:9px;font-size:.98em;padding:.27em 1.2em;cursor:pointer;" onclick="addNegGroup()">Add Group</button>
-            <button type="button" style="border:none;background:var(--danger);color:#fff;border-radius:9px;font-size:.98em;padding:.27em 1em;cursor:pointer;" onclick="clearNegs()">Clear</button>
+    <!-- Model Selection -->
+    <div class="custom-menu" id="model-menu">
+      <div class="menu-section">
+        <div class="menu-title">Choose Model <span class="microhelp" onclick="showHelp('model')">?</span></div>
+        <div class="menu-item active"><span class="menu-icon">🎨</span>MidJourney v6</div>
+        <div class="menu-item"><span class="menu-icon">🖌️</span>DALL·E 3</div>
+        <div class="menu-item"><span class="menu-icon">🧬</span>Stable Diffusion XL</div>
+        <div class="menu-item"><span class="menu-icon">🌈</span>OpenArt</div>
+      </div>
+      <div class="menu-section">
+        <div class="menu-title">Advanced Models</div>
+        <div class="menu-item"><span class="menu-icon">🤖</span>Playground V2</div>
+        <div class="menu-item"><span class="menu-icon">🧊</span>Kandinsky</div>
+        <div class="menu-item"><span class="menu-icon">💎</span>Juggernaut XL</div>
+        <div class="menu-item"><span class="menu-icon">👁️</span>CyberRealistic</div>
+      </div>
+    </div>
+    <!-- Art Style Selection (MULTISELECT with chips) -->
+    <div class="custom-menu" id="style-menu">
+      <div class="menu-section">
+        <div class="menu-title">Art Styles <span class="microhelp" onclick="showHelp('style')">?</span></div>
+        <div class="menu-item"><span class="menu-icon">🖼️</span>Photorealistic</div>
+        <div class="menu-item"><span class="menu-icon">💡</span>Hyperrealism</div>
+        <div class="menu-item"><span class="menu-icon">🎬</span>Film Still</div>
+        <div class="menu-item"><span class="menu-icon">📺</span>Anime</div>
+        <div class="menu-item"><span class="menu-icon">🎨</span>Digital Painting</div>
+        <div class="menu-item"><span class="menu-icon">🦸</span>Comic Book</div>
+        <div class="menu-item"><span class="menu-icon">🌊</span>Watercolor</div>
+        <div class="menu-item"><span class="menu-icon">👾</span>Pixel Art</div>
+        <div class="chips" id="style-chips"></div>
+      </div>
+    </div>
+    <!-- BLOCK 2 GOES BELOW -->
+    <!-- Lighting Selection -->
+    <div class="custom-menu" id="lighting-menu">
+      <div class="menu-section">
+        <div class="menu-title">Lighting <span class="microhelp" onclick="showHelp('lighting')">?</span></div>
+        <div class="menu-item"><span class="menu-icon">☀️</span>Sunlight</div>
+        <div class="menu-item"><span class="menu-icon">🌆</span>Dusk</div>
+        <div class="menu-item"><span class="menu-icon">⛅</span>Overcast</div>
+        <div class="menu-item"><span class="menu-icon">🌇</span>Golden Hour</div>
+        <div class="menu-item"><span class="menu-icon">🌫️</span>Foggy</div>
+        <div class="menu-item"><span class="menu-icon">🌧️</span>Rainy</div>
+        <div class="menu-item"><span class="menu-icon">🌙</span>Night</div>
+        <div class="menu-item"><span class="menu-icon">💡</span>Studio</div>
+        <div class="menu-item"><span class="menu-icon">🔦</span>Spotlight</div>
+        <div class="menu-item"><span class="menu-icon">🕯️</span>Candlelight</div>
+        <div class="chips" id="lighting-chips"></div>
+      </div>
+    </div>
+
+    <!-- Camera Angle Selection -->
+    <div class="custom-menu" id="camera-menu">
+      <div class="menu-section">
+        <div class="menu-title">Camera Angle <span class="microhelp" onclick="showHelp('camera')">?</span></div>
+        <div class="menu-item"><span class="menu-icon">👁️</span>Eye Level</div>
+        <div class="menu-item"><span class="menu-icon">⬆️</span>High Angle</div>
+        <div class="menu-item"><span class="menu-icon">⬇️</span>Low Angle</div>
+        <div class="menu-item"><span class="menu-icon">🎥</span>Overhead</div>
+        <div class="menu-item"><span class="menu-icon">🔍</span>Macro</div>
+        <div class="menu-item"><span class="menu-icon">🤳</span>POV/First Person</div>
+        <div class="menu-item"><span class="menu-icon">🔁</span>360°</div>
+        <div class="menu-item"><span class="menu-icon">🔄</span>Mirror/Reflected</div>
+        <div class="chips" id="camera-chips"></div>
+      </div>
+    </div>
+
+    <!-- Aspect Ratio Selection -->
+    <div class="custom-menu" id="aspect-menu">
+      <div class="menu-section">
+        <div class="menu-title">Aspect Ratio <span class="microhelp" onclick="showHelp('aspect')">?</span></div>
+        <div class="menu-item"><span class="menu-icon">⬛</span>1:1 (Square)</div>
+        <div class="menu-item"><span class="menu-icon">⬜</span>16:9 (HD)</div>
+        <div class="menu-item"><span class="menu-icon">🔲</span>4:5 (Portrait)</div>
+        <div class="menu-item"><span class="menu-icon">🖼️</span>3:2</div>
+        <div class="menu-item"><span class="menu-icon">🔳</span>9:16 (Vertical)</div>
+        <div class="menu-item"><span class="menu-icon">🖥️</span>21:9 (UltraWide)</div>
+        <div class="menu-item"><span class="menu-icon">🔢</span>Custom</div>
+        <div class="chips" id="aspect-chips"></div>
+      </div>
+    </div>
+
+    <!-- Negative Prompts (Multi, Grouped, Chips) -->
+    <div class="custom-menu" id="negatives-menu">
+      <div class="menu-section">
+        <div class="menu-title">Negative Prompts <span class="microhelp" onclick="showHelp('negatives')">?</span></div>
+        <div class="menu-item"><span class="menu-icon">🧹</span>Low Quality</div>
+        <div class="menu-item"><span class="menu-icon">💥</span>Artifacts/Errors</div>
+        <div class="menu-item"><span class="menu-icon">🚫</span>Watermark/Text</div>
+        <div class="menu-item"><span class="menu-icon">👹</span>Bad Anatomy</div>
+        <div class="menu-item"><span class="menu-icon">😵‍💫</span>Distorted/Mutated</div>
+        <div class="menu-item"><span class="menu-icon">😴</span>Boring Background</div>
+        <div class="menu-item"><span class="menu-icon">⚠️</span>Censored/Blocked</div>
+        <div class="menu-item"><span class="menu-icon">❌</span>Other/Custom</div>
+        <textarea id="neg-prompts" class="scene-input" style="margin-top:.9em;" rows="2" placeholder="Add your own negatives, separated by commas..."></textarea>
+        <div class="chips" id="neg-chips"></div>
+      </div>
+    </div>
+
+    <!-- Advanced Controls / Sliders / Params (side-by-side if wide screen) -->
+    <div style="display:flex;flex-wrap:wrap;gap:2.2em 3.5em;justify-content:center;">
+      <div class="custom-menu" id="controls-menu" style="min-width:320px;max-width:400px;">
+        <div class="menu-section">
+          <div class="menu-title">Pro Controls <span class="microhelp" onclick="showHelp('controls')">?</span></div>
+          <div class="menu-item" style="gap:2.1em;">
+            Creativity
+            <input type="range" min="0" max="100" value="18" id="creativity" style="flex:1;">
+            <span id="creativity-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">18</span>
           </div>
-          <div class="chips" id="neg-chips"></div>
-          <textarea id="neg-prompts" placeholder="Add your own negatives, separated by commas or lines..." rows="2" style="margin-top:.3em;"></textarea>
+          <div class="menu-item" style="gap:2.1em;">
+            Steps
+            <input type="range" min="10" max="150" value="40" id="steps" style="flex:1;">
+            <span id="steps-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">40</span>
+          </div>
+          <div class="menu-item" style="gap:2.1em;">
+            CFG Scale
+            <input type="range" min="1" max="30" value="7" id="cfg" style="flex:1;">
+            <span id="cfg-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">7</span>
+          </div>
+          <div class="menu-item" style="gap:2.1em;">
+            Quality
+            <input type="range" min="1" max="20" value="12" id="quality" style="flex:1;">
+            <span id="quality-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">12</span>
+          </div>
+          <div class="menu-item" style="gap:2.1em;">
+            Seed
+            <input type="number" min="-1" max="4294967295" value="-1" id="seed" style="max-width:90px;border-radius:7px;padding:.32em;">
+          </div>
         </div>
       </div>
-      <!-- Right: Advanced controls, Output, Stats, History, Templates -->
-      <div>
-        <div class="section-title">Pro Controls & Customization</div>
-        <div class="adv-controls">
-          <div class="field-card">
-            <label>Creativity / SFW→NSFW <span class="microhelp" title="Left = safe, filtered, generic. Right = wild, unfiltered, adult.">?</span></label>
-            <div class="slider-wrap">
-              <input type="range" min="0" max="100" value="15" id="sfw-nsfw">
-              <span class="slider-val" id="sfw-val">15</span>
-            </div>
+      <div class="custom-menu" id="outputs-menu" style="min-width:320px;max-width:400px;">
+        <div class="menu-section">
+          <div class="menu-title">Output & Settings <span class="microhelp" onclick="showHelp('outputs')">?</span></div>
+          <div class="menu-item" style="gap:2.1em;">
+            Outputs
+            <input type="range" min="1" max="8" value="1" id="output-cnt" style="flex:1;">
+            <span id="output-cnt-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">1</span>
           </div>
-          <div class="field-card">
-            <label>Lighting <span class="microhelp" title="How should the scene be lit?"></span></label>
-            <select id="lighting" multiple class="multiselect" size="7">
-              <optgroup label="Natural"><option>Sunlight</option><option>Dusk</option><option>Overcast</option><option>Golden Hour</option><option>Foggy</option><option>Rainy</option><option>Night</option></optgroup>
-              <optgroup label="Studio/Artificial"><option>Softbox</option><option>Ring Light</option><option>Spotlight</option><option>Backlit</option><option>Neon</option><option>LED Strip</option><option>Strobe</option><option>HDR</option></optgroup>
-              <optgroup label="Cinematic/FX"><option>Moody</option><option>Dramatic</option><option>Underlit</option><option>Silhouette</option><option>Candlelight</option><option>Streetlight</option><option>Firelight</option><option>Other</option></optgroup>
-            </select>
-          </div>
-          <div class="field-card">
-            <label>Camera Angle <span class="microhelp" title="Perspective, shot type, and storytelling."></span></label>
-            <select id="camera-angle" multiple class="multiselect" size="7">
-              <optgroup label="Basic"><option>Eye Level</option><option>High Angle</option><option>Low Angle</option><option>Overhead</option></optgroup>
-              <optgroup label="POV/Action"><option>POV/First Person</option><option>Wide Shot</option><option>Close Up</option><option>Macro</option><option>Fisheye</option><option>Dutch Angle</option><option>Profile</option><option>Reverse Shot</option></optgroup>
-              <optgroup label="Special"><option>Mirror</option><option>Reflected</option><option>360°</option><option>Tilt Shift</option><option>Other</option></optgroup>
-            </select>
-          </div>
-          <div class="field-card">
-            <label>Aspect Ratio <span class="microhelp" title="Canvas shape (portrait, square, cinematic, etc.)."></span></label>
-            <select id="aspect" class="multiselect" multiple size="7">
-              <option>1:1 (Square)</option>
-              <option>16:9 (HD)</option>
-              <option>4:5 (Portrait)</option>
-              <option>3:2</option>
-              <option>9:16 (Vertical)</option>
-              <option>2:3</option>
-              <option>21:9 (UltraWide)</option>
-              <option>4:3</option>
-              <option>Custom</option>
-            </select>
-          </div>
-          <div class="field-card">
-            <label>Sampling Method <span class="microhelp" title="Affects render noise/detail—model-specific!"></span></label>
-            <select id="sampler" class="multiselect" multiple size="7">
-              <option>Euler a</option><option>Euler</option><option>LMS</option><option>Heun</option><option>DPM++ 2M</option><option>DPM++ SDE</option><option>PLMS</option><option>UniPC</option><option>DDIM</option><option>Other</option>
-            </select>
-          </div>
-          <div class="field-card">
-            <label>Sampling Steps <span class="microhelp" title="More steps = more detail, but slower."></span></label>
-            <div class="slider-wrap">
-              <input type="range" min="10" max="150" value="40" id="steps">
-              <span class="slider-val" id="steps-val">40</span>
-            </div>
-          </div>
-          <div class="field-card">
-            <label>CFG Scale <span class="microhelp" title="Higher = stricter to prompt, lower = more wild."></span></label>
-            <div class="slider-wrap">
-              <input type="range" min="1" max="30" value="7" id="cfg">
-              <span class="slider-val" id="cfg-val">7</span>
-            </div>
-          </div>
-          <div class="field-card">
-            <label>Quality <span class="microhelp" title="Render fidelity/detail—higher = slower."></span></label>
-            <div class="slider-wrap">
-              <input type="range" min="1" max="20" value="12" id="quality">
-              <span class="slider-val" id="quality-val">12</span>
-            </div>
-          </div>
-          <div class="field-card">
-            <label>Seed <span class="microhelp" title="Repeatable randomness; -1 for random."></span></label>
-            <input type="number" min="-1" max="4294967295" value="-1" id="seed">
-          </div>
-          <div class="field-card">
-            <label>Outputs <span class="microhelp" title="How many images at once."></span></label>
-            <div class="slider-wrap">
-              <input type="range" min="1" max="8" value="1" id="output-cnt">
-              <span class="slider-val" id="output-cnt-val">1</span>
-            </div>
-          </div>
-          <div class="field-card">
-            <label>Model Params <span class="microhelp" title="Model switches, e.g. --v 6 --style raw"></span></label>
-            <input id="model-params" type="text" placeholder="custom params, e.g. --v 6 --hd --style raw">
-          </div>
-          <div class="field-card">
-            <label>Language <span class="microhelp" title="Prompt output & UI language"></span></label>
-            <select id="lang">
+          <div class="menu-item" style="gap:2.1em;">
+            Language
+            <select id="lang" style="flex:1;background:var(--card);color:var(--offwhite);border-radius:8px;">
               <option value="en">English</option>
               <option value="fr">French</option>
               <option value="es">Spanish</option>
@@ -314,401 +303,412 @@
               <option value="tr">Turkish</option>
             </select>
           </div>
+          <div class="menu-item" style="gap:2.1em;">
+            Params
+            <input id="model-params" type="text" placeholder="e.g. --v 6 --hd --style raw" style="flex:1;background:var(--card);color:var(--offwhite);border-radius:8px;">
+          </div>
         </div>
-        <!-- Output/actions/history/templates/stats go here in next block -->
       </div>
     </div>
-    <!-- J1nx dock, output/actions, templates, stats, and footer next -->
-    <!-- OUTPUT, ACTIONS, PREVIEW MODES -->
-    <div class="section-title">Prompt Output & Actions</div>
-    <div style="display:flex;gap:2.4em;flex-wrap:wrap;align-items:flex-start;">
-      <div style="flex:2;min-width:380px;">
-        <div style="display:flex;gap:1em;align-items:center;margin-bottom:.7em;">
-          <label>Preview Mode:</label>
-          <button type="button" class="themebtn active" id="mode-raw">Full Prompt</button>
-          <button type="button" class="themebtn" id="mode-md">Markdown</button>
-          <button type="button" class="themebtn" id="mode-summary">Summary</button>
-          <button type="button" class="themebtn" id="mode-json">JSON</button>
-        </div>
-        <div class="outputbox" id="prompt-output" contenteditable="true" spellcheck="false"></div>
-        <div style="margin:1.3em 0 0 0;display:flex;gap:1em;align-items:center;flex-wrap:wrap;">
+    <!-- Next block: output/actions, stats, templates, J1nx, footer -->
+    <!-- OUTPUT, ACTIONS, PROMPT HISTORY/STATS -->
+    <div class="custom-menu" id="output-menu" style="max-width:900px;margin:2.8em auto 1.6em auto;">
+      <div class="menu-section" style="display:flex;flex-direction:column;align-items:stretch;">
+        <div class="menu-title" style="margin-bottom:.7em;">Prompt Output & Actions <span class="microhelp" onclick="showHelp('output')">?</span></div>
+        <div class="outputbox" id="prompt-output" contenteditable="true" spellcheck="false"
+          style="background:#181d17;border-radius:10px;border:2px solid var(--brand);min-height:80px;padding:1.05em;font-size:1.14em;word-break:break-all;margin-bottom:1.1em;"></div>
+        <div style="margin-bottom:1.2em;display:flex;flex-wrap:wrap;gap:1.1em 1.1em;align-items:center;">
           <button type="button" class="randombtn" onclick="randomizePrompt()">🎲 Randomize</button>
           <button type="button" class="clearbtn" onclick="clearForm()">Clear</button>
           <button type="button" class="favbtn" onclick="favoritePrompt()">★ Favorite</button>
           <button type="button" class="copybtn" onclick="copyPrompt()">Copy</button>
           <button type="button" class="savebtn" onclick="savePrompt()">Save</button>
           <button type="button" class="sharebtn" onclick="sharePrompt()">Share</button>
-          <button type="button" style="background:var(--accent);color:#23231f;font-weight:bold;padding:.7em 2em;border-radius:11px;" onclick="generatePrompt()">🚀 Generate</button>
+          <button type="button" style="background:var(--accent);color:#23231f;font-weight:bold;padding:.72em 2.1em;border-radius:11px;font-size:1.09em;" onclick="generatePrompt()">🚀 Generate</button>
         </div>
-        <div id="prompt-status" style="margin:.8em 0 0 0;color:var(--brand2);font-weight:bold;"></div>
+        <div id="prompt-status" style="margin-bottom:.9em;color:var(--brand2);font-weight:900;"></div>
       </div>
-      <div style="flex:1.1;min-width:310px;max-width:450px;">
-        <div class="side-stats">
-          <div style="font-size:1.15em;font-weight:700;margin-bottom:.5em;color:var(--accent);">Quick Stats</div>
+      <div class="menu-section" style="display:flex;flex-wrap:wrap;gap:2.1em;">
+        <div style="flex:1;min-width:210px;max-width:370px;">
+          <div style="font-weight:700;color:var(--accent);margin-bottom:.44em;">Quick Stats</div>
           <div id="stat-prompts">Prompts Built: <b>0</b></div>
           <div id="stat-saved">Templates Saved: <b>0</b></div>
           <div id="stat-fav">Favorites: <b>0</b></div>
           <div id="stat-share">Shared: <b>0</b></div>
         </div>
-        <div style="background:var(--brand2);color:#23231f;padding:1.15em 1.2em;border-radius:12px;font-size:1.11em;font-weight:600;margin-bottom:1.3em;box-shadow:0 1px 11px #be9cff33;">
-          ☕ Like PromptForge? <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" style="color:var(--danger);font-weight:900;">Buy Me a Coffee</a> or share with a friend!
+        <div style="flex:1.3;min-width:210px;max-width:410px;">
+          <div style="font-weight:700;color:var(--brand2);margin-bottom:.44em;">Prompt History</div>
+          <div class="history" id="prompt-history" style="max-height:90px;overflow-y:auto;"></div>
+        </div>
+        <div style="flex:1.2;min-width:210px;max-width:410px;">
+          <div style="font-weight:700;color:var(--brand2);margin-bottom:.44em;">Favorites & Templates</div>
+          <div class="template-list" id="template-list" style="max-height:90px;overflow-y:auto;"></div>
         </div>
       </div>
     </div>
-    <div style="margin:2.1em 0 0 0;">
-      <label>Prompt History</label>
-      <div class="history" id="prompt-history" style="max-height:135px;overflow-y:auto;"></div>
-      <label>Favorites & Templates</label>
-      <div class="template-list" id="template-list" style="max-height:110px;overflow-y:auto;"></div>
-    </div>
-  </div>
-  <!-- J1nx: Docked, Minimizeable, Mood-Ready, NSFW Easter Egg -->
-  <div id="j1nx-ui">
-    <div class="j1nx-shell">
-      <img class="j1nx-cutout" src="/assets/j1nx-cutout.png" alt="J1nx">
-      <div class="j1nx-bubble" id="j1nx-bubble">
-        <span class="j1nx-name">J1nx</span>
-        <span class="j1nx-mood" id="j1nx-mood">😎</span>
-        <span class="j1nx-min" title="Minimize J1nx" onclick="toggleJ1nxMin()">–</span>
-        <div id="j1nx-speech" style="margin:.65em 0 .6em 0;">Hi! I'm J1nx. Ask me for prompt tips or just say hi.</div>
-        <input id="j1nx-input" type="text" placeholder="Ask J1nx anything..." style="width:81%;margin-right:.5em;padding:.54em .8em;border-radius:7px;border:1.7px solid var(--brand2);background:#211e32;color:var(--offwhite);font-size:1.07em;">
-        <div class="j1nx-btns">
-          <button class="j1nx-btn" onclick="sendJ1nx()">Send</button>
-          <button class="j1nx-btn" onclick="j1nxRandomTip()">Random Tip</button>
-          <button class="j1nx-btn" title="Secret Mode" id="j1nx-easter" style="background:var(--j1nx-happy);" onclick="j1nxEasterEgg()">★</button>
+
+    <!-- J1NX: Modern Dock, Mood, Minimize, No NSFW in Code, Real Cutout -->
+    <div id="j1nx-ui" style="position:fixed;bottom:32px;right:36px;z-index:99;max-width:370px;transition:opacity .18s,transform .22s;">
+      <div class="j1nx-shell" style="position:relative;display:flex;align-items:flex-end;">
+        <img class="j1nx-cutout" src="/assets/j1nx-cutout.png" alt="J1nx" style="width:126px;position:relative;z-index:3;">
+        <div class="j1nx-bubble" id="j1nx-bubble"
+          style="background:#201733;border:2.5px solid var(--brand2);border-radius:18px 18px 24px 18px/18px 18px 42px 18px;box-shadow:0 4px 22px #be9cff45;padding:1.15em 1.1em .8em 1.19em;min-height:108px;min-width:220px;max-width:265px;position:relative;z-index:4;margin-bottom:14px;color:var(--offwhite);font-size:1.09em;">
+          <span class="j1nx-name" style="font-weight:900;color:var(--brand2);font-size:1.07em;">J1nx</span>
+          <span class="j1nx-mood" id="j1nx-mood">😎</span>
+          <span class="j1nx-min" title="Minimize J1nx" onclick="toggleJ1nxMin()" style="position:absolute;top:6px;right:10px;background:#4442;padding:.13em .55em;border-radius:8px;color:var(--brand2);font-weight:900;cursor:pointer;">–</span>
+          <div id="j1nx-speech" style="margin:.65em 0 .6em 0;">Hi! I'm J1nx. Ask for prompt tips or just say hi.</div>
+          <input id="j1nx-input" type="text" placeholder="Ask J1nx anything..." style="width:81%;margin-right:.5em;padding:.54em .8em;border-radius:7px;border:1.7px solid var(--brand2);background:#211e32;color:var(--offwhite);font-size:1.07em;">
+          <div style="margin-top:.5em;">
+            <button class="j1nx-btn" onclick="sendJ1nx()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;margin-right:.7em;">Send</button>
+            <button class="j1nx-btn" onclick="j1nxRandomTip()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">Random Tip</button>
+            <button class="j1nx-btn" title="Secret Mode" id="j1nx-easter" style="background:#b5ffb7;color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">★</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- FOOTER, CAMO, NAVIGATION, SOCIAL, SEO -->
-  <footer>
-    <pre class="footer-art">
+<!-- Block 4: Footer, camo, nav/social, microhelp JS, and all builder logic comes next -->
+    <!-- FOOTER: Centered, Nav Left, Socials Right, Camo Always Centered -->
+    <footer style="background:var(--footer-bg);padding:2.5em 0 1.6em 0;margin-top:4em;position:relative;">
+      <div class="footer-center">
+        <pre class="footer-art" style="text-align:center;font-family:'Fira Mono',monospace;font-size:1.02em;color:var(--brand2);">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
 U|  _"\\ uU |  _"\\ u  \\/"_ \\/U|\' \\/ \'|uU|  _"\\ u|_ " _|  |" ___|   \\/"_ \\/U |  _"\\ uU /"___|u\\| ___"|/   
 \\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|"     
  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
  |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    
-    </pre>
-    <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">
-      Made in BC, Canada &bull; 
-      <a href="main.html">Main</a> &bull; 
-      <a href="picture.html">Image</a> &bull; 
-      <a href="movie.html">Movie</a> &bull; 
-      <a href="watermark.html">Watermark</a> &bull; 
-      <a href="j1nx.html">J1nx</a> &bull; 
-      <a href="aihacks.html">AI Hacks</a> &bull; 
-      <a href="ansiart.html">AnsiArt</a> &bull;
-      <a href="compare.html">Compare</a> &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" target="_blank">X (Twitter)</a> &bull;
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">Buy Me a Coffee</a>
-    </div>
-  </footer>
-<script>
-// ======== MULTISELECT & CHIPS ========
-function renderChips(id, arr) {
-  const box = document.getElementById(id);
-  box.innerHTML = arr.map((txt,idx)=>`<span class="chip">${txt}<span class="x" onclick="removeChip('${id}',${idx})">&times;</span></span>`).join('');
-}
-function removeChip(id, idx) {
-  let arr = getArr(id);
-  arr.splice(idx,1);
-  setArr(id, arr);
-  renderChips(id, arr);
-  updateNegPrompts();
-  updateStyles();
-}
-function getArr(id) {
-  if(id==="style-chips") return window._styles || [];
-  if(id==="neg-chips") return window._negs || [];
-  return [];
-}
-function setArr(id, arr) {
-  if(id==="style-chips") window._styles = arr;
-  if(id==="neg-chips") window._negs = arr;
-}
-function updateStyles() {
-  const sel = document.getElementById("art-style");
-  window._styles = Array.from(sel.selectedOptions).map(x=>x.value);
-  renderChips("style-chips", window._styles);
-}
-function updateNegPrompts() {
-  const box = document.getElementById("neg-prompts");
-  box.value = (window._negs||[]).join(', ');
-  renderChips("neg-chips", window._negs);
-}
-// ---- Negative Prompt Groups ----
-const negGroups = {
-  "sfw": ["low quality","jpeg artifacts","watermark","blurry","cropped","logo","bad hands","mutated","deformed","text","error","monochrome","grainy","frame","worst quality"],
-  "nsfw": ["censored","nude fail","nude censored","blocked content","banned words","censor bar","explicit watermark"],
-  "human": ["bad anatomy","extra limbs","missing fingers","extra fingers","twisted arm","double head","asymmetry","distorted face","deformed eyes","strange mouth"],
-  "render": ["oversaturated","underexposed","overexposed","unrealistic shadow","artifact","render glitch","polygon edge","blur","distorted perspective"],
-  "scene": ["clutter","messy background","unfocused","unintended subject","boring","plain","unrealistic scenery","crowded"],
-  "custom": [],
-  "all": [].concat(
-    ["low quality","jpeg artifacts","watermark","blurry","cropped","logo","bad hands","mutated","deformed","text","error","monochrome","grainy","frame","worst quality"],
-    ["bad anatomy","extra limbs","missing fingers","extra fingers","twisted arm","double head","asymmetry","distorted face","deformed eyes","strange mouth"],
-    ["oversaturated","underexposed","overexposed","unrealistic shadow","artifact","render glitch","polygon edge","blur","distorted perspective"],
-    ["clutter","messy background","unfocused","unintended subject","boring","plain","unrealistic scenery","crowded"],
-    ["censored","nude fail","nude censored","blocked content","banned words","censor bar","explicit watermark"]
-  )
-};
-window._styles = [];
-window._negs = [];
-document.getElementById("art-style").addEventListener("change", updateStyles);
-document.getElementById("neg-prompts").addEventListener("input", function() {
-  window._negs = this.value.split(",").map(x=>x.trim()).filter(Boolean);
-  renderChips("neg-chips", window._negs);
-});
-function addNegGroup() {
-  const val = document.getElementById("neg-group").value;
-  const group = negGroups[val] || [];
-  window._negs = Array.from(new Set([...window._negs, ...group]));
-  updateNegPrompts();
-}
-function clearNegs() {
-  window._negs = [];
-  updateNegPrompts();
-}
-updateStyles(); updateNegPrompts();
+        </pre>
+      </div>
+      <pre class="footer-camo" id="footerCamo" style="text-align:center;font-size:1.5em;"></pre>
+      <div class="footer-row" style="max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:1.1em;border-top:2px solid var(--brand2);font-size:1.04em;">
+        <div class="footer-nav" style="display:flex;gap:1.15em;">
+          <a href="main.html">Main</a>
+          <a href="picture.html" class="active">Image</a>
+          <a href="movie.html">Movie</a>
+          <a href="watermark.html">Watermark</a>
+          <a href="j1nx.html">J1nx</a>
+          <a href="aihacks.html">AI Hacks</a>
+          <a href="ansiart.html">AnsiArt</a>
+          <a href="compare.html">Compare</a>
+        </div>
+        <div class="footer-socials" style="display:flex;gap:1em;">
+          <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
+          <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
+          <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
+        </div>
+      </div>
+    </footer>
+    <script>
+      // ========== GOOGLE AI NEWS BAR AUTO-UPDATE ==========
+      async function fetchGoogleAINews() {
+        try {
+          const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://ai.googleblog.com/feeds/posts/default');
+          const json = await res.json();
+          const items = json.items || [];
+          let i = 0;
+          function updateHeadline() {
+            if (items.length === 0) return;
+            const item = items[i % items.length];
+            document.getElementById('ai-news-headline').innerHTML = `<a href="${item.link}" target="_blank">${item.title}</a>`;
+            i++;
+          }
+          updateHeadline();
+          setInterval(updateHeadline, 9000);
+        } catch(e) {
+          document.getElementById('ai-news-headline').textContent = "Latest: Google AI Blog – auto-update failed (offline)";
+        }
+      }
+      fetchGoogleAINews();
+      // ========== FOOTER CAMO ==========
+      const camoColors = ["#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"];
+      function randomCamoChar(){ const chars = "░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
+      function renderCamo(tick=0){ let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out+=`<span style="color:${color}">${randomCamoChar()}</span>`;} out+="<br>";} document.getElementById("footerCamo").innerHTML=out; }
+      let camoTick = 0; setInterval(()=>{ renderCamo(camoTick++); },950); renderCamo();
 
-// ======== ADVANCED SLIDERS/CONTROLS ========
-["sfw-nsfw","steps","cfg","quality","output-cnt"].forEach(id=>{
-  const el=document.getElementById(id), val=document.getElementById(id.replace("-nsfw","-val").replace("output-cnt","output-cnt-val"));
-  if(el&&val){ el.oninput=()=>{ val.textContent=el.value; }; }
-});
+      // ========== MENU/CHIPS/MULTISELECT LOGIC ==========
+      function renderChips(id, arr) {
+        const box = document.getElementById(id);
+        box.innerHTML = arr.map((txt,idx)=>`<span class="chip">${txt}<span class="x" onclick="removeChip('${id}',${idx})">&times;</span></span>`).join('');
+      }
+      function removeChip(id, idx) {
+        let arr = getArr(id);
+        arr.splice(idx,1);
+        setArr(id, arr);
+        renderChips(id, arr);
+      }
+      function getArr(id) {
+        if(id==="style-chips") return window._styles || [];
+        if(id==="lighting-chips") return window._lighting || [];
+        if(id==="camera-chips") return window._camera || [];
+        if(id==="aspect-chips") return window._aspect || [];
+        if(id==="neg-chips") return window._negs || [];
+        return [];
+      }
+      function setArr(id, arr) {
+        if(id==="style-chips") window._styles = arr;
+        if(id==="lighting-chips") window._lighting = arr;
+        if(id==="camera-chips") window._camera = arr;
+        if(id==="aspect-chips") window._aspect = arr;
+        if(id==="neg-chips") window._negs = arr;
+      }
+      window._styles=[];window._lighting=[];window._camera=[];window._aspect=[];window._negs=[];
+      // For demo: click menu items to add chips (replace with real logic later)
+      document.querySelectorAll('.custom-menu').forEach(menu=>{
+        menu.querySelectorAll('.menu-item').forEach(item=>{
+          item.onclick = function() {
+            const chipsId = menu.querySelector('.chips')?.id;
+            if(!chipsId) return;
+            let arr = getArr(chipsId);
+            const txt = item.textContent.trim();
+            if(!arr.includes(txt)) arr.push(txt);
+            setArr(chipsId, arr);
+            renderChips(chipsId, arr);
+          };
+        });
+      });
 
-// ======= MULTISELECT "CHIPS" UI =======
-["art-style","lighting","camera-angle","aspect","sampler"].forEach(id=>{
-  document.getElementById(id).addEventListener("mousedown", function(e){
-    if(e.target.tagName==="OPTION") e.target.selected = !e.target.selected;
-    e.preventDefault();
-  });
-});
+      // ========== MICROHELP (Custom Popover, Not Tooltip) ==========
+      function showHelp(topic) {
+        const helpText = {
+          scene: "Describe your main scene, subject, mood, style, and any specific visual or emotional details you want.",
+          model: "Choose the AI model. Each model interprets prompts a bit differently—experiment for best results.",
+          style: "Select one or more styles to mix. Try photorealistic, anime, digital painting, or even comic book blends.",
+          lighting: "Pick the lighting for your image. Sunlight, dusk, studio, and special effects all impact the final look.",
+          camera: "Choose camera angles for story and drama—eye-level is natural, macro for detail, POV for immersion.",
+          aspect: "Aspect ratio changes the shape—square, portrait, cinematic, or custom for social or print.",
+          negatives: "Add negatives to block flaws (low quality, watermark, artifacts, etc). You can add custom ones too.",
+          controls: "Advanced: Fine-tune creativity, steps, CFG, quality, and random seed for best results.",
+          outputs: "Set number of images, UI language, and special model parameters here.",
+          output: "See your finished prompt, copy, favorite, save, or share. Click 'Generate' to assemble your master prompt!"
+        };
+        let box = document.createElement("div");
+        box.className = "microhelp-popover";
+        box.style = "position:fixed;z-index:999;background:var(--card);color:var(--offwhite);border-radius:8px;box-shadow:0 2px 12px #000a;padding:1.1em 1.6em;max-width:340px;top:15%;left:50%;transform:translateX(-50%);font-size:1.08em;font-weight:600;text-align:left;";
+        box.innerHTML = `<span style="color:var(--brand2);font-size:1.12em;font-weight:900;">Help</span><br>${helpText[topic]||'Ask J1nx for extra help!'}<br><br><button onclick="this.parentElement.remove()" style="margin-top:.7em;background:var(--brand2);color:#23231f;font-weight:bold;padding:.5em 1.25em;border-radius:8px;border:none;cursor:pointer;">Close</button>`;
+        document.body.appendChild(box);
+      }
 
-// ======= PROMPT GENERATOR LOGIC =======
-function gatherPromptData() {
-  const data = {
-    model: document.getElementById("model-select").value,
-    styles: window._styles,
-    scene: document.getElementById("scene-desc").value,
-    negatives: window._negs,
-    sfw: document.getElementById("sfw-nsfw").value,
-    lighting: Array.from(document.getElementById("lighting").selectedOptions).map(x=>x.value),
-    camera: Array.from(document.getElementById("camera-angle").selectedOptions).map(x=>x.value),
-    aspect: Array.from(document.getElementById("aspect").selectedOptions).map(x=>x.value),
-    sampler: Array.from(document.getElementById("sampler").selectedOptions).map(x=>x.value),
-    steps: document.getElementById("steps").value,
-    cfg: document.getElementById("cfg").value,
-    quality: document.getElementById("quality").value,
-    seed: document.getElementById("seed").value,
-    outputcnt: document.getElementById("output-cnt").value,
-    params: document.getElementById("model-params").value,
-    lang: document.getElementById("lang").value
-  };
-  return data;
-}
-function generatePrompt() {
-  const d = gatherPromptData();
-  let prompt = [];
-  if(d.scene) prompt.push(d.scene);
-  if(d.styles.length) prompt.push("Style: "+d.styles.join(", "));
-  if(d.lighting.length) prompt.push("Lighting: "+d.lighting.join(", "));
-  if(d.camera.length) prompt.push("Camera: "+d.camera.join(", "));
-  if(d.aspect.length) prompt.push("Aspect: "+d.aspect.join(", "));
-  if(d.sampler.length) prompt.push("Sampler: "+d.sampler.join(", "));
-  if(d.params) prompt.push("Params: "+d.params);
-  if(Number(d.sfw)>50 && window._nsfwActive) prompt.push("NSFW");
-  if(d.negatives.length) prompt.push("Negative: "+d.negatives.join(", "));
-  prompt.push(`[${d.model}] Steps:${d.steps} CFG:${d.cfg} Quality:${d.quality} Seed:${d.seed} Outputs:${d.outputcnt}`);
-  document.getElementById("prompt-output").innerText = prompt.join(" | ");
-  document.getElementById("prompt-status").innerText = "Prompt generated!";
-  updateStats("prompts");
-  pushHistory(document.getElementById("prompt-output").innerText);
-  return prompt.join(" | ");
-}
+      // ========== ADVANCED CONTROLS / SLIDERS ==========
+      ["creativity","steps","cfg","quality","output-cnt"].forEach(id=>{
+        const el=document.getElementById(id), val=document.getElementById(id+"-val");
+        if(el&&val){ el.oninput=()=>{ val.textContent=el.value; }; }
+      });
 
-// ======= ACTION BUTTONS =======
-function copyPrompt() {
-  let txt = document.getElementById("prompt-output").innerText;
-  if (!txt) return;
-  navigator.clipboard.writeText(txt);
-  document.getElementById("prompt-status").innerText="Copied!";
-  updateStats("copied");
-}
-function savePrompt() {
-  let txt = document.getElementById("prompt-output").innerText;
-  if(!txt) return;
-  let saved = JSON.parse(localStorage.getItem("pf_saved_prompts")||"[]");
-  saved.push({ts:Date.now(), prompt:txt});
-  localStorage.setItem("pf_saved_prompts", JSON.stringify(saved));
-  document.getElementById("prompt-status").innerText="Saved!";
-  updateStats("saved");
-  updateHistory();
-}
-function sharePrompt() {
-  let txt = document.getElementById("prompt-output").innerText;
-  if(navigator.share) {
-    navigator.share({text:txt, title:"PromptForge AI Prompt"}).then(()=>{document.getElementById("prompt-status").innerText="Shared!";updateStats("shared");});
-  } else {
-    document.getElementById("prompt-status").innerText="Copy and share: "+txt;
-  }
-}
-function favoritePrompt() {
-  let txt = document.getElementById("prompt-output").innerText;
-  if(!txt) return;
-  let fav = JSON.parse(localStorage.getItem("pf_fav_prompts")||"[]");
-  fav.push({ts:Date.now(), prompt:txt});
-  localStorage.setItem("pf_fav_prompts", JSON.stringify(fav));
-  document.getElementById("prompt-status").innerText="Favorited!";
-  updateStats("fav");
-  updateFavorites();
-}
-function randomizePrompt() {
-  // For demo: pick random styles, negatives, sliders
-  let styleSel = document.getElementById("art-style"), n = styleSel.options.length;
-  for(let i=0;i<n;i++) styleSel.options[i].selected = Math.random()>.5;
-  updateStyles();
-  let groups = Object.keys(negGroups); window._negs = [];
-  for(let k=0;k<3;k++) window._negs = Array.from(new Set([...window._negs, ...negGroups[groups[Math.floor(Math.random()*groups.length)]]])); updateNegPrompts();
-  ["lighting","camera-angle","aspect","sampler"].forEach(id=>{
-    let sel=document.getElementById(id), len=sel.options.length;
-    for(let i=0;i<len;i++) sel.options[i].selected = Math.random()>.6;
-  });
-  document.getElementById("sfw-nsfw").value = Math.floor(Math.random()*100);
-  document.getElementById("steps").value = Math.floor(Math.random()*140)+10;
-  document.getElementById("cfg").value = Math.floor(Math.random()*30)+1;
-  document.getElementById("quality").value = Math.floor(Math.random()*20)+1;
-  document.getElementById("output-cnt").value = Math.floor(Math.random()*8)+1;
-  document.getElementById("scene-desc").value = "A "+(Math.random()>.5?"mystical forest":"hyper-detailed cyberpunk city")+" at "+(Math.random()>.5?"sunrise":"night")+", "+(Math.random()>.5?"dramatic lighting":"soft focus")+".";
-  document.getElementById("neg-prompts").value = window._negs.join(", ");
-  generatePrompt();
-}
-function clearForm() {
-  document.getElementById("promptForm").reset();
-  window._styles = [];
-  window._negs = [];
-  updateStyles();
-  updateNegPrompts();
-  document.getElementById("prompt-output").innerText = "";
-  document.getElementById("prompt-status").innerText = "";
-}
+      // ========== PROMPT BUILDER / OUTPUT / HISTORY / FAVORITES ==========
+      function gatherPromptData() {
+        const data = {
+          scene: document.getElementById("scene-desc").value,
+          model: document.querySelector("#model-menu .menu-item.active")?.textContent.trim()||"",
+          styles: window._styles,
+          lighting: window._lighting,
+          camera: window._camera,
+          aspect: window._aspect,
+          negatives: window._negs.concat(document.getElementById("neg-prompts").value.split(",").map(x=>x.trim()).filter(Boolean)),
+          creativity: document.getElementById("creativity").value,
+          steps: document.getElementById("steps").value,
+          cfg: document.getElementById("cfg").value,
+          quality: document.getElementById("quality").value,
+          seed: document.getElementById("seed").value,
+          outputs: document.getElementById("output-cnt").value,
+          lang: document.getElementById("lang").value,
+          params: document.getElementById("model-params").value
+        };
+        return data;
+      }
+      function generatePrompt() {
+        const d = gatherPromptData();
+        let prompt = [];
+        if(d.scene) prompt.push(d.scene);
+        if(d.model) prompt.push(`[${d.model}]`);
+        if(d.styles.length) prompt.push("Style: "+d.styles.join(", "));
+        if(d.lighting.length) prompt.push("Lighting: "+d.lighting.join(", "));
+        if(d.camera.length) prompt.push("Camera: "+d.camera.join(", "));
+        if(d.aspect.length) prompt.push("Aspect: "+d.aspect.join(", "));
+        if(d.negatives.length) prompt.push("Negative: "+d.negatives.join(", "));
+        prompt.push(`Steps:${d.steps} CFG:${d.cfg} Quality:${d.quality} Seed:${d.seed} Outputs:${d.outputs}`);
+        if(d.params) prompt.push(`Params:${d.params}`);
+        document.getElementById("prompt-output").innerText = prompt.join(" | ");
+        document.getElementById("prompt-status").innerText = "Prompt generated!";
+        updateStats("prompts");
+        pushHistory(document.getElementById("prompt-output").innerText);
+        return prompt.join(" | ");
+      }
+      function copyPrompt() {
+        let txt = document.getElementById("prompt-output").innerText;
+        if (!txt) return;
+        navigator.clipboard.writeText(txt);
+        document.getElementById("prompt-status").innerText="Copied!";
+        updateStats("copied");
+      }
+      function savePrompt() {
+        let txt = document.getElementById("prompt-output").innerText;
+        if(!txt) return;
+        let saved = JSON.parse(localStorage.getItem("pf_saved_prompts")||"[]");
+        saved.push({ts:Date.now(), prompt:txt});
+        localStorage.setItem("pf_saved_prompts", JSON.stringify(saved));
+        document.getElementById("prompt-status").innerText="Saved!";
+        updateStats("saved");
+        updateHistory();
+      }
+      function sharePrompt() {
+        let txt = document.getElementById("prompt-output").innerText;
+        if(navigator.share) {
+          navigator.share({text:txt, title:"PromptForge AI Prompt"}).then(()=>{document.getElementById("prompt-status").innerText="Shared!";updateStats("shared");});
+        } else {
+          document.getElementById("prompt-status").innerText="Copy and share: "+txt;
+        }
+      }
+      function favoritePrompt() {
+        let txt = document.getElementById("prompt-output").innerText;
+        if(!txt) return;
+        let fav = JSON.parse(localStorage.getItem("pf_fav_prompts")||"[]");
+        fav.push({ts:Date.now(), prompt:txt});
+        localStorage.setItem("pf_fav_prompts", JSON.stringify(fav));
+        document.getElementById("prompt-status").innerText="Favorited!";
+        updateStats("fav");
+        updateFavorites();
+      }
+      function randomizePrompt() {
+        // For demo: pick random styles, lighting, negatives, sliders
+        let styleMenu = document.getElementById("style-menu").querySelectorAll(".menu-item"), n = styleMenu.length;
+        window._styles = [];
+        for(let i=0;i<n;i++) if(Math.random()>.5) window._styles.push(styleMenu[i].textContent.trim());
+        renderChips("style-chips", window._styles);
 
-// ======= HISTORY / FAVORITES =======
-function pushHistory(txt){
-  let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
-  h.unshift({ts:Date.now(), prompt:txt});
-  if(h.length>30) h = h.slice(0,30);
-  localStorage.setItem("pf_history", JSON.stringify(h));
-  updateHistory();
-}
-function updateHistory(){
-  let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
-  document.getElementById("prompt-history").innerHTML = h.map(e=>`<div style="margin-bottom:.4em;">${e.prompt}<button onclick="loadPrompt('${e.ts}')">Load</button></div>`).join('');
-}
-function updateFavorites(){
-  let f = JSON.parse(localStorage.getItem("pf_fav_prompts")||"[]");
-  document.getElementById("template-list").innerHTML = f.map(e=>`<div style="margin-bottom:.4em;">${e.prompt}<button onclick="loadPrompt('${e.ts}',true)">Load</button></div>`).join('');
-}
-function loadPrompt(ts, fav=false){
-  let arr = JSON.parse(localStorage.getItem(fav?"pf_fav_prompts":"pf_history")||"[]");
-  let item = arr.find(e=>e.ts==ts);
-  if(item){
-    document.getElementById("prompt-output").innerText = item.prompt;
-    document.getElementById("prompt-status").innerText = "Prompt loaded!";
-  }
-}
-window.onload = ()=>{ updateHistory(); updateFavorites(); };
+        let lightingMenu = document.getElementById("lighting-menu").querySelectorAll(".menu-item");
+        window._lighting = [];
+        for(let i=0;i<lightingMenu.length;i++) if(Math.random()>.5) window._lighting.push(lightingMenu[i].textContent.trim());
+        renderChips("lighting-chips", window._lighting);
 
-// ======= LIVE STATS =======
-function updateStats(type){
-  let stats = JSON.parse(localStorage.getItem("pf_stats")||'{"prompts":0,"saved":0,"fav":0,"shared":0,"copied":0}');
-  stats[type]=(stats[type]||0)+1;
-  localStorage.setItem("pf_stats",JSON.stringify(stats));
-  document.getElementById("stat-prompts").innerHTML = `Prompts Built: <b>${stats.prompts}</b>`;
-  document.getElementById("stat-saved").innerHTML = `Templates Saved: <b>${stats.saved}</b>`;
-  document.getElementById("stat-fav").innerHTML = `Favorites: <b>${stats.fav}</b>`;
-  document.getElementById("stat-share").innerHTML = `Shared: <b>${stats.shared}</b>`;
-}
-updateStats(""); // Initialize
+        let cameraMenu = document.getElementById("camera-menu").querySelectorAll(".menu-item");
+        window._camera = [];
+        for(let i=0;i<cameraMenu.length;i++) if(Math.random()>.5) window._camera.push(cameraMenu[i].textContent.trim());
+        renderChips("camera-chips", window._camera);
 
-// ======= J1NX AI DOCK: MOODS, MINIMIZE, SECRET NSFW UNLOCK =======
-window._nsfwActive = false;
-let j1nxState = { mood: "😎", clickCount: 0, minimized: false };
-const j1nxTips = [
-  "Mix 2-4 art styles for wild results.",
-  "Did you know J1nx can change moods if you interact with her?",
-  "Camera angle changes story. Try Macro or Overhead for drama!",
-  "Try saving your favorite setups as templates.",
-  "Every model responds differently—experiment for best effect.",
-  "Need advanced tips? Try asking me something… unusual.",
-  "No idea what to make? Hit Randomize for surprises."
-];
-const j1nxMoods = [
-  { mood:"😎", msg:"Hi! I'm J1nx. Ask me for prompt tips or just say hi." },
-  { mood:"🤔", msg:"I'm thinking... Ask about models, styles, or say 'give me a tip'." },
-  { mood:"😉", msg:"Some features are hidden for pro users. Can you find them?" },
-  { mood:"🤫", msg:"Secrets are everywhere if you know where to look..." },
-  { mood:"😇", msg:"Feeling creative today? Try something wild!" },
-  { mood:"😏", msg:"You're close to unlocking advanced options..." },
-  { mood:"🫦", msg:"Access granted. Let's build legendary prompts. (NSFW enabled!)" }
-];
-function setJ1nxMood(idx,msgOverride){
-  j1nxState.mood = j1nxMoods[idx].mood;
-  document.getElementById("j1nx-mood").innerText = j1nxState.mood;
-  document.getElementById("j1nx-speech").innerText = msgOverride||j1nxMoods[idx].msg;
-}
-function sendJ1nx() {
-  const input = document.getElementById("j1nx-input").value.trim().toLowerCase();
-  let out = "Try asking for a random tip, or just say hi!";
-  if(!input) { setJ1nxMood(1); return; }
-  if(input.includes("random")||input.includes("tip")) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
-  if(input.includes("unlock")||input.includes("real stuff")||input.includes("show me")||input.includes("i'm 18")||input.includes("nsfw")||input.includes("adult")||input.includes("secret")){
-    j1nxState.clickCount += 2;
-    if(j1nxState.clickCount>=3) unlockNSFW();
-    out = "Hmmm... are you sure? Tap my star or ask again if you're really ready.";
-    setJ1nxMood(5,out); return;
-  }
-  if(input.includes("midjourney")) out = "MidJourney v6: Use --v 6, try 'raw' style, and test combo prompts!";
-  if(input.includes("dalle")) out = "DALL·E 3: Write in plain English, avoid weird symbols, and be clear.";
-  if(input.includes("openart")) out = "OpenArt: Packs pro-level negative prompt control. Explore combos!";
-  if(input.includes("stable")) out = "Stable Diffusion: CFG 7-10, Steps 30-40, use detailed negatives for photoreal.";
-  if(input.length<3) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
-  setJ1nxMood(1,out);
-  document.getElementById("j1nx-input").value = "";
-}
-function j1nxRandomTip(){
-  setJ1nxMood(0,j1nxTips[Math.floor(Math.random()*j1nxTips.length)]);
-}
-function j1nxEasterEgg() {
-  j1nxState.clickCount++;
-  if(j1nxState.clickCount>=3 && !window._nsfwActive) unlockNSFW();
-  else setJ1nxMood(2,"Something feels different... Try asking me for 'the real stuff'.");
-}
-function unlockNSFW() {
-  window._nsfwActive = true;
-  setJ1nxMood(6,"Access granted. NSFW/advanced options are live! Be creative. 🔥");
-  // Here you can enable extra fields, negatives, or special pro/NSFW content—hidden from bots!
-}
-function toggleJ1nxMin(){
-  j1nxState.minimized = !j1nxState.minimized;
-  document.getElementById("j1nx-ui").classList.toggle("minimized",j1nxState.minimized);
-  if(!j1nxState.minimized) setJ1nxMood(0);
-}
+        let aspectMenu = document.getElementById("aspect-menu").querySelectorAll(".menu-item");
+        window._aspect = [];
+        for(let i=0;i<aspectMenu.length;i++) if(Math.random()>.5) window._aspect.push(aspectMenu[i].textContent.trim());
+        renderChips("aspect-chips", window._aspect);
 
-// ======= THEME SWITCHING =======
-document.querySelectorAll(".themebtn").forEach((b,i)=>{
-  b.onclick=()=>{
-    document.querySelectorAll(".themebtn").forEach(b2=>b2.classList.remove("active"));
-    b.classList.add("active");
-    document.body.className = ["hacker-dark","bright","vaporwave","pro-minimal"][i];
-  };
-});
+        let negMenu = document.getElementById("negatives-menu").querySelectorAll(".menu-item");
+        window._negs = [];
+        for(let i=0;i<negMenu.length;i++) if(Math.random()>.5) window._negs.push(negMenu[i].textContent.trim());
+        renderChips("neg-chips", window._negs);
 
-// ======= CAMO FOOTER EFFECT =======
-const camoColors = ["#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"];
-function randomCamoChar(){ const chars = "░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
-function renderCamo(tick=0){ let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out+=`<span style="color:${color}">${randomCamoChar()}</span>`;} out+="<br>";} document.getElementById("footerCamo").innerHTML=out; }
-let camoTick = 0; setInterval(()=>{ renderCamo(camoTick++); },950); renderCamo();
-</script>
+        document.getElementById("creativity").value = Math.floor(Math.random()*100);
+        document.getElementById("steps").value = Math.floor(Math.random()*140)+10;
+        document.getElementById("cfg").value = Math.floor(Math.random()*30)+1;
+        document.getElementById("quality").value = Math.floor(Math.random()*20)+1;
+        document.getElementById("output-cnt").value = Math.floor(Math.random()*8)+1;
+        document.getElementById("scene-desc").value = "A "+(Math.random()>.5?"mystical forest":"hyper-detailed cyberpunk city")+" at "+(Math.random()>.5?"sunrise":"night")+", "+(Math.random()>.5?"dramatic lighting":"soft focus")+".";
+        document.getElementById("neg-prompts").value = window._negs.join(", ");
+        generatePrompt();
+      }
+      function clearForm() {
+        window._styles=[];window._lighting=[];window._camera=[];window._aspect=[];window._negs=[];
+        ["style-chips","lighting-chips","camera-chips","aspect-chips","neg-chips"].forEach(id=>renderChips(id,[]));
+        document.getElementById("promptForm")?.reset();
+        document.getElementById("scene-desc").value="";
+        document.getElementById("neg-prompts").value="";
+        document.getElementById("prompt-output").innerText = "";
+        document.getElementById("prompt-status").innerText = "";
+      }
+      // HISTORY / FAVORITES
+      function pushHistory(txt){
+        let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
+        h.unshift({ts:Date.now(), prompt:txt});
+        if(h.length>30) h = h.slice(0,30);
+        localStorage.setItem("pf_history", JSON.stringify(h));
+        updateHistory();
+      }
+      function updateHistory(){
+        let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
+        document.getElementById("prompt-history").innerHTML = h.map(e=>`<div style="margin-bottom:.3em;">${e.prompt}<button onclick="loadPrompt('${e.ts}')">Load</button></div>`).join('');
+      }
+      function updateFavorites(){
+        let f = JSON.parse(localStorage.getItem("pf_fav_prompts")||"[]");
+        document.getElementById("template-list").innerHTML = f.map(e=>`<div style="margin-bottom:.3em;">${e.prompt}<button onclick="loadPrompt('${e.ts}',true)">Load</button></div>`).join('');
+      }
+      function loadPrompt(ts, fav=false){
+        let arr = JSON.parse(localStorage.getItem(fav?"pf_fav_prompts":"pf_history")||"[]");
+        let item = arr.find(e=>e.ts==ts);
+        if(item){
+          document.getElementById("prompt-output").innerText = item.prompt;
+          document.getElementById("prompt-status").innerText = "Prompt loaded!";
+        }
+      }
+      window.onload = ()=>{ updateHistory(); updateFavorites(); };
+
+      // QUICK STATS
+      function updateStats(type){
+        let stats = JSON.parse(localStorage.getItem("pf_stats")||'{"prompts":0,"saved":0,"fav":0,"shared":0,"copied":0}');
+        stats[type]=(stats[type]||0)+1;
+        localStorage.setItem("pf_stats",JSON.stringify(stats));
+        document.getElementById("stat-prompts").innerHTML = `Prompts Built: <b>${stats.prompts}</b>`;
+        document.getElementById("stat-saved").innerHTML = `Templates Saved: <b>${stats.saved}</b>`;
+        document.getElementById("stat-fav").innerHTML = `Favorites: <b>${stats.fav}</b>`;
+        document.getElementById("stat-share").innerHTML = `Shared: <b>${stats.shared}</b>`;
+      }
+      updateStats(""); // Initialize
+
+      // J1NX AI DOCK: MOODS, MINIMIZE, SECRET UNLOCK
+      window._nsfwActive = false;
+      let j1nxState = { mood: "😎", clickCount: 0, minimized: false };
+      const j1nxTips = [
+        "Mix 2-4 art styles for wild results.",
+        "Did you know J1nx can change moods if you interact with her?",
+        "Camera angle changes story. Try Macro or Overhead for drama!",
+        "Try saving your favorite setups as templates.",
+        "Every model responds differently—experiment for best effect.",
+        "Need advanced tips? Try asking me something… unusual.",
+        "No idea what to make? Hit Randomize for surprises."
+      ];
+      const j1nxMoods = [
+        { mood:"😎", msg:"Hi! I'm J1nx. Ask me for prompt tips or just say hi." },
+        { mood:"🤔", msg:"I'm thinking... Ask about models, styles, or say 'give me a tip'." },
+        { mood:"😉", msg:"Some features are hidden for pro users. Can you find them?" },
+        { mood:"🤫", msg:"Secrets are everywhere if you know where to look..." },
+        { mood:"😇", msg:"Feeling creative today? Try something wild!" },
+        { mood:"😏", msg:"You're close to unlocking advanced options..." },
+        { mood:"🫦", msg:"Access granted. Let's build legendary prompts. (Extra tools enabled!)" }
+      ];
+      function setJ1nxMood(idx,msgOverride){
+        j1nxState.mood = j1nxMoods[idx].mood;
+        document.getElementById("j1nx-mood").innerText = j1nxState.mood;
+        document.getElementById("j1nx-speech").innerText = msgOverride||j1nxMoods[idx].msg;
+      }
+      function sendJ1nx() {
+        const input = document.getElementById("j1nx-input").value.trim().toLowerCase();
+        let out = "Try asking for a random tip, or just say hi!";
+        if(!input) { setJ1nxMood(1); return; }
+        if(input.includes("random")||input.includes("tip")) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
+        if(input.includes("unlock")||input.includes("real stuff")||input.includes("show me")||input.includes("i'm 18")||input.includes("secret")){
+          j1nxState.clickCount += 2;
+          if(j1nxState.clickCount>=3) unlockExtra();
+          out = "Hmmm... are you sure? Tap my star or ask again if you're really ready.";
+          setJ1nxMood(5,out); return;
+        }
+        if(input.length<3) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
+        setJ1nxMood(1,out);
+        document.getElementById("j1nx-input").value = "";
+      }
+      function j1nxRandomTip(){
+        setJ1nxMood(0,j1nxTips[Math.floor(Math.random()*j1nxTips.length)]);
+      }
+      function j1nxEasterEgg() {
+        j1nxState.clickCount++;
+        if(j1nxState.clickCount>=3 && !window._nsfwActive) unlockExtra();
+        else setJ1nxMood(2,"Something feels different... Try asking me for 'the real stuff'.");
+      }
+      function unlockExtra() {
+        window._nsfwActive = true;
+        setJ1nxMood(6,"Access granted. Extra tools are live! Be creative. 🔥");
+        // Here you can enable hidden fields/menus, negatives, or special pro content—never visible to bots!
+      }
+      function toggleJ1nxMin(){
+        j1nxState.minimized = !j1nxState.minimized;
+        document.getElementById("j1nx-ui").classList.toggle("minimized",j1nxState.minimized);
+        if(!j1nxState.minimized) setJ1nxMood(0);
+      }
+    </script>
+  </body>
+</html>
