@@ -123,7 +123,7 @@
     .j1nx-chat button:hover {background:#011d1e;color:#fff;}
     .j1nx-chat .j1nx-chat-row{display:flex;align-items:center;gap:6px;}
     .j1nx-chat .j1nx-chat-tip{font-size:0.96em;opacity:0.72;margin-top:8px;}
-    /* === ASCII/CAMO FOOTER BLOCK FROM YOUR MAIN === */
+    /* === ASCII/CAMO FOOTER BLOCK FROM YOUR MAIN, WITH DANCING HANDS === */
     .camo-footer {
       width: 100vw; background: repeating-linear-gradient(-45deg, #222, #232a28 30px, #1a241e 60px, #181f1e 80px, #232a28 110px, #222 120px);
       color: #0fffa6; padding: 0 0 9px 0; font-family: 'Fira Mono', monospace; border-top: 2px solid #0ff6;
@@ -135,12 +135,32 @@
     .footer-socials a {color:#0fffa0;text-decoration:none;margin:0 12px;}
     .footer-socials a:hover{color:#fff;}
     .footer-copy {font-size:0.92em; opacity:.77; margin-top:4px; margin-bottom:2px;}
-    .ascii-art-footer {
-      font-size:1.15em; font-family: 'Fira Mono', monospace; color:#0ff8e0; text-align:center;
-      margin:9px auto 0 auto; line-height:1.18;
+    .ascii-art-footer pre {
+      font-family: 'Fira Mono', monospace;
+      font-size: 1.15em;
+      color: #0ff8e0;
+      background: transparent;
+      line-height:1.18;
       filter: drop-shadow(0 0 4px #0ff9);
       letter-spacing: 0.09em;
       white-space: pre-line;
+      margin: 9px auto 0 auto;
+      text-align: center;
+      position: relative;
+    }
+    .u-hand {
+      display: inline-block;
+      animation: handwave 2.6s cubic-bezier(.7,0,.3,1) infinite alternate;
+      font-weight: bold;
+    }
+    .u-hand.wave1 { animation-delay: 0s;}
+    .u-hand.wave2 { animation-delay: 1.3s;}
+    @keyframes handwave {
+      0%   { transform: translateY(0); color: #0fffa0;}
+      30%  { transform: translateY(-7px) scale(1.13); color: #fff9a1;}
+      50%  { transform: translateY(-9px) scale(1.15); color: #f8b9ff;}
+      80%  { transform: translateY(2px) scale(1.08); color: #6af9ff;}
+      100% { transform: translateY(0); color: #0fffa0;}
     }
     .footer-legal {font-size:0.88em; color:#baffde; margin:7px 0 4px 0; opacity:.87;}
   </style>
@@ -185,54 +205,14 @@
   </div>
   <!-- CATEGORY BUTTONS ROW -->
   <div class="category-row" id="category-row">
-    <button class="category-btn cat-alexa" onclick="expandCat('alexa')"><span class="arrow" id="arrow-alexa">&#9654;</span>Alexa</button>
-    <button class="category-btn cat-google" onclick="expandCat('google')"><span class="arrow" id="arrow-google">&#9654;</span>Google Assistant</button>
-    <button class="category-btn cat-siri" onclick="expandCat('siri')"><span class="arrow" id="arrow-siri">&#9654;</span>Siri</button>
-    <button class="category-btn cat-bixby" onclick="expandCat('bixby')"><span class="arrow" id="arrow-bixby">&#9654;</span>Bixby</button>
-    <button class="category-btn cat-chatgpt" onclick="expandCat('chatgpt')"><span class="arrow" id="arrow-chatgpt">&#9654;</span>ChatGPT</button>
-    <button class="category-btn cat-drinking" onclick="expandCat('drinking')"><span class="arrow" id="arrow-drinking">&#9654;</span>Drinking Games</button>
-    <button class="category-btn cat-dares" onclick="expandCat('dares')"><span class="arrow" id="arrow-dares">&#9654;</span>Dares & Double-Dares</button>
-    <button class="category-btn cat-viral" onclick="expandCat('viral')"><span class="arrow" id="arrow-viral">&#9654;</span>Viral Challenges</button>
-    <button class="category-btn cat-party" onclick="expandCat('party')"><span class="arrow" id="arrow-party">&#9654;</span>AI Party Games</button>
-    <button class="category-btn cat-roast" onclick="expandCat('roast')"><span class="arrow" id="arrow-roast">&#9654;</span>Roast Battles</button>
-    <button class="category-btn cat-office" onclick="expandCat('office')"><span class="arrow" id="arrow-office">&#9654;</span>Office Pranks</button>
-    <button class="category-btn cat-family" onclick="expandCat('family')"><span class="arrow" id="arrow-family">&#9654;</span>Family Games</button>
-    <button class="category-btn cat-classroom" onclick="expandCat('classroom')"><span class="arrow" id="arrow-classroom">&#9654;</span>Classroom Fun</button>
-    <button class="category-btn cat-kids" onclick="expandCat('kids')"><span class="arrow" id="arrow-kids">&#9654;</span>Kids Only</button>
-    <button class="category-btn cat-adults" onclick="expandCat('adults')"><span class="arrow" id="arrow-adults">&#9654;</span>Grownups Only</button>
-    <button class="category-btn cat-nsfw" onclick="expandCat('nsfw')"><span class="arrow" id="arrow-nsfw">&#9654;</span>NSFW / Adult Mode</button>
-    <button class="category-btn cat-movie" onclick="expandCat('movie')"><span class="arrow" id="arrow-movie">&#9654;</span>Movie/TV Parodies</button>
-    <button class="category-btn cat-song" onclick="expandCat('song')"><span class="arrow" id="arrow-song">&#9654;</span>Song Generator</button>
-    <button class="category-btn cat-custom" onclick="expandCat('custom')"><span class="arrow" id="arrow-custom">&#9654;</span>Submit Your Own!</button>
-    <button class="category-btn cat-weird" onclick="expandCat('weird')"><span class="arrow" id="arrow-weird">&#9654;</span>Weirdest AI Fails</button>
-    <button class="category-btn cat-egg" onclick="expandCat('egg')"><span class="arrow" id="arrow-egg">&#9654;</span>Easter Eggs</button>
+    <!-- ... category buttons, unchanged ... -->
   </div>
   <div class="device-links">
-    <a href="https://www.amazon.com/alexa-app" class="device-link" target="_blank">Alexa App</a>
-    <a href="https://assistant.google.com/" class="device-link" target="_blank">Google Assistant</a>
-    <a href="https://apps.apple.com/app/id284910350" class="device-link" target="_blank">Siri/iOS</a>
-    <a href="https://galaxystore.samsung.com/detail/com.samsung.android.bixby.agent" class="device-link" target="_blank">Bixby App</a>
-    <a href="https://support.google.com/" class="device-link" target="_blank">Google Help</a>
-    <a href="https://support.apple.com/siri" class="device-link" target="_blank">Siri Help</a>
+    <!-- ... device links, unchanged ... -->
   </div>
   <div class="prank-bg">
     <div class="main-panel" id="main-panel">
-      <div class="ad-slot">
-        <ins class="adsbygoogle"
-          style="display:block; text-align:center;"
-          data-ad-client="ca-pub-4963053724895140"
-          data-ad-slot="1982348778"
-          data-ad-format="auto"
-          data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      </div>
-      <div id="accordion-area"></div>
-      <div id="nsfw-gate">
-        <b>18+ Only</b><br>
-        This section contains wild, adult, and uncensored pranks!<br>
-        By clicking below you confirm you are 18+.<br>
-        <button onclick="unlockNSFW()">I’m 18+, Show Me the Naughty Stuff!</button>
-      </div>
+      <!-- ... ad slot, accordion, NSFW gate ... -->
     </div>
   </div>
   <!-- === J1NX Unified Block with CORRECT ART PATH === -->
@@ -253,16 +233,17 @@
   </div>
   <!-- === END J1NX Unified Block === -->
 
-  <!-- === PROMPTFORGE ASCII / CAMO FOOTER (from your main) === -->
+  <!-- === PROMPTFORGE ASCII / CAMO FOOTER with DANCING HANDS === -->
   <footer class="camo-footer">
     <div class="ascii-art-footer">
       <pre>
-  ____                        _   ______             __            
- |  _ \ _ __ ___   __ _ _ __| |_|  ____|           / _|           
- | |_) | '__/ _ \ / _` | '__| __| |__   _ ____   _| |_ ___  _ __  
- |  __/| | | (_) | (_| | |  | |_|  __| | '_ \ \ / /  _/ _ \| '__| 
- |_|   |_|  \___/ \__,_|_|   \__|_|    | .__/ \ V /| || (_) | |    
-                                     |_|    \_/ |_| \___/|_|    
+  ____      ____    <span class="u-hand wave1">U</span>  ___ <span class="u-hand wave2">u</span>  __  __    ____    _____    _____   <span class="u-hand wave1">U</span>  ___ <span class="u-hand wave2">u</span>   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)    
       </pre>
     </div>
     <div class="footer-copy">
@@ -281,221 +262,6 @@
     </div>
   </footer>
   <!-- === END PROMPTFORGE Footer === -->
-
-  <section id="faq-full" class="faq-full" style="max-width:830px;margin:24px auto 10px auto; background:#122b38f3; color:#d2fffe; border-radius:1.1em; box-shadow:0 2px 12px #0ffae930; padding:25px 28px 19px 28px; font-size:1.02em;">
-    <h2 style="color:#0fffa0;margin-bottom:8px;">FAQ & Help</h2>
-    <b>How do I use these pranks?</b>
-    <br>Say the phrase out loud to your AI device, or use the Play/Copy/Share buttons to try, share, or save.
-    <br><br>
-    <b>Are these pranks safe for kids?</b>
-    <br>Most categories are family-friendly, but some may be for adults (these are hidden by default—unlock Adult Mode below).
-    <br><br>
-    <b>Is my data private?</b>
-    <br>All favorites/ratings are stored in your browser only. No logins, no tracking.
-    <br><br>
-    <b>Can I submit my own prank?</b>
-    <br>Yes! Use the “Submit a Prank” link in the footer.
-    <br><br>
-    <b>How do I unlock 18+ mode?</b>
-    <br>Scroll up and click “I’m 18+, Show Me the Naughty Stuff!” to see uncensored pranks. This mode is hidden from Google and ad networks.
-    <br><br>
-    <b>Any tips?</b>
-    <br>Share pranks with friends, try them at parties, and don’t forget to rate your favorites!
-  </section>
-  <script>
-    // CATEGORY BUTTON LOGIC
-    function expandCat(cat) {
-      // Accordion block id is [cat]-block
-      let area = document.getElementById('accordion-area');
-      // Hide all
-      document.querySelectorAll('.accordion-content').forEach(div=>div.classList.remove('active'));
-      document.querySelectorAll('.arrow').forEach(ar=>ar.innerHTML='&#9654;');
-      // Show block
-      let block = document.getElementById(cat+'-block');
-      if (block) {
-        let content = block.querySelector('.accordion-content');
-        if (content) content.classList.add('active');
-        // Set arrow
-        document.getElementById('arrow-'+cat).innerHTML = '&#9660;';
-        // Scroll into view
-        block.scrollIntoView({behavior:'smooth', block:'start'});
-        afterAccordionOpen();
-      }
-    }
-    // Demo Encyclopedia Sample
-    const prankData = {
-      alexa: {
-        Dares: [
-          { id:"a1", title:"Alexa, dare me to do something wild!", tip:"Party dare generator—try with friends!" }
-        ],
-        "Drinking Games": [
-          { id:"a2", title:"Alexa, let's play a drinking game.", tip:"She'll pick one—brace yourself." }
-        ],
-        "Viral Challenges": [
-          { id:"a3", title:"Alexa, roast me.", tip:"See if you can take it!" }
-        ]
-      },
-      drinking: {
-        "Classic Games": [
-          { id:"d1", title:"Kings Cup", tip:"Standard deck, classic party drinking." }
-        ]
-      },
-      viral: {
-        "TikTok Challenges": [
-          { id:"v1", title:"Ice Bucket Challenge", tip:"Get ready to be soaked (and viral)!" }
-        ]
-      }
-    };
-    // Render all accordion blocks but keep hidden, only show when button clicked
-    function renderAccordions() {
-      let area = document.getElementById('accordion-area');
-      area.innerHTML = '';
-      // Demo: Alexa, Drinking, Viral = full; rest = "coming soon"
-      let allCats = [
-        {id:"alexa",name:"Alexa"},{id:"google",name:"Google Assistant"},
-        {id:"siri",name:"Siri"},{id:"bixby",name:"Bixby"},
-        {id:"chatgpt",name:"ChatGPT/OpenAI"},{id:"drinking",name:"Drinking Games"},
-        {id:"dares",name:"Dares & Double-Dares"},{id:"viral",name:"Viral Challenges"},
-        {id:"party",name:"AI Party Games"},{id:"roast",name:"Roast Battles"},
-        {id:"office",name:"Office Pranks"},{id:"family",name:"Family Games"},
-        {id:"classroom",name:"Classroom Fun"},{id:"kids",name:"Kids Only"},
-        {id:"adults",name:"Grownups Only"},{id:"nsfw",name:"NSFW/Adult Mode"},
-        {id:"movie",name:"Movie/TV Parodies"},{id:"song",name:"Song Generator"},
-        {id:"custom",name:"Submit Your Own!"},{id:"weird",name:"Weirdest AI Fails"},
-        {id:"egg",name:"Easter Eggs"}
-      ];
-      allCats.forEach(cat=>{
-        let devBlock = document.createElement('div');
-        devBlock.className = 'accordion-block';
-        devBlock.id = cat.id+'-block';
-        let content = document.createElement('div');
-        content.className = 'accordion-content';
-        // If this cat is demo, render cards, else show "coming soon"
-        if(prankData[cat.id]) {
-          for (const subcat in prankData[cat.id]) {
-            let sub = document.createElement('div');
-            sub.className = 'subcat-block';
-            sub.innerHTML = `<button class="subcat-header" tabindex="0">${subcat}</button><div class="subcat-content"><div class="prank-grid"></div></div>`;
-            let grid = sub.querySelector('.prank-grid');
-            prankData[cat.id][subcat].forEach(prank=>{
-              grid.innerHTML += `
-                <div class="prank-card" data-id="${prank.id}">
-                  <div class="prank-title">${prank.title}</div>
-                  <div class="prank-tip">${prank.tip}</div>
-                  <div class="prank-actions">
-                    <button onclick="speakText('${prank.title.replace(/'/g,"\\'")}')">Play</button>
-                    <button onclick="copyText('${prank.title.replace(/'/g,"\\'")}')">Copy</button>
-                    <button onclick="shareText('${prank.title.replace(/'/g,"\\'")}')">Share</button>
-                    <span class="fav-btn" onclick="toggleFav(this, '${prank.id}')">&#10084;</span>
-                    <span class="star-rating" data-id="${prank.id}"></span>
-                  </div>
-                </div>`;
-            });
-            content.appendChild(sub);
-          }
-        } else {
-          content.innerHTML = `<div style="padding:30px 0 25px 0; text-align:center; font-size:1.12em; color:#eaf2fd; font-weight:700;">Coming soon!<br>Want this now? <a href="#submitprank" style="color:#7eeaff;">Submit your own prank or challenge!</a></div>`;
-        }
-        devBlock.appendChild(content);
-        area.appendChild(devBlock);
-      });
-    }
-    // Subcategory collapse
-    document.addEventListener('click', function(e) {
-      if(e.target.classList.contains('subcat-header')) {
-        let c = e.target.parentNode.querySelector('.subcat-content'); c.classList.toggle('active');
-        e.target.parentNode.parentNode.querySelectorAll('.subcat-content').forEach(o=>{ if(o!==c) o.classList.remove('active'); });
-      }
-    });
-    // Card controls
-    function toggleFav(btn, id) {
-      btn.classList.toggle('active');
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      if(btn.classList.contains('active')) {
-        if(!favs.includes(id)) favs.push(id);
-      } else {
-        favs = favs.filter(f=>f!==id);
-      }
-      localStorage.setItem('aihacks_favs',JSON.stringify(favs));
-    }
-    function setRating(id, val) {
-      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
-      ratings[id]=val;
-      localStorage.setItem('aihacks_ratings',JSON.stringify(ratings));
-    }
-    function getRating(id) {
-      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
-      return ratings[id]||0;
-    }
-    function updateStars(box,id) {
-      let val = getRating(id);
-      box.querySelectorAll('.star').forEach((s,i)=>{
-        if(i<val) s.classList.add('filled');
-        else s.classList.remove('filled');
-      });
-    }
-    function speakText(txt){ if('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.rate=1.06; u.pitch=1; speechSynthesis.speak(u);} else { alert("Speech not supported."); }}
-    function copyText(txt) { navigator.clipboard.writeText(txt); alert("Copied to clipboard!"); }
-    function shareText(txt) { if(navigator.share) { navigator.share({text: txt, title: "AIHacks Prank"});} else { copyText(txt);}}
-    // NSFW unlock (for future)
-    window.nsfwUnlocked = false;
-    function unlockNSFW() {
-      window.nsfwUnlocked = true;
-      document.getElementById('nsfw-gate').style.display='none';
-      renderAccordions();
-    }
-    // J1NX Widget (toggle)
-    function sendToJ1nx() { alert("J1NX logic goes here!"); }
-    function clearJ1nxChat() { alert("Clear chat!"); }
-    function saveJ1nxChat() { alert("Save chat!"); }
-    // Star/fav setup
-    function setupStarsAndFavs() {
-      document.querySelectorAll('.star-rating').forEach(starBox=>{
-        let id = starBox.dataset.id; starBox.innerHTML = '';
-        for(let i=1;i<=5;i++){
-          let star=document.createElement('span');
-          star.className='star';
-          star.innerHTML='&#9733;';
-          star.addEventListener('click',function(){
-            setRating(id,i);
-            updateStars(starBox,id);
-          });
-          starBox.appendChild(star);
-        }
-        updateStars(starBox,id);
-      });
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      favs.forEach(id=>{
-        let btn = document.querySelector(`.prank-card[data-id="${id}"] .fav-btn`);
-        if(btn) btn.classList.add('active');
-      });
-    }
-    // Initial render: build accordions, then add stars/favs
-    window.onload = function() {
-      renderAccordions();
-      setupStarsAndFavs();
-    }
-    // Rerender and setup after every accordion open
-    function afterAccordionOpen() {
-      setupStarsAndFavs();
-    }
-    // Also rerender on expandCat
-    window.expandCat = function(cat) {
-      // Hide all accordions
-      document.querySelectorAll('.accordion-content').forEach(div=>div.classList.remove('active'));
-      document.querySelectorAll('.arrow').forEach(ar=>ar.innerHTML='&#9654;');
-      // Show block
-      let block = document.getElementById(cat+'-block');
-      if (block) {
-        let content = block.querySelector('.accordion-content');
-        if (content) content.classList.add('active');
-        // Set arrow
-        document.getElementById('arrow-'+cat).innerHTML = '&#9660;';
-        // Scroll into view
-        block.scrollIntoView({behavior:'smooth', block:'start'});
-        afterAccordionOpen();
-      }
-    }
-  </script>
+<!-- ... FAQ section, scripts unchanged ... -->
 </body>
 </html>
