@@ -78,7 +78,7 @@
     .main-panel {margin:0 auto; max-width:1000px;}
     .ad-slot {margin:13px 0 13px 0; padding:7px 0; text-align:center; background:#061c1eb0; color:#9beaff; border-radius:0.7em; font-size:0.97em; font-weight:500; box-shadow:0 1px 6px #1cebf911;}
     /* ... rest of your styles unchanged ... */
-    /* === COMPACT ASCII FOOTER with GENTLE DANCING HANDS === */
+    /* === TIGHT ANSI FOOTER, DANCING HANDS === */
     .camo-footer {
       width: 100vw; background: repeating-linear-gradient(-45deg, #222, #232a28 30px, #1a241e 60px, #181f1e 80px, #232a28 110px, #222 120px);
       color: #0fffa6; padding: 0 0 9px 0; font-family: 'Fira Mono', monospace; border-top: 2px solid #0ff6;
@@ -86,78 +86,95 @@
       animation: camoScroll 15s linear infinite;
     }
     @keyframes camoScroll {0%{background-position:0 0;}100%{background-position:-400px 0;}}
-    .ascii-art-footer pre {
+    .ascii-art-footer { 
       font-family: 'Fira Mono', monospace;
-      font-size: 0.89em; /* much smaller */
+      font-size: 1em;
       color: #0ff8e0;
-      background: transparent;
-      line-height:1.09;
-      filter: drop-shadow(0 0 2px #0ff9);
-      letter-spacing: 0.09em;
-      white-space: pre-line;
-      margin: 7px auto 0 auto;
+      line-height:1.04;
+      letter-spacing: 0.06em;
+      margin: 0 auto 4px auto;
       text-align: center;
-      position: relative;
+      white-space: pre;
+      background: none;
+      padding: 0;
     }
     .u-hand {
       display: inline-block;
       animation: handwave 2.8s cubic-bezier(.7,0,.3,1) infinite alternate;
       font-weight: bold;
+      font-size: 1.08em;
     }
-    .wave1 { animation-delay: 0s;}
-    .wave2 { animation-delay: 1.4s;}
     @keyframes handwave {
       0%   { transform: translateY(0); color: #0fffa0;}
-      30%  { transform: translateY(-5px) scale(1.09); color: #fff9a1;}
-      50%  { transform: translateY(-7px) scale(1.11); color: #fa71ff;}
-      80%  { transform: translateY(2px) scale(1.05); color: #3afaff;}
+      30%  { transform: translateY(-3px) scale(1.08); color: #fff9a1;}
+      55%  { transform: translateY(-5px) scale(1.13); color: #fa71ff;}
+      80%  { transform: translateY(1.7px) scale(1.04); color: #3afaff;}
       100% { transform: translateY(0); color: #0fffa0;}
     }
+    .footer-copy {font-family:'Fira Mono',monospace;font-size:.96em; color:#18ffd2; margin-top:2px; margin-bottom:2px;}
+    .footer-copy a {color:#0fffa0;text-decoration:none;margin:0 12px;}
+    .footer-copy a:hover{color:#fff;}
+    .footer-legal {font-family:'Fira Mono',monospace;font-size:.95em; color:#baffde; margin:7px 0 4px 0; opacity:.87;}
+    /* === J1NX AI Chat Bubble (bottom-right) === */
+    .j1nx-float { position: fixed; right: 2vw; bottom: 2vw; z-index: 10000;}
+    .j1nx-bubble-wrap { display:flex; flex-direction:column; align-items:flex-end; }
+    .j1nx-avatar {
+      width: 110px; height: 210px; background: url('j1nx/j1nx_cutout.png') no-repeat center center/contain;
+      margin-bottom: -19px; filter: drop-shadow(0 0 20px #6ff) drop-shadow(0 0 12px #0ffb) brightness(1.1);
+      border-radius: 28px 28px 46px 46px; box-shadow: 0 2px 19px #00f7ff44;
+    }
+    .j1nx-chat {
+      background: #141d21f7; color: #fff; font-family: 'Fira Mono', monospace;
+      font-size: 1.06em; border-radius: 17px; padding: 17px 21px 15px 18px;
+      box-shadow: 0 6px 33px #0ff8, 0 2px 22px #0ff4 inset;
+      min-width: 270px; max-width: 350px; margin-bottom:7px;
+      border:2.5px solid #4ffb; position:relative;
+      animation: j1nxGlow 3s infinite alternate;
+    }
+    @keyframes j1nxGlow {0%{box-shadow:0 6px 33px #0ff8,0 2px 22px #0ff4 inset;}100%{box-shadow:0 6px 45px #fff8,0 2px 30px #0ffb inset;}}
+    .j1nx-chat b {color:#0fffa0;}
+    .j1nx-chat input[type="text"] {
+      width: 77%; background: #181f22; color: #fff; border: 1.2px solid #0ff9; border-radius: 10px; font-size:1em;
+      padding: 6px 8px; margin: 10px 6px 10px 0; font-family: inherit;
+    }
+    .j1nx-chat button {background:#000;color:#0ff;border:1.6px solid #0ff; border-radius:8px;font-weight:bold;font-size:1em;padding:7px 14px; cursor:pointer;}
+    .j1nx-chat button:hover {background:#011d1e;color:#fff;}
+    .j1nx-chat .j1nx-chat-row{display:flex;align-items:center;gap:6px;}
+    .j1nx-chat .j1nx-chat-tip{font-size:0.96em;opacity:0.72;margin-top:8px;}
   </style>
 </head>
 <body>
-  <!-- ... header, hero art, desc-seo ... -->
+  <!-- ... HEADER, HERO ART, DESCRIPTION, CATEGORY BUTTONS, PRANK LIST, ETC ... -->
 
-  <!-- === CATEGORY BUTTONS ROW (FULL LIST, CORRECT COLORS) === -->
-  <div class="category-row" id="category-row">
-    <button class="category-btn cat-alexa" onclick="expandCat('alexa')"><span class="arrow" id="arrow-alexa">&#9654;</span>Alexa</button>
-    <button class="category-btn cat-google" onclick="expandCat('google')"><span class="arrow" id="arrow-google">&#9654;</span>Google Assistant</button>
-    <button class="category-btn cat-siri" onclick="expandCat('siri')"><span class="arrow" id="arrow-siri">&#9654;</span>Siri</button>
-    <button class="category-btn cat-bixby" onclick="expandCat('bixby')"><span class="arrow" id="arrow-bixby">&#9654;</span>Bixby</button>
-    <button class="category-btn cat-chatgpt" onclick="expandCat('chatgpt')"><span class="arrow" id="arrow-chatgpt">&#9654;</span>ChatGPT</button>
-    <button class="category-btn cat-drinking" onclick="expandCat('drinking')"><span class="arrow" id="arrow-drinking">&#9654;</span>Drinking Games</button>
-    <button class="category-btn cat-dares" onclick="expandCat('dares')"><span class="arrow" id="arrow-dares">&#9654;</span>Dares & Double-Dares</button>
-    <button class="category-btn cat-viral" onclick="expandCat('viral')"><span class="arrow" id="arrow-viral">&#9654;</span>Viral Challenges</button>
-    <button class="category-btn cat-party" onclick="expandCat('party')"><span class="arrow" id="arrow-party">&#9654;</span>AI Party Games</button>
-    <button class="category-btn cat-roast" onclick="expandCat('roast')"><span class="arrow" id="arrow-roast">&#9654;</span>Roast Battles</button>
-    <button class="category-btn cat-office" onclick="expandCat('office')"><span class="arrow" id="arrow-office">&#9654;</span>Office Pranks</button>
-    <button class="category-btn cat-family" onclick="expandCat('family')"><span class="arrow" id="arrow-family">&#9654;</span>Family Games</button>
-    <button class="category-btn cat-classroom" onclick="expandCat('classroom')"><span class="arrow" id="arrow-classroom">&#9654;</span>Classroom Fun</button>
-    <button class="category-btn cat-kids" onclick="expandCat('kids')"><span class="arrow" id="arrow-kids">&#9654;</span>Kids Only</button>
-    <button class="category-btn cat-adults" onclick="expandCat('adults')"><span class="arrow" id="arrow-adults">&#9654;</span>Grownups Only</button>
-    <button class="category-btn cat-nsfw" onclick="expandCat('nsfw')"><span class="arrow" id="arrow-nsfw">&#9654;</span>NSFW / Adult Mode</button>
-    <button class="category-btn cat-movie" onclick="expandCat('movie')"><span class="arrow" id="arrow-movie">&#9654;</span>Movie/TV Parodies</button>
-    <button class="category-btn cat-song" onclick="expandCat('song')"><span class="arrow" id="arrow-song">&#9654;</span>Song Generator</button>
-    <button class="category-btn cat-custom" onclick="expandCat('custom')"><span class="arrow" id="arrow-custom">&#9654;</span>Submit Your Own!</button>
-    <button class="category-btn cat-weird" onclick="expandCat('weird')"><span class="arrow" id="arrow-weird">&#9654;</span>Weirdest AI Fails</button>
-    <button class="category-btn cat-egg" onclick="expandCat('egg')"><span class="arrow" id="arrow-egg">&#9654;</span>Easter Eggs</button>
+  <!-- === J1NX (bottom-right, always) === -->
+  <div class="j1nx-float">
+    <div class="j1nx-bubble-wrap">
+      <div class="j1nx-avatar"></div>
+      <div class="j1nx-chat">
+        <b>J1nx:</b> Hey you 👾—I'm J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)
+        <form class="j1nx-chat-row" onsubmit="event.preventDefault(); sendToJ1nx();">
+          <input type="text" id="j1nx-input" maxlength="120" autocomplete="off" placeholder="Say something to J1nx..." />
+          <button type="submit">Send</button>
+          <button type="button" onclick="clearJ1nxChat()">Clear Chat</button>
+          <button type="button" onclick="saveJ1nxChat()">Save Chat</button>
+        </form>
+        <div class="j1nx-chat-tip">Double-tap the chat bubble or type <b>unlock</b> to reveal NSFW mode…</div>
+      </div>
+    </div>
   </div>
-  <!-- ... rest of content unchanged ... -->
-  <!-- === PROMPTFORGE ASCII / CAMO FOOTER with DANCING HANDS (small/tight) === -->
+
+  <!-- === ANSI/CAMO FOOTER: Tight, Dancing Hands, Socials, Legal === -->
   <footer class="camo-footer">
     <div class="ascii-art-footer">
-      <pre>
-  ____      ____    <span class="u-hand wave1">U</span>  ___ <span class="u-hand wave2">u</span>  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)    
-      </pre>
+      u| _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/ <span class="u-hand">U</span> <span class="u-hand">u</span>
+      \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+       |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+       |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+       ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+      (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
     </div>
     <div class="footer-copy">
-      Made underground in BC, Canada &middot; <span id="footer-social-bar">
+      Made underground in BC, Canada &middot; 
       <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> &middot;
       <a href="https://x.com/GoreandGiggles" target="_blank">Twitter/X</a> &middot;
       <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook</a> &middot;
@@ -165,11 +182,16 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       <a href="#faq-full">FAQ/Help</a> &middot;
       <a href="mailto:0fearnofish0@gmail.com">Contact</a> &middot;
       <a href="#submitprank">Submit a Prank</a>
-      </span>
     </div>
     <div class="footer-legal">
       &copy; 2025 PromptForge / Gore and Giggles. All pranks are for entertainment only. Not affiliated with Amazon, Google, Apple, or Samsung.
     </div>
   </footer>
+  <script>
+    // Animate just the last pair of u/U hands in footer
+    document.querySelectorAll('.u-hand').forEach(function(el,i){
+      el.style.animationDelay = (i*1.1)+'s';
+    });
+  </script>
 </body>
 </html>
