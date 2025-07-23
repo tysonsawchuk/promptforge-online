@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AIHacks: Viral Encyclopedia of AI Pranks, Games, & Challenges</title>
+  <title>AIHacks: Encyclopedia of AI Pranks, Games, & Challenges</title>
   <meta name="description" content="The world’s #1 encyclopedia of viral, shareable AI pranks, games, and challenges for Alexa, Google, Siri & more. Stay-and-play, party-ready fun, always fresh!">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="AIHacks: Viral Encyclopedia of AI Pranks, Games, & Challenges">
+  <meta property="og:title" content="AIHacks: Encyclopedia of AI Pranks, Games, & Challenges">
   <meta property="og:description" content="The world’s best, most viral encyclopedia of AI pranks, party dares, and games for Alexa, Google, Siri & more!">
   <meta property="og:image" content="assets/bg-roulette.jpg">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://yourdomain.com/aihacks.html">
+  <meta property="og:url" content="https://promptforge.online/aihacks.html">
+  <meta name="google-adsense-account" content="ca-pub-4963053724895140">
   <link rel="icon" href="assets/favicon.ico">
+  <!-- Google AdSense Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140"
+     crossorigin="anonymous"></script>
   <style>
-    html, body {
-      height: 100%; margin: 0; padding: 0;
-    }
+    html, body {height:100%; margin:0; padding:0;}
     body {
       background: #121926 url('assets/bg-roulette.jpg') no-repeat center center fixed;
       background-size: cover;
@@ -23,346 +25,196 @@
       min-height: 100vh;
       overflow-x: hidden;
     }
+    /* Header and Breadcrumbs */
     header {
-      background: rgba(10,20,28,0.87);
-      padding: 24px 0 8px 0;
+      width: 100vw;
+      background: rgba(10,20,28,0.86);
+      padding: 0;
+      z-index: 30;
+      position: fixed;
+      top: 0; left: 0;
       border-bottom: 1.5px solid #222c39;
-      text-align: center;
-      letter-spacing: 1px;
-      z-index: 30;
-      position: relative;
     }
-    header .brand {
-      font-size: 2.3rem;
-      font-weight: bold;
-      background: linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 2px 14px #18c6fa50;
-      margin-bottom: 2px;
-      display: inline-block;
+    .header-inner {
+      max-width: 1050px; margin: 0 auto; padding: 6px 10px 2px 10px;
+      display: flex; flex-direction: column; align-items: flex-start;
     }
-    header nav {
-      margin-top: 6px;
-      font-size: 1rem;
+    .breadcrumbs {
+      font-size: 0.98em;
+      color: #86d1ee;
+      margin: 2px 0 0 2px;
+      letter-spacing: 0.03em;
       opacity: .8;
+      font-weight: 500;
     }
-    header nav a {
-      color: #77e3fc;
-      margin: 0 12px;
+    .breadcrumbs a {
+      color: #6beaff;
       text-decoration: none;
-      transition: color 0.2s;
+      margin: 0 5px;
+      transition: color 0.19s;
     }
-    header nav a:hover { color: #35f7e0; }
-
-    /* --- INVISIBLE HOTSPOTS --- */
+    .breadcrumbs a:hover { color: #0ff6c5; }
+    .header-main {
+      width: 100%; display: flex; justify-content: space-between; align-items: center;
+      margin-top: 0px;
+    }
+    .brand {
+      font-size: 1.36rem; font-weight: bold; letter-spacing:0.03em;
+      background: linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 1px 8px #18c6fa42;
+      margin: 2px 10px 0 0; display: inline-block;
+    }
+    nav {
+      font-size: 0.97em; opacity: .87;
+      display: flex; gap: 12px;
+    }
+    nav a {
+      color: #77e3fc;
+      text-decoration: none;
+      transition: color 0.19s;
+      font-weight: 600;
+    }
+    nav a:hover { color: #35f7e0; }
+    /* Main Art: takes up 61vh, no overlays, fixed hotspots only */
+    .art-area { position: relative; width: 100vw; height: 61vh; }
+    /* Hotspots - totally transparent */
     .ai-hotspot {
-      position: absolute;
-      z-index: 30;
-      cursor: pointer;
-      /* NO background, NO glow, NO border, fully transparent! */
-      background: transparent;
-      opacity: 1;
-      transition: outline 0.16s;
-      outline: none;
+      position: absolute; z-index: 30; cursor: pointer;
+      background: transparent; opacity: 1; border: none; outline:none;
     }
-    /* Show outline on focus for accessibility only */
-    .ai-hotspot:focus { outline: 2.5px dashed #44fadd; }
-
-    /* Adjust these as needed for pixel-perfect hotspot placement! */
-    #alexa-hotspot { left: 6vw; top: 48vh; width: 9vw; height: 19vh; }
-    #google-hotspot { left: 37vw; top: 45vh; width: 11vw; height: 20vh; }
-    #siri-hotspot { left: 74vw; top: 46vh; width: 10vw; height: 19vh; }
-
-    /* --- PANEL BELOW ART --- */
+    .ai-hotspot:focus { outline: 2px dashed #44fadd; }
+    /* Placement, adjust as needed */
+    #alexa-hotspot { left: 6vw; top: 32vh; width: 10vw; height: 20vh; }
+    #google-hotspot { left: 37vw; top: 28vh; width: 12vw; height: 22vh; }
+    #siri-hotspot { left: 74vw; top: 30vh; width: 10vw; height: 19vh; }
+    /* Description Bar */
+    .desc-bar {
+      max-width: 950px; margin: 0 auto; margin-top: 11px;
+      background: rgba(10,28,44,0.90);
+      border-radius: 1.5em;
+      padding: 12px 18px 11px 18px;
+      font-size: 1.05em; color: #baf3fa; text-align: center;
+      box-shadow: 0 1px 18px #24eaff24;
+    }
+    /* Prank List Panel */
     .main-panel {
-      margin: 64vh auto 0 auto;
+      margin: 22px auto 0 auto;
       max-width: 950px;
       background: rgba(0,0,0,0.91);
       border-radius: 2.1rem;
       box-shadow: 0 4px 42px #08ffff18;
-      padding: 36px 28px 36px 28px;
-      min-height: 440px;
+      padding: 26px 18px 26px 18px;
       position: relative;
       z-index: 2;
+      margin-top: 19px;
     }
-    /* Accordion & prank cards as before (collapsible) */
-    .accordion-block {
-      margin-bottom: 22px;
-      border-radius: 1.6rem;
-      overflow: hidden;
-      background: linear-gradient(110deg,#181f28 80%,#18d8fb11 100%);
-      box-shadow: 0 2px 16px #33c9ff19;
-    }
-    .accordion-header {
-      cursor: pointer;
-      background: linear-gradient(90deg,#202c37 80%,#35f7e023 100%);
-      padding: 20px 30px 20px 38px;
-      font-size: 1.43rem;
-      font-weight: 700;
-      color: #55fff2;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      transition: background 0.17s;
-    }
-    .accordion-header:hover { background: #14495aee; }
-    .accordion-header .icon {
-      margin-right: 16px;
-      font-size: 1.7rem;
-      filter: drop-shadow(0 0 6px #27f5f9aa);
-    }
-    .accordion-content {
-      display: none;
-      background: #191c22ef;
-      padding: 0 0 30px 0;
-      animation: fadeIn 0.4s;
-    }
-    .accordion-content.active { display: block; }
-    .subcat-block {
-      margin: 18px 24px 18px 24px;
-      border-radius: 1rem;
-      background: linear-gradient(90deg,#151e2bda 60%,#18d8fb0e 100%);
-      box-shadow: 0 2px 10px #24eaff11;
-    }
-    .subcat-header {
-      cursor: pointer;
-      padding: 12px 28px;
-      font-size: 1.09rem;
-      color: #3ff8e6;
-      font-weight: 600;
-      background: #163c49cc;
-      border-bottom: 1px solid #1d2f35;
-      transition: background 0.15s;
-      border-radius: 1rem 1rem 0 0;
-      display: flex;
-      align-items: center;
-      user-select: none;
-    }
-    .subcat-header:hover { background: #145669e9; }
-    .subcat-content {
-      display: none;
-      padding: 15px 13px 2px 13px;
-      background: #191e23b0;
-      border-radius: 0 0 1rem 1rem;
-      animation: fadeIn 0.38s;
-    }
-    .subcat-content.active { display: block; }
-    .prank-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(245px,1fr));
-      gap: 18px;
-      margin: 0 0 18px 0;
-    }
-    .prank-card {
-      background: linear-gradient(110deg,#101b25 85%,#19e4f623 100%);
-      border-radius: 1.18rem;
-      box-shadow: 0 2px 24px #2cfffa22;
-      padding: 19px 15px 15px 15px;
-      min-height: 110px;
-      position: relative;
-      transition: transform 0.15s, box-shadow 0.19s;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1.5px solid #23faff13;
-      opacity: 0.97;
-    }
-    .prank-card:hover {
-      transform: scale(1.035);
-      box-shadow: 0 0 32px #00f0ff77;
-      border: 1.5px solid #3ff8e6;
-      z-index: 2;
-    }
-    .prank-title {
-      font-size: 1.11rem;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #49e7fe;
-      text-shadow: 0 1px 8px #17d9ff60;
-    }
-    .prank-tip {
-      font-size: 0.96rem;
-      color: #d0fffb;
-      opacity: 0.77;
-      margin-bottom: 6px;
-    }
-    .prank-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .prank-actions button, .prank-actions .fav-btn {
-      background: linear-gradient(90deg,#1fffa0c0 70%,#39f4f2e1 100%);
-      border: none;
-      color: #123f48;
-      font-weight: bold;
-      border-radius: 1.2em;
-      padding: 6px 13px;
-      font-size: 1.04rem;
-      cursor: pointer;
-      transition: background 0.17s, color 0.19s, box-shadow 0.17s;
-      box-shadow: 0 0 10px #21ffe944;
-      outline: none;
-      min-width: 44px;
-    }
-    .prank-actions button:hover, .prank-actions .fav-btn.active {
-      background: linear-gradient(90deg,#12d9b4 40%,#18d8fb 100%);
-      color: #fff;
-      box-shadow: 0 2px 18px #18d8fb44;
-    }
-    .prank-actions .fav-btn {
-      font-size: 1.09rem;
-      color: #ff57ae;
-      background: #2c3a44;
-      border: 1.5px solid #ff57ae60;
-      transition: background 0.16s, color 0.19s;
-      min-width: 35px;
-    }
-    .prank-actions .fav-btn.active { color: #fff; background: #ff57ae; }
-    .star-rating {
-      display: flex;
-      align-items: center;
-      margin-left: 5px;
-      font-size: 1.13em;
-      user-select: none;
-      cursor: pointer;
-    }
-    .star-rating .star {
-      color: #ffd700b7;
-      margin-right: 1px;
-      transition: color 0.18s;
-    }
-    .star-rating .star.filled { color: #fff530; text-shadow: 0 0 8px #fffc6b99; }
-    .ad-slot {
-      margin: 20px 0 22px 0;
-      padding: 14px 0;
-      text-align: center;
-      background: #061c1ed0;
-      color: #9beaff;
-      border-radius: 0.8rem;
-      font-size: 1.09rem;
-      font-weight: 500;
-      box-shadow: 0 2px 12px #20e9f522;
-    }
-    /* --- SEARCH & LANG --- */
     .search-lang-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; margin-bottom: 10px; margin-top: 0px;
     }
     .search-box {
-      flex: 1;
-      border-radius: 16px;
-      border: none;
-      padding: 9px 18px;
-      font-size: 1.08em;
-      background: #212325;
-      color: #fafafa;
-      margin-right: 8px;
+      flex: 1; border-radius: 12px; border: none; padding: 5px 14px;
+      font-size: 0.97em; background: #232527; color: #fafafa; margin-right: 6px;
+      min-width: 100px;
     }
     .lang-select {
-      border-radius: 12px;
-      border: none;
-      padding: 7px 14px;
-      font-size: 1em;
-      background: #282e39;
-      color: #8ff;
+      border-radius: 9px; border: none; padding: 6px 11px; font-size: 0.97em;
+      background: #282e39; color: #8ff;
     }
-    /* J1NX Widget as before (floating corner, bubble, etc.) */
-    #j1nx-float {
-      position: fixed;
-      right: 2vw; bottom: 3vh;
-      min-width: 90px; max-width: 120px;
-      z-index: 9000;
-      display: flex; flex-direction: column; align-items: center;
-      pointer-events: auto;
+    /* Accordion & Prank Cards (compact!) */
+    .accordion-block { margin-bottom: 18px; border-radius: 1.2em; background: #161b21; box-shadow: 0 1px 8px #29f6f913;}
+    .accordion-header { cursor: pointer; background: #232b33; padding: 13px 18px; font-size: 1.02rem; font-weight: 700; color: #68f8fc; user-select: none; display: flex; align-items: center; }
+    .accordion-header .icon { margin-right: 12px; font-size: 1.23rem; filter: drop-shadow(0 0 4px #27f5f988);}
+    .accordion-header:hover { background: #143d46; }
+    .accordion-content { display: none; background: #13171be6; padding: 0 0 22px 0; animation: fadeIn 0.3s; }
+    .accordion-content.active { display: block; }
+    .subcat-block { margin: 11px 12px 9px 12px; border-radius: 1em; background: #181e22b2; }
+    .subcat-header { cursor: pointer; padding: 8px 16px; font-size: 0.98rem; color: #22eaff; font-weight: 600; background: #132c39bd; border-bottom: 1px solid #1a2c3d; border-radius: 1em 1em 0 0; display: flex; align-items: center; user-select: none; }
+    .subcat-header:hover { background: #154b69b0; }
+    .subcat-content { display: none; padding: 11px 11px 2px 11px; background: #181e23b0; border-radius: 0 0 1em 1em; animation: fadeIn 0.27s;}
+    .subcat-content.active { display: block; }
+    .prank-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(188px,1fr)); gap: 13px; margin: 0 0 13px 0;}
+    .prank-card { background: #151b26; border-radius: 1em; box-shadow: 0 1px 7px #2cfffa21; padding: 9px 8px 7px 9px; min-height: 79px; position: relative; transition: transform 0.13s, box-shadow 0.14s; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid #22b9dd12; opacity: 0.96; font-size: 0.97em; }
+    .prank-card:hover { transform: scale(1.025); box-shadow: 0 0 16px #1ac9f988; border: 1.2px solid #1ff8ed; }
+    .prank-title { font-size: 1em; font-weight: bold; margin-bottom: 2px; color: #43e2fd; text-shadow: 0 1px 4px #17d9ff40; }
+    .prank-tip { font-size: 0.93em; color: #b8fdff; opacity: 0.77; margin-bottom: 4px; }
+    .prank-actions { display: flex; align-items: center; gap: 6px; margin-top: 5px; }
+    .prank-actions button, .prank-actions .fav-btn {
+      background: #212b36; border: none; color: #61e5fe; font-weight: 500; border-radius: 0.98em; padding: 2.5px 7px; font-size: 0.94em; cursor: pointer; transition: background 0.13s, color 0.17s, box-shadow 0.14s; box-shadow: 0 0 5px #1dffe922; outline: none; min-width: 32px;
     }
-    #j1nx-cutout {
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      background: url('assets/j1nx_cutout.png') no-repeat center center/contain;
-      margin-bottom: -13px;
-      box-shadow: 0 0 16px #00f7ff35;
-      cursor: pointer;
-      animation: j1nxBob 2.8s infinite ease-in-out;
-      border: 2.5px solid #fff0;
-      transition: border 0.17s, box-shadow 0.22s;
-    }
-    #j1nx-cutout:hover {
-      border: 2.5px solid #44ffc6;
-      box-shadow: 0 0 36px #44faddbb;
-    }
-    @keyframes j1nxBob {
-      0% { transform: translateY(0);}
-      50% { transform: translateY(-8px);}
-      100% { transform: translateY(0);}
-    }
-    #j1nx-bubble {
-      min-width: 180px;
-      max-width: 330px;
-      margin-bottom: 6px;
-      background: #222;
-      color: #fff;
-      border-radius: 25px 25px 25px 9px;
-      font-size: 1.09em;
-      line-height: 1.7;
-      box-shadow: 0 0 16px 4px #17eaff33, 0 2px 12px #0ff9b688;
-      padding: 14px 19px 12px 22px;
-      border: 2px solid #44ffe644;
-      position: relative;
-      opacity: 0.99;
-      z-index: 9001;
-      transition: box-shadow 0.22s, background 0.19s;
-      pointer-events: auto;
-      display: none;
-    }
-    .j1nx-bubble-mood-happy { box-shadow: 0 0 22px 8px #78ffb1aa, 0 2px 8px #181a1b88; }
-    .j1nx-bubble-mood-wicked { box-shadow: 0 0 24px 8px #fa528eaa, 0 2px 16px #181a1b88; }
-    .j1nx-bubble-mood-sultry { box-shadow: 0 0 28px 14px #cf74ffa7, 0 2px 16px #181a1b88; }
-    .j1nx-bubble-mood-caught { box-shadow: 0 0 38px 12px #ffd166cc, 0 2px 12px #181a1b88; background: #352013; }
-    #j1nx-chatlog { max-height: 110px; overflow-y: auto; }
-    #j1nx-typing { display:none; font-size:0.97em; opacity:0.78; margin-top:8px; }
-    #j1nx-input-row { display: flex; gap: 5px; margin: 7px 0 0 0; }
-    #j1nx-input { flex: 1; border-radius: 16px; border: none; padding: 7px 12px; font-size: 1em; background: #232527; color: #fafafa; }
-    #j1nx-btn { border: none; background: #ffc0cb; color: #3d1826; border-radius: 12px; padding: 6px 13px; font-weight: 600; cursor: pointer; }
+    .prank-actions button:hover, .prank-actions .fav-btn.active { background: #19e5b8; color: #fff; box-shadow: 0 1px 11px #18d8fb50; }
+    .prank-actions .fav-btn { font-size: 1.1em; color: #ff57ae; background: #2c3a44; border: 1px solid #ff57ae33; min-width: 26px;}
+    .prank-actions .fav-btn.active { color: #fff; background: #ff57ae; }
+    .star-rating { display: flex; align-items: center; margin-left: 3px; font-size: 1.05em; user-select: none; cursor: pointer;}
+    .star-rating .star { color: #ffd700b7; margin-right: 1px; transition: color 0.13s;}
+    .star-rating .star.filled { color: #fff530; text-shadow: 0 0 6px #fffc6b99;}
+    .ad-slot { margin: 13px 0 15px 0; padding: 9px 0; text-align: center; background: #061c1ec0; color: #9beaff; border-radius: 0.7em; font-size: 0.98em; font-weight: 500; box-shadow: 0 1px 7px #1cebf911;}
+    /* J1NX Widget */
+    #j1nx-float { position: fixed; right: 2vw; bottom: 3vh; min-width: 78px; max-width: 110px; z-index: 9000; display: flex; flex-direction: column; align-items: center; pointer-events: auto;}
+    #j1nx-cutout { width: 50px; height: 50px; border-radius: 50%; background: url('assets/j1nx_cutout.png') no-repeat center center/contain; margin-bottom: -10px; box-shadow: 0 0 12px #00f7ff35; cursor: pointer; animation: j1nxBob 2.4s infinite ease-in-out; border: 2px solid #fff0; transition: border 0.17s, box-shadow 0.19s;}
+    #j1nx-cutout:hover { border: 2px solid #44ffc6; box-shadow: 0 0 22px #44faddbb;}
+    @keyframes j1nxBob { 0% { transform: translateY(0);} 50% { transform: translateY(-7px);} 100% { transform: translateY(0);} }
+    #j1nx-bubble { min-width: 140px; max-width: 210px; margin-bottom: 4px; background: #222; color: #fff; border-radius: 20px 20px 20px 7px; font-size: 0.98em; line-height: 1.5; box-shadow: 0 0 10px 2px #17eaff22, 0 2px 8px #0ff9b622; padding: 10px 12px 8px 14px; border: 2px solid #44ffe644; position: relative; opacity: 0.99; z-index: 9001; transition: box-shadow 0.15s, background 0.13s; pointer-events: auto; display: none;}
+    #j1nx-chatlog { max-height: 75px; overflow-y: auto; }
+    #j1nx-typing { display:none; font-size:0.93em; opacity:0.75; margin-top:5px; }
+    #j1nx-input-row { display: flex; gap: 4px; margin: 5px 0 0 0; }
+    #j1nx-input { flex: 1; border-radius: 11px; border: none; padding: 5px 8px; font-size: 0.95em; background: #232527; color: #fafafa; }
+    #j1nx-btn { border: none; background: #ffc0cb; color: #3d1826; border-radius: 9px; padding: 4px 8px; font-weight: 500; cursor: pointer; font-size: 0.93em;}
     #j1nx-btn:hover { background: #ffd1dc; }
-    #j1nx-controls { display: flex; gap: 6px; margin: 6px 0 4px 0; }
-    #j1nx-toggle-label { font-size: 0.97em; color: #a9e; margin-left: 2px; }
-    #j1nx-easteregg { font-size: 0.92em; color: #ff7d8a; margin-top: 2px; }
-    @media (max-width: 900px) {
-      .main-panel { max-width:97vw; }
-      #j1nx-float { right: 3vw; min-width: 65px; }
-      #j1nx-cutout { width: 50px; height: 50px;}
-      #j1nx-bubble { font-size:0.97em; min-width:110px; padding: 7px 10px 7px 11px;}
-    }
+    /* Footer */
+    footer { margin-top:32px;text-align:center;font-size:0.98rem;color:#c2eaffa0;background:rgba(13,28,44,0.88);padding:19px 0 12px 0;border-top:1.5px solid #0eeae5;}
+    footer .footer-links a {color:#44ffe7;font-weight:600;text-decoration:none; margin:0 8px;}
+    footer .footer-links a:hover { color:#18f8ff;}
+    footer .footer-socials a {color:#8de9fc; margin:0 6px;text-decoration:none;}
+    @media (max-width: 950px) { .main-panel, .desc-bar { max-width:99vw;}}
   </style>
 </head>
 <body>
+  <!-- HEADER WITH BREADCRUMBS -->
   <header>
-    <span class="brand">AIHacks</span>
-    <nav>
-      <a href="#alexa-block">Alexa</a> |
-      <a href="#google-block">Google</a> |
-      <a href="#siri-block">Siri</a> |
-      <a href="https://www.buymeacoffee.com/yourlink" target="_blank">Support</a> |
-      <a href="#faq">FAQ/Help</a>
-    </nav>
+    <div class="header-inner">
+      <div class="breadcrumbs">
+        <a href="#">Home</a> › <a href="#">AI Encyclopedia</a> › <span>Pranks & Games</span>
+      </div>
+      <div class="header-main">
+        <span class="brand">AIHacks</span>
+        <nav>
+          <a href="https://www.amazon.com/alexa" target="_blank">Alexa</a>
+          <a href="https://assistant.google.com/" target="_blank">Google Assistant</a>
+          <a href="https://www.apple.com/siri/" target="_blank">Siri</a>
+          <a href="https://www.samsung.com/global/galaxy/apps/bixby/" target="_blank">Bixby</a>
+          <a href="#faq">FAQ</a>
+          <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">Support</a>
+        </nav>
+      </div>
+    </div>
   </header>
 
-  <!-- INVISIBLE CLICKABLE HOTSPOTS, OVER ART ONLY! -->
-  <div id="alexa-hotspot" class="ai-hotspot" onclick="showPanel('alexa')" title="See Alexa Pranks"></div>
-  <div id="google-hotspot" class="ai-hotspot" onclick="showPanel('google')" title="See Google Pranks"></div>
-  <div id="siri-hotspot" class="ai-hotspot" onclick="showPanel('siri')" title="See Siri Pranks"></div>
+  <!-- HERO ART AREA, WITH 3 INVISIBLE HOTSPOTS (NO UI OVER ART) -->
+  <div class="art-area" style="width:100vw; height:61vh;"></div>
+  <div id="alexa-hotspot" class="ai-hotspot" onclick="showPanel('alexa')" title="Alexa"></div>
+  <div id="google-hotspot" class="ai-hotspot" onclick="showPanel('google')" title="Google"></div>
+  <div id="siri-hotspot" class="ai-hotspot" onclick="showPanel('siri')" title="Siri"></div>
 
-  <!-- MAIN PANEL: Shows after hotspot click (starts hidden) -->
+  <!-- PAGE DESCRIPTION (SEO, gold, always visible) -->
+  <div class="desc-bar">
+    <b>AIHacks:</b> The world’s viral encyclopedia of <b>AI pranks, games, party dares, and challenges</b> for Alexa, Google, Siri, Bixby, and more. Every trick, tip, and challenge—one click away. <a href="#faq" style="color:#aff;">Learn more</a>.
+  </div>
+
+  <!-- MAIN PRANK PANEL: Hidden until a hotspot is clicked -->
   <div id="main-panel" class="main-panel" style="display:none;">
+    <!-- Google AdSense slot above list -->
+    <ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-4963053724895140"
+        data-ad-slot="1982348778"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     <div class="search-lang-row">
-      <input type="text" id="search-box" class="search-box" placeholder="Search pranks by keyword..." oninput="filterPranks()" />
-      <select id="lang-select" class="lang-select" onchange="changeLang()">
+      <input type="text" id="search-box" class="search-box" placeholder="Search pranks..." oninput="filterPranks()" />
+      <select id="lang-select" class="lang-select" onchange="filterPranks()">
         <option value="en">English</option>
         <option value="es">Español</option>
         <option value="fr">Français</option>
@@ -375,43 +227,70 @@
         <option value="pt">Português</option>
       </select>
     </div>
-    <!-- Device panels inserted here by JS -->
     <div id="accordion-area"></div>
   </div>
 
-  <!-- J1NX FLOATING WIDGET -->
+  <!-- J1NX FLOATING WIDGET (Cutout, speech bubble, ready for full code) -->
   <div id="j1nx-float">
     <div id="j1nx-cutout" title="Chat with J1NX" onclick="toggleJ1nxBubble()"></div>
-    <div id="j1nx-bubble" class="j1nx-bubble-mood-happy">
+    <div id="j1nx-bubble">
       <div id="j1nx-chatlog"></div>
-      <div id="j1nx-typing">J1nx is typing<span>...</span></div>
+      <div id="j1nx-typing">J1NX is typing<span>...</span></div>
       <div id="j1nx-input-row">
-        <input type="text" id="j1nx-input" placeholder="Say something to J1nx..." autocomplete="off" />
+        <input type="text" id="j1nx-input" placeholder="Say something to J1NX..." autocomplete="off" />
         <button id="j1nx-btn" onclick="sendToJ1nx()">Send</button>
       </div>
       <div id="j1nx-controls">
         <button id="j1nx-btn" onclick="clearJ1nxChat()">Clear</button>
-        <span id="j1nx-toggle-label" style="display:none;">NSFW <span id="j1nx-nsfw-state">(OFF)</span></span>
       </div>
-      <div id="j1nx-easteregg">Double-tap my bubble or type "unlock" for NSFW…</div>
+      <div id="j1nx-easteregg" style="font-size:0.91em; color:#fd8;">Type 'unlock' for hidden features…</div>
     </div>
   </div>
 
-  <!-- Scripts: JS logic for showPanel, search, language, pranks, accordion, J1NX chat. FULL CODE. -->
+  <!-- FAQ & FOOTER -->
+  <section id="faq" style="max-width: 830px; margin: 44px auto 0 auto; background:#122b38e0; color:#d2fffe; border-radius:1.2em; box-shadow:0 2px 12px #0ffae930; padding:23px 22px 19px 22px; font-size:0.97em;">
+    <h2 style="color:#0fffa0;margin-bottom:8px;">FAQ & Help</h2>
+    <b>How do I use these pranks?</b>  
+    <br>Say the phrase out loud to your AI device, or use the Play/Copy/Share buttons to try, share, or save.
+    <br><br>
+    <b>Are these pranks safe for kids?</b>  
+    <br>Most categories are family-friendly, but some may be for adults (these are hidden by default—toggle Adult Mode in future updates).
+    <br><br>
+    <b>Is my data private?</b>  
+    <br>All favorites/ratings are stored in your browser only. No logins, no tracking.
+    <br><br>
+    <b>Can I submit my own prank?</b>  
+    <br>Yes! Use the “Submit a Prank” link in the footer.
+  </section>
+  <footer>
+    <div class="footer-links">
+      <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">Buy Me a Coffee</a>
+      <a href="#faq">FAQ/Help</a>
+      <a href="mailto:0fearnofish0@gmail.com">Contact</a>
+      <a href="#submitprank">Submit a Prank</a>
+    </div>
+    <div class="footer-socials" style="margin:8px 0;">
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+      <a href="https://x.com/GoreandGiggles" target="_blank">Twitter/X</a>
+      <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook</a>
+    </div>
+    <div style="font-size:.91em;opacity:.85; margin-top:7px;">
+      © 2025 AIHacks / Gore and Giggles. All pranks are for entertainment only. Not affiliated with Amazon, Google, Apple, or Samsung.
+    </div>
+  </footer>
+
   <script>
-    // -- Show main panel when a hotspot is clicked
+    // Hotspot Panel Show
     function showPanel(device) {
       document.getElementById('main-panel').style.display = 'block';
-      // Open the relevant device accordion and scroll to it
+      filterPranks(device);
       setTimeout(function() {
         let block = document.getElementById(device + '-block');
         if(block) block.scrollIntoView({behavior:'smooth', block:'start'});
-      }, 200);
-      // Optionally: filter by device
-      filterPranks(device);
+      }, 150);
     }
 
-    // -- Pranks database (small sample for each; expand as needed)
+    // Prank Data - expand as needed (sample)
     const prankData = {
       alexa: [
         { id:"a1", title:"Alexa, start the Roast Battle.", tip:"Provoke Alexa to roast you, your friends, or the party host!", category:"Party", lang:{ es:"Alexa, comienza la Batalla de Insultos." } },
@@ -419,6 +298,7 @@
         { id:"a3", title:"Alexa, open Spin the Bottle.", tip:"Party game for all. Alexa spins the bottle!", category:"Party" },
         { id:"a4", title:"Alexa, self-destruct.", tip:"Classic Star Trek moment. Try it with a straight face!", category:"EasterEgg" },
         { id:"a5", title:"Alexa, are you Skynet?", tip:"Test Alexa’s sense of humor (or dark secrets).", category:"EasterEgg" }
+        // ...expand up to 1000+ pranks!
       ],
       google: [
         { id:"g1", title:"Hey Google, let's play Truth or Dare.", tip:"Assistant will surprise you with wild prompts.", category:"Party" },
@@ -436,7 +316,7 @@
       ]
     };
 
-    // -- Live search/filter
+    // Render accordion with AdSense every 20 pranks
     function filterPranks(deviceFilter) {
       let search = (document.getElementById('search-box')||{}).value?.toLowerCase()||'';
       let lang = (document.getElementById('lang-select')||{}).value||'en';
@@ -447,14 +327,12 @@
         let list = prankData[device];
         let blocks = {};
         list.forEach(prank=>{
-          // Search + filter
           if(search && !prank.title.toLowerCase().includes(search) && !(prank.tip||'').toLowerCase().includes(search)) return;
-          // By category
           let cat = prank.category || "Other";
           if(!blocks[cat]) blocks[cat] = [];
           blocks[cat].push(prank);
         });
-        // Render blocks
+        // Accordion section per device
         let blockId = device+'-block';
         let devBlock = document.createElement('div');
         devBlock.className = 'accordion-block';
@@ -463,13 +341,14 @@
         devBlock.innerHTML = `<div class="accordion-header"><span class="icon">${device=='alexa'?'🟦':device=='google'?'🟩':'⬜'}</span>${devTitle}: Pranks & Games</div>`;
         let content = document.createElement('div');
         content.className = 'accordion-content active';
-        // Subcat blocks
+        let prankCount = 0;
         for(const cat in blocks) {
           let sub = document.createElement('div');
           sub.className = 'subcat-block';
           sub.innerHTML = `<div class="subcat-header">${cat}</div><div class="subcat-content active"><div class="prank-grid"></div></div>`;
           let grid = sub.querySelector('.prank-grid');
           blocks[cat].forEach(prank=>{
+            prankCount++;
             let title = prank.lang && prank.lang[lang] ? prank.lang[lang] : prank.title;
             let tip = prank.tip || '';
             grid.innerHTML += `
@@ -484,16 +363,28 @@
                   <span class="star-rating" data-id="${prank.id}"></span>
                 </div>
               </div>`;
+            // Insert AdSense slot every 20 cards
+            if(prankCount % 20 === 0) {
+              grid.innerHTML += `
+                <div class="ad-slot">
+                  <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-4963053724895140"
+                    data-ad-slot="1982348778"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>`;
+            }
           });
           content.appendChild(sub);
         }
         devBlock.appendChild(content);
         area.appendChild(devBlock);
       }
-      // Star ratings
+      // Star ratings & favs
       document.querySelectorAll('.star-rating').forEach(starBox=>{
-        let id = starBox.dataset.id;
-        starBox.innerHTML = '';
+        let id = starBox.dataset.id; starBox.innerHTML = '';
         for(let i=1;i<=5;i++){
           let star=document.createElement('span');
           star.className='star';
@@ -506,14 +397,12 @@
         }
         updateStars(starBox,id);
       });
-      // Restore faves
       let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
       favs.forEach(id=>{
         let btn = document.querySelector(`.prank-card[data-id="${id}"] .fav-btn`);
         if(btn) btn.classList.add('active');
       });
     }
-    // -- Ratings/faves functions as before
     function toggleFav(btn, id) {
       btn.classList.toggle('active');
       let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
@@ -540,64 +429,25 @@
         else s.classList.remove('filled');
       });
     }
-    // -- Search and Language change triggers
-    function changeLang() { filterPranks(); }
-    // -- Speech/Copy/Share
-    function speakText(txt){ 
-      if('speechSynthesis' in window) {
-        const u = new SpeechSynthesisUtterance(txt); 
-        u.rate=1.06; u.pitch=1; 
-        speechSynthesis.speak(u);
-      } else { alert("Speech not supported."); }
-    }
-    function copyText(txt) {
-      navigator.clipboard.writeText(txt); 
-      alert("Copied to clipboard!");
-    }
-    function shareText(txt) {
-      if(navigator.share) {
-        navigator.share({text: txt, title: "AIHacks Prank"});
-      } else {
-        copyText(txt);
-      }
-    }
-    // -- Accordion open/close
+    function speakText(txt){ if('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.rate=1.06; u.pitch=1; speechSynthesis.speak(u);} else { alert("Speech not supported."); }}
+    function copyText(txt) { navigator.clipboard.writeText(txt); alert("Copied to clipboard!"); }
+    function shareText(txt) { if(navigator.share) { navigator.share({text: txt, title: "AIHacks Prank"});} else { copyText(txt);}}
     document.addEventListener('click', function(e) {
       if(e.target.classList.contains('accordion-header')) {
-        let c = e.target.nextElementSibling;
-        c.classList.toggle('active');
-        // Only allow one open at a time
-        document.querySelectorAll('.accordion-content').forEach(o=>{
-          if(o!==c) o.classList.remove('active');
-        });
+        let c = e.target.nextElementSibling; c.classList.toggle('active');
+        document.querySelectorAll('.accordion-content').forEach(o=>{ if(o!==c) o.classList.remove('active'); });
       }
       if(e.target.classList.contains('subcat-header')) {
-        let c = e.target.nextElementSibling;
-        c.classList.toggle('active');
-        // Only one subcat open
-        e.target.parentNode.parentNode.querySelectorAll('.subcat-content').forEach(o=>{
-          if(o!==c) o.classList.remove('active');
-        });
+        let c = e.target.nextElementSibling; c.classList.toggle('active');
+        e.target.parentNode.parentNode.querySelectorAll('.subcat-content').forEach(o=>{ if(o!==c) o.classList.remove('active'); });
       }
     });
 
-    // -- J1NX WIDGET [Stub: paste your full inline logic here, as in your working code]
-    function toggleJ1nxBubble() {
-      var bubble = document.getElementById('j1nx-bubble');
-      bubble.style.display = bubble.style.display==='none' ? 'block' : 'none';
-    }
-    function sendToJ1nx() {
-      // [Insert your J1NX chat logic here or tell me to paste the full version!]
-      alert("J1NX logic goes here!");
-    }
-    function clearJ1nxChat() {
-      document.getElementById('j1nx-chatlog').innerHTML = '';
-    }
-
-    // -- Init: Hide main panel, position hotspots absolute over art
-    window.onload = function() {
-      document.getElementById('main-panel').style.display = 'none';
-    };
+    // J1NX Widget Logic [Stub]
+    function toggleJ1nxBubble() { var bubble = document.getElementById('j1nx-bubble'); bubble.style.display = bubble.style.display==='none' ? 'block' : 'none'; }
+    function sendToJ1nx() { alert("J1NX logic goes here!"); }
+    function clearJ1nxChat() { document.getElementById('j1nx-chatlog').innerHTML = ''; }
+    window.onload = function() { document.getElementById('main-panel').style.display = 'none'; };
   </script>
 </body>
 </html>
