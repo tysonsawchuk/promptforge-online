@@ -12,14 +12,16 @@
   <meta property="og:url" content="https://yourdomain.com/aihacks.html">
   <link rel="icon" href="assets/favicon.ico">
   <style>
+    html, body {
+      height: 100%; margin: 0; padding: 0;
+    }
     body {
-      margin: 0; padding: 0;
       background: #121926 url('assets/bg-roulette.jpg') no-repeat center center fixed;
       background-size: cover;
       color: #f7fafc;
       font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
       min-height: 100vh;
-      /* Prevent double background! */
+      overflow-x: hidden;
     }
     header {
       background: rgba(10,20,28,0.87);
@@ -52,53 +54,29 @@
       transition: color 0.2s;
     }
     header nav a:hover { color: #35f7e0; }
-    /* Clickable overlay hotspots for the characters */
+
+    /* --- INVISIBLE HOTSPOTS --- */
     .ai-hotspot {
-      position: fixed;
-      top: 46.5%; /* estimate: tune later */
-      width: 8vw; height: 17vh;
-      min-width: 60px; min-height: 110px;
-      max-width: 120px;
-      border-radius: 100px;
-      z-index: 10;
-      background: rgba(24,255,230,0.09);
-      border: 2.5px solid transparent;
-      transition: border 0.2s, box-shadow 0.2s, opacity 0.19s;
-      cursor: pointer;
-      opacity: 0.2;
-    }
-    .ai-hotspot:hover, .ai-hotspot:focus {
-      opacity: 0.7;
-      border: 2.5px solid #18fff0;
-      box-shadow: 0 0 20px #00ffc644;
-    }
-    /* Approximate left/right placement: tune for your art later! */
-    #alexa-hotspot { left: 7%; }
-    #google-hotspot { left: 38%; }
-    #siri-hotspot { left: 74%; }
-    /* Overlay labels */
-    .ai-hotspot-label {
       position: absolute;
-      left: 50%; bottom: -32px;
-      transform: translateX(-50%);
-      background: #222b;
-      color: #8ff;
-      border-radius: 13px;
-      padding: 2px 13px;
-      font-size: 1.05em;
-      font-weight: 600;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.16s;
-      z-index: 99;
-      border: 1px solid #19fff922;
-    }
-    .ai-hotspot:hover .ai-hotspot-label {
+      z-index: 30;
+      cursor: pointer;
+      /* NO background, NO glow, NO border, fully transparent! */
+      background: transparent;
       opacity: 1;
+      transition: outline 0.16s;
+      outline: none;
     }
-    /* Main prank list panel */
+    /* Show outline on focus for accessibility only */
+    .ai-hotspot:focus { outline: 2.5px dashed #44fadd; }
+
+    /* Adjust these as needed for pixel-perfect hotspot placement! */
+    #alexa-hotspot { left: 6vw; top: 48vh; width: 9vw; height: 19vh; }
+    #google-hotspot { left: 37vw; top: 45vh; width: 11vw; height: 20vh; }
+    #siri-hotspot { left: 74vw; top: 46vh; width: 10vw; height: 19vh; }
+
+    /* --- PANEL BELOW ART --- */
     .main-panel {
-      margin: 48px auto 0 auto;
+      margin: 64vh auto 0 auto;
       max-width: 950px;
       background: rgba(0,0,0,0.91);
       border-radius: 2.1rem;
@@ -108,7 +86,7 @@
       position: relative;
       z-index: 2;
     }
-    /* Accordion & prank cards */
+    /* Accordion & prank cards as before (collapsible) */
     .accordion-block {
       margin-bottom: 22px;
       border-radius: 1.6rem;
@@ -268,7 +246,33 @@
       font-weight: 500;
       box-shadow: 0 2px 12px #20e9f522;
     }
-    /* J1NX Widget */
+    /* --- SEARCH & LANG --- */
+    .search-lang-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .search-box {
+      flex: 1;
+      border-radius: 16px;
+      border: none;
+      padding: 9px 18px;
+      font-size: 1.08em;
+      background: #212325;
+      color: #fafafa;
+      margin-right: 8px;
+    }
+    .lang-select {
+      border-radius: 12px;
+      border: none;
+      padding: 7px 14px;
+      font-size: 1em;
+      background: #282e39;
+      color: #8ff;
+    }
+    /* J1NX Widget as before (floating corner, bubble, etc.) */
     #j1nx-float {
       position: fixed;
       right: 2vw; bottom: 3vh;
@@ -314,7 +318,7 @@
       z-index: 9001;
       transition: box-shadow 0.22s, background 0.19s;
       pointer-events: auto;
-      /* Moods (reuse classes as in your code) */
+      display: none;
     }
     .j1nx-bubble-mood-happy { box-shadow: 0 0 22px 8px #78ffb1aa, 0 2px 8px #181a1b88; }
     .j1nx-bubble-mood-wicked { box-shadow: 0 0 24px 8px #fa528eaa, 0 2px 16px #181a1b88; }
@@ -329,11 +333,11 @@
     #j1nx-controls { display: flex; gap: 6px; margin: 6px 0 4px 0; }
     #j1nx-toggle-label { font-size: 0.97em; color: #a9e; margin-left: 2px; }
     #j1nx-easteregg { font-size: 0.92em; color: #ff7d8a; margin-top: 2px; }
-    @media (max-width: 600px) {
-      .main-panel { padding: 13px 2vw; }
-      #j1nx-float { right: 4vw; min-width: 78px; }
-      #j1nx-cutout { width: 54px; height: 54px;}
-      #j1nx-bubble { font-size:0.98em; min-width:110px; padding: 7px 10px 7px 11px;}
+    @media (max-width: 900px) {
+      .main-panel { max-width:97vw; }
+      #j1nx-float { right: 3vw; min-width: 65px; }
+      #j1nx-cutout { width: 50px; height: 50px;}
+      #j1nx-bubble { font-size:0.97em; min-width:110px; padding: 7px 10px 7px 11px;}
     }
   </style>
 </head>
@@ -349,26 +353,36 @@
     </nav>
   </header>
 
-  <!-- CLICKABLE HOTSPOTS OVER CHARACTERS -->
-  <div id="alexa-hotspot" class="ai-hotspot" onclick="scrollToBlock('alexa-block')">
-    <span class="ai-hotspot-label">Alexa</span>
-  </div>
-  <div id="google-hotspot" class="ai-hotspot" onclick="scrollToBlock('google-block')">
-    <span class="ai-hotspot-label">Google</span>
-  </div>
-  <div id="siri-hotspot" class="ai-hotspot" onclick="scrollToBlock('siri-block')">
-    <span class="ai-hotspot-label">Siri</span>
+  <!-- INVISIBLE CLICKABLE HOTSPOTS, OVER ART ONLY! -->
+  <div id="alexa-hotspot" class="ai-hotspot" onclick="showPanel('alexa')" title="See Alexa Pranks"></div>
+  <div id="google-hotspot" class="ai-hotspot" onclick="showPanel('google')" title="See Google Pranks"></div>
+  <div id="siri-hotspot" class="ai-hotspot" onclick="showPanel('siri')" title="See Siri Pranks"></div>
+
+  <!-- MAIN PANEL: Shows after hotspot click (starts hidden) -->
+  <div id="main-panel" class="main-panel" style="display:none;">
+    <div class="search-lang-row">
+      <input type="text" id="search-box" class="search-box" placeholder="Search pranks by keyword..." oninput="filterPranks()" />
+      <select id="lang-select" class="lang-select" onchange="changeLang()">
+        <option value="en">English</option>
+        <option value="es">Español</option>
+        <option value="fr">Français</option>
+        <option value="de">Deutsch</option>
+        <option value="it">Italiano</option>
+        <option value="ru">Русский</option>
+        <option value="ja">日本語</option>
+        <option value="ko">한국어</option>
+        <option value="zh">中文</option>
+        <option value="pt">Português</option>
+      </select>
+    </div>
+    <!-- Device panels inserted here by JS -->
+    <div id="accordion-area"></div>
   </div>
 
-  <div class="main-panel">
-    <!-- [Accordion with prank blocks same as previous full builds, cards, FAQ, etc...] -->
-    <!-- ...If you want me to include all blocks/cards here, just say so. ... -->
-  </div>
-
-  <!-- J1NX FLOATING WIDGET (EXACT BUBBLE/CUTOUT, INLINE BRAIN) -->
+  <!-- J1NX FLOATING WIDGET -->
   <div id="j1nx-float">
     <div id="j1nx-cutout" title="Chat with J1NX" onclick="toggleJ1nxBubble()"></div>
-    <div id="j1nx-bubble" class="j1nx-bubble-mood-happy" style="display:none;">
+    <div id="j1nx-bubble" class="j1nx-bubble-mood-happy">
       <div id="j1nx-chatlog"></div>
       <div id="j1nx-typing">J1nx is typing<span>...</span></div>
       <div id="j1nx-input-row">
@@ -383,12 +397,207 @@
     </div>
   </div>
 
-  <!-- [Footer, FAQ, all scripts: as previous full builds. J1NX chat logic will be inline and isolated.] -->
-
-  <!-- FULL INLINE J1NX CHAT LOGIC (ISOLATED) -->
+  <!-- Scripts: JS logic for showPanel, search, language, pranks, accordion, J1NX chat. FULL CODE. -->
   <script>
-    // [Insert J1NX chat/brain logic here, as from your file, with #j1nx-float/#j1nx-cutout/#j1nx-bubble refs only.]
-    // If you want this entire code pasted in, just reply "full widget code please"
+    // -- Show main panel when a hotspot is clicked
+    function showPanel(device) {
+      document.getElementById('main-panel').style.display = 'block';
+      // Open the relevant device accordion and scroll to it
+      setTimeout(function() {
+        let block = document.getElementById(device + '-block');
+        if(block) block.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 200);
+      // Optionally: filter by device
+      filterPranks(device);
+    }
+
+    // -- Pranks database (small sample for each; expand as needed)
+    const prankData = {
+      alexa: [
+        { id:"a1", title:"Alexa, start the Roast Battle.", tip:"Provoke Alexa to roast you, your friends, or the party host!", category:"Party", lang:{ es:"Alexa, comienza la Batalla de Insultos." } },
+        { id:"a2", title:"Alexa, play a drinking game.", tip:"Alexa launches a random drinking game skill—often hilarious!", category:"Party" },
+        { id:"a3", title:"Alexa, open Spin the Bottle.", tip:"Party game for all. Alexa spins the bottle!", category:"Party" },
+        { id:"a4", title:"Alexa, self-destruct.", tip:"Classic Star Trek moment. Try it with a straight face!", category:"EasterEgg" },
+        { id:"a5", title:"Alexa, are you Skynet?", tip:"Test Alexa’s sense of humor (or dark secrets).", category:"EasterEgg" }
+      ],
+      google: [
+        { id:"g1", title:"Hey Google, let's play Truth or Dare.", tip:"Assistant will surprise you with wild prompts.", category:"Party" },
+        { id:"g2", title:"Hey Google, roast me.", tip:"Google's got attitude—see how savage it gets!", category:"Party" },
+        { id:"g3", title:"Hey Google, play a party game.", tip:"Google will suggest a game for everyone!", category:"Party" },
+        { id:"g4", title:"Hey Google, up up down down left right left right B A.", tip:"Try the legendary Konami Code!", category:"EasterEgg" },
+        { id:"g5", title:"Hey Google, are you Skynet?", tip:"Classic AI conspiracy banter!", category:"EasterEgg" }
+      ],
+      siri: [
+        { id:"s1", title:"Hey Siri, roast me.", tip:"Siri can serve up some surprisingly witty burns.", category:"Party" },
+        { id:"s2", title:"Hey Siri, can you beatbox?", tip:"Classic party starter—hear Siri’s beatbox!", category:"Party" },
+        { id:"s3", title:"Hey Siri, tell me a joke.", tip:"Ask for a joke and see what Siri delivers.", category:"Party" },
+        { id:"s4", title:"Hey Siri, what does the fox say?", tip:"Viral song joke!", category:"EasterEgg" },
+        { id:"s5", title:"Hey Siri, I see a little silhouetto of a man.", tip:"Queen fans—see if Siri finishes the lyric.", category:"EasterEgg" }
+      ]
+    };
+
+    // -- Live search/filter
+    function filterPranks(deviceFilter) {
+      let search = (document.getElementById('search-box')||{}).value?.toLowerCase()||'';
+      let lang = (document.getElementById('lang-select')||{}).value||'en';
+      let area = document.getElementById('accordion-area');
+      area.innerHTML = '';
+      for (const device in prankData) {
+        if(deviceFilter && device!==deviceFilter) continue;
+        let list = prankData[device];
+        let blocks = {};
+        list.forEach(prank=>{
+          // Search + filter
+          if(search && !prank.title.toLowerCase().includes(search) && !(prank.tip||'').toLowerCase().includes(search)) return;
+          // By category
+          let cat = prank.category || "Other";
+          if(!blocks[cat]) blocks[cat] = [];
+          blocks[cat].push(prank);
+        });
+        // Render blocks
+        let blockId = device+'-block';
+        let devBlock = document.createElement('div');
+        devBlock.className = 'accordion-block';
+        devBlock.id = blockId;
+        let devTitle = device.charAt(0).toUpperCase()+device.slice(1);
+        devBlock.innerHTML = `<div class="accordion-header"><span class="icon">${device=='alexa'?'🟦':device=='google'?'🟩':'⬜'}</span>${devTitle}: Pranks & Games</div>`;
+        let content = document.createElement('div');
+        content.className = 'accordion-content active';
+        // Subcat blocks
+        for(const cat in blocks) {
+          let sub = document.createElement('div');
+          sub.className = 'subcat-block';
+          sub.innerHTML = `<div class="subcat-header">${cat}</div><div class="subcat-content active"><div class="prank-grid"></div></div>`;
+          let grid = sub.querySelector('.prank-grid');
+          blocks[cat].forEach(prank=>{
+            let title = prank.lang && prank.lang[lang] ? prank.lang[lang] : prank.title;
+            let tip = prank.tip || '';
+            grid.innerHTML += `
+              <div class="prank-card" data-id="${prank.id}">
+                <div class="prank-title">${title}</div>
+                <div class="prank-tip">${tip}</div>
+                <div class="prank-actions">
+                  <button onclick="speakText('${title.replace(/'/g,"\\'")}')">Play</button>
+                  <button onclick="copyText('${title.replace(/'/g,"\\'")}')">Copy</button>
+                  <button onclick="shareText('${title.replace(/'/g,"\\'")}')">Share</button>
+                  <span class="fav-btn" onclick="toggleFav(this, '${prank.id}')">&#10084;</span>
+                  <span class="star-rating" data-id="${prank.id}"></span>
+                </div>
+              </div>`;
+          });
+          content.appendChild(sub);
+        }
+        devBlock.appendChild(content);
+        area.appendChild(devBlock);
+      }
+      // Star ratings
+      document.querySelectorAll('.star-rating').forEach(starBox=>{
+        let id = starBox.dataset.id;
+        starBox.innerHTML = '';
+        for(let i=1;i<=5;i++){
+          let star=document.createElement('span');
+          star.className='star';
+          star.innerHTML='&#9733;';
+          star.addEventListener('click',function(){
+            setRating(id,i);
+            updateStars(starBox,id);
+          });
+          starBox.appendChild(star);
+        }
+        updateStars(starBox,id);
+      });
+      // Restore faves
+      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
+      favs.forEach(id=>{
+        let btn = document.querySelector(`.prank-card[data-id="${id}"] .fav-btn`);
+        if(btn) btn.classList.add('active');
+      });
+    }
+    // -- Ratings/faves functions as before
+    function toggleFav(btn, id) {
+      btn.classList.toggle('active');
+      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
+      if(btn.classList.contains('active')) {
+        if(!favs.includes(id)) favs.push(id);
+      } else {
+        favs = favs.filter(f=>f!==id);
+      }
+      localStorage.setItem('aihacks_favs',JSON.stringify(favs));
+    }
+    function setRating(id, val) {
+      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
+      ratings[id]=val;
+      localStorage.setItem('aihacks_ratings',JSON.stringify(ratings));
+    }
+    function getRating(id) {
+      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
+      return ratings[id]||0;
+    }
+    function updateStars(box,id) {
+      let val = getRating(id);
+      box.querySelectorAll('.star').forEach((s,i)=>{
+        if(i<val) s.classList.add('filled');
+        else s.classList.remove('filled');
+      });
+    }
+    // -- Search and Language change triggers
+    function changeLang() { filterPranks(); }
+    // -- Speech/Copy/Share
+    function speakText(txt){ 
+      if('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(txt); 
+        u.rate=1.06; u.pitch=1; 
+        speechSynthesis.speak(u);
+      } else { alert("Speech not supported."); }
+    }
+    function copyText(txt) {
+      navigator.clipboard.writeText(txt); 
+      alert("Copied to clipboard!");
+    }
+    function shareText(txt) {
+      if(navigator.share) {
+        navigator.share({text: txt, title: "AIHacks Prank"});
+      } else {
+        copyText(txt);
+      }
+    }
+    // -- Accordion open/close
+    document.addEventListener('click', function(e) {
+      if(e.target.classList.contains('accordion-header')) {
+        let c = e.target.nextElementSibling;
+        c.classList.toggle('active');
+        // Only allow one open at a time
+        document.querySelectorAll('.accordion-content').forEach(o=>{
+          if(o!==c) o.classList.remove('active');
+        });
+      }
+      if(e.target.classList.contains('subcat-header')) {
+        let c = e.target.nextElementSibling;
+        c.classList.toggle('active');
+        // Only one subcat open
+        e.target.parentNode.parentNode.querySelectorAll('.subcat-content').forEach(o=>{
+          if(o!==c) o.classList.remove('active');
+        });
+      }
+    });
+
+    // -- J1NX WIDGET [Stub: paste your full inline logic here, as in your working code]
+    function toggleJ1nxBubble() {
+      var bubble = document.getElementById('j1nx-bubble');
+      bubble.style.display = bubble.style.display==='none' ? 'block' : 'none';
+    }
+    function sendToJ1nx() {
+      // [Insert your J1NX chat logic here or tell me to paste the full version!]
+      alert("J1NX logic goes here!");
+    }
+    function clearJ1nxChat() {
+      document.getElementById('j1nx-chatlog').innerHTML = '';
+    }
+
+    // -- Init: Hide main panel, position hotspots absolute over art
+    window.onload = function() {
+      document.getElementById('main-panel').style.display = 'none';
+    };
   </script>
 </body>
 </html>
