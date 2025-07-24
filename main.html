@@ -1,211 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>AIHacks: Viral Encyclopedia of AI Pranks, Games, Challenges & Dares for Alexa, Google, Siri, Bixby</title>
-  <meta name="description" content="The world's most viral encyclopedia of AI pranks, games, dares, TikTok/YouTube challenges for Alexa, Google, Siri, Bixby, ChatGPT, plus party, family, and secret adult fun.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="assets/favicon.ico">
-  <style>
-    html, body {margin:0; padding:0; background:#10151d; color:#f7fafc; font-family:'Inter','Segoe UI',Arial,sans-serif; min-height:100vh;}
-    a { color:#6af9ff; text-decoration:none; }
-    a:hover { color:#1ff8f4; text-decoration:underline; }
-    .main-header { width:100vw; background:rgba(12,20,30,0.98); z-index:40; position:fixed; top:0; left:0; border-bottom:2px solid #222c39; box-shadow: 0 2px 12px #121e2d7e; }
-    .main-header-inner {max-width:1220px; margin:0 auto; display:flex; flex-direction:column; padding:10px 16px 0 16px;}
-    .breadcrumbs { font-size:1em; color:#80dfff; letter-spacing:0.01em; font-weight:500; opacity:.92; }
-    .breadcrumbs a { color:#37e4fc; }
-    .site-nav-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
-    .brand { font-size:1.28rem; font-weight:bold; background:linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:0 1px 10px #18c6fa44; margin-right:16px;}
-    nav {font-size:1em; opacity:.98; display:flex; gap:13px;}
-    nav a { color:#7eeaff; text-decoration:none; font-weight:600; padding:3px 9px; border-radius:8px;}
-    nav a:hover {background:#122a38; color:#fff;}
-    .search-form {display:flex; align-items:center; gap:7px;}
-    .search-box { border-radius: 10px; border: none; padding: 4px 13px; font-size: 1em; background: #232527; color: #fafafa;}
-    .coffee-btn { background:linear-gradient(90deg,#ffb46e,#ff65b2 90%); color:#122f38; border-radius:12px; font-weight:bold; border:none; padding:5px 18px; cursor:pointer; font-size:1em; margin-left:10px;}
-    .coffee-btn:hover { background:linear-gradient(90deg,#ff93d6,#ffe87a 80%);}
-    .header-spacer {height:84px;}
-    .hero-art-wrap {width:100vw; height:46vh; min-height:400px; background:#000; display:flex; justify-content:center; align-items:center; position:relative; overflow:hidden;}
-    .hero-art-img {width:100vw; height:100%; object-fit:cover; background:#000;}
-    .desc-seo {margin:16px auto 8px auto; max-width:950px; font-size:1.09em; color:#baf3fa; text-align:center; font-weight:500;}
-    .desc-seo b {color:#49fffb;}
-    /* CATEGORY BUTTON ROW */
-    .category-row { display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin:26px auto 13px auto; }
-    .category-btn {
-      font-size:1.13em; font-weight:900; letter-spacing:0.01em;
-      padding:19px 26px; border-radius:19px; margin-bottom:7px;
-      color:#181e24; text-shadow:0 2px 10px #f2d6fd88,0 1px 7px #05aaff65;
-      border:none; outline:none; cursor:pointer; transition:.18s;
-      position:relative; z-index:9;
-      display:flex; align-items:center; gap:11px;
-      box-shadow:0 5px 26px #3fff9b52,0 2px 11px #6b4afd44 inset;
-      border:2.2px solid #fff9;
-    }
-    .category-btn .arrow { font-size:1.35em; margin-right:2px; }
-    .cat-alexa {background:linear-gradient(90deg,#1ff6ff 5%,#0f58ff 90%);}
-    .cat-google {background:linear-gradient(90deg,#a9ff6b,#1dff70 90%);}
-    .cat-siri {background:linear-gradient(90deg,#d47fff,#5068ff 90%);}
-    .cat-bixby {background:linear-gradient(90deg,#34ffe1,#3260ff 90%);}
-    .cat-chatgpt {background:linear-gradient(90deg,#43ff9d,#1b6f39 90%);}
-    .cat-drinking {background:linear-gradient(90deg,#ff53af,#fff700 90%);}
-    .cat-dares {background:linear-gradient(90deg,#ff6238,#ffa800 90%);}
-    .cat-viral {background:linear-gradient(90deg,#6dffe2,#e0f917 90%);}
-    .cat-party {background:linear-gradient(90deg,#ff45df,#63ffb4 90%);}
-    .cat-roast {background:linear-gradient(90deg,#ff3b60,#b47cff 90%);}
-    .cat-office {background:linear-gradient(90deg,#52e6ff,#ff7ed8 90%);}
-    .cat-family {background:linear-gradient(90deg,#faff63,#f64e4e 90%);}
-    .cat-classroom {background:linear-gradient(90deg,#52ffca,#b1abff 90%);}
-    .cat-kids {background:linear-gradient(90deg,#fff89c,#d3ff5a 90%);}
-    .cat-adults {background:linear-gradient(90deg,#ff576a,#1d043b 90%);}
-    .cat-nsfw {background:linear-gradient(90deg,#f91640,#000 90%);}
-    .cat-movie {background:linear-gradient(90deg,#ffe980,#fa3a86 90%);}
-    .cat-song {background:linear-gradient(90deg,#36e2ff,#ff71c2 90%);}
-    .cat-custom {background:linear-gradient(90deg,#fff7a1,#b1b1ff 90%);}
-    .cat-weird {background:linear-gradient(90deg,#ff97f7,#49ff93 90%);}
-    .cat-egg {background:linear-gradient(90deg,#5bffa7,#ffde67 90%);}
-    .category-btn:hover, .category-btn:focus {filter:brightness(1.15);}
-    .device-links {display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin:8px auto 16px auto;}
-    .device-link {font-size:1em; font-weight:600; background:linear-gradient(92deg,#22f7ff 60%,#12d7d7 120%); color:#123b45; border-radius:8px; padding:5px 17px; border:none; transition:.16s; box-shadow:0 1px 8px #17edfd2c;}
-    .device-link:hover {background:linear-gradient(92deg,#12d7d7 60%,#6ff8ff 120%); color:#000;}
-    .prank-bg {background:#0d121b; width:100vw; min-height:60vh; padding:0 0 30px 0;}
-    .main-panel {margin:0 auto; max-width:1000px;}
-    .ad-slot {margin:13px 0 13px 0; padding:7px 0; text-align:center; background:#061c1eb0; color:#9beaff; border-radius:0.7em; font-size:0.97em; font-weight:500; box-shadow:0 1px 6px #1cebf911;}
-    /* Accordion/prank cards: test layout, will stack more blocks here later */
-    .accordion-block {margin-bottom:18px;}
-    .accordion-content {display:none; background: #181d25ea; padding:0 0 16px 0; border-radius:0 0 13px 13px;}
-    .accordion-content.active {display:block;}
-    .prank-card { background:linear-gradient(100deg,#101b25 80%,#19e4f61a 100%); border-radius: 1.1em; box-shadow: 0 1px 7px #2cfffa22; padding: 13px 11px 11px 15px; min-height: 94px; transition: transform 0.13s, box-shadow 0.14s; display: flex; flex-direction: column; justify-content: space-between; border: 1.2px solid #23faff10; opacity: 0.98; font-size: 1em; position:relative;}
-    .prank-card:hover { transform: scale(1.025); box-shadow: 0 0 17px #1ac9f988; border: 1.2px solid #1ff8ed;}
-    .prank-title { font-size: 1.01em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
-    .prank-tip { font-size: 0.96em; color: #b8fdff; opacity: 0.87; margin-bottom: 5px;}
-    .prank-actions {display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap;}
-    .prank-actions button, .prank-actions .fav-btn { background: linear-gradient(90deg,#18ffc0c0 70%,#4af4f2e1 100%); border: none; color: #123f48; font-weight: bold; border-radius: 1.2em; padding: 5px 13px; font-size: 0.99em; cursor:pointer; min-width:45px;}
-    .prank-actions button:hover, .prank-actions .fav-btn.active {background:linear-gradient(90deg,#12d9b4 40%,#18d8fb 100%); color:#fff;}
-    .prank-actions .fav-btn {font-size:1.15em;color:#ff57ae;background:#2c3a44;border:1.5px solid #ff57ae50; min-width:33px;}
-    .prank-actions .fav-btn.active {color:#fff; background:#ff57ae;}
-    .star-rating { display: flex; align-items: center; margin-left: 4px; font-size: 1.1em; user-select: none; cursor: pointer;}
-    .star-rating .star { color: #ffd700b7; margin-right: 0px; transition: color 0.13s;}
-    .star-rating .star.filled { color: #fff530; text-shadow: 0 0 7px #fffc6b99;}
-    /* J1NX: from your main, exactly as you gave it */
-    .j1nx-float { position: fixed; right: 2vw; bottom: 2vw; z-index: 10000;}
-    .j1nx-bubble-wrap { display:flex; flex-direction:column; align-items:flex-end; }
-    .j1nx-avatar {
-      width: 110px; height: 210px; background: url('assets/j1nx.png') no-repeat center center/contain;
-      margin-bottom: -19px; filter: drop-shadow(0 0 20px #6ff) drop-shadow(0 0 12px #0ffb) brightness(1.1);
-      border-radius: 28px 28px 46px 46px; box-shadow: 0 2px 19px #00f7ff44;
-    }
-    .j1nx-chat {
-      background: #141d21f7; color: #fff; font-family: 'Fira Mono', monospace;
-      font-size: 1.06em; border-radius: 17px; padding: 17px 21px 15px 18px;
-      box-shadow: 0 6px 33px #0ff8, 0 2px 22px #0ff4 inset;
-      min-width: 270px; max-width: 350px; margin-bottom:7px;
-      border:2.5px solid #4ffb; position:relative;
-      animation: j1nxGlow 3s infinite alternate;
-    }
-    @keyframes j1nxGlow {0%{box-shadow:0 6px 33px #0ff8,0 2px 22px #0ff4 inset;}100%{box-shadow:0 6px 45px #fff8,0 2px 30px #0ffb inset;}}
-    .j1nx-chat b {color:#0fffa0;}
-    .j1nx-chat input[type="text"] {
-      width: 77%; background: #181f22; color: #fff; border: 1.2px solid #0ff9; border-radius: 10px; font-size:1em;
-      padding: 6px 8px; margin: 10px 6px 10px 0; font-family: inherit;
-    }
-    .j1nx-chat button {background:#000;color:#0ff;border:1.6px solid #0ff; border-radius:8px;font-weight:bold;font-size:1em;padding:7px 14px; cursor:pointer;}
-    .j1nx-chat button:hover {background:#011d1e;color:#fff;}
-    .j1nx-chat .j1nx-chat-row{display:flex;align-items:center;gap:6px;}
-    .j1nx-chat .j1nx-chat-tip{font-size:0.96em;opacity:0.72;margin-top:8px;}
-    /* CAMO/ANSI FOOTER & RAINBOW BAR */
-    .camo-footer { width:100vw; background:repeating-linear-gradient(-45deg,#222,#232a28 30px,#1a241e 60px,#181f1e 80px,#232a28 110px,#222 120px); color:#0fffa6; padding:0 0 9px 0; font-family:'Fira Mono',monospace; border-top:2px solid #0ff6; letter-spacing:0.04em; text-align:center; position:relative; overflow:hidden;}
-    .ascii-art-footer pre { font-family: 'Fira Mono', monospace; font-size: 1.08em; background:none; color:#0fffa0; filter: drop-shadow(0 0 4px #0ff9); text-align:center; margin:0; line-height:1.18; white-space:pre;}
-    .footer-copy { font-size:0.92em; opacity:.77; margin-top:4px; margin-bottom:2px;}
-    .footer-legal { font-size:0.88em; color:#baffde; margin:7px 0 4px 0; opacity:.87;}
-    .footer-copy a { color:#0fffa0; text-decoration:none; margin:0 12px;}
-    .footer-copy a:hover { color:#fff;}
-    /* Rainbow bar at bottom */
-    #rainbow-camo-bar {
-      width:100vw; height:13px; background:linear-gradient(270deg,#ff007f,#00fff7,#fffc00,#ff007f,#00fff7,#fffc00); background-size:1200% 1200%;
-      animation:rainbow-camo 18s linear infinite; position:fixed; bottom:0; left:0; z-index:9999;}
-    @keyframes rainbow-camo {
-      0% {background-position:0% 50%;}
-      100% {background-position:100% 50%;}
-    }
-    /* Responsive bits */
-    @media (max-width: 850px) {
-      .main-header-inner {padding:10px 3vw 0 3vw;}
-      .category-row {gap:6px;}
-      .prank-card {font-size:0.97em;}
-      .j1nx-chat {min-width:200px;max-width:99vw;}
-      .j1nx-avatar {width:70px;height:110px;}
-    }
-  </style>
-</head>
-<body>
-  <!-- HEADER from your main -->
-  <div class="main-header">
-    <div class="main-header-inner">
-      <div class="breadcrumbs">
-        <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
-      </div>
-      <div class="site-nav-row">
-        <span class="brand">AIHacks</span>
-        <nav>
-          <a href="aihacks.html">AIHacks</a>
-          <a href="ansiart.html">ANSI Art</a>
-          <a href="compare.html">Compare</a>
-          <a href="j1nx.html">J1NX</a>
-          <a href="movie.html">Movie</a>
-          <a href="picture.html">Picture</a>
-          <a href="watermark.html">Watermark</a>
-          <a href="#faq-full">Help/FAQ</a>
-        </nav>
-        <form class="search-form" onsubmit="event.preventDefault();">
-          <input type="text" id="search-box" class="search-box" placeholder="Search pranks..." />
-          <button class="coffee-btn" onclick="window.open('https://www.buymeacoffee.com/tysonsawchuk', '_blank')">☕ Buy Me a Coffee</button>
-        </form>
-      </div>
+<!-- ===== HEADER + HERO SECTION ===== -->
+<div class="main-header">
+  <div class="main-header-inner">
+    <div class="breadcrumbs">
+      <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
+    </div>
+    <div class="site-nav-row">
+      <span class="brand">AIHacks</span>
+      <nav>
+        <a href="aihacks.html">AIHacks</a>
+        <a href="ansiart.html">ANSI Art</a>
+        <a href="compare.html">Compare</a>
+        <a href="j1nx.html">J1NX</a>
+        <a href="movie.html">Movie</a>
+        <a href="picture.html">Picture</a>
+        <a href="watermark.html">Watermark</a>
+      </nav>
+      <form class="search-form" onsubmit="event.preventDefault();">
+        <input type="text" id="search-box" class="search-box" placeholder="Search pranks..." />
+        <button class="coffee-btn" onclick="window.open('https://www.buymeacoffee.com/tysonsawchuk', '_blank')">☕ Buy Me a Coffee</button>
+      </form>
     </div>
   </div>
-  <div class="header-spacer"></div>
-  <div class="hero-art-wrap">
-    <img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false" />
-  </div>
-  <div class="desc-seo">
-    <b>AIHacks Encyclopedia:</b> Viral pranks, games, dares, party challenges, and wild ideas for Alexa, Google, Siri, Bixby, ChatGPT, and more. Family, party, classroom, dev—and secret 18+ for grownups.
-  </div>
-  <!-- CATEGORY BUTTONS ROW -->
-  <div class="category-row" id="category-row">
-    <button class="category-btn cat-alexa" onclick="expandCat('alexa')"><span class="arrow" id="arrow-alexa">&#9654;</span>Alexa</button>
-    <button class="category-btn cat-google" onclick="expandCat('google')"><span class="arrow" id="arrow-google">&#9654;</span>Google Assistant</button>
-    <button class="category-btn cat-siri" onclick="expandCat('siri')"><span class="arrow" id="arrow-siri">&#9654;</span>Siri</button>
-    <button class="category-btn cat-bixby" onclick="expandCat('bixby')"><span class="arrow" id="arrow-bixby">&#9654;</span>Bixby</button>
-    <button class="category-btn cat-chatgpt" onclick="expandCat('chatgpt')"><span class="arrow" id="arrow-chatgpt">&#9654;</span>ChatGPT</button>
-    <button class="category-btn cat-drinking" onclick="expandCat('drinking')"><span class="arrow" id="arrow-drinking">&#9654;</span>Drinking Games</button>
-    <button class="category-btn cat-dares" onclick="expandCat('dares')"><span class="arrow" id="arrow-dares">&#9654;</span>Dares & Double-Dares</button>
-    <button class="category-btn cat-viral" onclick="expandCat('viral')"><span class="arrow" id="arrow-viral">&#9654;</span>Viral Challenges</button>
-    <button class="category-btn cat-party" onclick="expandCat('party')"><span class="arrow" id="arrow-party">&#9654;</span>AI Party Games</button>
-    <button class="category-btn cat-roast" onclick="expandCat('roast')"><span class="arrow" id="arrow-roast">&#9654;</span>Roast Battles</button>
-    <button class="category-btn cat-office" onclick="expandCat('office')"><span class="arrow" id="arrow-office">&#9654;</span>Office Pranks</button>
-    <button class="category-btn cat-family" onclick="expandCat('family')"><span class="arrow" id="arrow-family">&#9654;</span>Family Games</button>
-    <button class="category-btn cat-classroom" onclick="expandCat('classroom')"><span class="arrow" id="arrow-classroom">&#9654;</span>Classroom Fun</button>
-    <button class="category-btn cat-kids" onclick="expandCat('kids')"><span class="arrow" id="arrow-kids">&#9654;</span>Kids Only</button>
-    <button class="category-btn cat-adults" onclick="expandCat('adults')"><span class="arrow" id="arrow-adults">&#9654;</span>Grownups Only</button>
-    <button class="category-btn cat-nsfw" onclick="expandCat('nsfw')"><span class="arrow" id="arrow-nsfw">&#9654;</span>NSFW / Adult Mode</button>
-    <button class="category-btn cat-movie" onclick="expandCat('movie')"><span class="arrow" id="arrow-movie">&#9654;</span>Movie/TV Parodies</button>
-    <button class="category-btn cat-song" onclick="expandCat('song')"><span class="arrow" id="arrow-song">&#9654;</span>Song Generator</button>
-    <button class="category-btn cat-custom" onclick="expandCat('custom')"><span class="arrow" id="arrow-custom">&#9654;</span>Submit Your Own!</button>
-    <button class="category-btn cat-weird" onclick="expandCat('weird')"><span class="arrow" id="arrow-weird">&#9654;</span>Weirdest AI Fails</button>
-    <button class="category-btn cat-egg" onclick="expandCat('egg')"><span class="arrow" id="arrow-egg">&#9654;</span>Easter Eggs</button>
-  </div>
-  <div class="device-links">
-    <a href="https://www.amazon.com/alexa-app" class="device-link" target="_blank">Alexa App</a>
-    <a href="https://assistant.google.com/" class="device-link" target="_blank">Google Assistant</a>
-    <a href="https://apps.apple.com/app/id284910350" class="device-link" target="_blank">Siri/iOS</a>
-    <a href="https://galaxystore.samsung.com/detail/com.samsung.android.bixby.agent" class="device-link" target="_blank">Bixby App</a>
-    <a href="https://support.google.com/" class="device-link" target="_blank">Google Help</a>
-    <a href="https://support.apple.com/siri" class="device-link" target="_blank">Siri Help</a>
-  </div>
-  <div class="prank-bg">
-    <div class="main-panel" id="main-panel">
-      <!-- Here you will stack prank blocks/categories as needed! -->
-      <div id="accordion-area"></div>
-      <!-- Example test block, delete/replace as you stack real ones -->
+</div>
+<div class="header-spacer"></div>
+<div class="hero-art-wrap">
+  <img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false" />
+</div>
+<div class="desc-seo">
+  <b>AIHacks Encyclopedia:</b> Viral pranks, games, dares, party challenges, and wild ideas for Alexa, Google, Siri, Bixby, ChatGPT, and more. Family, party, classroom, dev—and secret 18+ for grownups.
+</div>
+<!-- ===== CATEGORY BUTTONS ROW ===== -->
+<div class="category-row" id="category-row">
+  <button class="category-btn cat-alexa" onclick="expandCat('alexa')"><span class="arrow" id="arrow-alexa">&#9654;</span>Alexa</button>
+  <button class="category-btn cat-google" onclick="expandCat('google')"><span class="arrow" id="arrow-google">&#9654;</span>Google Assistant</button>
+  <!-- ...add the rest of your categories here... -->
+  <button class="category-btn cat-faq" onclick="toggleFAQ()"><span class="arrow">&#9654;</span>FAQ / Help</button>
+</div>
+<div class="device-links">
+  <a href="https://www.amazon.com/alexa-app" class="device-link" target="_blank">Alexa App</a>
+  <a href="https://assistant.google.com/" class="device-link" target="_blank">Google Assistant</a>
+  <!-- ... -->
+</div>
+<!-- END HEADER + HERO + CATEGORY ROW -->
+<!-- ===== MAIN PANEL / PRANK BLOCKS ===== -->
+<div class="prank-bg">
+  <div class="main-panel" id="main-panel">
+    <div id="accordion-area">
+      <!-- Example test block for Alexa, more can be stacked as needed -->
       <div class="accordion-block" id="alexa-block">
         <div class="accordion-content active">
           <div class="prank-card">
@@ -216,94 +57,28 @@
               <button>Copy</button>
               <button>Share</button>
               <span class="fav-btn">&#10084;</span>
-              <span class="star-rating"><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span><span class="star">&#9733;</span></span>
+              <span class="star-rating">
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+                <span class="star">&#9733;</span>
+              </span>
             </div>
           </div>
         </div>
       </div>
-      <!-- End example block -->
+      <!-- End test block -->
+    </div>
+    <!-- ===== Collapsed FAQ block (hidden by default, toggled by button) ===== -->
+    <div class="faq-collapsed" id="faq-block">
+      <h3>FAQ & Help</h3>
+      <b>How do I use these pranks?</b> Say the phrase out loud to your AI device, or use Play/Copy/Share.<br><br>
+      <b>Are these pranks safe for kids?</b> Most are family-friendly, adult stuff is hidden.<br><br>
+      <b>Is my data private?</b> All favorites/ratings are local. No logins, no tracking.<br><br>
+      <b>Can I submit my own prank?</b> Yes! Use the link in the footer.<br><br>
+      <b>How do I unlock 18+ mode?</b> Scroll up and click the NSFW category. Hidden from Google and ad networks.<br><br>
     </div>
   </div>
-  <!-- === J1NX Widget: Pixel-Perfect from Main === -->
-  <div class="j1nx-float">
-    <div class="j1nx-bubble-wrap">
-      <div class="j1nx-avatar"></div>
-      <div class="j1nx-chat">
-        <b>J1nx:</b> Hey you 👾—I'm J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)
-        <form class="j1nx-chat-row" onsubmit="event.preventDefault(); sendToJ1nx();">
-          <input type="text" id="j1nx-input" maxlength="120" autocomplete="off" placeholder="Say something to J1nx..." />
-          <button type="submit">Send</button>
-          <button type="button" onclick="clearJ1nxChat()">Clear Chat</button>
-          <button type="button" onclick="saveJ1nxChat()">Save Chat</button>
-        </form>
-        <div class="j1nx-chat-tip">Double-tap the chat bubble or type <b>unlock</b> to reveal NSFW mode…</div>
-      </div>
-    </div>
-  </div>
-  <!-- === Unified ANSI Dancing Art & Camo Footer === -->
-  <footer class="camo-footer">
-    <!-- Dancing ANSI art with "uU" animated + rainbow coloring -->
-    <div class="ascii-art-footer" id="footer-ansi-art">
-<pre id="ansi-block">
-u| _"\ <span id="dancing-uU" style="font-weight:bold;color:#ff69b4;">uU</span> |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \_    \   <<,-,,-.   ||>>_   _// \_  )(\,-      \     //   \_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
-</pre>
-    </div>
-    <!-- END ANSI -->
-    <div class="footer-copy">
-      Made underground in BC, Canada &middot; 
-      <span id="footer-social-bar">
-        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> &middot;
-        <a href="https://x.com/GoreandGiggles" target="_blank">Twitter/X</a> &middot;
-        <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook</a> &middot;
-        <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">Buy Me a Coffee</a> &middot;
-        <a href="#faq-full">FAQ/Help</a> &middot;
-        <a href="mailto:0fearnofish0@gmail.com">Contact</a> &middot;
-        <a href="#submitprank">Submit a Prank</a>
-      </span>
-    </div>
-    <div class="footer-legal">
-      &copy; 2025 PromptForge / Gore and Giggles. All pranks are for entertainment only. Not affiliated with Amazon, Google, Apple, or Samsung.
-    </div>
-  </footer>
-  <!-- RAINBOW SCROLLING CAMO BAR (always sticky, animated) -->
-  <div id="rainbow-camo-bar"></div>
-  <script>
-    // === ANSI DANCING "uU" ANIMATION + RAINBOW ===
-    const dancing = document.getElementById('dancing-uU');
-    let uUcolors = ['#ff69b4','#17ffe3','#fffc00','#ff007f','#7ef9ff','#1dff70','#eb00d6'];
-    let uUstep = 0, uUflip = false;
-    setInterval(()=>{
-      uUstep = (uUstep+1)%uUcolors.length;
-      uUflip = !uUflip;
-      dancing.innerHTML = uUflip ? 'Uu' : 'uU';
-      dancing.style.color = uUcolors[uUstep];
-    }, 520);
-    // Dummy J1nx handlers for demo
-    function sendToJ1nx(){alert("J1nx chat coming soon!");}
-    function clearJ1nxChat(){alert("Clear chat!");}
-    function saveJ1nxChat(){alert("Save chat!");}
-    // Demo: expandCat accordion logic (for demo block)
-    function expandCat(cat) {
-      // Hide all
-      document.querySelectorAll('.accordion-content').forEach(div=>div.classList.remove('active'));
-      document.querySelectorAll('.arrow').forEach(ar=>ar.innerHTML='&#9654;');
-      // Show block
-      let block = document.getElementById(cat+'-block');
-      if (block) {
-        let content = block.querySelector('.accordion-content');
-        if (content) content.classList.add('active');
-        // Set arrow
-        document.getElementById('arrow-'+cat).innerHTML = '&#9660;';
-        // Scroll into view
-        block.scrollIntoView({behavior:'smooth', block:'start'});
-      }
-    }
-  </script>
-  <div style="height:27px;"></div><!-- Prevent rainbow bar overlay on content -->
-</body>
-</html>
+</div>
+<!-- END MAIN PANEL / PRANK BLOCKS -->
