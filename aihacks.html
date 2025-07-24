@@ -15,7 +15,9 @@
       --panel-deep: #23231f;
       --footer-bg: #131413;
       --gold: #ffe266;
-      --j1nx-glow: #be9cff;
+      --btn: #232922;
+      --btn-active: #191d19;
+      --btn-border: #49fffb;
     }
     html, body {
       width: 100vw; max-width: 100vw; min-width: 0;
@@ -28,6 +30,17 @@
       font-family: 'Fira Mono', monospace;
       font-size: 1.03em;
       -webkit-font-smoothing: antialiased;
+      position: relative;
+      min-height: 100vh;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: url('assets/bg-roulette.jpg') no-repeat center center/cover;
+      opacity: 0.22;
+      pointer-events: none;
     }
     .main-header {
       width: 100vw;
@@ -100,59 +113,48 @@
       font-weight: 600;
     }
     .pro-tip { color: #ffe266; font-size: .97em; }
-    /* Category Buttons */
+
+    /* Category Buttons - No emoji, pro theme only */
     .category-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 15px;
+      gap: 13px 17px;
       margin: 29px auto 19px auto;
+      max-width: 1150px;
+      position: relative;
+      z-index: 2;
     }
     .category-btn {
-      font-size: 1.16em;
+      font-size: 1.08em;
       font-weight: 900;
       letter-spacing: 0.01em;
-      padding: 18px 25px;
-      border-radius: 19px;
-      margin-bottom: 7px;
-      color: #181e24;
-      text-shadow: 0 2px 10px #f2d6fd88,0 1px 7px #05aaff65;
-      border: none;
+      padding: 17px 26px;
+      border-radius: 17px;
+      margin-bottom: 9px;
+      color: var(--aqua);
+      background: var(--btn);
+      border: 2px solid var(--btn-border);
+      text-shadow: 0 2px 10px #212c2f77,0 1px 6px #05aaff45;
       outline: none;
       cursor: pointer;
-      position: relative;
-      z-index: 9;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 5px 26px #3fff9b52,0 2px 11px #6b4afd44 inset;
-      border: 2.2px solid #fff9;
-      transition: filter .18s;
-      min-width: 168px;
+      box-shadow: 0 2px 13px #18c6fa33;
+      min-width: 164px;
+      transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.14s;
+      user-select: none;
     }
-    .category-btn .cat-art { font-size: 1.42em; margin-right: 7px; user-select: none;}
-    .cat-alexa { background: linear-gradient(90deg,#1ff6ff 5%,#0f58ff 90%);}
-    .cat-google { background: linear-gradient(90deg,#a9ff6b,#1dff70 90%);}
-    .cat-siri { background: linear-gradient(90deg,#d47fff,#5068ff 90%);}
-    .cat-bixby { background: linear-gradient(90deg,#34ffe1,#3260ff 90%);}
-    .cat-chatgpt { background: linear-gradient(90deg,#43ff9d,#1b6f39 90%);}
-    .cat-drinking { background: linear-gradient(90deg,#ff53af,#fff700 90%);}
-    .cat-dares { background: linear-gradient(90deg,#ff6238,#ffa800 90%);}
-    .cat-viral { background: linear-gradient(90deg,#6dffe2,#e0f917 90%);}
-    .cat-party { background: linear-gradient(90deg,#ff45df,#63ffb4 90%);}
-    .cat-roast { background: linear-gradient(90deg,#ff3b60,#b47cff 90%);}
-    .cat-office { background: linear-gradient(90deg,#52e6ff,#ff7ed8 90%);}
-    .cat-family { background: linear-gradient(90deg,#faff63,#f64e4e 90%);}
-    .cat-classroom { background: linear-gradient(90deg,#52ffca,#b1abff 90%);}
-    .cat-kids { background: linear-gradient(90deg,#fff89c,#d3ff5a 90%);}
-    .cat-adults { background: linear-gradient(90deg,#ff576a,#1d043b 90%);}
-    .cat-nsfw { background: linear-gradient(90deg,#f91640,#000 90%);}
-    .cat-movie { background: linear-gradient(90deg,#ffe980,#fa3a86 90%);}
-    .cat-song { background: linear-gradient(90deg,#36e2ff,#ff71c2 90%);}
-    .cat-custom { background: linear-gradient(90deg,#fff7a1,#b1b1ff 90%);}
-    .cat-weird { background: linear-gradient(90deg,#ff97f7,#49ff93 90%);}
-    .cat-egg { background: linear-gradient(90deg,#5bffa7,#ffde67 90%);}
-    .category-btn:hover, .category-btn:focus {filter: brightness(1.15);}
+    .category-btn:active, .category-btn:focus {
+      background: var(--btn-active);
+      color: #fff;
+      border-color: var(--gold);
+      box-shadow: 0 4px 24px #ffe26666;
+    }
+    .category-btn:hover {
+      background: #12161a;
+      color: #fff;
+      border-color: #fff;
+    }
+
     /* J1NX TRUE CUTOUT */
     .j1nx-float-true {
       position: fixed;
@@ -256,8 +258,8 @@
       box-shadow: 0 3px 13px #be9cff28;
       font-weight: 600;
     }
-    .prank-bg { background: #0d121b; width: 100vw; min-height: 60vh; padding: 0 0 30px 0; }
-    .main-panel { margin: 0 auto; max-width: 1000px; }
+    .prank-bg { background: #0d121bde; width: 100vw; min-height: 60vh; padding: 0 0 30px 0; }
+    .main-panel { margin: 0 auto; max-width: 1000px; position: relative; z-index: 2;}
     .footer-art {
       font-family: monospace;
       font-size: .91em;
@@ -325,31 +327,31 @@
     <b>AIHacks Encyclopedia:</b> Viral pranks, games, dares, party challenges, and wild ideas for Alexa, Google, Siri, Bixby, ChatGPT, and more. Family, party, classroom, dev—and secret 18+ for grownups.
   </div>
   <div class="micro-help">
-    <b>Ready to mess with every AI on earth?</b> Tap any category button below—each is unique, animated, and 100% pro. <span class="pro-tip">Want more chaos? Submit your own prank or hack at the bottom!</span>
+    <b>Ready to mess with every AI on earth?</b> Tap any category button below—each is pro, easy to read, and ready to expand. <span class="pro-tip">Want more chaos? Submit your own prank or hack at the bottom!</span>
   </div>
   <!-- CATEGORY BUTTONS -->
   <div class="category-row" id="category-row">
-    <button class="category-btn cat-alexa" onclick="expandCat('alexa')"><span class="cat-art">🔊</span>Alexa</button>
-    <button class="category-btn cat-google" onclick="expandCat('google')"><span class="cat-art">🤖</span>Google</button>
-    <button class="category-btn cat-siri" onclick="expandCat('siri')"><span class="cat-art">🍏</span>Siri</button>
-    <button class="category-btn cat-bixby" onclick="expandCat('bixby')"><span class="cat-art">📱</span>Bixby</button>
-    <button class="category-btn cat-chatgpt" onclick="expandCat('chatgpt')"><span class="cat-art">💬</span>ChatGPT</button>
-    <button class="category-btn cat-drinking" onclick="expandCat('drinking')"><span class="cat-art">🍺</span>Drinking</button>
-    <button class="category-btn cat-dares" onclick="expandCat('dares')"><span class="cat-art">🎲</span>Dares</button>
-    <button class="category-btn cat-viral" onclick="expandCat('viral')"><span class="cat-art">🌎</span>Viral</button>
-    <button class="category-btn cat-party" onclick="expandCat('party')"><span class="cat-art">🎉</span>Party</button>
-    <button class="category-btn cat-roast" onclick="expandCat('roast')"><span class="cat-art">🔥</span>Roast</button>
-    <button class="category-btn cat-office" onclick="expandCat('office')"><span class="cat-art">💼</span>Office</button>
-    <button class="category-btn cat-family" onclick="expandCat('family')"><span class="cat-art">👨‍👩‍👧‍👦</span>Family</button>
-    <button class="category-btn cat-classroom" onclick="expandCat('classroom')"><span class="cat-art">🏫</span>Classroom</button>
-    <button class="category-btn cat-kids" onclick="expandCat('kids')"><span class="cat-art">🧒</span>Kids</button>
-    <button class="category-btn cat-adults" onclick="expandCat('adults')"><span class="cat-art">🕵️‍♂️</span>Adults</button>
-    <button class="category-btn cat-nsfw" onclick="expandCat('nsfw')"><span class="cat-art">🔞</span>NSFW</button>
-    <button class="category-btn cat-movie" onclick="expandCat('movie')"><span class="cat-art">🎬</span>Movies/TV</button>
-    <button class="category-btn cat-song" onclick="expandCat('song')"><span class="cat-art">🎵</span>Songs</button>
-    <button class="category-btn cat-custom" onclick="expandCat('custom')"><span class="cat-art">➕</span>Submit</button>
-    <button class="category-btn cat-weird" onclick="expandCat('weird')"><span class="cat-art">👽</span>Weird</button>
-    <button class="category-btn cat-egg" onclick="expandCat('egg')"><span class="cat-art">🥚</span>Easter Eggs</button>
+    <button class="category-btn" onclick="expandCat('alexa')">Alexa</button>
+    <button class="category-btn" onclick="expandCat('google')">Google</button>
+    <button class="category-btn" onclick="expandCat('siri')">Siri</button>
+    <button class="category-btn" onclick="expandCat('bixby')">Bixby</button>
+    <button class="category-btn" onclick="expandCat('chatgpt')">ChatGPT</button>
+    <button class="category-btn" onclick="expandCat('drinking')">Drinking Games</button>
+    <button class="category-btn" onclick="expandCat('dares')">Dares</button>
+    <button class="category-btn" onclick="expandCat('viral')">Viral</button>
+    <button class="category-btn" onclick="expandCat('party')">Party</button>
+    <button class="category-btn" onclick="expandCat('roast')">Roast</button>
+    <button class="category-btn" onclick="expandCat('office')">Office</button>
+    <button class="category-btn" onclick="expandCat('family')">Family</button>
+    <button class="category-btn" onclick="expandCat('classroom')">Classroom</button>
+    <button class="category-btn" onclick="expandCat('kids')">Kids</button>
+    <button class="category-btn" onclick="expandCat('adults')">Adults</button>
+    <button class="category-btn" onclick="expandCat('nsfw')">NSFW</button>
+    <button class="category-btn" onclick="expandCat('movie')">Movies/TV</button>
+    <button class="category-btn" onclick="expandCat('song')">Songs</button>
+    <button class="category-btn" onclick="expandCat('custom')">Submit</button>
+    <button class="category-btn" onclick="expandCat('weird')">Weird</button>
+    <button class="category-btn" onclick="expandCat('egg')">Easter Eggs</button>
   </div>
   <!-- J1NX TRUE CUTOUT -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
