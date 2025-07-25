@@ -67,7 +67,6 @@
     }
     nav a:hover { background: #122a38; color: #fff; }
     .header-spacer { height: 16px; }
-
     .main-title {
       margin: 32px auto 16px auto;
       text-align: center;
@@ -198,7 +197,7 @@
 </head>
 <body>
   <header>
-    <span class="version">v2.0.1</span>
+    <span class="version">v2.1.1</span>
     <div class="breadcrumbs">
       <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
     </div>
@@ -334,32 +333,47 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
   <script>
     // ---- LOAD PRANKS FROM JSON, RENDER ACCORDION ----
     let prankData = {};
+    let prankReady = false;
+    let pendingCat = null;
+    // Helper to capitalize category
+    function catName(n) { return n.charAt(0).toUpperCase() + n.slice(1); }
     document.addEventListener('DOMContentLoaded', async function() {
-      const res = await fetch('assets/aihacks-data.json');
-      const data = await res.json();
-      prankData = {};
-      for (const prank of data) {
-        if (!prankData[prank.category]) prankData[prank.category] = [];
-        prankData[prank.category].push(prank);
-      }
-      // Render empty accordion blocks for each category
+      const cats = [
+        'alexa','google','siri','bixby','chatgpt','drinking','dares','viral','party','roast','office','family','classroom','kids','adults','nsfw','movie','song','custom','weird','egg'
+      ];
       const container = document.getElementById('accordion-area');
       container.innerHTML = '';
-      for (const cat of Object.keys(prankData)) {
+      for (const cat of cats) {
         const block = document.createElement('div');
         block.className = 'accordion-block';
         block.id = cat + '-block';
         block.innerHTML = `
           <div class="accordion-title" onclick="expandCat('${cat}')">
-            ${cat.replace(/^\w/, c => c.toUpperCase())} Pranks & Dares
+            ${catName(cat)} Pranks & Dares
           </div>
           <div class="prank-grid" id="${cat}-prank-grid"></div>
         `;
         container.appendChild(block);
       }
+      try {
+        const res = await fetch('assets/aihacks-data.json');
+        const data = await res.json();
+        prankData = {};
+        for (const prank of data) {
+          if (!prankData[prank.category]) prankData[prank.category] = [];
+          prankData[prank.category].push(prank);
+        }
+        prankReady = true;
+        if (pendingCat) {
+          expandCat(pendingCat);
+          pendingCat = null;
+        }
+      } catch(e) {
+        alert("Could not load prank data!");
+      }
     });
-
     window.expandCat = function(cat) {
+      if (!prankReady) { pendingCat = cat; return; }
       if (cat === "nsfw" || cat === "adults") {
         document.getElementById('ageGate').style.display = 'flex';
         window.ageCatOpen = cat;
@@ -373,7 +387,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         block.scrollIntoView({behavior:'smooth',block:'center'});
       }
     };
-
     function renderPranks(cat) {
       const grid = document.getElementById(cat + "-prank-grid");
       grid.innerHTML = "";
