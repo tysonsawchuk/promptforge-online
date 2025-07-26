@@ -17,6 +17,8 @@
       --footer-bg: #131413;
       --gold: #ffe266;
       --danger: #fa3c70;
+      --pink: #be9cff;
+      --j1nx-glow: #be9cff;
     }
     html, body {
       margin: 0; padding: 0; box-sizing: border-box;
@@ -25,38 +27,46 @@
       background: var(--panel);
       color: var(--offwhite);
       font-family: 'Fira Mono', monospace;
-      font-size: 1.03em;
+      font-size: 1.01em;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
-    /* ===== HERO ART WRAPPER AT TOP ===== */
-    .hero-art-wrap {
+    body {
+      background: var(--panel) url('assets/bg-hacker-neon.jpg') no-repeat top center;
+      background-size: 100vw 250px;
+      background-attachment: scroll;
+    }
+    header {
+      background: transparent;
+      padding: 0; margin: 0;
       width: 100vw; max-width: 100vw;
-      display: flex; justify-content: center; align-items: flex-end; overflow: hidden;
-      min-height: 210px; max-height: 350px; background: #000;
-      border-bottom: 3px solid #242b32;
-      position: relative;
+      border: none;
     }
-    .hero-art-img {
-      width: 100vw; max-width: 1450px; height: auto; max-height: 350px;
-      object-fit: cover; background: #000;
-      user-select: none; pointer-events: none; display: block; margin: 0 auto;
+    .top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 5px 2vw 0 2vw; margin: 0;
     }
-    @media (max-width: 900px) {
-      .hero-art-wrap { min-height: 110px; max-height: 160px; }
-      .hero-art-img { max-height: 160px; }
+    .breadcrumbs {
+      font-size: 0.98em; color: #80dfff;
+      letter-spacing: 0.01em; font-weight: 500; opacity: .96;
     }
-    @media (max-width: 600px) {
-      .hero-art-wrap { min-height: 64px; max-height: 90px; }
-      .hero-art-img { max-height: 90px; }
+    .breadcrumbs a { color: #37e4fc; text-decoration: none; }
+    .socials-row {
+      display: flex; gap: 9px; align-items: center; font-size: 1.07em;
     }
-
-    /* --- Main Title and Description --- */
-    .main-title {
-      margin: 38px auto 13px auto;
+    .socials-row a { color: var(--aqua); text-decoration: none; opacity: .84;}
+    .socials-row a:hover { color: var(--gold);}
+    .version { font-size: .97em; color: var(--aqua); background: #191c17; padding: 0.11em 1.12em; border-radius: 0 0 12px 12px; display: inline-block; font-weight: 700; letter-spacing: 0.07em; margin-bottom: 2px;}
+    .banner-hero {
+      width: 100vw; min-height: 120px; height: 145px; display: flex; align-items: flex-end;
+      justify-content: flex-start; overflow: hidden; margin-bottom: -5px; background: none;
+    }
+    .banner-hero img { width: 100vw; min-height:120px; object-fit: cover; max-height:190px; user-select: none;}
+    h1.main-title {
+      margin: 20px auto 9px auto;
       text-align: center;
-      font-size: 3.4em;
-      letter-spacing: 0.11em;
+      font-size: 3.2em;
+      letter-spacing: 0.10em;
       font-weight: 900;
       background: linear-gradient(90deg,var(--aqua) 14%,#fffac8 54%,#be9cff 100%);
       -webkit-background-clip: text;
@@ -67,34 +77,30 @@
       user-select: none;
       text-transform: uppercase;
     }
-    .aihacks-desc {
-      max-width: 1200px;
-      margin: 0 auto 21px auto;
-      font-size: .93em;
+    .desc-wrap {
+      max-width: 1100px; margin: 0 auto 0.3em auto; display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;
+    }
+    .desc-box {
+      flex: 1 1 350px; min-width: 250px; max-width: 500px;
+      font-size: .94em;
       color: #baf3fa;
-      font-weight: 400;
-      letter-spacing: .01em;
-      line-height: 1.18;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 32px;
-    }
-    .aihacks-desc-col {
-      flex: 1 1 340px;
-      min-width: 275px;
-      max-width: 440px;
-      padding: 0 7px;
       text-align: left;
+      font-weight: 500;
+      line-height: 1.31;
+      padding: 0 8px;
+      letter-spacing: .02em;
+      margin-bottom: 8px;
     }
-    .aihacks-desc-col b { color: #49fffb; }
-    .aihacks-desc-col span {color:#ffe266;}
-    .aihacks-desc-col small {font-size: 1em; opacity: 0.93;}
-
-    /* CATEGORY BUTTONS */
+    .desc-box b { color: #49fffb; }
+    #langSelect {
+      margin: 6px 0 7px 0;padding:4px 12px;border-radius:7px;font-size:1.05em;
+      background:#23292b;color:var(--aqua);border:1.5px solid #64f2e3;
+      box-shadow:0 1px 5px #64f2e344; cursor:pointer;
+      display:block;margin-left:auto;margin-right:auto;
+    }
     .category-row {
       display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 13px 17px; margin: 17px auto 26px auto; max-width: 1200px;
+      gap: 13px 17px; margin: 15px auto 22px auto; max-width: 1200px;
     }
     .category-btn {
       font-size: 1.13em; font-weight: 900; letter-spacing: 0.01em;
@@ -152,7 +158,7 @@
     .accordion-block {margin: 17px 0 22px 0;display:none;}
     .accordion-block.active {display:block;}
     .accordion-title {font-size: 1.35em; color: var(--aqua); margin-bottom: 8px; font-weight: 700; letter-spacing: .05em;}
-    .prank-grid { display: grid; grid-template-columns: repeat(2, minmax(285px,1fr)); gap: 14px;}
+    .prank-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(285px,1fr)); gap: 14px;}
     .prank-card { background:linear-gradient(100deg,#101b25 80%,#19e4f61a 100%); border-radius: 1.1em; box-shadow: 0 1px 7px #2cfffa22; padding: 13px 11px 11px 15px; min-height: 94px; transition: transform 0.13s, box-shadow 0.14s; display: flex; flex-direction: column; justify-content: space-between; border: 1.2px solid #23faff10; opacity: 0.98; font-size: 1em; position:relative;}
     .prank-card:hover { transform: scale(1.025); box-shadow: 0 0 17px #1ac9f988; border: 1.2px solid #1ff8ed;}
     .prank-title { font-size: 1.11em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
@@ -168,18 +174,39 @@
     .footer-art { font-family: monospace; font-size: .91em; line-height: 1.01; letter-spacing: 1.1px; background: var(--footer-bg); margin: 0 auto 0.7em auto; padding: 0; width: 100vw; text-align: center; color: var(--aqua); overflow-x: auto; user-select: none;}
     .footer-camo { font-family: monospace; font-size: .85em; line-height: 1.01; letter-spacing: 2px; background: transparent; margin: 0 auto 0 0; padding: 0 0 1.5px 0; width: 100vw; text-align: center; color: var(--aqua); min-height: .8em; overflow-x: auto; user-select: none;}
     .footer-bar { text-align: center; font-size: .94em; color: var(--aqua); margin-bottom: .3em; width: 100vw; max-width: 100vw; overflow: hidden;}
-    /* LANG SELECT DROPDOWN */
-    #langSelect {margin:5px 0 7px 0;padding:4px 9px;border-radius:7px;font-size:.98em;background:#23292b;color:var(--aqua);border:1.5px solid #64f2e3;box-shadow:0 1px 5px #64f2e344;}
-    #langSelect:focus{outline:2px solid var(--gold);}
+    @media (max-width: 1100px) {.desc-wrap{flex-direction:column;align-items:center;}}
+    @media (max-width: 900px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 112px; height: 112px;}
+      .desc-box {max-width:96vw;}
+    }
+    @media (max-width: 700px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 66px; height: 66px;}
+      .main-title {font-size:2em;}
+    }
   </style>
 </head>
 <body>
-  <!-- ======= HERO ART TOP ======= -->
-  <div class="hero-art-wrap">
-    <img src="assets/bg-hacker.jpg" alt="Hacker neon background" class="hero-art-img" draggable="false" />
-  </div>
-  <h1 class="main-title">AIHACKS ENCYCLOPEDIA</h1>
-  <div style="display:flex;justify-content:center;margin-bottom:8px;">
+  <header>
+    <div class="top-bar">
+      <span class="version">v2.0.1</span>
+      <span class="breadcrumbs">
+        <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
+      </span>
+      <span class="socials-row">
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+        <a href="https://x.com/GoreandGiggles" target="_blank">X/Twitter</a>
+        <a href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook</a>
+        <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank" style="color:var(--gold);">☕</a>
+      </span>
+    </div>
+    <div class="banner-hero">
+      <img src="assets/bg-hacker-neon.jpg" alt="Hacker neon background" />
+    </div>
+    <h1 class="main-title">AIHACKS ENCYCLOPEDIA</h1>
     <select id="langSelect">
       <option value="en">🌐 English</option>
       <option value="fr">Français</option>
@@ -197,16 +224,18 @@
       <option value="nl">Nederlands</option>
       <option value="sv">Svenska</option>
     </select>
-  </div>
-  <div class="aihacks-desc">
-    <div class="aihacks-desc-col">
-      <b>AIHacks Encyclopedia:</b> The ultimate, ever-expanding encyclopedia for viral AI pranks, dare games, challenge contests, and party tricks. Featuring 10,000+ hacks and ideas for Alexa, Google, Siri, Bixby, and ChatGPT—plus TikTok/YouTube challenges, family-friendly gags, wild party stunts, uncensored 18+ dares, and hidden AI secrets. Master voice commands, prompt hacks, developer exploits, “Break the Internet” memes, and social viral tricks.
+    <div class="desc-wrap">
+      <div class="desc-box">
+        <b>AIHacks Encyclopedia:</b> The ultimate, ever-expanding encyclopedia for viral AI pranks, dare games, challenge contests, and party tricks. Featuring 10,000+ hacks and ideas for Alexa, Google, Siri, Bixby, and ChatGPT—plus TikTok/YouTube challenges, family-friendly gags, wild party stunts, uncensored 18+ dares, and hidden AI secrets.
+      </div>
+      <div class="desc-box">
+        Master voice commands, prompt hacks, developer exploits, “Break the Internet” memes, and social viral tricks. Instantly play, share, rate, or favorite every prank—custom-tailored for every platform, every language, every vibe. SEO-optimized, always free, always underground, always ahead of the game.
+      </div>
+      <div class="desc-box">
+        Use AIHacks to level up your parties, shock your friends, teach your kids, or prank your office—everything is sorted, tagged, and organized for instant fun. Copy/paste, star, or submit your own pranks. Join a global community of hackers, meme lords, and mischief-makers. Translated for the world, never censored, always wild.
+      </div>
     </div>
-    <div class="aihacks-desc-col">
-      Instantly play, share, rate, or favorite every prank—custom-tailored for every platform, every language, every vibe. SEO-optimized, always free, always underground, always ahead of the game.<br><br>
-      Use AIHacks to level up your parties, shock your friends, teach your kids, or prank your office—everything is sorted, tagged, and organized for instant fun. Copy/paste, star, or submit your own pranks. Join a global community of hackers, meme lords, and mischief-makers. Translated for the world, never censored, always wild.
-    </div>
-  </div>
+  </header>
   <div class="category-row" id="category-row">
     <button class="category-btn" onclick="expandCat('alexa')">Alexa</button>
     <button class="category-btn" onclick="expandCat('google')">Google</button>
@@ -230,13 +259,7 @@
     <button class="category-btn" onclick="expandCat('weird')">Weird</button>
     <button class="category-btn" onclick="expandCat('egg')">Easter Eggs</button>
   </div>
-  <div id="ageGate" class="age-gate" style="display:none;">
-    <h2>18+ ONLY – NSFW / ADULT CONTENT</h2>
-    <div>
-      This section contains wild, explicit, or uncensored AI pranks & dares. By clicking below you confirm you are 18+.<br>
-      <button class="age-btn" onclick="closeAgeGate()">I’m 18+, show me the fun stuff!</button>
-    </div>
-  </div>
+
   <!-- J1NX TRUE CUTOUT -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
@@ -257,41 +280,43 @@
       </div>
     </div>
   </div>
-  <div class="prank-bg">
-    <div class="main-panel" id="main-panel">
-      <div id="accordion-area">
-        <!-- Stack new blocks here: this is where you paste more .accordion-block! -->
-        <div class="accordion-block" id="alexa-block">
-          <div class="accordion-title">Alexa Pranks & Dares</div>
-          <div class="prank-grid">
-            <div class="prank-card" data-id="a1">
-              <div class="prank-title">Alexa, Flirt Mode</div>
-              <div class="prank-tip">Ask Alexa to activate flirt mode and see what she says...</div>
-              <div class="prank-actions">
-                <button onclick="speakText('Alexa, activate flirt mode')">Play</button>
-                <button onclick="copyText('Alexa, activate flirt mode')">Copy</button>
-                <button onclick="shareText('Alexa, activate flirt mode')">Share</button>
-                <span class="fav-btn" onclick="toggleFav(this, 'a1')">&#10084;</span>
-                <span class="star-rating" data-id="a1"></span>
-              </div>
-            </div>
-            <div class="prank-card" data-id="a2">
-              <div class="prank-title">Alexa, Beatbox!</div>
-              <div class="prank-tip">Say: 'Alexa, can you beatbox?' and enjoy the show.</div>
-              <div class="prank-actions">
-                <button onclick="speakText('Alexa, can you beatbox?')">Play</button>
-                <button onclick="copyText('Alexa, can you beatbox?')">Copy</button>
-                <button onclick="shareText('Alexa, can you beatbox?')">Share</button>
-                <span class="fav-btn" onclick="toggleFav(this, 'a2')">&#10084;</span>
-                <span class="star-rating" data-id="a2"></span>
-              </div>
+
+  <div style="height:18px"></div>
+
+  <div class="main-panel" id="main-panel">
+    <div id="accordion-area">
+      <!-- Alexa demo (collapsed by default) -->
+      <div class="accordion-block" id="alexa-block">
+        <div class="accordion-title">Alexa Pranks & Dares</div>
+        <div class="prank-grid">
+          <div class="prank-card" data-id="a1">
+            <div class="prank-title">Alexa, Flirt Mode</div>
+            <div class="prank-tip">Ask Alexa to activate flirt mode and see what she says...</div>
+            <div class="prank-actions">
+              <button onclick="speakText('Alexa, activate flirt mode')">Play</button>
+              <button onclick="copyText('Alexa, activate flirt mode')">Copy</button>
+              <button onclick="shareText('Alexa, activate flirt mode')">Share</button>
+              <span class="fav-btn" onclick="toggleFav(this, 'a1')">&#10084;</span>
+              <span class="star-rating" data-id="a1"></span>
             </div>
           </div>
+          <div class="prank-card" data-id="a2">
+            <div class="prank-title">Alexa, Beatbox!</div>
+            <div class="prank-tip">Say: 'Alexa, can you beatbox?' and enjoy the show.</div>
+            <div class="prank-actions">
+              <button onclick="speakText('Alexa, can you beatbox?')">Play</button>
+              <button onclick="copyText('Alexa, can you beatbox?')">Copy</button>
+              <button onclick="shareText('Alexa, can you beatbox?')">Share</button>
+              <span class="fav-btn" onclick="toggleFav(this, 'a2')">&#10084;</span>
+              <span class="star-rating" data-id="a2"></span>
+            </div>
+          </div>
+          <!-- More pranks here -->
         </div>
-        <!-- Next .accordion-block goes here! -->
       </div>
     </div>
   </div>
+
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -392,11 +417,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
 
     // === CATEGORY EXPAND LOGIC (One open at a time) ===
     function expandCat(cat) {
-      if (cat === "nsfw" || cat === "adults") {
-        document.getElementById('ageGate').style.display = 'flex';
-        window.ageCatOpen = cat;
-        return;
-      }
       document.querySelectorAll('.accordion-block').forEach(block => block.classList.remove('active'));
       let block = document.getElementById(cat + "-block");
       if (block) {
@@ -404,14 +424,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         block.scrollIntoView({behavior:'smooth',block:'center'});
       }
     }
-    function closeAgeGate() {
-      document.getElementById('ageGate').style.display = 'none';
-      let block = document.getElementById(window.ageCatOpen + "-block");
-      if (block) {
-        block.classList.add('active');
-        block.scrollIntoView({behavior:'smooth',block:'center'});
-      }
-    }
+
     // --- J1NX JS (unmodified, real logic from your main) ---
     document.addEventListener('DOMContentLoaded', function() {
       function adjustJ1nxFloatTrue() {
@@ -430,6 +443,23 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       window.addEventListener('scroll', adjustJ1nxFloatTrue);
       window.addEventListener('resize', adjustJ1nxFloatTrue);
       setTimeout(adjustJ1nxFloatTrue, 700);
+    });
+
+    // --- Language Switcher ---
+    document.getElementById('langSelect').addEventListener('change', function(e) {
+      const lang = e.target.value;
+      if(lang === 'en') { location.reload(); return; }
+      // Use Google Translate widget
+      let s = document.createElement('script');
+      s.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
+      document.body.appendChild(s);
+      window.googleTranslateElementInit = function() {
+        new window.google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: lang,
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'main-panel');
+      };
     });
   </script>
 </body>
