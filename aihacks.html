@@ -81,28 +81,38 @@
       user-select: none;
       text-transform: uppercase;
     }
-    /* FINAL description styling: small, tight, fits mobile */
-    .desc-seo {
-      font-size: 0.78em;
-      line-height: 1.13;
+    /* NEW: Compact description layout for mobile & desktop */
+    .desc-seo-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 32px;
+      align-items: flex-start;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 8px auto 4px auto;
+      width: 100%;
+    }
+    .desc-seo-col {
+      flex: 1 1 280px;
+      min-width: 210px;
+      max-width: 540px;
+      font-size: 0.85em;
+      line-height: 1.19;
       color: #b5c3cf;
-      max-width: 660px;
-      margin: 7px auto 8px auto;
-      text-align: left;
       font-weight: 400;
-      background: none;
-      border: none;
-      padding: 0;
-      box-shadow: none;
-      letter-spacing: .003em;
       opacity: 0.76;
+      margin-bottom: 2px;
+      padding: 0;
+      letter-spacing: .003em;
       user-select: none;
     }
-    .desc-seo b { color: #41e4fe; font-weight: 600;}
-    .desc-seo small { font-size: 0.91em; opacity: 0.63; display: block; margin-top: 2px;}
-    @media (max-width: 700px) {
-      .desc-seo { max-width: 95vw; font-size: 0.90em;}
+    .desc-seo-col b { color: #41e4fe; font-weight: 600;}
+    .desc-seo-col small { font-size: 0.91em; opacity: 0.7; display: block; margin-top: 3px;}
+    @media (max-width: 900px) {
+      .desc-seo-row { flex-direction: column; gap: 0;}
+      .desc-seo-col { max-width: 97vw; margin-bottom: 4px; font-size: 0.97em;}
     }
+    /* ...rest of styles unchanged (categories, j1nx, prank grid, footer etc.) ... */
     .category-row {display:flex;flex-wrap:wrap;justify-content:center;gap:13px 17px;margin:17px auto 22px auto;max-width:1200px;}
     .category-btn {
       font-size: 1.13em; font-weight: 900; letter-spacing: 0.01em;
@@ -128,7 +138,6 @@
       background: #32240b; color: var(--gold); border-color: var(--gold);
       box-shadow: 0 2px 18px #ffe266bb,0 1px 7px #22200644 inset;
     }
-    /* ...rest of your styles for J1NX, prank grid, footer, etc. unchanged... */
     .accordion-block {margin: 17px 0 22px 0;display:none;}
     .accordion-block.active {display:block;}
     .accordion-title {font-size: 1.35em; color: var(--aqua); margin-bottom: 8px; font-weight: 700; letter-spacing: .05em;}
@@ -178,6 +187,10 @@
     .footer-bar { text-align: center; font-size: .94em; color: var(--aqua); margin-bottom: .3em; width: 100vw; max-width: 100vw; overflow: hidden;}
     #langSelect {margin:5px 0 7px 0;padding:4px 9px;border-radius:7px;font-size:.98em;background:#23292b;color:var(--aqua);border:1.5px solid #64f2e3;box-shadow:0 1px 5px #64f2e344;}
     #langSelect:focus{outline:2px solid var(--gold);}
+    /* Hide default Google Translate branding as much as possible */
+    .goog-logo-link,.goog-te-gadget span,.goog-te-banner-frame,.goog-te-balloon-frame{display:none!important;}
+    .goog-te-gadget{color:#64f2e3!important;}
+    body {top:0!important;}
   </style>
 </head>
 <body>
@@ -201,7 +214,8 @@
     </div>
   </header>
   <h1 class="main-title">AIHacks Encyclopedia</h1>
-  <div style="display:flex;justify-content:center;margin-bottom:8px;">
+  <!-- Language Selector and Google Translate widget -->
+  <div style="display:flex;justify-content:center;margin-bottom:8px;gap:17px;align-items:center;">
     <select id="langSelect">
       <option value="en">🌐 English</option>
       <option value="fr">Français</option>
@@ -219,13 +233,22 @@
       <option value="nl">Nederlands</option>
       <option value="sv">Svenska</option>
     </select>
+    <div id="google_translate_element"></div>
   </div>
-  <div class="desc-seo">
-    <b>AIHacks Encyclopedia:</b>
-    The ultimate, ever-expanding encyclopedia for viral AI pranks, dare games, challenge contests, and party tricks. Featuring 10,000+ hacks and ideas for Alexa, Google, Siri, Bixby, and ChatGPT—plus TikTok/YouTube challenges, family-friendly gags, wild party stunts, uncensored 18+ dares, and hidden AI secrets. Master voice commands, prompt hacks, developer exploits, “Break the Internet” memes, and social viral tricks. Instantly play, share, rate, or favorite every prank—custom-tailored for every platform, every language, every vibe. SEO-optimized, always free, always underground, always ahead of the game.
-    <small>
-      Use AIHacks to level up your parties, shock your friends, teach your kids, or prank your office—everything is sorted, tagged, and organized for instant fun. Copy/paste, star, or submit your own pranks. Join a global community of hackers, meme lords, and mischief-makers. Translated for the world, never censored, always wild.
-    </small>
+  <!-- NEW Tighter SEO Description Layout -->
+  <div class="desc-seo-row">
+    <div class="desc-seo-col">
+      <b>AIHacks Encyclopedia:</b>  
+      The ultimate, ever-expanding guide for viral AI pranks, dare games, and challenge contests. 10,000+ ideas for Alexa, Google, Siri, Bixby, and ChatGPT—plus TikTok/YouTube challenges, family gags, wild stunts, and hidden AI secrets.
+    </div>
+    <div class="desc-seo-col">
+      Master voice commands, prompt hacks, developer exploits, meme stunts, and viral tricks. Instantly play, share, rate, or favorite every prank—custom for every platform, every language, every vibe.
+    </div>
+    <div class="desc-seo-col">
+      <small>
+        Level up parties, shock friends, teach kids, or prank the office—everything is sorted, tagged, and organized for instant fun. Submit your own pranks. Translated worldwide, never censored, always wild.
+      </small>
+    </div>
   </div>
   <div class="category-row" id="category-row">
     <button class="category-btn" onclick="expandCat('alexa')">Alexa</button>
@@ -279,7 +302,7 @@
   </div>
   <div class="main-panel" id="main-panel">
     <div id="accordion-area">
-      <!-- This is where you stack new .accordion-blocks! Sample block: -->
+      <!-- Example Alexa block, rest get stacked -->
       <div class="accordion-block" id="alexa-block" style="display:block;">
         <div class="accordion-title">Alexa Pranks & Dares</div>
         <div class="prank-grid">
@@ -294,10 +317,9 @@
               <span class="star-rating" data-id="a1"></span>
             </div>
           </div>
-          <!-- Add more pranks here -->
         </div>
       </div>
-      <!-- Add more categories here as you stack! -->
+      <!-- More blocks... -->
     </div>
   </div>
   <footer>
@@ -521,7 +543,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
           pageLanguage: 'en',
           includedLanguages: code,
           layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'main-panel');
+        }, 'google_translate_element');
       };
       // Fallback for page elements:
       setTimeout(()=>{
