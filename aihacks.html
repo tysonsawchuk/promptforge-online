@@ -325,22 +325,40 @@
     .accordion-block {margin: 17px 0 22px 0;display:none;}
     .accordion-block.active, .accordion-block.open {display:block;}
     .accordion-title {font-size: 1.35em; color: var(--aqua); margin-bottom: 8px; font-weight: 700; letter-spacing: .05em;}
-    .prank-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(285px,1fr)); gap: 14px;}
-    .prank-card { background:linear-gradient(100deg,#101b25 80%,#19e4f61a 100%); border-radius: 1.1em; box-shadow: 0 1px 7px #2cfffa22; padding: 13px 11px 11px 15px; min-height: 94px; transition: transform 0.13s, box-shadow 0.14s; display: flex; flex-direction: column; justify-content: space-between; border: 1.2px solid #23faff10; opacity: 0.98; font-size: 1em; position:relative;}
+    .prank-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px 20px;
+      margin-bottom: 16px;
+    }
+    .prank-card {
+      background: linear-gradient(100deg,#101b25 80%,#19e4f61a 100%);
+      border-radius: 1.1em;
+      box-shadow: 0 1px 7px #2cfffa22;
+      padding: 13px 11px 11px 15px;
+      min-height: 110px;
+      transition: transform 0.13s, box-shadow 0.14s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1.2px solid #23faff10;
+      opacity: 0.98;
+      font-size: 1em;
+      position:relative;
+    }
     .prank-card:hover { transform: scale(1.025); box-shadow: 0 0 17px #1ac9f988; border: 1.2px solid #1ff8ed;}
     .prank-title { font-size: 1.11em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
     .prank-tip { font-size: 0.98em; color: #b8fdff; opacity: 0.87; margin-bottom: 5px;}
     .prank-actions {display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap;}
     .prank-actions button { background: linear-gradient(90deg,#18ffc0c0 70%,#4af4f2e1 100%); border: none; color: #123f48; font-weight: bold; border-radius: 1.2em; padding: 5px 13px; font-size: 0.99em; cursor:pointer; min-width:45px;}
     .prank-actions button:hover {background:linear-gradient(90deg,#12d9b4 40%,#18d8fb 100%); color:#fff;}
-    /* LANG SELECT DROPDOWN */
     #langSelect {margin:5px 0 7px 0;padding:4px 9px;border-radius:7px;font-size:.98em;background:#23292b;color:var(--aqua);border:1.5px solid #64f2e3;box-shadow:0 1px 5px #64f2e344;}
     #langSelect:focus{outline:2px solid var(--gold);}
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v2.2.0</span>
+    <span class="version">v2.3.1</span>
     <div class="breadcrumbs">
       <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
     </div>
@@ -447,7 +465,6 @@
     <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="☕" />
     Buy Me a Coffee
   </button>
-
   <div id="ageGate">
     <div id="ageGateInner">
       <h2>18+ ONLY – NSFW / ADULT CONTENT</h2>
@@ -460,7 +477,6 @@
   <div class="prank-bg">
     <div class="main-panel" id="main-panel">
       <div id="accordion-area">
-        <!-- All category blocks, all hidden by default. Pranks will be loaded into these on click. -->
         <div class="accordion-block" id="alexa-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></div>
         <div class="accordion-block" id="google-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></div>
         <div class="accordion-block" id="siri-block"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></div>
@@ -603,7 +619,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
 
     // --- Prank JSON DYNAMIC LOADER + ACCORDION LOGIC ---
     let prankData = {};
-    let prankLoaded = false;
 
     function renderPrankBlock(cat) {
       let block = document.getElementById(cat + "-block");
@@ -621,9 +636,9 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
             <div class="prank-title">${prank.title}</div>
             <div class="prank-tip">${prank.tip}</div>
             <div class="prank-actions">
-              <button onclick="speakText('${prank.say.replace(/'/g, "\\'")}')">Play</button>
-              <button onclick="copyText('${prank.say.replace(/'/g, "\\'")}')">Copy</button>
-              <button onclick="shareText('${prank.say.replace(/'/g, "\\'")}')">Share</button>
+              <button onclick="speakText('${prank.command.replace(/'/g, "\\'")}')">Play</button>
+              <button onclick="copyText('${prank.command.replace(/'/g, "\\'")}')">Copy</button>
+              <button onclick="shareText('${prank.command.replace(/'/g, "\\'")}')">Share</button>
             </div>
           </div>
         `;
@@ -682,9 +697,13 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     window.onload = function() {
       fetch("assets/aihacks-data.json")
         .then(r => r.json())
-        .then(data => {
-          prankData = data;
-          prankLoaded = true;
+        .then(all => {
+          prankData = {};
+          for (let prank of all) {
+            let cat = prank.category;
+            if (!prankData[cat]) prankData[cat] = [];
+            prankData[cat].push(prank);
+          }
         });
     };
   </script>
