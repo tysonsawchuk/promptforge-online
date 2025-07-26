@@ -175,7 +175,13 @@
     .accordion-block {margin: 17px 0 22px 0;display:none;}
     .accordion-block.active {display:block;}
     .accordion-title {font-size: 1.35em; color: var(--aqua); margin-bottom: 8px; font-weight: 700; letter-spacing: .05em;}
-    .prank-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(285px,1fr)); gap: 14px;}
+    .prank-grid { display: grid; grid-template-columns: 1fr; gap: 14px;}
+    @media (min-width: 700px) {
+      .prank-grid { grid-template-columns: repeat(2, 1fr);}
+    }
+    @media (min-width: 1050px) {
+      .prank-grid { grid-template-columns: repeat(3, 1fr);}
+    }
     .prank-card { background:linear-gradient(100deg,#101b25 80%,#19e4f61a 100%); border-radius: 1.1em; box-shadow: 0 1px 7px #2cfffa22; padding: 13px 11px 11px 15px; min-height: 94px; transition: transform 0.13s, box-shadow 0.14s; display: flex; flex-direction: column; justify-content: space-between; border: 1.2px solid #23faff10; opacity: 0.98; font-size: 1em; position:relative;}
     .prank-card:hover { transform: scale(1.025); box-shadow: 0 0 17px #1ac9f988; border: 1.2px solid #1ff8ed;}
     .prank-title { font-size: 1.11em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
@@ -254,6 +260,7 @@
     <a class="howto-link" href="terms.html">Legal / Terms</a>
   </div>
   <div class="category-row" id="category-row">
+    <!-- ...all your category buttons exactly as before... -->
     <button class="category-btn" onclick="expandCat('alexa')">Alexa</button>
     <button class="category-btn" onclick="expandCat('google')">Google</button>
     <button class="category-btn" onclick="expandCat('siri')">Siri</button>
@@ -283,7 +290,7 @@
       <button class="age-btn" onclick="closeAgeGate()">I’m 18+, show me the fun stuff!</button>
     </div>
   </div>
-  <!-- J1NX TRUE CUTOUT -->
+  <!-- ==== J1NX WIDGET (float, fully wired) ==== -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -472,7 +479,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         block.scrollIntoView({behavior:'smooth',block:'center'});
       }
     }
-    // --- J1NX LOGIC (unchanged, fully working) ---
+    // --- J1NX JS (Full Chat/Brain Logic, from main.html) ---
     document.addEventListener('DOMContentLoaded', function() {
       function adjustJ1nxFloatTrue() {
         const widget = document.getElementById('j1nxFloatTrue');
@@ -490,8 +497,77 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       window.addEventListener('scroll', adjustJ1nxFloatTrue);
       window.addEventListener('resize', adjustJ1nxFloatTrue);
       setTimeout(adjustJ1nxFloatTrue, 700);
+
+      // ==== J1nx BRAIN LOGIC ====
+      let chat = [];
+      let defaultMood = 0;
+      let moods = [
+        {glow: "#64f2e3"},
+        {glow: "#fa528e"},
+        {glow: "#be9cff"},
+        {glow: "#ffd166"}
+      ];
+      // moodIdx: 0 = default/cheer, 1 = wicked, 2 = sultry, 3 = caught/slack
+
+      function getJ1nxReply(val) {
+        if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+          let res = window.j1nxBrain(val, chat.length);
+          if(typeof res === "string") return {reply: res, mood: 0};
+          if(typeof res === "object" && res.reply) return res;
+          return {reply: "(I have no clue... bug?)", mood: 0};
+        }
+        return {reply: "(Brain not loaded)", mood: 0};
+      }
+      function setJ1nxMood(idx) {
+        idx = Math.max(0, Math.min(idx, moods.length-1));
+        document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+        document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      }
+      let moodIndex = 0, lastTap = 0;
+      document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+        let now = Date.now();
+        if (now - lastTap < 400) {
+          moodIndex = (moodIndex + 1) % moods.length;
+          setJ1nxMood(moodIndex);
+        }
+        lastTap = now;
+      });
+      function renderJ1nxChat() {
+        document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      }
+      function chatReset() {
+        chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+        setJ1nxMood(defaultMood);
+        renderJ1nxChat();
+      }
+      document.getElementById("j1nxSendTrue").onclick = function(){
+        let val = document.getElementById("j1nxInputTrue").value.trim();
+        if (!val) return;
+        let res = getJ1nxReply(val);
+        chat.push(val);
+        chat.push(res.reply);
+        setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+        renderJ1nxChat();
+        document.getElementById("j1nxInputTrue").value = "";
+      };
+      document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+        if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+      });
+      document.getElementById("j1nxClearTrue").onclick = chatReset;
+      document.getElementById("j1nxSaveTrue").onclick = function(){
+        let text = chat.join('\n');
+        let blob = new Blob([text], {type:"text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "j1nx_chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      };
+      chatReset(); // init
     });
-    // --- Language Switcher (Google Translate API, fallback) ---
+    // --- Language Switcher ---
     function switchLang(code) {
       if(code==='en') { location.reload(); return; }
       let scriptId = "google-translate-script";
@@ -509,5 +585,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       };
     }
   </script>
+  <!-- J1NX BRAIN LOGIC -->
+  <script src="assets/j1nx_brain.js" defer></script>
 </body>
 </html>
