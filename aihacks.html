@@ -278,11 +278,56 @@
       .bmc-float-btn { left: 6px; bottom: 6px; padding: 10px 13px; font-size: 1.02em; }
     }
     .main-panel { padding-bottom: 220px !important; }
+    .footer-art { 
+      font-family: monospace; 
+      font-size: .91em; 
+      line-height: 1.01; 
+      letter-spacing: 1.1px; 
+      background: var(--footer-bg); 
+      margin: 0 auto 0.7em auto; 
+      padding: 0; 
+      width: 100vw; 
+      text-align: center; 
+      color: var(--aqua); 
+      overflow-x: auto; 
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-bar { text-align: center; font-size: .94em; color: var(--aqua); margin-bottom: .3em; width: 100vw; max-width: 100vw; overflow: hidden;}
+    /* Age Gate Modal */
+    #ageGate {
+      display:none;
+      position: fixed;
+      z-index: 2001;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(14,19,18,0.96);
+      justify-content: center;
+      align-items: center;
+    }
+    #ageGateInner {
+      background: #1b1622;
+      border: 3px solid #fa3c70;
+      border-radius: 20px;
+      color: #ffe266;
+      text-align: center;
+      padding: 40px 32px 36px 32px;
+      box-shadow: 0 3px 28px #fa3c7082;
+      max-width: 420px;
+    }
+    #ageGateInner h2 { color: #fa3c70; font-size: 2em; font-weight: 900; margin-bottom: 14px; }
+    #ageGateInner .age-btn {
+      background: #fa3c70; color: #fff; border: none; border-radius: 12px;
+      font-size: 1.2em; font-weight: 700; padding: 15px 32px; margin-top: 30px;
+      cursor: pointer; box-shadow: 0 1px 10px #fa3c7048; transition: background .12s;
+    }
+    #ageGateInner .age-btn:hover { background: #ffe266; color: #fa3c70; }
   </style>
 </head>
 <body>
   <header>
-    <span class="version">v2.0.7</span>
+    <span class="version">v2.1.0</span>
     <div class="breadcrumbs">
       <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
     </div>
@@ -390,35 +435,44 @@
     Buy Me a Coffee
   </button>
 
+  <div id="ageGate">
+    <div id="ageGateInner">
+      <h2>18+ ONLY – NSFW / ADULT CONTENT</h2>
+      <div>
+        This section contains wild, explicit, or uncensored AI pranks & dares. By clicking below you confirm you are 18+.<br>
+        <button class="age-btn" onclick="closeAgeGate()">I’m 18+, show me the fun stuff!</button>
+      </div>
+    </div>
+  </div>
   <div class="prank-bg">
     <div class="main-panel" id="main-panel">
       <div id="accordion-area">
-        <!-- All category blocks: ready to fill! -->
-        <div class="accordion-block" id="alexa-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="google-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="siri-block"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="bixby-block"><div class="accordion-title">Bixby Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="chatgpt-block"><div class="accordion-title">ChatGPT Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="drinking-block"><div class="accordion-title">Drinking Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="dares-block"><div class="accordion-title">Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="viral-block"><div class="accordion-title">Viral Challenges</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="party-block"><div class="accordion-title">Party Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="roast-block"><div class="accordion-title">Roast Battles</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="office-block"><div class="accordion-title">Office Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="family-block"><div class="accordion-title">Family Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="classroom-block"><div class="accordion-title">Classroom Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="kids-block"><div class="accordion-title">Kids Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="adults-block"><div class="accordion-title">Adults 18+ Only</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="nsfw-block"><div class="accordion-title">NSFW / Uncensored</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="movie-block"><div class="accordion-title">Movie/TV Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="song-block"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="weird-block"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="egg-block"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></div>
+        <!-- All category blocks, all hidden by default -->
+        <div class="accordion-block" id="alexa-block" style="display:none"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="google-block" style="display:none"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="siri-block" style="display:none"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="bixby-block" style="display:none"><div class="accordion-title">Bixby Pranks & Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="chatgpt-block" style="display:none"><div class="accordion-title">ChatGPT Pranks & Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="drinking-block" style="display:none"><div class="accordion-title">Drinking Games</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="dares-block" style="display:none"><div class="accordion-title">Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="viral-block" style="display:none"><div class="accordion-title">Viral Challenges</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="party-block" style="display:none"><div class="accordion-title">Party Pranks</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="roast-block" style="display:none"><div class="accordion-title">Roast Battles</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="office-block" style="display:none"><div class="accordion-title">Office Pranks</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="family-block" style="display:none"><div class="accordion-title">Family Games</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="classroom-block" style="display:none"><div class="accordion-title">Classroom Games</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="kids-block" style="display:none"><div class="accordion-title">Kids Pranks & Dares</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="adults-block" style="display:none"><div class="accordion-title">Adults 18+ Only</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="nsfw-block" style="display:none"><div class="accordion-title">NSFW / Uncensored</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="movie-block" style="display:none"><div class="accordion-title">Movie/TV Pranks</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="song-block" style="display:none"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="weird-block" style="display:none"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></div>
+        <div class="accordion-block" id="egg-block" style="display:none"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></div>
       </div>
     </div>
   </div>
   <footer>
-    <pre class="footer-art">
+    <pre class="footer-art" style="justify-content:center;">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
 U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
 \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
@@ -468,11 +522,10 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       shrinkJ1nx();
     })();
 
-    // --- J1NX CHAT WIRING (no object reply bug) ---
+    // --- J1NX CHAT WIRING ---
     (function(){
       let chatHistory = [];
       let nsfwUnlocked = false;
-
       function renderChat() {
         const out = chatHistory.map(line => `<div>${line}</div>`).join('');
         document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
@@ -484,19 +537,16 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
         renderChat();
       }
-      // NSFW double-tap/unlock support
       document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
         nsfwUnlocked = true;
         document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
         addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
       });
-      // Wire input/send
       document.getElementById('j1nxSendTrue').onclick = function() {
         const input = document.getElementById('j1nxInputTrue');
         const val = (input.value || '').trim();
         if (!val) return;
         addMsg(val, true);
-        // Easter egg unlock by typing "unlock"
         if (/^unlock$/i.test(val)) {
           nsfwUnlocked = true;
           document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
@@ -504,7 +554,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
           input.value = "";
           return;
         }
-        // Call real J1NX brain!
         try {
           let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
           let replyText = (reply && typeof reply === 'object')
@@ -516,11 +565,9 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         }
         input.value = "";
       };
-      // Enter key support
       document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
         if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
       });
-      // Save chat
       document.getElementById('j1nxSaveTrue').onclick = function() {
         const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
         const blob = new Blob([text], {type:'text/plain'});
@@ -529,19 +576,19 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
         setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
       };
-      // Clear chat
       document.getElementById('j1nxClearTrue').onclick = function() {
         chatHistory = [];
         renderChat();
       };
-      // Show default on load
       renderChat();
     })();
 
-    // --- Category expand logic ---
+    // --- Category expand logic + AgeGate ---
     function expandCat(cat) {
+      // Age gate for NSFW/Adults
       if (cat === "nsfw" || cat === "adults") {
-        alert("18+ section! NSFW/Adults-only coming soon…");
+        document.getElementById('ageGate').style.display = 'flex';
+        window.ageCatOpen = cat;
         return;
       }
       document.querySelectorAll('.accordion-block').forEach(block => block.style.display = 'none');
@@ -551,7 +598,15 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         block.scrollIntoView({behavior:'smooth',block:'center'});
       }
     }
-    // --- Submit modal logic (placeholder for now) ---
+    function closeAgeGate() {
+      document.getElementById('ageGate').style.display = 'none';
+      let block = document.getElementById(window.ageCatOpen + "-block");
+      if (block) {
+        block.style.display = 'block';
+        block.scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    }
+    // --- Submit modal logic ---
     function openSubmitModal() {
       alert("Prank submission coming soon. For now, DM on socials or email: 0fearnofish0@gmail.com");
     }
