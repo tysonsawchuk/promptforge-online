@@ -312,21 +312,27 @@
       }
     }
     .prank-card {
-      background: linear-gradient(100deg,#101b25 80%,#19e4f61a 100%);
-      border-radius: 1.1em;
-      box-shadow: 0 1px 7px #2cfffa22;
+      background: linear-gradient(110deg, #202e3a 78%, #2ef9e81c 100%);
+      border-radius: 1.15em;
+      box-shadow: 0 2px 16px #3af5f449, 0 1px 16px #3cfbe638, 0 4px 28px #1e405766;
       padding: 13px 11px 11px 15px;
       min-height: 110px;
       transition: transform 0.13s, box-shadow 0.14s;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border: 1.2px solid #23faff10;
-      opacity: 0.98;
+      border: 1.7px solid #39ffe876;
+      opacity: 0.99;
       font-size: 1em;
       position:relative;
+      filter: drop-shadow(0 4px 13px #64f2e32b);
     }
-    .prank-card:hover { transform: scale(1.025); box-shadow: 0 0 17px #1ac9f988; border: 1.2px solid #1ff8ed;}
+    .prank-card:hover { 
+      transform: scale(1.033); 
+      box-shadow: 0 0 29px #52e7ffbb, 0 2px 13px #1ffedba1; 
+      border: 1.7px solid #64f2e3;
+      z-index: 10;
+    }
     .prank-title { font-size: 1.11em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
     .prank-tip { font-size: 0.98em; color: #b8fdff; opacity: 0.87; margin-bottom: 5px;}
     .prank-actions {display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap;}
@@ -387,7 +393,7 @@
 </head>
 <body>
   <header>
-    <span class="version">v2.4.0</span>
+    <span class="version">v2.4.2</span>
     <div class="breadcrumbs">
       <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
     </div>
@@ -469,7 +475,6 @@
     <button class="category-btn" onclick="expandCat('weird')">Weird</button>
     <button class="category-btn" onclick="expandCat('egg')">Easter Eggs</button>
   </div>
-  <!-- J1NX FLOATING WIDGET -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -549,11 +554,9 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     </div>
   </footer>
   <script>
-    // --- SEO Banner animation reset if needed ---
     document.getElementById('seoBannerInner').addEventListener('animationiteration',function(){
       this.style.animation = 'none'; void this.offsetWidth; this.style.animation = '';
     });
-    // --- J1NX FLOATING SHRINK/EXPAND ON MOBILE ---
     (function(){
       const j1nxFloat = document.getElementById('j1nxFloatTrue');
       const cutout = document.getElementById('j1nxCutoutTrue');
@@ -582,7 +585,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       window.addEventListener('resize', shrinkJ1nx);
       shrinkJ1nx();
     })();
-    // --- J1NX CHAT WIRING ---
     (function(){
       let chatHistory = [];
       let nsfwUnlocked = false;
@@ -642,7 +644,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       };
       renderChat();
     })();
-    // --- Prank JSON DYNAMIC LOADER + ACCORDION LOGIC ---
     let prankData = {};
     function setRating(id, val) {
       let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
@@ -675,7 +676,6 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       }
       let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
       for (let i=0; i<items.length; ++i) {
-        // Insert ad card every 15
         if (i>0 && i%15===0) {
           grid.innerHTML += `
             <div class="ad-card">
