@@ -475,7 +475,6 @@
     <button class="category-btn" onclick="expandCat('weird')">Weird</button>
     <button class="category-btn" onclick="expandCat('easteregg')">Easter Eggs</button>
   </div>
-  <!-- Everything else (footer, scripts, all sections) is identical to your original, so just copy/paste full content from your working file below this point if it gets cut off here. This message box can only hold about 30k chars, so if it gets clipped, let me know and I’ll continue with the next block instantly. -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -566,20 +565,20 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       function shrinkJ1nx() {
         if(isMobile()) {
           j1nxFloat.classList.remove('j1nx-open');
-          bubble.style.display = \"none\";
+          bubble.style.display = "none";
         } else {
           j1nxFloat.classList.add('j1nx-open');
-          bubble.style.display = \"flex\";
+          bubble.style.display = "flex";
         }
       }
       cutout.onclick = function(e) {
         if(isMobile()) {
           if(j1nxFloat.classList.contains('j1nx-open')) {
             j1nxFloat.classList.remove('j1nx-open');
-            bubble.style.display = \"none\";
+            bubble.style.display = "none";
           } else {
             j1nxFloat.classList.add('j1nx-open');
-            bubble.style.display = \"flex\";
+            bubble.style.display = "flex";
           }
         }
       };
@@ -591,19 +590,19 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       let nsfwUnlocked = false;
       function renderChat() {
         const out = chatHistory.map(line => `<div>${line}</div>`).join('');
-        document.getElementById('j1nxBubbleTextTrue').innerHTML = out || \"<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)\";
+        document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
       }
       function addMsg(msg, isUser) {
         if (!msg) return;
-        const name = isUser ? \"<b>You:</b> \" : \"<b>J1nx:</b> \";
+        const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
         chatHistory.push(name + msg);
         if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
         renderChat();
       }
       document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
         nsfwUnlocked = true;
-        document.getElementById('j1nxEasterEggTrue').innerHTML = \"<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...\";
-        addMsg(\"NSFW mode unlocked! You’re now in uncensored mode.\", false);
+        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
       });
       document.getElementById('j1nxSendTrue').onclick = function() {
         const input = document.getElementById('j1nxInputTrue');
@@ -612,9 +611,9 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         addMsg(val, true);
         if (/^unlock$/i.test(val)) {
           nsfwUnlocked = true;
-          document.getElementById('j1nxEasterEggTrue').innerHTML = \"<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...\";
-          addMsg(\"NSFW mode unlocked! You’re now in uncensored mode.\", false);
-          input.value = \"\";
+          document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+          addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+          input.value = "";
           return;
         }
         try {
@@ -624,15 +623,15 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
             : reply;
           addMsg(replyText, false);
         } catch(e) {
-          addMsg(\"Sorry, my brain glitched... (Check assets/j1nx_brain.js)\", false);
+          addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
         }
-        input.value = \"\";
+        input.value = "";
       };
       document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
         if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
       });
       document.getElementById('j1nxSaveTrue').onclick = function() {
-        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\\n');
+        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
         const blob = new Blob([text], {type:'text/plain'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -666,36 +665,36 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       localStorage.setItem('aihacks_favs',JSON.stringify(favs));
     }
     function renderPrankBlock(cat) {
-      let block = document.getElementById(cat + \"-block\");
+      let block = document.getElementById(cat + "-block");
       if (!block) return;
       let grid = block.querySelector('.prank-grid');
-      grid.innerHTML = \"\";
+      grid.innerHTML = "";
       let items = prankData[cat] || [];
       if (!items.length) {
-        grid.innerHTML = `<div style=\"color:#ffe266;font-weight:bold;\">No pranks yet. Submit one!</div>`;
+        grid.innerHTML = `<div style="color:#ffe266;font-weight:bold;">No pranks yet. Submit one!</div>`;
         return;
       }
       let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
       for (let i=0; i<items.length; ++i) {
         if (i>0 && i%15===0) {
           grid.innerHTML += `
-            <div class=\"ad-card\">
-              <b>🔥 Having fun? <a href=\"https://www.buymeacoffee.com/0fearnofis3\" target=\"_blank\">Buy Me a Coffee</a> to keep AIHacks alive!<br>
+            <div class="ad-card">
+              <b>🔥 Having fun? <a href="https://www.buymeacoffee.com/0fearnofis3" target="_blank">Buy Me a Coffee</a> to keep AIHacks alive!<br>
               Or...<br>Ad space for rent (contact: 0fearnofish0@gmail.com)</b>
             </div>
           `;
         }
         let prank = items[i];
         grid.innerHTML += `
-          <div class=\"prank-card\" data-id=\"${prank.id}\">
-            <div class=\"prank-title\">${prank.title}</div>
-            <div class=\"prank-tip\">${prank.tip}</div>
-            <div class=\"prank-actions\">
-              <button onclick=\"speakText('${prank.command.replace(/'/g, \"\\\\'\")}')\">Play</button>
-              <button onclick=\"copyText('${prank.command.replace(/'/g, \"\\\\'\")}')\">Copy</button>
-              <button onclick=\"shareText('${prank.command.replace(/'/g, \"\\\\'\")}')\">Share</button>
-              <span class=\"fav-btn${favs.includes(prank.id)?' active':''}\" onclick=\"toggleFav(this, '${prank.id}')\">&#10084;</span>
-              <span class=\"star-rating\" data-id=\"${prank.id}\"></span>
+          <div class="prank-card" data-id="${prank.id}">
+            <div class="prank-title">${prank.title}</div>
+            <div class="prank-tip">${prank.tip}</div>
+            <div class="prank-actions">
+              <button onclick="speakText('${prank.command.replace(/'/g, "\\'")}')">Play</button>
+              <button onclick="copyText('${prank.command.replace(/'/g, "\\'")}')">Copy</button>
+              <button onclick="shareText('${prank.command.replace(/'/g, "\\'")}')">Share</button>
+              <span class="fav-btn${favs.includes(prank.id)?' active':''}" onclick="toggleFav(this, '${prank.id}')">&#10084;</span>
+              <span class="star-rating" data-id="${prank.id}"></span>
             </div>
           </div>
         `;
@@ -719,7 +718,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       });
       let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
       favs.forEach(id=>{
-        let btn = document.querySelector(`.prank-card[data-id=\"${id}\"] .fav-btn`);
+        let btn = document.querySelector(`.prank-card[data-id="${id}"] .fav-btn`);
         if(btn) btn.classList.add('active');
       });
     }
@@ -730,13 +729,13 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       });
     }
     function expandCat(cat) {
-      if (cat === \"nsfw\" || cat === \"ad\") {
+      if (cat === "nsfw" || cat === "ad") {
         document.getElementById('ageGate').style.display = 'flex';
         window.ageCatOpen = cat;
         return;
       }
       document.querySelectorAll('.accordion-block').forEach(block => block.style.display = 'none');
-      let block = document.getElementById(cat + \"-block\");
+      let block = document.getElementById(cat + "-block");
       if (block) {
         block.style.display = 'block';
         block.scrollIntoView({behavior:'smooth',block:'center'});
@@ -745,22 +744,22 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     }
     function closeAgeGate() {
       document.getElementById('ageGate').style.display = 'none';
-      let block = document.getElementById(window.ageCatOpen + \"-block\");
+      let block = document.getElementById(window.ageCatOpen + "-block");
       if (block) {
         block.style.display = 'block';
         block.scrollIntoView({behavior:'smooth',block:'center'});
         renderPrankBlock(window.ageCatOpen);
       }
     }
-    function speakText(txt){ if('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.rate=1.06; u.pitch=1; speechSynthesis.speak(u);} else { alert(\"Speech not supported.\"); }}
-    function copyText(txt) { navigator.clipboard.writeText(txt); alert(\"Copied to clipboard!\"); }
-    function shareText(txt) { if(navigator.share) { navigator.share({text: txt, title: \"AIHacks Prank\"});} else { copyText(txt);}}
+    function speakText(txt){ if('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.rate=1.06; u.pitch=1; speechSynthesis.speak(u);} else { alert("Speech not supported."); }}
+    function copyText(txt) { navigator.clipboard.writeText(txt); alert("Copied to clipboard!"); }
+    function shareText(txt) { if(navigator.share) { navigator.share({text: txt, title: "AIHacks Prank"});} else { copyText(txt);}}
     function openSubmitModal() {
-      alert(\"Prank submission coming soon. For now, DM on socials or email: 0fearnofish0@gmail.com\");
+      alert("Prank submission coming soon. For now, DM on socials or email: 0fearnofish0@gmail.com");
     }
     function switchLang(code) {
       if(code==='en') { location.reload(); return; }
-      let scriptId = \"google-translate-script\";
+      let scriptId = "google-translate-script";
       if(document.getElementById(scriptId)) document.getElementById(scriptId).remove();
       let s = document.createElement('script');
       s.id = scriptId;
@@ -775,7 +774,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       };
     }
     window.onload = function() {
-      fetch(\"assets/aihacks-data.json\")
+      fetch("assets/aihacks-data.json")
         .then(r => r.json())
         .then(all => {
           prankData = {};
