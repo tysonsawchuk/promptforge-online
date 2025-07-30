@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="description" content="PromptForge: Underground ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more. Create, export, and share the wildest ASCII art on the net.">
+  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, and pure matrix rain tools. Create, export, and share wild text art.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="/assets/favicon.png" type="image/png">
   <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -19,49 +18,12 @@
     }
     #matrix-canvas {
       position: fixed;
-      z-index: 0;
-      left: 0; top: 0; width: 100vw; height: 100vh;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
       pointer-events: none;
-      opacity: 1;
-      mix-blend-mode: lighten;
+      z-index: 0;
       background: #000;
-    }
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 38px;
-      padding: 0 24px;
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-    .logo {
-      font-family: 'Orbitron', 'monospace', sans-serif;
-      font-weight: 900;
-      font-size: clamp(2.25rem, 7vw, 3.65rem);
-      background: linear-gradient(90deg, #ff005e, #9c6aff 55%, #00e1ff);
-      background-size: 220% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      letter-spacing: 0.12em;
-      text-shadow: 0 0 36px #00e1ff55, 2px 2px 2px #ff005e66, -2px -2px 2px #00e1ff66;
-      animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate;
-      cursor: pointer;
-      user-select: none;
-      filter: drop-shadow(0 2px 24px #00e1ff44);
-    }
-    @keyframes gradient-flow {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
-    @keyframes pulse-title {
-      0% { text-shadow: 0 0 18px #00e1ff88, 2px 2px 2px #ff005e55;}
-      80% { text-shadow: 0 0 48px #ff005eee, -2px -2px 2px #00e1ffbb;}
-      100% { text-shadow: 0 0 64px #9c6aff, 1px 2px 3px #ff005e;}
+      display: block;
     }
     .hero {
       display: flex;
@@ -75,21 +37,27 @@
     }
     .hero-title {
       font-family: 'Orbitron', monospace;
-      font-size: clamp(2.8rem, 8vw, 4.1rem);
+      font-size: clamp(1.2rem, 5vw, 2.5rem);
       font-weight: 900;
       background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
       -webkit-text-fill-color: transparent;
-      text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 33px #00e1ff88;
-      letter-spacing: 0.12em;
-      margin-bottom: 19px;
+      text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88;
+      letter-spacing: 0.11em;
+      margin-bottom: 18px;
+      margin-top: 6vh;
       animation: pulse-title 2.7s infinite alternate;
       border-bottom: 2.2px solid #00e1ffcc;
       display: inline-block;
       padding-bottom: 10px;
-      filter: drop-shadow(0 0 22px #00e1ff55);
+      filter: drop-shadow(0 0 16px #00e1ff55);
+    }
+    @keyframes pulse-title {
+      0% { text-shadow: 0 0 8px #00e1ff88, 2px 2px 2px #ff005e55;}
+      80% { text-shadow: 0 0 18px #ff005eee, -2px -2px 2px #00e1ffbb;}
+      100% { text-shadow: 0 0 22px #9c6aff, 1px 2px 3px #ff005e;}
     }
     .hero-desc {
       display: flex;
@@ -97,24 +65,24 @@
       gap: 20px;
       flex-wrap: wrap;
       justify-content: center;
-      font-size: clamp(1.06rem, 2.2vw, 1.21rem);
+      font-size: clamp(0.98rem, 2vw, 1.10rem);
       background: rgba(0, 0, 0, 0.93);
       color: #fff;
       box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44;
       border-radius: 22px;
-      padding: 25px 42px 22px 42px;
-      margin-bottom: 30px;
-      margin-top: 3px;
+      padding: 17px 29px 15px 29px;
+      margin-bottom: 24px;
+      margin-top: 2px;
       font-weight: 600;
-      text-shadow: 0 2px 13px #00e1ff99;
-      line-height: 1.56;
+      text-shadow: 0 2px 9px #00e1ff99;
+      line-height: 1.55;
       border: none;
       user-select: text;
     }
     .hero-desc strong {
       color: #00e1ff;
       font-weight: 900;
-      text-shadow: 0 0 9px #00e1ffcc;
+      text-shadow: 0 0 7px #00e1ffcc;
       letter-spacing: 0.01em;
     }
     .hero-desc u {
@@ -123,27 +91,18 @@
       text-underline-offset: 0.18em;
     }
     @media (max-width: 700px) {
-      .navbar {
-        flex-direction: column;
-        gap: 12px;
-        padding: 0 10px;
-      }
       .hero {
         padding: 0 2vw;
       }
       .hero-desc {
         flex-direction: column;
-        padding: 18px 7vw 15px 7vw;
+        padding: 10px 4vw 9px 4vw;
       }
     }
   </style>
 </head>
 <body>
   <canvas id="matrix-canvas"></canvas>
-  <div class="navbar">
-    <div class="logo">PromptForge</div>
-    <!-- Add nav/socials as needed -->
-  </div>
   <main>
     <section class="hero">
       <div class="hero-title">
@@ -151,84 +110,83 @@
       </div>
       <div class="hero-desc">
         <span>
-          <strong>PromptForge</strong> is the world’s most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build mind-bending <strong>ASCII art</strong> banners, and export to any platform.
+          <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
         </span>
         <span>
-          <strong>Export, download, and share</strong> your art in seconds. Every block is SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+          <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
         </span>
       </div>
     </section>
   </main>
   <script>
-    // 3D Red/Blue Matrix Rain (for GH Pages, no CodePen bugs)
+    // === BULLETPROOF 3D MATRIX RAIN ===
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
+    let width, height, fontSize, columns, drops, speeds;
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()<>|\\/+-=.:;".split('');
-    let fontSize = 18;
-    let columns, drops, speeds, colColors, colAlphas;
 
     function setup() {
-      fontSize = Math.max(14, Math.floor(window.innerWidth / 90));
-      columns = Math.floor(window.innerWidth / fontSize) + 3;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
       drops = [];
       speeds = [];
-      colColors = [];
-      colAlphas = [];
       for (let x = 0; x < columns; x++) {
-        drops[x] = Math.random() * window.innerHeight / fontSize;
-        speeds[x] = 1.1 + Math.random() * 2.4;
-        colColors[x] = (x % 2 === 0) ? "#00e1ff" : "#ff005e";
-        colAlphas[x] = 0.65 + Math.random() * 0.35;
+        drops[x] = Math.random() * height / fontSize;
+        speeds[x] = 1.1 + Math.random() * 1.7;
       }
     }
     setup();
     window.addEventListener('resize', setup);
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(0,0,0,0.19)";
+      ctx.fillStyle = "rgba(0,0,0,0.23)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.font = fontSize + "px 'Orbitron', monospace";
       ctx.textAlign = "center";
-      
+
       for (let i = 0; i < columns; i++) {
         const text = letters[Math.floor(Math.random() * letters.length)];
-        const baseX = i * fontSize;
-        const baseY = drops[i] * fontSize;
+        const x = i * fontSize + fontSize / 2;
+        const y = drops[i] * fontSize;
 
-        ctx.globalAlpha = colAlphas[i];
-        ctx.shadowColor = colColors[i];
-        ctx.shadowBlur = 14;
-        ctx.fillStyle = colColors[i];
-        ctx.fillText(text, baseX, baseY);
+        // BLUE ghost (top-left)
+        ctx.globalAlpha = 0.75;
+        ctx.shadowColor = "#00e1ff";
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 1.5, y - 1.5);
 
-        // Rare white sparkle
-        if (Math.random() > 0.985) {
-          ctx.globalAlpha = 0.8;
+        // RED ghost (bottom-right)
+        ctx.globalAlpha = 0.75;
+        ctx.shadowColor = "#ff005e";
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 1.5, y + 1.5);
+
+        // White/magenta pop, rarely
+        if (Math.random() > 0.993) {
+          ctx.globalAlpha = 0.82;
           ctx.shadowColor = "#fff";
-          ctx.shadowBlur = 28;
-          ctx.fillStyle = "#fff";
-          ctx.fillText(text, baseX, baseY);
+          ctx.shadowBlur = 17;
+          ctx.fillStyle = (Math.random() > 0.6) ? "#fff" : "#ff57ff";
+          ctx.fillText(text, x, y);
         }
+        ctx.globalAlpha = 1.0;
 
         drops[i] += speeds[i];
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
           drops[i] = 0;
-          speeds[i] = 1.0 + Math.random() * 2.4;
-          colAlphas[i] = 0.65 + Math.random() * 0.35;
+          speeds[i] = 1.1 + Math.random() * 1.7;
         }
       }
-      ctx.globalAlpha = 1.0;
     }
 
-    setInterval(drawMatrix, 32);
+    setInterval(drawMatrix, 33);
   </script>
 </body>
 </html>
