@@ -276,6 +276,45 @@
       text-decoration-thickness: 2px;
       text-underline-offset: 0.18em;
     }
+    /* Sidebar */
+    .app-flex {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      margin: 0 auto;
+      min-height: 430px;
+      z-index: 2;
+    }
+    .sidebar-nav {
+      width: 190px; min-width: 106px; background:rgba(15,18,26,0.98); border-right: 2.5px solid #00e1ff33;
+      box-shadow: 2px 0 32px #00e1ff22; padding: 23px 0 0 0; position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;
+    }
+    .sidebar-logo {
+      color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900;
+      letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44);
+      user-select:none; pointer-events:none;
+    }
+    .sidebar-nav nav { display: flex; flex-direction: column; gap: 7px; width: 90%; }
+    .side-link {
+      display: block; color: #00e1ff; font-family: 'Share Tech Mono', monospace;
+      text-decoration: none; font-weight: 700; font-size: 1.11em; padding: 11px 22px; border-radius: 14px;
+      margin-bottom: 4px; background:rgba(0,0,0,0.16);
+      border:1.7px solid #191e25; box-shadow:0 0 12px #00e1ff22 inset; letter-spacing:0.08em;
+      transition: .17s cubic-bezier(.7,1.2,.8,2.1) all;
+      outline:none;
+      position:relative;
+    }
+    .side-link.active, .side-link:hover, .side-link:focus {
+      background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%);
+      color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;
+    }
+    @media (max-width: 700px) {
+      .app-flex { flex-direction: column; }
+      .sidebar-nav { width: 100%; min-width: 0; flex-direction: row; border-bottom:2.5px solid #00e1ff33; border-right:0; }
+      .sidebar-logo { display: none; }
+      .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
+      .side-link { margin-bottom:0; margin-right:5px; }
+    }
   </style>
 </head>
 <body>
@@ -331,6 +370,23 @@
       </span>
     </div>
   </section>
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
+        <a href="#gallery" class="side-link">Gallery</a>
+        <a href="#news" class="side-link">News</a>
+        <a href="#about" class="side-link">About</a>
+        <a href="#faq" class="side-link">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- Tool sections go here -->
+    </main>
+  </div>
   <!-- GOOGLE TRANSLATE SCRIPT -->
   <script type="text/javascript">
     function googleTranslateElementInit() {
@@ -343,7 +399,7 @@
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script>
-    // WORKING Matrix Rain (main + depth layers)
+    // Matrix Rain (main + depth layers, NO closeup rain yet)
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
