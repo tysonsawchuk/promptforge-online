@@ -717,6 +717,159 @@
   });
 </script>
 <!-- Now just fill in sections as you go. No major rewrites ever again. -->
+  <!-- == NEXT BLOCK: J1NX DOCK / ASSISTANT == -->
+<div id="j1nx-dock" class="j1nx-dock" style="display:none;">
+  <div class="j1nx-art"><img src="j1nx/j1nx_cutout.png" alt="J1NX" /></div>
+  <div class="j1nx-bubble">
+    <div id="j1nx-message"></div>
+    <div class="j1nx-options">
+      <button onclick="j1nxSay('faq')">FAQ</button>
+      <button onclick="j1nxSay('tip')">Show a tip</button>
+      <button onclick="j1nxSay('contact')">Contact</button>
+      <button onclick="j1nxSay('roast')">Roast me</button>
+      <button onclick="j1nxSay('debug')">Debug</button>
+      <button onclick="closeJ1NX()" class="close-btn">×</button>
+    </div>
+  </div>
+</div>
+<style>
+.j1nx-dock {
+  position: fixed;
+  bottom: 2vh;
+  right: 2vw;
+  z-index: 99;
+  display: flex;
+  align-items: flex-end;
+  animation: j1nx-slidein 0.35s cubic-bezier(.6,1.6,.4,1.1);
+  pointer-events: auto;
+}
+@keyframes j1nx-slidein { from { opacity:0; right:-260px; } to { opacity:1; right:2vw; } }
+.j1nx-art img {
+  height: 168px;
+  width: auto;
+  max-width: 126px;
+  border-radius: 17px 17px 24px 24px;
+  box-shadow: 0 0 33px #00e1ff88, 0 0 9px #ff005e66;
+  background: #090e15cc;
+  margin-right: -19px;
+  margin-bottom: 3px;
+  filter: drop-shadow(0 0 9px #00e1ff);
+  border: 2.4px solid #00e1ff;
+}
+.j1nx-bubble {
+  min-width: 205px;
+  max-width: 310px;
+  background: linear-gradient(110deg,#10162a 70%,#1b0024 120%);
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.09em;
+  border-radius: 17px 29px 18px 11px;
+  box-shadow: 0 3px 24px #00e1ff44, 0 1px 9px #ff005e33;
+  border: 2.5px solid #00e1ff;
+  padding: 18px 21px 14px 16px;
+  margin-left: -10px;
+  margin-bottom: 26px;
+  position: relative;
+  animation: bubble-pop 0.45s cubic-bezier(.3,1.2,.6,1.6);
+}
+@keyframes bubble-pop { from { opacity:0; scale:0.82;} to { opacity:1; scale:1;} }
+.j1nx-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 9px;
+  margin-top: 12px;
+}
+.j1nx-options button {
+  background: linear-gradient(90deg,#00e1ff 50%,#9c6aff 130%);
+  color: #111;
+  font-family: 'Orbitron', monospace;
+  border-radius: 8px;
+  font-size: 0.97em;
+  font-weight: 700;
+  border: 1.4px solid #00e1ff;
+  box-shadow: 0 0 8px #00e1ff77 inset;
+  padding: 5px 13px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.13s, border 0.12s;
+}
+.j1nx-options .close-btn {
+  background: #ff005e;
+  color: #fff;
+  font-size: 1.32em;
+  border: none;
+  border-radius: 8px;
+  padding: 2px 12px;
+  margin-left: 4px;
+  margin-right: 2px;
+  font-weight: 900;
+  box-shadow: 0 0 7px #ff005e99;
+}
+.j1nx-options button:hover, .j1nx-options button:focus {
+  background: linear-gradient(90deg,#ff005e 50%,#00e1ff 130%);
+  color: #fff;
+  border-color: #ff005e;
+}
+@media (max-width: 700px) {
+  .j1nx-art img { height: 110px; max-width: 80px;}
+  .j1nx-bubble { min-width:140px;max-width:210px;font-size:0.93em;padding:11px 9px 10px 10px;}
+}
+</style>
+<script>
+const j1nxLines = {
+  'welcome': [
+    "Yo, human. Need some help?",
+    "J1NX at your service—don’t screw this up.",
+    "Lost already? Figures. Ask away.",
+    "What’s your damage, hotshot?"
+  ],
+  'faq': [
+    "FAQ: <b>1.</b> ASCII tools? Click left. <b>2.</b> Bugs? Try reloading.<br><b>3.</b> Still stuck? DM @GoreandGiggles.",
+    "FAQ loaded. If you ask 'how do I ASCII?', I’ll turn your text into a meme.",
+    "Go to the FAQ section, genius. Or just ask me.",
+  ],
+  'tip': [
+    "Tip: Paste any emoji into the text tool. Bet you didn’t know that.",
+    "Shortcut: Double-click a result to auto-copy it.",
+    "Pro move: Use a monospaced font for ASCII screenshots.",
+    "Secret: Try alt+clicking a gallery image. 🤫"
+  ],
+  'contact': [
+    "Ping @GoreandGiggles on Bluesky or X, or <a href='mailto:0fearnofish0@gmail.com'>email Tyson</a>.",
+    "Contact: Carrier pigeon not supported (yet).",
+    "Find the dev in a dark corner of the web. Or just use the socials above."
+  ],
+  'roast': [
+    "You call *that* ASCII art? My circuits are melting.",
+    "Legendary? Bro, your code is one typo from Skynet.",
+    "My GPU weeps for you. Try again.",
+    "Next time, try doing it sober."
+  ],
+  'debug': [
+    "Debug mode: Browser is " + navigator.userAgent,
+    "Debug: If it’s broken, it’s probably your fault. Or Apple’s.",
+    "Console says: No errors. You sure about that?",
+    "J1NX v1.0.2 loaded, ready to roast bugs."
+  ]
+};
+function openJ1NX(mode='welcome') {
+  document.getElementById('j1nx-dock').style.display = 'flex';
+  j1nxSay(mode);
+}
+function closeJ1NX() {
+  document.getElementById('j1nx-dock').style.display = 'none';
+}
+function j1nxSay(mode='welcome') {
+  const lines = j1nxLines[mode] || j1nxLines['welcome'];
+  const pick = lines[Math.floor(Math.random()*lines.length)];
+  document.getElementById('j1nx-message').innerHTML = pick;
+}
+// Optional: add ESC to close
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeJ1NX();
+});
+</script>
+<!-- == END J1NX DOCK BLOCK == -->
+
 
 </body>
 </html>
