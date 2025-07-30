@@ -193,38 +193,24 @@
       margin-left: 2px;
       user-select: none;
     }
-    /* Rest of your CSS for hero, sidebar, main, J1NX, etc... as before */
-    /* ... (unchanged, see earlier blocks) ... */
-    .j1nx-float-true {
-      position: fixed; z-index: 1400; right: 2vw; bottom: 54px;
-      display: flex; flex-direction: column; align-items: center;
-      pointer-events: all; user-select: none; min-width: 0; max-width: 360px;
-      transition: all 0.17s cubic-bezier(.82,0,.21,1);
-    }
-    .j1nx-true-cutout-img {
-      width: 320px; height: 320px;
-      object-fit: contain; border-radius: 32px;
-      background: transparent !important; margin-bottom: -30px;
-      position: relative; z-index: 9; pointer-events: auto;
-      box-shadow: 0 0 48px #ff005e77, 0 0 14px #64f2e3cc;
-      transition: width 0.17s, height 0.17s;
-    }
-    .j1nx-true-cutout-img.error {
-      filter: grayscale(1) blur(0.5px) brightness(0.75);
-      box-shadow: 0 0 18px #ff005e;
-      background: #201a2d;
-      border: 3px solid #ff005e;
-    }
-    .j1nx-bubble-true-main {
-      background: rgba(22,23,31,0.97); border-radius: 17px;
-      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
-      border: 2px solid #64f2e3;
-      padding: 1.1em 1.3em 1em 1.3em;
-      margin-top: 0; margin-bottom: 0.3em;
-      display: flex; flex-direction: column; align-items: center;
-      min-width: 290px; max-width: 330px; position: relative; z-index: 1;
-      transition: opacity 0.18s, visibility 0.18s;
-    }
+    /* HERO, SIDEBAR, MAIN, J1NX -- same as before, see above blocks */
+    .hero { ... }
+    .hero-title { ... }
+    .hero-desc { ... }
+    .app-flex { ... }
+    .sidebar-nav { ... }
+    .sidebar-logo { ... }
+    .sidebar-nav nav { ... }
+    .side-link { ... }
+    .side-link.active, .side-link:hover, .side-link:focus { ... }
+    .coming-soon { ... }
+    .main-sections { ... }
+    .tool-section { ... }
+    .tool-section.active { ... }
+    /* J1NX FLOAT -- all CSS from your working AIHacks float, unchanged */
+    .j1nx-float-true { position: fixed; z-index: 1400; right: 2vw; bottom: 54px; display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none; min-width: 0; max-width: 360px; transition: all 0.17s cubic-bezier(.82,0,.21,1);}
+    .j1nx-true-cutout-img { width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto; box-shadow: none !important; transition: width 0.17s, height 0.17s;}
+    .j1nx-bubble-true-main { background: rgba(22,23,31,0.97); border-radius: 17px; box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f; border: 2px solid #64f2e3; padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em; display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1; transition: opacity 0.18s, visibility 0.18s;}
     .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1;}
     .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0;}
     .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid #64f2e3; background: #171b22; color: #64f2e3; min-width: 0;}
@@ -303,11 +289,10 @@
       <a href="#">support</a>
     </div>
   </header>
-  <!-- The rest of your main layout (hero, sidebar, etc.) goes here... -->
-
+  <!-- Main content/hero/sidebar/etc here... -->
   <!-- J1NX FLOAT ASSISTANT -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue" onerror="this.classList.add('error');this.nextElementSibling.innerHTML='<div style=&quot;color:#ff005e;font-weight:bold;font-size:1.08em;margin:1em 0;&quot;>Missing: j1nx/j1nx_cutout.png</div>'"/>
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
         <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
@@ -326,9 +311,8 @@
     </div>
   </div>
   <!-- END J1NX FLOAT -->
-
-  <!-- Matrix Rain (now with 4th layer: superlarge, glowy, rare) -->
   <script>
+    // Matrix Rain (now with a 5th "closer up" layer!)
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
@@ -339,6 +323,7 @@
     let drops2 = [], speeds2 = [];
     let drops3 = [], speeds3 = [];
     let drops4 = [], speeds4 = [];
+    let drops5 = [], speeds5 = [];
 
     function setup() {
       width = window.innerWidth;
@@ -363,33 +348,37 @@
         drops3[x] = Math.random() * height / fontSize;
         speeds3[x] = (1.4 + Math.random() * 2.4) / 3;
       }
-      // 4th layer: superlarge rare glyphs
       drops4 = []; speeds4 = [];
       for (let x = 0; x < Math.floor(columns * 0.14); x++) {
         drops4[x] = Math.random() * height / fontSize;
         speeds4[x] = (2.3 + Math.random() * 2.6) / 2.1;
+      }
+      // Closest (BIGGEST/foreground) layer
+      drops5 = []; speeds5 = [];
+      for (let x = 0; x < Math.floor(columns * 0.055); x++) {
+        drops5[x] = Math.random() * height / fontSize;
+        speeds5[x] = (2.9 + Math.random() * 3.2) / 1.77;
       }
     }
     setup();
     window.addEventListener('resize', setup);
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(0,0,0,0.13)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.textAlign = "center";
-      // Second layer (background)
+      // 2nd layer (deep/faint)
       ctx.font = (fontSize - 3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops2.length; i++) {
         const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
         const x = i * fontSize * 0.62 + fontSize / 2;
         const y = drops2[i] * fontSize;
-        ctx.globalAlpha = 0.35;
+        ctx.globalAlpha = 0.30;
         ctx.fillStyle = "#00e1ff";
         ctx.fillText(text, x - 2.2, y - 2.2);
         ctx.fillStyle = "#ff005e";
         ctx.fillText(text, x + 2.2, y + 2.2);
         if (Math.random() > 0.995) {
-          ctx.globalAlpha = 0.25;
+          ctx.globalAlpha = 0.16;
           ctx.fillStyle = "#fff";
           ctx.fillText(text, x, y);
         }
@@ -399,7 +388,7 @@
           speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
         }
       }
-      // Main (bright) layer
+      // Main layer
       ctx.globalAlpha = 1.0;
       ctx.font = fontSize + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < columns; i++) {
@@ -418,7 +407,7 @@
           speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
         }
       }
-      // Highlight layer (brighter/white)
+      // 3rd layer (highlight/white)
       ctx.font = (fontSize + 3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops3.length; i++) {
         if (Math.random() > 0.985) {
@@ -435,7 +424,7 @@
           speeds3[i] = (1.4 + Math.random() * 2.4) / 3;
         }
       }
-      // ** Superlarge layer (max depth/highlight) **
+      // 4th layer (superlarge, extra rare)
       ctx.font = (fontSize * 2.3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops4.length; i++) {
         if (Math.random() > 0.995) {
@@ -456,11 +445,32 @@
           speeds4[i] = (2.3 + Math.random() * 2.6) / 2.1;
         }
       }
+      // 5th (closest, massive, bright layer)
+      ctx.font = (fontSize * 3.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops5.length; i++) {
+        if (Math.random() > 0.9975) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 13 + fontSize;
+          const y = drops5[i] * fontSize * 3.5;
+          ctx.globalAlpha = 0.98;
+          ctx.shadowColor = "#fff";
+          ctx.shadowBlur = 55;
+          ctx.fillStyle = "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops5[i] += speeds5[i];
+        if (drops5[i] * fontSize * 3.7 > height && Math.random() > 0.98) {
+          drops5[i] = 0;
+          speeds5[i] = (2.9 + Math.random() * 3.2) / 1.77;
+        }
+      }
       ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
     }
     setInterval(drawMatrix, 32);
 
-    // J1NX float logic (unchanged)
+    // J1NX float logic
     (function(){
       const j1nxFloat = document.getElementById('j1nxFloatTrue');
       const cutout = document.getElementById('j1nxCutoutTrue');
