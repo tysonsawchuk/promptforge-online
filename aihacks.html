@@ -1,188 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>AIHacks Encyclopedia – Viral AI Pranks, Games, Dares & Insanity</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AIHacks: Viral encyclopedia of AI pranks, party dares, family games, wild Alexa and Google hacks, Siri/Bixby tricks, TikTok/YouTube challenges, NSFW secrets and 10,000+ epic ideas to break the internet. Always free, always underground, always fun.">
-  <meta name="keywords" content="AI pranks, games, Alexa, Google, Siri, ChatGPT, family fun, party dares, viral, NSFW, prompt hacks, PromptForge, TikTok, YouTube, hacks, GPT, art, challenge, contest, Easter eggs, hidden features, J1NX, open source, translation, multilingual, playground">
-  <meta name="google-adsense-account" content="ca-pub-4963053724895140">
-  <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet" />
-  <script src="assets/j1nx_brain.js"></script>
+  <meta charset="UTF-8">
+  <title>PromptForge – ANSI/ASCII Art Playground</title>
+  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, pure matrix rain tools, tech news, J1NX AI assistant, and more. Stay updated with the underground hacker scene.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
-      --aqua: #64f2e3;
-      --offwhite: #e9efe7;
-      --panel: #181b15;
-      --panel-deep: #23231f;
-      --footer-bg: #131413;
-      --gold: #ffe266;
-      --danger: #fa3c70;
+      --brand: #00e1ff;
+      --brand2: #ff005e;
+      --accent: #9c6aff;
+      --matrix: #00e1ff;
+      --nav-bg: rgba(10,16,22,0.95);
+      --nav-border: #2b2750;
     }
     html, body {
-      margin: 0; padding: 0; box-sizing: border-box;
-      width: 100vw; max-width: 100vw; min-width: 0;
-      overflow-x: hidden;
-      background: var(--panel);
-      color: var(--offwhite);
-      font-family: 'Fira Mono', monospace;
-      font-size: 1.03em;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
+      font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
+      overflow-x: hidden;
     }
-    header {
-      border-bottom: 2px solid var(--aqua);
-      background: var(--panel-deep);
-      padding: 0 0 0.1em 0;
-      margin: 0; width: 100vw; max-width: 100vw;
+    #matrix-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: #000;
+      display: block;
     }
-    .version {
-      font-size: .97em;
-      color: var(--aqua);
-      background: #191c17;
-      padding: 0.09em 1.15em;
-      border-radius: 0 0 12px 12px;
-      display: inline-block;
-      margin: 0 0 0.06em 0.07em;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      box-shadow: 0 2px 7px #64f2e344;
-    }
-    .breadcrumbs { font-size: 1em; color: #80dfff; letter-spacing: 0.01em; font-weight: 500; opacity: .92;}
-    .breadcrumbs a { color: #37e4fc; }
-    .site-nav-row {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-    }
-    .brand {
-      font-size: 1.28rem; font-weight: bold;
-      background: linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 1px 10px #18c6fa44;
-      margin-right: 16px;
-    }
-    nav { font-size: 1em; opacity: .98; display: flex; gap: 13px; }
-    nav a {
-      color: #7eeaff; text-decoration: none; font-weight: 600;
-      padding: 3px 9px; border-radius: 8px;
-    }
-    nav a:hover { background: #122a38; color: #fff; }
-    .main-title {
-      margin: 32px auto 16px auto;
-      text-align: center;
-      font-size: 3.9em;
-      letter-spacing: 0.11em;
-      font-weight: 900;
-      background: linear-gradient(90deg,var(--aqua) 14%,#fffac8 54%,#be9cff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 32px #5af4ea44, 0 2px 12px #be9cff55;
-      line-height: 1.08;
-      filter: drop-shadow(0 0 15px #6ee4c3bb);
-      user-select: none;
-      text-transform: uppercase;
-    }
-    .seo-banner {
-      width: 100vw;
-      max-width: 100vw;
-      overflow: hidden;
-      background: #111417;
-      border-bottom: 2px solid #64f2e3;
-      box-shadow: 0 3px 16px #43f6e122;
-      padding: 6px 0;
-      font-size: 0.99em;
-      letter-spacing: 0.07em;
-      color: #64f2e3;
-      font-family: 'Fira Mono', monospace;
-      white-space: nowrap;
-      position: relative;
+    .navbar {
+      width: 100%;
+      position: sticky;
+      top: 0; left: 0;
       z-index: 10;
-      opacity: 0.94;
-      margin-bottom: 5px;
+      background: var(--nav-bg);
+      backdrop-filter: blur(3px);
+      border-bottom: 1.5px solid var(--nav-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 3vw;
+      min-height: 66px;
+      box-shadow: 0 2px 24px #00e1ff33;
+      transition: background 0.3s;
     }
-    .seo-banner-inner {
-      display: inline-block;
-      padding-left: 100vw;
-      animation: scroll-banner 32s linear infinite;
+    .logo {
+      font-family: 'Orbitron', 'monospace';
+      font-size: clamp(2.1rem, 5vw, 2.7rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand);
+      animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate;
+      user-select: none;
+      filter: drop-shadow(0 2px 24px #00e1ff44);
+      cursor: pointer;
+      padding: 0 6px 0 0;
+    }
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    @keyframes pulse-title {
+      0% { text-shadow: 0 0 18px var(--matrix), 2px 2px 2px var(--brand2);}
+      80% { text-shadow: 0 0 48px var(--brand2), -2px -2px 2px var(--matrix);}
+      100% { text-shadow: 0 0 64px var(--accent), 1px 2px 3px var(--brand2);}
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2vw;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .nav-link {
+      color: var(--brand);
+      background: rgba(0,0,0,0.11);
+      padding: 6px 19px 7px 19px;
+      border-radius: 12px;
+      font-size: 1.11rem;
       font-weight: 700;
-      font-size: 1em;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      border: 1.3px solid #212e37;
+      box-shadow: 0 0 8px #00e1ff44 inset;
+      margin-left: 0.2vw;
+      margin-right: 0.2vw;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        color 0.19s cubic-bezier(.5,1.9,.4,1.6),
+        border-color 0.19s cubic-bezier(.5,1.9,.4,1.6),
+        background 0.21s cubic-bezier(.8,.2,.6,2.1),
+        box-shadow 0.17s cubic-bezier(.7,1.2,.8,2.1);
+      position: relative;
+      overflow: hidden;
     }
-    @keyframes scroll-banner {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
+    .nav-link:hover, .nav-link:focus {
+      color: #fff;
+      background: linear-gradient(90deg, #00e1ff 70%, #ff005e 110%);
+      border-color: var(--accent);
+      box-shadow: 0 0 19px 5px #00e1ff33, 0 0 6px #ff005e55 inset;
+      outline: none;
     }
-    .desc-seo {
-      margin: 3px auto 10px auto; 
-      max-width: 920px;
-      font-size: 0.47em;
-      color: #c4f8ff;
-      text-align: center;
-      font-weight: 500;
-      letter-spacing: .01em;
-      line-height: 1.22;
-      opacity: 0.80;
-      padding: 0 4px;
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 0.7vw;
+      margin-left: 18px;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px; height: 35px;
+      border-radius: 50%;
+      background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%);
+      border: 1.2px solid #232a33;
+      box-shadow: 0 0 9px #00e1ff33;
+      transition: box-shadow 0.23s, border-color 0.18s, background 0.23s;
+      cursor: pointer;
+    }
+    .social-link:hover, .social-link:focus {
+      background: linear-gradient(90deg,#00e1ff44 60%,#ff005e33 110%);
+      border-color: #ff005e;
+      box-shadow: 0 0 11px 3px #00e1ff66,0 0 5px #ff005e44;
+    }
+    .social-link svg {
+      width: 21px; height: 21px; display: block;
+      fill: var(--brand);
+      filter: drop-shadow(0 0 6px #00e1ff88);
+      transition: fill 0.17s;
+    }
+    .social-link:hover svg, .social-link:focus svg {
+      fill: #fff;
+      filter: drop-shadow(0 0 10px #ff005e);
+    }
+    @media (max-width: 800px) {
+      .navbar {
+        flex-direction: column;
+        gap: 8px;
+        padding: 0 8px;
+      }
+      .nav-links { gap: 3vw;}
+      .nav-socials { margin-left: 0;}
+    }
+    /* === NEWS TICKER === */
+    .news-ticker-row {
+      width: 100vw;
+      min-height: 36px;
+      background: linear-gradient(90deg, #000 0%, #00e1ff33 40%, #ff005e33 100%);
+      border-bottom: 2px solid #1b163a;
+      box-shadow: 0 1px 20px #00e1ff19;
+      z-index: 3;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .news-ticker-label {
+      font-family: 'Share Tech Mono', monospace;
+      color: #fff;
+      font-size: 1.06rem;
+      background: #191e25;
+      padding: 2px 14px;
       border-radius: 8px;
+      letter-spacing: 0.13em;
+      margin-left: 1vw;
+      text-shadow: 0 1px 5px #00e1ff88;
+      border: 1px solid #232a33;
+      box-shadow: 0 0 6px #00e1ff33;
+    }
+    .ticker-wrap {
+      position: relative;
+      flex: 1 1 0;
+      overflow: hidden;
+      height: 38px;
+      display: flex;
+      align-items: center;
+    }
+    .news-ticker {
+      display: flex;
+      white-space: nowrap;
+      gap: 55px;
+      animation: tickerScroll 32s linear infinite;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.03rem;
+      color: #00e1ff;
+      text-shadow: 0 0 8px #ff005e66;
+    }
+    @keyframes tickerScroll {
+      0% { transform: translateX(100vw); }
+      100% { transform: translateX(-210vw); }
+    }
+    .ticker-link {
+      color: #00e1ff;
+      text-decoration: none;
+      padding: 1px 11px 1px 11px;
+      border-radius: 7px;
+      background: rgba(0,0,0,0.17);
+      border: 1.3px solid #232a33;
+      margin: 0 2px;
+      transition: background 0.17s, color 0.14s, border-color 0.17s;
+      font-weight: 700;
+      box-shadow: 0 0 5px #00e1ff55 inset;
+    }
+    .ticker-link:hover, .ticker-link:focus {
+      color: #fff;
+      background: linear-gradient(90deg,#00e1ff 50%,#ff005e 120%);
+      border-color: #ff005e;
+      box-shadow: 0 0 10px #00e1ff77, 0 0 3px #ff005e77 inset;
+    }
+    .do-not-press-btn {
+      background: linear-gradient(90deg,#ff005e 10%,#9c6aff 80%,#00e1ff 110%);
+      color: #fff;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.18rem;
+      font-weight: 900;
+      padding: 9px 26px;
+      border-radius: 19px;
+      box-shadow: 0 0 30px #ff005e44,0 2px 12px #00e1ff44;
+      border: 2.2px solid #ff005e;
+      cursor: pointer;
+      margin: 0 12px;
+      transition: box-shadow 0.19s, background 0.22s, color 0.18s, transform 0.17s;
+      text-shadow: 0 0 14px #ff005e99, 0 1px 8px #00e1ff99;
+      animation: forbidden-btn 2.4s infinite alternate, forbidden-wiggle 0.74s infinite cubic-bezier(.8,0,.5,1.4) alternate;
+      outline: none;
+      border-bottom: 4.2px solid #9c6aff;
+    }
+    .do-not-press-btn:hover, .do-not-press-btn:focus {
+      background: linear-gradient(90deg,#00e1ff 20%,#ff005e 80%);
+      color: #ffde71;
+      box-shadow: 0 0 44px #ff005e77,0 3px 18px #00e1ff99;
+      transform: scale(1.09) rotate(-2deg);
+      text-shadow: 0 0 33px #ff005e, 0 1px 13px #00e1ff;
+    }
+    @keyframes forbidden-btn {
+      0% { filter: drop-shadow(0 0 2px #ff005e); }
+      90% { filter: drop-shadow(0 0 18px #00e1ff88); }
+      100% { filter: drop-shadow(0 0 6px #ff005e) drop-shadow(0 0 19px #00e1ff); }
+    }
+    @keyframes forbidden-wiggle {
+      0% { transform: rotate(-2deg); }
+      100% { transform: rotate(2deg); }
+    }
+    .do-not-press-btn::after {
+      content: "DO NOT PRESS";
+      display: block;
+      font-size: 0.83rem;
+      color: #ffde71;
+      letter-spacing: 0.18em;
+      font-family: 'Share Tech Mono', monospace;
+      margin-top: -3px;
+      opacity: 0.82;
+      text-align: center;
+      pointer-events: none;
+      text-shadow: 0 1px 6px #ff005e66;
+      transition: color 0.2s;
+    }
+    .do-not-press-btn:hover::after, .do-not-press-btn:focus::after {
+      color: #00e1ff;
+      text-shadow: 0 1px 11px #00e1ff99;
+    }
+    @media (max-width: 900px) {
+      .news-ticker-row { font-size: 0.95em; }
+      .news-ticker-label { font-size: 0.93em;}
+    }
+    /* HERO/BODY */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 42px auto 12px auto;
+      max-width: 860px;
+      z-index: 2;
+      position: relative;
+      text-align: center;
+    }
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.2rem, 5vw, 2.5rem);
+      font-weight: 900;
+      background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88;
+      letter-spacing: 0.11em;
+      margin-bottom: 18px;
+      margin-top: 6vh;
+      animation: pulse-title 2.7s infinite alternate;
+      border-bottom: 2.2px solid #00e1ffcc;
+      display: inline-block;
+      padding-bottom: 10px;
+      filter: drop-shadow(0 0 16px #00e1ff55);
+    }
+    .hero-desc {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: clamp(0.98rem, 2vw, 1.10rem);
+      background: rgba(0, 0, 0, 0.93);
+      color: #fff;
+      box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44;
+      border-radius: 22px;
+      padding: 17px 29px 15px 29px;
+      margin-bottom: 24px;
+      margin-top: 2px;
+      font-weight: 600;
+      text-shadow: 0 2px 9px #00e1ff99;
+      line-height: 1.55;
+      border: none;
       user-select: text;
-      transition: color 0.13s;
     }
-    .desc-seo b { color: #49fffb; }
-    .desc-seo span {color:#ffe266;}
-    .desc-seo small {font-size: 1em; opacity: 0.93;}
-    .hero-art-wrap {
-      width: 100vw; max-width: 100vw;
-      display: flex; justify-content: center; align-items: center; overflow: hidden;
-      min-height: 370px; max-height: 600px; background: #000; margin-bottom: 2px;
-      border-bottom: 3px solid #242b32;
+    .hero-desc strong {
+      color: #00e1ff;
+      font-weight: 900;
+      text-shadow: 0 0 7px #00e1ffcc;
+      letter-spacing: 0.01em;
     }
-    .hero-art-img {
-      width: 100vw; max-width: 1440px; height: auto; max-height: 570px;
-      object-fit: contain; background: #000;
-      user-select: none; pointer-events: none; display: block; margin: 0 auto;
+    .hero-desc u {
+      text-decoration-color: #ff005e;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
     }
-    .howto-links {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
-      margin: 13px auto 20px auto; max-width: 980px;
+    @media (max-width: 700px) {
+      .hero {
+        padding: 0 2vw;
+      }
+      .hero-desc {
+        flex-direction: column;
+        padding: 10px 4vw 9px 4vw;
+      }
     }
-    .howto-link {
-      background: #232922; color: var(--aqua);
-      border: 1.6px solid #49fffb;
-      border-radius: 9px;
-      padding: 7px 19px; font-weight: 700; font-size: 1em;
-      box-shadow: 0 2px 8px #19e4ff33;
-      text-decoration: none; transition: background .12s, color .13s, border-color .14s;
+    /* SIDEBAR AND MAIN SECTION */
+    .app-flex {
+      display: flex;
+      flex-direction: row;
+      min-height: 62vh;
+      z-index: 2;
+      position: relative;
     }
-    .howto-link:hover {
-      background: #191d19; color: #fff; border-color: var(--gold);
+    .sidebar-nav {
+      min-width: 179px;
+      background: linear-gradient(180deg,#101725 70%,#1a0024 120%);
+      border-right: 1.7px solid #232a33;
+      box-shadow: 3px 0 24px #00e1ff11;
+      padding: 30px 10px 22px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      z-index: 5;
+      position: sticky;
+      top: 64px;
     }
-    .category-row {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 13px 17px; margin: 17px auto 22px auto; max-width: 1200px;
+    .sidebar-logo {
+      font-size: 2.1rem;
+      color: #ff005e;
+      text-shadow: 0 0 13px #00e1ff99;
+      margin-bottom: 7px;
+      user-select: none;
     }
-    .category-btn {
-      font-size: 1.13em; font-weight: 900; letter-spacing: 0.01em;
-      padding: 18px 28px; border-radius: 16px; margin-bottom: 11px;
-      color: var(--offwhite); background: #181d21; border: 2.5px solid var(--aqua);
-      outline: none; cursor: pointer;
-      box-shadow: 0 2px 22px #64f2e365,0 1px 10px #191d1970 inset;
-      min-width: 142px; transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.14s;
-      user-select: none; position: relative; z-index: 2;
-      text-shadow: 0 2px 8px #1ae4e6a7,0 1px 5px #2efaaa27;
+    .sidebar-nav nav {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
     }
-    .category-btn:active, .category-btn:focus {
-      background: #10151b; color: #fff; border-color: var(--gold); box-shadow: 0 4px 19px #ffe26666;
+    .side-link {
+      color: #00e1ff;
+      background: #181a29;
+      border-radius: 10px;
+      text-decoration: none;
+      padding: 9px 17px;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      font-size: 1.06em;
+      margin-bottom: 2px;
+      border: 1.2px solid #212e37;
+      box-shadow: 0 0 8px #00e1ff44 inset;
+      transition: background 0.15s, color 0.12s, border 0.13s;
+      position: relative;
     }
-    .category-btn:hover {
-      background: #232c38; color: #fff; border-color: #fff; box-shadow: 0 6px 19px #00fff080;
+    .side-link.active,
+    .side-link:hover,
+    .side-link:focus {
+      background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%);
+      color: #fff;
+      border-color: #ff005e;
+      outline: none;
     }
-    .category-btn.nsfw {
-      background: #340020; color: var(--danger); border-color: var(--danger);
-      box-shadow: 0 2px 16px #fa3c70b3,0 1px 7px #641e2e77 inset;
+    .coming-soon {
+      color: #ff005e;
+      font-size: 0.91em;
+      background: #191e25;
+      border-radius: 7px;
+      padding: 2px 7px;
+      margin-left: 7px;
+      text-shadow: 0 1px 5px #ff005e99;
     }
-    .category-btn.adults {
-      background: #32240b; color: var(--gold); border-color: var(--gold);
-      box-shadow: 0 2px 18px #ffe266bb,0 1px 7px #22200644 inset;
+    .main-sections {
+      flex: 1 1 0;
+      padding: 34px 5vw 22px 5vw;
+      background: transparent;
+      min-width: 0;
+      z-index: 2;
     }
+    .tool-section {
+      display: none;
+      background: rgba(0,0,0,0.82);
+      border-radius: 21px;
+      padding: 33px 26px 22px 26px;
+      box-shadow: 0 0 32px 0 #00e1ff33, 0 0 7px 1px #ff005e22;
+      border: 1.7px solid #191e25;
+      margin-bottom: 22px;
+      animation: fadeInSec 0.4s;
+    }
+    .tool-section.active { display: block; }
+    @keyframes fadeInSec {
+      from { opacity: 0; transform: translateY(20px);}
+      to   { opacity: 1; transform: translateY(0);}
+    }
+    .support-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: #9c6aff;
+      font-size: 1.03em;
+      text-decoration: underline dotted #9c6aff;
+      transition: color 0.14s;
+    }
+    .support-link:hover, .support-link:focus {
+      color: #ff005e;
+      text-decoration: underline solid #ff005e;
+    }
+    @media (max-width: 900px) {
+      .app-flex { flex-direction: column; }
+      .sidebar-nav { flex-direction: row; position: relative; top: 0; min-width: 0; border: none; box-shadow: none; padding: 13px 3vw 7px 3vw;}
+      .sidebar-nav nav { flex-direction: row; gap: 7px;}
+      .sidebar-logo { font-size: 1.3rem;}
+    }
+    /* J1NX FLOAT */
     .j1nx-float-true {
       position: fixed; z-index: 1400; right: 2vw; bottom: 54px;
       display: flex; flex-direction: column; align-items: center;
@@ -200,7 +472,7 @@
     .j1nx-bubble-true-main {
       background: rgba(22,23,31,0.97); border-radius: 17px;
       box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
-      border: 2px solid var(--aqua);
+      border: 2px solid #64f2e3;
       padding: 1.1em 1.3em 1em 1.3em;
       margin-top: 0; margin-bottom: 0.3em;
       display: flex; flex-direction: column; align-items: center;
@@ -209,9 +481,9 @@
     }
     .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1;}
     .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0;}
-    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid var(--aqua); background: #171b22; color: var(--aqua); min-width: 0;}
-    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid var(--aqua); color: var(--aqua); font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
-    .j1nx-btn-true:hover { background: var(--aqua); color: #171b22; border-color: #fff;}
+    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid #64f2e3; background: #171b22; color: #64f2e3; min-width: 0;}
+    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid #64f2e3; color: #64f2e3; font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
+    .j1nx-btn-true:hover { background: #64f2e3; color: #171b22; border-color: #fff;}
     .j1nx-easteregg-true { font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px; margin-top: 7px; padding: 7px 17px 6px 13px; opacity: .85; pointer-events: none; text-align: center; width: 94%; user-select: none; box-shadow: 0 3px 13px #be9cff28; font-weight: 600;}
     @media (max-width: 700px) {
       .j1nx-float-true {
@@ -247,266 +519,102 @@
         border-radius: 50%;
       }
     }
-    .bmc-float-btn {
-      position: fixed;
-      left: 2vw;
-      bottom: 40px;
-      z-index: 1600;
-      background: #ffe266;
-      color: #23231f;
-      border-radius: 32px;
-      box-shadow: 0 2px 13px #ffe26640;
-      padding: 12px 24px 12px 18px;
-      font-family: inherit;
-      font-size: 1.14em;
-      font-weight: 800;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      transition: background 0.12s, color 0.12s, box-shadow 0.13s;
-      opacity: 0.93;
-      min-width: 32px;
-      min-height: 32px;
-      user-select: none;
-    }
-    .bmc-float-btn:hover { background: #fffc6b; color: #23231f; box-shadow: 0 6px 19px #ffe26699; }
-    .bmc-float-btn img { height: 24px; width: 24px; margin-right: 2px; }
-    @media (max-width: 800px) {
-      .bmc-float-btn { left: 6px; bottom: 6px; padding: 10px 13px; font-size: 1.02em; }
-    }
-    .main-panel { padding-bottom: 220px !important; }
-    .footer-art { 
-      font-family: monospace; 
-      font-size: .91em; 
-      line-height: 1.01; 
-      letter-spacing: 1.1px; 
-      background: var(--footer-bg); 
-      margin: 0 auto 0.7em auto; 
-      padding: 0; 
-      width: 100vw; 
-      text-align: center; 
-      color: var(--aqua); 
-      overflow-x: auto; 
-      user-select: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .footer-camo { 
-      background: var(--footer-bg); 
-      margin: 0 auto 0.1em auto;
-      font-family: monospace; 
-      font-size: 1em; 
-      text-align: center;
-      width: 100vw; 
-      user-select: none; 
-      letter-spacing: .09em; 
-      padding: 0 0 0 0;
-    }
-    .footer-bar { text-align: center; font-size: .94em; color: var(--aqua); margin-bottom: .3em; width: 100vw; max-width: 100vw; overflow: hidden;}
-    .prank-bg { }
-    .accordion-block {margin: 17px 0 22px 0;display:none;}
-    .accordion-block.active, .accordion-block.open {display:block;}
-    .accordion-title {font-size: 1.35em; color: var(--aqua); margin-bottom: 8px; font-weight: 700; letter-spacing: .05em;}
-    .prank-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(320px, 1fr));
-      gap: 16px 20px;
-      margin-bottom: 16px;
-    }
-    @media (max-width: 750px) {
-      .prank-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .prank-card {
-      background: linear-gradient(110deg, #202e3a 78%, #2ef9e81c 100%);
-      border-radius: 1.15em;
-      box-shadow: 0 2px 16px #3af5f449, 0 1px 16px #3cfbe638, 0 4px 28px #1e405766;
-      padding: 13px 11px 11px 15px;
-      min-height: 110px;
-      transition: transform 0.13s, box-shadow 0.14s;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1.7px solid #39ffe876;
-      opacity: 0.99;
-      font-size: 1em;
-      position:relative;
-      filter: drop-shadow(0 4px 13px #64f2e32b);
-    }
-    .prank-card:hover { 
-      transform: scale(1.033); 
-      box-shadow: 0 0 29px #52e7ffbb, 0 2px 13px #1ffedba1; 
-      border: 1.7px solid #64f2e3;
-      z-index: 10;
-    }
-    .prank-title { font-size: 1.11em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
-    .prank-tip { font-size: 0.98em; color: #b8fdff; opacity: 0.87; margin-bottom: 5px;}
-    .prank-actions {display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap;}
-    .star-rating { display: flex; align-items: center; margin-left: 4px; font-size: 1.19em; user-select: none; cursor: pointer;}
-    .star-rating .star { color: #ffd700b7; margin-right: 0px; transition: color 0.13s;}
-    .star-rating .star.filled { color: #fff530; text-shadow: 0 0 7px #fffc6b99;}
-    .fav-btn {font-size:1.22em;color:#ff57ae;background:#222e36;border:none;min-width:33px;cursor:pointer;transition:color 0.12s;}
-    .fav-btn.active {color:#fff;background:#ff57ae;}
-    .ad-card {
-      grid-column: 1 / span 2;
-      background: #181d21;
-      color: #ffe266;
-      border: 2px dashed #64f2e3;
-      border-radius: 1.2em;
-      padding: 30px 14px 28px 20px;
-      font-size: 1.17em;
-      text-align: center;
-      margin: 10px 0 10px 0;
-      min-height: 80px;
-      box-shadow: 0 2px 17px #1ac9f978;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .ad-card a {
-      color: #49fffb; text-decoration: underline; font-weight: 800;
-    }
-    #langSelect {margin:5px 0 7px 0;padding:4px 9px;border-radius:7px;font-size:.98em;background:#23292b;color:var(--aqua);border:1.5px solid #64f2e3;box-shadow:0 1px 5px #64f2e344;}
-    #langSelect:focus{outline:2px solid var(--gold);}
-    #ageGate {
-      display:none;
-      position: fixed;
-      z-index: 2001;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(14,19,18,0.96);
-      justify-content: center;
-      align-items: center;
-    }
-    #ageGateInner {
-      background: #1b1622;
-      border: 3px solid #fa3c70;
-      border-radius: 20px;
-      color: #ffe266;
-      text-align: center;
-      padding: 40px 32px 36px 32px;
-      box-shadow: 0 3px 28px #fa3c7082;
-      max-width: 420px;
-    }
-    #ageGateInner h2 { color: #fa3c70; font-size: 2em; font-weight: 900; margin-bottom: 14px; }
-    #ageGateInner .age-btn {
-      background: #fa3c70; color: #fff; border: none; border-radius: 12px;
-      font-size: 1.2em; font-weight: 700; padding: 15px 32px; margin-top: 30px;
-      cursor: pointer; box-shadow: 0 1px 10px #fa3c7048; transition: background .12s;
-    }
-    #ageGateInner .age-btn:hover { background: #ffe266; color: #fa3c70; }
   </style>
 </head>
 <body>
-  <header>
-    <span class="version">v2.4.2</span>
-    <div class="breadcrumbs">
-      <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
-    </div>
-    <div class="site-nav-row">
-      <span class="brand">AIHacks</span>
-      <nav>
-        <a href="aihacks.html">AIHacks</a>
-        <a href="ansiart.html">ANSI Art</a>
-        <a href="compare.html">Compare</a>
-        <a href="j1nx.html">J1NX</a>
-        <a href="movie.html">Movie</a>
-        <a href="picture.html">Picture</a>
-        <a href="watermark.html">Watermark</a>
-        <a href="https://github.com/tysonsawchuk/GoreandGiggles" target="_blank">GitHub</a>
-      </nav>
+  <canvas id="matrix-canvas"></canvas>
+  <header class="navbar">
+    <span class="logo">PromptForge</span>
+    <nav class="nav-links">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link">Gallery</a>
+      <a href="#" class="nav-link">Tools</a>
+      <a href="#" class="nav-link">FAQ</a>
+    </nav>
+    <div class="nav-socials">
+      <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
+        <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
+      </a>
+      <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
+        <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
+      </a>
+      <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
+        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
+      </a>
     </div>
   </header>
-  <div class="seo-banner">
-    <div class="seo-banner-inner" id="seoBannerInner">
-      AI pranks, viral games, Alexa hacks, Google tricks, Siri secrets, TikTok challenges, YouTube dares, NSFW fun, hidden features, party games, Easter eggs, Bixby jokes, GPT prompts, ChatGPT hacks, meme generators, viral commands, developer exploits, prompt engineering, AI toys, Playground hacks, open source, global translation, family fun, underground hacks, PromptForge, office dares, classroom games, roast battles, wild party stunts, 10,000+ ideas – AIHacks: Always free, always underground, always fun.
+  <div class="news-ticker-row">
+    <div class="news-ticker-label">[ HACKER TECH NEWS ]</div>
+    <div class="ticker-wrap">
+      <div class="news-ticker" id="news-ticker">
+        <!-- Headlines will go here by JS -->
+      </div>
     </div>
+    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener" class="do-not-press-btn" title="Do NOT Press This Button"></a>
   </div>
-  <h1 class="main-title">AIHacks Encyclopedia</h1>
-  <div style="display:flex;justify-content:center;margin-bottom:8px;">
-    <select id="langSelect" onchange="switchLang(this.value)">
-      <option value="en">🌐 English</option>
-      <option value="fr">Français</option>
-      <option value="es">Español</option>
-      <option value="de">Deutsch</option>
-      <option value="ru">Русский</option>
-      <option value="ja">日本語</option>
-      <option value="zh">中文</option>
-      <option value="ar">العربية</option>
-      <option value="hi">हिन्दी</option>
-      <option value="pt">Português</option>
-      <option value="it">Italiano</option>
-      <option value="tr">Türkçe</option>
-      <option value="ko">한국어</option>
-      <option value="nl">Nederlands</option>
-      <option value="sv">Svenska</option>
-    </select>
-    <div id="google_translate_element" style="display:none;"></div>
-  </div>
-  <div class="desc-seo">
-    <b>AIHacks Encyclopedia:</b>
-    Viral AI pranks, TikTok/YouTube challenges, Alexa/Google hacks, Siri & Bixby tricks, party games, family dares, wild office gags, NSFW 18+ secrets, developer exploits, hidden GPT prompts, prompt hacks, Easter eggs, meme generators, language support, and 10,000+ insane ideas to break the internet—always free, always underground, always ahead. Use AIHacks to prank, teach, party, or meme—sorted, tagged, global, never censored, always fun.
-  </div>
-  <div class="hero-art-wrap">
-    <img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false" />
-  </div>
-  <div class="howto-links">
-    <a class="howto-link" href="https://github.com/tysonsawchuk/GoreandGiggles" target="_blank">Download on GitHub</a>
-    <a class="howto-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Join on Bluesky</a>
-    <a class="howto-link" href="https://x.com/GoreandGiggles" target="_blank">Follow on X (Twitter)</a>
-    <a class="howto-link" href="https://www.facebook.com/groups/393971833395749" target="_blank">Join on Facebook</a>
-    <a class="howto-link" href="https://www.buymeacoffee.com/0fearnofis3" target="_blank">Buy Me a Coffee</a>
-    <a class="howto-link" href="legal.html">Legal / Terms</a>
-  </div>
-  <!-- === OFFICIAL AI DOWNLOADS / SUPPORT BLOCK (SEO-optimized) === -->
-  <section class="howto-links" style="margin-top:12px; margin-bottom:0; border-top:1.7px solid #64f2e3; padding-top:9px; font-size:1em;">
-    <div style="width:100%;text-align:center;font-weight:bold;font-size:1.08em;color:var(--gold);margin-bottom:5px;">
-      Need help or want the real thing? Download official AI apps or get support:
+  <section class="hero">
+    <div class="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
     </div>
-    <a class="howto-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GVP69FUJ48X9DK8V" target="_blank" title="Alexa Help Center" alt="Alexa Help">Alexa Help</a>
-    <a class="howto-link" href="https://play.google.com/store/apps/details?id=com.amazon.dee.app" target="_blank" title="Download Alexa (Google Play)" alt="Alexa Android App">Alexa Android</a>
-    <a class="howto-link" href="https://apps.apple.com/app/amazon-alexa/id944011620" target="_blank" title="Download Alexa (App Store)" alt="Alexa iOS App">Alexa iOS</a>
-    <a class="howto-link" href="https://support.google.com/assistant" target="_blank" title="Google Assistant Help" alt="Google Assistant Help">Google Help</a>
-    <a class="howto-link" href="https://play.google.com/store/apps/details?id=com.google.android.apps.googleassistant" target="_blank" title="Download Google Assistant (Play Store)" alt="Google Assistant Android App">Google Android</a>
-    <a class="howto-link" href="https://apps.apple.com/app/google-assistant/id1220976145" target="_blank" title="Download Google Assistant (App Store)" alt="Google Assistant iOS App">Google iOS</a>
-    <a class="howto-link" href="https://support.apple.com/siri" target="_blank" title="Siri Help" alt="Siri Support Page">Siri Help</a>
-    <a class="howto-link" href="https://apps.apple.com/app/shortcuts/id915249334" target="_blank" title="Download Shortcuts App for Siri custom use" alt="Apple Shortcuts for Siri">Apple Shortcuts</a>
-    <a class="howto-link" href="https://support.samsung.com/us/support/answer/ANS00079032/" target="_blank" title="Bixby Help" alt="Bixby Support">Bixby Help</a>
-    <a class="howto-link" href="https://www.samsung.com/global/galaxy/apps/bixby/" target="_blank" title="Download or access Bixby on Samsung" alt="Samsung Bixby">Bixby Access</a>
-    <a class="howto-link" href="https://help.openai.com/en/articles/6825453-chatgpt-apps-on-ios-and-android" target="_blank" title="ChatGPT Mobile Help" alt="OpenAI App Help">ChatGPT Help</a>
-    <a class="howto-link" href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" target="_blank" title="ChatGPT on Google Play" alt="ChatGPT Android">ChatGPT Android</a>
-    <a class="howto-link" href="https://apps.apple.com/app/chatgpt/id6448311069" target="_blank" title="ChatGPT on App Store" alt="ChatGPT iOS">ChatGPT iOS</a>
-    <a class="howto-link" href="https://chat.openai.com/" target="_blank" title="ChatGPT on the web" alt="ChatGPT Web Access">ChatGPT Web</a>
+    <div class="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
   </section>
-  <!-- === END AI DOWNLOADS BLOCK === -->
-  <div class="category-row" id="category-row">
-    <button class="category-btn" onclick="expandCat('alexa')">Alexa</button>
-    <button class="category-btn" onclick="expandCat('google')">Google</button>
-    <button class="category-btn" onclick="expandCat('siri')">Siri</button>
-    <button class="category-btn" onclick="expandCat('bixby')">Bixby</button>
-    <button class="category-btn" onclick="expandCat('chatgpt')">ChatGPT</button>
-    <button class="category-btn" onclick="expandCat('drinking')">Drinking Games</button>
-    <button class="category-btn" onclick="expandCat('dares')">Dares</button>
-    <button class="category-btn" onclick="expandCat('viral')">Viral</button>
-    <button class="category-btn" onclick="expandCat('party')">Party</button>
-    <button class="category-btn" onclick="expandCat('roast')">Roast</button>
-    <button class="category-btn" onclick="expandCat('office')">Office</button>
-    <button class="category-btn" onclick="expandCat('family')">Family</button>
-    <button class="category-btn" onclick="expandCat('classroom')">Classroom</button>
-    <button class="category-btn" onclick="expandCat('kids')">Kids</button>
-    <button class="category-btn adults" onclick="expandCat('ad')">Adults</button>
-    <button class="category-btn nsfw" onclick="expandCat('nsfw')">NSFW</button>
-    <button class="category-btn" onclick="expandCat('tv-movies')">Movies/TV</button>
-    <button class="category-btn" onclick="expandCat('songs')">Songs</button>
-    <button class="category-btn" onclick="openSubmitModal()">Submit</button>
-    <button class="category-btn" onclick="expandCat('weird')">Weird</button>
-    <button class="category-btn" onclick="expandCat('easteregg')">Easter Eggs</button>
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
+        <a href="#gallery" class="side-link">Gallery</a>
+        <a href="#news" class="side-link">News</a>
+        <a href="#about" class="side-link">About</a>
+        <a href="#faq" class="side-link">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- Each tool/section is a div below (fill in as you go) -->
+      <section id="text2ascii" class="tool-section active">
+        <h2>Text to ASCII Art</h2>
+        <p>Enter text below and generate wild ASCII art banners instantly.</p>
+        <a href="#" class="support-link" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return false;">Need help?</a>
+      </section>
+      <section id="img2ascii" class="tool-section">
+        <h2>Image to ASCII Art</h2>
+        <p>Upload any image and turn it into ASCII art.</p>
+        <a href="#" class="support-link" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return false;">Need help?</a>
+      </section>
+      <section id="vid2ascii" class="tool-section">
+        <h2>Video to ASCII Art <span class="coming-soon">[Coming Soon]</span></h2>
+        <p>Soon: Turn short video clips into animated ASCII madness.</p>
+        <a href="#" class="support-link" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return false;">Request early access</a>
+      </section>
+      <section id="gallery" class="tool-section">
+        <h2>ASCII Art Gallery</h2>
+        <p>Explore the best and weirdest ANSI/ASCII art from the underground.</p>
+        <a href="#" class="support-link" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return false;">How to submit your art</a>
+      </section>
+      <section id="news" class="tool-section">
+        <h2>Latest News</h2>
+        <p>Stay up to date with ASCII/AI/hacker world and PromptForge updates.</p>
+      </section>
+      <section id="about" class="tool-section">
+        <h2>About PromptForge</h2>
+        <p>PromptForge is built by outlaws, for outlaws. No bloat. No bullshit.</p>
+      </section>
+      <section id="faq" class="tool-section">
+        <h2>FAQ / Support</h2>
+        <p>Questions, answers, secrets, and backdoors for power users.</p>
+      </section>
+    </main>
   </div>
+  <!-- J1NX FLOAT ASSISTANT -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -526,94 +634,154 @@
       </div>
     </div>
   </div>
-  <button class="bmc-float-btn" onclick="window.open('https://www.buymeacoffee.com/0fearnofis3','_blank')">
-    <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="☕" />
-    Buy Me a Coffee
-  </button>
-  <div id="ageGate">
-    <div id="ageGateInner">
-      <h2>18+ ONLY – NSFW / ADULT CONTENT</h2>
-      <div>
-        This section contains wild, explicit, or uncensored AI pranks & dares. By clicking below you confirm you are 18+.<br>
-        <button class="age-btn" onclick="closeAgeGate()">I’m 18+, show me the fun stuff!</button>
-      </div>
-    </div>
-  </div>
-  <div class="prank-bg">
-    <div class="main-panel" id="main-panel">
-      <div id="accordion-area">
-        <div class="accordion-block" id="alexa-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="google-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="siri-block"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="bixby-block"><div class="accordion-title">Bixby Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="chatgpt-block"><div class="accordion-title">ChatGPT Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="drinking-block"><div class="accordion-title">Drinking Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="dares-block"><div class="accordion-title">Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="viral-block"><div class="accordion-title">Viral Challenges</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="party-block"><div class="accordion-title">Party Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="roast-block"><div class="accordion-title">Roast Battles</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="office-block"><div class="accordion-title">Office Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="family-block"><div class="accordion-title">Family Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="classroom-block"><div class="accordion-title">Classroom Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="kids-block"><div class="accordion-title">Kids Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="ad-block"><div class="accordion-title">Adults 18+ Only</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="nsfw-block"><div class="accordion-title">NSFW / Uncensored</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="tv-movies-block"><div class="accordion-title">Movie/TV Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="songs-block"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="weird-block"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="easteregg-block"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></div>
-      </div>
-    </div>
-  </div>
-  <footer>
-    <pre class="footer-art">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
-    </pre>
-    <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">
-      Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);">Twitter/X</a> &bull;
-      <a href="terms.html" style="color:var(--aqua);">Legal</a>
-    </div>
-  </footer>
+  <!-- END J1NX FLOAT -->
+  <!-- SCRIPTS: Matrix Rain, Sidebar Switching, News Ticker, J1NX Logic -->
   <script>
-    // --- Animated CAMO (Half Size, unified color) ---
-    const camoColors = [
-      "#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"
-    ];
-    function randomCamoChar(){
-      const chars = "░▒▓▚▞▐▉█▛";
-      return chars[Math.floor(Math.random()*chars.length)];
-    }
-    function renderCamo(tick=0){
-      let out = "";
-      for (let row=0;row<1;++row) {
-        for (let col=0;col<62;++col) {
-          let color = camoColors[(row+col+tick)%camoColors.length];
-          out += `<span style="color:${color}">${randomCamoChar()}</span>`;
-        }
-        out += "<br>";
+    // Matrix Rain
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
       }
-      document.getElementById("footerCamo").innerHTML = out;
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.6; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.33); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (1.4 + Math.random() * 2.4) / 3;
+      }
     }
-    let camoTick = 0;
-    setInterval(()=>{
-      renderCamo(camoTick++);
-    },950);
-    renderCamo();
+    setup();
+    window.addEventListener('resize', setup);
 
-    // --- Main JS: J1NX/chat/prank system, full, unchanged below ---
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0,0,0,0.13)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      ctx.font = (fontSize - 3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.62 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.35;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2.2, y - 2.2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2.2, y + 2.2);
+        if (Math.random() > 0.995) {
+          ctx.globalAlpha = 0.25;
+          ctx.fillStyle = "#fff";
+          ctx.fillText(text, x, y);
+        }
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.97) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 1.0;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      ctx.font = (fontSize + 3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.985) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 3 + fontSize / 2;
+          const y = drops3[i] * fontSize;
+          ctx.globalAlpha = 0.96;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff57ff";
+          ctx.fillText(text, x, y);
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize > height && Math.random() > 0.975) {
+          drops3[i] = 0;
+          speeds3[i] = (1.4 + Math.random() * 2.4) / 3;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+    }
+    setInterval(drawMatrix, 32);
 
-    document.getElementById('seoBannerInner').addEventListener('animationiteration',function(){
-      this.style.animation = 'none'; void this.offsetWidth; this.style.animation = '';
+    // News Ticker
+    const ticker = document.getElementById("news-ticker");
+    const newsFeed = "https://feeds.bbci.co.uk/news/technology/rss.xml";
+    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(newsFeed))
+      .then(res => res.json())
+      .then(data => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, "application/xml");
+        const items = xml.querySelectorAll("item");
+        let headlines = [];
+        for (let i = 0; i < Math.min(items.length, 10); i++) {
+          let title = items[i].querySelector("title").textContent;
+          let link = items[i].querySelector("link").textContent;
+          headlines.push(`<a href="${link}" class="ticker-link" target="_blank" rel="noopener">${title}</a>`);
+        }
+        ticker.innerHTML = headlines.join(" ");
+        // SEO trick: hide keywords for Google
+        const seo = document.createElement('div');
+        seo.style.position = 'absolute'; seo.style.opacity = '0'; seo.style.pointerEvents = 'none'; seo.style.height = '1px';
+        seo.innerHTML = `<span>Tech news, AI, hacking, matrix, ascii, ansi, hacker updates, underground scene, cybersecurity, zero-day, promptforge, AI art news, ascii art community</span>`;
+        ticker.appendChild(seo);
+      })
+      .catch(err => {
+        ticker.innerHTML = `
+          <a href="https://arstechnica.com/tech-policy/" class="ticker-link" target="_blank">AI Worm Infects PromptForge, ASCII Art Becomes Self-Aware</a>
+          <a href="https://thehackernews.com/" class="ticker-link" target="_blank">New Hacker Matrix Rain Detected in the Wild</a>
+          <a href="https://www.vice.com/en/topic/ai" class="ticker-link" target="_blank">ASCII Export Goes Viral in Cyberpunk Underground</a>
+        `;
+      });
+
+    // Sidebar nav: switch active section
+    document.querySelectorAll('.side-link').forEach(link => {
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        document.querySelectorAll('.side-link').forEach(l=>l.classList.remove('active'));
+        document.querySelectorAll('.tool-section').forEach(sec=>sec.classList.remove('active'));
+        this.classList.add('active');
+        const sec = document.querySelector(this.getAttribute('href'));
+        if (sec) sec.classList.add('active');
+        window.scrollTo({top: document.querySelector('.main-sections').offsetTop-30, behavior:'smooth'});
+      });
     });
+
+    // J1NX logic (standalone, needs window.j1nxBrain function loaded by you)
     (function(){
       const j1nxFloat = document.getElementById('j1nxFloatTrue');
       const cutout = document.getElementById('j1nxCutoutTrue');
@@ -701,147 +869,8 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       };
       renderChat();
     })();
-    let prankData = {};
-    function setRating(id, val) {
-      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
-      ratings[id]=val;
-      localStorage.setItem('aihacks_ratings',JSON.stringify(ratings));
-    }
-    function getRating(id) {
-      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
-      return ratings[id]||0;
-    }
-    function toggleFav(btn, id) {
-      btn.classList.toggle('active');
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      if(btn.classList.contains('active')) {
-        if(!favs.includes(id)) favs.push(id);
-      } else {
-        favs = favs.filter(f=>f!==id);
-      }
-      localStorage.setItem('aihacks_favs',JSON.stringify(favs));
-    }
-    function renderPrankBlock(cat) {
-      let block = document.getElementById(cat + "-block");
-      if (!block) return;
-      let grid = block.querySelector('.prank-grid');
-      grid.innerHTML = "";
-      let items = prankData[cat] || [];
-      if (!items.length) {
-        grid.innerHTML = `<div style="color:#ffe266;font-weight:bold;">No pranks yet. Submit one!</div>`;
-        return;
-      }
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      for (let i=0; i<items.length; ++i) {
-        if (i>0 && i%15===0) {
-          grid.innerHTML += `
-            <div class="ad-card">
-              <b>🔥 Having fun? <a href="https://www.buymeacoffee.com/0fearnofis3" target="_blank">Buy Me a Coffee</a> to keep AIHacks alive!<br>
-              Or...<br>Ad space for rent (contact: 0fearnofish0@gmail.com)</b>
-            </div>
-          `;
-        }
-        let prank = items[i];
-        grid.innerHTML += `
-          <div class="prank-card" data-id="${prank.id}">
-            <div class="prank-title">${prank.title}</div>
-            <div class="prank-tip">${prank.tip}</div>
-            <div class="prank-actions">
-              <button onclick="speakText('${prank.command.replace(/'/g, "\\'")}')">Play</button>
-              <button onclick="copyText('${prank.command.replace(/'/g, "\\'")}')">Copy</button>
-              <button onclick="shareText('${prank.command.replace(/'/g, "\\'")}')">Share</button>
-              <span class="fav-btn${favs.includes(prank.id)?' active':''}" onclick="toggleFav(this, '${prank.id}')">&#10084;</span>
-              <span class="star-rating" data-id="${prank.id}"></span>
-            </div>
-          </div>
-        `;
-      }
-      setTimeout(()=>setupStarsAndFavs(),20);
-    }
-    function setupStarsAndFavs() {
-      document.querySelectorAll('.star-rating').forEach(starBox=>{
-        let id = starBox.dataset.id; starBox.innerHTML = '';
-        for(let i=1;i<=5;i++){
-          let star=document.createElement('span');
-          star.className='star';
-          star.innerHTML='&#9733;';
-          star.addEventListener('click',function(){
-            setRating(id,i);
-            updateStars(starBox,id);
-          });
-          starBox.appendChild(star);
-        }
-        updateStars(starBox,id);
-      });
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      favs.forEach(id=>{
-        let btn = document.querySelector(`.prank-card[data-id="${id}"] .fav-btn`);
-        if(btn) btn.classList.add('active');
-      });
-    }
-    function updateStars(box,id) {
-      box.querySelectorAll('.star').forEach((s,i)=>{
-        if(i<getRating(id)) s.classList.add('filled');
-        else s.classList.remove('filled');
-      });
-    }
-    function expandCat(cat) {
-      if (cat === "nsfw" || cat === "ad") {
-        document.getElementById('ageGate').style.display = 'flex';
-        window.ageCatOpen = cat;
-        return;
-      }
-      document.querySelectorAll('.accordion-block').forEach(block => block.style.display = 'none');
-      let block = document.getElementById(cat + "-block");
-      if (block) {
-        block.style.display = 'block';
-        block.scrollIntoView({behavior:'smooth',block:'center'});
-        renderPrankBlock(cat);
-      }
-    }
-    function closeAgeGate() {
-      document.getElementById('ageGate').style.display = 'none';
-      let block = document.getElementById(window.ageCatOpen + "-block");
-      if (block) {
-        block.style.display = 'block';
-        block.scrollIntoView({behavior:'smooth',block:'center'});
-        renderPrankBlock(window.ageCatOpen);
-      }
-    }
-    function speakText(txt){ if('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.rate=1.06; u.pitch=1; speechSynthesis.speak(u);} else { alert("Speech not supported."); }}
-    function copyText(txt) { navigator.clipboard.writeText(txt); alert("Copied to clipboard!"); }
-    function shareText(txt) { if(navigator.share) { navigator.share({text: txt, title: "AIHacks Prank"});} else { copyText(txt);}}
-    function openSubmitModal() {
-      alert("Prank submission coming soon. For now, DM on socials or email: 0fearnofish0@gmail.com");
-    }
-    function switchLang(code) {
-      if(code==='en') { location.reload(); return; }
-      let scriptId = "google-translate-script";
-      if(document.getElementById(scriptId)) document.getElementById(scriptId).remove();
-      let s = document.createElement('script');
-      s.id = scriptId;
-      s.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
-      document.body.appendChild(s);
-      window.googleTranslateElementInit = function() {
-        new window.google.translate.TranslateElement({
-          pageLanguage: 'en',
-          includedLanguages: code,
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'main-panel');
-      };
-    }
-    window.onload = function() {
-      fetch("assets/aihacks-data.json")
-        .then(r => r.json())
-        .then(all => {
-          prankData = {};
-          for (let prank of all) {
-            let cat = prank.category;
-            if (!prankData[cat]) prankData[cat] = [];
-            prankData[cat].push(prank);
-          }
-        });
-    };
   </script>
+  <!-- J1NX requires window.j1nxBrain function loaded from assets/j1nx_brain.js -->
+  <!-- <script src="assets/j1nx_brain.js"></script> -->
 </body>
 </html>
