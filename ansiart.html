@@ -193,21 +193,67 @@
       margin-left: 2px;
       user-select: none;
     }
-    /* HERO, SIDEBAR, MAIN, J1NX -- same as before, see above blocks */
-    .hero { ... }
-    .hero-title { ... }
-    .hero-desc { ... }
-    .app-flex { ... }
-    .sidebar-nav { ... }
-    .sidebar-logo { ... }
-    .sidebar-nav nav { ... }
-    .side-link { ... }
-    .side-link.active, .side-link:hover, .side-link:focus { ... }
-    .coming-soon { ... }
-    .main-sections { ... }
-    .tool-section { ... }
-    .tool-section.active { ... }
-    /* J1NX FLOAT -- all CSS from your working AIHacks float, unchanged */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 42px auto 12px auto;
+      max-width: 860px;
+      z-index: 2;
+      position: relative;
+      text-align: center;
+    }
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.2rem, 5vw, 2.5rem);
+      font-weight: 900;
+      background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88;
+      letter-spacing: 0.11em;
+      margin-bottom: 18px;
+      margin-top: 6vh;
+      animation: pulse-title 2.7s infinite alternate;
+      border-bottom: 2.2px solid #00e1ffcc;
+      display: inline-block;
+      padding-bottom: 10px;
+      filter: drop-shadow(0 0 16px #00e1ff55);
+    }
+    .hero-desc {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: clamp(0.98rem, 2vw, 1.10rem);
+      background: rgba(0, 0, 0, 0.93);
+      color: #fff;
+      box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44;
+      border-radius: 22px;
+      padding: 17px 29px 15px 29px;
+      margin-bottom: 24px;
+      margin-top: 2px;
+      font-weight: 600;
+      text-shadow: 0 2px 9px #00e1ff99;
+      line-height: 1.55;
+      border: none;
+      user-select: text;
+    }
+    .hero-desc strong {
+      color: #00e1ff;
+      font-weight: 900;
+      text-shadow: 0 0 7px #00e1ffcc;
+      letter-spacing: 0.01em;
+    }
+    .hero-desc u {
+      text-decoration-color: #ff005e;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.18em;
+    }
+    /* J1NX FLOAT -- as above, unchanged */
     .j1nx-float-true { position: fixed; z-index: 1400; right: 2vw; bottom: 54px; display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none; min-width: 0; max-width: 360px; transition: all 0.17s cubic-bezier(.82,0,.21,1);}
     .j1nx-true-cutout-img { width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto; box-shadow: none !important; transition: width 0.17s, height 0.17s;}
     .j1nx-bubble-true-main { background: rgba(22,23,31,0.97); border-radius: 17px; box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f; border: 2px solid #64f2e3; padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em; display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1; transition: opacity 0.18s, visibility 0.18s;}
@@ -289,7 +335,19 @@
       <a href="#">support</a>
     </div>
   </header>
-  <!-- Main content/hero/sidebar/etc here... -->
+  <section class="hero">
+    <div class="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
+    </div>
+    <div class="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
+  </section>
   <!-- J1NX FLOAT ASSISTANT -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
@@ -312,7 +370,7 @@
   </div>
   <!-- END J1NX FLOAT -->
   <script>
-    // Matrix Rain (now with a 5th "closer up" layer!)
+    // Matrix Rain (with BIG visible super-foreground layer)
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
@@ -355,9 +413,9 @@
       }
       // Closest (BIGGEST/foreground) layer
       drops5 = []; speeds5 = [];
-      for (let x = 0; x < Math.floor(columns * 0.055); x++) {
+      for (let x = 0; x < Math.floor(columns * 0.07); x++) {
         drops5[x] = Math.random() * height / fontSize;
-        speeds5[x] = (2.9 + Math.random() * 3.2) / 1.77;
+        speeds5[x] = (3.1 + Math.random() * 3.6) / 1.45;
       }
     }
     setup();
@@ -427,11 +485,11 @@
       // 4th layer (superlarge, extra rare)
       ctx.font = (fontSize * 2.3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops4.length; i++) {
-        if (Math.random() > 0.995) {
+        if (Math.random() > 0.985) {
           const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
           const x = i * fontSize * 7 + fontSize;
           const y = drops4[i] * fontSize * 2.4;
-          ctx.globalAlpha = 0.81;
+          ctx.globalAlpha = 0.87;
           ctx.shadowColor = "#fff";
           ctx.shadowBlur = 38;
           ctx.fillStyle = "#fff";
@@ -445,32 +503,32 @@
           speeds4[i] = (2.3 + Math.random() * 2.6) / 2.1;
         }
       }
-      // 5th (closest, massive, bright layer)
-      ctx.font = (fontSize * 3.7) + "px 'Share Tech Mono', monospace";
+      // 5th (closest, massive, bright layer) - more frequent, BIGGER
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops5.length; i++) {
-        if (Math.random() > 0.9975) {
+        if (Math.random() > 0.93) { // way more common
           const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
-          const x = i * fontSize * 13 + fontSize;
-          const y = drops5[i] * fontSize * 3.5;
-          ctx.globalAlpha = 0.98;
-          ctx.shadowColor = "#fff";
-          ctx.shadowBlur = 55;
-          ctx.fillStyle = "#ff005e";
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops5[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
           ctx.fillText(text, x, y);
           ctx.shadowBlur = 0;
           ctx.globalAlpha = 1.0;
         }
         drops5[i] += speeds5[i];
-        if (drops5[i] * fontSize * 3.7 > height && Math.random() > 0.98) {
+        if (drops5[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
           drops5[i] = 0;
-          speeds5[i] = (2.9 + Math.random() * 3.2) / 1.77;
+          speeds5[i] = (3.1 + Math.random() * 3.6) / 1.45;
         }
       }
       ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
     }
     setInterval(drawMatrix, 32);
 
-    // J1NX float logic
+    // J1NX float logic (unchanged)
     (function(){
       const j1nxFloat = document.getElementById('j1nxFloatTrue');
       const cutout = document.getElementById('j1nxCutoutTrue');
