@@ -119,7 +119,7 @@
     </section>
   </main>
   <script>
-    // === BULLETPROOF 3D MATRIX RAIN ===
+    // 3D Matrix Rain - No Shadows, No Blurs, Only Offset Colors!
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
 
@@ -144,7 +144,7 @@
     window.addEventListener('resize', setup);
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(0,0,0,0.23)";
+      ctx.fillStyle = "rgba(0,0,0,0.24)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.font = fontSize + "px 'Orbitron', monospace";
       ctx.textAlign = "center";
@@ -154,28 +154,23 @@
         const x = i * fontSize + fontSize / 2;
         const y = drops[i] * fontSize;
 
-        // BLUE ghost (top-left)
-        ctx.globalAlpha = 0.75;
-        ctx.shadowColor = "#00e1ff";
-        ctx.shadowBlur = 10;
+        // Blue pass, offset left-up
         ctx.fillStyle = "#00e1ff";
-        ctx.fillText(text, x - 1.5, y - 1.5);
+        ctx.globalAlpha = 0.93;
+        ctx.fillText(text, x - 2, y - 2);
 
-        // RED ghost (bottom-right)
-        ctx.globalAlpha = 0.75;
-        ctx.shadowColor = "#ff005e";
-        ctx.shadowBlur = 10;
+        // Red pass, offset right-down
         ctx.fillStyle = "#ff005e";
-        ctx.fillText(text, x + 1.5, y + 1.5);
+        ctx.globalAlpha = 0.93;
+        ctx.fillText(text, x + 2, y + 2);
 
-        // White/magenta pop, rarely
+        // Pop highlight (white, center, rare)
         if (Math.random() > 0.993) {
-          ctx.globalAlpha = 0.82;
-          ctx.shadowColor = "#fff";
-          ctx.shadowBlur = 17;
-          ctx.fillStyle = (Math.random() > 0.6) ? "#fff" : "#ff57ff";
+          ctx.fillStyle = "#fff";
+          ctx.globalAlpha = 0.98;
           ctx.fillText(text, x, y);
         }
+
         ctx.globalAlpha = 1.0;
 
         drops[i] += speeds[i];
@@ -186,7 +181,7 @@
       }
     }
 
-    setInterval(drawMatrix, 33);
+    setInterval(drawMatrix, 35);
   </script>
 </body>
 </html>
