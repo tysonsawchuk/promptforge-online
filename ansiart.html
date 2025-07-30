@@ -5,7 +5,6 @@
   <title>PromptForge – ANSI/ASCII Art Playground</title>
   <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, and pure matrix rain tools. Create, export, and share wild text art.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Orbitron (for hero/title) and Share Tech Mono (for rain) -->
   <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -120,18 +119,18 @@
     </section>
   </main>
   <script>
-    // -- Alien 3D Matrix Rain: Double layer, fake glyphs, zero blur, 3D pop --
+    // --- Alien 3D Matrix Rain: 3 layers, all bright ---
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
 
-    // --- ALIEN/FAKE GLYPH UNICODE CHAR SET ---
+    // Alien/fake Unicode glyphs (copy-paste safe, all monospace-friendly)
     const fakeGlyphs =
       "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
 
-    // -- RAIN LAYER SETUP --
     let width, height, fontSize, columns;
     let drops1 = [], speeds1 = [];
     let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
 
     function setup() {
       width = window.innerWidth;
@@ -151,7 +150,13 @@
       drops2 = []; speeds2 = [];
       for (let x = 0; x < columns * 1.6; x++) {
         drops2[x] = Math.random() * height / fontSize;
-        speeds2[x] = 0.6 + Math.random() * 1.2;
+        speeds2[x] = 0.7 + Math.random() * 1.2;
+      }
+      // Bright pop highlights (1/3 as many as main columns)
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.33); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = 1.4 + Math.random() * 2.4;
       }
     }
     setup();
@@ -160,51 +165,42 @@
     function drawMatrix() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.textAlign = "center";
-      // -- BACKGROUND FAINT RAIN LAYER --
+      // -- BACKGROUND LAYER (Fainter but brighter than before)
       ctx.font = (fontSize - 3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops2.length; i++) {
         const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
         const x = i * fontSize * 0.62 + fontSize / 2;
         const y = drops2[i] * fontSize;
-        // blue then red, faint, larger offset, lower alpha
-        ctx.globalAlpha = 0.22;
+        ctx.globalAlpha = 0.35; // much brighter!
         ctx.fillStyle = "#00e1ff";
-        ctx.fillText(text, x - 2.5, y - 2.5);
+        ctx.fillText(text, x - 2.2, y - 2.2);
         ctx.fillStyle = "#ff005e";
-        ctx.fillText(text, x + 2.5, y + 2.5);
+        ctx.fillText(text, x + 2.2, y + 2.2);
         // rare center pop
-        if (Math.random() > 0.996) {
-          ctx.globalAlpha = 0.11;
+        if (Math.random() > 0.995) {
+          ctx.globalAlpha = 0.25;
           ctx.fillStyle = "#fff";
           ctx.fillText(text, x, y);
         }
         drops2[i] += speeds2[i];
-        if (drops2[i] * fontSize > height && Math.random() > 0.96) {
+        if (drops2[i] * fontSize > height && Math.random() > 0.97) {
           drops2[i] = 0;
-          speeds2[i] = 0.6 + Math.random() * 1.2;
+          speeds2[i] = 0.7 + Math.random() * 1.2;
         }
       }
       ctx.globalAlpha = 1.0;
 
-      // -- MAIN FOREGROUND RAIN LAYER --
+      // -- MAIN LAYER (Foremost, bolder, brightest 3D) --
       ctx.font = fontSize + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < columns; i++) {
         const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
         const x = i * fontSize + fontSize / 2;
         const y = drops1[i] * fontSize;
-        // Blue left-up
-        ctx.globalAlpha = 0.94;
+        ctx.globalAlpha = 1.0; // **fully bright!**
         ctx.fillStyle = "#00e1ff";
         ctx.fillText(text, x - 2, y - 2);
-        // Red right-down
         ctx.fillStyle = "#ff005e";
         ctx.fillText(text, x + 2, y + 2);
-        // White pop center, rare
-        if (Math.random() > 0.993) {
-          ctx.fillStyle = "#fff";
-          ctx.globalAlpha = 0.99;
-          ctx.fillText(text, x, y);
-        }
         ctx.globalAlpha = 1.0;
         drops1[i] += speeds1[i];
         if (drops1[i] * fontSize > height && Math.random() > 0.985) {
@@ -212,10 +208,28 @@
           speeds1[i] = 1.1 + Math.random() * 1.7;
         }
       }
+
+      // -- POP HIGHLIGHT LAYER (White or magenta, large/rare/BRIGHT) --
+      ctx.font = (fontSize + 3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.985) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 3 + fontSize / 2;
+          const y = drops3[i] * fontSize;
+          ctx.globalAlpha = 0.96;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff57ff";
+          ctx.fillText(text, x, y);
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize > height && Math.random() > 0.975) {
+          drops3[i] = 0;
+          speeds3[i] = 1.4 + Math.random() * 2.4;
+        }
+      }
       ctx.globalAlpha = 1.0;
     }
 
-    setInterval(drawMatrix, 34);
+    setInterval(drawMatrix, 32);
   </script>
 </body>
 </html>
