@@ -5,7 +5,8 @@
   <title>PromptForge – ANSI/ASCII Art Playground</title>
   <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, and pure matrix rain tools. Create, export, and share wild text art.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900&display=swap" rel="stylesheet">
+  <!-- Orbitron (for hero/title) and Share Tech Mono (for rain) -->
+  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     html, body {
       height: 100%;
@@ -13,7 +14,7 @@
       padding: 0;
       background: #000;
       min-height: 100vh;
-      font-family: 'Orbitron', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
+      font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
       overflow-x: hidden;
     }
     #matrix-canvas {
@@ -119,12 +120,18 @@
     </section>
   </main>
   <script>
-    // 3D Matrix Rain - No Shadows, No Blurs, Only Offset Colors!
+    // -- Alien 3D Matrix Rain: Double layer, fake glyphs, zero blur, 3D pop --
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
 
-    let width, height, fontSize, columns, drops, speeds;
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()<>|\\/+-=.:;".split('');
+    // --- ALIEN/FAKE GLYPH UNICODE CHAR SET ---
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+
+    // -- RAIN LAYER SETUP --
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
 
     function setup() {
       width = window.innerWidth;
@@ -133,55 +140,82 @@
       canvas.height = height;
       fontSize = Math.max(16, Math.floor(width / 90));
       columns = Math.floor(width / fontSize);
-      drops = [];
-      speeds = [];
+
+      // Main rain
+      drops1 = []; speeds1 = [];
       for (let x = 0; x < columns; x++) {
-        drops[x] = Math.random() * height / fontSize;
-        speeds[x] = 1.1 + Math.random() * 1.7;
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = 1.1 + Math.random() * 1.7;
+      }
+      // Fainter back rain (double the columns)
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.6; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = 0.6 + Math.random() * 1.2;
       }
     }
     setup();
     window.addEventListener('resize', setup);
 
     function drawMatrix() {
-      ctx.fillStyle = "rgba(0,0,0,0.24)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.font = fontSize + "px 'Orbitron', monospace";
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.textAlign = "center";
-
-      for (let i = 0; i < columns; i++) {
-        const text = letters[Math.floor(Math.random() * letters.length)];
-        const x = i * fontSize + fontSize / 2;
-        const y = drops[i] * fontSize;
-
-        // Blue pass, offset left-up
+      // -- BACKGROUND FAINT RAIN LAYER --
+      ctx.font = (fontSize - 3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.62 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        // blue then red, faint, larger offset, lower alpha
+        ctx.globalAlpha = 0.22;
         ctx.fillStyle = "#00e1ff";
-        ctx.globalAlpha = 0.93;
-        ctx.fillText(text, x - 2, y - 2);
-
-        // Red pass, offset right-down
+        ctx.fillText(text, x - 2.5, y - 2.5);
         ctx.fillStyle = "#ff005e";
-        ctx.globalAlpha = 0.93;
-        ctx.fillText(text, x + 2, y + 2);
-
-        // Pop highlight (white, center, rare)
-        if (Math.random() > 0.993) {
+        ctx.fillText(text, x + 2.5, y + 2.5);
+        // rare center pop
+        if (Math.random() > 0.996) {
+          ctx.globalAlpha = 0.11;
           ctx.fillStyle = "#fff";
-          ctx.globalAlpha = 0.98;
           ctx.fillText(text, x, y);
         }
-
-        ctx.globalAlpha = 1.0;
-
-        drops[i] += speeds[i];
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
-          drops[i] = 0;
-          speeds[i] = 1.1 + Math.random() * 1.7;
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.96) {
+          drops2[i] = 0;
+          speeds2[i] = 0.6 + Math.random() * 1.2;
         }
       }
+      ctx.globalAlpha = 1.0;
+
+      // -- MAIN FOREGROUND RAIN LAYER --
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        // Blue left-up
+        ctx.globalAlpha = 0.94;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        // Red right-down
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        // White pop center, rare
+        if (Math.random() > 0.993) {
+          ctx.fillStyle = "#fff";
+          ctx.globalAlpha = 0.99;
+          ctx.fillText(text, x, y);
+        }
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = 1.1 + Math.random() * 1.7;
+        }
+      }
+      ctx.globalAlpha = 1.0;
     }
 
-    setInterval(drawMatrix, 35);
+    setInterval(drawMatrix, 34);
   </script>
 </body>
 </html>
