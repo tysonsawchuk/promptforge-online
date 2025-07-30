@@ -69,19 +69,20 @@
       .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
       .side-link { margin-bottom:0; margin-right:5px; }
     }
-    /* J1NX FLOATING STYLE - fullsize left, no crop */
+    /* J1NX FLOATING STYLE - right, no crop, AIHacks size */
     .j1nx-float-true {
-      position: fixed; left: 24px; bottom: 28px; z-index: 4000;
+      position: fixed; right: 24px; bottom: 28px; z-index: 4000;
       display: flex; flex-direction: column; align-items: center; gap: 0;
       background: none !important; box-shadow: none; pointer-events: auto;
       transition: all 0.21s cubic-bezier(.82,0,.21,1);
     }
     .j1nx-true-cutout-img {
-      width: 144px; height: auto; margin-bottom: -8px; background: #fff0; box-shadow: 0 4px 36px #be9cff80, 0 0 2px #191e25;
+      width: 144px; height: auto; margin-bottom: -8px; background: none; box-shadow: none;
       cursor: pointer; user-select: none; border: none; transition: box-shadow 0.15s, filter 0.13s;
-      border-radius: 24px;
+      border-radius: 0; /* NO rounding/crop */
+      background: none !important;
+      box-shadow: none !important;
     }
-    .j1nx-true-cutout-img:hover { box-shadow: 0 0 44px #ff005eaa, 0 0 7px #00e1ffbb;}
     .j1nx-bubble-true-main {
       position: relative; min-width: 280px; max-width: 360px;
       background: rgba(20,22,28,0.99); border-radius: 20px 22px 24px 14px; box-shadow: 0 6px 27px #be9cff77, 0 0 0 3px #23231f; padding: 16px 16px 11px 16px; display: flex; flex-direction: column; align-items: flex-start;
@@ -96,6 +97,7 @@
     @media (max-width: 900px) {
       .j1nx-true-cutout-img { width: 93px; }
       .j1nx-bubble-true-main { min-width: 56vw; max-width: 97vw; }
+      .j1nx-float-true { right: 9px; }
     }
     @media (max-width: 700px) {
       .j1nx-float-true { left: unset; right: 9px; bottom: 9px; }
@@ -207,15 +209,17 @@
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script>
-    // Matrix Rain (main + depth + CLOSEUP highlight layer)
+    // Matrix Rain (main + depth + CLOSEUP + wild color layer)
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
       "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    const wildColors = ["#FFD700","#00FFEA","#FF00F3","#FF9300","#00FF19","#D100FF","#01FCFD","#fc0341","#fcba03","#d9fc03","#25fc03","#03fc5a","#03fcbc","#03e7fc","#037efc","#5d03fc","#ba03fc","#fc03d1"];
     let width, height, fontSize, columns;
     let drops1 = [], speeds1 = [];
     let drops2 = [], speeds2 = [];
     let drops3 = [], speeds3 = [];
+    let drops4 = [], speeds4 = [], sizes4 = [];
     function setup() {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -237,6 +241,13 @@
       for (let x = 0; x < Math.floor(columns * 0.08); x++) {
         drops3[x] = Math.random() * height / fontSize;
         speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+      }
+      // WILD COLOR LAYER
+      drops4 = []; speeds4 = []; sizes4 = [];
+      for (let x = 0; x < Math.floor(columns * 0.07); x++) {
+        drops4[x] = Math.random() * height / fontSize;
+        speeds4[x] = (1.3 + Math.random() * 2.7) / 1.4;
+        sizes4[x] = 1.5 + Math.random() * 7;
       }
     }
     setup();
@@ -299,6 +310,30 @@
         if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
           drops3[i] = 0;
           speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+      }
+      // WILD COLOR LAYER: random colors, random size, extra rare
+      for (let i = 0; i < drops4.length; i++) {
+        if (Math.random() > 0.97) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const color = wildColors[Math.floor(Math.random() * wildColors.length)];
+          const size = fontSize * sizes4[i];
+          ctx.font = size + "px 'Share Tech Mono', monospace";
+          ctx.globalAlpha = 0.87 + Math.random() * 0.13;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 32 + Math.random() * 65;
+          ctx.fillStyle = color;
+          const x = (i * fontSize * 10.5 + fontSize * 2) % width;
+          const y = drops4[i] * fontSize * 2.7;
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops4[i] += speeds4[i];
+        if (drops4[i] * fontSize * 8 > height && Math.random() > 0.98) {
+          drops4[i] = 0;
+          speeds4[i] = (1.3 + Math.random() * 2.7) / 1.4;
+          sizes4[i] = 1.5 + Math.random() * 7;
         }
       }
       ctx.globalAlpha = 1.0;
@@ -393,5 +428,15 @@
       renderChat();
     })();
   </script>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,fr,de,es,ru,zh-CN,ja,it,ko,pt,ar',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
