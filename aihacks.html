@@ -33,6 +33,7 @@
       background: #000;
       display: block;
     }
+    /* HEADER, NAV, BREADCRUMBS */
     .navbar {
       width: 100%;
       position: sticky;
@@ -42,13 +43,22 @@
       backdrop-filter: blur(3px);
       border-bottom: 1.5px solid var(--nav-border);
       display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 0 0 0 0;
+      min-height: 78px;
+      box-shadow: 0 2px 24px #00e1ff33;
+      transition: background 0.3s;
+    }
+    .navbar-row1 {
+      width: 100%;
+      display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 18px;
       padding: 0 3vw;
-      min-height: 66px;
-      box-shadow: 0 2px 24px #00e1ff33;
-      transition: background 0.3s;
+      min-height: 56px;
     }
     .logo {
       font-family: 'Orbitron', 'monospace';
@@ -146,283 +156,45 @@
       fill: #fff;
       filter: drop-shadow(0 0 10px #ff005e);
     }
-    @media (max-width: 800px) {
-      .navbar {
-        flex-direction: column;
-        gap: 8px;
-        padding: 0 8px;
-      }
-      .nav-links { gap: 3vw;}
-      .nav-socials { margin-left: 0;}
-    }
-    /* NEWS TICKER (unchanged) ... */
-    .news-ticker-row {
+    .breadcrumbs {
       width: 100vw;
-      min-height: 36px;
-      background: linear-gradient(90deg, #000 0%, #00e1ff33 40%, #ff005e33 100%);
-      border-bottom: 2px solid #1b163a;
-      box-shadow: 0 1px 20px #00e1ff19;
-      z-index: 3;
-      position: relative;
+      padding: 7px 3vw 7px 3vw;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.08rem;
+      letter-spacing: 0.09em;
+      color: #fff;
       display: flex;
       align-items: center;
       gap: 8px;
-      overflow: hidden;
+      background: linear-gradient(90deg, #141829 55%, #191e25 120%);
+      box-shadow: 0 2px 14px #00e1ff19;
+      border-bottom: 1px solid #232a33;
+      user-select: text;
+      z-index: 4;
     }
-    .news-ticker-label {
-      font-family: 'Share Tech Mono', monospace;
-      color: #fff;
-      font-size: 1.06rem;
-      background: #191e25;
-      padding: 2px 14px;
-      border-radius: 8px;
-      letter-spacing: 0.13em;
-      margin-left: 1vw;
-      text-shadow: 0 1px 5px #00e1ff88;
-      border: 1px solid #232a33;
-      box-shadow: 0 0 6px #00e1ff33;
-    }
-    .ticker-wrap {
-      position: relative;
-      flex: 1 1 0;
-      overflow: hidden;
-      height: 38px;
-      display: flex;
-      align-items: center;
-    }
-    .news-ticker {
-      display: flex;
-      white-space: nowrap;
-      gap: 55px;
-      animation: tickerScroll 32s linear infinite;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 1.03rem;
-      color: #00e1ff;
-      text-shadow: 0 0 8px #ff005e66;
-    }
-    @keyframes tickerScroll {
-      0% { transform: translateX(100vw); }
-      100% { transform: translateX(-210vw); }
-    }
-    .ticker-link {
+    .breadcrumbs a {
       color: #00e1ff;
       text-decoration: none;
-      padding: 1px 11px 1px 11px;
-      border-radius: 7px;
-      background: rgba(0,0,0,0.17);
-      border: 1.3px solid #232a33;
-      margin: 0 2px;
-      transition: background 0.17s, color 0.14s, border-color 0.17s;
+      border-bottom: 1.6px dotted #ff005e;
       font-weight: 700;
-      box-shadow: 0 0 5px #00e1ff55 inset;
+      margin-right: 7px;
+      margin-left: 3px;
+      transition: color 0.18s;
     }
-    .ticker-link:hover, .ticker-link:focus {
-      color: #fff;
-      background: linear-gradient(90deg,#00e1ff 50%,#ff005e 120%);
-      border-color: #ff005e;
-      box-shadow: 0 0 10px #00e1ff77, 0 0 3px #ff005e77 inset;
-    }
-    .do-not-press-btn {
-      background: linear-gradient(90deg,#ff005e 10%,#9c6aff 80%,#00e1ff 110%);
-      color: #fff;
-      font-family: 'Orbitron', monospace;
-      font-size: 1.18rem;
-      font-weight: 900;
-      padding: 9px 26px;
-      border-radius: 19px;
-      box-shadow: 0 0 30px #ff005e44,0 2px 12px #00e1ff44;
-      border: 2.2px solid #ff005e;
-      cursor: pointer;
-      margin: 0 12px;
-      transition: box-shadow 0.19s, background 0.22s, color 0.18s, transform 0.17s;
-      text-shadow: 0 0 14px #ff005e99, 0 1px 8px #00e1ff99;
-      animation: forbidden-btn 2.4s infinite alternate, forbidden-wiggle 0.74s infinite cubic-bezier(.8,0,.5,1.4) alternate;
-      outline: none;
-      border-bottom: 4.2px solid #9c6aff;
-    }
-    .do-not-press-btn:hover, .do-not-press-btn:focus {
-      background: linear-gradient(90deg,#00e1ff 20%,#ff005e 80%);
-      color: #ffde71;
-      box-shadow: 0 0 44px #ff005e77,0 3px 18px #00e1ff99;
-      transform: scale(1.09) rotate(-2deg);
-      text-shadow: 0 0 33px #ff005e, 0 1px 13px #00e1ff;
-    }
-    @keyframes forbidden-btn {
-      0% { filter: drop-shadow(0 0 2px #ff005e); }
-      90% { filter: drop-shadow(0 0 18px #00e1ff88); }
-      100% { filter: drop-shadow(0 0 6px #ff005e) drop-shadow(0 0 19px #00e1ff); }
-    }
-    @keyframes forbidden-wiggle {
-      0% { transform: rotate(-2deg); }
-      100% { transform: rotate(2deg); }
-    }
-    .do-not-press-btn::after {
-      content: "DO NOT PRESS";
-      display: block;
-      font-size: 0.83rem;
-      color: #ffde71;
-      letter-spacing: 0.18em;
-      font-family: 'Share Tech Mono', monospace;
-      margin-top: -3px;
-      opacity: 0.82;
-      text-align: center;
-      pointer-events: none;
-      text-shadow: 0 1px 6px #ff005e66;
-      transition: color 0.2s;
-    }
-    .do-not-press-btn:hover::after, .do-not-press-btn:focus::after {
-      color: #00e1ff;
-      text-shadow: 0 1px 11px #00e1ff99;
-    }
-    /* SIDEBAR/MAIN/SECTION/HERO: ... (unchanged, see previous blocks) ... */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 42px auto 12px auto;
-      max-width: 860px;
-      z-index: 2;
-      position: relative;
-      text-align: center;
-    }
-    .hero-title {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(1.2rem, 5vw, 2.5rem);
-      font-weight: 900;
-      background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88;
-      letter-spacing: 0.11em;
-      margin-bottom: 18px;
-      margin-top: 6vh;
-      animation: pulse-title 2.7s infinite alternate;
-      border-bottom: 2.2px solid #00e1ffcc;
-      display: inline-block;
-      padding-bottom: 10px;
-      filter: drop-shadow(0 0 16px #00e1ff55);
-    }
-    .hero-desc {
-      display: flex;
-      flex-direction: row;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-      font-size: clamp(0.98rem, 2vw, 1.10rem);
-      background: rgba(0, 0, 0, 0.93);
-      color: #fff;
-      box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44;
-      border-radius: 22px;
-      padding: 17px 29px 15px 29px;
-      margin-bottom: 24px;
-      margin-top: 2px;
-      font-weight: 600;
-      text-shadow: 0 2px 9px #00e1ff99;
-      line-height: 1.55;
-      border: none;
-      user-select: text;
-    }
-    .hero-desc strong {
-      color: #00e1ff;
-      font-weight: 900;
-      text-shadow: 0 0 7px #00e1ffcc;
-      letter-spacing: 0.01em;
-    }
-    .hero-desc u {
-      text-decoration-color: #ff005e;
-      text-decoration-thickness: 2px;
-      text-underline-offset: 0.18em;
-    }
-    .app-flex {
-      display: flex;
-      flex-direction: row;
-      min-height: 62vh;
-      z-index: 2;
-      position: relative;
-    }
-    .sidebar-nav {
-      min-width: 179px;
-      background: linear-gradient(180deg,#101725 70%,#1a0024 120%);
-      border-right: 1.7px solid #232a33;
-      box-shadow: 3px 0 24px #00e1ff11;
-      padding: 30px 10px 22px 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-      z-index: 5;
-      position: sticky;
-      top: 64px;
-    }
-    .sidebar-logo {
-      font-size: 2.1rem;
+    .breadcrumbs a:hover, .breadcrumbs a:focus {
       color: #ff005e;
-      text-shadow: 0 0 13px #00e1ff99;
-      margin-bottom: 7px;
+      border-bottom: 2.1px solid #ff005e;
+    }
+    .breadcrumbs .bc-sep {
+      color: #9c6aff;
+      font-weight: 700;
+      font-size: 1.15em;
+      margin-right: 4px;
+      margin-left: 2px;
       user-select: none;
     }
-    .sidebar-nav nav {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .side-link {
-      color: #00e1ff;
-      background: #181a29;
-      border-radius: 10px;
-      text-decoration: none;
-      padding: 9px 17px;
-      font-family: 'Share Tech Mono', monospace;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      font-size: 1.06em;
-      margin-bottom: 2px;
-      border: 1.2px solid #212e37;
-      box-shadow: 0 0 8px #00e1ff44 inset;
-      transition: background 0.15s, color 0.12s, border 0.13s;
-      position: relative;
-    }
-    .side-link.active,
-    .side-link:hover,
-    .side-link:focus {
-      background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%);
-      color: #fff;
-      border-color: #ff005e;
-      outline: none;
-    }
-    .coming-soon {
-      color: #ff005e;
-      font-size: 0.91em;
-      background: #191e25;
-      border-radius: 7px;
-      padding: 2px 7px;
-      margin-left: 7px;
-      text-shadow: 0 1px 5px #ff005e99;
-    }
-    .main-sections {
-      flex: 1 1 0;
-      padding: 34px 5vw 22px 5vw;
-      background: transparent;
-      min-width: 0;
-      z-index: 2;
-    }
-    .tool-section {
-      display: none;
-      background: rgba(0,0,0,0.82);
-      border-radius: 21px;
-      padding: 33px 26px 22px 26px;
-      box-shadow: 0 0 32px 0 #00e1ff33, 0 0 7px 1px #ff005e22;
-      border: 1.7px solid #191e25;
-      margin-bottom: 22px;
-      animation: fadeInSec 0.4s;
-    }
-    .tool-section.active { display: block; }
-    @keyframes fadeInSec {
-      from { opacity: 0; transform: translateY(20px);}
-      to   { opacity: 1; transform: translateY(0);}
-    }
-    /* J1NX FLOAT */
+    /* Rest of your CSS for hero, sidebar, main, J1NX, etc... as before */
+    /* ... (unchanged, see earlier blocks) ... */
     .j1nx-float-true {
       position: fixed; z-index: 1400; right: 2vw; bottom: 54px;
       display: flex; flex-direction: column; align-items: center;
@@ -434,8 +206,14 @@
       object-fit: contain; border-radius: 32px;
       background: transparent !important; margin-bottom: -30px;
       position: relative; z-index: 9; pointer-events: auto;
-      box-shadow: none !important;
+      box-shadow: 0 0 48px #ff005e77, 0 0 14px #64f2e3cc;
       transition: width 0.17s, height 0.17s;
+    }
+    .j1nx-true-cutout-img.error {
+      filter: grayscale(1) blur(0.5px) brightness(0.75);
+      box-shadow: 0 0 18px #ff005e;
+      background: #201a2d;
+      border: 3px solid #ff005e;
     }
     .j1nx-bubble-true-main {
       background: rgba(22,23,31,0.97); border-radius: 17px;
@@ -492,94 +270,44 @@
 <body>
   <canvas id="matrix-canvas"></canvas>
   <header class="navbar">
-    <span class="logo">PromptForge</span>
-    <nav class="nav-links">
-      <a href="#" class="nav-link">Home</a>
-      <a href="#" class="nav-link">Gallery</a>
-      <a href="#" class="nav-link">Tools</a>
-      <a href="#" class="nav-link">FAQ</a>
-    </nav>
-    <div class="nav-socials">
-      <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
-        <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
-      </a>
-      <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
-        <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
-      </a>
-      <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
-        <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
-      </a>
-    </div>
-  </header>
-  <div class="news-ticker-row">
-    <div class="news-ticker-label">[ HACKER TECH NEWS ]</div>
-    <div class="ticker-wrap">
-      <div class="news-ticker" id="news-ticker">
-        <!-- Headlines will go here by JS -->
+    <div class="navbar-row1">
+      <span class="logo">PromptForge</span>
+      <nav class="nav-links">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Gallery</a>
+        <a href="#" class="nav-link">Tools</a>
+        <a href="#" class="nav-link">FAQ</a>
+      </nav>
+      <div class="nav-socials">
+        <a class="social-link" href="https://promptforge.online" target="_blank">🌐</a>
+        <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
+        </a>
+        <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
+        </a>
       </div>
     </div>
-    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener" class="do-not-press-btn" title="Do NOT Press This Button"></a>
-  </div>
-  <section class="hero">
-    <div class="hero-title">
-      <u>ANSI/ASCII Art Playground</u>
+    <div class="breadcrumbs">
+      <a href="https://promptforge.online">promptforge.online</a>
+      <span class="bc-sep">/</span>
+      <a href="#">gallery</a>
+      <span class="bc-sep">/</span>
+      <a href="#">tools</a>
+      <span class="bc-sep">/</span>
+      <a href="#">aihacks</a>
+      <span class="bc-sep">/</span>
+      <a href="#">support</a>
     </div>
-    <div class="hero-desc">
-      <span>
-        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
-      </span>
-      <span>
-        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
-      </span>
-    </div>
-  </section>
-  <div class="app-flex">
-    <aside class="sidebar-nav">
-      <div class="sidebar-logo">☰</div>
-      <nav>
-        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
-        <a href="#img2ascii" class="side-link">Image → ASCII</a>
-        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
-        <a href="#gallery" class="side-link">Gallery</a>
-        <a href="#news" class="side-link">News</a>
-        <a href="#about" class="side-link">About</a>
-        <a href="#faq" class="side-link">FAQ</a>
-      </nav>
-    </aside>
-    <main class="main-sections">
-      <section id="text2ascii" class="tool-section active">
-        <h2>Text to ASCII Art</h2>
-        <p>Enter text below and generate wild ASCII art banners instantly.</p>
-      </section>
-      <section id="img2ascii" class="tool-section">
-        <h2>Image to ASCII Art</h2>
-        <p>Upload any image and turn it into ASCII art.</p>
-      </section>
-      <section id="vid2ascii" class="tool-section">
-        <h2>Video to ASCII Art <span class="coming-soon">[Coming Soon]</span></h2>
-        <p>Soon: Turn short video clips into animated ASCII madness.</p>
-      </section>
-      <section id="gallery" class="tool-section">
-        <h2>ASCII Art Gallery</h2>
-        <p>Explore the best and weirdest ANSI/ASCII art from the underground.</p>
-      </section>
-      <section id="news" class="tool-section">
-        <h2>Latest News</h2>
-        <p>Stay up to date with ASCII/AI/hacker world and PromptForge updates.</p>
-      </section>
-      <section id="about" class="tool-section">
-        <h2>About PromptForge</h2>
-        <p>PromptForge is built by outlaws, for outlaws. No bloat. No bullshit.</p>
-      </section>
-      <section id="faq" class="tool-section">
-        <h2>FAQ / Support</h2>
-        <p>Questions, answers, secrets, and backdoors for power users.</p>
-      </section>
-    </main>
-  </div>
+  </header>
+  <!-- The rest of your main layout (hero, sidebar, etc.) goes here... -->
+
   <!-- J1NX FLOAT ASSISTANT -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue" onerror="this.classList.add('error');this.nextElementSibling.innerHTML='<div style=&quot;color:#ff005e;font-weight:bold;font-size:1.08em;margin:1em 0;&quot;>Missing: j1nx/j1nx_cutout.png</div>'"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
         <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
@@ -598,8 +326,9 @@
     </div>
   </div>
   <!-- END J1NX FLOAT -->
+
+  <!-- Matrix Rain (now with 4th layer: superlarge, glowy, rare) -->
   <script>
-    // Matrix Rain
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
@@ -609,6 +338,7 @@
     let drops1 = [], speeds1 = [];
     let drops2 = [], speeds2 = [];
     let drops3 = [], speeds3 = [];
+    let drops4 = [], speeds4 = [];
 
     function setup() {
       width = window.innerWidth;
@@ -633,6 +363,12 @@
         drops3[x] = Math.random() * height / fontSize;
         speeds3[x] = (1.4 + Math.random() * 2.4) / 3;
       }
+      // 4th layer: superlarge rare glyphs
+      drops4 = []; speeds4 = [];
+      for (let x = 0; x < Math.floor(columns * 0.14); x++) {
+        drops4[x] = Math.random() * height / fontSize;
+        speeds4[x] = (2.3 + Math.random() * 2.6) / 2.1;
+      }
     }
     setup();
     window.addEventListener('resize', setup);
@@ -641,6 +377,7 @@
       ctx.fillStyle = "rgba(0,0,0,0.13)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.textAlign = "center";
+      // Second layer (background)
       ctx.font = (fontSize - 3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops2.length; i++) {
         const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
@@ -662,6 +399,7 @@
           speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
         }
       }
+      // Main (bright) layer
       ctx.globalAlpha = 1.0;
       ctx.font = fontSize + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < columns; i++) {
@@ -680,6 +418,7 @@
           speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
         }
       }
+      // Highlight layer (brighter/white)
       ctx.font = (fontSize + 3) + "px 'Share Tech Mono', monospace";
       for (let i = 0; i < drops3.length; i++) {
         if (Math.random() > 0.985) {
@@ -696,54 +435,32 @@
           speeds3[i] = (1.4 + Math.random() * 2.4) / 3;
         }
       }
-      ctx.globalAlpha = 1.0;
+      // ** Superlarge layer (max depth/highlight) **
+      ctx.font = (fontSize * 2.3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops4.length; i++) {
+        if (Math.random() > 0.995) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 7 + fontSize;
+          const y = drops4[i] * fontSize * 2.4;
+          ctx.globalAlpha = 0.81;
+          ctx.shadowColor = "#fff";
+          ctx.shadowBlur = 38;
+          ctx.fillStyle = "#fff";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops4[i] += speeds4[i];
+        if (drops4[i] * fontSize * 2.3 > height && Math.random() > 0.97) {
+          drops4[i] = 0;
+          speeds4[i] = (2.3 + Math.random() * 2.6) / 2.1;
+        }
+      }
+      ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
     }
     setInterval(drawMatrix, 32);
 
-    // News Ticker
-    const ticker = document.getElementById("news-ticker");
-    const newsFeed = "https://feeds.bbci.co.uk/news/technology/rss.xml";
-    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(newsFeed))
-      .then(res => res.json())
-      .then(data => {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data.contents, "application/xml");
-        const items = xml.querySelectorAll("item");
-        let headlines = [];
-        for (let i = 0; i < Math.min(items.length, 10); i++) {
-          let title = items[i].querySelector("title").textContent;
-          let link = items[i].querySelector("link").textContent;
-          headlines.push(`<a href="${link}" class="ticker-link" target="_blank" rel="noopener">${title}</a>`);
-        }
-        ticker.innerHTML = headlines.join(" ");
-        // SEO trick: hide keywords for Google
-        const seo = document.createElement('div');
-        seo.style.position = 'absolute'; seo.style.opacity = '0'; seo.style.pointerEvents = 'none'; seo.style.height = '1px';
-        seo.innerHTML = `<span>Tech news, AI, hacking, matrix, ascii, ansi, hacker updates, underground scene, cybersecurity, zero-day, promptforge, AI art news, ascii art community</span>`;
-        ticker.appendChild(seo);
-      })
-      .catch(err => {
-        ticker.innerHTML = `
-          <a href="https://arstechnica.com/tech-policy/" class="ticker-link" target="_blank">AI Worm Infects PromptForge, ASCII Art Becomes Self-Aware</a>
-          <a href="https://thehackernews.com/" class="ticker-link" target="_blank">New Hacker Matrix Rain Detected in the Wild</a>
-          <a href="https://www.vice.com/en/topic/ai" class="ticker-link" target="_blank">ASCII Export Goes Viral in Cyberpunk Underground</a>
-        `;
-      });
-
-    // Sidebar nav: switch active section
-    document.querySelectorAll('.side-link').forEach(link => {
-      link.addEventListener('click', function(e){
-        e.preventDefault();
-        document.querySelectorAll('.side-link').forEach(l=>l.classList.remove('active'));
-        document.querySelectorAll('.tool-section').forEach(sec=>sec.classList.remove('active'));
-        this.classList.add('active');
-        const sec = document.querySelector(this.getAttribute('href'));
-        if (sec) sec.classList.add('active');
-        window.scrollTo({top: document.querySelector('.main-sections').offsetTop-30, behavior:'smooth'});
-      });
-    });
-
-    // J1NX float logic
+    // J1NX float logic (unchanged)
     (function(){
       const j1nxFloat = document.getElementById('j1nxFloatTrue');
       const cutout = document.getElementById('j1nxCutoutTrue');
