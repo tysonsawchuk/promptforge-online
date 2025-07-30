@@ -30,7 +30,6 @@
     .breadcrumbs a { color: #00e1ff; text-decoration: none; border-bottom: 1.6px dotted #ff005e; font-weight: 700; margin-right: 7px; margin-left: 3px;}
     .breadcrumbs a:hover, .breadcrumbs a:focus { color: #ff005e; border-bottom: 2.1px solid #ff005e;}
     .breadcrumbs .bc-sep { color: #9c6aff; font-weight: 700; font-size: 1.15em; margin-right: 4px; margin-left: 2px; user-select: none;}
-    /* Spinning Globe Google Translate camo, bottom right */
     .google-translate-camo {
       position: fixed; bottom: 22px; right: 24px; z-index: 9999;
       background: rgba(20,22,32,0.93); border-radius: 13px; padding: 5px 12px 5px 7px;
@@ -70,18 +69,17 @@
       .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
       .side-link { margin-bottom:0; margin-right:5px; }
     }
-    /* J1NX FLOATING STYLE */
+    /* J1NX FLOATING STYLE - fullsize left, no crop */
     .j1nx-float-true {
       position: fixed; left: 24px; bottom: 28px; z-index: 4000;
       display: flex; flex-direction: column; align-items: center; gap: 0;
-      background: none !important;
-      box-shadow: none;
-      pointer-events: auto;
+      background: none !important; box-shadow: none; pointer-events: auto;
       transition: all 0.21s cubic-bezier(.82,0,.21,1);
     }
     .j1nx-true-cutout-img {
-      width: 83px; height: 83px; margin-bottom: -6px; border-radius: 48px; background: #fff0; box-shadow: 0 4px 36px #be9cff80, 0 0 2px #191e25;
+      width: 144px; height: auto; margin-bottom: -8px; background: #fff0; box-shadow: 0 4px 36px #be9cff80, 0 0 2px #191e25;
       cursor: pointer; user-select: none; border: none; transition: box-shadow 0.15s, filter 0.13s;
+      border-radius: 24px;
     }
     .j1nx-true-cutout-img:hover { box-shadow: 0 0 44px #ff005eaa, 0 0 7px #00e1ffbb;}
     .j1nx-bubble-true-main {
@@ -95,10 +93,14 @@
     .j1nx-btn-true { background: #be9cff; color: #191e25; border-radius: 8px; font-weight: 700; font-family: inherit; padding: 7px 13px; border: none; font-size: .99em; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
     .j1nx-btn-true:hover { background: #64f2e3; color: #171b22;}
     .j1nx-easteregg-true { font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px; margin-top: 7px; padding: 4px 11px;}
+    @media (max-width: 900px) {
+      .j1nx-true-cutout-img { width: 93px; }
+      .j1nx-bubble-true-main { min-width: 56vw; max-width: 97vw; }
+    }
     @media (max-width: 700px) {
       .j1nx-float-true { left: unset; right: 9px; bottom: 9px; }
+      .j1nx-true-cutout-img { width: 63px;}
       .j1nx-bubble-true-main { min-width: 65vw; max-width: 97vw; }
-      .j1nx-true-cutout-img { width: 63px; height: 63px;}
     }
   </style>
 </head>
@@ -205,7 +207,7 @@
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script>
-    // Matrix Rain (main + depth layers, NO closeup rain yet)
+    // Matrix Rain (main + depth + CLOSEUP highlight layer)
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
@@ -213,6 +215,7 @@
     let width, height, fontSize, columns;
     let drops1 = [], speeds1 = [];
     let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
     function setup() {
       width = window.innerWidth;
       height = window.innerHeight;
@@ -229,6 +232,11 @@
       for (let x = 0; x < columns * 1.3; x++) {
         drops2[x] = Math.random() * height / fontSize;
         speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
       }
     }
     setup();
@@ -270,6 +278,27 @@
         if (drops1[i] * fontSize > height && Math.random() > 0.985) {
           drops1[i] = 0;
           speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      // CLOSEUP RAIN: big, white, highlight, rare
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.93) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops3[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops3[i] = 0;
+          speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
         }
       }
       ctx.globalAlpha = 1.0;
