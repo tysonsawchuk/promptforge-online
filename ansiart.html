@@ -15,6 +15,45 @@
     }
     html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
     #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
+
+    /* ==== CREEPY VIDEO LAYER ==== */
+    #glitch-video-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 4;
+      display: flex;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+      mix-blend-mode: lighten;
+      background: transparent;
+    }
+    #creepy-glitch-video, #glitch-canvas {
+      display: none;
+    }
+    #glitch-canvas {
+      display: block;
+      position: relative;
+      max-width: 50vw;
+      max-height: 50vh;
+      min-width: 320px;
+      min-height: 180px;
+      width: 42vw;
+      height: 42vh;
+      margin: auto;
+      box-shadow: 0 0 92px 18px #00e1ff1a, 0 0 33px #ff005e99 inset;
+      filter: brightness(0.80) contrast(1.12) saturate(1.1) blur(0.4px);
+      opacity: 0.94;
+      border-radius: 2vw;
+      z-index: 10;
+      pointer-events: none;
+      background: transparent;
+      transition: opacity 0.33s;
+    }
+    @media (max-width: 700px) {
+      #glitch-canvas { max-width: 95vw; max-height: 32vh; min-width: 120px; min-height: 90px; }
+    }
+    /* === Existing site CSS unchanged below === */
     .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
     .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
     .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
@@ -66,6 +105,564 @@
       .sidebar-logo { display: none; }
       .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
       .side-link { margin-bottom:0; margin-right:5px; }
+    }
+    .j1nx-right-float {
+      position: fixed;
+      right: 34px;
+      bottom: 24px;
+      z-index: 4100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: auto;
+      background: none !important;
+    }
+    .j1nx-art-big {
+      width: 340px;
+      max-width: 92vw;
+      margin-bottom: -12px;
+      background: none;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+      display: block;
+      cursor: pointer;
+      user-select: none;
+      pointer-events: auto;
+    }
+    .j1nx-chat-bubble-pf {
+      position: relative; z-index: 4101;
+      margin: 0 0 10px 0;
+      min-height: 90px; max-width: 440px; width: 94vw;
+      padding: 25px 24px 23px 28px;
+      background: #181a1be0;
+      color: #fff;
+      border-radius: 32px 32px 32px 10px;
+      font-size: 1.11em; line-height: 1.65;
+      box-shadow: 0 0 44px 11px #00e1ff44, 0 0 20px 3px #ff005e25 inset, 0 2px 14px #191e27a2;
+      border: 2.5px solid #00e1ff55;
+      overflow-y: auto;
+      border-bottom: 3.5px solid #ff005e70;
+      text-shadow: 0 2px 7px #00e1ff77;
+      transition: box-shadow 0.3s, background 0.3s;
+    }
+    .j1nx-bubble-mood-happy { box-shadow: 0 0 44px 14px #78ffb1aa, 0 2px 16px #181a1b88, 0 0 20px 3px #00e1ff22 inset; }
+    .j1nx-bubble-mood-wicked { box-shadow: 0 0 56px 19px #fa528eaa, 0 2px 16px #181a1b88, 0 0 20px 3px #ff005e22 inset; }
+    .j1nx-bubble-mood-sultry { box-shadow: 0 0 60px 19px #cf74ffa7, 0 2px 16px #181a1b88, 0 0 20px 3px #9c6aff33 inset; }
+    .j1nx-bubble-mood-caught { box-shadow: 0 0 42px 14px #ffd166cc, 0 2px 16px #181a1b88; background: #352013e6 !important; }
+    .j1nx-chatlog { max-height: 210px; overflow-y: auto; }
+    .j1nx-input-row { display: flex; gap: 8px; margin: 6px 0 0 0; }
+    .j1nx-input { flex: 1; border-radius: 18px; border: none; padding: 11px 16px; font-size: 1em; background: #23262a; color: #fafafa; }
+    .j1nx-btn { border: none; background: #00e1ff; color: #181a1b; border-radius: 13px; padding: 8px 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+    .j1nx-btn:hover { background: #ff005e; color: #fff;}
+    .j1nx-controls { display: flex; gap: 10px; margin: 10px 0 8px 0; }
+    .j1nx-toggle-label { font-size: 1em; color: #9c6aff; margin-left: 3px; }
+    .j1nx-easteregg { font-size: .95em; color: #ff7d8a; margin-top: 3px; }
+    @media (max-width: 800px) {
+      .j1nx-art-big { width: 210px; }
+      .j1nx-chat-bubble-pf { font-size: 1em; padding: 14px 7px 14px 12px; }
+    }
+    @media (max-width: 600px) {
+      .j1nx-art-big { width: 120px; }
+      .j1nx-chat-bubble-pf { font-size: .97em; padding: 8px 3px 11px 6px; }
+      .j1nx-right-float { right: 3vw; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <!-- === CREEPY GLITCH VIDEO LAYER === -->
+  <div id="glitch-video-layer">
+    <video id="creepy-glitch-video" src="assets/creepyvideo.mp4" preload="auto" loop playsinline></video>
+    <canvas id="glitch-canvas"></canvas>
+  </div>
+  <!-- === REST OF SITE === -->
+  <header class="navbar">
+    <div class="navbar-row1">
+      <span class="logo">PromptForge</span>
+      <nav class="nav-links">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Gallery</a>
+        <a href="#" class="nav-link">Tools</a>
+        <a href="#" class="nav-link">FAQ</a>
+        <span class="nav-translate" id="nav-translate">
+          <svg class="translate-globe" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#00e1ff" stroke-width="2"/>
+            <ellipse cx="16" cy="16" rx="9.5" ry="14" stroke="#ff005e" stroke-width="1.7"/>
+            <ellipse cx="16" cy="16" rx="14" ry="9.5" stroke="#9c6aff" stroke-width="1.7"/>
+            <circle cx="16" cy="16" r="2.8" fill="#00e1ff"/>
+          </svg>
+          <div id="google_translate_element"></div>
+        </span>
+      </nav>
+      <div class="nav-socials">
+        <a class="social-link" href="https://promptforge.online" target="_blank">🌐</a>
+        <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
+        </a>
+        <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="breadcrumbs">
+      <a href="https://promptforge.online">promptforge.online</a>
+      <span class="bc-sep">/</span>
+      <a href="#">gallery</a>
+      <span class="bc-sep">/</span>
+      <a href="#">tools</a>
+      <span class="bc-sep">/</span>
+      <a href="#">aihacks</a>
+      <span class="bc-sep">/</span>
+      <a href="#">support</a>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
+    </div>
+    <div class="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
+  </section>
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
+        <a href="#gallery" class="side-link">Gallery</a>
+        <a href="#news" class="side-link">News</a>
+        <a href="#about" class="side-link">About</a>
+        <a href="#faq" class="side-link">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- Tool sections go here -->
+    </main>
+  </div>
+  <div class="j1nx-right-float" id="j1nxFloatPF">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-art-big" id="j1nxArtBig"/>
+    <section class="j1nx-chat-bubble-pf j1nx-bubble-mood-happy" id="j1nxChatBubblePF">
+      <div class="j1nx-chatlog" id="j1nxChatlogPF"></div>
+      <div id="j1nxTypingPF" style="display:none;">J1nx is typing<span class="j1nx-dot">.</span><span class="j1nx-dot">.</span><span class="j1nx-dot">.</span></div>
+      <div class="j1nx-input-row">
+        <input type="text" class="j1nx-input" id="j1nxInputPF" placeholder="Say something to J1nx..." autocomplete="off" />
+        <button class="j1nx-btn" onclick="sendToJ1nxPF()">Send</button>
+      </div>
+      <div class="j1nx-controls">
+        <button class="j1nx-btn" onclick="clearChatPF()">Clear Chat</button>
+        <button class="j1nx-btn" onclick="saveChatPF()">Save Chat</button>
+        <span class="j1nx-toggle-label" id="nsfwLabelPF" style="display:none;">NSFW Mode <span id="nsfwStatePF">(OFF)</span></span>
+      </div>
+      <div class="j1nx-easteregg" id="easterEggHintPF">Double-tap the chat bubble or type "unlock" to reveal NSFW mode…</div>
+    </section>
+  </div>
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,fr,de,es,ru,zh-CN,ja,it,ko,pt,ar',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+    // Matrix Rain (exact copy from your file)
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    const wildColors = ["#FFD700","#00FFEA","#FF00F3","#FF9300","#00FF19","#D100FF","#01FCFD","#fc0341","#fcba03","#d9fc03","#25fc03","#03fc5a","#03fcbc","#03e7fc","#037efc","#5d03fc","#ba03fc","#fc03d1"];
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+    let drops4 = [], speeds4 = [], sizes4 = [];
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+      }
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.3; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+      }
+      drops4 = []; speeds4 = []; sizes4 = [];
+      for (let x = 0; x < Math.floor(columns * 0.07); x++) {
+        drops4[x] = Math.random() * height / fontSize;
+        speeds4[x] = (1.3 + Math.random() * 2.7) / 1.4;
+        sizes4[x] = 1.5 + Math.random() * 7;
+      }
+    }
+    setup();
+    window.addEventListener('resize', setup);
+    function drawMatrix() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.82 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.21;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.98) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      ctx.globalAlpha = 0.93;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 0.95;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.93) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops3[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops3[i] = 0;
+          speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+      }
+      for (let i = 0; i < drops4.length; i++) {
+        if (Math.random() > 0.97) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const color = wildColors[Math.floor(Math.random() * wildColors.length)];
+          const size = fontSize * sizes4[i];
+          ctx.font = size + "px 'Share Tech Mono', monospace";
+          ctx.globalAlpha = 0.87 + Math.random() * 0.13;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 32 + Math.random() * 65;
+          ctx.fillStyle = color;
+          const x = (i * fontSize * 10.5 + fontSize * 2) % width;
+          const y = drops4[i] * fontSize * 2.7;
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops4[i] += speeds4[i];
+        if (drops4[i] * fontSize * 8 > height && Math.random() > 0.98) {
+          drops4[i] = 0;
+          speeds4[i] = (1.3 + Math.random() * 2.7) / 1.4;
+          sizes4[i] = 1.5 + Math.random() * 7;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+    }
+    setInterval(drawMatrix, 32);
+
+    // Glitch Video FX
+    const glitchVideo = document.getElementById("creepy-glitch-video");
+    const glitchCanvas = document.getElementById("glitch-canvas");
+    const glitchCtx = glitchCanvas.getContext("2d", { willReadFrequently: true });
+    let vw = 600, vh = 350;
+    let forceDraw = 0;
+    function resizeGlitchCanvas() {
+      vw = Math.floor(window.innerWidth * 0.42);
+      vh = Math.floor(window.innerHeight * 0.42);
+      if(window.innerWidth < 800) {
+        vw = Math.max(120, Math.floor(window.innerWidth * 0.98));
+        vh = Math.max(90, Math.floor(window.innerHeight * 0.33));
+      }
+      glitchCanvas.width = vw;
+      glitchCanvas.height = vh;
+    }
+    resizeGlitchCanvas();
+    window.addEventListener('resize', resizeGlitchCanvas);
+
+    let basePlaybackRate = 0.5;
+    let lastGlitch = 0, glitchInterval = 4200 + Math.random()*3400;
+    let inGlitch = false, glitchEnd = 0, stutter = false;
+    let lastJump = 0;
+    let fadeState = 0; // 0=normal, 1=fadeout, 2=fadein
+    let fadeTimer = 0, fadeTarget = 1, fadeCurrent = 1;
+    let nextGlitchType = "";
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+    function drawGlitchFrame() {
+      if (glitchVideo.readyState >= 2 && !glitchVideo.paused) {
+        glitchCtx.clearRect(0,0,vw,vh);
+        if(fadeState === 1) {
+          fadeCurrent = clamp(fadeCurrent - 0.08, 0, 1);
+          if(fadeCurrent <= 0.05) { fadeState = 2; }
+        } else if(fadeState === 2) {
+          fadeCurrent = clamp(fadeCurrent + 0.07, 0, fadeTarget);
+          if(fadeCurrent >= fadeTarget) { fadeState = 0; }
+        }
+        glitchCanvas.style.opacity = fadeCurrent;
+        let sx=0, sy=0, sw=glitchVideo.videoWidth, sh=glitchVideo.videoHeight;
+        if(inGlitch && nextGlitchType==="slice") {
+          sx = Math.floor(Math.random()*sw*0.7);
+          sw = Math.floor(sw*0.3+Math.random()*sw*0.15);
+          sy = Math.floor(Math.random()*sh*0.7);
+          sh = Math.floor(sh*0.3+Math.random()*sh*0.13);
+        }
+        glitchCtx.save();
+        if(inGlitch && Math.random()>0.7) {
+          glitchCtx.globalAlpha = fadeCurrent * (0.4 + Math.random()*0.5);
+          glitchCtx.fillStyle = "#00e1ff44";
+          glitchCtx.fillRect(0,0,vw,vh);
+        }
+        glitchCtx.globalAlpha = fadeCurrent;
+        glitchCtx.drawImage(glitchVideo, sx, sy, sw, sh, 0, 0, vw, vh);
+        if(inGlitch && Math.random()>0.6) {
+          let y = Math.floor(Math.random()*vh);
+          glitchCtx.globalAlpha = fadeCurrent * (0.23+Math.random()*0.33);
+          glitchCtx.fillStyle = ["#00e1ff", "#ff005e", "#fff", "#9c6aff"][Math.floor(Math.random()*4)];
+          glitchCtx.fillRect(0, y, vw, Math.floor(Math.random()*13+2));
+        }
+        if(inGlitch && Math.random()>0.7) {
+          let x = Math.floor(Math.random()*vw);
+          glitchCtx.globalAlpha = fadeCurrent * (0.13+Math.random()*0.18);
+          glitchCtx.fillStyle = "#fff";
+          glitchCtx.fillRect(x, 0, Math.floor(Math.random()*8+1), vh);
+        }
+        glitchCtx.restore();
+        if(Math.random()>0.97) {
+          let imageData = glitchCtx.getImageData(0, 0, vw, vh);
+          let d = imageData.data;
+          for(let i=0;i<d.length;i+=4){
+            if(Math.random() > 0.992) {
+              let v = Math.floor(Math.random()*120);
+              d[i]=v; d[i+1]=v; d[i+2]=v;
+            }
+          }
+          glitchCtx.putImageData(imageData,0,0);
+        }
+        forceDraw++;
+        if(forceDraw % 19 === 0) glitchCtx.drawImage(glitchVideo, sx, sy, sw, sh, 0, 0, vw, vh);
+      }
+      requestAnimationFrame(drawGlitchFrame);
+    }
+    function glitchEngineLoop(ts) {
+      let t = performance.now();
+      if (inGlitch && t > glitchEnd) {
+        inGlitch = false;
+        glitchVideo.playbackRate = basePlaybackRate;
+        if(Math.random() > 0.6) { fadeState = 2; fadeTarget = 1; }
+      }
+      if (t > lastGlitch + glitchInterval && !inGlitch) {
+        inGlitch = true;
+        let glitchType = Math.random();
+        nextGlitchType = glitchType > 0.6 ? "slice" : (glitchType > 0.3 ? "fastfwd" : "stutter");
+        let glitchDur = 300 + Math.random() * 900;
+        glitchEnd = t + glitchDur;
+        lastGlitch = t;
+        glitchInterval = 3200 + Math.random()*5200;
+        if(nextGlitchType==="fastfwd"){
+          let jumpTo = Math.random()*glitchVideo.duration*0.7;
+          glitchVideo.currentTime = jumpTo;
+          glitchVideo.playbackRate = 1.25 + Math.random();
+          if(Math.random()>0.6){ fadeState=1; fadeTarget=0.15+Math.random()*0.25; }
+        } else if(nextGlitchType==="stutter") {
+          glitchVideo.playbackRate = 0.2+Math.random()*0.1;
+          if(Math.random()>0.5){ fadeState=1; fadeTarget=0.13+Math.random()*0.18; }
+        } else if(nextGlitchType==="slice") {
+          glitchVideo.playbackRate = 0.5 + Math.random()*1.5;
+          if(Math.random()>0.5){ fadeState=1; fadeTarget=0.16+Math.random()*0.2; }
+        }
+      }
+      if(!inGlitch && Math.random() > 0.995 && t - lastJump > 3800) {
+        glitchVideo.currentTime = Math.random() * glitchVideo.duration * 0.95;
+        lastJump = t;
+        fadeState = 1; fadeTarget = 0.12+Math.random()*0.2;
+      }
+      if(!inGlitch) glitchVideo.playbackRate = basePlaybackRate;
+      setTimeout(glitchEngineLoop, 22+Math.random()*20);
+    }
+    function tryStartGlitchVid() {
+      function playSafe() { glitchVideo.muted=true; glitchVideo.play().catch(()=>{}); }
+      document.addEventListener("click", playSafe, { once: true });
+      document.addEventListener("touchstart", playSafe, { once: true });
+      if (glitchVideo.readyState < 2) {
+        glitchVideo.addEventListener('canplay', () => {
+          glitchVideo.play().catch(()=>{});
+        }, { once:true });
+      }
+      glitchVideo.muted = true;
+      glitchVideo.play().catch(()=>{});
+    }
+    glitchVideo.addEventListener('play', function() {
+      glitchCanvas.style.display = "block";
+      drawGlitchFrame();
+    });
+    glitchVideo.addEventListener('pause', function() {
+      glitchCanvas.style.display = "none";
+    });
+    tryStartGlitchVid();
+    glitchEngineLoop();
+    setInterval(()=>{
+      if(glitchVideo.paused){ glitchVideo.muted=true; glitchVideo.play().catch(()=>{}); }
+      if(glitchVideo.currentTime > glitchVideo.duration-0.33) glitchVideo.currentTime = 0.1+Math.random()*0.5;
+    }, 450);
+
+    // J1nx brain logic (unchanged from your file, just copy)
+    const J1nxBrainPF = (() => {
+      const SFW_GREET = "Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)";
+      const NSFW_GREET = "Well, well… look who stumbled in. You planning to behave, or should I lock the door and whisper all your dirty secrets back at you?";
+      const naughtyWords = /fuck|cock|cum|tits|pussy|dick|bitch|shit|whore|anal|ass|slut|blowjob|cunt|sex|naked|suck|orgasm|fap/i;
+      function isDirty(input) { return naughtyWords.test(input); }
+      function getGreeting(nsfw) { return nsfw ? NSFW_GREET : SFW_GREET; }
+      function getReply(input, mode="SFW") {
+        if (mode==="NSFW" || isDirty(input)) {
+          if (/naked|sex|touch/i.test(input)) return "Ooh, you don't waste time, do you? What do you want me to do next?";
+          if (/flirt|dirty/i.test(input)) return "Flirting is my specialty. Want me to tease you or just say exactly what I’m thinking?";
+          if (/fantasy|fetish/i.test(input)) return "Let’s get specific. What’s your wildest fantasy? I promise, no holding back.";
+          return "You’re in my NSFW zone now. Ask me anything. Literally anything.";
+        } else {
+          if (/hello|hi|hey/i.test(input)) return "Hey! So what kind of trouble are you into today?";
+          if (/trouble|fun|dare/i.test(input)) return "You want fun? I have a million ways to make you blush. PG or R-rated?";
+          if (/secret|confess/i.test(input)) return "I'm all ears... spill it. I promise I won't judge (much).";
+          return "I can be playful, helpful, or just a little bit wicked—your move.";
+        }
+      }
+      function getMood(reply, input, mode="SFW") {
+        if ((mode==="NSFW" || isDirty(input)) && /fantasy|fetish|naked|sex|touch|tease/i.test(reply+input)) return "sultry";
+        if (mode==="NSFW" || isDirty(input)) return "wicked";
+        return "happy";
+      }
+      function isNSFW(input, mode="SFW") { return mode==="NSFW" || isDirty(input); }
+      return { getGreeting, getReply, getMood, isNSFW };
+    })();
+    let isNSFWPF = false;
+    let j1nxMoodPF = "happy";
+    const chatlogPF = [];
+    function greetJ1nxPF() {
+      addJ1nxMsgPF(J1nxBrainPF.getGreeting(isNSFWPF), isNSFWPF ? "sultry" : "happy");
+    }
+    function addJ1nxMsgPF(msg, mood="happy") {
+      chatlogPF.push({sender: "J1nx", msg, mood});
+      j1nxMoodPF = mood;
+      renderChatlogPF();
+    }
+    function addUserMsgPF(msg) {
+      chatlogPF.push({sender: "User", msg, mood: null});
+      renderChatlogPF();
+    }
+    function renderChatlogPF() {
+      const bubble = document.getElementById("j1nxChatBubblePF");
+      const chatEl = document.getElementById("j1nxChatlogPF");
+      chatEl.innerHTML = "";
+      for (const entry of chatlogPF) {
+        if (entry.sender === "User") {
+          chatEl.innerHTML += `<div style="text-align:right;"><b>You:</b> ${entry.msg}</div>`;
+        } else {
+          chatEl.innerHTML += `<div><b>J1nx:</b> ${entry.msg}</div>`;
+        }
+      }
+      bubble.className = "j1nx-chat-bubble-pf " + (j1nxMoodPF === "happy" ? "j1nx-bubble-mood-happy" :
+        j1nxMoodPF === "wicked" ? "j1nx-bubble-mood-wicked" :
+        j1nxMoodPF === "sultry" ? "j1nx-bubble-mood-sultry" : "j1nx-bubble-mood-caught");
+      document.getElementById("nsfwLabelPF").style.display = isNSFWPF ? "inline-block" : "none";
+      document.getElementById("nsfwStatePF").innerText = isNSFWPF ? "ON" : "OFF";
+      chatEl.scrollTop = chatEl.scrollHeight;
+    }
+    function showTypingPF(show=true) {
+      document.getElementById("j1nxTypingPF").style.display = show ? "block" : "none";
+    }
+    function sendToJ1nxPF() {
+      const input = document.getElementById("j1nxInputPF");
+      let val = input.value.trim();
+      if (!val) return;
+      addUserMsgPF(val);
+      if (!isNSFWPF && (J1nxBrainPF.isNSFW(val) || /unlock/i.test(val))) {
+        isNSFWPF = true;
+        addJ1nxMsgPF("Naughty detected! NSFW mode enabled 👅", "caught");
+        document.getElementById("easterEggHintPF").innerText = "NSFW mode unlocked. Anything goes…";
+      }
+      showTypingPF(true);
+      setTimeout(() => {
+        showTypingPF(false);
+        let reply = J1nxBrainPF.getReply(val, isNSFWPF ? "NSFW" : "SFW");
+        let mood = J1nxBrainPF.getMood(reply, val, isNSFWPF ? "NSFW" : "SFW");
+        addJ1nxMsgPF(reply, mood);
+      }, 1100 + Math.random() * 600);
+      input.value = "";
+      input.focus();
+    }
+    function clearChatPF() {
+      chatlogPF.length = 0;
+      greetJ1nxPF();
+    }
+    function saveChatPF() {
+      let txt = chatlogPF.map(e =>
+        (e.sender === "User" ? "You: " : "J1nx: ") + e.msg
+      ).join("\n");
+      let blob = new Blob([txt], {type:"text/plain"});
+      let a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "J1nx_chat.txt";
+      a.click();
+    }
+    let lastTapPF = 0;
+    document.getElementById("j1nxChatBubblePF").addEventListener("click", function(e){
+      let now = Date.now();
+      if (now - lastTapPF < 400) {
+        isNSFWPF = true;
+        addJ1nxMsgPF("Secret NSFW mode unlocked! 😈", "caught");
+        document.getElementById("easterEggHintPF").innerText = "NSFW mode unlocked. Anything goes…";
+      }
+      lastTapPF = now;
+    });
+    document.getElementById("j1nxInputPF").addEventListener("keydown", function(e){
+      if (e.key === "Enter") sendToJ1nxPF();
+    });
+    window.onload = greetJ1nxPF;
+  </script>
+</body>
+</html>
     }
     .j1nx-right-float {
       position: fixed;
