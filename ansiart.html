@@ -19,53 +19,171 @@
       font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
       overflow-x: hidden; height: 100%;
     }
-    .matrix-canvas {
+    #matrix-canvas {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      pointer-events: none; background: transparent; display: block; z-index: 1;
+      pointer-events: none;
+      background: #000;
+      z-index: 1;
+      display: block;
     }
-    #glitch-video-canvas {
+    #glitch-holder {
       position: fixed;
       left: 50%; top: 50%;
       transform: translate(-50%, -50%);
-      width: 32vw; max-width: 460px; min-width: 140px;
+      z-index: 2;
+      width: 34vw; max-width: 460px; min-width: 140px;
       height: auto; max-height: 38vh; min-height: 120px;
       pointer-events: none;
-      opacity: 0.98;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 2vw;
-      z-index: 2;
-      filter: brightness(0.80) contrast(1.13) saturate(1.09) blur(0.28px);
-      box-shadow: 0 0 48px 10px #00e1ff12, 0 0 19px #ff005e44 inset;
+      filter: brightness(0.85) contrast(1.15) saturate(1.12) blur(0.18px);
+      overflow: hidden;
+      box-shadow: 0 0 72px 10px #00e1ff17, 0 0 19px #ff005e44 inset;
       background: transparent;
-      transition: opacity 0.3s;
+    }
+    #glitch-video {
+      width: 100%; height: auto; display: block;
+      border-radius: 2vw;
+      filter: none;
+      mix-blend-mode: lighten;
+      opacity: 0.98;
+    }
+    .glitch-mask {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      border-radius: 2vw;
+      background: radial-gradient(circle at 55% 46%, rgba(255,255,255,0) 75%, #000 98%);
+      mix-blend-mode: multiply;
     }
     @media (max-width: 700px) {
-      #glitch-video-canvas { width: 92vw; max-width: none; min-width: 100px; }
+      #glitch-holder { width: 92vw; max-width: none; min-width: 100px; }
     }
-    /* All your other CSS stays unchanged below! */
+    .logo {
+      font-family: 'Orbitron', 'monospace';
+      font-size: clamp(2.1rem, 5vw, 2.7rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand);
+      user-select: none;
+      filter: drop-shadow(0 2px 24px #00e1ff44);
+      cursor: pointer;
+      padding: 0 6px 0 0;
+      margin: 36px 0 12px 0;
+      display: block;
+      text-align: center;
+    }
+    .desc {
+      color: #fff;
+      font-size: 1.18rem;
+      text-align: center;
+      margin: 0 auto 36px auto;
+      max-width: 670px;
+      font-family: 'Share Tech Mono', monospace;
+      text-shadow: 0 2px 9px #00e1ff99;
+      font-weight: 600;
+      line-height: 1.6;
+      z-index: 5;
+      position: relative;
+    }
+    /* Feel free to add more style for future tools/sections */
   </style>
 </head>
 <body>
-  <canvas id="matrix-canvas1" class="matrix-canvas"></canvas>
-  <canvas id="matrix-canvas2" class="matrix-canvas"></canvas>
-  <canvas id="glitch-video-canvas"></canvas>
-  <canvas id="matrix-canvas3" class="matrix-canvas"></canvas>
-
-  <!-- YOUR HEADER, HERO, MAIN, SIDEBAR, J1NX, ETC: UNTOUCHED FROM YOUR BASE FILE -->
-  <!-- ...everything below is exactly as your uploaded ansiart (3).html... -->
-  <header class="navbar">
-    <!-- ... -->
-    <!-- (all your header content and nav here) -->
-  </header>
-  <section class="hero">
-    <!-- ... -->
-    <!-- (all your hero/title/desc here) -->
-  </section>
-  <div class="app-flex">
-    <!-- ... -->
-    <!-- (your sidebar/tools/etc here) -->
+  <canvas id="matrix-canvas"></canvas>
+  <span class="logo">PromptForge – ANSI/ASCII Art Playground</span>
+  <div class="desc">
+    <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground.<br>
+    Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.<br>
+    <strong>Export, download, and share</strong> your art in seconds.<br>
+    SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>.<br>
+    Next-level text art—only at <strong>PromptForge</strong>.
   </div>
+  <!-- Centered glitch video, always visible but not huge -->
+  <div id="glitch-holder">
+    <video id="glitch-video" src="assets/creepyvideo.mp4" autoplay loop muted playsinline></video>
+    <div class="glitch-mask"></div>
+  </div>
+  <!-- Add your tool sections, sidebar, footer, ads, etc here when ready -->
+  <script>
+    // MATRIX RAIN
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const glyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    let width, height, fontSize, columns, drops;
+    function setupMatrix() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(18, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops = [];
+      for (let x = 0; x < columns; x++) {
+        drops[x] = Math.random() * height / fontSize;
+      }
+    }
+    setupMatrix();
+    window.addEventListener('resize', setupMatrix);
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0,0,0,0.15)";
+      ctx.fillRect(0, 0, width, height);
+      ctx.textAlign = "center";
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = glyphs[Math.floor(Math.random() * glyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops[i] * fontSize;
+        ctx.globalAlpha = 0.88;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 1, y - 2);
+        ctx.globalAlpha = 0.6;
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops[i] += (1.1 + Math.random() * 1.2) / 2.5;
+        if (drops[i] * fontSize > height && Math.random() > 0.98) {
+          drops[i] = 0;
+        }
+      }
+    }
+    setInterval(drawMatrix, 32);
+
+    // GLITCH VIDEO LOGIC (simple + masked)
+    const video = document.getElementById('glitch-video');
+    function doGlitchJump() {
+      if (!video.duration || video.readyState < 2) return setTimeout(doGlitchJump, 600);
+      setTimeout(() => {
+        video.style.opacity = "0.18";
+        video.playbackRate = 1.25 + Math.random() * 1.6;
+        let t = Math.random() * video.duration * 0.85;
+        video.currentTime = t;
+        setTimeout(() => {
+          video.style.opacity = "0.98";
+          video.playbackRate = 0.55;
+          doGlitchJump();
+        }, 1200 + Math.random() * 1400);
+      }, 3200 + Math.random() * 2200);
+    }
+    video.addEventListener('canplay', () => {
+      video.playbackRate = 0.55;
+      video.muted = true;
+      video.play();
+      doGlitchJump();
+    });
+  </script>
+</body>
+</html>
   <div class="j1nx-right-float" id="j1nxFloatPF">
     <!-- ... -->
     <!-- (your J1nx chat widget as in your file) -->
