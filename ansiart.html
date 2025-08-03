@@ -1090,6 +1090,632 @@
         <a href="https://x.com/GoreandGiggles" target="_blank" aria-label="Twitter"><img src="assets/twitter.png" style="height: 1.5em;" alt="Twitter"></a>
         <a href="https://www.facebook.com/groups/393971833395749" target="_blank" aria-label="Facebook"><img src="assets/facebook.png" style="height: 1.5em;" alt="Facebook"></a>
       </div>
+      <!-- TRANSLATE BUTTON FIX START -->
+      <div class="translate-container">
+        <div class="matrix-globe-btn" id="matrixGlobeBtn" tabindex="0" title="Translate">
+          <img class="matrix-globe-icon" src="assets/matrix_globe.svg" alt="Translate Globe">
+        </div>
+        <div class="translate-dropdown" id="translateDropdown">
+          <h3>🌐 Select Language</h3>
+          <button class="lang-btn" data-lang="en">English</button>
+          <button class="lang-btn" data-lang="fr">Français</button>
+          <button class="lang-btn" data-lang="es">Español</button>
+          <button class="lang-btn" data-lang="de">Deutsch</button>
+          <button class="lang-btn" data-lang="ja">日本語</button>
+          <button class="lang-btn" data-lang="zh-CN">中文</button>
+          <button class="lang-btn" data-lang="ru">Русский</button>
+          <button class="lang-btn" data-lang="it">Italiano</button>
+          <button class="lang-btn" data-lang="ko">한국어</button>
+        </div>
+        <div id="google_translate_element" style="display:none;"></div>
+      </div>
+      <!-- TRANSLATE BUTTON FIX END -->
+    </div>
+    <div class="breadcrumbs">
+      <a href="/main.html">promptforge.online</a>
+      <span class="breadcrumb-divider">/</span>
+      <a href="/gallery">gallery</a>
+      <span class="breadcrumb-divider">/</span>
+      <a href="/tools">tools</a>
+      <span class="breadcrumb-divider">/</span>
+      <a href="/ansiart">ansiart</a>
+      <span class="breadcrumb-divider">/</span>
+      <a href="/aihacks">aihacks</a>
+      <span class="breadcrumb-divider">/</span>
+      <a href="/support">support</a>
+    </div>
+  </header>
+
+  <div class="sidebar">
+    <a class="sidebar-link active" href="/ansiart"><span>Text → ASCII</span></a>
+    <a class="sidebar-link" href="/img2ascii"><span>Image → ASCII</span></a>
+    <a class="sidebar-link" href="/video2ascii"><span>Video → ASCII</span></a>
+    <a class="sidebar-link" href="/gallery"><span>Gallery</span></a>
+    <a class="sidebar-link" href="/news"><span>News</span></a>
+    <a class="sidebar-link" href="/about"><span>About</span></a>
+    <a class="sidebar-link" href="/faq"><span>FAQ</span></a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="hero-title">ANSI/ASCII Art Playground</div>
+      <div class="hero-desc">
+        <b>PromptForge</b> is the most advanced ANSI art and ASCII art generator, gallery, and matrix rain playground. Instantly convert images to ASCII, build creative ASCII art banners, and export to any platform.<br><br>
+        <b>Export, download, and share</b> your art in seconds. SEO-optimized. ASCII art, ANSI generator, image-to-ASCII, gallery, matrix rain, export tools. Next-level text art—only at PromptForge.
+      </div>
+    </section>
+  </main>
+
+  <img id="j1nx-avatar" src="j1nx/j1nx_cutout.png" alt="J1nx Muse">
+  <div id="j1nx-chat-container">
+    <div id="j1nx-mood"></div>
+    <div id="j1nx-chat">J1nx: Hey you 👀—I'm J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don't worry, I'm good at both...)</div>
+    <div id="j1nx-input-row">
+      <input id="j1nx-input" type="text" maxlength="400" placeholder="Say something to J1nx...">
+      <button class="j1nx-btn" id="j1nx-send-btn">Send</button>
+    </div>
+    <div class="j1nx-ctrl-row">
+      <button class="j1nx-btn" id="j1nx-clear-btn">Clear Chat</button>
+      <button class="j1nx-btn" id="j1nx-save-btn">Save Chat</button>
+    </div>
+    <div id="j1nx-nsfw-hint">Double-tap the chat bubble or type 'unlock' to reveal NSFW mode...</div>
+  </div>
+
+  <script src="assets/j1nx_brain.js"></script>
+  <script>
+    // ===== Matrix Rain Effect =====
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    const chars = 'アァカサタナハマヤャラワンABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%&*+=-'.split('');
+    const fontSize = 24;
+    const columns = Math.floor(width / fontSize);
+    const drops = Array(columns).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = 'rgba(9,13,20,0.11)';
+      ctx.fillRect(0, 0, width, height);
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      ctx.textAlign = 'center';
+
+      for (let i = 0; i < columns; i++) {
+        const text = chars[Math.floor(Math.random() * chars.length)];
+        ctx.fillStyle = Math.random() > 0.97 ? '#ff005e' : (Math.random() > 0.92 ? '#9c6aff' : '#00e1ff');
+        ctx.fillText(text, i * fontSize + fontSize / 2, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > height && Math.random() > 0.955) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 46);
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+
+    // ========== Translate Button/Dropdown Logic ==============
+    const globeBtn = document.getElementById('matrixGlobeBtn');
+    const dropdown = document.getElementById('translateDropdown');
+    let dropdownOpen = false;
+    globeBtn.addEventListener('click', function(e) {
+      dropdown.style.display = dropdownOpen ? 'none' : 'block';
+      dropdownOpen = !dropdownOpen;
+    });
+    document.addEventListener('click', function(e) {
+      if (!globeBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+        dropdownOpen = false;
+      }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") {
+        dropdown.style.display = 'none';
+        dropdownOpen = false;
+      }
+    });
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', autoDisplay: false}, 'google_translate_element');
+    }
+    let googleScriptLoaded = false;
+    function loadGoogleScript(cb) {
+      if (googleScriptLoaded) { cb && cb(); return; }
+      var s = document.createElement('script');
+      s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      s.async = true;
+      s.onload = () => { googleScriptLoaded = true; cb && cb(); };
+      document.body.appendChild(s);
+    }
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const lang = btn.getAttribute('data-lang');
+        loadGoogleScript(() => {
+          const gtFrame = document.querySelector('iframe.goog-te-menu-frame');
+          if (window.google && window.google.translate) {
+            window.google.translate.TranslateElement({pageLanguage: 'en', autoDisplay: false}, 'google_translate_element');
+          }
+          setTimeout(() => {
+            const select = document.querySelector('.goog-te-combo');
+            if (select) {
+              select.value = lang;
+              select.dispatchEvent(new Event('change'));
+            }
+          }, 700);
+        });
+        dropdown.style.display = 'none';
+        dropdownOpen = false;
+      });
+    });
+
+    // ========== J1nx Chat Logic ==========
+    let j1nxMode = 'PG';
+    let j1nxNSFW = false;
+    let lastTap = 0;
+    const chatDiv = document.getElementById('j1nx-chat');
+    const input = document.getElementById('j1nx-input');
+    const sendBtn = document.getElementById('j1nx-send-btn');
+    const clearBtn = document.getElementById('j1nx-clear-btn');
+    const saveBtn = document.getElementById('j1nx-save-btn');
+    const nsfwHint = document.getElementById('j1nx-nsfw-hint');
+    const j1nxMood = document.getElementById('j1nx-mood');
+    const avatar = document.getElementById('j1nx-avatar');
+    function setMood(mood) {
+      let color = "#00e1ff", shadow = "0 0 10px #00e1ff, 0 0 24px #9c6aff";
+      if (mood === "horny" && j1nxNSFW) { color="#ff005e"; shadow="0 0 16px #ff005e, 0 0 38px #9c6aff"; }
+      if (mood === "funny") { color="#ff2fd7"; shadow="0 0 13px #ff2fd7, 0 0 24px #00e1ff"; }
+      j1nxMood.style.background = color;
+      j1nxMood.style.boxShadow = shadow;
+    }
+    setMood('normal');
+    chatDiv.addEventListener('touchend', e => {
+      let now = Date.now();
+      if (now - lastTap < 350) {
+        j1nxNSFW = !j1nxNSFW;
+        setMood(j1nxNSFW ? "horny" : "normal");
+        nsfwHint.textContent = j1nxNSFW ? "NSFW mode unlocked. Type away, you little perv." : "Double-tap the chat bubble or type 'unlock' to reveal NSFW mode...";
+      }
+      lastTap = now;
+    });
+    input.addEventListener('keydown', e => {
+      if (e.key === "Enter" && input.value.trim().toLowerCase() === "unlock") {
+        j1nxNSFW = true;
+        setMood("horny");
+        nsfwHint.textContent = "NSFW mode unlocked. Type away, you little perv.";
+        input.value = "";
+      }
+    });
+    // --- J1nx Send Fix ---
+    sendBtn.addEventListener('click', sendJ1nxChat);
+    input.addEventListener('keydown', e => { if (e.key === "Enter") sendJ1nxChat(); });
+    function sendJ1nxChat() {
+      const msg = input.value.trim();
+      if (!msg) return;
+      if (typeof window.j1nxBrainRespond === "function") {
+        const response = window.j1nxBrainRespond(msg, { nsfw: j1nxNSFW });
+        chatDiv.innerHTML = `<b>You:</b> ${msg}<br><b>J1nx:</b> ${response}`;
+        setMood(j1nxNSFW ? "horny" : "normal");
+      } else {
+        chatDiv.innerHTML = `<b>You:</b> ${msg}<br><b>J1nx:</b> <i>(J1nx brain not loaded)</i>`;
+      }
+      input.value = "";
+    }
+    clearBtn.addEventListener('click', () => {
+      chatDiv.innerHTML = `J1nx: Hey you 👀—I'm J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don't worry, I'm good at both...)`;
+      setMood('normal');
+    });
+    saveBtn.addEventListener('click', () => {
+      const blob = new Blob([chatDiv.innerText], { type: "text/plain" });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = "j1nx_chat.txt";
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
+  </script>
+</body>
+</html>
+      font-family: 'Orbitron', monospace;
+      font-weight: 900;
+      font-size: 2.2rem;
+      letter-spacing: 1.5px;
+      color: var(--brand);
+      text-shadow: 0 0 8px #00e1ff88;
+      margin-right: 24px;
+    }
+    nav {
+      display: flex;
+      gap: 28px;
+      font-size: 1.1rem;
+      font-family: 'Orbitron', monospace;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      position: relative;
+      letter-spacing: 1px;
+      transition: color 0.15s;
+      padding: 4px 10px;
+    }
+    nav a:hover, nav a.active {
+      color: var(--brand2);
+      text-shadow: 0 0 6px #ff005e88;
+    }
+    .socials {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-left: 32px;
+    }
+    .socials a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--brand);
+      font-size: 1.6rem;
+      transition: color 0.12s;
+      text-shadow: 0 0 6px #00e1ff66;
+    }
+    .socials a:hover {
+      color: var(--brand2);
+      text-shadow: 0 0 8px #ff005e88;
+    }
+
+    .breadcrumbs {
+      margin: 0;
+      padding: 4px 28px 8px 24px;
+      font-size: 1.1rem;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 12;
+    }
+    .breadcrumbs a {
+      color: var(--brand2);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .breadcrumbs a:hover { color: var(--brand); }
+    .breadcrumb-divider { color: #666; padding: 0 4px; }
+
+    .sidebar {
+      position: fixed;
+      left: 0; top: 66px;
+      width: 215px;
+      height: calc(100vh - 66px);
+      background: var(--sidebar);
+      border-right: 2px solid var(--brand);
+      z-index: 30;
+      box-shadow: 2px 0 12px #00e1ff22;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px 0 0 0;
+    }
+    .sidebar .menu-btn {
+      display: none;
+      margin: 0 0 20px 20px;
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 2.4rem;
+      color: var(--brand2);
+    }
+    .sidebar .sidebar-link {
+      display: block;
+      width: 195px;
+      margin: 0 0 14px 10px;
+      padding: 11px 12px;
+      color: #fff;
+      font-size: 1.09rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #10131b, #0b1225 70%, #151924 100%);
+      border-left: 4px solid transparent;
+      transition: border-color 0.14s, color 0.13s, background 0.16s;
+      box-shadow: 0 0 9px #00e1ff33 inset;
+    }
+    .sidebar .sidebar-link.active, .sidebar .sidebar-link:hover {
+      border-left: 4px solid var(--brand2);
+      color: var(--brand2);
+      background: linear-gradient(90deg, #111824 85%, #10131b 100%);
+      box-shadow: 0 0 13px #ff005e33 inset;
+    }
+    @media (max-width: 900px) {
+      .sidebar {
+        width: 62px;
+        padding: 10px 0 0 0;
+      }
+      .sidebar .sidebar-link {
+        width: 56px;
+        font-size: 1.18rem;
+        margin: 0 0 10px 2px;
+        padding: 13px 5px;
+        text-align: center;
+      }
+      .sidebar .sidebar-link span {
+        display: none;
+      }
+    }
+    @media (max-width: 600px) {
+      .sidebar {
+        position: fixed;
+        left: 0; top: 66px;
+        width: 54px;
+        height: calc(100vh - 66px);
+        padding: 4px 0 0 0;
+      }
+    }
+
+    .hero {
+      margin-left: 235px;
+      margin-top: 36px;
+      padding: 60px 60px 48px 60px;
+      z-index: 10;
+      position: relative;
+      min-height: 44vh;
+      max-width: 1050px;
+    }
+    .hero-title {
+      font-family: 'Orbitron', monospace;
+      color: var(--hero-fg);
+      font-size: 2.55rem;
+      letter-spacing: 2.4px;
+      text-shadow: 0 0 18px #ff2fd7cc, 0 0 28px #00e1ff44;
+      margin-bottom: 13px;
+      font-weight: 900;
+      margin-left: -8px;
+    }
+    .hero-desc {
+      font-size: 1.22rem;
+      color: #fff;
+      font-family: 'Share Tech Mono', monospace;
+      background: none;
+      margin: 0 0 0 1px;
+      padding: 0;
+      opacity: 0.97;
+      letter-spacing: 0.2px;
+      font-weight: 400;
+      line-height: 1.6;
+      text-shadow: 0 0 6px #090d1455;
+      background: rgba(0,0,0,0.0);
+    }
+
+    .translate-container {
+      position: absolute;
+      top: 11px; right: 46px;
+      z-index: 1011;
+      display: flex;
+      align-items: center;
+      user-select: none;
+    }
+    .matrix-globe-btn {
+      width: 47px; height: 47px;
+      background: radial-gradient(circle, #00e1ff 54%, #9c6aff 90%, transparent 99%);
+      border-radius: 50%;
+      border: 3px solid #00e1ff;
+      box-shadow: 0 0 19px #00e1ff99, 0 0 6px #9c6aff99;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      animation: matrix-globe-spin 4.4s linear infinite;
+      transition: box-shadow 0.13s, border-color 0.13s;
+      position: relative;
+      overflow: visible;
+    }
+    .matrix-globe-btn:hover {
+      border-color: var(--brand2);
+      box-shadow: 0 0 29px #ff005e99, 0 0 16px #00e1ff99;
+    }
+    @keyframes matrix-globe-spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+    .matrix-globe-icon {
+      width: 31px; height: 31px;
+      background: none;
+      filter: drop-shadow(0 0 7px #00e1ffcc);
+      z-index: 1012;
+    }
+    .translate-dropdown {
+      display: none;
+      position: absolute;
+      top: 55px; right: 2px;
+      background: #090d14ee;
+      border: 2px solid #00e1ff;
+      border-radius: 12px;
+      box-shadow: 0 0 34px #00e1ff77, 0 0 19px #9c6aff55;
+      padding: 15px 23px 17px 23px;
+      min-width: 195px;
+      z-index: 1012;
+      animation: dropdown-fadein 0.29s cubic-bezier(.4,2,.6,.85);
+    }
+    @keyframes dropdown-fadein {
+      from { opacity: 0; transform: translateY(-18px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .translate-dropdown h3 {
+      margin: 0 0 8px 0;
+      color: var(--brand2);
+      font-family: 'Orbitron', monospace;
+      font-size: 1.07rem;
+      letter-spacing: 0.9px;
+      font-weight: 800;
+    }
+    .translate-dropdown .lang-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      font-size: 1.13rem;
+      color: #fff;
+      padding: 7px 0 7px 0;
+      text-align: left;
+      font-family: 'Share Tech Mono', monospace;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-bottom: 2px;
+      transition: background 0.12s, color 0.11s;
+      text-shadow: 0 0 6px #00e1ff55;
+    }
+    .translate-dropdown .lang-btn:hover {
+      background: #00e1ff33;
+      color: var(--brand2);
+    }
+    #google_translate_element, .goog-te-banner-frame, .goog-logo-link, .goog-te-gadget, .goog-te-combo, .goog-te-balloon-frame, .goog-te-banner, .goog-te-menu-value {
+      display: none !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      height: 0 !important; width: 0 !important;
+      position: absolute !important;
+      top: -9999px !important; left: -9999px !important;
+    }
+
+    #j1nx-chat-container {
+      position: fixed;
+      bottom: 36px;
+      right: 48px;
+      z-index: 1400;
+      width: 340px;
+      min-height: 82px;
+      background: linear-gradient(125deg, #101927cc 75%, #312244cc 100%);
+      border: 2.5px solid var(--j1nx-glow);
+      border-radius: 19px;
+      box-shadow: 0 0 22px #00e1ffbb, 0 0 33px #ff005e33;
+      padding: 22px 20px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      transition: box-shadow 0.15s;
+      user-select: none;
+    }
+    #j1nx-avatar {
+      position: absolute;
+      bottom: 118px; right: 18px;
+      width: 68px; height: auto;
+      z-index: 1402;
+      filter: drop-shadow(0 0 12px #00e1ff88) drop-shadow(0 0 22px #ff2fd7aa);
+    }
+    #j1nx-mood {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #00e1ff;
+      margin-right: 7px;
+      margin-top: 4px;
+      box-shadow: 0 0 10px #00e1ff, 0 0 24px #9c6aff;
+      transition: background 0.22s, box-shadow 0.21s;
+    }
+    #j1nx-chat {
+      width: 100%;
+      min-height: 54px;
+      max-height: 142px;
+      font-size: 1.06rem;
+      color: #fff;
+      background: none;
+      border: none;
+      outline: none;
+      resize: none;
+      margin-bottom: 9px;
+      padding: 0;
+    }
+    #j1nx-input-row {
+      width: 100%;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    #j1nx-input {
+      flex: 1;
+      font-size: 1.05rem;
+      background: #161926;
+      color: #fff;
+      border: 1.6px solid var(--brand);
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-family: 'Share Tech Mono', monospace;
+      outline: none;
+      transition: border 0.11s;
+    }
+    #j1nx-input:focus { border: 1.6px solid var(--brand2);}
+    .j1nx-btn {
+      background: linear-gradient(95deg, #00e1ff, #9c6aff 98%);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 7px 15px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.06rem;
+      cursor: pointer;
+      margin-left: 2px;
+      box-shadow: 0 0 6px #00e1ff77;
+      transition: background 0.13s, box-shadow 0.13s;
+    }
+    .j1nx-btn:hover {
+      background: linear-gradient(100deg, #ff005e, #00e1ff 93%);
+      box-shadow: 0 0 13px #ff005e77;
+    }
+    .j1nx-ctrl-row {
+      margin-top: 8px;
+      width: 100%;
+      display: flex;
+      gap: 8px;
+    }
+    .j1nx-ctrl-row .j1nx-btn {
+      flex: 1;
+      padding: 6px 6px;
+    }
+    #j1nx-nsfw-hint {
+      font-size: 0.93rem;
+      color: #aaa;
+      margin-top: 8px;
+      text-align: center;
+      width: 100%;
+      opacity: 0.74;
+      letter-spacing: 0.09px;
+    }
+    @media (max-width: 1100px) {
+      .hero { margin-left: 90px; padding: 40px 2vw 36px 2vw;}
+      #j1nx-chat-container { right: 12px; }
+      .sidebar { width: 62px;}
+    }
+    @media (max-width: 800px) {
+      .sidebar { width: 0; display: none;}
+      .hero { margin-left: 0; padding: 26px 4vw;}
+      #j1nx-chat-container { right: 4vw;}
+      .translate-container { right: 11px;}
+    }
+    @media (max-width: 500px) {
+      .hero { padding: 10vw 1vw 9vw 1vw;}
+      #j1nx-chat-container { width: 94vw; right: 2vw; }
+    }
+  </style>
+</head>
+<body>
+  <video id="bg-video" autoplay loop muted playsinline>
+    <source src="assets/creepyvideo.mp4" type="video/mp4">
+  </video>
+  <canvas id="matrix-canvas"></canvas>
+  <header>
+    <div class="navbar">
+      <div class="logo">PromptForge</div>
+      <nav>
+        <a href="/gallery">GALLERY</a>
+        <a href="/tools">TOOLS</a>
+        <a href="/aihacks">AIHACKS</a>
+        <a href="/faq">FAQ</a>
+      </nav>
+      <div class="socials">
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" aria-label="Bluesky"><img src="assets/bsky.png" style="height: 1.5em;" alt="Bluesky"></a>
+        <a href="https://x.com/GoreandGiggles" target="_blank" aria-label="Twitter"><img src="assets/twitter.png" style="height: 1.5em;" alt="Twitter"></a>
+        <a href="https://www.facebook.com/groups/393971833395749" target="_blank" aria-label="Facebook"><img src="assets/facebook.png" style="height: 1.5em;" alt="Facebook"></a>
+      </div>
       <div class="translate-container">
         <div class="matrix-globe-btn" id="matrixGlobeBtn" tabindex="0" title="Translate">
           <img class="matrix-globe-icon" src="assets/matrix_globe.svg" alt="Translate Globe">
