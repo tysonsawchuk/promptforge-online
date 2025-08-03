@@ -3,69 +3,385 @@
 <head>
   <meta charset="UTF-8" />
   <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --brand: #00e1ff;
       --brand2: #ff005e;
       --accent: #9c6aff;
       --matrix: #00e1ff;
-      --aqua: #64f2e3;
-      --offwhite: #e9efe7;
-      --panel: #181b15;
-      --panel-deep: #23231f;
-      --footer-bg: #131413;
-      --gold: #ffe266;
-      --j1nx-glow: #be9cff;
     }
-    html, body {
-      margin: 0; padding: 0; background: #000; min-height: 100vh;
-      font-family: 'Orbitron', 'Share Tech Mono', 'Fira Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
-      overflow-x: hidden; height: 100%;
-      color: var(--offwhite);
-      font-size: 1.03em;
-      -webkit-font-smoothing: antialiased;
-    }
-    /* === VIDEO BG: centered, faded at edge === */
-    #video-bg-container {
+    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
+    /* === Video === */
+    #bg-video {
       position: fixed;
-      z-index: 0;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      overflow: hidden;
-      pointer-events: none;
-    }
-    #glitch-video-bg {
-      position: absolute;
-      left: 50%; top: 50%;
-      width: 56vw; height: 56vh;
-      min-width: 320px; min-height: 220px;
-      max-width: 85vw; max-height: 90vh;
+      top: 0; left: 0; width: 100vw; height: 100vh;
       object-fit: cover;
-      transform: translate(-50%,-50%);
-      opacity: 0.79;
+      z-index: 0;
+      opacity: 0.87;
+      background: #000;
       pointer-events: none;
-      border-radius: 44vw;
-      filter: blur(0.8px) brightness(0.93) contrast(1.08);
-      box-shadow: 0 0 155px 120px #000;
-      transition: filter .25s;
-      /* Faded edges (mask) */
-      -webkit-mask-image: radial-gradient(circle at 50% 53%, #fff 73%, transparent 100%);
-      mask-image: radial-gradient(circle at 50% 53%, #fff 73%, transparent 100%);
+      filter: brightness(0.67) saturate(1.12) blur(0.3px);
+      transition: opacity .6s;
     }
+    /* === Matrix Rain === */
     #matrix-canvas {
-      position: fixed; top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
       pointer-events: none;
-      z-index: 2;
-      background: none;
+      z-index: 1;
       display: block;
+      background: none !important;
     }
-    /* ==== NAV & HEADER ==== */
-    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
-    .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
+    /* === J1NX styles (from main.html) === */
+    .j1nx-float-true {
+      position: fixed;
+      z-index: 1400;
+      right: 2vw;
+      bottom: 2.8vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: all;
+      user-select: none;
+      min-width: 0;
+      max-width: 360px;
+    }
+    .j1nx-true-cutout-img {
+      width: 320px; height: 320px; object-fit: contain;
+      border-radius: 32px;
+      background: transparent !important;
+      margin-bottom: -30px;
+      position: relative;
+      z-index: 9;
+      pointer-events: auto;
+      box-shadow: none !important;
+      transition: box-shadow .2s;
+    }
+    .j1nx-bubble-true-main {
+      background: rgba(22,23,31,0.97);
+      border-radius: 17px;
+      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
+      border: 2px solid var(--brand);
+      padding: 1.1em 1.3em 1em 1.3em;
+      margin-top: 0;
+      margin-bottom: 0.3em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 290px;
+      max-width: 330px;
+      position: relative;
+      z-index: 1;
+    }
+    .j1nx-bubble-text-true {
+      font-size: 1.05em;
+      color: #fff;
+      margin: 0.42em 0 0.20em 0;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 1px 11px #1e1111cc;
+      line-height: 1.22;
+      z-index: 1;
+    }
+    .j1nx-bubble-row-true {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin: 0.13em 0 0.10em 0;
+    }
+    .j1nx-input-true {
+      flex: 1;
+      font-size: 1em;
+      border-radius: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--brand);
+      background: #171b22;
+      color: var(--brand);
+      min-width: 0;
+    }
+    .j1nx-btn-true {
+      font-size: .98em;
+      padding: 6.5px 14px;
+      border-radius: 8px;
+      background: #22252b;
+      border: 1.3px solid var(--brand);
+      color: var(--brand);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .13s, color .13s, border .13s;
+      box-shadow: 0 1.5px 9px #be9cff33;
+    }
+    .j1nx-btn-true:hover {
+      background: var(--brand);
+      color: #171b22;
+      border-color: #fff;
+    }
+    .j1nx-easteregg-true {
+      font-size: .91em;
+      color: #be9cff;
+      background: #171b22e6;
+      border-radius: 7px 13px 12px 17px;
+      margin-top: 7px;
+      padding: 7px 17px 6px 13px;
+      opacity: .85;
+      pointer-events: none;
+      text-align: center;
+      width: 94%;
+      user-select: none;
+      box-shadow: 0 3px 13px #be9cff28;
+      font-weight: 600;
+    }
+    @media (max-width: 900px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 112px; height: 112px;}
+    }
+    @media (max-width: 700px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 66px; height: 66px;}
+    }
+    /* Hide scrollbars on body for immersive look */
+    body::-webkit-scrollbar {display:none;}
+  </style>
+</head>
+<body>
+  <!-- VIDEO BG -->
+  <video id="bg-video" src="assets/creepyvideo.mp4" autoplay loop muted playsinline></video>
+  <!-- MATRIX RAIN -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- ===== J1nx: Floating Widget, main.html logic ===== -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+
+  <!-- J1NX BRAIN (main.html logic) -->
+  <script src="assets/j1nx_brain.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+      let chat = [];
+      let defaultMood = 0;
+      let moods = [
+        {glow: "#64f2e3"},
+        {glow: "#fa528e"},
+        {glow: "#be9cff"},
+        {glow: "#ffd166"}
+      ];
+      function getJ1nxReply(val) {
+        if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+          let res = window.j1nxBrain(val, chat.length);
+          if(typeof res === "string") return {reply: res, mood: 0};
+          if(typeof res === "object" && res.reply) return res;
+          return {reply: "(I have no clue... bug?)", mood: 0};
+        }
+        return {reply: "(Brain not loaded)", mood: 0};
+      }
+      function setJ1nxMood(idx) {
+        idx = Math.max(0, Math.min(idx, moods.length-1));
+        document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+        document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      }
+      let moodIndex = 0, lastTap = 0;
+      document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+        let now = Date.now();
+        if (now - lastTap < 400) {
+          moodIndex = (moodIndex + 1) % moods.length;
+          setJ1nxMood(moodIndex);
+        }
+        lastTap = now;
+      });
+      function renderJ1nxChat() {
+        document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      }
+      function chatReset() {
+        chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+        setJ1nxMood(defaultMood);
+        renderJ1nxChat();
+      }
+      document.getElementById("j1nxSendTrue").onclick = function(){
+        let val = document.getElementById("j1nxInputTrue").value.trim();
+        if (!val) return;
+        let res = getJ1nxReply(val);
+        chat.push(val);
+        chat.push(res.reply);
+        setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+        renderJ1nxChat();
+        document.getElementById("j1nxInputTrue").value = "";
+      };
+      document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+        if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+      });
+      document.getElementById("j1nxClearTrue").onclick = chatReset;
+      document.getElementById("j1nxSaveTrue").onclick = function(){
+        let text = chat.join('\n');
+        let blob = new Blob([text], {type:"text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "j1nx_chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      };
+      chatReset();
+    });
+  </script>
+
+  <!-- MATRIX RAIN (all layers, overlay on video) -->
+  <script>
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    const wildColors = ["#FFD700","#00FFEA","#FF00F3","#FF9300","#00FF19","#D100FF","#01FCFD","#fc0341","#fcba03","#d9fc03","#25fc03","#03fc5a","#03fcbc","#03e7fc","#037efc","#5d03fc","#ba03fc","#fc03d1"];
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+    let drops4 = [], speeds4 = [], sizes4 = [];
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+      }
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.3; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+      }
+      // WILD COLOR LAYER
+      drops4 = []; speeds4 = []; sizes4 = [];
+      for (let x = 0; x < Math.floor(columns * 0.07); x++) {
+        drops4[x] = Math.random() * height / fontSize;
+        speeds4[x] = (1.3 + Math.random() * 2.7) / 1.4;
+        sizes4[x] = 1.5 + Math.random() * 7;
+      }
+    }
+    setup();
+    window.addEventListener('resize', setup);
+    function drawMatrix() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      // 2nd layer (deep/faint)
+      ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.82 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.21;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.98) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      // Main layer
+      ctx.globalAlpha = 0.93;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 0.95;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      // CLOSEUP RAIN: big, white, highlight, rare
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.93) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops3[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops3[i] = 0;
+          speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+      }
+      // WILD COLOR LAYER: random colors, random size, extra rare
+      for (let i = 0; i < drops4.length; i++) {
+        if (Math.random() > 0.97) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const color = wildColors[Math.floor(Math.random() * wildColors.length)];
+          const size = fontSize * sizes4[i];
+          ctx.font = size + "px 'Share Tech Mono', monospace";
+          ctx.globalAlpha = 0.87 + Math.random() * 0.13;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 32 + Math.random() * 65;
+          ctx.fillStyle = color;
+          const x = (i * fontSize * 10.5 + fontSize * 2) % width;
+          const y = drops4[i] * fontSize * 2.7;
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops4[i] += speeds4[i];
+        if (drops4[i] * fontSize * 8 > height && Math.random() > 0.98) {
+          drops4[i] = 0;
+          speeds4[i] = (1.3 + Math.random() * 2.7) / 1.4;
+          sizes4[i] = 1.5 + Math.random() * 7;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+    }
+    setInterval(drawMatrix, 32);
+  </script>
+</body>
+</html>
     .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
     @keyframes gradient-flow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
     @keyframes pulse-title { 0% { text-shadow: 0 0 18px var(--matrix), 2px 2px 2px var(--brand2);} 80% { text-shadow: 0 0 48px var(--brand2), -2px -2px 2px var(--matrix);} 100% { text-shadow: 0 0 64px var(--accent), 1px 2px 3px var(--brand2);}}
