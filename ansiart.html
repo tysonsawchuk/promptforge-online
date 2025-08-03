@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>PromptForge – ANSI/ASCII Art Playground</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more." />
   <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -11,17 +12,33 @@
       --brand2: #ff005e;
       --accent: #9c6aff;
       --matrix: #00e1ff;
+      --aqua: #64f2e3;
     }
-    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
+    html, body {
+      margin: 0; padding: 0; background: #000;
+      min-height: 100vh;
+      font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
+      overflow-x: hidden; height: 100%;
+    }
     #bg-video {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover;
-      z-index: 0; opacity: 0.88; background: #000; pointer-events: none; filter: brightness(0.68) saturate(1.07) blur(0.2px);
-      border: none; outline: none;
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; object-fit: cover;
+      z-index: 0; pointer-events: none; opacity: 0.89;
+      filter: brightness(0.84) saturate(1.08) blur(0.2px);
+      background: #000;
     }
     #matrix-canvas {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; display: block; background: none !important;
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh; pointer-events: none;
+      z-index: 1; background: none; display: block;
     }
-    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
+    .navbar {
+      width: 100%; position: sticky; top: 0; left: 0; z-index: 10;
+      background: rgba(10,16,22,0.95); backdrop-filter: blur(3px);
+      border-bottom: 1.5px solid #2b2750;
+      display: flex; flex-direction: column; align-items: flex-start;
+      min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;
+    }
     .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
     .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
     @keyframes gradient-flow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
@@ -32,15 +49,15 @@
     .nav-socials { display: flex; align-items: center; gap: 0.7vw; margin-left: 18px;}
     .social-link { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%); border: 1.2px solid #232a33; box-shadow: 0 0 9px #00e1ff33; cursor: pointer;}
     .social-link svg { width: 21px; height: 21px; display: block; fill: var(--brand); filter: drop-shadow(0 0 6px #00e1ff88);}
-    .breadcrumbs { width: 100vw; padding: 7px 3vw 7px 3vw; font-family: 'Share Tech Mono', monospace; font-size: 1.08rem; letter-spacing: 0.09em; color: #fff; display: flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #141829 55%, #191e25 120%); box-shadow: 0 2px 14px #00e1ff19; border-bottom: 1px solid #232a33; user-select: text; z-index: 4;}
-    .breadcrumbs a { color: #00e1ff; text-decoration: none; border-bottom: 1.6px dotted #ff005e; font-weight: 700; margin-right: 7px; margin-left: 3px;}
-    .breadcrumbs a:hover, .breadcrumbs a:focus { color: #ff005e; border-bottom: 2.1px solid #ff005e;}
-    .breadcrumbs .bc-sep { color: #9c6aff; font-weight: 700; font-size: 1.15em; margin-right: 4px; margin-left: 2px; user-select: none;}
-    .hero { display: flex; flex-direction: column; align-items: center; margin: 42px auto 12px auto; max-width: 860px; z-index: 2; position: relative; text-align: center;}
-    .hero-title { font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 5vw, 2.5rem); font-weight: 900; background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88; letter-spacing: 0.11em; margin-bottom: 18px; margin-top: 6vh; animation: pulse-title 2.7s infinite alternate; border-bottom: 2.2px solid #00e1ffcc; display: inline-block; padding-bottom: 10px; filter: drop-shadow(0 0 16px #00e1ff55);}
-    .hero-desc { display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: clamp(0.98rem, 2vw, 1.10rem); background: rgba(0, 0, 0, 0.93); color: #fff; box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44; border-radius: 22px; padding: 17px 29px 15px 29px; margin-bottom: 24px; margin-top: 2px; font-weight: 600; text-shadow: 0 2px 9px #00e1ff99; line-height: 1.55; border: none; user-select: text;}
-    .hero-desc strong { color: #00e1ff; font-weight: 900; text-shadow: 0 0 7px #00e1ffcc; letter-spacing: 0.01em;}
-    .hero-desc u { text-decoration-color: #ff005e; text-decoration-thickness: 2px; text-underline-offset: 0.18em;}
+    /* GOOGLE TRANSLATE */
+    .lang-globe-wrap { margin-left:18px; position:relative; display:flex; align-items:center; z-index:99; }
+    .globe-btn { width:32px; height:32px; border-radius:50%; border:none; background: none; box-shadow: 0 0 16px #00e1ff55, 0 0 8px #ff005e33; display: flex; align-items: center; justify-content: center; cursor: pointer; transition:.15s; }
+    .globe-btn svg { width: 29px; height: 29px; fill: #00e1ff; filter: drop-shadow(0 0 8px #00e1ffbb); animation: spin-globe 2.7s linear infinite;}
+    @keyframes spin-globe {100%{transform:rotate(360deg);}}
+    .lang-label { color:#9c6aff; font-size:1.08em; font-family:'Share Tech Mono',monospace; margin-left:6px; opacity:.74; }
+    .lang-dropdown { position: absolute; top: 39px; right: 0; background: #191c29e8; border-radius: 12px; box-shadow: 0 4px 14px #00e1ff66; padding: 14px 24px 11px 14px; z-index: 999; display: none; }
+    .lang-dropdown select { background:#191c29; color:#00e1ff; border:1.4px solid #9c6aff; border-radius:7px; font-size:1em; padding:5px 13px; font-family:inherit; }
+    /* Sidebar example (optional) */
     .app-flex { display: flex; flex-direction: row; width: 100%; margin: 0 auto; min-height: 430px; z-index: 2;}
     .sidebar-nav { width: 190px; min-width: 106px; background:rgba(15,18,26,0.98); border-right: 2.5px solid #00e1ff33; box-shadow: 2px 0 32px #00e1ff22; padding: 23px 0 0 0; position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;}
     .sidebar-logo { color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900; letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44); user-select:none; pointer-events:none;}
@@ -54,18 +71,333 @@
       .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
       .side-link { margin-bottom:0; margin-right:5px; }
     }
-    /* J1nx styles (from main.html) */
-    .j1nx-float-true { position: fixed; z-index: 1400; right: 2vw; bottom: 2.8vh; display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none; min-width: 0; max-width: 360px;}
-    .j1nx-true-cutout-img { width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto; box-shadow: none !important; transition: box-shadow .2s; }
-    .j1nx-bubble-true-main { background: rgba(22,23,31,0.97); border-radius: 17px; box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f; border: 2px solid var(--brand); padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em; display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1;}
-    .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1;}
+    /* J1NX True Cutout Widget */
+    .j1nx-float-true {
+      position: fixed; z-index: 1400; right: 2vw; bottom: calc(2.8vh + 125px);
+      display: flex; flex-direction: column; align-items: center;
+      pointer-events: all; user-select: none; min-width: 0; max-width: 360px;
+    }
+    .j1nx-true-cutout-img { width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto; transition: box-shadow .2s; box-shadow: none !important;}
+    .j1nx-bubble-true-main { background: rgba(22,23,31,0.97); border-radius: 17px; box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f; border: 2px solid var(--aqua); padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em; display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1; }
+    .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1; }
     .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0;}
-    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid var(--brand); background: #171b22; color: var(--brand); min-width: 0;}
-    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid var(--brand); color: var(--brand); font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
-    .j1nx-btn-true:hover { background: var(--brand); color: #171b22; border-color: #fff;}
+    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid var(--aqua); background: #171b22; color: var(--aqua); min-width: 0;}
+    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid var(--aqua); color: var(--aqua); font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
+    .j1nx-btn-true:hover { background: var(--aqua); color: #171b22; border-color: #fff; }
     .j1nx-easteregg-true { font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px; margin-top: 7px; padding: 7px 17px 6px 13px; opacity: .85; pointer-events: none; text-align: center; width: 94%; user-select: none; box-shadow: 0 3px 13px #be9cff28; font-weight: 600;}
-    @media (max-width: 900px) { .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;} .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;} .j1nx-true-cutout-img {width: 112px; height: 112px;} }
-    @media (max-width: 700px) { .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;} .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;} .j1nx-true-cutout-img {width: 66px; height: 66px;} }
+    @media (max-width: 900px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 112px; height: 112px;}
+    }
+    @media (max-width: 700px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 66px; height: 66px;}
+    }
+    /* Hero section (description box fully transparent) */
+    .hero { display: flex; flex-direction: column; align-items: center; margin: 42px auto 12px auto; max-width: 860px; z-index: 2; position: relative; text-align: center;}
+    .hero-title { font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 5vw, 2.5rem); font-weight: 900; background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88; letter-spacing: 0.11em; margin-bottom: 18px; margin-top: 6vh; animation: pulse-title 2.7s infinite alternate; border-bottom: 2.2px solid #00e1ffcc; display: inline-block; padding-bottom: 10px; filter: drop-shadow(0 0 16px #00e1ff55);}
+    .hero-desc { background: none!important; box-shadow: none!important; border:none!important; color: #fff; }
+    .hero-desc strong { color: #00e1ff; font-weight: 900; text-shadow: 0 0 7px #00e1ffcc; letter-spacing: 0.01em;}
+    .hero-desc u { text-decoration-color: #ff005e; text-decoration-thickness: 2px; text-underline-offset: 0.18em;}
+  </style>
+</head>
+<body>
+  <!-- VIDEO BACKGROUND -->
+  <video id="bg-video" src="assets/creepyvideo.mp4" autoplay muted loop playsinline></video>
+  <!-- MATRIX RAIN -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-row1">
+      <span class="logo">PromptForge</span>
+      <nav class="nav-links">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Gallery</a>
+        <a href="#" class="nav-link">Tools</a>
+        <a href="#" class="nav-link">FAQ</a>
+      </nav>
+      <div class="lang-globe-wrap">
+        <button class="globe-btn" id="langBtn">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" stroke="#00e1ff" stroke-width="2"/><ellipse cx="16" cy="16" rx="9.5" ry="14" stroke="#ff005e" stroke-width="1.7"/><ellipse cx="16" cy="16" rx="14" ry="9.5" stroke="#9c6aff" stroke-width="1.7"/><circle cx="16" cy="16" r="2.8" fill="#00e1ff"/></svg>
+        </button>
+        <span class="lang-label">Translate</span>
+        <div class="lang-dropdown" id="langDropdown">
+          <div id="google_translate_element"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
+    </div>
+    <div class="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
+  </section>
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
+        <a href="#gallery" class="side-link">Gallery</a>
+        <a href="#news" class="side-link">News</a>
+        <a href="#about" class="side-link">About</a>
+        <a href="#faq" class="side-link">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- Tool sections go here -->
+    </main>
+  </div>
+  <!-- FLOATING J1NX ASSISTANT (from main.html, true cutout style, working logic) -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+  <!-- === Google Translate === -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,fr,de,es,ru,zh-CN,ja,it,ko,pt,ar',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+    document.getElementById('langBtn').onclick = function() {
+      const d = document.getElementById('langDropdown');
+      d.style.display = d.style.display === 'block' ? 'none' : 'block';
+    };
+    document.body.addEventListener('click', function(e){
+      if(!e.target.closest('.lang-globe-wrap')) document.getElementById('langDropdown').style.display='none';
+    });
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <!-- === J1nx logic (true cutout, main.html pattern) === -->
+  <script src="assets/j1nx_brain.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // J1nx brain logic
+      let chat = [];
+      let defaultMood = 0;
+      let moods = [
+        {glow: "#00e1ff"},
+        {glow: "#fa528e"},
+        {glow: "#be9cff"},
+        {glow: "#ffd166"}
+      ];
+      function getJ1nxReply(val) {
+        if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+          let res = window.j1nxBrain(val, chat.length);
+          if(typeof res === "string") return {reply: res, mood: 0};
+          if(typeof res === "object" && res.reply) return res;
+          return {reply: "(I have no clue... bug?)", mood: 0};
+        }
+        return {reply: "(Brain not loaded)", mood: 0};
+      }
+      function setJ1nxMood(idx) {
+        idx = Math.max(0, Math.min(idx, moods.length-1));
+        document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+        document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      }
+      let moodIndex = 0, lastTap = 0;
+      document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+        let now = Date.now();
+        if (now - lastTap < 400) {
+          moodIndex = (moodIndex + 1) % moods.length;
+          setJ1nxMood(moodIndex);
+        }
+        lastTap = now;
+      });
+      function renderJ1nxChat() {
+        document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      }
+      function chatReset() {
+        chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+        setJ1nxMood(defaultMood);
+        renderJ1nxChat();
+      }
+      document.getElementById("j1nxSendTrue").onclick = function(){
+        let val = document.getElementById("j1nxInputTrue").value.trim();
+        if (!val) return;
+        let res = getJ1nxReply(val);
+        chat.push(val);
+        chat.push(res.reply);
+        setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+        renderJ1nxChat();
+        document.getElementById("j1nxInputTrue").value = "";
+      };
+      document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+        if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+      });
+      document.getElementById("j1nxClearTrue").onclick = chatReset;
+      document.getElementById("j1nxSaveTrue").onclick = function(){
+        let text = chat.join('\n');
+        let blob = new Blob([text], {type:"text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "j1nx_chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      };
+      chatReset(); // init
+    });
+    // MATRIX RAIN (no change from last working version)
+    window.onload = function() {
+      const canvas = document.getElementById('matrix-canvas');
+      const ctx = canvas.getContext('2d');
+      const fakeGlyphs = "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+      const wildColors = ["#FFD700","#00FFEA","#FF00F3","#FF9300","#00FF19","#D100FF","#01FCFD","#fc0341","#fcba03","#d9fc03","#25fc03","#03fc5a","#03fcbc","#03e7fc","#037efc","#5d03fc","#ba03fc","#fc03d1"];
+      let width, height, fontSize, columns;
+      let drops1 = [], speeds1 = [];
+      let drops2 = [], speeds2 = [];
+      let drops3 = [], speeds3 = [];
+      let drops4 = [], speeds4 = [], sizes4 = [];
+      function setup() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        fontSize = Math.max(16, Math.floor(width / 90));
+        columns = Math.floor(width / fontSize);
+        drops1 = []; speeds1 = [];
+        for (let x = 0; x < columns; x++) {
+          drops1[x] = Math.random() * height / fontSize;
+          speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+        }
+        drops2 = []; speeds2 = [];
+        for (let x = 0; x < columns * 1.3; x++) {
+          drops2[x] = Math.random() * height / fontSize;
+          speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+        }
+        drops3 = []; speeds3 = [];
+        for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+          drops3[x] = Math.random() * height / fontSize;
+          speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+        drops4 = []; speeds4 = []; sizes4 = [];
+        for (let x = 0; x < Math.floor(columns * 0.07); x++) {
+          drops4[x] = Math.random() * height / fontSize;
+          speeds4[x] = (1.3 + Math.random() * 2.7) / 1.4;
+          sizes4[x] = 1.5 + Math.random() * 7;
+        }
+      }
+      setup();
+      window.addEventListener('resize', setup);
+      function drawMatrix() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.textAlign = "center";
+        ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
+        for (let i = 0; i < drops2.length; i++) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 0.82 + fontSize / 2;
+          const y = drops2[i] * fontSize;
+          ctx.globalAlpha = 0.21;
+          ctx.fillStyle = "#00e1ff";
+          ctx.fillText(text, x - 2, y - 2);
+          ctx.fillStyle = "#ff005e";
+          ctx.fillText(text, x + 2, y + 2);
+          drops2[i] += speeds2[i];
+          if (drops2[i] * fontSize > height && Math.random() > 0.98) {
+            drops2[i] = 0;
+            speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+          }
+        }
+        ctx.globalAlpha = 0.93;
+        ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+        for (let i = 0; i < columns; i++) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize + fontSize / 2;
+          const y = drops1[i] * fontSize;
+          ctx.globalAlpha = 0.95;
+          ctx.fillStyle = "#00e1ff";
+          ctx.fillText(text, x - 2, y - 2);
+          ctx.fillStyle = "#ff005e";
+          ctx.fillText(text, x + 2, y + 2);
+          ctx.globalAlpha = 1.0;
+          drops1[i] += speeds1[i];
+          if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+            drops1[i] = 0;
+            speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+          }
+        }
+        ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+        for (let i = 0; i < drops3.length; i++) {
+          if (Math.random() > 0.93) {
+            const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+            const x = i * fontSize * 8.2 + fontSize;
+            const y = drops3[i] * fontSize * 2.3;
+            ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+            ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+            ctx.shadowBlur = 92;
+            ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+            ctx.fillText(text, x, y);
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1.0;
+          }
+          drops3[i] += speeds3[i];
+          if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+            drops3[i] = 0;
+            speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+          }
+        }
+        for (let i = 0; i < drops4.length; i++) {
+          if (Math.random() > 0.97) {
+            const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+            const color = wildColors[Math.floor(Math.random() * wildColors.length)];
+            const size = fontSize * sizes4[i];
+            ctx.font = size + "px 'Share Tech Mono', monospace";
+            ctx.globalAlpha = 0.87 + Math.random() * 0.13;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 32 + Math.random() * 65;
+            ctx.fillStyle = color;
+            const x = (i * fontSize * 10.5 + fontSize * 2) % width;
+            const y = drops4[i] * fontSize * 2.7;
+            ctx.fillText(text, x, y);
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1.0;
+          }
+          drops4[i] += speeds4[i];
+          if (drops4[i] * fontSize * 8 > height && Math.random() > 0.98) {
+            drops4[i] = 0;
+            speeds4[i] = (1.3 + Math.random() * 2.7) / 1.4;
+            sizes4[i] = 1.5 + Math.random() * 7;
+          }
+        }
+        ctx.globalAlpha = 1.0;
+      }
+      setInterval(drawMatrix, 32);
+    };
+  </script>
+</body>
+</html>
   </style>
 </head>
 <body>
