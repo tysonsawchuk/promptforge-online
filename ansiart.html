@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more.">
+  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, tech news, J1NX floating assistant, and more.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -12,61 +12,803 @@
       --brand2: #ff005e;
       --accent: #9c6aff;
       --matrix: #00e1ff;
+      --nav-bg: rgba(10,16,22,0.95);
+      --nav-border: #2b2750;
     }
-    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
-    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
-    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
-    .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
-    .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
-    @keyframes gradient-flow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-    @keyframes pulse-title { 0% { text-shadow: 0 0 18px var(--matrix), 2px 2px 2px var(--brand2);} 80% { text-shadow: 0 0 48px var(--brand2), -2px -2px 2px var(--matrix);} 100% { text-shadow: 0 0 64px var(--accent), 1px 2px 3px var(--brand2);}}
-    .nav-links { display: flex; align-items: center; gap: 2vw; font-family: 'Share Tech Mono', monospace;}
-    .nav-link { color: var(--brand); background: rgba(0,0,0,0.11); padding: 6px 19px 7px 19px; border-radius: 12px; font-size: 1.11rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border: 1.3px solid #212e37; box-shadow: 0 0 8px #00e1ff44 inset; margin-left: 0.2vw; margin-right: 0.2vw; cursor: pointer; text-decoration: none;}
-    .nav-link:hover, .nav-link:focus { color: #fff; background: linear-gradient(90deg, #00e1ff 70%, #ff005e 110%); border-color: var(--accent); box-shadow: 0 0 19px 5px #00e1ff33, 0 0 6px #ff005e55 inset; outline: none;}
-    .nav-socials { display: flex; align-items: center; gap: 0.7vw; margin-left: 18px;}
-    .social-link { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%); border: 1.2px solid #232a33; box-shadow: 0 0 9px #00e1ff33; cursor: pointer;}
-    .social-link svg { width: 21px; height: 21px; display: block; fill: var(--brand); filter: drop-shadow(0 0 6px #00e1ff88);}
-    .nav-translate {
-      display: flex; align-items: center; margin-left: 0.7vw;
-      background: rgba(0,0,0,0.12); border-radius: 13px; border: 1.3px solid #212e37; box-shadow: 0 0 8px #00e1ff44 inset;
-      padding: 3px 12px 3px 8px; height: 39px; position: relative; cursor: pointer; min-width: 45px;
-      transition: border-color 0.17s, box-shadow 0.17s;
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+      min-height: 100vh;
+      font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
+      overflow-x: hidden;
     }
-    .nav-translate:hover, .nav-translate:focus { border-color: #ff005e; box-shadow: 0 0 19px 5px #00e1ff33, 0 0 6px #ff005e55 inset; }
-    .translate-globe {
-      width: 26px; height: 26px; display: inline-block; animation: globe-spin 2.7s linear infinite;
-      filter: drop-shadow(0 0 6px #00e1ff77); margin-right: 2px;
+    #matrix-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      background: #000;
+      display: block;
     }
-    @keyframes globe-spin { 100% { transform: rotate(360deg); } }
-    .navbar-row1 .google-translate-camo { display: flex !important; position: static; background: none !important; box-shadow: none !important; padding: 0 !important; border: none !important; z-index: 200; }
-    .navbar-row1 .goog-te-gadget-simple { background: none !important; border: none !important; font-size: 1em !important; color: #00e1ff !important; font-family: inherit !important; padding: 0 !important; margin: 0 0 0 4px !important;}
-    .navbar-row1 .goog-te-gadget-icon { display: none !important; }
-    .navbar-row1 .goog-te-menu-value span { color: #00e1ff !important;}
-    .navbar-row1 .goog-te-combo { border-radius: 7px; border: 1px solid #00e1ff; background: #16192c; color: #00e1ff; padding: 2px 11px 2px 7px; font-family: 'Share Tech Mono', monospace; font-size: 0.99em; cursor: pointer; outline: none;}
-    .navbar-row1 .goog-te-combo:hover, .navbar-row1 .goog-te-combo:focus { background: #232a33; color: #ff005e; border-color: #ff005e;}
-    .navbar-row1 .goog-logo-link, .navbar-row1 .goog-te-gadget span { display: none !important; }
-    .breadcrumbs { width: 100vw; padding: 7px 3vw 7px 3vw; font-family: 'Share Tech Mono', monospace; font-size: 1.08rem; letter-spacing: 0.09em; color: #fff; display: flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #141829 55%, #191e25 120%); box-shadow: 0 2px 14px #00e1ff19; border-bottom: 1px solid #232a33; user-select: text; z-index: 4;}
-    .breadcrumbs a { color: #00e1ff; text-decoration: none; border-bottom: 1.6px dotted #ff005e; font-weight: 700; margin-right: 7px; margin-left: 3px;}
-    .breadcrumbs a:hover, .breadcrumbs a:focus { color: #ff005e; border-bottom: 2.1px solid #ff005e;}
-    .breadcrumbs .bc-sep { color: #9c6aff; font-weight: 700; font-size: 1.15em; margin-right: 4px; margin-left: 2px; user-select: none;}
-    .hero { display: flex; flex-direction: column; align-items: center; margin: 42px auto 12px auto; max-width: 860px; z-index: 2; position: relative; text-align: center;}
-    .hero-title { font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 5vw, 2.5rem); font-weight: 900; background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88; letter-spacing: 0.11em; margin-bottom: 18px; margin-top: 6vh; animation: pulse-title 2.7s infinite alternate; border-bottom: 2.2px solid #00e1ffcc; display: inline-block; padding-bottom: 10px; filter: drop-shadow(0 0 16px #00e1ff55);}
-    .hero-desc { display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: clamp(0.98rem, 2vw, 1.10rem); background: rgba(0, 0, 0, 0.93); color: #fff; box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44; border-radius: 22px; padding: 17px 29px 15px 29px; margin-bottom: 24px; margin-top: 2px; font-weight: 600; text-shadow: 0 2px 9px #00e1ff99; line-height: 1.55; border: none; user-select: text;}
-    .hero-desc strong { color: #00e1ff; font-weight: 900; text-shadow: 0 0 7px #00e1ffcc; letter-spacing: 0.01em;}
-    .hero-desc u { text-decoration-color: #ff005e; text-decoration-thickness: 2px; text-underline-offset: 0.18em;}
-    .app-flex { display: flex; flex-direction: row; width: 100%; margin: 0 auto; min-height: 430px; z-index: 2;}
-    .sidebar-nav { width: 190px; min-width: 106px; background:rgba(15,18,26,0.98); border-right: 2.5px solid #00e1ff33; box-shadow: 2px 0 32px #00e1ff22; padding: 23px 0 0 0; position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;}
-    .sidebar-logo { color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900; letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44); user-select:none; pointer-events:none;}
-    .sidebar-nav nav { display: flex; flex-direction: column; gap: 7px; width: 90%;}
-    .side-link { display: block; color: #00e1ff; font-family: 'Share Tech Mono', monospace; text-decoration: none; font-weight: 700; font-size: 1.11em; padding: 11px 22px; border-radius: 14px; margin-bottom: 4px; background:rgba(0,0,0,0.16); border:1.7px solid #191e25; box-shadow:0 0 12px #00e1ff22 inset; letter-spacing:0.08em; transition: .17s cubic-bezier(.7,1.2,.8,2.1) all; outline:none; position:relative;}
-    .side-link.active, .side-link:hover, .side-link:focus { background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%); color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;}
+    /* HEADER, NAV, BREADCRUMBS, LANGUAGE */
+    .navbar {
+      width: 100%;
+      position: sticky;
+      top: 0; left: 0;
+      z-index: 10;
+      background: var(--nav-bg);
+      backdrop-filter: blur(3px);
+      border-bottom: 1.5px solid var(--nav-border);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 0 0 0 0;
+      min-height: 78px;
+      box-shadow: 0 2px 24px #00e1ff33;
+      transition: background 0.3s;
+    }
+    .navbar-row1 {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0 3vw;
+      min-height: 56px;
+    }
+    .logo {
+      font-family: 'Orbitron', 'monospace';
+      font-size: clamp(2.1rem, 5vw, 2.7rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-fill-color: transparent;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand);
+      animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate;
+      user-select: none;
+      filter: drop-shadow(0 2px 24px #00e1ff44);
+      cursor: pointer;
+      padding: 0 6px 0 0;
+    }
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    @keyframes pulse-title {
+      0% { text-shadow: 0 0 18px var(--matrix), 2px 2px 2px var(--brand2);}
+      80% { text-shadow: 0 0 48px var(--brand2), -2px -2px 2px var(--matrix);}
+      100% { text-shadow: 0 0 64px var(--accent), 1px 2px 3px var(--brand2);}
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2vw;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    .nav-link {
+      color: var(--brand);
+      background: rgba(0,0,0,0.11);
+      padding: 6px 19px 7px 19px;
+      border-radius: 12px;
+      font-size: 1.11rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      border: 1.3px solid #212e37;
+      box-shadow: 0 0 8px #00e1ff44 inset;
+      margin-left: 0.2vw;
+      margin-right: 0.2vw;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        color 0.19s cubic-bezier(.5,1.9,.4,1.6),
+        border-color 0.19s cubic-bezier(.5,1.9,.4,1.6),
+        background 0.21s cubic-bezier(.8,.2,.6,2.1),
+        box-shadow 0.17s cubic-bezier(.7,1.2,.8,2.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-link:hover, .nav-link:focus {
+      color: #fff;
+      background: linear-gradient(90deg, #00e1ff 70%, #ff005e 110%);
+      border-color: var(--accent);
+      box-shadow: 0 0 19px 5px #00e1ff33, 0 0 6px #ff005e55 inset;
+      outline: none;
+    }
+    .nav-socials {
+      display: flex;
+      align-items: center;
+      gap: 0.7vw;
+      margin-left: 18px;
+    }
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px; height: 35px;
+      border-radius: 50%;
+      background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%);
+      border: 1.2px solid #232a33;
+      box-shadow: 0 0 9px #00e1ff33;
+      transition: box-shadow 0.23s, border-color 0.18s, background 0.23s;
+      cursor: pointer;
+    }
+    .social-link:hover, .social-link:focus {
+      background: linear-gradient(90deg,#00e1ff44 60%,#ff005e33 110%);
+      border-color: #ff005e;
+      box-shadow: 0 0 11px 3px #00e1ff66,0 0 5px #ff005e44;
+    }
+    .social-link svg {
+      width: 21px; height: 21px; display: block;
+      fill: var(--brand);
+      filter: drop-shadow(0 0 6px #00e1ff88);
+      transition: fill 0.17s;
+    }
+    .social-link:hover svg, .social-link:focus svg {
+      fill: #fff;
+      filter: drop-shadow(0 0 10px #ff005e);
+    }
+    .lang-switcher {
+      margin-left: 28px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.09em;
+      background: #232a33;
+      color: #00e1ff;
+      border: 1.5px solid #00e1ff;
+      border-radius: 13px;
+      padding: 3px 16px 3px 12px;
+      cursor: pointer;
+      box-shadow: 0 0 9px #00e1ff33;
+      outline: none;
+      transition: background 0.19s, color 0.19s;
+    }
+    .lang-switcher:focus, .lang-switcher:hover {
+      background: #191e25;
+      color: #ff005e;
+      border-color: #ff005e;
+    }
+    .breadcrumbs {
+      width: 100vw;
+      padding: 7px 3vw 7px 3vw;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.08rem;
+      letter-spacing: 0.09em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(90deg, #141829 55%, #191e25 120%);
+      box-shadow: 0 2px 14px #00e1ff19;
+      border-bottom: 1px solid #232a33;
+      user-select: text;
+      z-index: 4;
+    }
+    .breadcrumbs a {
+      color: #00e1ff;
+      text-decoration: none;
+      border-bottom: 1.6px dotted #ff005e;
+      font-weight: 700;
+      margin-right: 7px;
+      margin-left: 3px;
+      transition: color 0.18s;
+    }
+    .breadcrumbs a:hover, .breadcrumbs a:focus {
+      color: #ff005e;
+      border-bottom: 2.1px solid #ff005e;
+    }
+    .breadcrumbs .bc-sep {
+      color: #9c6aff;
+      font-weight: 700;
+      font-size: 1.15em;
+      margin-right: 4px;
+      margin-left: 2px;
+      user-select: none;
+    }
+    /* News Ticker */
+    .news-ticker-row {
+      display: flex; align-items: center; justify-content: flex-start;
+      gap: 13px; width: 100vw; background: #191e25ed; z-index: 8;
+      border-bottom: 1.5px solid #00e1ff33;
+      box-shadow: 0 3px 18px #00e1ff16;
+      padding: 0 0 0 3vw; min-height: 35px;
+    }
+    .news-ticker-label {
+      color: #ff005e; font-family: 'Share Tech Mono', monospace; font-size: 1.01em;
+      letter-spacing: 0.09em; font-weight: 900; text-shadow: 0 1px 10px #ff005e77;
+      margin-right: 9px;
+    }
+    .ticker-wrap { flex:1; overflow:hidden; min-width:0; }
+    .news-ticker {
+      display:inline-block; min-width:100%; white-space:nowrap; overflow:hidden; font-family:'Share Tech Mono',monospace; font-size:1.07em; color:#00e1ff; letter-spacing:0.08em; animation: ticker 36s linear infinite;
+    }
+    .news-ticker .ticker-link {
+      color: #00e1ff; text-decoration:none; padding:0 22px 0 7px; font-weight:700; text-shadow: 0 2px 8px #00e1ff33;
+      transition: color .19s;
+    }
+    .news-ticker .ticker-link:hover { color: #ff005e; }
+    @keyframes ticker {
+      0% { transform: translateX(100%);}
+      100% { transform: translateX(-100%);}
+    }
+    .do-not-press-btn {
+      font-family:'Share Tech Mono',monospace;
+      background:linear-gradient(90deg,#ff005e 15%,#00e1ff 95%);
+      color:#fff; font-size:1.2em; border-radius:18px; border:none; padding:3px 21px 4px 15px;
+      box-shadow:0 2px 14px #ff005e33; margin-left:17px; margin-right:2vw; font-weight:900; cursor:pointer;
+      text-shadow: 0 2px 12px #ff005e99;
+      letter-spacing: 0.04em;
+      transition:.18s cubic-bezier(.8,1.5,.7,1.2) all;
+      outline:none; border:2px solid #00e1ff;
+    }
+    .do-not-press-btn:hover {
+      background:linear-gradient(90deg,#00e1ff 25%,#ff005e 95%);
+      color:#191e25; border-color:#ff005e; text-shadow: 0 2px 10px #00e1ff99;
+    }
+    /* Hero section */
+    .hero { ... }
+    .hero-title { ... }
+    .hero-desc { ... }
+    /* Sidebar */
+    .app-flex { display: flex; flex-direction: row; width: 100%; margin: 0 auto; min-height: 430px; z-index:2; }
+    .sidebar-nav {
+      width: 190px; min-width: 106px; background:rgba(15,18,26,0.98); border-right: 2.5px solid #00e1ff33;
+      box-shadow: 2px 0 32px #00e1ff22; padding: 23px 0 0 0; position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;
+    }
+    .sidebar-logo {
+      color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900;
+      letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44);
+      user-select:none; pointer-events:none;
+    }
+    .sidebar-nav nav { display: flex; flex-direction: column; gap: 7px; width: 90%; }
+    .side-link {
+      display: block; color: #00e1ff; font-family: 'Share Tech Mono', monospace;
+      text-decoration: none; font-weight: 700; font-size: 1.11em; padding: 11px 22px; border-radius: 14px;
+      margin-bottom: 4px; background:rgba(0,0,0,0.16);
+      border:1.7px solid #191e25; box-shadow:0 0 12px #00e1ff22 inset; letter-spacing:0.08em;
+      transition: .17s cubic-bezier(.7,1.2,.8,2.1) all;
+      outline:none;
+      position:relative;
+    }
+    .side-link.active, .side-link:hover, .side-link:focus {
+      background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%);
+      color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;
+    }
+    /* J1NX FLOAT ... (unchanged, as before) */
+    .j1nx-float-true { position: fixed; z-index: 1400; right: 2vw; bottom: 54px; display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none; min-width: 0; max-width: 360px; transition: all 0.17s cubic-bezier(.82,0,.21,1);}
+    .j1nx-true-cutout-img { width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto; box-shadow: none !important; transition: width 0.17s, height 0.17s;}
+    .j1nx-bubble-true-main { background: rgba(22,23,31,0.97); border-radius: 17px; box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f; border: 2px solid #64f2e3; padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em; display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1; transition: opacity 0.18s, visibility 0.18s;}
+    .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1;}
+    .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0;}
+    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid #64f2e3; background: #171b22; color: #64f2e3; min-width: 0;}
+    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid #64f2e3; color: #64f2e3; font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
+    .j1nx-btn-true:hover { background: #64f2e3; color: #171b22; border-color: #fff;}
+    .j1nx-easteregg-true { font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px; margin-top: 7px; padding: 7px 17px 6px 13px; opacity: .85; pointer-events: none; text-align: center; width: 94%; user-select: none; box-shadow: 0 3px 13px #be9cff28; font-weight: 600;}
     @media (max-width: 700px) {
       .app-flex { flex-direction: column; }
       .sidebar-nav { width: 100%; min-width: 0; flex-direction: row; border-bottom:2.5px solid #00e1ff33; border-right:0; }
       .sidebar-logo { display: none; }
       .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
       .side-link { margin-bottom:0; margin-right:5px; }
+      .j1nx-float-true {
+        right: 9px;
+        bottom: 9px;
+        max-width: 74px;
+        width: 74px;
+        min-width: 0;
+        transition: all 0.18s cubic-bezier(.82,0,.21,1);
+      }
+      .j1nx-true-cutout-img {
+        width: 64px !important; height: 64px !important; margin-bottom: 0;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px #be9cff44;
+      }
+      .j1nx-bubble-true-main {
+        display: none !important;
+        position: absolute;
+        left: 0; top: 0;
+        opacity: 0; pointer-events: none;
+      }
+      .j1nx-float-true.j1nx-open .j1nx-bubble-true-main {
+        display: flex !important;
+        opacity: 1; pointer-events: all; position: absolute; left: 75px; top: 0; min-width: 230px;
+        background: rgba(20,22,28,0.99);
+        box-shadow: 0 4px 22px #be9cff88, 0 0 0 3px #23231f;
+      }
+      .j1nx-float-true.j1nx-open {
+        max-width: 320px; width: 320px;
+      }
+      .j1nx-float-true.j1nx-open .j1nx-true-cutout-img {
+        width: 64px !important; height: 64px !important; margin-bottom: 0;
+        border-radius: 50%;
+      }
     }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <header class="navbar">
+    <div class="navbar-row1">
+      <span class="logo">PromptForge</span>
+      <nav class="nav-links">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Gallery</a>
+        <a href="#" class="nav-link">Tools</a>
+        <a href="#" class="nav-link">FAQ</a>
+      </nav>
+      <div class="nav-socials">
+        <a class="social-link" href="https://promptforge.online" target="_blank">🌐</a>
+        <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
+        </a>
+        <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
+        </a>
+      </div>
+      <select class="lang-switcher" id="lang-switcher">
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+        <option value="es">ES</option>
+        <option value="de">DE</option>
+      </select>
+    </div>
+    <div class="breadcrumbs">
+      <a href="https://promptforge.online">promptforge.online</a>
+      <span class="bc-sep">/</span>
+      <a href="#">gallery</a>
+      <span class="bc-sep">/</span>
+      <a href="#">tools</a>
+      <span class="bc-sep">/</span>
+      <a href="#">aihacks</a>
+      <span class="bc-sep">/</span>
+      <a href="#">support</a>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-title" id="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
+    </div>
+    <div class="hero-desc" id="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
+  </section>
+  <!-- NEWS TICKER -->
+  <div class="news-ticker-row">
+    <div class="news-ticker-label" id="news-label">[ HACKER TECH NEWS ]</div>
+    <div class="ticker-wrap">
+      <div class="news-ticker" id="news-ticker">
+        <!-- Headlines load here -->
+      </div>
+    </div>
+    <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener" class="do-not-press-btn" title="Do NOT Press This Button">☕️</a>
+  </div>
+  <!-- SIDEBAR AND MAIN TOOL SECTIONS -->
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active" data-i18n="sidebar.text2ascii">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link" data-i18n="sidebar.img2ascii">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link" data-i18n="sidebar.vid2ascii">Video → ASCII</a>
+        <a href="#gallery" class="side-link" data-i18n="sidebar.gallery">Gallery</a>
+        <a href="#news" class="side-link" data-i18n="sidebar.news">News</a>
+        <a href="#about" class="side-link" data-i18n="sidebar.about">About</a>
+        <a href="#faq" class="side-link" data-i18n="sidebar.faq">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- ADD YOUR TOOL SECTIONS HERE -->
+    </main>
+  </div>
+  <!-- J1NX FLOAT ASSISTANT -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+  <!-- END J1NX FLOAT -->
+  <script>
+    // MATRIX RAIN (all layers, super visible)
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+    let drops4 = [], speeds4 = [];
+    let drops5 = [], speeds5 = [];
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+      }
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.6; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.33); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (1.4 + Math.random() * 2.4) / 3;
+      }
+      drops4 = []; speeds4 = [];
+      for (let x = 0; x < Math.floor(columns * 0.14); x++) {
+        drops4[x] = Math.random() * height / fontSize;
+        speeds4[x] = (2.3 + Math.random() * 2.6) / 2.1;
+      }
+      drops5 = []; speeds5 = [];
+      for (let x = 0; x < Math.floor(columns * 0.07); x++) {
+        drops5[x] = Math.random() * height / fontSize;
+        speeds5[x] = (3.1 + Math.random() * 3.6) / 1.45;
+      }
+    }
+    setup();
+    window.addEventListener('resize', setup);
+    function drawMatrix() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      // 2nd layer (deep/faint)
+      ctx.font = (fontSize - 3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.62 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.30;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2.2, y - 2.2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2.2, y + 2.2);
+        if (Math.random() > 0.995) {
+          ctx.globalAlpha = 0.16;
+          ctx.fillStyle = "#fff";
+          ctx.fillText(text, x, y);
+        }
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.97) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      // Main layer
+      ctx.globalAlpha = 1.0;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 1.0;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      // 3rd layer (highlight/white)
+      ctx.font = (fontSize + 3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.985) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 3 + fontSize / 2;
+          const y = drops3[i] * fontSize;
+          ctx.globalAlpha = 0.96;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff57ff";
+          ctx.fillText(text, x, y);
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize > height && Math.random() > 0.975) {
+          drops3[i] = 0;
+          speeds3[i] = (1.4 + Math.random() * 2.4) / 3;
+        }
+      }
+      // 4th layer (superlarge, extra rare)
+      ctx.font = (fontSize * 2.3) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops4.length; i++) {
+        if (Math.random() > 0.985) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 7 + fontSize;
+          const y = drops4[i] * fontSize * 2.4;
+          ctx.globalAlpha = 0.87;
+          ctx.shadowColor = "#fff";
+          ctx.shadowBlur = 38;
+          ctx.fillStyle = "#fff";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops4[i] += speeds4[i];
+        if (drops4[i] * fontSize * 2.3 > height && Math.random() > 0.97) {
+          drops4[i] = 0;
+          speeds4[i] = (2.3 + Math.random() * 2.6) / 2.1;
+        }
+      }
+      // 5th (closest, massive, bright layer)
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops5.length; i++) {
+        if (Math.random() > 0.93) { // frequent, BIGGER
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops5[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops5[i] += speeds5[i];
+        if (drops5[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops5[i] = 0;
+          speeds5[i] = (3.1 + Math.random() * 3.6) / 1.45;
+        }
+      }
+      ctx.globalAlpha = 1.0; ctx.shadowBlur = 0;
+    }
+    setInterval(drawMatrix, 32);
+
+    // News ticker (BBC Tech, fallback SEO, buy-me-a-coffee btn)
+    const ticker = document.getElementById("news-ticker");
+    const newsFeed = "https://feeds.bbci.co.uk/news/technology/rss.xml";
+    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(newsFeed))
+      .then(res => res.json())
+      .then(data => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, "application/xml");
+        const items = xml.querySelectorAll("item");
+        let headlines = [];
+        for (let i = 0; i < Math.min(items.length, 10); i++) {
+          let title = items[i].querySelector("title").textContent;
+          let link = items[i].querySelector("link").textContent;
+          headlines.push(`<a href="${link}" class="ticker-link" target="_blank" rel="noopener">${title}</a>`);
+        }
+        ticker.innerHTML = headlines.join(" ");
+        const seo = document.createElement('div');
+        seo.style.position = 'absolute'; seo.style.opacity = '0'; seo.style.pointerEvents = 'none'; seo.style.height = '1px';
+        seo.innerHTML = `<span>Tech news, AI, hacking, matrix, ascii, ansi, hacker updates, underground scene, cybersecurity, zero-day, promptforge, AI art news, ascii art community</span>`;
+        ticker.appendChild(seo);
+      })
+      .catch(err => {
+        ticker.innerHTML = `
+          <a href="https://arstechnica.com/tech-policy/" class="ticker-link" target="_blank">AI Worm Infects PromptForge, ASCII Art Becomes Self-Aware</a>
+          <a href="https://thehackernews.com/" class="ticker-link" target="_blank">New Hacker Matrix Rain Detected in the Wild</a>
+          <a href="https://www.vice.com/en/topic/ai" class="ticker-link" target="_blank">ASCII Export Goes Viral in Cyberpunk Underground</a>
+        `;
+      });
+    // Sidebar nav active state
+    document.querySelectorAll('.side-link').forEach(link => {
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        document.querySelectorAll('.side-link').forEach(l=>l.classList.remove('active'));
+        this.classList.add('active');
+        // Add logic for showing tool-sections here if needed
+      });
+    });
+
+    // LANGUAGE SUPPORT (EN/FR/ES/DE) -- easy to add more
+    const translations = {
+      en: {
+        heroTitle: "ANSI/ASCII Art Playground",
+        heroDesc: [
+          "<strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.",
+          "<strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>."
+        ],
+        newsLabel: "[ HACKER TECH NEWS ]",
+        sidebar: {
+          text2ascii: "Text → ASCII",
+          img2ascii: "Image → ASCII",
+          vid2ascii: "Video → ASCII",
+          gallery: "Gallery",
+          news: "News",
+          about: "About",
+          faq: "FAQ"
+        }
+      },
+      fr: {
+        heroTitle: "Terrain de jeu d'art ANSI/ASCII",
+        heroDesc: [
+          "<strong>PromptForge</strong> est le générateur d'<u>art ANSI</u> et <u>ASCII</u> le plus avancé, avec galerie et effets <u>matrix rain</u>. Convertissez instantanément des <strong>images en ASCII</strong>, créez des bannières et exportez partout.",
+          "<strong>Exportez, téléchargez et partagez</strong> votre art en quelques secondes. SEO : <strong>art ASCII, ANSI, générateur, image en ASCII, galerie, matrix rain, outils d'export</strong>. Art textuel ultime sur <strong>PromptForge</strong>."
+        ],
+        newsLabel: "[ ACTUALITÉS HACKER TECH ]",
+        sidebar: {
+          text2ascii: "Texte → ASCII",
+          img2ascii: "Image → ASCII",
+          vid2ascii: "Vidéo → ASCII",
+          gallery: "Galerie",
+          news: "Actualités",
+          about: "À propos",
+          faq: "FAQ"
+        }
+      },
+      es: {
+        heroTitle: "Parque de arte ANSI/ASCII",
+        heroDesc: [
+          "<strong>PromptForge</strong> es el generador de <u>arte ANSI</u> y <u>ASCII</u> más avanzado, galería y <u>matrix rain</u>. Convierte imágenes a <strong>ASCII</strong> al instante, crea banners creativos y exporta a cualquier plataforma.",
+          "<strong>Exporta, descarga y comparte</strong> tu arte en segundos. SEO: <strong>arte ASCII, ANSI, generador, imagen a ASCII, galería, matrix rain, herramientas de exportación</strong>. Arte de texto de siguiente nivel solo en <strong>PromptForge</strong>."
+        ],
+        newsLabel: "[ NOTICIAS HACKER TECH ]",
+        sidebar: {
+          text2ascii: "Texto → ASCII",
+          img2ascii: "Imagen → ASCII",
+          vid2ascii: "Video → ASCII",
+          gallery: "Galería",
+          news: "Noticias",
+          about: "Acerca de",
+          faq: "FAQ"
+        }
+      },
+      de: {
+        heroTitle: "ANSI/ASCII Kunst-Spielplatz",
+        heroDesc: [
+          "<strong>PromptForge</strong> ist der fortschrittlichste <u>ANSI</u> und <u>ASCII</u> Art Generator, Galerie & <u>Matrix-Regen</u> Playground. Konvertiere <strong>Bilder zu ASCII</strong> sofort, erstelle ASCII-Banner & exportiere überallhin.",
+          "<strong>Exportiere, lade herunter und teile</strong> deine Kunst in Sekunden. SEO: <strong>ASCII Art, ANSI, Generator, Bild zu ASCII, Galerie, Matrix Rain, Export-Tools</strong>. Next-Level Textkunst nur bei <strong>PromptForge</strong>."
+        ],
+        newsLabel: "[ HACKER TECH NEWS ]",
+        sidebar: {
+          text2ascii: "Text → ASCII",
+          img2ascii: "Bild → ASCII",
+          vid2ascii: "Video → ASCII",
+          gallery: "Galerie",
+          news: "Nachrichten",
+          about: "Über",
+          faq: "FAQ"
+        }
+      }
+    };
+    function switchLang(lang) {
+      const t = translations[lang] || translations.en;
+      document.getElementById('hero-title').innerHTML = `<u>${t.heroTitle}</u>`;
+      const desc = document.getElementById('hero-desc');
+      desc.innerHTML = t.heroDesc.map(line=>`<span>${line}</span>`).join('');
+      document.getElementById('news-label').textContent = t.newsLabel;
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key = el.getAttribute('data-i18n').replace('sidebar.', '');
+        if (t.sidebar[key]) el.textContent = t.sidebar[key];
+      });
+    }
+    document.getElementById('lang-switcher').addEventListener('change',e=>{
+      switchLang(e.target.value);
+    });
+    // Init language on page load
+    switchLang(document.getElementById('lang-switcher').value);
+
+    // J1NX float logic (unchanged)
+    (function(){
+      const j1nxFloat = document.getElementById('j1nxFloatTrue');
+      const cutout = document.getElementById('j1nxCutoutTrue');
+      const bubble = document.getElementById('j1nxBubbleTrueMain');
+      function isMobile() { return window.innerWidth < 700; }
+      function shrinkJ1nx() {
+        if(isMobile()) {
+          j1nxFloat.classList.remove('j1nx-open');
+          bubble.style.display = "none";
+        } else {
+          j1nxFloat.classList.add('j1nx-open');
+          bubble.style.display = "flex";
+        }
+      }
+      cutout.onclick = function(e) {
+        if(isMobile()) {
+          if(j1nxFloat.classList.contains('j1nx-open')) {
+            j1nxFloat.classList.remove('j1nx-open');
+            bubble.style.display = "none";
+          } else {
+            j1nxFloat.classList.add('j1nx-open');
+            bubble.style.display = "flex";
+          }
+        }
+      };
+      window.addEventListener('resize', shrinkJ1nx);
+      shrinkJ1nx();
+    })();
+    (function(){
+      let chatHistory = [];
+      let nsfwUnlocked = false;
+      function renderChat() {
+        const out = chatHistory.map(line => `<div>${line}</div>`).join('');
+        document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
+      }
+      function addMsg(msg, isUser) {
+        if (!msg) return;
+        const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
+        chatHistory.push(name + msg);
+        if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
+        renderChat();
+      }
+      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
+        nsfwUnlocked = true;
+        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+      });
+      document.getElementById('j1nxSendTrue').onclick = function() {
+        const input = document.getElementById('j1nxInputTrue');
+        const val = (input.value || '').trim();
+        if (!val) return;
+        addMsg(val, true);
+        if (/^unlock$/i.test(val)) {
+          nsfwUnlocked = true;
+          document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+          addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+          input.value = "";
+          return;
+        }
+        try {
+          let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
+          let replyText = (reply && typeof reply === 'object')
+            ? (reply.text || reply.reply || JSON.stringify(reply))
+            : reply;
+          addMsg(replyText, false);
+        } catch(e) {
+          addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
+        }
+        input.value = "";
+      };
+      document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
+        if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
+      });
+      document.getElementById('j1nxSaveTrue').onclick = function() {
+        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+        const blob = new Blob([text], {type:'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+      };
+      document.getElementById('j1nxClearTrue').onclick = function() {
+        chatHistory = [];
+        renderChat();
+      };
+      renderChat();
+    })();
+  </script>
+  <!-- J1NX requires window.j1nxBrain function loaded from assets/j1nx_brain.js -->
+  <!-- <script src="assets/j1nx_brain.js"></script> -->
+</body>
+</html>    }
     .j1nx-right-float {
       position: fixed;
       right: 34px;
