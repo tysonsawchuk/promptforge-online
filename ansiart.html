@@ -2,70 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more.">
+  <title>Matrix Rain + Video (Ultimate Failsafe)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --brand: #00e1ff;
-      --brand2: #ff005e;
-      --accent: #9c6aff;
-      --matrix: #00e1ff;
+    html, body {margin:0;padding:0;background:#000;height:100%;width:100%;overflow:hidden;}
+    #bg-video {
+      position: fixed; left: 0; top: 0; min-width: 100vw; min-height: 100vh; width: auto; height: auto;
+      z-index: 0; object-fit: cover; opacity: 0.38; pointer-events: none; background: #000;
     }
-    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
-    /* ---- VIDEO BG LAYER ---- */
-    #video-bg {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      object-fit: cover;
-      z-index: -2;
-      opacity: 0.42;
-      pointer-events: none;
-      filter: blur(1.7px) brightness(0.78) grayscale(0.18) contrast(1.14) saturate(1.15);
-      mask-image: radial-gradient(ellipse 68% 64% at 50% 54%, #fff 88%, #0000 100%);
-      -webkit-mask-image: radial-gradient(ellipse 68% 64% at 50% 54%, #fff 88%, #0000 100%);
-      transition: opacity .8s;
-      background: #000;
+    #matrix-canvas { position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:1; pointer-events:none;}
+    .test-msg {
+      position: absolute; top: 10px; left: 0; right: 0; text-align: center; color: #00e1ff; font-size: 2em; z-index:2; font-family: monospace;
+      text-shadow: 0 2px 16px #00ffe4,0 0 12px #00e1ff;
     }
-    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
-    /* ...rest of your CSS unchanged... */
-    /* Sidebar, nav, J1NX, etc. (your full CSS) */
-    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); ... }
-    /* ...and so on... */
   </style>
 </head>
 <body>
-  <!-- FULLSCREEN VIDEO BG UNDER CANVAS -->
-  <video id="video-bg"
-    src="assets/creepyvideo.mp4"
-    autoplay loop muted playsinline preload="auto"
-  ></video>
+  <video id="bg-video" src="assets/creepyvideo.mp4" autoplay loop muted playsinline></video>
   <canvas id="matrix-canvas"></canvas>
-  <!-- Your full UI code, sidebar, nav, etc. continues below... -->
-  <!-- ... (header, sidebar, J1nx, hero, etc) ... -->
-  <!-- Keep the rest of your HTML as in your last working version -->
-  <!-- ... -->
+  <div class="test-msg">You should see rain AND video behind it.</div>
   <script>
-    // Matrix Rain as in your baseline (unchanged)
+    // Simple matrix rain
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
-    const fakeGlyphs =
-      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
-    let width, height, fontSize, columns;
-    let drops1 = [], speeds1 = [];
-    let drops2 = [], speeds2 = [];
-    let drops3 = [], speeds3 = [];
-    function setup() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      fontSize = Math.max(16, Math.floor(width / 90));
-      columns = Math.floor(width / fontSize);
-      drops1 = []; speeds1 = [];
-      for (let x = 0; x < columns; x++) {
-        drops1[x] = Math.random() * height / fontSize;
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize(); window.onresize = resize;
+    const chars = "アァイィウヴエカガキクケコサシスセソタチッツテトナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン".split('');
+    let fontSize = 22;
+    function getColumns() { return Math.floor(window.innerWidth / fontSize); }
+    let drops = Array.from({length: getColumns()}).map(()=>Math.random()*window.innerHeight/fontSize);
+    function draw() {
+      ctx.fillStyle = "rgba(0,0,0,0.15)";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.font = fontSize + "px monospace";
+      ctx.fillStyle = "#00ffe0";
+      for(let i=0;i<drops.length;i++){
+        let text = chars[Math.floor(Math.random()*chars.length)];
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > canvas.height && Math.random()>0.975) drops[i]=0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 33);
+    window.addEventListener('resize',()=>{
+      resize();
+      drops = Array.from({length: getColumns()}).map(()=>Math.random()*window.innerHeight/fontSize);
+    });
+  </script>
+</body>
+</html>
         speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
       }
       drops2 = []; speeds2 = [];
