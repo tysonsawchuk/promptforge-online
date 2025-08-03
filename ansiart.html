@@ -14,12 +14,7 @@
       --matrix: #00e1ff;
     }
     html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
-    #bg-video {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover;
-      z-index: 0; pointer-events: none; min-width: 100vw; min-height: 100vh;
-    }
-    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; background: transparent; display: block; }
+    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
     .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
     .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
     .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
@@ -58,7 +53,7 @@
     .goog-logo-link, .goog-te-gadget span { display: none !important; }
     .hero { display: flex; flex-direction: column; align-items: center; margin: 42px auto 12px auto; max-width: 860px; z-index: 2; position: relative; text-align: center;}
     .hero-title { font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 5vw, 2.5rem); font-weight: 900; background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88; letter-spacing: 0.11em; margin-bottom: 18px; margin-top: 6vh; animation: pulse-title 2.7s infinite alternate; border-bottom: 2.2px solid #00e1ffcc; display: inline-block; padding-bottom: 10px; filter: drop-shadow(0 0 16px #00e1ff55);}
-    .hero-desc { display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: clamp(0.98rem, 2vw, 1.10rem); background: rgba(0,0,0,0.0); color: #fff; box-shadow: none; border-radius: 0; padding: 17px 29px 15px 29px; margin-bottom: 24px; margin-top: 2px; font-weight: 600; text-shadow: 0 2px 9px #00e1ff99; line-height: 1.55; border: none; user-select: text;}
+    .hero-desc { display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: clamp(0.98rem, 2vw, 1.10rem); background: rgba(0, 0, 0, 0.00); color: #fff; box-shadow: none; border-radius: 22px; padding: 17px 29px 15px 29px; margin-bottom: 24px; margin-top: 2px; font-weight: 600; text-shadow: 0 2px 9px #00e1ff99; line-height: 1.55; border: none; user-select: text;}
     .hero-desc strong { color: #00e1ff; font-weight: 900; text-shadow: 0 0 7px #00e1ffcc; letter-spacing: 0.01em;}
     .hero-desc u { text-decoration-color: #ff005e; text-decoration-thickness: 2px; text-underline-offset: 0.18em;}
     .app-flex { display: flex; flex-direction: row; width: 100%; margin: 0 auto; min-height: 430px; z-index: 2;}
@@ -66,6 +61,104 @@
     .sidebar-logo { color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900; letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44); user-select:none; pointer-events:none;}
     .sidebar-nav nav { display: flex; flex-direction: column; gap: 7px; width: 90%;}
     .side-link { display: block; color: #00e1ff; font-family: 'Share Tech Mono', monospace; text-decoration: none; font-weight: 700; font-size: 1.11em; padding: 11px 22px; border-radius: 14px; margin-bottom: 4px; background:rgba(0,0,0,0.16); border:1.7px solid #191e25; box-shadow:0 0 12px #00e1ff22 inset; letter-spacing:0.08em; transition: .17s cubic-bezier(.7,1.2,.8,2.1) all; outline:none; position:relative;}
+    .side-link.active, .side-link:hover, .side-link:focus { background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%); color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;}
+    @media (max-width: 700px) {
+      .app-flex { flex-direction: column; }
+      .sidebar-nav { width: 100%; min-width: 0; flex-direction: row; border-bottom:2.5px solid #00e1ff33; border-right:0; }
+      .sidebar-logo { display: none; }
+      .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
+      .side-link { margin-bottom:0; margin-right:5px; }
+    }
+    /* J1NX Styles */
+    .j1nx-right-float {
+      position: fixed;
+      right: 34px;
+      bottom: 24px;
+      z-index: 4100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: auto;
+      background: none !important;
+    }
+    .j1nx-art-big {
+      width: 340px;
+      max-width: 92vw;
+      margin-bottom: -12px;
+      background: none;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+      display: block;
+      cursor: pointer;
+      user-select: none;
+      pointer-events: auto;
+    }
+    .j1nx-chat-bubble-pf {
+      position: relative; z-index: 4101;
+      margin: 0 0 10px 0;
+      min-height: 90px; max-width: 440px; width: 94vw;
+      padding: 25px 24px 23px 28px;
+      background: #181a1be0;
+      color: #fff;
+      border-radius: 32px 32px 32px 10px;
+      font-size: 1.11em; line-height: 1.65;
+      box-shadow: 0 0 44px 11px #00e1ff44, 0 0 20px 3px #ff005e25 inset, 0 2px 14px #191e27a2;
+      border: 2.5px solid #00e1ff55;
+      overflow-y: auto;
+      border-bottom: 3.5px solid #ff005e70;
+      text-shadow: 0 2px 7px #00e1ff77;
+      transition: box-shadow 0.3s, background 0.3s;
+    }
+    .j1nx-bubble-mood-happy { box-shadow: 0 0 44px 14px #78ffb1aa, 0 2px 16px #181a1b88, 0 0 20px 3px #00e1ff22 inset; }
+    .j1nx-bubble-mood-wicked { box-shadow: 0 0 56px 19px #fa528eaa, 0 2px 16px #181a1b88, 0 0 20px 3px #ff005e22 inset; }
+    .j1nx-bubble-mood-sultry { box-shadow: 0 0 60px 19px #cf74ffa7, 0 2px 16px #181a1b88, 0 0 20px 3px #9c6aff33 inset; }
+    .j1nx-bubble-mood-caught { box-shadow: 0 0 42px 14px #ffd166cc, 0 2px 16px #181a1b88; background: #352013e6 !important; }
+    .j1nx-chatlog { max-height: 210px; overflow-y: auto; }
+    .j1nx-input-row { display: flex; gap: 8px; margin: 6px 0 0 0; }
+    .j1nx-input { flex: 1; border-radius: 18px; border: none; padding: 11px 16px; font-size: 1em; background: #23262a; color: #fafafa; }
+    .j1nx-btn { border: none; background: #00e1ff; color: #181a1b; border-radius: 13px; padding: 8px 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+    .j1nx-btn:hover { background: #ff005e; color: #fff;}
+    .j1nx-controls { display: flex; gap: 10px; margin: 10px 0 8px 0; }
+    .j1nx-toggle-label { font-size: 1em; color: #9c6aff; margin-left: 3px; }
+    .j1nx-easteregg { font-size: .95em; color: #ff7d8a; margin-top: 3px; }
+    @media (max-width: 800px) {
+      .j1nx-art-big { width: 210px; }
+      .j1nx-chat-bubble-pf { font-size: 1em; padding: 14px 7px 14px 12px; }
+    }
+    @media (max-width: 600px) {
+      .j1nx-art-big { width: 120px; }
+      .j1nx-chat-bubble-pf { font-size: .97em; padding: 8px 3px 11px 6px; }
+      .j1nx-right-float { right: 3vw; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-canvas"></canvas>
+  <!-- ====== J1NX (single correct copy, bottom right only) ===== -->
+  <div class="j1nx-right-float" id="j1nxFloatPF">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-art-big" id="j1nxArtBig"/>
+    <section class="j1nx-chat-bubble-pf j1nx-bubble-mood-happy" id="j1nxChatBubblePF">
+      <div class="j1nx-chatlog" id="j1nxChatlogPF"></div>
+      <div id="j1nxTypingPF" style="display:none;">J1nx is typing<span class="j1nx-dot">.</span><span class="j1nx-dot">.</span><span class="j1nx-dot">.</span></div>
+      <div class="j1nx-input-row">
+        <input type="text" class="j1nx-input" id="j1nxInputPF" placeholder="Say something to J1nx..." autocomplete="off" />
+        <button class="j1nx-btn" onclick="sendToJ1nxPF()">Send</button>
+      </div>
+      <div class="j1nx-controls">
+        <button class="j1nx-btn" onclick="clearChatPF()">Clear Chat</button>
+        <button class="j1nx-btn" onclick="saveChatPF()">Save Chat</button>
+        <span class="j1nx-toggle-label" id="nsfwLabelPF" style="display:none;">NSFW Mode <span id="nsfwStatePF">(OFF)</span></span>
+      </div>
+      <div class="j1nx-easteregg" id="easterEggHintPF">Double-tap the chat bubble or type "unlock" to reveal NSFW mode…</div>
+    </section>
+  </div>
+  <!-- ====== END J1NX ===== -->
+  <!-- Rest of your HTML (sidebar, hero, video, matrix rain, etc) goes here, unchanged -->
+
+  <!-- Scripts ... (same as your previous version) -->
+</body>
+</html>
     .side-link.active, .side-link:hover, .side-link:focus { background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%); color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;}
     @media (max-width: 700px) {
       .app-flex { flex-direction: column; }
