@@ -12,7 +12,6 @@
       --brand2: #ff005e;
       --accent: #9c6aff;
       --matrix: #00e1ff;
-      --j1nx-glow: #be9cff;
       --aqua: #64f2e3;
       --offwhite: #e9efe7;
       --panel: #181b15;
@@ -21,43 +20,23 @@
       --gold: #ffe266;
     }
     html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
-    #video-bg-container {
-      position: fixed;
-      z-index: 0;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      display: flex;
-      align-items: center; justify-content: center;
-      pointer-events: none;
-      overflow: hidden;
-    }
+    #video-bg-container { position: fixed; z-index: 0; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; overflow: hidden;}
     #glitch-video-bg {
-      /* "Jewel" style: center, never full screen */
-      display: block;
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 54vw;
-      height: auto;
-      max-width: 900px;
-      min-width: 310px;
-      min-height: 210px;
+      position: absolute; top: 50%; left: 50%;
+      width: 54vw; height: auto;
+      max-width: 900px; min-width: 310px; min-height: 210px;
       transform: translate(-50%,-50%);
       object-fit: cover;
       filter: brightness(0.74) contrast(1.08) saturate(1.08) blur(0.3px);
-      opacity: 0.66;
-      pointer-events: none;
+      opacity: 0.66; pointer-events: none;
       border-radius: 42% 43% 46% 45%/41% 44% 49% 45%;
-      box-shadow: none !important;
-      /* Remove all borders/glows */
-      background: none !important;
-      z-index: 0;
+      background: none !important; z-index: 0;
       transition: filter 0.3s, opacity 0.25s;
-      /* Soft vignette edge using mask */
       mask-image: radial-gradient(circle at 50% 55%, #fff 82%, transparent 100%);
       -webkit-mask-image: radial-gradient(circle at 50% 55%, #fff 82%, transparent 100%);
+      box-shadow: none !important;
     }
     #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 1; background: #000; display: block; }
-
-    /* SIDEBAR, HERO, NAV, ETC. — SAME AS BEFORE (shortened for brevity) */
     .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
     .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
     .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
@@ -66,6 +45,443 @@
     .nav-links { display: flex; align-items: center; gap: 2vw; font-family: 'Share Tech Mono', monospace;}
     .nav-link { color: var(--brand); background: rgba(0,0,0,0.11); padding: 6px 19px 7px 19px; border-radius: 12px; font-size: 1.11rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border: 1.3px solid #212e37; box-shadow: 0 0 8px #00e1ff44 inset; margin-left: 0.2vw; margin-right: 0.2vw; cursor: pointer; text-decoration: none;}
     .nav-link:hover, .nav-link:focus { color: #fff; background: linear-gradient(90deg, #00e1ff 70%, #ff005e 110%); border-color: var(--accent); box-shadow: 0 0 19px 5px #00e1ff33, 0 0 6px #ff005e55 inset; outline: none;}
+    .nav-socials { display: flex; align-items: center; gap: 0.7vw; margin-left: 18px;}
+    .social-link { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%); border: 1.2px solid #232a33; box-shadow: 0 0 9px #00e1ff33; cursor: pointer;}
+    .social-link svg { width: 21px; height: 21px; display: block; fill: var(--brand); filter: drop-shadow(0 0 6px #00e1ff88);}
+    .breadcrumbs { width: 100vw; padding: 7px 3vw 7px 3vw; font-family: 'Share Tech Mono', monospace; font-size: 1.08rem; letter-spacing: 0.09em; color: #fff; display: flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #141829 55%, #191e25 120%); box-shadow: 0 2px 14px #00e1ff19; border-bottom: 1px solid #232a33; user-select: text; z-index: 4;}
+    .breadcrumbs a { color: #00e1ff; text-decoration: none; border-bottom: 1.6px dotted #ff005e; font-weight: 700; margin-right: 7px; margin-left: 3px;}
+    .breadcrumbs a:hover, .breadcrumbs a:focus { color: #ff005e; border-bottom: 2.1px solid #ff005e;}
+    .breadcrumbs .bc-sep { color: #9c6aff; font-weight: 700; font-size: 1.15em; margin-right: 4px; margin-left: 2px; user-select: none;}
+    .hero { display: flex; flex-direction: column; align-items: center; margin: 42px auto 12px auto; max-width: 860px; z-index: 2; position: relative; text-align: center;}
+    .hero-title { font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 5vw, 2.5rem); font-weight: 900; background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88; letter-spacing: 0.11em; margin-bottom: 18px; margin-top: 6vh; animation: pulse-title 2.7s infinite alternate; border-bottom: 2.2px solid #00e1ffcc; display: inline-block; padding-bottom: 10px; filter: drop-shadow(0 0 16px #00e1ff55);}
+    .hero-desc { display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: clamp(0.98rem, 2vw, 1.10rem); background: rgba(0, 0, 0, 0.0); color: #fff; box-shadow: none; border-radius: 22px; padding: 17px 29px 15px 29px; margin-bottom: 24px; margin-top: 2px; font-weight: 600; text-shadow: 0 2px 9px #00e1ff99; line-height: 1.55; border: none; user-select: text;}
+    .hero-desc strong { color: #00e1ff; font-weight: 900; text-shadow: 0 0 7px #00e1ffcc; letter-spacing: 0.01em;}
+    .hero-desc u { text-decoration-color: #ff005e; text-decoration-thickness: 2px; text-underline-offset: 0.18em;}
+    .app-flex { display: flex; flex-direction: row; width: 100%; margin: 0 auto; min-height: 430px; z-index: 2;}
+    .sidebar-nav { width: 190px; min-width: 106px; background:rgba(15,18,26,0.98); border-right: 2.5px solid #00e1ff33; box-shadow: 2px 0 32px #00e1ff22; padding: 23px 0 0 0; position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;}
+    .sidebar-logo { color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900; letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44); user-select:none; pointer-events:none;}
+    .sidebar-nav nav { display: flex; flex-direction: column; gap: 7px; width: 90%;}
+    .side-link { display: block; color: #00e1ff; font-family: 'Share Tech Mono', monospace; text-decoration: none; font-weight: 700; font-size: 1.11em; padding: 11px 22px; border-radius: 14px; margin-bottom: 4px; background:rgba(0,0,0,0.16); border:1.7px solid #191e25; box-shadow:0 0 12px #00e1ff22 inset; letter-spacing:0.08em; transition: .17s cubic-bezier(.7,1.2,.8,2.1) all; outline:none; position:relative;}
+    .side-link.active, .side-link:hover, .side-link:focus { background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%); color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;}
+    @media (max-width: 700px) {
+      .app-flex { flex-direction: column; }
+      .sidebar-nav { width: 100%; min-width: 0; flex-direction: row; border-bottom:2.5px solid #00e1ff33; border-right:0; }
+      .sidebar-logo { display: none; }
+      .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
+      .side-link { margin-bottom:0; margin-right:5px; }
+    }
+    /* ===== J1nx: True cutout widget, main.html logic ===== */
+    .j1nx-float-true {
+      position: fixed;
+      z-index: 1400;
+      right: 2vw;
+      bottom: calc(2.8vh + 125px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: all;
+      user-select: none;
+      min-width: 0;
+      max-width: 360px;
+    }
+    .j1nx-true-cutout-img {
+      width: 320px;
+      height: 320px;
+      object-fit: contain;
+      border-radius: 32px;
+      background: transparent !important;
+      margin-bottom: -30px;
+      position: relative;
+      z-index: 9;
+      pointer-events: auto;
+      transition: box-shadow .2s;
+      box-shadow: none !important;
+    }
+    .j1nx-bubble-true-main {
+      background: rgba(22,23,31,0.97);
+      border-radius: 17px;
+      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
+      border: 2px solid var(--aqua);
+      padding: 1.1em 1.3em 1em 1.3em;
+      margin-top: 0;
+      margin-bottom: 0.3em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 290px;
+      max-width: 330px;
+      position: relative;
+      z-index: 1;
+    }
+    .j1nx-bubble-text-true {
+      font-size: 1.05em;
+      color: #fff;
+      margin: 0.42em 0 0.20em 0;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 1px 11px #1e1111cc;
+      line-height: 1.22;
+      z-index: 1;
+    }
+    .j1nx-bubble-row-true {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin: 0.13em 0 0.10em 0;
+    }
+    .j1nx-input-true {
+      flex: 1;
+      font-size: 1em;
+      border-radius: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--aqua);
+      background: #171b22;
+      color: var(--aqua);
+      min-width: 0;
+    }
+    .j1nx-btn-true {
+      font-size: .98em;
+      padding: 6.5px 14px;
+      border-radius: 8px;
+      background: #22252b;
+      border: 1.3px solid var(--aqua);
+      color: var(--aqua);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .13s, color .13s, border .13s;
+      box-shadow: 0 1.5px 9px #be9cff33;
+    }
+    .j1nx-btn-true:hover {
+      background: var(--aqua);
+      color: #171b22;
+      border-color: #fff;
+    }
+    .j1nx-easteregg-true {
+      font-size: .91em;
+      color: #be9cff;
+      background: #171b22e6;
+      border-radius: 7px 13px 12px 17px;
+      margin-top: 7px;
+      padding: 7px 17px 6px 13px;
+      opacity: .85;
+      pointer-events: none;
+      text-align: center;
+      width: 94%;
+      user-select: none;
+      box-shadow: 0 3px 13px #be9cff28;
+      font-weight: 600;
+    }
+    @media (max-width: 900px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 112px; height: 112px;}
+    }
+    @media (max-width: 700px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 66px; height: 66px;}
+    }
+    /* Google Translate fix */
+    .google-translate-camo {
+      position: absolute; top: 9px; right: 17vw; z-index: 20;
+      background: rgba(20,22,32,0.93); border-radius: 13px; padding: 5px 12px 5px 7px;
+      box-shadow: 0 0 17px #00e1ff33; border: 1.5px solid #00e1ff44; opacity: 0.97; display: flex; align-items: center; gap: 7px;
+      transition: box-shadow 0.17s, background 0.16s;
+    }
+    .globe-spin {
+      width: 28px; height: 28px; margin-right: 4px; display: inline-block; animation: globe-spin 2.7s linear infinite;
+      filter: drop-shadow(0 0 7px #00e1ff77);
+      transition: filter 0.2s;
+    }
+    @keyframes globe-spin { 100% { transform: rotate(360deg); } }
+    .goog-te-banner-frame.skiptranslate { display: none !important; }
+    .goog-te-gadget-simple { background: none !important; border: none !important; font-size: 1em !important; color: #00e1ff !important; font-family: inherit !important; padding: 0 !important; margin: 0 !important;}
+    .goog-te-gadget-icon { display: none !important; }
+    .goog-te-menu-value span { color: #00e1ff !important;}
+    .goog-te-combo { border-radius: 7px; border: 1px solid #00e1ff; background: #16192c; color: #00e1ff; padding: 2px 11px 2px 7px; font-family: 'Share Tech Mono', monospace; font-size: 0.99em; cursor: pointer; outline: none;}
+    .goog-te-combo:hover, .goog-te-combo:focus { background: #232a33; color: #ff005e; border-color: #ff005e;}
+    .goog-logo-link, .goog-te-gadget span { display: none !important; }
+  </style>
+</head>
+<body>
+  <!-- === VIDEO BACKGROUND, BEHIND MATRIX RAIN === -->
+  <div id="video-bg-container">
+    <video id="glitch-video-bg" src="assets/creepyvideo.mp4" autoplay loop muted playsinline></video>
+  </div>
+  <canvas id="matrix-canvas"></canvas>
+  <header class="navbar">
+    <div class="navbar-row1">
+      <span class="logo">PromptForge</span>
+      <nav class="nav-links">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Gallery</a>
+        <a href="#" class="nav-link">Tools</a>
+        <a href="#" class="nav-link">FAQ</a>
+      </nav>
+      <div class="nav-socials">
+        <a class="social-link" href="https://promptforge.online" target="_blank">🌐</a>
+        <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
+        </a>
+        <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
+        </a>
+      </div>
+      <div class="google-translate-camo" id="google-translate-camo">
+        <svg class="globe-spin" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" stroke="#00e1ff" stroke-width="2"/><ellipse cx="16" cy="16" rx="9.5" ry="14" stroke="#ff005e" stroke-width="1.7"/><ellipse cx="16" cy="16" rx="14" ry="9.5" stroke="#9c6aff" stroke-width="1.7"/><circle cx="16" cy="16" r="2.8" fill="#00e1ff"/></svg>
+        <div id="google_translate_element"></div>
+      </div>
+    </div>
+    <div class="breadcrumbs">
+      <a href="https://promptforge.online">promptforge.online</a>
+      <span class="bc-sep">/</span>
+      <a href="#">gallery</a>
+      <span class="bc-sep">/</span>
+      <a href="#">tools</a>
+      <span class="bc-sep">/</span>
+      <a href="#">aihacks</a>
+      <span class="bc-sep">/</span>
+      <a href="#">support</a>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
+    </div>
+    <div class="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
+  </section>
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
+        <a href="#gallery" class="side-link">Gallery</a>
+        <a href="#news" class="side-link">News</a>
+        <a href="#about" class="side-link">About</a>
+        <a href="#faq" class="side-link">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- Tool sections go here -->
+    </main>
+  </div>
+  <!-- ======= J1nx: True cutout, floating, SMART with "brain" ======= -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+  <!-- GOOGLE TRANSLATE SCRIPT -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,fr,de,es,ru,zh-CN,ja,it,ko,pt,ar',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+    // Matrix Rain (main + depth + CLOSEUP highlight layer)
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+      }
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.3; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+      }
+    }
+    setup();
+    window.addEventListener('resize', setup);
+    function drawMatrix() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      // 2nd layer (deep/faint)
+      ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.82 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.21;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.98) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      // Main layer
+      ctx.globalAlpha = 0.93;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 0.95;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      // CLOSEUP RAIN: big, white, highlight, rare
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.93) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops3[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops3[i] = 0;
+          speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+    }
+    setInterval(drawMatrix, 32);
+  </script>
+  <script src="assets/j1nx_brain.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+      // ===== J1nx BRAIN LOGIC FROM MAIN.HTML =====
+      let chat = [];
+      let defaultMood = 0;
+      let moods = [
+        {glow: "#64f2e3"},
+        {glow: "#fa528e"},
+        {glow: "#be9cff"},
+        {glow: "#ffd166"}
+      ];
+      function getJ1nxReply(val) {
+        if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+          let res = window.j1nxBrain(val, chat.length);
+          if(typeof res === "string") return {reply: res, mood: 0};
+          if(typeof res === "object" && res.reply) return res;
+          return {reply: "(I have no clue... bug?)", mood: 0};
+        }
+        return {reply: "(Brain not loaded)", mood: 0};
+      }
+      function setJ1nxMood(idx) {
+        idx = Math.max(0, Math.min(idx, moods.length-1));
+        document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+        document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      }
+      let moodIndex = 0, lastTap = 0;
+      document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+        let now = Date.now();
+        if (now - lastTap < 400) {
+          moodIndex = (moodIndex + 1) % moods.length;
+          setJ1nxMood(moodIndex);
+        }
+        lastTap = now;
+      });
+      function renderJ1nxChat() {
+        document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      }
+      function chatReset() {
+        chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+        setJ1nxMood(defaultMood);
+        renderJ1nxChat();
+      }
+      document.getElementById("j1nxSendTrue").onclick = function(){
+        let val = document.getElementById("j1nxInputTrue").value.trim();
+        if (!val) return;
+        let res = getJ1nxReply(val);
+        chat.push(val);
+        chat.push(res.reply);
+        setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+        renderJ1nxChat();
+        document.getElementById("j1nxInputTrue").value = "";
+      };
+      document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+        if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+      });
+      document.getElementById("j1nxClearTrue").onclick = chatReset;
+      document.getElementById("j1nxSaveTrue").onclick = function(){
+        let text = chat.join('\n');
+        let blob = new Blob([text], {type:"text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "j1nx_chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      };
+      chatReset(); // init
+    });
+  </script>
+</body>
+</html>
     .nav-socials { display: flex; align-items: center; gap: 0.7vw; margin-left: 18px;}
     .social-link { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%); border: 1.2px solid #232a33; box-shadow: 0 0 9px #00e1ff33; cursor: pointer;}
     .social-link svg { width: 21px; height: 21px; display: block; fill: var(--brand); filter: drop-shadow(0 0 6px #00e1ff88);}
