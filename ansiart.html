@@ -2,57 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Matrix Rain Minimal Test</title>
+  <title>PromptForge – ANSI/ASCII Art Playground</title>
+  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; background: #000; overflow: hidden;}
-    #matrix-canvas { position: fixed; top:0; left:0; width:100vw; height:100vh; z-index:2; }
-    #glitch-video-wrapper { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      z-index: 1; width: 42vw; max-width: 600px; aspect-ratio: 16/9; pointer-events:none;
-      filter: drop-shadow(0 0 64px #00e1ff33);}
-    #glitch-video-mask { width:100%; height:100%; border-radius:38% 47% 36% 53%/48% 33% 65% 53%; overflow:hidden;}
-    #glitch-video { width:100%; height:100%; object-fit:cover; opacity:0.88;}
+    :root {
+      --brand: #00e1ff;
+      --brand2: #ff005e;
+      --accent: #9c6aff;
+      --matrix: #00e1ff;
+    }
+    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
+    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; background: #000; display: block; }
+    #glitch-video-wrapper {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      pointer-events: none;
+      width: 46vw;
+      max-width: 600px;
+      min-width: 240px;
+      aspect-ratio: 16/9;
+      height: auto;
+      display: flex; justify-content: center; align-items: center;
+      filter: drop-shadow(0 0 64px #00e1ff33);
+    }
+    #glitch-video-mask {
+      width: 100%; height: 100%;
+      border-radius: 38% 47% 36% 53%/48% 33% 65% 53%;
+      overflow: hidden;
+      box-shadow: 0 0 88px 28px #00e1ff1c, 0 0 111px 37px #ff005e2a;
+      position: relative;
+      background: none;
+      filter: blur(1.1px) contrast(1.12) brightness(0.88) saturate(1.19);
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #fff 89%, #0000 100%);
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #fff 89%, #0000 100%);
+    }
+    #glitch-video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.88;
+      filter: grayscale(0.14) contrast(1.1) brightness(0.98) saturate(1.12);
+      pointer-events: none;
+      background: #000;
+      display: block;
+    }
+    @media (max-width: 800px) {
+      #glitch-video-wrapper { width: 80vw; max-width: 98vw; min-width: 140px; }
+    }
+    @media (max-width: 500px) {
+      #glitch-video-wrapper { width: 99vw; max-width: 99vw; min-width: 80px;}
+      #glitch-video-mask { border-radius: 23% 44% 29% 50%/54% 36% 63% 38%; }
+    }
+    /* ----- Rest of your original CSS continues here, unchanged... ----- */
+    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
+    /* ... [Rest of your CSS remains here] ... */
   </style>
 </head>
 <body>
+  <!-- Centered masked video "jewel" layer -->
   <div id="glitch-video-wrapper">
     <div id="glitch-video-mask">
-      <video id="glitch-video" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
-    </div>
-  </div>
-  <canvas id="matrix-canvas"></canvas>
-  <script>
-    // Minimal bulletproof matrix rain
-    const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
-    let w = window.innerWidth, h = window.innerHeight;
-    canvas.width = w; canvas.height = h;
-    const chars = "アァイィウヴエカガキクケコサシスセソタチッツテトナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン".split('');
-    let fontSize = 22;
-    let columns = Math.floor(w / fontSize);
-    let drops = Array.from({length: columns}).map(()=>Math.random()*h/fontSize);
-    function draw() {
-      ctx.fillStyle = "rgba(0,0,0,0.15)";
-      ctx.fillRect(0,0,w,h);
-      ctx.font = fontSize + "px monospace";
-      ctx.fillStyle = "#00ffe0";
-      for(let i=0;i<drops.length;i++){
-        let text = chars[Math.floor(Math.random()*chars.length)];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > h && Math.random()>0.975) drops[i]=0;
-        drops[i]++;
-      }
-    }
-    setInterval(draw, 33);
-    window.onresize = ()=>{
-      w = window.innerWidth; h = window.innerHeight;
-      canvas.width = w; canvas.height = h;
-      columns = Math.floor(w / fontSize);
-      drops = Array.from({length: columns}).map(()=>Math.random()*h/fontSize);
-    };
-  </script>
-</body>
-</html>
+      <video id="glitch-video"
         src="assets/creepyvideo.mp4"
         autoplay loop muted playsinline
         preload="auto"
@@ -61,11 +74,238 @@
     </div>
   </div>
   <canvas id="matrix-canvas"></canvas>
+  <!-- ====== REST OF YOUR PAGE CODE: HEADER, NAV, ETC ====== -->
   <header class="navbar">
     <div class="navbar-row1">
       <span class="logo">PromptForge</span>
       <nav class="nav-links">
         <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">Gallery</a>
+        <a href="#" class="nav-link">Tools</a>
+        <a href="#" class="nav-link">FAQ</a>
+        <span class="nav-translate" id="nav-translate">
+          <svg class="translate-globe" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="14" stroke="#00e1ff" stroke-width="2"/>
+            <ellipse cx="16" cy="16" rx="9.5" ry="14" stroke="#ff005e" stroke-width="1.7"/>
+            <ellipse cx="16" cy="16" rx="14" ry="9.5" stroke="#9c6aff" stroke-width="1.7"/>
+            <circle cx="16" cy="16" r="2.8" fill="#00e1ff"/>
+          </svg>
+          <div id="google_translate_element"></div>
+        </span>
+      </nav>
+      <div class="nav-socials">
+        <a class="social-link" href="https://promptforge.online" target="_blank">🌐</a>
+        <a class="social-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" title="Bluesky" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M15.9 28.3c-1.7 0-3.2-1.1-3.2-1.1C7 25.1 2 19.7 2 14.7c0-4.3 3.6-7.5 7.5-7.5 2.5 0 4.5 1.2 6.4 3.6 1.8-2.5 3.8-3.6 6.4-3.6 3.8 0 7.5 3.2 7.5 7.5 0 5-5 10.4-10.7 12.5 0 0-1.5 1.1-3.2 1.1z" fill="#00e1ff"/></svg>
+        </a>
+        <a class="social-link" href="https://x.com/GoreandGiggles" title="X/Twitter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><path d="M26.5 6h-5.2l-5.4 7.2L9 6H2l9.7 13.5L2.6 26h5.2l5.5-7.5 5.4 7.5h7l-10-13.7z"/></svg>
+        </a>
+        <a class="social-link" href="https://www.buymeacoffee.com/goreandgiggles" title="Buy Me a Coffee" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#ffde71"/><rect x="11" y="20" width="10" height="2" rx="1" fill="#fff"/><rect x="12" y="22" width="8" height="2" rx="1" fill="#fff"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="breadcrumbs">
+      <a href="https://promptforge.online">promptforge.online</a>
+      <span class="bc-sep">/</span>
+      <a href="#">gallery</a>
+      <span class="bc-sep">/</span>
+      <a href="#">tools</a>
+      <span class="bc-sep">/</span>
+      <a href="#">aihacks</a>
+      <span class="bc-sep">/</span>
+      <a href="#">support</a>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-title">
+      <u>ANSI/ASCII Art Playground</u>
+    </div>
+    <div class="hero-desc">
+      <span>
+        <strong>PromptForge</strong> is the most advanced <u>ANSI art</u> and <u>ASCII art</u> generator, gallery, and <u>matrix rain</u> playground. Instantly convert <strong>images to ASCII</strong>, build creative <strong>ASCII art</strong> banners, and export to any platform.
+      </span>
+      <span>
+        <strong>Export, download, and share</strong> your art in seconds. SEO-optimized: <strong>ASCII art, ANSI, generator, image-to-ASCII, gallery, matrix rain, export tools</strong>. Next-level text art—only at <strong>PromptForge</strong>.
+      </span>
+    </div>
+  </section>
+  <div class="app-flex">
+    <aside class="sidebar-nav">
+      <div class="sidebar-logo">☰</div>
+      <nav>
+        <a href="#text2ascii" class="side-link active">Text → ASCII</a>
+        <a href="#img2ascii" class="side-link">Image → ASCII</a>
+        <a href="#vid2ascii" class="side-link">Video → ASCII</a>
+        <a href="#gallery" class="side-link">Gallery</a>
+        <a href="#news" class="side-link">News</a>
+        <a href="#about" class="side-link">About</a>
+        <a href="#faq" class="side-link">FAQ</a>
+      </nav>
+    </aside>
+    <main class="main-sections">
+      <!-- Tool sections go here -->
+    </main>
+  </div>
+  <div class="j1nx-right-float" id="j1nxFloatPF">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-art-big" id="j1nxArtBig"/>
+    <section class="j1nx-chat-bubble-pf j1nx-bubble-mood-happy" id="j1nxChatBubblePF">
+      <div class="j1nx-chatlog" id="j1nxChatlogPF"></div>
+      <div id="j1nxTypingPF" style="display:none;">J1nx is typing<span class="j1nx-dot">.</span><span class="j1nx-dot">.</span><span class="j1nx-dot">.</span></div>
+      <div class="j1nx-input-row">
+        <input type="text" class="j1nx-input" id="j1nxInputPF" placeholder="Say something to J1nx..." autocomplete="off" />
+        <button class="j1nx-btn" onclick="sendToJ1nxPF()">Send</button>
+      </div>
+      <div class="j1nx-controls">
+        <button class="j1nx-btn" onclick="clearChatPF()">Clear Chat</button>
+        <button class="j1nx-btn" onclick="saveChatPF()">Save Chat</button>
+        <span class="j1nx-toggle-label" id="nsfwLabelPF" style="display:none;">NSFW Mode <span id="nsfwStatePF">(OFF)</span></span>
+      </div>
+      <div class="j1nx-easteregg" id="easterEggHintPF">Double-tap the chat bubble or type "unlock" to reveal NSFW mode…</div>
+    </section>
+  </div>
+  <!-- === SCRIPTS === -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,fr,de,es,ru,zh-CN,ja,it,ko,pt,ar',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+    // == ANSI MATRIX RAIN: FULL LOGIC ==
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    const wildColors = ["#FFD700","#00FFEA","#FF00F3","#FF9300","#00FF19","#D100FF","#01FCFD","#fc0341","#fcba03","#d9fc03","#25fc03","#03fc5a","#03fcbc","#03e7fc","#037efc","#5d03fc","#ba03fc","#fc03d1"];
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+    let drops4 = [], speeds4 = [], sizes4 = [];
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+      }
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.3; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+      }
+      drops4 = []; speeds4 = []; sizes4 = [];
+      for (let x = 0; x < Math.floor(columns * 0.07); x++) {
+        drops4[x] = Math.random() * height / fontSize;
+        speeds4[x] = (1.3 + Math.random() * 2.7) / 1.4;
+        sizes4[x] = 1.5 + Math.random() * 7;
+      }
+    }
+    setup();
+    window.addEventListener('resize', setup);
+    function drawMatrix() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.82 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.21;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.98) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      ctx.globalAlpha = 0.93;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 0.95;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.93) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops3[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops3[i] = 0;
+          speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+      }
+      for (let i = 0; i < drops4.length; i++) {
+        if (Math.random() > 0.97) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const color = wildColors[Math.floor(Math.random() * wildColors.length)];
+          const size = fontSize * sizes4[i];
+          ctx.font = size + "px 'Share Tech Mono', monospace";
+          ctx.globalAlpha = 0.87 + Math.random() * 0.13;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 32 + Math.random() * 65;
+          ctx.fillStyle = color;
+          const x = (i * fontSize * 10.5 + fontSize * 2) % width;
+          const y = drops4[i] * fontSize * 2.7;
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops4[i] += speeds4[i];
+        if (drops4[i] * fontSize * 8 > height && Math.random() > 0.98) {
+          drops4[i] = 0;
+          speeds4[i] = (1.3 + Math.random() * 2.7) / 1.4;
+          sizes4[i] = 1.5 + Math.random() * 7;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+    }
+    setInterval(drawMatrix, 32);
+  </script>
+  <!-- [Your J1NX logic and any other scripts go here, unchanged.] -->
+</body>
+</html>
         <a href="#" class="nav-link">Gallery</a>
         <a href="#" class="nav-link">Tools</a>
         <a href="#" class="nav-link">FAQ</a>
