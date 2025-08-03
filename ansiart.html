@@ -14,15 +14,52 @@
       --matrix: #00e1ff;
     }
     html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
-    /* VIDEO background */
+    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2; background: #000; display: block; }
+    /* --- Video Layer --- */
     #video-bg {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      object-fit: cover; z-index: -2; opacity: 0.32; pointer-events: none;
-      filter: blur(0.6px) brightness(0.92) contrast(1.06);
-      mask-image: radial-gradient(circle at 50% 53%, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 120%);
-      -webkit-mask-image: radial-gradient(circle at 50% 53%, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 120%);
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      min-width: 40vw;
+      min-height: 40vh;
+      width: 56vw;
+      height: auto;
+      max-width: 80vw;
+      max-height: 80vh;
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+      opacity: 0.31;
+      pointer-events: none;
+      border-radius: 44px;
+      box-shadow: 0 0 70px 32px #000 inset, 0 0 200px 20px #18132e;
+      filter: blur(0.7px) contrast(1.13) brightness(0.97) saturate(1.15);
+      transition: opacity 0.25s, filter 0.15s;
+      mask-image: radial-gradient(circle, #fff 65%, transparent 100%);
+      -webkit-mask-image: radial-gradient(circle, #fff 65%, transparent 100%);
+      background: none;
     }
-    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
+    @media (max-width: 900px) {
+      #video-bg {
+        width: 90vw; min-width: 68vw; min-height: 24vh; max-height: 55vw;
+        border-radius: 19vw;
+      }
+    }
+    /* Sidebar and UI */
+    .app-flex { display: flex; flex-direction: row; width: 100%; margin: 0 auto; min-height: 430px; z-index: 4;}
+    .sidebar-nav { width: 190px; min-width: 106px; background:rgba(15,18,26,0.98); border-right: 2.5px solid #00e1ff33; box-shadow: 2px 0 32px #00e1ff22; padding: 23px 0 0 0; position:relative; z-index:3; display:flex; flex-direction:column; align-items:center;}
+    .sidebar-logo { color: #ff005e; font-family: 'Orbitron', monospace; font-size: 2.3em; font-weight: 900; letter-spacing: 0.1em; margin-bottom: 26px; filter: drop-shadow(0 2px 8px #00e1ff44); user-select:none; pointer-events:none;}
+    .sidebar-nav nav { display: flex; flex-direction: column; gap: 7px; width: 90%;}
+    .side-link { display: block; color: #00e1ff; font-family: 'Share Tech Mono', monospace; text-decoration: none; font-weight: 700; font-size: 1.11em; padding: 11px 22px; border-radius: 14px; margin-bottom: 4px; background:rgba(0,0,0,0.16); border:1.7px solid #191e25; box-shadow:0 0 12px #00e1ff22 inset; letter-spacing:0.08em; transition: .17s cubic-bezier(.7,1.2,.8,2.1) all; outline:none; position:relative;}
+    .side-link.active, .side-link:hover, .side-link:focus { background: linear-gradient(90deg, #00e1ff 55%, #ff005e 120%); color: #fff; border-color: #ff005e; box-shadow: 0 0 19px #00e1ff22, 0 0 8px #ff005e44 inset;}
+    @media (max-width: 700px) {
+      .app-flex { flex-direction: column; }
+      .sidebar-nav { width: 100%; min-width: 0; flex-direction: row; border-bottom:2.5px solid #00e1ff33; border-right:0; }
+      .sidebar-logo { display: none; }
+      .sidebar-nav nav { flex-direction: row; width: 100%; justify-content: center;}
+      .side-link { margin-bottom:0; margin-right:5px; }
+    }
+    /* Navbar/Header */
     .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
     .navbar-row1 { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 0 3vw; min-height: 56px; }
     .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
@@ -34,7 +71,7 @@
     .nav-socials { display: flex; align-items: center; gap: 0.7vw; margin-left: 18px;}
     .social-link { display: flex; align-items: center; justify-content: center; width: 35px; height: 35px; border-radius: 50%; background: linear-gradient(120deg,#191c21 60%,#00e1ff20 110%); border: 1.2px solid #232a33; box-shadow: 0 0 9px #00e1ff33; cursor: pointer;}
     .social-link svg { width: 21px; height: 21px; display: block; fill: var(--brand); filter: drop-shadow(0 0 6px #00e1ff88);}
-    /* -- Google Translate globe in header -- */
+    /* Google Translate */
     .nav-translate {
       display: flex; align-items: center; margin-left: 0.7vw;
       background: rgba(0,0,0,0.12); border-radius: 13px; border: 1.3px solid #212e37; box-shadow: 0 0 8px #00e1ff44 inset;
@@ -54,11 +91,18 @@
     .navbar-row1 .goog-te-combo { border-radius: 7px; border: 1px solid #00e1ff; background: #16192c; color: #00e1ff; padding: 2px 11px 2px 7px; font-family: 'Share Tech Mono', monospace; font-size: 0.99em; cursor: pointer; outline: none;}
     .navbar-row1 .goog-te-combo:hover, .navbar-row1 .goog-te-combo:focus { background: #232a33; color: #ff005e; border-color: #ff005e;}
     .navbar-row1 .goog-logo-link, .navbar-row1 .goog-te-gadget span { display: none !important; }
+    /* Breadcrumbs, hero, etc. as before... */
     .breadcrumbs { width: 100vw; padding: 7px 3vw 7px 3vw; font-family: 'Share Tech Mono', monospace; font-size: 1.08rem; letter-spacing: 0.09em; color: #fff; display: flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #141829 55%, #191e25 120%); box-shadow: 0 2px 14px #00e1ff19; border-bottom: 1px solid #232a33; user-select: text; z-index: 4;}
     .breadcrumbs a { color: #00e1ff; text-decoration: none; border-bottom: 1.6px dotted #ff005e; font-weight: 700; margin-right: 7px; margin-left: 3px;}
     .breadcrumbs a:hover, .breadcrumbs a:focus { color: #ff005e; border-bottom: 2.1px solid #ff005e;}
     .breadcrumbs .bc-sep { color: #9c6aff; font-weight: 700; font-size: 1.15em; margin-right: 4px; margin-left: 2px; user-select: none;}
-    /* ...rest unchanged... */
+    /* Hero, main, etc. as before... */
+    .hero { display: flex; flex-direction: column; align-items: center; margin: 42px auto 12px auto; max-width: 860px; z-index: 2; position: relative; text-align: center;}
+    .hero-title { font-family: 'Orbitron', monospace; font-size: clamp(1.2rem, 5vw, 2.5rem); font-weight: 900; background: linear-gradient(100deg, #9c6aff 10%, #00e1ff 59%, #ff005e 99%); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: 2px 2px 0 #ff005e, -2px -2px 0 #00e1ff, 0 0 18px #00e1ff88; letter-spacing: 0.11em; margin-bottom: 18px; margin-top: 6vh; animation: pulse-title 2.7s infinite alternate; border-bottom: 2.2px solid #00e1ffcc; display: inline-block; padding-bottom: 10px; filter: drop-shadow(0 0 16px #00e1ff55);}
+    .hero-desc { display: flex; flex-direction: row; gap: 20px; flex-wrap: wrap; justify-content: center; font-size: clamp(0.98rem, 2vw, 1.10rem); background: rgba(0, 0, 0, 0.93); color: #fff; box-shadow: 0 0 32px 2px #00e1ff33, 0 0 7px 2px #ff005e44; border-radius: 22px; padding: 17px 29px 15px 29px; margin-bottom: 24px; margin-top: 2px; font-weight: 600; text-shadow: 0 2px 9px #00e1ff99; line-height: 1.55; border: none; user-select: text;}
+    .hero-desc strong { color: #00e1ff; font-weight: 900; text-shadow: 0 0 7px #00e1ffcc; letter-spacing: 0.01em;}
+    .hero-desc u { text-decoration-color: #ff005e; text-decoration-thickness: 2px; text-underline-offset: 0.18em;}
+    /* J1nx (RIGHT FLOAT - UNTOUCHED FROM YOUR GOLD) */
     .j1nx-right-float {
       position: fixed;
       right: 34px;
@@ -103,7 +147,14 @@
     .j1nx-bubble-mood-wicked { box-shadow: 0 0 56px 19px #fa528eaa, 0 2px 16px #181a1b88, 0 0 20px 3px #ff005e22 inset; }
     .j1nx-bubble-mood-sultry { box-shadow: 0 0 60px 19px #cf74ffa7, 0 2px 16px #181a1b88, 0 0 20px 3px #9c6aff33 inset; }
     .j1nx-bubble-mood-caught { box-shadow: 0 0 42px 14px #ffd166cc, 0 2px 16px #181a1b88; background: #352013e6 !important; }
-    /* ...media queries unchanged... */
+    .j1nx-chatlog { max-height: 210px; overflow-y: auto; }
+    .j1nx-input-row { display: flex; gap: 8px; margin: 6px 0 0 0; }
+    .j1nx-input { flex: 1; border-radius: 18px; border: none; padding: 11px 16px; font-size: 1em; background: #23262a; color: #fafafa; }
+    .j1nx-btn { border: none; background: #00e1ff; color: #181a1b; border-radius: 13px; padding: 8px 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+    .j1nx-btn:hover { background: #ff005e; color: #fff;}
+    .j1nx-controls { display: flex; gap: 10px; margin: 10px 0 8px 0; }
+    .j1nx-toggle-label { font-size: 1em; color: #9c6aff; margin-left: 3px; }
+    .j1nx-easteregg { font-size: .95em; color: #ff7d8a; margin-top: 3px; }
     @media (max-width: 800px) {
       .j1nx-art-big { width: 210px; }
       .j1nx-chat-bubble-pf { font-size: 1em; padding: 14px 7px 14px 12px; }
@@ -116,7 +167,7 @@
   </style>
 </head>
 <body>
-  <!-- BG VIDEO: Only add this line! -->
+  <!-- VIDEO: Sits behind everything except rain and UI -->
   <video id="video-bg" src="assets/creepyvideo.mp4" autoplay loop muted playsinline></video>
   <canvas id="matrix-canvas"></canvas>
   <header class="navbar">
@@ -127,7 +178,7 @@
         <a href="#" class="nav-link">Gallery</a>
         <a href="#" class="nav-link">Tools</a>
         <a href="#" class="nav-link">FAQ</a>
-        <!-- GOOGLE TRANSLATE moved into header nav -->
+        <!-- Translate Globe (now in nav) -->
         <span class="nav-translate" id="nav-translate">
           <svg class="translate-globe" viewBox="0 0 32 32" fill="none">
             <circle cx="16" cy="16" r="14" stroke="#00e1ff" stroke-width="2"/>
@@ -193,7 +244,7 @@
       <!-- Tool sections go here -->
     </main>
   </div>
-  <!-- FLOATING J1NX ASSISTANT (full brain, bottom right, UNCHANGED except for right alignment) -->
+  <!-- FLOATING J1NX ASSISTANT (full brain, bottom right, untouched) -->
   <div class="j1nx-right-float" id="j1nxFloatPF">
     <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-art-big" id="j1nxArtBig"/>
     <section class="j1nx-chat-bubble-pf j1nx-bubble-mood-happy" id="j1nxChatBubblePF">
@@ -223,7 +274,7 @@
   </script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <script>
-    // --- RAIN: All 4 layers, wild, depth, giant, color --- (Unchanged)
+    // --- RAIN: All 4 layers, wild, depth, giant, color ---
     const canvas = document.getElementById('matrix-canvas');
     const ctx = canvas.getContext('2d');
     const fakeGlyphs =
@@ -354,7 +405,7 @@
     }
     setInterval(drawMatrix, 32);
 
-    // J1NX chat logic, UNCHANGED...
+    // J1NX "big brain" logic (unchanged)
     const J1nxBrainPF = (() => {
       const SFW_GREET = "Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)";
       const NSFW_GREET = "Well, well… look who stumbled in. You planning to behave, or should I lock the door and whisper all your dirty secrets back at you?";
@@ -382,13 +433,22 @@
       function isNSFW(input, mode="SFW") { return mode==="NSFW" || isDirty(input); }
       return { getGreeting, getReply, getMood, isNSFW };
     })();
-    // J1NX chat code...
+    // ----- MAIN J1NX CHAT LOGIC -----
     let isNSFWPF = false;
     let j1nxMoodPF = "happy";
     const chatlogPF = [];
-    function greetJ1nxPF() { addJ1nxMsgPF(J1nxBrainPF.getGreeting(isNSFWPF), isNSFWPF ? "sultry" : "happy"); }
-    function addJ1nxMsgPF(msg, mood="happy") { chatlogPF.push({sender: "J1nx", msg, mood}); j1nxMoodPF = mood; renderChatlogPF(); }
-    function addUserMsgPF(msg) { chatlogPF.push({sender: "User", msg, mood: null}); renderChatlogPF(); }
+    function greetJ1nxPF() {
+      addJ1nxMsgPF(J1nxBrainPF.getGreeting(isNSFWPF), isNSFWPF ? "sultry" : "happy");
+    }
+    function addJ1nxMsgPF(msg, mood="happy") {
+      chatlogPF.push({sender: "J1nx", msg, mood});
+      j1nxMoodPF = mood;
+      renderChatlogPF();
+    }
+    function addUserMsgPF(msg) {
+      chatlogPF.push({sender: "User", msg, mood: null});
+      renderChatlogPF();
+    }
     function renderChatlogPF() {
       const bubble = document.getElementById("j1nxChatBubblePF");
       const chatEl = document.getElementById("j1nxChatlogPF");
@@ -407,7 +467,9 @@
       document.getElementById("nsfwStatePF").innerText = isNSFWPF ? "ON" : "OFF";
       chatEl.scrollTop = chatEl.scrollHeight;
     }
-    function showTypingPF(show=true) { document.getElementById("j1nxTypingPF").style.display = show ? "block" : "none"; }
+    function showTypingPF(show=true) {
+      document.getElementById("j1nxTypingPF").style.display = show ? "block" : "none";
+    }
     function sendToJ1nxPF() {
       const input = document.getElementById("j1nxInputPF");
       let val = input.value.trim();
@@ -428,7 +490,10 @@
       input.value = "";
       input.focus();
     }
-    function clearChatPF() { chatlogPF.length = 0; greetJ1nxPF(); }
+    function clearChatPF() {
+      chatlogPF.length = 0;
+      greetJ1nxPF();
+    }
     function saveChatPF() {
       let txt = chatlogPF.map(e =>
         (e.sender === "User" ? "You: " : "J1nx: ") + e.msg
@@ -453,30 +518,6 @@
       if (e.key === "Enter") sendToJ1nxPF();
     });
     window.onload = greetJ1nxPF;
-
-    // -------- VIDEO GLITCH/JUMP EFFECTS --------
-    // Optionally add JS glitch: randomized jumps, opacity, pauses
-    const video = document.getElementById('video-bg');
-    let glitchInt = null;
-    video.addEventListener('play', function () {
-      if (glitchInt) clearInterval(glitchInt);
-      glitchInt = setInterval(() => {
-        // Random jump cut
-        if (Math.random() < 0.09) {
-          video.currentTime = Math.random() * video.duration;
-        }
-        // Random opacity glitch
-        let g = Math.random();
-        video.style.opacity = 0.23 + (g > 0.7 ? 0.16 : 0) + (g > 0.9 ? Math.random() * 0.19 : 0);
-        // Fast fade out/fade in glitch
-        if (Math.random() < 0.03) {
-          video.style.transition = "opacity 0.07s";
-          video.style.opacity = 0.03 + Math.random() * 0.16;
-          setTimeout(() => { video.style.transition = "opacity 0.3s"; video.style.opacity = 0.33; }, 50+Math.random()*200);
-        }
-      }, 420 + Math.random() * 180);
-    });
-    video.addEventListener('pause', () => { if (glitchInt) clearInterval(glitchInt); });
   </script>
 </body>
 </html>
