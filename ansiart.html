@@ -2,23 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more.">
+  <title>Matrix Rain + Glitch Video - BAREBONES TEST</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --brand: #00e1ff;
-      --brand2: #ff005e;
-      --accent: #9c6aff;
-      --matrix: #00e1ff;
-    }
-    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
-    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
-    /* --- Jewel video layer --- */
+    html, body {margin:0;padding:0;background:#000;height:100%;width:100%;overflow:hidden;}
+    #matrix-canvas { position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:2;pointer-events:none;}
     #glitch-video-wrapper {
-      position: fixed;
-      top: 50%; left: 50%;
+      position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       z-index: 1;
       pointer-events: none;
@@ -26,7 +16,6 @@
       max-width: 600px;
       min-width: 240px;
       aspect-ratio: 16/9;
-      height: auto;
       display: flex; justify-content: center; align-items: center;
       filter: drop-shadow(0 0 64px #00e1ff33);
     }
@@ -50,22 +39,53 @@
       background: #000;
       display: block;
     }
-    @media (max-width: 800px) {
-      #glitch-video-wrapper { width: 80vw; max-width: 98vw; min-width: 140px; }
+  </style>
+</head>
+<body>
+  <div id="glitch-video-wrapper">
+    <div id="glitch-video-mask">
+      <video id="glitch-video"
+        src="assets/creepyvideo.mp4"
+        autoplay loop muted playsinline
+        preload="auto"
+        tabindex="-1"
+      ></video>
+    </div>
+  </div>
+  <canvas id="matrix-canvas"></canvas>
+  <h1 style="color:#00e1ff;position:relative;z-index:3;text-align:center;margin-top:40px;">MATRIX RAIN + VIDEO TEST</h1>
+  <script>
+    // === BAREBONES MATRIX RAIN ===
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w; canvas.height = h;
+    const chars = "アァイィウヴエカガキクケコサシスセソタチッツテトナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン".split('');
+    let fontSize = 22;
+    let columns = Math.floor(w / fontSize);
+    let drops = Array.from({length: columns}).map(()=>Math.random()*h/fontSize);
+    function draw() {
+      ctx.fillStyle = "rgba(0,0,0,0.15)";
+      ctx.fillRect(0,0,w,h);
+      ctx.font = fontSize + "px monospace";
+      ctx.fillStyle = "#00ffe0";
+      for(let i=0;i<drops.length;i++){
+        let text = chars[Math.floor(Math.random()*chars.length)];
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > h && Math.random()>0.975) drops[i]=0;
+        drops[i]++;
+      }
     }
-    @media (max-width: 500px) {
-      #glitch-video-wrapper { width: 99vw; max-width: 99vw; min-width: 80px;}
-      #glitch-video-mask { border-radius: 23% 44% 29% 50%/54% 36% 63% 38%; }
-    }
-    /* --- Your CSS continues as before --- */
-    /* [Rest of your CSS unchanged...] */
-    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
-    /* ... rest unchanged ... */
-    .j1nx-right-float {
-      position: fixed;
-      right: 34px;
-      bottom: 24px;
-      z-index: 4100;
+    setInterval(draw, 33);
+    window.onresize = ()=>{
+      w = window.innerWidth; h = window.innerHeight;
+      canvas.width = w; canvas.height = h;
+      columns = Math.floor(w / fontSize);
+      drops = Array.from({length: columns}).map(()=>Math.random()*h/fontSize);
+    };
+  </script>
+</body>
+</html>
       display: flex;
       flex-direction: column;
       align-items: center;
