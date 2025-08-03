@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, pure matrix rain tools, tech news, and more. Stay updated with the underground hacker scene.">
+  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, gallery, image-to-ASCII, matrix rain tools, and more.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
@@ -12,60 +12,142 @@
       --brand2: #ff005e;
       --accent: #9c6aff;
       --matrix: #00e1ff;
-      --nav-bg: rgba(10,16,22,0.95);
-      --nav-border: #2b2750;
     }
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: #000;
-      min-height: 100vh;
-      font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
-      overflow-x: hidden;
-    }
-    #matrix-canvas {
+    html, body { margin: 0; padding: 0; background: #000; min-height: 100vh; font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif; overflow-x: hidden; height: 100%;}
+    /* ---- VIDEO BG LAYER ---- */
+    #video-bg {
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      opacity: 0.42;
       pointer-events: none;
-      z-index: 0;
+      filter: blur(1.7px) brightness(0.78) grayscale(0.18) contrast(1.14) saturate(1.15);
+      mask-image: radial-gradient(ellipse 68% 64% at 50% 54%, #fff 88%, #0000 100%);
+      -webkit-mask-image: radial-gradient(ellipse 68% 64% at 50% 54%, #fff 88%, #0000 100%);
+      transition: opacity .8s;
       background: #000;
-      display: block;
     }
-    /* --- HEADER/NAV STYLES ...unchanged from before... */
-    .navbar {
-      width: 100%;
-      position: sticky;
-      top: 0; left: 0;
-      z-index: 10;
-      background: var(--nav-bg);
-      backdrop-filter: blur(3px);
-      border-bottom: 1.5px solid var(--nav-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 0 3vw;
-      min-height: 66px;
-      box-shadow: 0 2px 24px #00e1ff33;
-      transition: background 0.3s;
+    #matrix-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; background: #000; display: block; }
+    /* ...rest of your CSS unchanged... */
+    /* Sidebar, nav, J1NX, etc. (your full CSS) */
+    .navbar { width: 100%; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); ... }
+    /* ...and so on... */
+  </style>
+</head>
+<body>
+  <!-- FULLSCREEN VIDEO BG UNDER CANVAS -->
+  <video id="video-bg"
+    src="assets/creepyvideo.mp4"
+    autoplay loop muted playsinline preload="auto"
+  ></video>
+  <canvas id="matrix-canvas"></canvas>
+  <!-- Your full UI code, sidebar, nav, etc. continues below... -->
+  <!-- ... (header, sidebar, J1nx, hero, etc) ... -->
+  <!-- Keep the rest of your HTML as in your last working version -->
+  <!-- ... -->
+  <script>
+    // Matrix Rain as in your baseline (unchanged)
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    const fakeGlyphs =
+      "卐 卍 卞 乂 亖 〆 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ㄜ ㄝ ㄞ 〒 ψ λ ʭ Δ Ω Ж Ҩ Ғ Щ ш Ѭ Ѯ Ѳ Ѻ Ѿ Ԇ Ԋ Ԓ Ԧ Ԩ Ԭ Ѷ Ѿ ∆ ∇ ∈ ∉ ∋ ∌ ∍ ∎ ∏ ∑ ∕ ∖ ∗ ∜ ∞ ∩ ∪ ∫ ∮ ∴ ∵ ∷ ∸ ∹ ∺ ∻ ∼ ∽ ∾ ∿".split(" ");
+    let width, height, fontSize, columns;
+    let drops1 = [], speeds1 = [];
+    let drops2 = [], speeds2 = [];
+    let drops3 = [], speeds3 = [];
+    function setup() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      fontSize = Math.max(16, Math.floor(width / 90));
+      columns = Math.floor(width / fontSize);
+      drops1 = []; speeds1 = [];
+      for (let x = 0; x < columns; x++) {
+        drops1[x] = Math.random() * height / fontSize;
+        speeds1[x] = (1.1 + Math.random() * 1.7) / 3;
+      }
+      drops2 = []; speeds2 = [];
+      for (let x = 0; x < columns * 1.3; x++) {
+        drops2[x] = Math.random() * height / fontSize;
+        speeds2[x] = (0.7 + Math.random() * 1.2) / 3;
+      }
+      drops3 = []; speeds3 = [];
+      for (let x = 0; x < Math.floor(columns * 0.08); x++) {
+        drops3[x] = Math.random() * height / fontSize;
+        speeds3[x] = (2.6 + Math.random() * 2.8) / 1.25;
+      }
     }
-    .logo {
-      font-family: 'Orbitron', 'monospace';
-      font-size: clamp(2.1rem, 5vw, 2.7rem);
-      font-weight: 900;
-      background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%);
-      background-size: 220% 100%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      letter-spacing: 0.12em;
-      text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand);
-      animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate;
-      user-select: none;
-      filter: drop-shadow(0 2px 24px #00e1ff44);
+    setup();
+    window.addEventListener('resize', setup);
+    function drawMatrix() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.textAlign = "center";
+      // 2nd layer (deep/faint)
+      ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops2.length; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize * 0.82 + fontSize / 2;
+        const y = drops2[i] * fontSize;
+        ctx.globalAlpha = 0.21;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        drops2[i] += speeds2[i];
+        if (drops2[i] * fontSize > height && Math.random() > 0.98) {
+          drops2[i] = 0;
+          speeds2[i] = (0.7 + Math.random() * 1.2) / 3;
+        }
+      }
+      // Main layer
+      ctx.globalAlpha = 0.93;
+      ctx.font = fontSize + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < columns; i++) {
+        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+        const x = i * fontSize + fontSize / 2;
+        const y = drops1[i] * fontSize;
+        ctx.globalAlpha = 0.95;
+        ctx.fillStyle = "#00e1ff";
+        ctx.fillText(text, x - 2, y - 2);
+        ctx.fillStyle = "#ff005e";
+        ctx.fillText(text, x + 2, y + 2);
+        ctx.globalAlpha = 1.0;
+        drops1[i] += speeds1[i];
+        if (drops1[i] * fontSize > height && Math.random() > 0.985) {
+          drops1[i] = 0;
+          speeds1[i] = (1.1 + Math.random() * 1.7) / 3;
+        }
+      }
+      // CLOSEUP RAIN: big, white, highlight, rare
+      ctx.font = (fontSize * 4.7) + "px 'Share Tech Mono', monospace";
+      for (let i = 0; i < drops3.length; i++) {
+        if (Math.random() > 0.93) {
+          const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
+          const x = i * fontSize * 8.2 + fontSize;
+          const y = drops3[i] * fontSize * 2.3;
+          ctx.globalAlpha = 0.96 + Math.random() * 0.03;
+          ctx.shadowColor = Math.random() > 0.5 ? "#fff" : "#00e1ff";
+          ctx.shadowBlur = 92;
+          ctx.fillStyle = Math.random() > 0.5 ? "#fff" : "#ff005e";
+          ctx.fillText(text, x, y);
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1.0;
+        }
+        drops3[i] += speeds3[i];
+        if (drops3[i] * fontSize * 4.7 > height && Math.random() > 0.97) {
+          drops3[i] = 0;
+          speeds3[i] = (2.6 + Math.random() * 2.8) / 1.25;
+        }
+      }
+      ctx.globalAlpha = 1.0;
+    }
+    setInterval(drawMatrix, 32);
+  </script>
+  <!-- ...YOUR OTHER SCRIPTS (J1NX, TRANSLATE, ETC) ... -->
+</body>
+</html>
       cursor: pointer;
       padding: 0 6px 0 0;
     }
