@@ -2,70 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Matrix Rain + Video = Sanity Check</title>
+  <title>MP4 Sanity Test</title>
   <style>
-    html, body {margin:0; padding:0; width:100vw; height:100vh; background:#000;}
-    #video-bg {
-      position:fixed; top:0; left:0; width:100vw; height:100vh; object-fit:cover;
-      opacity:0.4; z-index:0; pointer-events:none; background:#000;
-    }
-    #matrix-canvas {
-      position:fixed; top:0; left:0; width:100vw; height:100vh;
-      z-index:1; pointer-events:none;
-    }
-    .msg {position:fixed;top:12px;left:0;right:0;text-align:center;z-index:2;color:#00e1ff;font-family:monospace;font-size:2em;}
+    html, body { margin:0; padding:0; background:#111; width:100vw; height:100vh;}
+    video { width:60vw; height:auto; display:block; margin:40px auto 0 auto; background:#000; box-shadow:0 0 16px #00e1ff;}
   </style>
 </head>
 <body>
-  <video id="video-bg" src="assets/creepyvideo.mp4" autoplay loop muted playsinline></video>
-  <canvas id="matrix-canvas"></canvas>
-  <div class="msg">MATRIX + VIDEO TEST (should see both)</div>
-  <script>
-    const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.onresize = resize;
-    const chars = "アァイィウヴエカガキクケコサシスセソタチッツテトナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲン".split('');
-    let fontSize = 22;
-    let columns = Math.floor(window.innerWidth / fontSize);
-    let drops = Array.from({length: columns}).map(()=>Math.random()*window.innerHeight/fontSize);
-    function draw() {
-      ctx.fillStyle = "rgba(0,0,0,0.15)";
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.font = fontSize + "px monospace";
-      ctx.fillStyle = "#00ffe0";
-      for(let i=0;i<drops.length;i++){
-        let text = chars[Math.floor(Math.random()*chars.length)];
-        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > canvas.height && Math.random()>0.975) drops[i]=0;
-        drops[i]++;
-      }
-    }
-    setInterval(draw, 33);
-    window.addEventListener('resize',()=>{
-      resize();
-      columns = Math.floor(window.innerWidth / fontSize);
-      drops = Array.from({length: columns}).map(()=>Math.random()*window.innerHeight/fontSize);
-    });
-  </script>
+  <video controls autoplay loop muted playsinline>
+    <source src="assets/creepyvideo.mp4" type="video/mp4">
+    Sorry, your browser can't play this file.
+  </video>
+  <div style="text-align:center;color:#00e1ff;margin-top:22px;font-family:monospace;font-size:1.2em">
+    You should see your creepyvideo.mp4 here.<br>
+    If it plays here, it works everywhere.
+  </div>
 </body>
 </html>
-    }
-    setup();
-    window.addEventListener('resize', setup);
-    function drawMatrix() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.textAlign = "center";
-      // 2nd layer (deep/faint)
-      ctx.font = (fontSize - 2) + "px 'Share Tech Mono', monospace";
-      for (let i = 0; i < drops2.length; i++) {
-        const text = fakeGlyphs[Math.floor(Math.random() * fakeGlyphs.length)];
-        const x = i * fontSize * 0.82 + fontSize / 2;
-        const y = drops2[i] * fontSize;
         ctx.globalAlpha = 0.21;
         ctx.fillStyle = "#00e1ff";
         ctx.fillText(text, x - 2, y - 2);
