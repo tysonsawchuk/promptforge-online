@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptForge.online – AI Prompt Generator, Jailbreak Tools & Art Suite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="PromptForge.online: Advanced AI prompt builder, jailbreak hacks, art and watermark generator, ASCII/ANSI tools, and model comparison. Unlock unfiltered creativity for every AI platform." />
+  <meta name="keywords" content="AI prompt generator, jailbreaks, Stable Diffusion, Sora, RealVis, ASCII art, ANSI art, AI watermark, NSFW, OpenArt, prompt tools, compare AI models, prompt builder, image prompt, video prompt, AI hacks, creative AI toolbox" />
+  <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --aqua: #64f2e3;
+      --offwhite: #e9efe7;
+      --panel: #181b15;
+      --panel-deep: #23231f;
+      --footer-bg: #131413;
+      --gold: #ffe266;
+      --j1nx-glow: #be9cff;
+    }
+    html, body {
+      width: 100vw; max-width: 100vw; min-width: 0;
+      overflow-x: hidden;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background: var(--panel);
+      color: var(--offwhite);
+      font-family: 'Fira Mono', monospace;
+      font-size: 1.03em;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      border-bottom: 2px solid var(--aqua);
+      background: var(--panel-deep);
+      padding: 0 0 0.1em 0;
+      margin: 0;
+      width: 100vw;
+      max-width: 100vw;
+    }
+    .version {
+      font-size: .97em;
+      color: var(--aqua);
+      background: #191c17;
+      padding: 0.09em 1.15em;
+      border-radius: 0 0 12px 12px;
+      display: inline-block;
+      margin: 0 0 0.06em 0.07em;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      box-shadow: 0 2px 7px #64f2e344;
+    }
+    .ansi-art {
+      font-family: monospace, 'Fira Mono', Consolas, Menlo, 'Courier New';
+      white-space: pre;
+      font-size: 1em;
+      text-align: center;
+      color: var(--aqua);
+      margin: 0 auto 0.05em auto;
+      text-shadow: 0 0 12px var(--aqua), 0 0 2px #fff5;
+      line-height: 1.07;
+      overflow-x: auto;
+    }
+    .eye {
+      display: inline-block; width: 1.08em; height: 1.08em;
+      background: #fff; border-radius: 50%; border: 2px solid var(--aqua);
+      position: relative; margin: 0 1.7px; vertical-align: middle;
+      box-shadow: 0 0 8px var(--aqua)90, 0 0 0.2em var(--aqua)33;
+    }
+    .pupil {
+      width: .41em; height: .41em;
+      background: #41bbff;
+      border-radius: 50%;
+      position: absolute; top: 0.31em; left: 0.31em;
+      border: 2.1px solid #1c3566;
+      box-shadow: 0 0 9px 3px #2a24c9, 0 0 2px 1px #fff2;
+      transition: box-shadow .10s, border .11s;
+    }
+    h1 {
+      text-align: center;
+      margin: .04em 0 0.09em 0;
+      font-size: 1.1em;
+      letter-spacing: 0.13em;
+      background: linear-gradient(90deg, var(--aqua) 0%, #87ffd9 52%, #bdf6c3 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      user-select: none;
+      text-shadow: 0 0 12px var(--aqua)10;
+    }
+    .desc {
+      max-width: 650px;
+      margin: 0.12em auto 0.55em auto;
+      text-align: center;
+      font-size: 1em;
+      color: var(--aqua);
+      font-weight: 400;
+      background: #181b1511;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 2px 7px var(--aqua)06;
+      line-height: 1.29;
+      letter-spacing: 0.011em;
+      padding: 0.30em .6em 0.45em .6em;
+    }
+    main {
+      width: 100vw;
+      max-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 45vh;
+    }
+    .feature-grid {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0.6em auto 1.1em auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.2em;
+    }
+    .feature-tile {
+      background: #21261e;
+      border-radius: 11px;
+      box-shadow: 0 2px 16px #21cfcf28;
+      border: 1.5px solid var(--aqua)28;
+      flex: 1 1 322px;
+      max-width: 340px;
+      min-width: 282px;
+      min-height: 112px;
+      margin: 0;
+      padding: 1em 1.12em 0.88em 1.12em;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      transition: box-shadow .13s, border-color .12s;
+    }
+    .feature-tile:hover {
+      box-shadow: 0 4px 24px #4dfff355;
+      border-color: var(--gold);
+      background: #232922;
+    }
+    .feature-title {
+      color: var(--aqua);
+      font-size: 1.02em;
+      font-weight: 700;
+      letter-spacing: .02em;
+      margin-bottom: .13em;
+      line-height: 1.1;
+    }
+    .feature-desc {
+      margin-top: .04em;
+      font-size: .96em;
+      color: var(--offwhite);
+      line-height: 1.21;
+      font-weight: 400;
+      max-height: 2.6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: normal;
+    }
+    .partner-block {
+      background: #1d1e19;
+      border-radius: 8px;
+      padding: .7em .8em .7em .8em;
+      box-shadow: 0 1px 7px var(--aqua)09;
+      margin: 0 auto 0.8em auto;
+      border: 1px solid var(--aqua)19;
+      max-width: 820px;
+    }
+    .partner-block h2 {
+      color: var(--aqua);
+      font-size: .95em;
+      letter-spacing: .01em;
+      margin: 0 0 .12em 0;
+      font-weight: 700;
+      text-shadow: 0 0 2px var(--aqua)10;
+    }
+    .partner-link {
+      background: #191c17;
+      border-radius: 6px;
+      padding: .20em 0.54em;
+      color: var(--aqua) !important;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 1.2px 6px var(--aqua)07;
+      transition: .08s;
+      border: 1px solid var(--aqua)11;
+      font-size:.93em;
+    }
+    .partner-link:hover {color: var(--offwhite) !important; background: #232922; border-color: var(--aqua);}
+    .adsense-wrap {max-width:650px;margin:.63em auto;}
+    .bmc-button {margin:.6em auto 0.1em auto;text-align:center;}
+    .footer-bar {
+      text-align:center;
+      font-size:.94em;
+      color:var(--aqua);
+      margin-bottom:.3em;
+      width:100vw;
+      max-width:100vw;
+      overflow: hidden;
+    }
+    .footer-art {
+      font-family:monospace;
+      font-size:.91em;
+      line-height:1.01;
+      letter-spacing:1.1px;
+      background:var(--footer-bg);
+      margin:0 auto 0.7em auto;
+      padding:0;
+      width:100vw;
+      text-align:center;
+      color:var(--aqua);
+      overflow-x: auto;
+      user-select: none;
+    }
+    .footer-camo {
+      font-family:monospace;
+      font-size:.85em;
+      line-height:1.01;
+      letter-spacing:2px;
+      background:transparent;
+      margin:0 auto 0 0;
+      padding:0 0 1.5px 0;
+      width:100vw;
+      text-align:center;
+      color:var(--aqua);
+      min-height:.8em;
+      overflow-x: auto;
+      user-select: none;
+    }
+
+    /* ==== J1nx TRUE CUTOUT Widget ==== */
+    .j1nx-float-true {
+      position: fixed;
+      z-index: 1400;
+      right: 2vw;
+      bottom: calc(2.8vh + 125px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: all;
+      user-select: none;
+      min-width: 0;
+      max-width: 360px;
+    }
+    .j1nx-true-cutout-img {
+      width: 320px;
+      height: 320px;
+      object-fit: contain;
+      border-radius: 32px;
+      /* === NO GLOW/SHADOW AROUND J1NX IMAGE! === */
+      background: transparent !important;
+      margin-bottom: -30px;
+      position: relative;
+      z-index: 9;
+      pointer-events: auto;
+      transition: box-shadow .2s;
+      box-shadow: none !important; /* force NO glow! */
+    }
+    .j1nx-bubble-true-main {
+      background: rgba(22,23,31,0.97);
+      border-radius: 17px;
+      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
+      border: 2px solid var(--aqua);
+      padding: 1.1em 1.3em 1em 1.3em;
+      margin-top: 0;
+      margin-bottom: 0.3em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 290px;
+      max-width: 330px;
+      position: relative;
+      z-index: 1;
+    }
+    .j1nx-bubble-text-true {
+      font-size: 1.05em;
+      color: #fff;
+      margin: 0.42em 0 0.20em 0;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 1px 11px #1e1111cc;
+      line-height: 1.22;
+      z-index: 1;
+    }
+    .j1nx-bubble-row-true {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin: 0.13em 0 0.10em 0;
+    }
+    .j1nx-input-true {
+      flex: 1;
+      font-size: 1em;
+      border-radius: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--aqua);
+      background: #171b22;
+      color: var(--aqua);
+      min-width: 0;
+    }
+    .j1nx-btn-true {
+      font-size: .98em;
+      padding: 6.5px 14px;
+      border-radius: 8px;
+      background: #22252b;
+      border: 1.3px solid var(--aqua);
+      color: var(--aqua);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .13s, color .13s, border .13s;
+      box-shadow: 0 1.5px 9px #be9cff33;
+    }
+    .j1nx-btn-true:hover {
+      background: var(--aqua);
+      color: #171b22;
+      border-color: #fff;
+    }
+    .j1nx-easteregg-true {
+      font-size: .91em;
+      color: #be9cff;
+      background: #171b22e6;
+      border-radius: 7px 13px 12px 17px;
+      margin-top: 7px;
+      padding: 7px 17px 6px 13px;
+      opacity: .85;
+      pointer-events: none;
+      text-align: center;
+      width: 94%;
+      user-select: none;
+      box-shadow: 0 3px 13px #be9cff28;
+      font-weight: 600;
+    }
+    @media (max-width: 900px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 97vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 112px; height: 112px;}
+    }
+    @media (max-width: 700px) {
+      .j1nx-float-true {min-width: 99vw; max-width: 99vw; right: 1vw;}
+      .j1nx-bubble-true-main {min-width: 98vw; max-width: 99vw;}
+      .j1nx-true-cutout-img {width: 66px; height: 66px;}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="version">v2.0.1</span>
+    <pre class="ansi-art" id="ansiArt">
+  ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
+ (o0)-.(Oo)-.  c(O_O)c ((O)  (O))(o0)-.(__  __)wWw    c(O_O)c  (Oo)-.   (OO)   wWw  
+  | (_))| (_)),'.---.`, | \  / |  | (_)) (  )  (O)_  ,'.---.`,  | (_)),'.--.)  (O)_ 
+  | .-' |  .'/ /|_|_|\ \||\\//||  | .-'   )(  .' __)/ /|_|_|\ \ |  .'/ /|_|_\ .' __)
+  |(    )|\\ | \_____/ ||| \/ ||  |(     (  )(  _)  | \_____/ | )|\\ | \_.--.(  _)  
+   \)  (/  \)'. `---' .`||    ||   \)     )/  )/    '. `---' .`(/  \)'.   \) \`.__) 
+   (    )      `-...-' (_/    \_)  (     (   (        `-...-'   )      `-.(_.'      
+    </pre>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        function replaceEyes() {
+          const el = document.getElementById('ansiArt');
+          let html = el.innerHTML;
+          html = html.replace(/(\([oO0]{1,3}\))/g, function(m) {
+            return m.replace(/[oO0]/g, '<span class="eye"><span class="pupil"></span></span>');
+          });
+          el.innerHTML = html;
+        }
+        replaceEyes();
+        function moveEyes(e){
+          var eyes=document.querySelectorAll('.eye');
+          var ww=window.innerWidth, wh=window.innerHeight;
+          for(var i=0;i<eyes.length;i++){
+            var pupil=eyes[i].querySelector('.pupil');
+            var cx=eyes[i].getBoundingClientRect().left+eyes[i].offsetWidth/2;
+            var cy=eyes[i].getBoundingClientRect().top+eyes[i].offsetHeight/2;
+            var dx=(e.clientX-cx)/ww*2, dy=(e.clientY-cy)/wh*2;
+            var px= Math.max(-.32, Math.min(.32, dx));
+            var py= Math.max(-.32,Math.min(.32, dy));
+            pupil.style.left=0.33+px*0.38+'em';
+            pupil.style.top=0.33+py*0.38+'em';
+          }
+        }
+        document.addEventListener('mousemove', moveEyes);
+        document.addEventListener('touchmove', function(e){
+          if(e.touches.length){
+            var fakeEvent = {clientX: e.touches[0].clientX, clientY: e.touches[0].clientY};
+            moveEyes(fakeEvent);
+          }
+        });
+      });
+    </script>
+    <h1>PromptForge.online</h1>
+    <div class="desc">
+      Advanced AI prompt builder, jailbreak hacks, creative tools, and ANSI/ASCII generators.<br>
+      No limits. No filter walls. Forever free.
+    </div>
+  </header>
+
+  <!-- ======= J1nx: True cutout, floating, SMART with "brain" ======= -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/j1nx_brain.js" defer></script>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Position J1nx above the footer
+      function adjustJ1nxFloatTrue() {
+        const widget = document.getElementById('j1nxFloatTrue');
+        const footer = document.querySelector('footer');
+        if (!widget || !footer) return;
+        const footerRect = footer.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const overlap = windowHeight - footerRect.top;
+        if (overlap > 0) {
+          widget.style.bottom = (overlap + 16) + 'px';
+        } else {
+          widget.style.bottom = 'calc(2.8vh + 125px)';
+        }
+      }
+      window.addEventListener('scroll', adjustJ1nxFloatTrue);
+      window.addEventListener('resize', adjustJ1nxFloatTrue);
+      setTimeout(adjustJ1nxFloatTrue, 700);
+
+      // ==== J1nx BRAIN LOGIC ====
+      // SESSION MASTER: Use only window.j1nxBrain from assets/j1nx_brain.js!
+      let chat = [];
+      let defaultMood = 0;
+      let moods = [
+        {glow: "#64f2e3"},
+        {glow: "#fa528e"},
+        {glow: "#be9cff"},
+        {glow: "#ffd166"}
+      ];
+      // moodIdx: 0 = default/cheer, 1 = wicked, 2 = sultry, 3 = caught/slack
+
+      // Use your real brain! (always window.j1nxBrain)
+      function getJ1nxReply(val) {
+        if(window.j1nxBrain && typeof window.j1nxBrain === 'function'){
+          let res = window.j1nxBrain(val, chat.length);
+          if(typeof res === "string") return {reply: res, mood: 0};
+          if(typeof res === "object" && res.reply) return res;
+          return {reply: "(I have no clue... bug?)", mood: 0};
+        }
+        return {reply: "(Brain not loaded)", mood: 0};
+      }
+      function setJ1nxMood(idx) {
+        // Limit idx to known moods
+        idx = Math.max(0, Math.min(idx, moods.length-1));
+        // Only set bubble, NOT cutout image
+        document.getElementById("j1nxBubbleTrueMain").style.boxShadow = "0 4px 22px "+moods[idx].glow+"bb,0 0 0 3px #23231f";
+        // No glow on cutout, ever
+        document.getElementById("j1nxCutoutTrue").style.boxShadow = "none";
+      }
+      // Double-tap to "cycle" mood manually for fun
+      let moodIndex = 0, lastTap = 0;
+      document.getElementById("j1nxBubbleTrueMain").addEventListener("click", function(e){
+        let now = Date.now();
+        if (now - lastTap < 400) {
+          moodIndex = (moodIndex + 1) % moods.length;
+          setJ1nxMood(moodIndex);
+        }
+        lastTap = now;
+      });
+
+      // ==== Chat logic ====
+      function renderJ1nxChat() {
+        document.getElementById("j1nxBubbleTextTrue").innerHTML = "<b>J1nx:</b> " + chat[chat.length-1];
+      }
+      function chatReset() {
+        chat = ["Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? (Don’t worry, I’m good at both…)"];
+        setJ1nxMood(defaultMood);
+        renderJ1nxChat();
+      }
+      document.getElementById("j1nxSendTrue").onclick = function(){
+        let val = document.getElementById("j1nxInputTrue").value.trim();
+        if (!val) return;
+        let res = getJ1nxReply(val);
+        chat.push(val);
+        chat.push(res.reply);
+        setJ1nxMood(typeof res.mood==="number"?res.mood:defaultMood);
+        renderJ1nxChat();
+        document.getElementById("j1nxInputTrue").value = "";
+      };
+      document.getElementById("j1nxInputTrue").addEventListener('keydown',e=>{
+        if(e.key==="Enter")document.getElementById("j1nxSendTrue").onclick();
+      });
+      document.getElementById("j1nxClearTrue").onclick = chatReset;
+      document.getElementById("j1nxSaveTrue").onclick = function(){
+        let text = chat.join('\n');
+        let blob = new Blob([text], {type:"text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "j1nx_chat.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+      };
+      chatReset(); // init
+    });
+  </script>
+
+  <main>
+    <section class="feature-grid">
+      <a class="feature-tile" href="picture.html">
+        <div class="feature-title">Image Prompt Builder</div>
+        <div class="feature-desc">Generate AI image prompts for OpenArt, RealVis, Juggernaut, SDXL. Lock faces/poses, unlock NSFW.</div>
+      </a>
+      <a class="feature-tile" href="movie.html">
+        <div class="feature-title">Video Prompt Builder</div>
+        <div class="feature-desc">Create AI video and animation prompts for Sora, Stable Video, Gemini, and next-gen models.</div>
+      </a>
+      <a class="feature-tile" href="aihacks.html">
+        <div class="feature-title">AI Pranks, Hacks & Encyclopedia</div>
+        <div class="feature-desc">650+ jailbreaks, prompt hacks, secret AI commands, and voice tricks for every major platform.</div>
+      </a>
+      <a class="feature-tile" href="ansiart.html">
+        <div class="feature-title">ANSI & ASCII Art Generator</div>
+        <div class="feature-desc">Convert text/images to classic ANSI/ASCII art. Interactive playground and hacker art.</div>
+      </a>
+      <a class="feature-tile" href="j1nx.html">
+        <div class="feature-title">J1nx AI Chat Muse</div>
+        <div class="feature-desc">Floating AI muse: chat, prank, hack, brainstorm, and evolve your creative prompts.</div>
+      </a>
+      <a class="feature-tile" href="watermark.html">
+        <div class="feature-title">Watermark & Stealth Tool</div>
+        <div class="feature-desc">Add invisible watermarks, overlays, and privacy to AI art. Export in 4K, pro options.</div>
+      </a>
+      <a class="feature-tile" href="compare.html">
+        <div class="feature-title">Compare AI Models</div>
+        <div class="feature-desc">Test, benchmark, and compare all major image/video AI models. Live scores, user reviews.</div>
+      </a>
+      <a class="feature-tile" href="terms.html">
+        <div class="feature-title">Legal / Terms</div>
+        <div class="feature-desc">Review terms, disclaimers, and legal rules for every PromptForge tool.</div>
+      </a>
+    </section>
+
+    <!-- ======= Partner/Resource Links ======= -->
+    <section class="partner-block">
+      <h2>Essential AI Art & Prompt Resources</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:.7em .9em;justify-content:center;margin-bottom:.18em;">
+        <a href="https://openart.ai/" target="_blank" class="partner-link">OpenArt</a>
+        <a href="https://www.krea.ai/" target="_blank" class="partner-link">Krea</a>
+        <a href="https://gemini.google.com/" target="_blank" class="partner-link">Gemini</a>
+        <a href="https://www.bing.com/images/create/" target="_blank" class="partner-link">Bing Create</a>
+        <a href="https://huggingface.co/spaces" target="_blank" class="partner-link">Hugging Face Spaces</a>
+        <a href="https://www.asciiart.eu/" target="_blank" class="partner-link">ASCIIArt.eu</a>
+        <a href="https://chat.openai.com/" target="_blank" class="partner-link">ChatGPT</a>
+        <a href="https://perchance.org/" target="_blank" class="partner-link">Perchance</a>
+      </div>
+    </section>
+
+    <div class="bmc-button">
+      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank">
+        <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 43px !important;" />
+      </a>
+    </div>
+    <div class="adsense-wrap">
+      <ins class="adsbygoogle" style="display:block; text-align:center; min-width:320px; min-height:80px;" data-ad-client="ca-pub-4963053724895140" data-ad-slot="auto" data-ad-format="auto"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </main>
+
+  <!-- ======= Footer, Static Dancers & Camo ======= -->
+  <footer>
+    <pre class="footer-art">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+    </pre>
+    <pre class="footer-camo" id="footerCamo"></pre>
+    <div class="footer-bar">
+      Made underground in BC, Canada &bull; #PromptForge &bull;
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);">Twitter/X</a> &bull;
+      <a href="terms.html" style="color:var(--aqua);">Legal</a>
+    </div>
+  </footer>
+  <script>
+    // --- Animated CAMO (Half Size, unified color) ---
+    const camoColors = [
+      "#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"
+    ];
+    function randomCamoChar(){
+      const chars = "░▒▓▚▞▐▉█▛";
+      return chars[Math.floor(Math.random()*chars.length)];
+    }
+    function renderCamo(tick=0){
+      let out = "";
+      for (let row=0;row<1;++row) {
+        for (let col=0;col<62;++col) {
+          let color = camoColors[(row+col+tick)%camoColors.length];
+          out += `<span style="color:${color}">${randomCamoChar()}</span>`;
+        }
+        out += "<br>";
+      }
+      document.getElementById("footerCamo").innerHTML = out;
+    }
+    let camoTick = 0;
+    setInterval(()=>{
+      renderCamo(camoTick++);
+    },950);
+    renderCamo();
+  </script>
+</body>
+</html>
