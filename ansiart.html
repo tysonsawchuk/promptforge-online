@@ -1,71 +1,974 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge – ANSI/ASCII Art Playground</title>
-  <meta name="description" content="PromptForge: Advanced ANSI & ASCII art generator, AI gallery, image-to-ASCII, jailbreaks, matrix rain, and more.">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Orbitron:700,900|Share+Tech+Mono&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>PromptForge – ANSI & ASCII Art HUD (Playground)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="PromptForge HUD — cyber‑neon workshop for ASCII/ANSI art. Text/Image/Video → ASCII, FIGlet banners, dithers, ramps & gradients. Export TXT/PNG. Live previews.">
+  <meta name="keywords" content="ascii art, ansi art, text to ascii, image to ascii, video to ascii, figlet fonts, floyd-steinberg, ordered bayer, atkinson dither, character ramps, unicode blocks, braille, cp437, petscii, gradient, ansi 256, export png, export txt, generator, converter, PromptForge">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --brand: #00e1ff;
-      --brand2: #ff005e;
-      --accent: #9c6aff;
-      --matrix: #00e1ff;
-      --aqua: #64f2e3;
-      --footer-bg: #131413;
-      --do-not-press: #0820a6;
-      --do-not-glow: #00e1ff;
+    :root{
+      --bg:#03060b; --glass:#0b111aA6; --hud:#0d1622; --ink:#dff7ff;
+      --aqua:#00e1ff; --pink:#ff3b84; --vio:#9c6aff; --line:#203247;
+      --good:#53ffa8; --warn:#ffd44d; --bad:#ff5577;
+      --panelShade: radial-gradient(1200px 700px at 70% 30%, rgba(0,225,255,.08), transparent 60%);
     }
-    html, body {
-      margin: 0; padding: 0;
-      background: #000; min-height: 100vh;
-      font-family: 'Orbitron', 'Share Tech Mono', 'Segoe UI', 'Roboto', 'monospace', sans-serif;
-      height: 100%; width: 100vw;
-      min-height: 100vh;
-      box-sizing: border-box;
-      overflow-x: hidden;
+    *{box-sizing:border-box}
+    html,body{height:100%;background:#000;color:var(--ink);font-family:'Share Tech Mono',monospace}
+    a{color:var(--aqua);text-decoration:none} a:hover{color:#fff}
+
+    /* ===== BG ===== */
+    #bg-wrap{position:fixed;inset:0;z-index:0}
+    #video-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.26) contrast(1.06) saturate(1.05) blur(1px)}
+    #matrix-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+    /* ===== HEADER ===== */
+    header.navbar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(7,10,16,.9),rgba(7,10,16,.74));border-bottom:1px solid var(--line);backdrop-filter:blur(6px)}
+    .nav-row{display:flex;align-items:center;justify-content:space-between;padding:10px 2vw}
+    .logo{font-family:Orbitron,monospace;font-weight:900;font-size:clamp(26px,4vw,34px);letter-spacing:.12em;background:linear-gradient(90deg,var(--pink),var(--vio),var(--aqua));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 36px #00e1ff33}
+    .nav-links{display:flex;gap:.6rem;align-items:center}
+    .nav-btn{border:1px solid #233246;background:#0c131c;color:var(--aqua);padding:.45rem .9rem;border-radius:12px;font-weight:700;cursor:pointer}
+    .nav-btn:hover{background:linear-gradient(90deg,var(--aqua),var(--pink));color:#001018;border-color:var(--vio)}
+    .nav-socials{display:flex;gap:.4rem;margin-left:8px}
+    .social{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;border:1px solid #223142;background:linear-gradient(120deg,#0b1119 60%,#0b1119 60%);box-shadow:0 0 8px #00e1ff33}
+
+    /* ===== DESCRIPTION with 3D layered title ===== */
+    .desc-strip{position:relative;z-index:5;padding:12px 2vw;border-bottom:1px solid #1b2634;background:linear-gradient(180deg,transparent,rgba(10,15,22,.35) 80%,transparent)}
+    .desc-inner{max-width:1200px;margin:0 auto;line-height:1.45}
+    .desc-title{
+      font-family:Orbitron; font-weight:900; letter-spacing:.16em; font-size:clamp(22px,3.4vw,34px);
+      color:#fff;
+      /* 3‑tone depth: white front, deep blue, neon red */
+      text-shadow:
+        0 0 0 #fff,
+        -1px 1px 0 #0a1e3d,
+        -2px 2px 0 #0a1e3d,
+        2px 3px 0 #ff1d5e,
+        0 0 24px #00e1ff55;
     }
-    #video-bg {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: cover;
-      z-index: 0; pointer-events: none; min-width: 100vw; min-height: 100vh;
-      filter: brightness(0.34) saturate(1.14) contrast(1.12) blur(1px);
+    .desc-blurb{color:#cfefff;opacity:.96}
+    .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+    .badge{border:1px solid #223a53;border-radius:10px;padding:2px 8px;background:#0b121b;color:#9fe7ff}
+    .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    /* ===== LAYOUT ===== */
+    .wrap{display:grid;grid-template-columns:276px 1fr;gap:16px;max-width:1600px;margin:14px auto 120px auto;padding:0 2vw;position:relative;z-index:3}
+
+    /* Sidebar (glass, neon border) */
+    .sidebar{position:sticky;top:86px;align-self:start;border-radius:16px;background:linear-gradient(180deg,rgba(7,12,18,.65),rgba(7,12,18,.55));
+      border:1px solid #1f3a52; box-shadow:inset 0 0 0 1px #112131, 0 10px 30px #0009, 0 0 30px #00e1ff1c;}
+    .side-head{display:flex;align-items:center;gap:.6rem;padding:12px 14px;border-bottom:1px solid #1b2634}
+    .side-title{font-family:Orbitron;font-weight:900;letter-spacing:.1em;color:var(--pink)}
+    .side-nav{display:flex;flex-direction:column;padding:10px}
+    .side-link{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;margin:4px 0;border-radius:12px;color:var(--aqua);background:rgba(0,0,0,.16);border:1px solid #182230}
+    .side-link.active,.side-link:hover{background:radial-gradient(130% 80% at 20% 30%,rgba(0,225,255,.18),rgba(255,59,132,.14));color:#eaffff;border-color:#3c79a3;box-shadow:0 0 0 1px #2a5977 inset,0 0 18px #00e1ff55 inset}
+    .side-pin{font-size:.86em;opacity:.75}
+
+    /* Panels (transparent HUD with aqua border) */
+    .panels{display:flex;flex-direction:column;gap:22px}
+    .panel{
+      background:var(--panelShade), linear-gradient(180deg,rgba(13,24,38,.70),rgba(10,14,22,.56));
+      border-radius:16px;
+      border:1px solid rgba(0,225,255,.35);
+      box-shadow:
+        inset 0 0 0 1px rgba(20,60,95,.7),
+        0 8px 24px rgba(0,0,0,.55),
+        0 0 40px rgba(0,225,255,.08);
     }
-    #matrix-canvas {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      pointer-events: none; z-index: 1; background: none; display: block;
+    .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:10px 12px;border-bottom:1px solid #173149}
+    .panel-title{font-family:Orbitron;font-weight:900;letter-spacing:.08em}
+    .hud-tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .hud-tab{padding:6px 10px;border-radius:10px;border:1px solid #2a4967;background:#0b121b;color:#bfe8ff;cursor:pointer}
+    .hud-tab.active{background:#16273d;color:#fff;border-color:#3a5a7d;box-shadow:0 0 0 2px #223042}
+
+    .tool-grid{display:grid;grid-template-columns:minmax(270px,420px) 1fr;gap:16px}
+    .controls{background:linear-gradient(180deg,#0b121a,#0a1016);border:1px solid #1b2e42;border-radius:14px;padding:12px}
+    .ctrl-group{margin:10px 0;padding:10px;border:1px dashed #243246;border-radius:10px}
+    .ctrl-group[data-step]:before{content:attr(data-step);font-size:.78em;color:#a9c9ff;background:#142032;border:1px solid #26364a;border-radius:8px;padding:2px 8px;margin-right:8px}
+    .ctrl-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin:6px 0}
+    input[type="text"], select, textarea{width:100%;padding:.55rem .7rem;border:1px solid #213041;border-radius:10px;background:#0b121b;color:#cfeaff;outline:none}
+    .slider{accent-color:var(--aqua);width:100%}
+    .toggle{appearance:none;width:42px;height:24px;border-radius:999px;background:#223142;position:relative;outline:none;border:1px solid #1a2736;cursor:pointer}
+    .toggle:checked{background:#1d3548}
+    .toggle:before{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#88f1ff;transition:.18s}
+    .toggle:checked:before{transform:translateX(18px);background:#ffd44d}
+
+    .preview{position:relative;min-height:360px;border:1px solid #1a3146;border-radius:14px;background:linear-gradient(180deg,rgba(3,6,10,.3),rgba(3,6,10,.45));}
+    .preview .glass{position:absolute;inset:0;border-radius:14px;pointer-events:none;box-shadow:inset 0 0 0 1px #223142,inset 0 0 80px rgba(0,225,255,.06)}
+    pre.ascii{margin:0;white-space:pre;overflow:auto;font-family:'Share Tech Mono',monospace;font-size:12px;line-height:1.06;color:#bfe8ff;text-shadow:0 0 6px #00e1ff33;max-height:56vh;padding:8px}
+    .preview-toolbar{display:flex;gap:8px;flex-wrap:wrap;position:absolute;top:8px;right:8px}
+    .btn{border:1px solid #274158;background:#101b27;color:#dff7ff;padding:6px 10px;border-radius:10px;cursor:pointer}
+    .btn:hover{background:linear-gradient(90deg,var(--aqua),var(--pink));color:#001018}
+    .chip{border:1px solid #2a3c50;border-radius:14px;padding:6px 10px;background:#0c141f;color:#aeefff}
+
+    /* Quickbar */
+    .quickbar{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:55;display:flex;gap:8px;background:rgba(9,14,22,.9);border:1px solid #22364a;border-radius:999px;padding:6px 10px;backdrop-filter:blur(6px);box-shadow:0 6px 28px #0009}
+    .quickbar a{display:flex;align-items:center;gap:6px;border:1px solid #2b3e55;background:#0e1622;color:#bfe8ff;padding:6px 10px;border-radius:999px}
+    .quickbar a:hover{background:linear-gradient(90deg,var(--aqua),var(--pink));color:#001018;border-color:#3a4d68}
+
+    /* Footer (centered + camo) */
+    footer{border-top:1px solid #1b2634;background:#0a0d12;color:#9bd7ff;padding:22px 2vw}
+    .footer-wrap{max-width:1200px;margin:0 auto;text-align:center}
+    .footer-art{display:inline-block;margin:0 auto;line-height:1;letter-spacing:1px;color:#9bd7ff;text-shadow:0 0 8px #00e1ff22}
+    .footer-camo{margin:.6rem auto 0 auto;display:inline-block}
+    .footer-bar{padding:8px 0}
+
+    /* Translate nuke */
+    .goog-te-banner-frame.skiptranslate,#goog-gt-tt,.goog-te-balloon-frame,.goog-te-gadget,.goog-tooltip{display:none !important}
+    body{top:0 !important}
+
+    /* Responsive */
+    @media(max-width:1100px){.tool-grid{grid-template-columns:1fr}}
+    @media(max-width:820px){.wrap{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <!-- ===== BG ===== -->
+  <div id="bg-wrap">
+    <video id="video-bg" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
+    <canvas id="matrix-canvas"></canvas>
+  </div>
+
+  <!-- ===== HEADER ===== -->
+  <header class="navbar">
+    <div class="nav-row">
+      <div class="logo">PromptForge</div>
+      <nav class="nav-links">
+        <a class="nav-btn" href="#t2a">Home</a>
+        <div class="nav-btn" id="openHelp">? Help</div>
+        <a class="nav-btn" href="#showcase">Gallery</a>
+        <a class="nav-btn" href="#faq">FAQ</a>
+        <div class="nav-socials">
+          <a class="social" title="site" href="https://promptforge.online" target="_blank" rel="noopener">🌐</a>
+          <a class="social" title="Bsky" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener">🟦</a>
+          <a class="social" title="X" href="https://x.com/GoreandGiggles" target="_blank" rel="noopener">🐦</a>
+          <a class="social" title="FB" href="https://www.facebook.com/groups/393971833395749" target="_blank" rel="noopener">📘</a>
+        </div>
+        <div class="nav-btn" id="skinBtn">HUD Skin ▾</div>
+        <div class="nav-btn">
+          <span>🌐</span>
+          <div id="google_translate_element" style="display:inline-block"></div>
+        </div>
+        <a class="nav-btn" style="white-space:nowrap" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">DO NOT PRESS</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== DESCRIPTION ===== -->
+  <div class="desc-strip">
+    <div class="desc-inner">
+      <div class="desc-title">PROMPTFORGE HUD</div>
+      <div class="desc-blurb">Transparent, neon‑edged interface for <b>text, image, and video</b> → ASCII/ANSI. Ramps, gamma, 5 dithers, gradients, FIGlet banners. Live previews. Export PNG/TXT.</div>
+      <div class="badges">
+        <span class="badge">ASCII</span><span class="badge">ANSI 256</span><span class="badge">FIGlet 50+</span><span class="badge">Dither</span><span class="badge">PNG/TXT</span>
+      </div>
+      <div class="sr-only">ascii art, ansi art, text to ascii, image to ascii, video to ascii, figlet fonts, floyd-steinberg, ordered bayer, atkinson, character ramps, unicode blocks, braille, cp437, petscii, gradient, ansi 256, export png, export txt, generator, converter, PromptForge</div>
+    </div>
+  </div>
+
+  <!-- ===== LAYOUT ===== -->
+  <div class="wrap" id="wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="side-head"><div class="side-title">☰ Tools</div></div>
+      <nav class="side-nav" id="sideNav">
+        <a class="side-link active" href="#t2a"><span>Text → ASCII</span><span class="side-pin">S1–S3</span></a>
+        <a class="side-link" href="#i2a"><span>Image → ASCII</span><span class="side-pin">S1–S4</span></a>
+        <a class="side-link" href="#v2a"><span>Video → ASCII</span><span class="side-pin">Live</span></a>
+        <a class="side-link" href="#banner"><span>ASCII Banner</span><span class="side-pin">FIGlet</span></a>
+        <a class="side-link" href="#ansi"><span>ANSI Colorizer</span><span class="side-pin">256</span></a>
+        <a class="side-link" href="#export"><span>Export</span><span class="side-pin">TXT/PNG</span></a>
+        <a class="side-link" href="#showcase"><span>Showcase</span></a>
+        <a class="side-link" href="#faq"><span>FAQ</span></a>
+
+        <!-- Ad slot -->
+        <div class="ad-slot" style="display:grid;place-items:center;min-height:90px;border:1px dashed #2a3c50;border-radius:12px;background:rgba(10,16,24,.5);margin-top:10px">
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+          <span class="chip">Ad space</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Panels -->
+    <main class="panels">
+
+      <!-- TEXT → ASCII -->
+      <section class="panel" id="t2a">
+        <div class="panel-head">
+          <div class="panel-title">Text → ASCII</div>
+          <div class="hud-tabs">
+            <button class="hud-tab active" data-step-target="t2a" data-step="1">1) Text & Ramp</button>
+            <button class="hud-tab" data-step-target="t2a" data-step="2">2) Size</button>
+            <button class="hud-tab" data-step-target="t2a" data-step="3">3) Tone</button>
+          </div>
+        </div>
+        <div class="tool-grid">
+          <div class="controls" id="t2aControls">
+            <div class="ctrl-group" data-step="1">
+              <div class="ctrl-row"><label for="tText">Text</label><input id="tText" type="text" placeholder="PromptForge loves neon HUDs." autocomplete="off" /></div>
+              <div class="ctrl-row">
+                <label for="tRamp">Character Ramp</label>
+                <select id="tRamp">
+                  <option value=" .'`&quot;,:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$">Fine (classic)</option>
+                  <option value=" .:-=+*#%@">Simple</option>
+                  <option value=" ░▒▓█">Blocks</option>
+                  <option value="⠀⠁⠂⠄⠆⠇⠋⠛⠟⠿">Braille smooth</option>
+                  <option value=" .¸·:;*oO8@">Soft glow</option>
+                  <option value=" `.'^_-=+*#█">Poster</option>
+                </select>
+              </div>
+              <div class="ctrl-row"><label for="tWeight">Weight</label><select id="tWeight"><option value="normal">normal</option><option value="bold">bold</option><option value="900">ultra</option></select></div>
+              <div class="ctrl-row"><label class="small">Invert</label><input id="tInvert" class="toggle" type="checkbox" /></div>
+            </div>
+            <div class="ctrl-group" data-step="2">
+              <div class="ctrl-row"><label>Font Size: <span id="tFontSizeVal" class="chip">16px</span></label><input id="tFontSize" class="slider" type="range" min="10" max="48" step="1" value="16" /></div>
+              <div class="ctrl-row"><label>Width (chars): <span id="tWidthVal" class="chip">120</span></label><input id="tWidth" class="slider" type="range" min="40" max="240" step="2" value="120" /></div>
+              <div class="ctrl-row"><label>Letter Spacing: <span id="tLSVal" class="chip">0</span></label><input id="tLS" class="slider" type="range" min="-2" max="4" step=".1" value="0" /></div>
+            </div>
+            <div class="ctrl-group" data-step="3">
+              <div class="ctrl-row"><label>Brightness: <span id="tBriVal" class="chip">0</span></label><input id="tBri" class="slider" type="range" min="-100" max="100" step="1" value="0" /></div>
+              <div class="ctrl-row"><label>Contrast: <span id="tConVal" class="chip">0</span></label><input id="tCon" class="slider" type="range" min="-100" max="100" step="1" value="0" /></div>
+              <div class="ctrl-row"><label>Gamma: <span id="tGamVal" class="chip">1.00</span></label><input id="tGam" class="slider" type="range" min="0.2" max="3" step="0.05" value="1" /></div>
+            </div>
+            <div class="ctrl-row" style="margin-top:10px;grid-template-columns:repeat(5,1fr);gap:8px">
+              <button class="btn" id="tGenerate">Generate</button>
+              <button class="btn" id="tTrim">Trim WS</button>
+              <button class="btn" id="tNormalize">Normalize</button>
+              <button class="btn" id="tCopy">Copy</button>
+              <button class="btn" id="tSaveTxt">Save .txt</button>
+            </div>
+          </div>
+          <div class="preview" id="t2aPreview">
+            <div class="preview-toolbar"><button class="btn" id="tSavePng">Save .png</button></div>
+            <pre id="tOut" class="ascii" aria-live="polite"></pre>
+            <div class="glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- IMAGE → ASCII -->
+      <section class="panel" id="i2a">
+        <div class="panel-head">
+          <div class="panel-title">Image → ASCII</div>
+          <div class="hud-tabs">
+            <button class="hud-tab active" data-step-target="i2a" data-step="1">1) Image</button>
+            <button class="hud-tab" data-step-target="i2a" data-step="2">2) Size</button>
+            <button class="hud-tab" data-step-target="i2a" data-step="3">3) Tone</button>
+            <button class="hud-tab" data-step-target="i2a" data-step="4">4) Dither</button>
+          </div>
+        </div>
+
+        <div class="tool-grid">
+          <div class="controls" id="i2aControls">
+            <div class="ctrl-group" data-step="1">
+              <div class="ctrl-row"><label>Upload</label><input id="iFile" type="file" accept="image/*" /></div>
+              <div class="ctrl-row"><label>Ramp</label>
+                <select id="iRamp">
+                  <option value=" .'`&quot;,:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$">Fine</option>
+                  <option value=" .:-=+*#%@">Simple</option>
+                  <option value=" ░▒▓█">Blocks</option>
+                  <option value="⠀⠁⠂⠄⠆⠇⠋⠛⠟⠿">Braille smooth</option>
+                </select>
+              </div>
+              <div class="ctrl-row"><label class="small">Invert</label><input id="iInvert" class="toggle" type="checkbox" /></div>
+            </div>
+            <div class="ctrl-group" data-step="2">
+              <div class="ctrl-row"><label>Width (chars): <span id="iWVal" class="chip">140</span></label><input id="iWidth" class="slider" type="range" min="40" max="240" step="2" value="140" /></div>
+              <div class="ctrl-row"><label>Line Height: <span id="iLHVal" class="chip">1.9</span></label><input id="iLH" class="slider" type="range" min="1" max="2.5" step="0.05" value="1.9" /></div>
+            </div>
+            <div class="ctrl-group" data-step="3">
+              <div class="ctrl-row"><label>Brightness: <span id="iBVal" class="chip">0</span></label><input id="iBri" class="slider" type="range" min="-100" max="100" value="0" /></div>
+              <div class="ctrl-row"><label>Contrast: <span id="iCVal" class="chip">0</span></label><input id="iCon" class="slider" type="range" min="-100" max="100" value="0" /></div>
+              <div class="ctrl-row"><label>Gamma: <span id="iGVal" class="chip">1.00</span></label><input id="iGam" class="slider" type="range" min="0.2" max="3" step="0.05" value="1" /></div>
+              <div class="ctrl-row"><label>Threshold: <span id="iTVal" class="chip">128</span></label><input id="iThr" class="slider" type="range" min="0" max="255" value="128" /></div>
+            </div>
+            <div class="ctrl-group" data-step="4">
+              <div class="ctrl-row"><label>Dither</label>
+                <select id="iDither">
+                  <option value="none">None</option>
+                  <option value="floyd">Floyd–Steinberg</option>
+                  <option value="bayer4">Ordered (Bayer 4×4)</option>
+                  <option value="bayer8">Ordered (Bayer 8×8)</option>
+                  <option value="atkinson">Atkinson</option>
+                </select>
+              </div>
+              <div class="ctrl-row"><label>Noise: <span id="iNVal" class="chip">0</span></label><input id="iNoise" class="slider" type="range" min="0" max="40" value="0" /></div>
+            </div>
+            <div class="ctrl-row" style="margin-top:10px;grid-template-columns:repeat(5,1fr);gap:8px">
+              <button class="btn" id="iGenerate">Generate</button>
+              <button class="btn" id="iTrim">Trim WS</button>
+              <button class="btn" id="iCopy">Copy</button>
+              <button class="btn" id="iSaveTxt">Save .txt</button>
+              <button class="btn" id="iSavePng">Save .png</button>
+            </div>
+          </div>
+          <div class="preview" id="i2aPreview">
+            <pre id="iOut" class="ascii"></pre>
+            <div class="glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIDEO → ASCII -->
+      <section class="panel" id="v2a">
+        <div class="panel-head">
+          <div class="panel-title">Video → ASCII</div>
+          <div class="hud-tabs">
+            <button class="hud-tab active" data-step-target="v2a" data-step="1">1) Video</button>
+            <button class="hud-tab" data-step-target="v2a" data-step="2">2) Tune</button>
+          </div>
+        </div>
+        <div class="tool-grid">
+          <div class="controls" id="v2aControls">
+            <div class="ctrl-group" data-step="1">
+              <div class="ctrl-row"><label>Upload MP4/WebM</label><input id="vFile" type="file" accept="video/*" /></div>
+              <div class="ctrl-row"><label>Ramp</label>
+                <select id="vRamp">
+                  <option value=" .:-=+*#%@">Simple</option>
+                  <option value=" .'`&quot;,:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$">Fine</option>
+                  <option value=" ░▒▓█">Blocks</option>
+                  <option value="⠀⠁⠂⠄⠆⠇⠋⠛⠟⠿">Braille smooth</option>
+                </select>
+              </div>
+              <div class="ctrl-row"><label class="small">Invert</label><input id="vInvert" class="toggle" type="checkbox" /></div>
+            </div>
+            <div class="ctrl-group" data-step="2">
+              <div class="ctrl-row"><label>Width (chars): <span id="vWVal" class="chip">120</span></label><input id="vWidth" class="slider" type="range" min="60" max="220" step="2" value="120" /></div>
+              <div class="ctrl-row"><label>FPS: <span id="vFPSVal" class="chip">12</span></label><input id="vFPS" class="slider" type="range" min="4" max="30" step="1" value="12" /></div>
+              <div class="ctrl-row"><label>Brightness: <span id="vBVal" class="chip">0</span></label><input id="vBri" class="slider" type="range" min="-100" max="100" value="0" /></div>
+              <div class="ctrl-row"><label>Contrast: <span id="vCVal" class="chip">0</span></label><input id="vCon" class="slider" type="range" min="-100" max="100" value="0" /></div>
+              <div class="ctrl-row"><label>Gamma: <span id="vGVal" class="chip">1.00</span></label><input id="vGam" class="slider" type="range" min="0.2" max="3" step="0.05" value="1" /></div>
+            </div>
+            <div class="ctrl-row" style="margin-top:10px;grid-template-columns:repeat(3,1fr);gap:8px">
+              <button class="btn" id="vPlay">Play</button>
+              <button class="btn" id="vStop">Stop</button>
+              <button class="btn" id="vSaveTxt">Save frames (.txt)</button>
+            </div>
+          </div>
+          <div class="preview" id="v2aPreview">
+            <pre id="vOut" class="ascii"></pre>
+            <video id="vEl" style="display:none"></video>
+            <canvas id="vCanvas" style="display:none"></canvas>
+            <div class="glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ASCII Banner -->
+      <section class="panel" id="banner">
+        <div class="panel-head">
+          <div class="panel-title">ASCII Banner (FIGlet)</div>
+          <div class="hud-tabs">
+            <button class="hud-tab active" data-step-target="banner" data-step="1">1) Text</button>
+            <button class="hud-tab" data-step-target="banner" data-step="2">2) Style</button>
+          </div>
+        </div>
+        <div class="tool-grid">
+          <div class="controls" id="bannerControls">
+            <div class="ctrl-group" data-step="1">
+              <div class="ctrl-row"><label>Banner Text</label><input id="bText" type="text" placeholder="PROMPTFORGE" /></div>
+              <div class="ctrl-row"><label>Font</label><select id="bFont"></select></div>
+            </div>
+            <div class="ctrl-group" data-step="2">
+              <div class="ctrl-row"><label>Outline: <span id="bOVal" class="chip">0</span></label><input id="bOutline" class="slider" type="range" min="0" max="2" step="1" value="0" /></div>
+              <div class="ctrl-row"><label>Fill Char</label><input id="bFill" type="text" value="█" /></div>
+              <div class="ctrl-row"><label>Shadow</label><select id="bShadow"><option value="none">None</option><option value="soft">Soft</option><option value="hard">Hard</option></select></div>
+            </div>
+            <div class="ctrl-row" style="grid-template-columns:repeat(4,1fr);gap:8px">
+              <button class="btn" id="bGenerate">Generate</button>
+              <button class="btn" id="bTrim">Trim WS</button>
+              <button class="btn" id="bCopy">Copy</button>
+              <button class="btn" id="bSaveTxt">Save .txt</button>
+            </div>
+          </div>
+          <div class="preview" id="bannerPreview">
+            <div class="preview-toolbar"><button class="btn" id="bSavePng">Save .png</button></div>
+            <pre id="bOut" class="ascii"></pre>
+            <div class="glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANSI Colorizer -->
+      <section class="panel" id="ansi">
+        <div class="panel-head">
+          <div class="panel-title">ANSI Colorizer</div>
+          <div class="hud-tabs">
+            <button class="hud-tab active" data-step-target="ansi" data-step="1">1) Paste</button>
+            <button class="hud-tab" data-step-target="ansi" data-step="2">2) Gradient</button>
+          </div>
+        </div>
+        <div class="tool-grid">
+          <div class="controls" id="ansiControls">
+            <div class="ctrl-group" data-step="1">
+              <div class="ctrl-row" style="grid-template-columns:1fr">
+                <label>ASCII Input</label>
+                <textarea id="aIn" rows="8" placeholder="Paste your ASCII here…"></textarea>
+              </div>
+            </div>
+            <div class="ctrl-group" data-step="2">
+              <div class="ctrl-row"><label>Start</label><input id="aC1" type="color" value="#00e1ff" /></div>
+              <div class="ctrl-row"><label>End</label><input id="aC2" type="color" value="#ff3b84" /></div>
+              <div class="ctrl-row"><label>Mode</label><select id="aMode"><option value="row">Row</option><option value="col">Column</option><option value="diag">Diagonal</option></select></div>
+              <div class="ctrl-row"><label>ANSI Palette</label><select id="aPal"><option value="16">16 colors</option><option value="256" selected>256 colors</option></select></div>
+              <div class="ctrl-row"><label class="small">HTML Preview</label><input id="aPreviewToggle" class="toggle" type="checkbox" /></div>
+              <div class="ctrl-row" style="grid-template-columns:repeat(4,1fr);gap:8px">
+                <button class="btn" id="aApply">Apply Color</button>
+                <button class="btn" id="aTrim">Trim WS</button>
+                <button class="btn" id="aCopy">Copy (ANSI)</button>
+                <button class="btn" id="aSaveTxt">Save .txt</button>
+              </div>
+            </div>
+          </div>
+          <div class="preview" id="ansiPreview">
+            <pre id="aOut" class="ascii"></pre>
+            <pre id="aOutHtml" class="ascii" style="display:none"></pre>
+            <div class="glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPORT -->
+      <section class="panel" id="export">
+        <div class="panel-head">
+          <div class="panel-title">Export</div>
+          <div class="hud-tabs"><span class="chip">TXT</span><span class="chip">PNG</span><span class="chip">History</span></div>
+        </div>
+        <div class="tool-grid">
+          <div class="controls">
+            <div class="ctrl-group">
+              <div class="ctrl-row"><label>Session Name</label><input id="sessName" type="text" placeholder="my-ascii-session" /></div>
+              <div class="ctrl-row" style="grid-template-columns:1fr 1fr"><button class="btn" id="saveSession">Save Session (JSON)</button><button class="btn" id="loadSession">Load Session</button></div>
+              <div class="ctrl-row"><label class="small">PNG Font Size: <span id="pngFSVal" class="chip">14</span></label><input id="pngFS" class="slider" type="range" min="10" max="28" value="14" /></div>
+              <div class="ctrl-row" style="grid-template-columns:1fr 1fr"><button class="btn" id="saveGallery">Save to Gallery API</button><button class="btn" id="clearHist">Clear History</button></div>
+            </div>
+          </div>
+          <div class="preview">
+            <pre id="hist" class="ascii">History will collect your generated outputs here (Text, Image, Banner). Export JSON to preserve.</pre>
+            <div class="glass"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SHOWCASE -->
+      <section class="panel" id="showcase">
+        <div class="panel-head"><div class="panel-title">Showcase</div></div>
+        <div class="desc-inner" style="padding:8px 0">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px" id="showcaseGrid"></div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="panel" id="faq">
+        <div class="panel-head"><div class="panel-title">FAQ</div></div>
+        <div class="desc-inner" style="padding:8px 0">
+          <p><b>Instant clean ASCII?</b> Image → ASCII with <i>Fine</i> ramp, width 140–180, line‑height 1.9, gamma 1.25, and <i>Bayer 8×8</i> for crisp edges.</p>
+          <p><b>Video looks coarse?</b> Up the width & FPS, pick “Fine” or “Braille smooth”, then lift gamma slightly.</p>
+          <p><b>FIGlet fonts?</b> 50+ fonts. Add outline/shadow; swap the fill glyph for themed posters.</p>
+          <p><b>ANSI gradients?</b> Toggle HTML Preview to see colors in the browser; copy ANSI for terminals.</p>
+          <p><b>Exports?</b> Save PNG/TXT per tool or batch via Export. PNG font size controls crispness.</p>
+          <p class="sr-only">ascii art • ansi art • text to ascii • image to ascii • video to ascii • figlet fonts • dithering • floyd‑steinberg • ordered bayer • atkinson • character ramps • unicode blocks • braille • cp437 • petscii • gradient • ansi 256 • export png • export txt • generator • converter • PromptForge</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Quickbar -->
+  <div class="quickbar" id="quickbar">
+    <a href="#t2a">Text→ASCII</a>
+    <a href="#i2a">Image→ASCII</a>
+    <a href="#v2a">Video→ASCII</a>
+    <a href="#banner">FIGlet</a>
+    <a href="#ansi">ANSI</a>
+    <a href="#export">Export</a>
+    <a href="#showcase">Gallery</a>
+    <a href="#faq">FAQ</a>
+  </div>
+
+  <!-- ===== YOUR FOOTER (centered) ===== -->
+  <footer id="footer">
+    <div class="footer-wrap">
+      <pre class="footer-art">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+      </pre>
+      <pre class="footer-camo" id="footerCamo"></pre>
+      <div class="footer-bar">
+        Made underground in BC, Canada &bull; #PromptForge &bull;
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);" target="_blank" rel="noopener">Bluesky</a> &bull;
+        <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);" target="_blank" rel="noopener">Twitter/X</a> &bull;
+        <a href="terms.html" style="color:var(--aqua);">Legal</a>
+      </div>
+    </div>
+  </footer>
+  <!-- ===== CORE JS: utilities, tools, gallery, sessions ===== -->
+  <script>
+  /********* UTIL *********/
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+  function toast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;left:50%;bottom:32px;transform:translateX(-50%);background:#0e1926;border:1px solid #28445f;color:#dff7ff;padding:8px 12px;border-radius:10px;z-index:9999;box-shadow:0 8px 20px #000a';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2200);}
+  function dl(filename, text) {
+    const blob = new Blob([text], {type: 'text/plain'}), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+    setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();}, 400);
+  }
+  function asciiToPNG(text, fontSize=14, bg="#050a11", color="#bfe8ff"){
+    const lines=text.split("\n"); const cw=fontSize*0.6, ch=fontSize*1.05;
+    const w=Math.max(1, Math.floor(Math.max(...lines.map(l=>l.length))*cw+20)), h=Math.floor(lines.length*ch+20);
+    const c=document.createElement('canvas'); c.width=w; c.height=h; const ctx=c.getContext('2d');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,w,h); ctx.font=`${fontSize}px 'Share Tech Mono'`; ctx.fillStyle=color; ctx.textBaseline='top';
+    lines.forEach((ln,i)=>ctx.fillText(ln,10,10+i*ch));
+    return c.toDataURL('image/png');
+  }
+  function savePNG(text, base="ascii", fontSize=14){ const url=asciiToPNG(text,fontSize); const a=document.createElement('a'); a.href=url; a.download=`${base}.png`; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 5000); }
+  const trimWS = s => s.split('\n').map(l=>l.replace(/\s+$/,'')).join('\n').replace(/^\s*\n+/,'').replace(/\n+\s*$/,'');
+  const normalizeMono = s => { const lines=s.split('\n'); const w=Math.max(...lines.map(l=>l.replace(/\s+$/,'').length)); return lines.map(l=>l.padEnd(w,' ')).join('\n'); };
+
+  /********* SKINS *********/
+  (function(){ const btn=$('#skinBtn'); const skins=['neon','emerald','amber']; const map={neon:{'--aqua':'#00e1ff'},emerald:{'--aqua':'#34f3c2'},amber:{'--aqua':'#ffd166'}}; let idx=0;
+    const saved=localStorage.getItem('pf_skin_idx'); if(saved){ idx=+saved; apply(); }
+    function apply(){ const name=skins[idx%skins.length]; Object.entries(map[name]).forEach(([k,v])=>document.documentElement.style.setProperty(k,v)); localStorage.setItem('pf_skin_idx', idx); toast('Skin: '+name); }
+    btn.addEventListener('click',()=>{ idx=(idx+1)%skins.length; apply(); });
+  })();
+
+  /********* STEP HIGHLIGHT *********/
+  function makeStepSystem(panelId){
+    const root = document.getElementById(panelId);
+    if(!root) return;
+    const tabs = root.querySelectorAll('.hud-tab');
+    const controls = document.getElementById(panelId+'Controls');
+    function setStep(step){
+      tabs.forEach(t=>t.classList.toggle('active', t.dataset.step==step));
+      controls && controls.querySelectorAll('.ctrl-group').forEach(g=>{g.style.outline=g.dataset.step==step?'1px solid #ffd44d66':'none';});
     }
-    .navbar { width: 100vw; position: sticky; top: 0; left: 0; z-index: 10; background: rgba(10,16,22,0.95); backdrop-filter: blur(3px); border-bottom: 1.5px solid #2b2750; display: flex; flex-direction: column; align-items: flex-start; min-height: 78px; box-shadow: 0 2px 24px #00e1ff33;}
-    .navbar-row1 {
-      width: 100vw;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 0 2vw;
-      min-height: 56px;
-      flex-wrap: nowrap;
-      overflow: hidden;
-      position: relative;
-      max-width: 100vw;
+    tabs.forEach(t=>t.addEventListener('click', ()=>setStep(t.dataset.step)));
+    setStep(1);
+  }
+  ['t2a','i2a','v2a','banner','ansi'].forEach(makeStepSystem);
+
+  /********* SIDEBAR ACTIVE (scrollspy) *********/
+  const sideLinks = $$('#sideNav .side-link');
+  const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ sideLinks.forEach(a=>a.classList.toggle('active', a.getAttribute('href').slice(1)===e.target.id)); } }); },{rootMargin:'-35% 0px -55% 0px'});
+  ['t2a','i2a','v2a','banner','ansi','export','showcase','faq'].forEach(id=>obs.observe(document.getElementById(id)));
+
+  /********* HISTORY *********/
+  const historyBox = $('#hist'); function pushHistory(title, text){ if(!text) return; historyBox.textContent += `\n\n=== ${title} ===\n` + text; }
+
+  /********* Ramp density LUT (better mapping) *********/
+  const densityCache = new Map();
+  function getRampLUT(ramp){
+    if(densityCache.has(ramp)) return densityCache.get(ramp);
+    const size=24, pad=4, cw=size*0.6+pad*2, ch=size*1.05+pad*2;
+    const c=document.createElement('canvas'); c.width=cw; c.height=ch; const ctx=c.getContext('2d');
+    ctx.font=`${size}px 'Share Tech Mono'`; ctx.textBaseline='top'; ctx.fillStyle='#fff';
+    const arr=[...ramp].map(ch=>{
+      ctx.clearRect(0,0,cw,ch); ctx.fillText(ch,pad,pad);
+      const d=ctx.getImageData(0,0,cw,ch).data; let sum=0; for(let i=0;i<d.length;i+=4) sum+=d[i]; // white sum proxy
+      return {ch, val:sum/(255*(d.length/4))};
+    }).sort((a,b)=>a.val-b.val);
+    const chars=arr.map(o=>o.ch), vals=arr.map(o=>o.val);
+    const lut = v => {
+      const idx = vals.findIndex(x=>x>=v);
+      return chars[idx===-1? chars.length-1 : idx];
+    };
+    densityCache.set(ramp,lut); return lut;
+  }
+  const applyTone=(val,bri,con,gam)=>{ let v = clamp(val + bri/200, 0, 1); v = clamp(((v-.5)*(1 + con/100)) + .5, 0, 1); v = Math.pow(v, 1/gam); return clamp(v,0,1); };
+
+  /********* TEXT→ASCII *********/
+  const tEl = {text:$('#tText'), ramp:$('#tRamp'), weight:$('#tWeight'), invert:$('#tInvert'),
+    fs:$('#tFontSize'), fsVal:$('#tFontSizeVal'), width:$('#tWidth'), widthVal:$('#tWidthVal'),
+    ls:$('#tLS'), lsVal:$('#tLSVal'), bri:$('#tBri'), briVal:$('#tBriVal'), con:$('#tCon'),
+    conVal:$('#tConVal'), gam:$('#tGam'), gamVal:$('#tGamVal'), out:$('#tOut')};
+  function textToAscii(){
+    const str = tEl.text.value || 'PromptForge HUD rocks.';
+    const width = parseInt(tEl.width.value,10);
+    const ramp = tEl.ramp.value; const inv = tEl.invert.checked; const lut = getRampLUT(ramp);
+    const lines = []; const words = str.split(/\s+/g); let line='';
+    words.forEach(w=>{ if((line+w).length>width){lines.push(line.trim()); line=w+' ';} else line += w+' '; });
+    if(line.trim()) lines.push(line.trim());
+    const result = lines.map(ln=>{
+      let out=''; for(let i=0;i<width;i++){ const t=i/(width-1); let v=applyTone(t,+tEl.bri.value,+tEl.con.value,+tEl.gam.value); if(inv) v=1-v; out+=lut(v); }
+      const start=Math.max(0, Math.floor((width-ln.length)/2));
+      return out.slice(0,start)+ln+out.slice(start+ln.length);
+    }).join('\n');
+    tEl.out.style.fontWeight = tEl.weight.value; tEl.out.style.fontSize = tEl.fs.value+'px'; tEl.out.style.letterSpacing = tEl.ls.value+'px';
+    tEl.fsVal.textContent = tEl.fs.value+'px'; tEl.widthVal.textContent = width; tEl.lsVal.textContent = tEl.ls.value; tEl.briVal.textContent = tEl.bri.value; tEl.conVal.textContent = tEl.con.value; tEl.gamVal.textContent = (+tEl.gam.value).toFixed(2);
+    tEl.out.textContent = result;
+  }
+  ;['input','change','keyup'].forEach(ev=>['tText','tRamp','tWeight','tInvert','tFontSize','tWidth','tLS','tBri','tCon','tGam'].forEach(id=>document.getElementById(id).addEventListener(ev, textToAscii)));
+  $('#tGenerate').onclick = ()=>{ textToAscii(); pushHistory('Text→ASCII', tEl.out.textContent); };
+  $('#tTrim').onclick = ()=>{ tEl.out.textContent = trimWS(tEl.out.textContent); };
+  $('#tNormalize').onclick = ()=>{ tEl.out.textContent = normalizeMono(tEl.out.textContent); };
+  $('#tCopy').onclick = ()=>{ navigator.clipboard.writeText(tEl.out.textContent); toast('Copied Text→ASCII'); };
+  $('#tSaveTxt').onclick = ()=>dl('text_ascii.txt', tEl.out.textContent);
+  $('#tSavePng').onclick = ()=>savePNG(tEl.out.textContent,'text_ascii', parseInt($('#pngFS').value,10));
+  textToAscii();
+
+  /********* IMAGE→ASCII *********/
+  const iEl = {file:$('#iFile'), ramp:$('#iRamp'), invert:$('#iInvert'),
+    width:$('#iWidth'), wVal:$('#iWVal'), lh:$('#iLH'), lhVal:$('#iLHVal'),
+    bri:$('#iBri'), bVal:$('#iBVal'), con:$('#iCon'), cVal:$('#iCVal'),
+    gam:$('#iGam'), gVal:$('#iGVal'), thr:$('#iThr'), tVal:$('#iTVal'),
+    dith:$('#iDither'), noise:$('#iNoise'), nVal:$('#iNVal'), out:$('#iOut')};
+  let imgBitmap=null;
+  iEl.file.addEventListener('change', async e=>{ const f=e.target.files?.[0]; if(!f) return; imgBitmap = await createImageBitmap(f); renderImageAscii(); });
+  function renderImageAscii(){
+    if(!imgBitmap){ iEl.out.textContent="(Upload an image)"; return; }
+    const cw=parseInt(iEl.width.value,10);
+    const ch=Math.round((imgBitmap.height/imgBitmap.width) * cw * (iEl.lh.value||1.9));
+    iEl.wVal.textContent=cw; iEl.lhVal.textContent=iEl.lh.value; iEl.bVal.textContent=iEl.bri.value; iEl.cVal.textContent=iEl.con.value; iEl.gVal.textContent=(+iEl.gam.value).toFixed(2); iEl.tVal.textContent=iEl.thr.value; iEl.nVal.textContent=iEl.noise.value;
+    const c=document.createElement('canvas'); c.width=cw; c.height=ch; const ctx=c.getContext('2d');
+    ctx.drawImage(imgBitmap,0,0,cw,ch);
+    let img=ctx.getImageData(0,0,cw,ch), d=img.data;
+    const bri=+iEl.bri.value, con=+iEl.con.value, gam=+iEl.gam.value, inv=iEl.invert.checked;
+    for(let i=0;i<d.length;i+=4){
+      let v=(d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114)/255;
+      v = applyTone(v,bri,con,gam);
+      if(+iEl.noise.value>0){ v = clamp(v + (Math.random()*2-1)*(iEl.noise.value/255),0,1); }
+      if(inv) v=1-v;
+      const q=Math.floor(v*255); d[i]=d[i+1]=d[i+2]=q;
     }
-    .logo { font-family: 'Orbitron', 'monospace'; font-size: clamp(2.1rem, 5vw, 2.7rem); font-weight: 900; background: linear-gradient(90deg, var(--brand2) 0%, var(--accent) 60%, var(--brand) 100%); background-size: 220% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; letter-spacing: 0.12em; text-shadow: 0 0 36px var(--matrix), 2px 2px 2px var(--brand2), -2px -2px 2px var(--brand); animation: gradient-flow 7s linear infinite, pulse-title 2.3s infinite alternate; user-select: none; filter: drop-shadow(0 2px 24px #00e1ff44); cursor: pointer; padding: 0 6px 0 0;}
-    @keyframes gradient-flow { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
-    @keyframes pulse-title { 0% { text-shadow: 0 0 18px var(--matrix), 2px 2px 2px var(--brand2);} 80% { text-shadow: 0 0 48px var(--brand2), -2px -2px 2px var(--matrix);} 100% { text-shadow: 0 0 64px var(--accent), 1px 2px 3px var(--brand2);}}
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1vw;
-      font-family: 'Share Tech Mono', monospace;
-      flex-wrap: nowrap;
-      min-width: 0;
+    ctx.putImageData(img,0,0);
+
+    if(iEl.dith.value==='floyd'){
+      let id=ctx.getImageData(0,0,cw,ch), p=id.data;
+      for(let y=0;y<ch;y++)for(let x=0;x<cw;x++){
+        const i=(y*cw+x)*4, old=p[i], nv=old<+iEl.thr.value?0:255, err=old-nv;
+        p[i]=p[i+1]=p[i+2]=nv;
+        const add=(xo,yo,coef)=>{ const xi=x+xo, yi=y+yo; if(xi<0||xi>=cw||yi<0||yi>=ch) return; const ii=(yi*cw+xi)*4; const val=clamp(p[ii]+err*coef,0,255); p[ii]=p[ii+1]=p[ii+2]=val; };
+        add(1,0,7/16); add(-1,1,3/16); add(0,1,5/16); add(1,1,1/16);
+      }
+      ctx.putImageData(id,0,0);
+    } else if(iEl.dith.value==='bayer4' || iEl.dith.value==='bayer8'){
+      const b4=[[15,7,13,5],[3,11,1,9],[12,4,14,6],[0,8,2,10]];
+      const b8=[[0,48,12,60,3,51,15,63],[32,16,44,28,35,19,47,31],[8,56,4,52,11,59,7,55],[40,24,36,20,43,27,39,23],[2,50,14,62,1,49,13,61],[34,18,46,30,33,17,45,29],[10,58,6,54,9,57,5,53],[42,26,38,22,41,25,37,21]];
+      const mat=iEl.dith.value==='bayer4'?b4:b8,n=mat.length; let id=ctx.getImageData(0,0,cw,ch), p=id.data;
+      for(let y=0;y<ch;y++)for(let x=0;x<cw;x++){ const i=(y*cw+x)*4; const threshold=((mat[y%n][x%n]+1)/(n*n+1))*255; const val=p[i] + (threshold-128)/2; const bin= val < +iEl.thr.value ? 0:255; p[i]=p[i+1]=p[i+2]=bin; }
+      ctx.putImageData(id,0,0);
+    } else if(iEl.dith.value==='atkinson'){
+      let id=ctx.getImageData(0,0,cw,ch), p=id.data;
+      for(let y=0;y<ch;y++)for(let x=0;x<cw;x++){
+        const i=(y*cw+x)*4, old=p[i], nv=old<+iEl.thr.value?0:255, err=(old-nv)/8;
+        p[i]=p[i+1]=p[i+2]=nv;
+        const add=(xo,yo)=>{ const xi=x+xo, yi=y+yo; if(xi<0||xi>=cw||yi<0||yi>=ch) return; const ii=(yi*cw+xi)*4; const v=clamp(p[ii]-err,0,255); p[ii]=p[ii+1]=p[ii+2]=v; };
+        add(1,0); add(2,0); add(-1,1); add(0,1); add(1,1); add(0,2);
+      }
+      ctx.putImageData(id,0,0);
     }
-    .nav-link { color: var(--brand); background: rgba(0,0,0,0.11); padding: 6px 19px 7px 19px; border-radius: 12px; font-size: 1.11rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; border: 1.3px solid #212e37; box-shadow: 0 0 8px #00e1ff44 inset; margin-left: 0.2vw; margin-right: 0.2vw; cursor: pointer; text-decoration: none;}
-    .nav-link:hover, .nav-link:focus { color: #fff; background: linear-gradient(90deg, #00e1ff 70%, #ff005e 110%); border-color: var(--accent); box-shadow: 0 0 19px 5px #00e1ff33, 0 0 6px #ff005e55 inset; outline: none;}
-    .nav-feature-drop {position:relative;}
-    .nav-feature-btn {background:linear-gradient(90deg,#181b21 60%,#2e3449 120%);color:var(--aqua);border:1.2px solid #2b2750;font-family:'Share Tech Mono',monospace;font-size:1em;font-weight:700;letter-spacing:0.05em;border-radius:10px;padding:7px 15px;cursor:pointer;}
-    .nav-feature-btn:hover {background:linear-gradient(90deg,#00e1ff 80%,#ff005e 110%);color:#fff;}
-    .nav-feature-menu {display:none;position:absolute;top:42px;left:0;min-width:260px;background:#10131bde;box-shadow:0 7px 26px #00e1ff38,0 0 0 2.2px #232a33;border-radius:13px;padding:7px 0;z-index:250;}
+
+    const ramp=iEl.ramp.value; const lut=getRampLUT(ramp); const pixels=ctx.getImageData(0,0,cw,ch).data;
+    let out=[]; for(let y=0;y<ch;y++){ let line=''; for(let x=0;x<cw;x++){ const i=(y*cw+x)*4; const v=pixels[i]/255; line += lut(v); } out.push(line); }
+    iEl.out.textContent = out.join('\n');
+  }
+  ['iRamp','iInvert','iWidth','iLH','iBri','iCon','iGam','iThr','iDither','iNoise'].forEach(id=>document.getElementById(id).addEventListener('input', renderImageAscii));
+  $('#iGenerate').onclick = ()=>{ renderImageAscii(); pushHistory('Image→ASCII', iEl.out.textContent); };
+  $('#iTrim').onclick = ()=>{ iEl.out.textContent = trimWS(iEl.out.textContent); };
+  $('#iCopy').onclick = ()=>{ navigator.clipboard.writeText(iEl.out.textContent); toast('Copied Image→ASCII'); };
+  $('#iSaveTxt').onclick = ()=>dl('image_ascii.txt', iEl.out.textContent);
+  $('#iSavePng').onclick = ()=>savePNG(iEl.out.textContent,'image_ascii', parseInt($('#pngFS').value,10));
+
+  /********* VIDEO→ASCII *********/
+  const vEl = {file:$('#vFile'),video:$('#vEl'),can:$('#vCanvas'),out:$('#vOut'),
+               ramp:$('#vRamp'),invert:$('#vInvert'),width:$('#vWidth'),fps:$('#vFPS'),
+               bri:$('#vBri'),con:$('#vCon'),gam:$('#vGam')};
+  let vTimer=null;
+  vEl.file.addEventListener('change', e=>{ const f=e.target.files?.[0]; if(!f) return; vEl.video.src = URL.createObjectURL(f); vEl.video.muted = true; });
+  function frameToAscii(){
+    const video=vEl.video, can=vEl.can, ctx=can.getContext('2d');
+    if(!video.videoWidth){return;}
+    const cw=parseInt(vEl.width.value,10); const ch=Math.round((video.videoHeight/video.videoWidth)*cw*1.9);
+    can.width=cw; can.height=ch; ctx.drawImage(video,0,0,cw,ch);
+    let img=ctx.getImageData(0,0,cw,ch), d=img.data;
+    for(let i=0;i<d.length;i+=4){ let v=(d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114)/255; v=applyTone(v,+vEl.bri.value,+vEl.con.value,+vEl.gam.value); if(vEl.invert.checked) v=1-v; d[i]=d[i+1]=d[i+2]=Math.floor(v*255); }
+    ctx.putImageData(img,0,0);
+    const lut=getRampLUT(vEl.ramp.value), px=ctx.getImageData(0,0,cw,ch).data;
+    let out=[]; for(let y=0;y<ch;y++){ let line=''; for(let x=0;x<cw;x++){ const i=(y*cw+x)*4; line+=lut(px[i]/255); } out.push(line); }
+    vEl.out.textContent = out.join('\n');
+  }
+  function startVideo(){ if(!vEl.video.src) return; vEl.video.play(); const fps=parseInt(vEl.fps.value,10); vTimer&&clearInterval(vTimer); vTimer=setInterval(()=>{ if(!vEl.video.paused&&!vEl.video.ended) frameToAscii(); },1000/fps); }
+  function stopVideo(){ vTimer&&clearInterval(vTimer); vEl.video.pause(); }
+  $('#vPlay').onclick = ()=>startVideo(); $('#vStop').onclick = ()=>stopVideo();
+  $('#vSaveTxt').onclick = ()=>dl('video_frames_ascii.txt', vEl.out.textContent);
+
+  /********* FIGLET (50+ fonts via CDN) *********/
+  const FIGLET=(function(){
+    const fonts={}; const list=["Standard","Big","Banner3-D","Block","Bubble","Colossal","Doom","Epic","Isometric1","Isometric2","Isometric3","Isometric4","Ivrit","Larry 3D","Ogre","Rectangles","Slant","Small","smslant","Star Wars","Sub-Zero","3-D","3x5","Roman","Shadow","Soft","Thin","Twisted","Varsity","Ghost","Lean","Puffy","Elite","Fraktur","Gothic","Electronic","Calvin S","Speed","Contessa","Doh","Computer","Small Slant","Bulbhead","Big Chief","Cosmike","Acrobatic","Cola","Avatar","Pagga","Stick Letters"];
+    async function load(name){ if(fonts[name]) return fonts[name]; const res=await fetch(`https://unpkg.com/figlet@1.6.0/importable-fonts/${encodeURIComponent(name)}.flf`); const txt=await res.text(); fonts[name]=txt; return txt; }
+    async function text(name, str){
+      const flf=await load(name); const lines=flf.split('\n'); const header=lines[0]||''; const stop=header[5]||'@'; const height=parseInt(header.split(' ')[1],10)||6;
+      const table={}; let idx=1;
+      for(let c=32;c<=126;c++){ table[String.fromCharCode(c)] = lines.slice(idx, idx+height).map(l=>l.replace(new RegExp(`\\${stop}$`),'')).join('\n'); idx += height; if(idx>=lines.length) break; }
+      const rows=Array.from({length:height},()=>[]);
+      for(const ch of str){ const g=(table[ch]||table['?']||ch).split('\n'); for(let y=0;y<height;y++) rows[y].push(g[y]||''); }
+      return rows.map(r=>r.join(' ')).join('\n');
+    }
+    return {list,text};
+  })();
+  (function initFonts(){ const sel=$('#bFont'); FIGLET.list.forEach(n=>{ const o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o); }); sel.value='Standard'; })();
+
+  function outlineAndShadow(art, outline=0, shadow='none'){
+    if(outline<=0 && shadow==='none') return art;
+    const lines=art.split('\n'); const w=Math.max(...lines.map(l=>l.length));
+    const pad=s=>s.padEnd(w,' '); let grid=lines.map(pad).map(l=>l.split(''));
+    if(outline>0){ const dirs=[[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[1,-1],[-1,1],[1,1]];
+      for(let y=0;y<grid.length;y++)for(let x=0;x<w;x++) if(grid[y][x]!==' ') dirs.forEach(([dx,dy])=>{ const yy=y+dy,xx=x+dx; if(yy>=0&&yy<grid.length&&xx>=0&&xx<w&&grid[yy][xx]==' ') grid[yy][xx]='.'; });
+      if(outline===2){ let g2=grid.map(r=>r.slice()); for(let y=0;y<grid.length;y++)for(let x=0;x<w;x++) if(grid[y][x]==='.') [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dx,dy])=>{ const yy=y+dy,xx=x+dx;if(yy>=0&&yy<grid.length&&xx>=0&&xx<w&&g2[yy][xx]==' ') g2[yy][xx]='.'; }); grid=g2;}
+    }
+    let out=grid.map(r=>r.join('')).join('\n');
+    if(shadow!=='none'){ const off=shadow==='soft'?1:2; out = out + '\n' + out.split('\n').map(l=>' '.repeat(off)+l.replace(/[^\s]/g,'·')).join('\n'); }
+    return out;
+  }
+  async function genBanner(){
+    const text=$('#bText').value || 'PROMPTFORGE';
+    const font=$('#bFont').value, fill=$('#bFill').value||'█';
+    const outline=parseInt($('#bOutline').value,10), shadow=$('#bShadow').value;
+    $('#bOVal').textContent=outline;
+    const raw=await FIGLET.text(font, text);
+    const filled = fill ? raw.replace(/[#█▪■▓▒@]/g, fill[0]) : raw;
+    const out = outlineAndShadow(filled, outline, shadow);
+    $('#bOut').textContent = out;
+  }
+  ['bText','bFont','bFill','bOutline','bShadow'].forEach(id=>document.getElementById(id).addEventListener('input', genBanner));
+  $('#bGenerate').onclick = ()=>{ genBanner(); pushHistory('Banner', $('#bOut').textContent); };
+  $('#bTrim').onclick = ()=>{ $('#bOut').textContent = trimWS($('#bOut').textContent); };
+  $('#bCopy').onclick = ()=>{ navigator.clipboard.writeText($('#bOut').textContent); toast('Copied Banner'); };
+  $('#bSaveTxt').onclick = ()=>dl('banner.txt',$('#bOut').textContent);
+  $('#bSavePng').onclick = ()=>savePNG($('#bOut').textContent,'banner', parseInt($('#pngFS').value,10));
+  genBanner();
+
+  /********* ANSI COLORIZER *********/
+  function hexToRgb(h){ const n=parseInt(h.slice(1),16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255}; }
+  const toAnsi256=({r,g,b})=>{ const to6=v=>v<48?0:v<114?1:Math.round((v-35)/40); const ir=to6(r), ig=to6(g), ib=to6(b); return 16 + 36*ir + 6*ig + ib; };
+  function colorizeAnsi(text,c1,c2,mode='row',pal='256'){
+    const lines=text.split('\n'), H=lines.length, W=Math.max(...lines.map(l=>l.length));
+    const s=hexToRgb(c1), e=hexToRgb(c2); const lerp=(a,b,t)=>Math.round(a+(b-a)*t); const out=[];
+    for(let y=0;y<H;y++){ let line=''; for(let x=0;x<W;x++){
+      const t = mode==='row' ? (y/(H-1||1)) : mode==='col' ? (x/(W-1||1)) : ((x+y)/(W+H-2||1));
+      const rgb={r:lerp(s.r,e.r,t), g:lerp(s.g,e.g,t), b:lerp(s.b,e.b,t)};
+      const code = pal==='256' ? `38;5;${toAnsi256(rgb)}` : `38;2;${rgb.r};${rgb.g};${rgb.b}`;
+      const ch = (lines[y][x]||' ');
+      line += `\x1b[${code}m${ch}\x1b[0m`;
+    } out.push(line); }
+    return out.join('\n');
+  }
+  function colorizeHtml(text,c1,c2,mode='row'){
+    const lines=text.split('\n'), H=lines.length, W=Math.max(...lines.map(l=>l.length));
+    const s=hexToRgb(c1), e=hexToRgb(c2); const lerp=(a,b,t)=>Math.round(a+(b-a)*t);
+    let html='';
+    for(let y=0;y<H;y++){
+      for(let x=0;x<W;x++){
+        const t = mode==='row' ? (y/(H-1||1)) : mode==='col' ? (x/(W-1||1)) : ((x+y)/(W+H-2||1));
+        const rgb={r:lerp(s.r,e.r,t), g:lerp(s.g,e.g,t), b:lerp(s.b,e.b,t)};
+        const ch = (lines[y][x]||' ');
+        const safe = ch==='<'?'&lt;': ch==='>'?'&gt;': ch==='&'?'&amp;': ch===' ' ? '&nbsp;' : ch;
+        html += `<span style="color:rgb(${rgb.r},${rgb.g},${rgb.b})">${safe}</span>`;
+      }
+      html += '\n';
+    }
+    return html;
+  }
+  $('#aApply').onclick = ()=>{
+    const txt=$('#aIn').value.trim(); if(!txt){ $('#aOut').textContent='(Paste ASCII first)'; $('#aOutHtml').style.display='none'; return; }
+    const ansi=colorizeAnsi(txt,$('#aC1').value,$('#aC2').value,$('#aMode').value,$('#aPal').value);
+    $('#aOut').textContent = ansi;
+    if($('#aPreviewToggle').checked){
+      $('#aOutHtml').innerHTML = colorizeHtml(txt,$('#aC1').value,$('#aC2').value,$('#aMode').value);
+      $('#aOutHtml').style.display='block';
+    } else $('#aOutHtml').style.display='none';
+    pushHistory('ANSI Colorized', ansi);
+  };
+  $('#aTrim').onclick = ()=>{ $('#aOut').textContent = trimWS($('#aOut').textContent); };
+  $('#aCopy').onclick = ()=>{ navigator.clipboard.writeText($('#aOut').textContent); toast('Copied ANSI'); };
+  $('#aSaveTxt').onclick = ()=>dl('ansi_colored.txt',$('#aOut').textContent);
+
+  /********* EXPORT / SESSION *********/
+  $('#saveSession').onclick = ()=>{ const data={ t2a:$('#tOut').textContent, i2a:$('#iOut').textContent, banner:$('#bOut').textContent, ansi:$('#aOut').textContent, history:$('#hist').textContent }; dl(($('#sessName').value||'promptforge_session')+'.json', JSON.stringify(data,null,2)); toast('Session saved'); };
+  $('#loadSession').onclick = ()=>{ const inp=document.createElement('input'); inp.type='file'; inp.accept='application/json';
+    inp.onchange = async ()=>{ const f=inp.files?.[0]; if(!f) return; try{ const txt=await f.text(); const data=JSON.parse(txt); if(data.t2a) $('#tOut').textContent=data.t2a; if(data.i2a) $('#iOut').textContent=data.i2a; if(data.banner) $('#bOut').textContent=data.banner; if(data.ansi) $('#aOut').textContent=data.ansi; if(data.history) $('#hist').textContent=data.history; toast('Session loaded'); }catch(e){ toast('Failed to load session'); } };
+    inp.click();
+  };
+  $('#pngFS').addEventListener('input', e=>$('#pngFSVal').textContent=e.target.value);
+  $('#clearHist').onclick=()=>{ $('#hist').textContent=''; };
+
+  // Gallery API (safe fallback)
+  async function saveToGallery(payload){ try{ const res=await fetch('/api/gallery',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); if(!res.ok) throw 0; toast('Saved to Gallery ✔️'); }catch{ console.warn('Gallery API unavailable, payload:', payload); toast('Gallery not available'); } }
+  $('#saveGallery').onclick=()=>{ const text = $('#hist').textContent.trim(); if(!text){ toast('Nothing to save'); return; } saveToGallery({name:($('#sessName').value||'promptforge-history')+'-'+Date.now(), kind:'history', text}); };
+
+  /********* SHOWCASE (killer samples) *********/
+  (function(){
+    const grid=$('#showcaseGrid');
+    function card(title, txt){ const img=asciiToPNG(txt, 14); const el=document.createElement('div'); el.style.border='1px solid #213041'; el.style.borderRadius='12px'; el.style.background='#0a111a'; el.style.overflow='hidden'; el.innerHTML=`<div style="padding:8px 10px;border-bottom:1px solid #1b2634;color:#aeefff">${title}</div><img alt="${title}" src="${img}" style="display:block;width:100%">`; grid.appendChild(el); }
+    // Wave ramp
+    const wave=(()=>{ const w=90, lut=getRampLUT(" .:-=+*#%@"); let out=''; for(let y=0;y<24;y++){ let row=''; for(let x=0;x<w;x++){ const v=(Math.sin(x/7)+Math.cos(y/5)+2)/4; row+=lut(v); } out+=row+(y<23?'\n':''); } return out; })();
+    // Faux sphere shading
+    const sphere=(()=>{ const ramp=" ░▒▓█", lut=getRampLUT(ramp); let out=''; const w=64,h=32; for(let y=0;y<h;y++){ let row=''; for(let x=0;x<w;x++){ const r=Math.hypot(x-w/2,y-h/2)/(Math.max(w,h)/2); const v=clamp(1-r,0,1); row+=lut(v*v); } out+=row+(y<h-1?'\n':''); } return out; })();
+    // Checker gradient (ANSI preview style)
+    const checker=(()=>{ let out=''; const w=48,h=18; for(let y=0;y<h;y++){ let row=''; for(let x=0;x<w;x++){ row+=(x+y)%2?'#':' '; } out+=row+(y<h-1?'\n':''); } return out; })();
+    card('Text→ASCII (wave ramp)', wave);
+    card('Image→ASCII (synthetic sphere)', sphere);
+    card('ANSI gradient (checker)', checker);
+  })();
+  </script>
+  <!-- ===== HELP MODAL + Translate (silenced) ===== -->
+  <div class="sr-only" id="helpSentinel"></div>
+  <div class="modal" id="helpModal">
+    <div class="modal-card">
+      <h3>HUD Shortcuts</h3>
+      <ul style="margin:0 0 10px 18px">
+        <li><b>?</b> — Toggle help</li>
+        <li><b>G</b> — Generate (focused tool)</li>
+        <li><b>C</b> — Copy (focused tool)</li>
+        <li><b>T</b> — Trim trailing spaces</li>
+        <li><b>1–4</b> — Jump steps inside current tool</li>
+      </ul>
+      <h3>Tips</h3>
+      <ul style="margin:0 0 0 18px">
+        <li><b>Braille smooth</b> ramp = ultra dense at small widths.</li>
+        <li><b>Bayer 8×8</b> keeps edges crisp for logos/screens.</li>
+        <li>Export PNG and increase font size for clean posters.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Help toggle + keybinds
+    const helpModal=$('#helpModal'); const toggleHelp=()=>helpModal.classList.toggle('open');
+    $('#openHelp').onclick=toggleHelp; helpModal.addEventListener('click',e=>{ if(e.target===helpModal) toggleHelp(); });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='?'){ e.preventDefault(); toggleHelp(); }
+      const id = document.activeElement.closest('.panel')?.id;
+      if(!id) return;
+      if(e.key.toLowerCase()==='g'){ const btn=$(`#${id} .btn`); btn && btn.click(); }
+      if(e.key.toLowerCase()==='c'){ const pre=$(`#${id} pre.ascii`); pre && navigator.clipboard.writeText(pre.textContent); }
+      if(e.key.toLowerCase()==='t'){ const pre=$(`#${id} pre.ascii`); if(pre) pre.textContent=pre.textContent.replace(/\s+$/gm,''); }
+      if(['1','2','3','4'].includes(e.key)){ const tab=$(`#${id} .hud-tab[data-step="${e.key}"]`); tab && tab.click(); }
+    });
+
+    // Google Translate mute (kills banners/frames quickly)
+    function googleTranslateElementInit(){
+      new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,fr,de,es,ru,zh-CN,ja,it,ko,pt,ar',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
+    }
+    const gtKill=()=>{try{document.querySelectorAll('.goog-te-banner-frame,.goog-te-balloon-frame,#goog-gt-tt,.goog-tooltip,.skiptranslate').forEach(n=>n.remove());document.body.style.top='0px';}catch(e){}}
+    new MutationObserver(gtKill).observe(document.documentElement,{childList:true,subtree:true}); setInterval(gtKill,1000);
+  </script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- ===== 5‑LAYER MATRIX RAIN (depth, blur, sizes) ===== -->
+  <script>
+  (function(){
+    const cvs=document.getElementById('matrix-canvas');
+    const ctx=cvs.getContext('2d',{alpha:true});
+    const glyphs="乂 亖 々 〱 〶 ㊎ ㊙ ㊚ ㊛ ㊬ ㊯ ㋛ ㋡ ψ λ Δ Ω Ж Щ Ѯ Ѳ ∆ ∇ ∈ ∏ ∑ ∞ ∩ ∪ ∫ ∮".split(" ");
+    let W=innerWidth,H=innerHeight; function resize(){W=innerWidth;H=innerHeight;cvs.width=W;cvs.height=H;} resize(); addEventListener('resize',resize,{passive:true});
+
+    // 5 layers: far → near
+    const layers=[
+      {size:Math.max(10,Math.floor(W/110)), speed:0.10, alpha:.22, blur:2.5},
+      {size:Math.max(12,Math.floor(W/100)), speed:0.16, alpha:.28, blur:1.8},
+      {size:Math.max(14,Math.floor(W/90 )), speed:0.22, alpha:.35, blur:1.0},
+      {size:Math.max(16,Math.floor(W/80 )), speed:0.30, alpha:.46, blur:0.6},
+      {size:Math.max(18,Math.floor(W/70 )), speed:0.40, alpha:.65, blur:0.0}
+    ];
+    const drops=layers.map(L=>{
+      const cols=Math.floor(W/L.size);
+      return {L, cols, y:new Array(cols).fill(0).map(()=>Math.random()*H/L.size)};
+    });
+
+    function drawLayer(d){
+      const {L,cols,y}=d;
+      ctx.save();
+      ctx.font=L.size+"px 'Share Tech Mono'";
+      ctx.globalAlpha=L.alpha;
+      ctx.filter = L.blur?`blur(${L.blur}px)`:'none';
+      for(let i=0;i<cols;i++){
+        const x=i*L.size+L.size/2, yy=y[i]*L.size, t=glyphs[(Math.random()*glyphs.length)|0];
+        // dual neon ink
+        ctx.fillStyle="#00e1ff"; ctx.fillText(t,x-1,yy-1);
+        ctx.fillStyle="#ff3b84"; ctx.fillText(t,x+1,yy+1);
+        y[i]+= L.speed + Math.random()*0.15;
+        if(y[i]*L.size>H && Math.random()>.985) y[i]=0;
+      }
+      ctx.restore();
+    }
+
+    function frame(){
+      ctx.clearRect(0,0,W,H);
+      for(const d of drops) drawLayer(d);
+      requestAnimationFrame(frame);
+    }
+    frame();
+
+    // Live tuner if you want in console.
+    window.setRainSpeeds = (mul)=> layers.forEach(L=>L.speed*=mul);
+  })();
+  </script>
+
+  <!-- ===== J1NX (floating) ===== -->
+  <div id="j1nxDock" style="position:fixed;right:14px;bottom:78px;z-index:56;max-width:360px">
+    <div id="j1nxShell" style="background:rgba(22,23,31,.96);border:2px solid var(--aqua);box-shadow:0 4px 22px var(--aqua)66;border-radius:14px;padding:10px">
+      <div id="jxTxt" style="font-weight:600;margin:4px 0 8px 0">J1nx: Hey you 👀—I’m J1nx. Type something &amp; hit Send.</div>
+      <div style="display:flex;gap:6px">
+        <input id="jxIn" placeholder="Say something to J1nx..." maxlength="140" style="flex:1;background:#0f1520;border:1px solid var(--aqua);color:#aeefff;border-radius:8px;padding:7px 10px">
+        <button id="jxSend" class="btn">Send</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+        <button id="jxClr" class="btn">Clear</button>
+        <button id="jxSave" class="btn">Save chat</button>
+        <button id="jxUnlock" class="btn">Unlock</button>
+      </div>
+      <div style="font-size:.88em;color:#be9cff;margin-top:6px">Double‑tap the shell to cycle mood.</div>
+    </div>
+  </div>
+  <script src="assets/j1nx_brain.js"></script>
+  <script>
+    (function(){
+      const shell=$('#j1nxShell');
+      let chat=["Hey you 👀—I’m J1nx. Type something & hit Send."], mood=0, moods=["#64f2e3","#fa528e","#be9cff","#ffd166"];
+      function setMood(i){ mood=i % moods.length; shell.style.borderColor=moods[mood]; shell.style.boxShadow=`0 4px 22px ${moods[mood]}66`; }
+      shell.addEventListener('dblclick',()=>setMood(mood+1));
+      function render(){ $('#jxTxt').innerHTML = "<b>J1nx:</b> " + chat[chat.length-1]; }
+      function brainReply(val){
+        if(window.j1nxBrain && typeof window.j1nxBrain==='function'){
+          const res=window.j1nxBrain(val, chat.length);
+          if(typeof res==='string') return {reply:res,mood:0};
+          if(res && typeof res==='object' && (res.reply||res.text)) return {reply:(res.reply||res.text), mood:res.mood||0};
+        }
+        return {reply:"(Brain not loaded?)", mood:0};
+      }
+      $('#jxSend').onclick=()=>{ const v=$('#jxIn').value.trim(); if(!v) return; const r=brainReply(v); chat.push(v); chat.push(r.reply); setMood(r.mood||0); render(); $('#jxIn').value=''; };
+      $('#jxIn').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#jxSend').click(); });
+      $('#jxClr').onclick=()=>{ chat=[chat[0]]; render(); };
+      $('#jxSave').onclick=()=>dl('j1nx_chat.txt', chat.join('\n'));
+      $('#jxUnlock').onclick=()=>{ const r=brainReply('unlock'); chat.push('unlock'); chat.push(r.reply); render(); };
+      render(); setMood(0);
+    })();
+  </script>
+
+  <!-- ===== FOOTER CAMO ===== -->
+  <script>
+    (function(){
+      const camoColors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
+      function randomCamoChar(){ const chars="░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
+      function renderCamo(tick=0){
+        let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out += `<span style="color:${color}">${randomCamoChar()}</span>`; } out += "<br>"; }
+        const el=document.getElementById("footerCamo"); if(el) el.innerHTML = out;
+      }
+      let camoTick=0; setInterval(()=>renderCamo(camoTick++),950); renderCamo();
+    })();
+  </script>
+
+  <!-- VERSION -->
+  <!-- VERSION: ansiart-v2.6.0-2025-08-13 -->
+</body>
+</html>
     .nav-feature-drop:hover .nav-feature-menu,.nav-feature-drop:focus-within .nav-feature-menu {display:block;}
     .nav-feature-link {display:block;color:var(--brand2);text-decoration:none;font-family:'Share Tech Mono',monospace;font-weight:600;font-size:1.03em;padding:10px 25px;white-space:nowrap;transition:.14s;background:none;}
     .nav-feature-link:hover {background:linear-gradient(90deg,#232b40,#ff005e19);color:var(--brand);}
