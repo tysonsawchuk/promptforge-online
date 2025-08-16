@@ -2614,7 +2614,16 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       }
       ctx.globalAlpha = 1.0;
     }
-    setInterval(drawMatrix, 32);
+    (function startMatrixRAF(){
+  let rafId = null;
+  function frame(){
+    drawMatrix();
+    rafId = requestAnimationFrame(frame);
+  }
+  if (rafId !== null) cancelAnimationFrame(rafId);
+  frame();
+})();
+
   </script>
   <script src="assets/j1nx_brain.js"></script>
   <!-- === FIXED J1NX CHAT LOGIC === -->
