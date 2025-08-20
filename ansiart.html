@@ -2,171 +2,208 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>Superfooter + Floating J1NX — Standalone Demo</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>ANSIart Playground — Futuristic HUD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="ANSI/ASCII art playground with glowing matrix rain, video FX, creative AI hacking, retro terminal HUD, prompt engineering, and digital art tools for 2025."/>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg:#0b0f14; --panel:#10161d; --edge:#232a33; --aqua:#64f2e3; --aqua2:#23d7ba;
+      --bg:#0b0f14; --panel:#10161d; --edge:#232a33; --aqua:#4dfff5; --aqua2:#64f2e3;
       --ink:#d6f5ff; --dim:#9db1bd; --hot:#fa528e; --vio:#be9cff; --gold:#ffd166;
+      --matrix-blue:#88d7ff; --matrix-red:#ff617d; --matrix-white:#fff;
+      --hud-glass:rgba(16,32,40,0.73);
     }
-    html,body{background:var(--bg);color:var(--ink);margin:0;padding:0;font-family:"Share Tech Mono",monospace;}
-    body{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;}
-    /* ---- J1NX FLOAT ---- */
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Share Tech Mono",monospace;}
+    body{min-height:100vh;}
+    #matrix-canvas, #creepyvideo {
+      position:fixed; inset:0; width:100vw; height:100vh; object-fit:cover; z-index:-3; pointer-events:none;
+    }
+    #creepyvideo { z-index:-4;}
+    header {
+      width: 100vw; background: linear-gradient(90deg,#171e22 82%,#12262d 100%);
+      border-bottom: 2.7px solid #21e4e1aa; box-shadow: 0 4px 42px #1afffa33, 0 1.5px 0 #1cf4;
+      z-index:30; position:relative; padding:0; margin:0;
+    }
+    .nav-bar {
+      display: flex; align-items: center; width: 100%;
+      min-height: 62px; padding: 0 18px 0 24px; font-size: 1.14em;
+    }
+    .logo {
+      font-family: "Fira Mono",monospace; font-size: 1.23em; letter-spacing: 2.7px; font-weight: 900;
+      color: #64f2e3; text-shadow: 0 2px 12px #13e3fa, 0 0 28px #1efff4;
+      margin-right: 27px; border-right: 2.5px solid #0af4; padding-right:22px; user-select:text; letter-spacing: 0.23em;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 30px; flex:1 1 auto;
+    }
+    .nav-links a {
+      color: var(--aqua2); text-decoration: none; font-weight: 700; padding:2px 3px;
+      border-bottom: 2.3px solid transparent; transition: color .13s, border .13s;
+      letter-spacing: .07em;
+    }
+    .nav-links a:hover { color: var(--hot); border-bottom:2.3px solid var(--hot);}
+    .do-not-press {
+      margin-left: 38px; background: linear-gradient(93deg,#ffd166 35%,#00eaff 99%);
+      color: #01131a; font-size: 1.04em; font-weight: 800; border-radius: 13px;
+      border: 2px solid #fff7; box-shadow:0 2px 22px #13e3fa90,0 1.5px 8px #fa528e22;
+      padding: 8px 25px; text-shadow:0 1.5px 6px #fff6;
+      text-decoration: none; transition: .14s; user-select:none; animation:doNotPulse 2.2s infinite;
+      position: relative; z-index: 2;
+    }
+    .do-not-press:hover {background:linear-gradient(90deg,#fa528e 70%,#ffd166 99%); color:#fff;}
+    @keyframes doNotPulse {
+      0%{box-shadow:0 2px 18px #00eaff60,0 1.5px 8px #fa528e22;}
+      60%{box-shadow:0 7px 30px #13e3fa99,0 2px 12px #ffd16644;}
+      100%{box-shadow:0 2px 18px #00eaff60,0 1.5px 8px #fa528e22;}
+    }
+    .gt-globe { margin-left:22px; width:34px; height:34px; flex-shrink:0; cursor:pointer; opacity:.97;}
+    .gt-globe img {width:100%;height:100%;}
+    .gt-globe:hover {filter:drop-shadow(0 2px 8px #64f2e3);}
+    .breadcrumbs {
+      font-size:.98em; color:var(--dim); margin:7px 0 0 24px;
+      padding:2px 0 2.5px 0; display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+      text-shadow:0 1px 9px #040a; z-index:4;
+    }
+    .breadcrumbs .sep {color:var(--vio);}
+    /* === NEW DESC BAR === */
+    .desc-bar {
+      display:block; position:relative; margin:22px auto 22px auto;
+      max-width:950px; min-width:180px; font-size:1.08em; font-family:"Fira Mono",monospace;
+      color:#d9ffff; text-align:center; line-height:1.4; font-weight:700;
+      background:linear-gradient(92deg,rgba(0,80,105,0.90) 0%,rgba(4,35,59,0.72) 100%);
+      border-radius:15px; box-shadow:0 2px 32px #13f8f466,0 0 0 2.5px #1bdbff,0 0 0 13px #07253a88 inset;
+      border-left: 4.5px solid #3ffcff; border-right:4.5px solid #1bbfff;
+      padding: 13px 4vw 11px 4vw; z-index:9; filter:drop-shadow(0 0 15px #13e3fae2);
+      letter-spacing:0.01em; white-space:pre-line;
+    }
+    .desc-bar strong { color: #53f2ff; text-shadow:0 2px 8px #21e0fa;}
+    .desc-bar .desc-blue { color:#1ac7fa; text-shadow:0 0 8px #34faffbb;}
+    .desc-bar .desc-pink { color:#fd7fff; text-shadow:0 0 8px #ff4fcfbb;}
+    .desc-bar .desc-gold { color:#ffd166;}
+    @media (max-width:1100px){
+      .desc-bar {max-width:98vw; padding:11px 2vw;}
+    }
+    @media (max-width:700px){
+      .nav-bar{padding:0 2vw 0 1vw;}
+      .logo{font-size:.97em;}
+      .breadcrumbs{margin-left:4vw;}
+      .desc-bar{font-size:.98em;max-width:99vw;padding:8px 2vw;}
+    }
+    .hud-sidebar {
+      position: fixed; left: 0; top: 66px; z-index: 50;
+      width: 228px; min-height: 360px; max-height: 83vh;
+      background: var(--hud-glass); border: 2.4px solid #28dbe9aa;
+      box-shadow: 0 0 24px #17c7ff88, 0 1.5px 32px #05a6d8b2, 0 0 0 5px #0f243366;
+      border-radius: 0 21px 28px 0;
+      padding: 17px 9px 24px 15px;
+      display: flex; flex-direction: column; gap: 16px;
+      backdrop-filter: blur(3.5px); pointer-events: all;
+    }
+    .hud-sidebar h3 {
+      color: #67fff7; margin: 0 0 7px 0; font-size: 1.13em; text-shadow:0 2px 7px #36f6; letter-spacing: .13em;
+    }
+    .hud-tool-link {
+      display: flex; align-items:center; gap: 7px; margin:0 0 8px 0;
+      padding: 8px 14px; border-radius: 12px;
+      background: linear-gradient(87deg,rgba(22,44,53,0.82),rgba(32,55,65,0.56) 92%);
+      border: 1.2px solid #1ef9fa33; color: #abfdff; font-weight: 700; letter-spacing:.07em;
+      box-shadow: 0 1px 12px #27d0f922; cursor: pointer;
+      font-size:.98em; text-decoration:none; transition: background .15s, color .15s, box-shadow .16s;
+    }
+    .hud-tool-link:hover {
+      background:linear-gradient(87deg,#1ef9fa33,#0a0d1080 96%);
+      color:#fff; box-shadow: 0 1.5px 18px #10e3ff33;
+    }
     .j1nx-float-true {
-      position: fixed;
-      z-index: 4000;
-      right: 2vw;
-      bottom: calc(2.8vh + 125px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      pointer-events: all;
-      user-select: none;
-      min-width: 0;
-      max-width: 360px;
+      position: fixed; z-index: 4000; right: 2vw; bottom: calc(2.8vh + 125px);
+      display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none;
+      min-width: 0; max-width: 360px;
     }
     .j1nx-true-cutout-img {
-      width: 320px;
-      height: 320px;
-      object-fit: contain;
-      border-radius: 32px;
-      background: transparent !important;
-      margin-bottom: -30px;
-      position: relative;
-      z-index: 9;
-      pointer-events: auto;
-      transition: box-shadow .2s;
-      box-shadow: none !important;
+      width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important;
+      margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto;
+      transition: box-shadow .2s; box-shadow: none !important;
     }
     .j1nx-bubble-true-main {
-      background: rgba(22,23,31,0.97);
-      border-radius: 17px;
+      background: rgba(22,23,31,0.97); border-radius: 17px;
       box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
-      border: 2px solid var(--aqua);
-      padding: 1.1em 1.3em 1em 1.3em;
-      margin-top: 0;
-      margin-bottom: 0.3em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 290px;
-      max-width: 330px;
-      position: relative;
-      z-index: 1;
+      border: 2px solid var(--aqua); padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em;
+      display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1;
     }
     .j1nx-bubble-text-true {
-      font-size: 1.05em;
-      color: #fff;
-      margin: 0.42em 0 0.20em 0;
-      text-align: center;
-      font-weight: 600;
-      text-shadow: 0 1px 11px #1e1111cc;
-      line-height: 1.22;
-      z-index: 1;
+      font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center;
+      font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1;
     }
     .j1nx-bubble-row-true {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 7px;
-      margin: 0.13em 0 0.10em 0;
+      width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0;
     }
     .j1nx-input-true {
-      flex: 1;
-      font-size: 1em;
-      border-radius: 8px;
-      padding: 7px 12px;
-      border: 1px solid var(--aqua);
-      background: #171b22;
-      color: var(--aqua);
-      min-width: 0;
+      flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid var(--aqua);
+      background: #171b22; color: var(--aqua); min-width: 0;
     }
     .j1nx-btn-true {
-      font-size: .98em;
-      padding: 6.5px 14px;
-      border-radius: 8px;
-      background: #22252b;
-      border: 1.3px solid var(--aqua);
-      color: var(--aqua);
-      font-family: inherit;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .13s, color .13s, border .13s;
-      box-shadow: 0 1.5px 9px #be9cff33;
+      font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b;
+      border: 1.3px solid var(--aqua); color: var(--aqua); font-family: inherit; font-weight: 600; cursor: pointer;
+      transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;
     }
     .j1nx-btn-true:hover { background: var(--aqua); color:#171b22; border-color:#fff; }
     .j1nx-easteregg-true {
-      font-size: .91em;
-      color: #be9cff;
-      background: #171b22e6;
-      border-radius: 7px 13px 12px 17px;
-      margin-top: 7px;
-      padding: 7px 17px 6px 13px;
-      opacity: .85;
-      pointer-events: none;
-      text-align: center;
-      width: 94%;
-      user-select: none;
-      box-shadow: 0 3px 13px #be9cff28;
-      font-weight: 600;
+      font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px;
+      margin-top: 7px; padding: 7px 17px 6px 13px; opacity: .85; pointer-events: none; text-align: center; width: 94%;
+      user-select: none; box-shadow: 0 3px 13px #be9cff28; font-weight: 600;
     }
-    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
-    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
-    /* ---- ANSI Footer ---- */
     footer {
-      margin: 0 auto 0 auto;
-      padding: 0;
-      text-align: center;
-      max-width: 820px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: none;
-      position: relative;
-      z-index: 100;
-      font-family: inherit;
-      font-size: 1rem;
-      color: var(--ink);
+      margin: 0 auto 0 auto; padding: 0; text-align: center; max-width: 820px; width: 100%;
+      display: flex; flex-direction: column; align-items: center; background: none; position: relative; z-index: 100;
+      font-family: inherit; font-size: 1rem; color: var(--ink);
     }
-    .footer-art {
-      margin: 0 0 12px 0;
-      font-family: "Fira Mono", monospace;
-      font-size: .96em;
-      color: #a1ffe3;
-      line-height: 1.1;
-      letter-spacing: .2px;
-      text-align: center;
-      white-space: pre;
-      user-select: text;
-    }
-    .footer-camo {
-      font-family: inherit;
-      font-size: 15px;
-      line-height: 1.11;
-      letter-spacing: 1.7px;
-      margin: 5px 0 12px 0;
-      text-align: center;
-      opacity: 0.93;
-      white-space: pre;
-    }
-    .footer-bar {
-      color: #88fffd;
-      margin: 12px auto 8px auto;
-      font-size: 1.04em;
-      text-align: center;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .footer-art { margin: 0 0 12px 0; font-family: "Fira Mono", monospace; font-size: .96em; color: #a1ffe3; line-height: 1.1; letter-spacing: .2px; text-align: center; white-space: pre; user-select: text;}
+    .footer-camo { font-family: inherit; font-size: 15px; line-height: 1.11; letter-spacing: 1.7px; margin: 5px 0 12px 0; text-align: center; opacity: 0.93; white-space: pre;}
+    .footer-bar { color: #88fffd; margin: 12px auto 8px auto; font-size: 1.04em; text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;}
     .footer-bar a { color:var(--aqua); text-decoration: none; }
     .footer-bar a:hover { text-decoration: underline; color: #fff; }
   </style>
 </head>
 <body>
-  <!-- J1NX FLOATS OVER EVERYTHING, APPEARS FIRST IN SOURCE, ALWAYS FIXED -->
+  <video id="creepyvideo" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
+  <canvas id="matrix-canvas"></canvas>
+  <header>
+    <div class="nav-bar">
+      <span class="logo">PROMPTFORGE</span>
+      <nav class="nav-links">
+        <a href="#">Playground</a>
+        <a href="#">Gallery</a>
+        <a href="#">FAQ</a>
+        <a href="#">About</a>
+      </nav>
+      <a class="do-not-press" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">☕ DO NOT PRESS ☕</a>
+      <div class="gt-globe" title="Translate page"><img src="assets/globe.svg" alt="Translate"/></div>
+    </div>
+    <div class="breadcrumbs">
+      <a href="#">Main</a><span class="sep">&raquo;</span>
+      <a href="#">ANSI Playground</a><span class="sep">&raquo;</span>
+      <span>Welcome</span>
+    </div>
+  </header>
+  <!-- Centered, 3-line, glowing, super-SEO description -->
+  <div class="desc-bar">
+    <strong>Matrix Rain Generator &amp; ASCII/ANSI Art Playground — Cyberpunk Creative Toolkit.</strong>
+    <span class="desc-blue">Create and remix digital art, live retro text effects, video-to-ASCII, hacker style prompts, and glowing terminal HUDs.</span>
+    <span class="desc-pink">AI art tools, generative prompt engineering, creative code, 2025 digital culture, open source, no filter walls.</span>
+  </div>
+  <!-- HUD SIDEBAR -->
+  <aside class="hud-sidebar">
+    <h3>HUD Controls</h3>
+    <a href="#" class="hud-tool-link">Video ➔ ASCII</a>
+    <a href="#" class="hud-tool-link">Text ➔ ASCII</a>
+    <a href="#" class="hud-tool-link">Image ➔ ASCII</a>
+    <a href="#" class="hud-tool-link">FIGlet / Fonts</a>
+    <a href="#" class="hud-tool-link">Colorizer</a>
+    <a href="#" class="hud-tool-link">Export</a>
+    <a href="#" class="hud-tool-link">Gallery</a>
+    <a href="#" class="hud-tool-link">FAQ</a>
+  </aside>
+  <!-- ===== J1NX FLOATING WIDGET ===== -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -186,7 +223,6 @@
       </div>
     </div>
   </div>
-  <!-- ====== ANSI ART FOOTER, 100% REAL ====== -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -205,35 +241,94 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       <a href="terms.html">Legal</a>
     </div>
   </footer>
-  <!-- ===== END FOOTER ===== -->
-
-  <!-- FOOTER CAMO ANIMATION (DANCING) -->
-  <script>
-    (function(){
-      const camoEl = document.getElementById("footerCamo");
-      if (camoEl) {
-        const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
-        const chars = "░▒▓▚▞▐▉█▛";
-        function camoTick(t){
-          let out = "";
-          for(let i=0;i<62;i++){
-            out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
-          }
-          camoEl.innerHTML = out;
-        }
-        let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+</body>
+<script>
+(function(){
+  var v=document.getElementById("creepyvideo");
+  if(v){
+    v.muted=true;
+    ["autoplay","muted","loop","playsinline","preload"].forEach(a=>v.setAttribute(a,""));
+    var kick=function(){ try{ v.play(); }catch(e){} };
+    document.addEventListener("DOMContentLoaded", kick, {once:true});
+    window.addEventListener("load", kick, {once:true});
+  }
+})();
+(function(){
+  // 5-LAYER MATRIX RAIN — blue/white/red, 3D effect, 100% like your original
+  const c=document.getElementById('matrix-canvas');
+  const ctx=c.getContext('2d');
+  let w,h; function resize(){w= c.width = window.innerWidth; h = c.height = window.innerHeight;}
+  window.addEventListener('resize',resize,{passive:true}); resize();
+  // Glowing glyphs and layer logic
+  const glyphs = "アイウエオカキクケコサシスセソタチツテトナニヌネノﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  function newDrops(cols){ const arr=[]; for(let i=0;i<cols;i++) arr[i]=Math.random()*-h; return arr; }
+  function newLayer(speed,size,alpha,color){ return { speed, size, alpha, color, drops:newDrops(Math.floor(w/(size*0.87))) }; }
+  let layers=[
+    newLayer(16,18,0.26,"#fff"),
+    newLayer(32,16,0.22,"#88d7ff"),
+    newLayer(48,14,0.15,"#fff"),
+    newLayer(72,12,0.16,"#ff617d"),
+    newLayer(96,10,0.11,"#fff")
+  ];
+  function drawLayer(L,t){
+    ctx.save();
+    ctx.font = `${L.size}px "Share Tech Mono", monospace`;
+    ctx.globalAlpha = L.alpha;
+    ctx.shadowColor = L.color;
+    ctx.shadowBlur = 12;
+    for(let i=0;i<L.drops.length;i++){
+      const x = i * (L.size*0.87);
+      const y = L.drops[i] = (L.drops[i] + L.speed) % (h + 52);
+      const ch = glyphs[(t+i*3) % glyphs.length];
+      ctx.fillStyle=L.color;
+      ctx.fillText(ch, x, y);
+    }
+    ctx.restore();
+  }
+  function drawMatrix(){
+    ctx.globalAlpha=1; ctx.fillStyle="rgba(0,0,0,0.16)"; ctx.fillRect(0,0,w,h);
+    const t=(performance.now()/60)|0;
+    for(const L of layers) drawLayer(L,t);
+  }
+  (function loop(){
+    drawMatrix();
+    requestAnimationFrame(loop);
+  })();
+})();
+// Dancing camo for the footer
+(function(){
+  const camoEl = document.getElementById("footerCamo");
+  if (camoEl) {
+    const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
+    const chars = "░▒▓▚▞▐▉█▛";
+    function camoTick(t){
+      let out = "";
+      for(let i=0;i<62;i++){
+        out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
       }
-    })();
-  </script>
-  <!-- J1NX LOGIC -->
-  <script>
-  (function(){
-    const j1nxFloat = document.getElementById('j1nxFloatTrue');
-    const cutout = document.getElementById('j1nxCutoutTrue');
-    const bubble = document.getElementById('j1nxBubbleTrueMain');
-    function isMobile() { return window.innerWidth < 700; }
-    function shrinkJ1nx() {
-      if(isMobile()) {
+      camoEl.innerHTML = out;
+    }
+    let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+  }
+})();
+// J1NX logic
+(function(){
+  const j1nxFloat = document.getElementById('j1nxFloatTrue');
+  const cutout = document.getElementById('j1nxCutoutTrue');
+  const bubble = document.getElementById('j1nxBubbleTrueMain');
+  function isMobile() { return window.innerWidth < 700; }
+  function shrinkJ1nx() {
+    if(isMobile()) {
+      j1nxFloat.classList.remove('j1nx-open');
+      bubble.style.display = "none";
+    } else {
+      j1nxFloat.classList.add('j1nx-open');
+      bubble.style.display = "flex";
+    }
+  }
+  cutout.onclick = function(e) {
+    if(isMobile()) {
+      if(j1nxFloat.classList.contains('j1nx-open')) {
         j1nxFloat.classList.remove('j1nx-open');
         bubble.style.display = "none";
       } else {
@@ -241,81 +336,69 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
         bubble.style.display = "flex";
       }
     }
-    cutout.onclick = function(e) {
-      if(isMobile()) {
-        if(j1nxFloat.classList.contains('j1nx-open')) {
-          j1nxFloat.classList.remove('j1nx-open');
-          bubble.style.display = "none";
-        } else {
-          j1nxFloat.classList.add('j1nx-open');
-          bubble.style.display = "flex";
-        }
-      }
-    };
-    window.addEventListener('resize', shrinkJ1nx);
-    shrinkJ1nx();
-  })();
-  (function(){
-    let chatHistory = [];
-    let nsfwUnlocked = false;
-    function renderChat() {
-      const out = chatHistory.map(line => `<div>${line}</div>`).join('');
-      document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
-    }
-    function addMsg(msg, isUser) {
-      if (!msg) return;
-      const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
-      chatHistory.push(name + msg);
-      if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
-      renderChat();
-    }
-    document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
+  };
+  window.addEventListener('resize', shrinkJ1nx);
+  shrinkJ1nx();
+})();
+(function(){
+  let chatHistory = [];
+  let nsfwUnlocked = false;
+  function renderChat() {
+    const out = chatHistory.map(line => `<div>${line}</div>`).join('');
+    document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
+  }
+  function addMsg(msg, isUser) {
+    if (!msg) return;
+    const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
+    chatHistory.push(name + msg);
+    if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
+    renderChat();
+  }
+  document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
+    nsfwUnlocked = true;
+    document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+    addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+  });
+  document.getElementById('j1nxSendTrue').onclick = function() {
+    const input = document.getElementById('j1nxInputTrue');
+    const val = (input.value || '').trim();
+    if (!val) return;
+    addMsg(val, true);
+    if (/^unlock$/i.test(val)) {
       nsfwUnlocked = true;
       document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
       addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-    });
-    document.getElementById('j1nxSendTrue').onclick = function() {
-      const input = document.getElementById('j1nxInputTrue');
-      const val = (input.value || '').trim();
-      if (!val) return;
-      addMsg(val, true);
-      if (/^unlock$/i.test(val)) {
-        nsfwUnlocked = true;
-        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-        input.value = "";
-        return;
-      }
-      try {
-        let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
-        let replyText = (reply && typeof reply === 'object')
-          ? (reply.text || reply.reply || JSON.stringify(reply))
-          : reply;
-        addMsg(replyText, false);
-      } catch(e) {
-        addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
-      }
       input.value = "";
-    };
-    document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
-      if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
-    });
-    document.getElementById('j1nxSaveTrue').onclick = function() {
-      const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
-      const blob = new Blob([text], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
-      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
-    };
-    document.getElementById('j1nxClearTrue').onclick = function() {
-      chatHistory = [];
-      renderChat();
-    };
+      return;
+    }
+    try {
+      let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
+      let replyText = (reply && typeof reply === 'object')
+        ? (reply.text || reply.reply || JSON.stringify(reply))
+        : reply;
+      addMsg(replyText, false);
+    } catch(e) {
+      addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
+    }
+    input.value = "";
+  };
+  document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
+  });
+  document.getElementById('j1nxSaveTrue').onclick = function() {
+    const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+    const blob = new Blob([text], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+  };
+  document.getElementById('j1nxClearTrue').onclick = function() {
+    chatHistory = [];
     renderChat();
-  })();
-  </script>
-  <!-- External J1NX BRAIN (for full function, required as in your site) -->
-  <script src="assets/j1nx_brain.js"></script>
-</body>
+  };
+  renderChat();
+})();
+</script>
+<script src="assets/j1nx_brain.js"></script>
 </html>
