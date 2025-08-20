@@ -6,7 +6,135 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="PromptForge HUD — cyber‑neon workshop for ASCII/ANSI art. Text/Image/Video → ASCII, FIGlet banners, dithers, ramps & gradients. Export TXT/PNG. Live previews.">
   <meta name="keywords" content="ascii art, ansi art, text to ascii, image to ascii, video to ascii, figlet fonts, floyd-steinberg, ordered bayer, atkinson dither, character ramps, unicode blocks, braille, cp437, petscii, gradient, ansi 256, export png, export txt, generator, converter, PromptForge">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link <footer>
+  <pre class="footer-art">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+  </pre>
+  <pre class="footer-camo" id="footerCamo"></pre>
+  <div class="footer-bar">
+    Made underground in BC, Canada &bull; #PromptForge &bull;
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);">Bluesky</a> &bull;
+    <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);">Twitter/X</a> &bull;
+    <a href="terms.html" style="color:var(--aqua);">Legal</a>
+  </div>
+  <!-- ===== J1NX FLOATING WIDGET (included in footer for portability) ===== -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    const j1nxFloat = document.getElementById('j1nxFloatTrue');
+    const cutout = document.getElementById('j1nxCutoutTrue');
+    const bubble = document.getElementById('j1nxBubbleTrueMain');
+    function isMobile() { return window.innerWidth < 700; }
+    function shrinkJ1nx() {
+      if(isMobile()) {
+        j1nxFloat.classList.remove('j1nx-open');
+        bubble.style.display = "none";
+      } else {
+        j1nxFloat.classList.add('j1nx-open');
+        bubble.style.display = "flex";
+      }
+    }
+    cutout.onclick = function(e) {
+      if(isMobile()) {
+        if(j1nxFloat.classList.contains('j1nx-open')) {
+          j1nxFloat.classList.remove('j1nx-open');
+          bubble.style.display = "none";
+        } else {
+          j1nxFloat.classList.add('j1nx-open');
+          bubble.style.display = "flex";
+        }
+      }
+    };
+    window.addEventListener('resize', shrinkJ1nx);
+    shrinkJ1nx();
+  })();
+  (function(){
+    let chatHistory = [];
+    let nsfwUnlocked = false;
+    function renderChat() {
+      const out = chatHistory.map(line => `<div>${line}</div>`).join('');
+      document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
+    }
+    function addMsg(msg, isUser) {
+      if (!msg) return;
+      const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
+      chatHistory.push(name + msg);
+      if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
+      renderChat();
+    }
+    document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
+      nsfwUnlocked = true;
+      document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+      addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+    });
+    document.getElementById('j1nxSendTrue').onclick = function() {
+      const input = document.getElementById('j1nxInputTrue');
+      const val = (input.value || '').trim();
+      if (!val) return;
+      addMsg(val, true);
+      if (/^unlock$/i.test(val)) {
+        nsfwUnlocked = true;
+        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+        input.value = "";
+        return;
+      }
+      try {
+        let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
+        let replyText = (reply && typeof reply === 'object')
+          ? (reply.text || reply.reply || JSON.stringify(reply))
+          : reply;
+        addMsg(replyText, false);
+      } catch(e) {
+        addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
+      }
+      input.value = "";
+    };
+    document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
+    });
+    document.getElementById('j1nxSaveTrue').onclick = function() {
+      const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+    };
+    document.getElementById('j1nxClearTrue').onclick = function() {
+      chatHistory = [];
+      renderChat();
+    };
+    renderChat();
+  })();
+  </script>
+  <script src="assets/j1nx_brain.js"></script>
+</footer>
+ rel="stylesheet">
   <style>
     :root{
       --bg:#03060b; --glass:#0b111aA6; --hud:#0d1622; --ink:#dff7ff;
