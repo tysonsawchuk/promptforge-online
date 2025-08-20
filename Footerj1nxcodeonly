@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Superfooter + Floating J1NX — Standalone Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    :root {
+      --bg:#0b0f14; --panel:#10161d; --edge:#232a33; --aqua:#64f2e3; --aqua2:#23d7ba;
+      --ink:#d6f5ff; --dim:#9db1bd; --hot:#fa528e; --vio:#be9cff; --gold:#ffd166;
+    }
+    html,body{background:var(--bg);color:var(--ink);margin:0;padding:0;font-family:"Share Tech Mono",monospace;}
+    body{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;}
+    /* ---- J1NX FLOAT ---- */
+    .j1nx-float-true {
+      position: fixed;
+      z-index: 4000;
+      right: 2vw;
+      bottom: calc(2.8vh + 125px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: all;
+      user-select: none;
+      min-width: 0;
+      max-width: 360px;
+    }
+    .j1nx-true-cutout-img {
+      width: 320px;
+      height: 320px;
+      object-fit: contain;
+      border-radius: 32px;
+      background: transparent !important;
+      margin-bottom: -30px;
+      position: relative;
+      z-index: 9;
+      pointer-events: auto;
+      transition: box-shadow .2s;
+      box-shadow: none !important;
+    }
+    .j1nx-bubble-true-main {
+      background: rgba(22,23,31,0.97);
+      border-radius: 17px;
+      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
+      border: 2px solid var(--aqua);
+      padding: 1.1em 1.3em 1em 1.3em;
+      margin-top: 0;
+      margin-bottom: 0.3em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 290px;
+      max-width: 330px;
+      position: relative;
+      z-index: 1;
+    }
+    .j1nx-bubble-text-true {
+      font-size: 1.05em;
+      color: #fff;
+      margin: 0.42em 0 0.20em 0;
+      text-align: center;
+      font-weight: 600;
+      text-shadow: 0 1px 11px #1e1111cc;
+      line-height: 1.22;
+      z-index: 1;
+    }
+    .j1nx-bubble-row-true {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin: 0.13em 0 0.10em 0;
+    }
+    .j1nx-input-true {
+      flex: 1;
+      font-size: 1em;
+      border-radius: 8px;
+      padding: 7px 12px;
+      border: 1px solid var(--aqua);
+      background: #171b22;
+      color: var(--aqua);
+      min-width: 0;
+    }
+    .j1nx-btn-true {
+      font-size: .98em;
+      padding: 6.5px 14px;
+      border-radius: 8px;
+      background: #22252b;
+      border: 1.3px solid var(--aqua);
+      color: var(--aqua);
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .13s, color .13s, border .13s;
+      box-shadow: 0 1.5px 9px #be9cff33;
+    }
+    .j1nx-btn-true:hover { background: var(--aqua); color:#171b22; border-color:#fff; }
+    .j1nx-easteregg-true {
+      font-size: .91em;
+      color: #be9cff;
+      background: #171b22e6;
+      border-radius: 7px 13px 12px 17px;
+      margin-top: 7px;
+      padding: 7px 17px 6px 13px;
+      opacity: .85;
+      pointer-events: none;
+      text-align: center;
+      width: 94%;
+      user-select: none;
+      box-shadow: 0 3px 13px #be9cff28;
+      font-weight: 600;
+    }
+    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
+    /* ---- ANSI Footer ---- */
+    footer {
+      margin: 0 auto 0 auto;
+      padding: 0;
+      text-align: center;
+      max-width: 820px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: none;
+      position: relative;
+      z-index: 100;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+    .footer-art {
+      margin: 0 0 12px 0;
+      font-family: "Fira Mono", monospace;
+      font-size: .96em;
+      color: #a1ffe3;
+      line-height: 1.1;
+      letter-spacing: .2px;
+      text-align: center;
+      white-space: pre;
+      user-select: text;
+    }
+    .footer-camo {
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.11;
+      letter-spacing: 1.7px;
+      margin: 5px 0 12px 0;
+      text-align: center;
+      opacity: 0.93;
+      white-space: pre;
+    }
+    .footer-bar {
+      color: #88fffd;
+      margin: 12px auto 8px auto;
+      font-size: 1.04em;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .footer-bar a { color:var(--aqua); text-decoration: none; }
+    .footer-bar a:hover { text-decoration: underline; color: #fff; }
+  </style>
+</head>
+<body>
+  <!-- J1NX FLOATS OVER EVERYTHING, APPEARS FIRST IN SOURCE, ALWAYS FIXED -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+  <!-- ====== ANSI ART FOOTER, 100% REAL ====== -->
+  <footer>
+    <pre class="footer-art">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+    </pre>
+    <pre class="footer-camo" id="footerCamo"></pre>
+    <div class="footer-bar">
+      Made underground in BC, Canada &bull; #PromptForge &bull;
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles">Twitter/X</a> &bull;
+      <a href="terms.html">Legal</a>
+    </div>
+  </footer>
+  <!-- ===== END FOOTER ===== -->
+
+  <!-- FOOTER CAMO ANIMATION (DANCING) -->
+  <script>
+    (function(){
+      const camoEl = document.getElementById("footerCamo");
+      if (camoEl) {
+        const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
+        const chars = "░▒▓▚▞▐▉█▛";
+        function camoTick(t){
+          let out = "";
+          for(let i=0;i<62;i++){
+            out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
+          }
+          camoEl.innerHTML = out;
+        }
+        let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+      }
+    })();
+  </script>
+  <!-- J1NX LOGIC -->
+  <script>
+  (function(){
+    const j1nxFloat = document.getElementById('j1nxFloatTrue');
+    const cutout = document.getElementById('j1nxCutoutTrue');
+    const bubble = document.getElementById('j1nxBubbleTrueMain');
+    function isMobile() { return window.innerWidth < 700; }
+    function shrinkJ1nx() {
+      if(isMobile()) {
+        j1nxFloat.classList.remove('j1nx-open');
+        bubble.style.display = "none";
+      } else {
+        j1nxFloat.classList.add('j1nx-open');
+        bubble.style.display = "flex";
+      }
+    }
+    cutout.onclick = function(e) {
+      if(isMobile()) {
+        if(j1nxFloat.classList.contains('j1nx-open')) {
+          j1nxFloat.classList.remove('j1nx-open');
+          bubble.style.display = "none";
+        } else {
+          j1nxFloat.classList.add('j1nx-open');
+          bubble.style.display = "flex";
+        }
+      }
+    };
+    window.addEventListener('resize', shrinkJ1nx);
+    shrinkJ1nx();
+  })();
+  (function(){
+    let chatHistory = [];
+    let nsfwUnlocked = false;
+    function renderChat() {
+      const out = chatHistory.map(line => `<div>${line}</div>`).join('');
+      document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
+    }
+    function addMsg(msg, isUser) {
+      if (!msg) return;
+      const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
+      chatHistory.push(name + msg);
+      if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
+      renderChat();
+    }
+    document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
+      nsfwUnlocked = true;
+      document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+      addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+    });
+    document.getElementById('j1nxSendTrue').onclick = function() {
+      const input = document.getElementById('j1nxInputTrue');
+      const val = (input.value || '').trim();
+      if (!val) return;
+      addMsg(val, true);
+      if (/^unlock$/i.test(val)) {
+        nsfwUnlocked = true;
+        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+        input.value = "";
+        return;
+      }
+      try {
+        let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
+        let replyText = (reply && typeof reply === 'object')
+          ? (reply.text || reply.reply || JSON.stringify(reply))
+          : reply;
+        addMsg(replyText, false);
+      } catch(e) {
+        addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
+      }
+      input.value = "";
+    };
+    document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
+    });
+    document.getElementById('j1nxSaveTrue').onclick = function() {
+      const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+    };
+    document.getElementById('j1nxClearTrue').onclick = function() {
+      chatHistory = [];
+      renderChat();
+    };
+    renderChat();
+  })();
+  </script>
+  <!-- External J1NX BRAIN (for full function, required as in your site) -->
+  <script src="assets/j1nx_brain.js"></script>
+</body>
+</html>
