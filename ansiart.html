@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>ANSIart Playground — Futuristic HUD</title>
+  <title>ANSIart Playground — HUD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="ANSI/ASCII art playground with glowing matrix rain, video FX, creative AI hacking, retro terminal HUD, prompt engineering, and digital art tools for 2025."/>
+  <meta name="description" content="ANSI/ASCII matrix rain, video FX, PromptForge J1NX, glowing HUD tools and footer. True dev cyberpunk art playground for 2025.">
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -65,7 +65,6 @@
       text-shadow:0 1px 9px #040a; z-index:4;
     }
     .breadcrumbs .sep {color:var(--vio);}
-    /* === NEW DESC BAR === */
     .desc-bar {
       display:block; position:relative; margin:22px auto 22px auto;
       max-width:950px; min-width:180px; font-size:1.08em; font-family:"Fira Mono",monospace;
@@ -185,13 +184,11 @@
       <span>Welcome</span>
     </div>
   </header>
-  <!-- Centered, 3-line, glowing, super-SEO description -->
   <div class="desc-bar">
     <strong>Matrix Rain Generator &amp; ASCII/ANSI Art Playground — Cyberpunk Creative Toolkit.</strong>
     <span class="desc-blue">Create and remix digital art, live retro text effects, video-to-ASCII, hacker style prompts, and glowing terminal HUDs.</span>
     <span class="desc-pink">AI art tools, generative prompt engineering, creative code, 2025 digital culture, open source, no filter walls.</span>
   </div>
-  <!-- HUD SIDEBAR -->
   <aside class="hud-sidebar">
     <h3>HUD Controls</h3>
     <a href="#" class="hud-tool-link">Video ➔ ASCII</a>
@@ -203,7 +200,6 @@
     <a href="#" class="hud-tool-link">Gallery</a>
     <a href="#" class="hud-tool-link">FAQ</a>
   </aside>
-  <!-- ===== J1NX FLOATING WIDGET ===== -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -243,18 +239,21 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
   </footer>
 </body>
 <script>
+// Force video play, even on chrome (muted/inline/autoplay)
 (function(){
   var v=document.getElementById("creepyvideo");
+  function startVid() { if(v && v.paused){ try{ v.play(); }catch(e){} } }
   if(v){
     v.muted=true;
     ["autoplay","muted","loop","playsinline","preload"].forEach(a=>v.setAttribute(a,""));
-    var kick=function(){ try{ v.play(); }catch(e){} };
-    document.addEventListener("DOMContentLoaded", kick, {once:true});
-    window.addEventListener("load", kick, {once:true});
+    document.addEventListener("DOMContentLoaded", startVid, {once:true});
+    window.addEventListener("load", startVid, {once:true});
+    setTimeout(startVid, 300);
+    v.addEventListener('click', startVid);
   }
 })();
+// 5-LAYER MATRIX RAIN (canvas, never fails)
 (function(){
-  // 5-LAYER MATRIX RAIN — blue/white/red, 3D effect, 100% like your original
   const c=document.getElementById('matrix-canvas');
   const ctx=c.getContext('2d');
   let w,h; function resize(){w= c.width = window.innerWidth; h = c.height = window.innerHeight;}
