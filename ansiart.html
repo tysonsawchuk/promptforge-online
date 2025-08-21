@@ -2,340 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <title>ANSIart Playground</title>
+  <title>RAIN DIAG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Ultimate 3D Matrix Rain, ANSI/ASCII, video background, PromptForge, J1NX, and perfect navigation.">
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --bg:#0b0f14; --aqua2:#64f2e3; --ink:#d6f5ff; --dim:#9db1bd; --hot:#fa528e; --vio:#be9cff;
-      --hud-glass:rgba(16,32,40,0.76);
-    }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Share Tech Mono",monospace;}
-    body{min-height:100vh;}
-    #creepyvideo, #matrix-canvas {
-      position:fixed; left:0; top:0; width:100vw; height:100vh; object-fit:cover; z-index:-3; pointer-events:none; display:block;
-    }
-    #creepyvideo { z-index:-5; opacity:0.85; transition:opacity .3s;}
-    #matrix-canvas { z-index:-3;}
-    header { width:100vw; background:linear-gradient(90deg,#171e22 82%,#12262d 100%);
-      border-bottom:2px solid #21e4e1aa; box-shadow:0 4px 30px #1afffa22,0 1.5px 0 #1cf4; z-index:30; position:relative;}
-    .nav-bar {display:flex;align-items:center;width:100%;min-height:57px;padding:0 12px 0 16px;font-size:1em;}
-    .logo {font-family:"Fira Mono",monospace;font-size:1.14em;letter-spacing:2.2px;font-weight:900;color:#64f2e3;
-      text-shadow:0 2px 8px #13e3fa,0 0 18px #1efff4;margin-right:24px;border-right:2px solid #0af4;padding-right:18px;}
-    .nav-links {display:flex;align-items:center;gap:22px;flex:1 1 auto;}
-    .nav-links a {color:var(--aqua2);text-decoration:none;font-weight:700;padding:1.5px 2px;
-      border-bottom:1.5px solid transparent;transition:color .13s, border .13s;letter-spacing:.06em;}
-    .nav-links a:hover {color:var(--hot);border-bottom:1.5px solid var(--hot);}
-    .do-not-press {margin-left:13px;background:linear-gradient(93deg,#ffd166 35%,#00eaff 99%);
-      color:#01131a;font-size:.93em;font-weight:800;border-radius:9px;border:1px solid #fff7;
-      box-shadow:0 2px 12px #13e3fa66,0 1.5px 6px #fa528e22;padding:6px 12px;text-shadow:0 1px 3px #fff6;
-      text-decoration:none;transition:.14s;user-select:none;}
-    .do-not-press:hover {background:linear-gradient(90deg,#fa528e 70%,#ffd166 99%);color:#fff;}
-    .gt-globe {margin-left:12px;width:27px;height:27px;flex-shrink:0;cursor:pointer;opacity:.97;}
-    .gt-globe img {width:100%;height:100%;}
-    .gt-globe:hover {filter:drop-shadow(0 2px 8px #64f2e3);}
-    .breadcrumbs {font-size:.96em;color:var(--dim);margin:4px 0 0 16px;padding:2px 0 2px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;text-shadow:0 1px 7px #040a;z-index:4;}
-    .breadcrumbs .sep {color:var(--vio);}
-    /* Sidebar floats below header, not overlapping */
-    .hud-sidebar { position:fixed; left:0; top:60px; z-index:29; width:202px; min-height:220px; max-height:78vh;
-      background:var(--hud-glass); border:1.9px solid #28dbe9bb; box-shadow:0 0 17px #17c7ff44,0 1.5px 20px #05a6d8a2,0 0 0 3px #0f243355;
-      border-radius:0 15px 19px 0;padding:13px 6px 14px 13px; display:flex;flex-direction:column;gap:13px;backdrop-filter:blur(3.5px);pointer-events:all;}
-    .hud-sidebar h3 {color:#67fff7;margin:0 0 7px 0;font-size:.98em;text-shadow:0 2px 7px #36f6;letter-spacing:.10em;}
-    .hud-tool-link {
-      display:flex;align-items:center;gap:6px;margin:0 0 7px 0;padding:8px 10px;border-radius:10px;
-      background:linear-gradient(87deg,rgba(22,44,53,0.79),rgba(32,55,65,0.49) 92%);border:1px solid #1ef9fa22;color:#abfdff;font-weight:700;letter-spacing:.07em;
-      box-shadow:0 1px 8px #27d0f91c;cursor:pointer;font-size:.93em;text-decoration:none;transition:background .12s, color .12s, box-shadow .12s;}
-    .hud-tool-link:hover {background:linear-gradient(87deg,#1ef9fa22,#0a0d1060 96%);color:#fff;box-shadow:0 1.5px 11px #10e3ff22;}
-    .desc-bar { display:block;position:relative;margin:8px auto 8px 225px;max-width:600px;min-width:80px;font-size:.82em;font-family:"Fira Mono",monospace;
-      color:#e8ffff;text-align:center;line-height:1.10;font-weight:700;background:linear-gradient(92deg,rgba(0,80,105,0.43) 0%,rgba(4,35,59,0.24) 100%);
-      border-radius:9px;box-shadow:0 1px 5px #13f8f425,0 0 0 1px #1bdbff,0 0 0 2px #07253a20 inset;
-      border-left:2px solid #3ffcff;border-right:2px solid #1bbfff;padding:1.7px .7vw 1.7px .7vw;z-index:9;letter-spacing:.01em;white-space:pre-line;}
-    .desc-bar strong { color: #53f2ff; text-shadow:0 1px 3px #21e0fa;}
-    .desc-bar .desc-blue { color:#1ac7fa; text-shadow:0 0 3px #34faffbb;}
-    .desc-bar .desc-pink { color:#fd7fff; text-shadow:0 0 4px #ff4fcfbb;}
-    .desc-bar .desc-gold { color:#ffd166;}
-    @media (max-width:900px){
-      .desc-bar{margin:8px auto;}
-      .hud-sidebar{display:none;}
-    }
-    .j1nx-float-true { position: fixed; z-index: 4000; right: 2vw; bottom: calc(2.8vh + 95px); display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none; min-width: 0; max-width: 320px;}
-    .j1nx-true-cutout-img { width: 210px; height: 210px; object-fit: contain; border-radius: 15px; background: transparent !important;
-      margin-bottom: -14px; position: relative; z-index: 9; pointer-events: auto;}
-    .j1nx-bubble-true-main { background: rgba(22,23,31,0.92); border-radius: 11px; box-shadow: 0 4px 14px #be9cff22, 0 0 0 2px #23231f;
-      border: 1.3px solid #64f2e3; padding: .56em 1em .6em 1em; margin-top: 0; margin-bottom: 0.13em;
-      display: flex; flex-direction: column; align-items: center; min-width: 128px; max-width: 222px; position: relative; z-index: 1;}
-    .j1nx-bubble-text-true { font-size: .87em; color: #fff; margin: .21em 0 .13em 0; text-align: center;
-      font-weight: 600; text-shadow: 0 1px 5px #1e1111cc; line-height: 1.11; z-index: 1;}
-    .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 5px; margin: .04em 0 0.04em 0;}
-    .j1nx-input-true { flex: 1; font-size: .85em; border-radius: 4px; padding: 5px 7px; border: 1px solid #64f2e3;
-      background: #171b22; color: #64f2e3; min-width: 0;}
-    .j1nx-btn-true { font-size: .86em; padding: 4px 8px; border-radius: 4px; background: #22252b;
-      border: 1.2px solid #64f2e3; color: #64f2e3; font-family: inherit; font-weight: 600; cursor: pointer; }
-    .j1nx-btn-true:hover { background: #4dfff5; color:#171b22; border-color:#fff; }
-    .j1nx-easteregg-true { font-size: .81em; color: #be9cff; background: #171b22e6; border-radius: 5px 8px 10px 9px;
-      margin-top: 3px; padding: 2px 7px 3px 7px; opacity: .75; pointer-events: none; text-align: center; width: 90%;
-      user-select: none; box-shadow: 0 3px 13px #be9cff12; font-weight: 600;}
-    footer { margin: 0 auto 0 auto; padding: 0; text-align: center; max-width: 800px; width: 100%;
-      display: flex; flex-direction: column; align-items: center; background: none; position: relative; z-index: 100; font-family: inherit; font-size: .99rem; color: var(--ink);}
-    .footer-art { margin: 0 0 8px 0; font-family: "Fira Mono", monospace; font-size: .89em; color: #a1ffe3; line-height: 1.05; letter-spacing: .2px; text-align: center; white-space: pre; user-select: text;}
-    .footer-camo { font-family: inherit; font-size: 11px; line-height: 1.11; letter-spacing: 1.7px; margin: 1px 0 6px 0; text-align: center; opacity: 0.93; white-space: pre;}
-    .footer-bar { color: #88fffd; margin: 3px auto 3px auto; font-size: .93em; text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;}
-    .footer-bar a { color:var(--aqua2); text-decoration: none; }
-    .footer-bar a:hover { text-decoration: underline; color: #fff; }
+    html,body { margin:0; padding:0; background:#000; width:100vw; height:100vh; }
+    #bgvid, #matrix3d { position:fixed; left:0; top:0; width:100vw; height:100vh; display:block; pointer-events:none;}
+    #bgvid { z-index:-5; object-fit:cover; }
+    #matrix3d { z-index:-3; }
+    #failmsg { position:fixed; top:0; left:0; width:100vw; height:100vh; background:#e0142870; color:#fff; font-size:2em; z-index:9999; display:none; align-items:center; justify-content:center; text-shadow:0 0 12px #000; }
   </style>
 </head>
 <body>
-  <video id="creepyvideo" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
-  <canvas id="matrix-canvas"></canvas>
-  <header>
-    <div class="nav-bar">
-      <span class="logo">PROMPTFORGE</span>
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="ansiart.html">ANSI Art</a>
-        <a href="gallery.html">Gallery</a>
-        <a href="faq.html">FAQ</a>
-        <a href="about.html">About</a>
-        <a href="tools.html">Tools</a>
-        <a href="contact.html">Contact</a>
-        <a href="terms.html">Terms</a>
-      </nav>
-      <a class="do-not-press" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">☕ DO NOT PRESS ☕</a>
-      <div class="gt-globe" title="Translate page"><img src="assets/globe.svg" alt="Translate"/></div>
-    </div>
-    <div class="breadcrumbs">
-      <a href="index.html">Main</a><span class="sep">&raquo;</span>
-      <a href="ansiart.html">ANSI Playground</a><span class="sep">&raquo;</span>
-      <span>Welcome</span>
-    </div>
-  </header>
-  <aside class="hud-sidebar">
-    <h3>HUD Controls</h3>
-    <a href="#" class="hud-tool-link">Video ➔ ASCII</a>
-    <a href="#" class="hud-tool-link">Text ➔ ASCII</a>
-    <a href="#" class="hud-tool-link">Image ➔ ASCII</a>
-    <a href="#" class="hud-tool-link">FIGlet / Fonts</a>
-    <a href="#" class="hud-tool-link">Colorizer</a>
-    <a href="#" class="hud-tool-link">Export</a>
-    <a href="#" class="hud-tool-link">Gallery</a>
-    <a href="#" class="hud-tool-link">FAQ</a>
-  </aside>
-  <div class="desc-bar">
-    <strong>3D Matrix Rain &amp; ANSI/ASCII Playground.</strong>
-    <span class="desc-blue">Generative text FX, video-to-ASCII, hacker prompts, neon terminal overlays.</span>
-    <span class="desc-pink">AI art, prompt engineering, digital culture, open source.</span>
-  </div>
-  <div class="j1nx-float-true" id="j1nxFloatTrue">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
-    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
-      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
-      </div>
-      <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
-        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
-      </div>
-      <div class="j1nx-bubble-row-true">
-        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
-        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
-      </div>
-      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
-        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
-      </div>
-    </div>
-  </div>
-  <footer>
-    <pre class="footer-art">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
-    </pre>
-    <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">
-      Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles">Twitter/X</a> &bull;
-      <a href="terms.html">Legal</a>
-    </div>
-  </footer>
+  <video id="bgvid" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
+  <canvas id="matrix3d"></canvas>
+  <div id="failmsg"></div>
 <script>
 (function(){
-  var v=document.getElementById("creepyvideo");
-  function kick() { if(v && v.paused){ v.play().catch(()=>{}); } }
+  var v=document.getElementById("bgvid"),fail=document.getElementById('failmsg');
+  function ok(){ if(fail)fail.style.display='none'; }
+  function err(){ if(fail){fail.style.display='flex';fail.textContent='VIDEO FAILED TO PLAY';} }
   if(v){
-    v.muted=true;
-    ["autoplay","muted","loop","playsinline","preload"].forEach(a=>v.setAttribute(a,""));
-    document.addEventListener("DOMContentLoaded", kick, {once:true});
-    window.addEventListener("load", kick, {once:true});
-    setTimeout(kick, 350);
-    v.addEventListener('click', kick);
-    v.onplay = function(){ v.style.opacity=0.85; }
-    v.onerror = function(){ v.style.opacity=0.35; alert("Video could not play—check path or use a local server."); }
+    v.onplay = ok;
+    v.onerror = err;
+    setTimeout(function(){ if (v.readyState<2) err(); },600);
+    v.muted=true; ["autoplay","muted","loop","playsinline","preload"].forEach(a=>v.setAttribute(a,""));
+    v.play().catch(err);
+    v.addEventListener('click', function(){v.play().catch(err);});
   }
 })();
-// 3D, 5-layer Matrix Rain
+// === BRUTE CANVAS DIAGNOSTIC ===
 (function(){
-  const c=document.getElementById('matrix-canvas');
-  if(!c || !c.getContext) { alert("Matrix rain canvas missing!"); return; }
-  const ctx=c.getContext('2d');
-  let W=window.innerWidth,H=window.innerHeight;
-  function resize(){W=c.width=window.innerWidth; H=c.height=window.innerHeight;}
-  window.addEventListener('resize',resize,{passive:true}); resize();
-  const layerDefs=[
-    [44,30,0.19,'#fff',0.33,23],
-    [30,48,0.16,'#64f2e3',0.53,17],
-    [20,68,0.13,'#fff',0.75,13],
-    [14,98,0.14,'#fa528e',0.97,7],
-    [8,144,0.09,'#fff',1.26,3]
-  ];
-  let layers = [];
-  function makeLayer([size,speed,alpha,color,density,blur]){
-    let cols = Math.floor(W/(size*density));
-    let drops = [];
-    for(let i=0;i<cols;i++) drops[i]=Math.random()*-H;
-    return {size,speed,alpha,color,density,blur,drops,cols};
+  const c = document.getElementById('matrix3d'), fail = document.getElementById('failmsg');
+  if(!c || !c.getContext){ if(fail){fail.style.display='flex';fail.textContent='MATRIX CANVAS FAILED';} return; }
+  let W = c.width = window.innerWidth, H = c.height = window.innerHeight;
+  window.addEventListener('resize',()=>{W=c.width=window.innerWidth;H=c.height=window.innerHeight;});
+  function diag(){
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle="#e00";
+    ctx.fillRect(0,0,W,H);
+    ctx.font = "bold 48px monospace";
+    ctx.fillStyle="#fff";
+    ctx.textAlign = "center";
+    ctx.fillText("RAIN HERE", W/2, H/2);
+    requestAnimationFrame(diag);
   }
-  function regenLayers(){
-    layers = [];
-    for(let def of layerDefs) layers.push(makeLayer(def));
-  }
-  regenLayers(); window.addEventListener('resize',regenLayers);
-  const glyphs = "アイウエオカキクケコサシスセソタチツテトナニヌネノﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  function drawLayer(L,t){
-    ctx.save();
-    ctx.font = `bold ${L.size}px "Share Tech Mono", monospace`;
-    ctx.globalAlpha = L.alpha;
-    ctx.shadowColor = L.color;
-    ctx.shadowBlur = L.blur;
-    for(let i=0;i<L.cols;i++){
-      const x = i * (L.size*L.density);
-      let y = L.drops[i];
-      let rx = x + Math.sin(t*0.003+i)*L.size*0.24;
-      let ch = glyphs[(Math.floor(t/7)+i*5)%glyphs.length];
-      ctx.fillStyle = L.color;
-      ctx.fillText(ch, rx, y);
-      L.drops[i] = (y + L.speed + Math.random()*2) % (H + 50);
-    }
-    ctx.restore();
-  }
-  function drawMatrix(){
-    ctx.globalAlpha=1; ctx.fillStyle="rgba(0,0,0,0.19)"; ctx.fillRect(0,0,W,H);
-    const t=performance.now();
-    for(const L of layers) drawLayer(L,t);
-  }
-  (function loop(){
-    drawMatrix();
-    requestAnimationFrame(loop);
-  })();
-})();
-(function(){
-  const camoEl = document.getElementById("footerCamo");
-  if (camoEl) {
-    const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
-    const chars = "░▒▓▚▞▐▉█▛";
-    function camoTick(t){
-      let out = "";
-      for(let i=0;i<62;i++){
-        out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
-      }
-      camoEl.innerHTML = out;
-    }
-    let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
-  }
-})();
-(function(){
-  const j1nxFloat = document.getElementById('j1nxFloatTrue');
-  const cutout = document.getElementById('j1nxCutoutTrue');
-  const bubble = document.getElementById('j1nxBubbleTrueMain');
-  function isMobile() { return window.innerWidth < 700; }
-  function shrinkJ1nx() {
-    if(isMobile()) {
-      j1nxFloat.classList.remove('j1nx-open');
-      bubble.style.display = "none";
-    } else {
-      j1nxFloat.classList.add('j1nx-open');
-      bubble.style.display = "flex";
-    }
-  }
-  cutout.onclick = function(e) {
-    if(isMobile()) {
-      if(j1nxFloat.classList.contains('j1nx-open')) {
-        j1nxFloat.classList.remove('j1nx-open');
-        bubble.style.display = "none";
-      } else {
-        j1nxFloat.classList.add('j1nx-open');
-        bubble.style.display = "flex";
-      }
-    }
-  };
-  window.addEventListener('resize', shrinkJ1nx);
-  shrinkJ1nx();
-})();
-(function(){
-  let chatHistory = [];
-  let nsfwUnlocked = false;
-  function renderChat() {
-    const out = chatHistory.map(line => `<div>${line}</div>`).join('');
-    document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
-  }
-  function addMsg(msg, isUser) {
-    if (!msg) return;
-    const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
-    chatHistory.push(name + msg);
-    if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
-    renderChat();
-  }
-  document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
-    nsfwUnlocked = true;
-    document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-    addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-  });
-  document.getElementById('j1nxSendTrue').onclick = function() {
-    const input = document.getElementById('j1nxInputTrue');
-    const val = (input.value || '').trim();
-    if (!val) return;
-    addMsg(val, true);
-    if (/^unlock$/i.test(val)) {
-      nsfwUnlocked = true;
-      document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-      addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-      input.value = "";
-      return;
-    }
-    try {
-      let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
-      let replyText = (reply && typeof reply === 'object')
-        ? (reply.text || reply.reply || JSON.stringify(reply))
-        : reply;
-      addMsg(replyText, false);
-    } catch(e) {
-      addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
-    }
-    input.value = "";
-  };
-  document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
-    if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
-  });
-  document.getElementById('j1nxSaveTrue').onclick = function() {
-    const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
-    const blob = new Blob([text], {type:'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
-    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
-  };
-  document.getElementById('j1nxClearTrue').onclick = function() {
-    chatHistory = [];
-    renderChat();
-  };
-  renderChat();
+  try{ diag(); }catch(e){ if(fail){fail.style.display='flex';fail.textContent='MATRIX RAIN ERROR';} }
 })();
 </script>
-<script src="assets/j1nx_brain.js"></script>
 </body>
 </html>
