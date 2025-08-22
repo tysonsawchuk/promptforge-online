@@ -15,10 +15,12 @@
     #bgvid {
       position:fixed; left:0; top:0; width:100vw; height:100vh;
       object-fit:cover; z-index:0; pointer-events:none; opacity:.82;
+      background: #000; /* fallback */
     }
     #matrix-canvas {
       position:fixed; left:0; top:0; width:100vw; height:100vh;
-      z-index:1; pointer-events:none;
+      z-index:1; pointer-events:none; background:transparent !important;
+      display:block;
     }
     header {
       width:100vw; background:linear-gradient(90deg,#171e22 82%,#12262d 100%);
@@ -183,7 +185,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     v.addEventListener('click', kick);
   }
 })();
-// --- TRUE FLUID MATRIX RAIN (5-LAYER AQUA/BLUE, CANVAS ALWAYS ABOVE VIDEO) ---
+// --- TRUE FLUID MATRIX RAIN (TRANSPARENT BG, 5-LAYER AQUA) ---
 (function(){
   const c = document.getElementById('matrix-canvas');
   const ctx = c.getContext('2d');
@@ -207,15 +209,8 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     ];
   }
   initRain();
-  function fadeRain(ctx) {
-    ctx.save();
-    ctx.globalAlpha = 0.15;
-    ctx.fillStyle = "#091f28";
-    ctx.fillRect(0,0,W,H);
-    ctx.restore();
-  }
   function draw() {
-    fadeRain(ctx);
+    ctx.clearRect(0,0,W,H); // THIS is what keeps video visible!
     for(const L of layers) {
       ctx.save();
       ctx.font = `bold ${L.fontSize}px monospace`;
