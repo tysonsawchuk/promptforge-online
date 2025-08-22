@@ -8,116 +8,84 @@
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     html,body {
-      margin:0; padding:0; height:100%; width:100vw; background:#0b0f14;
-      color:#d6f5ff; font-family:'Share Tech Mono',monospace; min-height:100vh;
-      overflow-x:hidden;
+      margin:0; padding:0; min-height:100vh; width:100vw; background:#0b0f14;
+      color:#d6f5ff; font-family:'Share Tech Mono',monospace; overflow-x:hidden;
     }
     #bgvid {
       position:fixed; left:0; top:0; width:100vw; height:100vh;
-      object-fit:cover; z-index:0; pointer-events:none; opacity:.82;
-      background: #000;
+      object-fit:cover; z-index:0; pointer-events:none; opacity:.81;
+      background:#000;
     }
     #matrix-canvas {
       position:fixed; left:0; top:0; width:100vw; height:100vh;
-      z-index:1; pointer-events:none; background:transparent !important;
-      display:block;
+      z-index:1; pointer-events:none; background:transparent !important; display:block;
     }
     header {
-      width:100vw; background:linear-gradient(90deg,#171e22 82%,#12262d 100%);
-      border-bottom:2.7px solid #21e4e1aa; box-shadow:0 4px 42px #1afffa33,0 1.5px 0 #1cf4;
-      z-index:10; position:relative; padding:0; margin:0;
+      width:100vw; background:linear-gradient(90deg,#0b1116 85%,#131b26 100%);
+      border-bottom:2.7px solid #21e4e1aa; box-shadow:0 4px 42px #1afffa26,0 1.5px 0 #1cf4;
+      z-index:10; position:relative; padding:0 0 0 0; margin:0;
+      min-height:102px;
     }
-    .nav-bar {
-      display:flex;align-items:center;width:100%;min-height:62px;
-      padding:0 18px 0 24px;font-size:1.14em;z-index:12;position:relative;
+    .pf-desc-alien {
+      padding-top:22px;
+      text-align:center;
+      font-size:1.09em;
+      line-height:1.32;
+      letter-spacing:0.13em;
+      background:none;
+      color:#57fff9;
+      font-family:'Fira Mono',monospace;
+      text-shadow: 0 0 9px #18fff5cc, 0 0 36px #16caff44, 0 1.5px 11px #00f6ffcc, 0 0 1px #fff;
+      filter: blur(.1px) brightness(1.09);
+      margin-bottom:6px;
+      opacity:.99;
+      user-select:text;
     }
-    .logo { font-family:"Fira Mono",monospace;font-size:1.23em;letter-spacing:2.7px;
-      font-weight:900;color:#64f2e3;text-shadow:0 2px 12px #13e3fa,0 0 28px #1efff4;
-      margin-right:27px;border-right:2.5px solid #0af4;padding-right:22px;user-select:text;}
-    .nav-links {display:flex;align-items:center;gap:30px;flex:1 1 auto;}
-    .nav-links a {color:#64f2e3;text-decoration:none;font-weight:700;padding:2px 3px;
-      border-bottom:2.3px solid transparent;transition:color .13s, border .13s;letter-spacing:.07em;}
-    .nav-links a:hover {color:#fa528e;border-bottom:2.3px solid #fa528e;}
-    .do-not-press {margin-left:38px;background:linear-gradient(93deg,#ffd166 35%,#00eaff 99%);
-      color:#01131a;font-size:1.04em;font-weight:800;border-radius:13px;border:2px solid #fff7;
-      box-shadow:0 2px 22px #13e3fa90,0 1.5px 8px #fa528e22;padding:8px 25px;text-shadow:0 1.5px 6px #fff6;
-      text-decoration:none;transition:.14s;user-select:none;animation:doNotPulse 2.2s infinite;position:relative;z-index:13;}
-    .do-not-press:hover {background:linear-gradient(90deg,#fa528e 70%,#ffd166 99%);color:#fff;}
-    @keyframes doNotPulse {0%{box-shadow:0 2px 18px #00eaff60,0 1.5px 8px #fa528e22;}
-      60%{box-shadow:0 7px 30px #13e3fa99,0 2px 12px #ffd16644;}100%{box-shadow:0 2px 18px #00eaff60,0 1.5px 8px #fa528e22;}}
-    .gt-globe {margin-left:22px;width:34px;height:34px;flex-shrink:0;cursor:pointer;opacity:.97;}
-    .gt-globe img {width:100%;height:100%;}
-    .gt-globe:hover {filter:drop-shadow(0 2px 8px #64f2e3);}
-    .breadcrumbs {font-size:.98em;color:#9db1bd;margin:7px 0 0 24px;
-      padding:2px 0 2.5px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;text-shadow:0 1px 9px #040a;z-index:11;}
-    .breadcrumbs .sep {color:#be9cff;}
-    /* ASCII ART BANNER */
-    .banner-art {
-      margin: 28px auto 0 auto;
-      font-family: "Fira Mono", monospace;
-      font-size: 1.12em;
-      color: #a1ffe3;
-      line-height: 1.13;
-      letter-spacing: .2px;
-      text-align: center;
-      white-space: pre;
-      user-select: text;
-      text-shadow: 0 0 10px #26f1f1, 0 2px 12px #13e3fa;
-      filter: drop-shadow(0 0 18px #31f7ff77);
-      z-index: 7;
-      position: relative;
+    .pf-desc-alien .desc-pink { color:#ff3fda; text-shadow:0 0 13px #ff69f9aa;}
+    .pf-desc-alien .desc-blue { color:#1ac7fa; text-shadow:0 0 14px #2bfffebb;}
+    .pf-desc-alien .desc-gold { color:#ffd166;}
+    .pf-nav {
+      width:100vw; margin:0 auto 0 auto; padding:0; background:none; text-align:center; z-index:12;
     }
-    .desc-bar {
-      display: block;
-      position: relative;
-      margin: 18px auto 22px auto;  /* moved under ASCII art */
-      max-width: 820px;
-      min-width: 180px;
-      font-size: 1.12em;
-      font-family: "Fira Mono", monospace;
-      color: #d9ffff;
-      text-align: center;
-      line-height: 1.35;
-      font-weight: 700;
-      background: linear-gradient(90deg, rgba(15,70,105,0.37) 0%, rgba(4,35,59,0.22) 100%);
-      border-radius: 17px;
-      box-shadow: 0 2px 18px #19f9ff34, 0 0 0 2.5px #1bdbff, 0 0 0 13px #07253a44 inset;
-      border-left: 3px solid #43e0ff99;
-      border-right: 3px solid #19c2ff99;
-      padding: 7px 2vw 8px 2vw;
-      z-index: 13;
-      filter: drop-shadow(0 0 9px #13e3fae2);
-      letter-spacing: 0.01em;
-      white-space: pre-line;
-      backdrop-filter: blur(2.7px);
-      opacity: 0.93;
-      transition: margin .3s, opacity .3s, background .3s;
+    .pf-nav ul {
+      list-style:none; margin:0; padding:0 0 8px 0; display:flex;flex-wrap:wrap;justify-content:center;gap:0;
     }
-    .desc-bar strong { color: #53f2ff; text-shadow:0 2px 8px #21e0fa, 0 0 14px #1ae4ff; }
-    .desc-bar .desc-blue { color: #1ac7fa; text-shadow:0 0 8px #34faffcc, 0 0 10px #13e4ff77; }
-    .desc-bar .desc-pink { color: #fd7fff; text-shadow:0 0 8px #ff4fcfcc, 0 0 10px #ff79fd88;}
-    .desc-bar .desc-gold { color:#ffd166; }
-    @media (max-width:900px){
-      .desc-bar {margin:11px auto 10px auto; font-size:.98em;}
-      .banner-art {font-size:.91em;}
+    .pf-nav ul li {
+      display:inline-block; margin:0 3px 0 0;
     }
-    @media (max-width:600px){
-      .desc-bar {margin:5px auto 6px auto; font-size:.91em;}
-      .banner-art {font-size:.79em;}
+    .pf-nav a {
+      display:inline-block; color:#64f2e3; text-decoration:none; font-weight:700; font-size:1.03em;
+      padding:6px 17px 6px 17px; border-radius:8px;
+      border-bottom:2.3px solid transparent; background:rgba(22,36,40,0.22);
+      margin:3px 0 0 0; letter-spacing:.09em;
+      transition: color .16s, border .16s, box-shadow .19s, background .18s;
+      box-shadow:0 1px 7px #20e3f240;
     }
-    .hud-sidebar {
-      position:fixed;left:0;top:66px;z-index:20;width:228px;min-height:360px;max-height:83vh;background:rgba(16,32,40,0.73);
+    .pf-nav a:hover, .pf-nav a:focus {
+      color:#fa528e; border-bottom:2.3px solid #fa528e;
+      background:rgba(34,24,48,0.16);
+      text-shadow:0 0 11px #ff47c866, 0 0 8px #1cfffbcc;
+      box-shadow:0 1.5px 18px #18e0ff66;
+    }
+    .pf-breadcrumbs {
+      color:#a3eaff; font-size:.97em; padding:0; margin:0 0 0 18px; display:block;
+      text-align:left; letter-spacing:.05em; z-index:14; position:relative;
+    }
+    .pf-breadcrumbs ol { display:inline; list-style:none; padding:0; margin:0;}
+    .pf-breadcrumbs li { display:inline; margin-right:3px;}
+    .pf-breadcrumbs li a { color:#55fff7; text-decoration:none; border-bottom:1.4px solid #3efcff22; }
+    .pf-breadcrumbs li a:hover { color:#fa528e; border-bottom:1.7px solid #fa528e; }
+    .breadcrumbs .sep, .pf-breadcrumbs .sep {color:#be9cff;}
+    .hud-sidebar { position:fixed;left:0;top:102px;z-index:20;width:228px;min-height:360px;max-height:83vh;background:rgba(16,32,40,0.73);
       border:2.4px solid #28dbe9aa;box-shadow:0 0 24px #17c7ff88,0 1.5px 32px #05a6d8b2,0 0 0 5px #0f243366;
-      border-radius:0 21px 28px 0;padding:17px 9px 24px 15px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(3.5px);pointer-events:all;
-    }
+      border-radius:0 21px 28px 0;padding:17px 9px 24px 15px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(3.5px);pointer-events:all;}
     .hud-sidebar h3 {color:#67fff7;margin:0 0 7px 0;font-size:1.13em;text-shadow:0 2px 7px #36f6;letter-spacing:.13em;}
     .hud-tool-link {display:flex;align-items:center;gap:7px;margin:0 0 8px 0;padding:8px 14px;border-radius:12px;
       background:linear-gradient(87deg,rgba(22,44,53,0.82),rgba(32,55,65,0.56) 92%);border:1.2px solid #1ef9fa33;color:#abfdff;
       font-weight:700;letter-spacing:.07em;box-shadow:0 1px 12px #27d0f922;cursor:pointer;font-size:.98em;text-decoration:none;transition:background .15s,color .15s,box-shadow .16s;}
     .hud-tool-link:hover {background:linear-gradient(87deg,#1ef9fa33,#0a0d1080 96%);color:#fff;box-shadow:0 1.5px 18px #10e3ff33;}
-    @media (max-width:900px){
-      .hud-sidebar{display:none;}
-    }
+    @media (max-width:900px){ .hud-sidebar{display:none;} .pf-nav ul{flex-direction:column;align-items:center;}}
+    /* J1NX, footer, camo, art etc from previous build remain unchanged */
     .j1nx-float-true {position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px;}
     .j1nx-true-cutout-img {width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent !important;
       margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none !important;}
@@ -141,43 +109,38 @@
   </style>
 </head>
 <body>
+  <header>
+    <div class="pf-desc-alien">
+      Matrix Rain Generator &amp; ASCII/ANSI Art Playground — Cyberpunk Creative Toolkit.<br>
+      <span class="desc-blue">Create and remix digital art, live retro text effects, video-to-ASCII, hacker style prompts, and glowing terminal HUDs.</span><br>
+      <span class="desc-pink">AI art tools, generative prompt engineering, creative code, 2025 digital culture, open source, no filter walls.</span>
+    </div>
+    <!-- MASTER NAV -->
+    <nav id="pf-nav" class="pf-nav">
+      <ul>
+        <li><a href="/main.html">Main Hub</a></li>
+        <li><a href="/j1nx.html">J1nx</a></li>
+        <li><a href="/watermark.html">Watermark</a></li>
+        <li><a href="/picture.html">Image Prompt</a></li>
+        <li><a href="/movie.html">Video Prompt</a></li>
+        <li><a href="/playground.html">AI Playground</a></li>
+        <li><a href="/ansiart.html">ANSI/ASCII Art</a></li>
+        <li><a href="/compare.html">Compare</a></li>
+        <li><a href="/legal.html">Legal/Terms</a></li>
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <!-- BREADCRUMBS -->
+    <nav aria-label="breadcrumb" class="pf-breadcrumbs">
+      <ol>
+        <li><a href="/main.html">Main Hub</a> &gt;</li>
+        <li>J1nx</li>
+      </ol>
+    </nav>
+  </header>
   <video id="bgvid" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
   <canvas id="matrix-canvas"></canvas>
-  <header>
-    <div class="nav-bar">
-      <span class="logo">PROMPTFORGE</span>
-      <nav class="nav-links">
-        <a href="#">Playground</a>
-        <a href="#">Gallery</a>
-        <a href="#">FAQ</a>
-        <a href="#">About</a>
-      </nav>
-      <a class="do-not-press" href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">☕ DO NOT PRESS ☕</a>
-      <div class="gt-globe" title="Translate page"><img src="assets/globe.svg" alt="Translate"/></div>
-    </div>
-    <div class="breadcrumbs">
-      <a href="#">Main</a><span class="sep">&raquo;</span>
-      <a href="#">ANSI Playground</a><span class="sep">&raquo;</span>
-      <span>Welcome</span>
-    </div>
-  </header>
-
-  <div class="banner-art">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
-  </div>
-
-  <div class="desc-bar">
-    <strong>Matrix Rain Generator &amp; ASCII/ANSI Art Playground — Cyberpunk Creative Toolkit.</strong>
-    <span class="desc-blue">Create and remix digital art, live retro text effects, video-to-ASCII, hacker style prompts, and glowing terminal HUDs.</span>
-    <span class="desc-pink">AI art tools, generative prompt engineering, creative code, 2025 digital culture, open source, no filter walls.</span>
-  </div>
-
   <aside class="hud-sidebar">
     <h3>HUD Controls</h3>
     <a href="#" class="hud-tool-link">Video ➔ ASCII</a>
@@ -189,7 +152,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     <a href="#" class="hud-tool-link">Gallery</a>
     <a href="#" class="hud-tool-link">FAQ</a>
   </aside>
-
+  <!-- J1NX assistant, always floating -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
@@ -209,6 +172,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       </div>
     </div>
   </div>
+  <!-- FOOTER (only once, centered) -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -224,11 +188,11 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       Made underground in BC, Canada &bull; #PromptForge &bull;
       <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> &bull;
       <a href="https://x.com/GoreandGiggles">Twitter/X</a> &bull;
-      <a href="terms.html">Legal</a>
+      <a href="/legal.html">Legal</a>
     </div>
   </footer>
 <script>
-// --- FORCE VIDEO PLAY (EVERY DEVICE) ---
+// --- FORCE VIDEO PLAY ---
 (function(){
   var v=document.getElementById("bgvid");
   function kick() { if(v && v.paused){ v.play().catch(()=>{}); } }
@@ -241,7 +205,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     v.addEventListener('click', kick);
   }
 })();
-// --- TRUE FLUID MATRIX RAIN (TRANSPARENT BG, 5-LAYER AQUA) ---
+// --- MATRIX RAIN ---
 (function(){
   const c = document.getElementById('matrix-canvas');
   const ctx = c.getContext('2d');
@@ -266,7 +230,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
   }
   initRain();
   function draw() {
-    ctx.clearRect(0,0,W,H); // THIS is what keeps video visible!
+    ctx.clearRect(0,0,W,H);
     for(const L of layers) {
       ctx.save();
       ctx.font = `bold ${L.fontSize}px monospace`;
@@ -304,7 +268,7 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
     let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
   }
 })();
-// J1NX logic (unchanged)
+// J1NX logic
 (function(){
   const j1nxFloat = document.getElementById('j1nxFloatTrue');
   const cutout = document.getElementById('j1nxCutoutTrue');
