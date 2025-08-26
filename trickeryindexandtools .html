@@ -1,0 +1,1942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PromptForge | Underground AI Terminal Entry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="description" content="PromptForge.online: The underground’s only uncensored, free, and pro-level AI toolkit for watermarking, prompt building, face mapping, NSFW/SFW creation, meme gen, viral content, and more. No paywalls. No filters. All features unlocked." />
+  <meta name="keywords" content="PromptForge, AI toolkit, watermark, meme generator, NSFW, SFW, face mapping, prompt engineering, underground AI, batch watermark, batch meme, DMCA, viral AI, open source, RealVis, CyberRealistic, JuggernautXL, SDXL, DALL-E, TikTok watermark, Instagram, batch tools, creators, AI prompt, meme vault, digital art, artist tools, uncensored AI, no paywall, AI hacks, PromptForge online, TikTok meme, creative commons, AI copyright, Gore and Giggles" />
+  <meta name="author" content="Tyson Sawchuk, Gore and Giggles" />
+  <meta name="google-adsense-account" content="ca-pub-4963053724895140" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="PromptForge | Underground AI Terminal Entry" />
+  <meta property="og:description" content="PromptForge.online: The underground’s only uncensored, free, and pro-level AI toolkit for watermarking, prompt building, face mapping, NSFW/SFW creation, meme gen, viral content, and more. No paywalls. No filters. All features unlocked." />
+  <meta property="og:url" content="https://promptforge.online/" />
+  <meta property="og:site_name" content="PromptForge" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://promptforge.online/favicon.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@GoreandGiggles" />
+  <meta name="twitter:title" content="PromptForge | Underground AI Terminal Entry" />
+  <meta name="twitter:description" content="PromptForge.online: The underground’s only uncensored, free, and pro-level AI toolkit for watermarking, prompt building, face mapping, NSFW/SFW creation, meme gen, viral content, and more." />
+  <meta name="twitter:image" content="https://promptforge.online/favicon.png" />
+
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="canonical" href="https://promptforge.online/" />
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="https://promptforge.online/sitemap.xml" />
+  
+  <style>
+    html, body {
+      height: 100%; width: 100vw; margin: 0; padding: 0; background: #090b10;
+      font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+      color: #1aff87; overflow: hidden;
+    }
+    body { min-height: 100vh; }
+    .container { display: flex; flex-direction: row; height: 100vh; width: 100vw; box-sizing: border-box;}
+    .left { width: 46vw; min-width: 220px; background: #090b10;
+      display: flex; flex-direction: column; justify-content: flex-start;
+      align-items: stretch; border-right: 2px solid #162019; position: relative; z-index: 3;}
+    .terminal-inner { display: flex; flex-direction: column; flex: 1 1 0; padding: 2.5vh 0 0 2vw;
+      height: calc(100vh - 4em); min-height: 0; box-sizing: border-box; position: relative; z-index: 9;}
+    .fakery { font-size: 1.09rem; white-space: pre-line; min-height: 10em; max-height: 36vh; overflow-y: auto;
+      font-family: inherit; margin-bottom: 0.12em; font-weight: 600; letter-spacing: 0.01em; user-select: text;
+      color: #32ffd3; text-shadow: 0 0 2px #14ff98, 0 0 6px #11fda1; transition: color 0.2s; position: relative; z-index: 11;}
+    .fakery .sys { color: #32ff32; }
+    .fakery .cmd { color: #aff1ff; }
+    .fakery .info { color: #ffe662; }
+    .fakery .warn { color: #ffec4b; background: #2e2d093a; border-radius: 0.13em; }
+    .fakery .err { color: #ff5252; }
+    .fakery .dir { color: #4adfff; }
+    .fakery .progress { color: #e3e3e3; }
+    .fakery .progress.complete { color: #ff4242; font-weight: 900;}
+    .fakery .sudo { color: #ff94ef; }
+    .crt-fx {
+      pointer-events: none; position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: 20; opacity: 0.26;
+      mix-blend-mode: lighten;
+      background: repeating-linear-gradient(to bottom,rgba(0,0,0,0.18) 0px,rgba(0,0,0,0.08) 1px,transparent 3px,transparent 5px),
+      linear-gradient(0deg,rgba(24,255,143,0.07),rgba(17,33,19,0.09));
+      animation: crt-flicker 0.65s infinite steps(2,end);
+      display: block;
+    }
+    @keyframes crt-flicker { 0%{opacity:.21;} 50%{opacity:.33;} 100%{opacity:.21;} }
+    .fx-btn {
+      position: absolute; right: 0.6em; bottom: 0.5em; z-index: 30;
+      font-size: 1em; color: #21fd36; background: #031913ed;
+      border: 2px solid #21fd36; border-radius: 9px; padding: 0.21em 0.89em;
+      cursor: pointer; font-weight: 700;
+      text-shadow: 0 0 8px #000, 0 0 2px #fff;
+      transition: background 0.15s, border 0.15s, color 0.18s;
+    }
+    .fx-btn.off { color: #bbb; border-color: #555; background: #141515bb;}
+    .fx-btn:active { background: #12ff39bb; color: #111;}
+    .cmd-hints { color: #21c5c8; font-size: 0.98em; margin-bottom: 0.11em; margin-top: 0;
+      font-style: italic; text-shadow: 0 0 1px #045, 0 0 2px #000; user-select: none; }
+    .input-row { display: flex; align-items: center; margin: 0; width: 100%;
+      background: transparent; font-size: 1.11rem; z-index: 10; padding-bottom: 0.11em; position: relative; }
+    #prompt { color: #fa4242; font-weight: 700; margin-right: 0.14em; font-size: 1.13rem; letter-spacing: 0.01em; user-select: none; }
+    #terminalInput {
+      background: transparent; color: #f8e4fb; border: none; outline: none; font-family: inherit;
+      font-size: 1.13rem; width: 22vw; min-width: 100px; max-width: 370px;
+      caret-color: #ff3030; font-weight: bold; letter-spacing: 0.01em;
+      z-index: 11; position: relative; padding: 0; margin: 0;
+    }
+    #fakeCursor {
+      color: #ff3131; font-size: 1.18em; font-weight: 900; margin-left: -0.11em;
+      animation: blink 1.03s steps(2, start) infinite; position: relative; left: 0; top: 0.12em;
+      display: inline-block; user-select: none;
+    }
+    @keyframes blink {0%{opacity:1;}50%{opacity:0;}100%{opacity:1;}}
+    .right { flex: 1 1 0; min-width: 180px; height: 100vh; position: relative;
+      background: #050607; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden; }
+    .starwars-scroll-wrap {
+      width: 100%; height: 100vh; position: absolute; left: 0; top: 0; pointer-events: none; z-index: 12;
+      display: flex; align-items: flex-start; justify-content: center;
+      -webkit-mask-image: linear-gradient(to top, #000 88%, transparent 100%);
+      mask-image: linear-gradient(to top, #000 88%, transparent 100%);
+      background: transparent;
+    }
+    .starwars-scroll {
+      width: 94%; max-width: 880px; opacity: 0.54;
+      font-family: inherit; color: #ffee88; font-size: 1.18em; font-weight: 700;
+      text-align: center; text-shadow: 0 0 8px #ffe, 0 0 2px #880;
+      white-space: pre-line; line-height: 1.53;
+      user-select: text; pointer-events: none;
+      will-change: transform;
+    }
+    .globe-bg-video {
+      width: 100%; height: 100vh; object-fit: cover; background: transparent; z-index: 3;
+      position: absolute; top: 0; left: 0; border: none; filter: none; pointer-events: none;
+      opacity: 0.88;
+    }
+    .footer-sticky { width: 100vw; background: #182523e7; color: #21c5c8; font-size: 1em; text-align: center;
+      position: fixed; left: 0; bottom: 0; padding:0 0 0.1em 0; border-top: 2px solid #fa4242; z-index: 1001; font-family: inherit;
+      box-shadow: 0 -2px 14px #111b; line-height: 1.08; user-select: text; letter-spacing: -0.01em;}
+    .footer-sticky a { color: #99fff3; text-decoration: underline; font-weight: 700; margin: 0 0.5em;}
+    .footer-sticky pre {margin:0 0 0 0;line-height:1.09;letter-spacing:-0.04em;}
+    #passkeyPopup { position:fixed;top:0;left:0;width:100vw;height:100vh;
+      background:rgba(18,16,16,0.98);z-index:9999;display:flex;
+      align-items:center;justify-content:center;pointer-events:auto; }
+    .modal-warning { background: #080d0c; color: #ffe800;
+      border: 7px solid #39ff14; box-shadow: 0 0 33px #09852d88, 0 0 0 13px #222 inset;
+      font-size:1.22em; font-family:'Fira Mono', 'Consolas', monospace; padding: 2.1em 2em 2em 2em;
+      border-radius: 1.2em; text-align:center; min-width:280px; max-width:430px; position:relative; outline: 7px solid #1a320f;
+      letter-spacing: 0.04em; background-image: repeating-linear-gradient(135deg, #1a1a1a 0 8px, #0e1a0f 8px 16px);
+      background-size: 90px 90px; background-blend-mode: multiply; text-shadow: 0 0 7px #222, 0 0 2px #111;}
+    .modal-warning .modal-icon { display: block; margin: 0 auto 0.8em auto; width: 3.2em; height: 3.2em;}
+    .modal-warning strong { color: #39ff14; font-size:1.09em; display: block; margin-bottom: 0.2em; text-shadow: 0 2px 8px #000a;}
+    .modal-warning .modal-text { color: #ffee88; font-size: 1.01em; font-weight: 700; margin-bottom: 0.41em; text-shadow: 0 0 2px #0009;}
+    .modal-warning input { margin-top:1em;font-size:1.13em; border:2.2px solid #39ff14; padding:0.28em 0.59em; border-radius:0.36em;
+      background: #141a19; color: #39ff14; font-weight: bold; letter-spacing: 0.11em; box-shadow: 0 2px 8px #39ff1499;
+      outline:none; width: 78%; text-align: center; margin-bottom: 1em; font-family:inherit;}
+    .modal-warning .modal-note { font-size:0.93em;color:#ffd600; margin-top: 1em; display:block; user-select: none;}
+    .access-btn { display: inline-block; padding: 0.53em 2em; background: linear-gradient(90deg, #222e 0%, #39ff14 100%);
+      border: 2.8px solid #39ff14; border-radius: 1.6em; font-size: 1.11em; font-family: inherit; color: #111;
+      box-shadow: 0 0 17px #39ff1466, 0 2px 0 #060, inset 0 6px 14px #33ff11bb; cursor: pointer; font-weight: 800;
+      text-shadow: 0 0 6px #21fd36, 0 0 1px #fff; letter-spacing: 0.05em; margin-top: 0.1em; margin-bottom: 0.13em;
+      transition: transform 0.11s, box-shadow 0.18s, background 0.13s;}
+    .access-btn:hover, .access-btn:active { background: linear-gradient(90deg, #39ff14 0%, #333 100%);
+      color: #fff; transform: scale(1.07); box-shadow: 0 0 24px #12ff3b, 0 2px 0 #010, 0 0 4px #fff7;}
+  </style>
+</head>
+<body>
+  <!-- HIDDEN BOT NAVIGATION ONLY -->
+  <nav id="bot-nav" aria-label="Site Navigation" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
+    <a href="main.html">Main</a>
+    <a href="generator.html">Prompt Generator</a>
+    <a href="randomizer.html">Randomizer</a>
+    <a href="characterforge.html">CharacterForge</a>
+    <a href="watermark.html">Watermark</a>
+    <a href="fuckwith/fuckwith.html">AIHacks Encyclopedia</a>
+    <a href="j1nx/j1nx.html">J1NX</a>
+    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Privacy</a>
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a>
+    <a href="https://x.com/GoreandGiggles">Twitter/X</a>
+    <a href="https://www.buymeacoffee.com/tysonsawchuk">Buy Me a Coffee</a>
+    <a href="mailto:admin@goreandgiggles.com">Contact</a>
+  </nav>
+  <div class="container">
+    <div class="left">
+      <div class="terminal-inner">
+        <div class="fakery" id="fakery"></div>
+        <div class="crt-fx" id="crtFX"></div>
+        <div class="cmd-hints" id="cmdHints"></div>
+        <div class="input-row">
+          <span id="prompt">root@promptforge:/j1nx#</span>
+          <input id="terminalInput" autocomplete="off" autofocus spellcheck="false" maxlength="40" />
+          <span id="fakeCursor">|</span>
+        </div>
+        <button class="fx-btn" id="fxBtn" title="Toggle FX">FX: ON</button>
+        <audio id="fxAudio" src="https://cdn.pixabay.com/audio/2022/07/26/audio_123bfa1e5c.mp3" preload="auto"></audio>
+      </div>
+    </div>
+    <div class="right">
+      <!-- Your original globe BG + yellow scroll. Not modified. -->
+      <div class="starwars-scroll-wrap">
+        <div class="starwars-scroll" id="starwarsScroll"></div>
+      </div>
+      <video class="globe-bg-video" autoplay muted loop playsinline>
+        <source src="openart-video_106dc64a_1751649473737.mp4" type="video/mp4" />
+      </video>
+    </div>
+  </div>
+  <div class="footer-sticky" style="padding: 0 0 0.12em 0;">
+    <pre style="color: #21c5c8; font-size: 1em; line-height: 1.1; margin: 0 0 0 0; letter-spacing: -0.03em;">
+ 888888ba                                          dP   .8888b                                    
+ 88    `8b                                         88   88   "                                    
+a88aaaa8P' 88d888b. .d8888b. 88d8b.d8b. 88d888b. d8888P 88aaa  .d8888b. 88d888b. .d8888b. .d8888b.
+ 88        88'  `88 88'  `88 88'`88'`88 88'  `88   88   88     88'  `88 88'  `88 88'  `88 88ooood8
+ 88        88       88.  .88 88  88  88 88.  .88   88   88     88.  .88 88       88.  .88 88.  ...
+ dP        dP       `88888P' dP  dP  dP 88Y888P'   dP   dP     `88888P' dP       `8888P88 `88888P'
+                                        88                                            .88         
+                                        dP                                        d8888P          
+    </pre>
+    <div style="color: #99fff3; font-size: 1em; margin: 0.13em 0 0 0;">
+      <span class="for-google">
+        Index page: sign-in gateway for PromptForge.online. For all tools, proceed to <a href="main.html">main site</a>. No ads here.
+      </span>
+      <span style="display: block;">
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a> |
+        <a href="https://x.com/GoreandGiggles" target="_blank">X</a> |
+        <a href="mailto:admin@goreandgiggles.com">Contact</a> |
+        <a href="https://www.buymeacoffee.com/tysonsawchuk" target="_blank">☕ Buy Me a Coffee</a>
+      </span>
+    </div>
+  </div>
+  <script>
+    // --- FX Toggle, CRT overlay
+    let fxOn = true;
+    let crt = document.getElementById('crtFX');
+    let fxBtn = document.getElementById('fxBtn');
+    let fxAudio = document.getElementById('fxAudio');
+    fxBtn.onclick = function () {
+      fxOn = !fxOn;
+      crt.style.display = fxOn ? 'block' : 'none';
+      fxBtn.textContent = 'FX: ' + (fxOn ? 'ON' : 'OFF');
+      fxBtn.className = fxOn ? 'fx-btn' : 'fx-btn off';
+    };
+    // Terminal Sound FX (only on input)
+    let lastKeyFx = Date.now();
+    document.getElementById('terminalInput').addEventListener('keydown', function (e) {
+      if (fxOn && e.key.length == 1 && Date.now() - lastKeyFx > 40) {
+        fxAudio.currentTime = 0.06;
+        fxAudio.volume = 0.13;
+        fxAudio.play();
+        lastKeyFx = Date.now();
+      }
+    });
+    // STARWARS SCROLL (Preloaded, never empty)
+    const seoText = `Welcome to PromptForge.online — the internet’s most powerful, uncensored AI toolkit for creators, rebels, artists, and visionaries. Here you’ll find pro-level tools for batch watermarking TikToks, batch meme creation, face mapping, viral remixing, DMCA protection, open source utilities, NSFW/SFW prompt generators, and more. No paywalls, no ads, no limits—just pure, underground creative power.
+
+PromptForge was founded by medics, meme lords, and creators who got tired of walled gardens, censorship, and rent-seeking “AI as a service” scams. We believe in open access, creative freedom, and protecting artists’ rights. This site is run by Tyson Sawchuk and the Gore & Giggles crew. We built PromptForge for TikTokers, digital artists, adult content creators, meme warriors, teachers, prompt engineers, and anyone sick of locked-down, censored, overpriced software.
+
+Features: 
+Batch watermark AI images, videos, and TikToks. Generate NSFW/SFW prompts with built-in prompt engineer. Swap faces and styles, batch meme and viral image builder, real-time face fusion, TikTok/IG watermark tool, DMCA support, meme vault, Discord tools, creative commons art tools, and zero-cookie, privacy-first design.
+
+Compatible with RealVis, CyberRealistic, JuggernautXL, GPT, SDXL, DALL-E, and more. PromptForge works on desktop and mobile, is always free, and will never filter or log your prompts. We run on community support and donations.
+
+Join the underground—type 'main' in the terminal and unlock the most powerful AI prompt system the net has never seen. 
+Follow us: Bluesky goreandgiggles.bsky.social, X @GoreandGiggles, email admin@goreandgiggles.com.
+PromptForge.online — for creators who refuse to be censored.
+`.replace(/^\s+|\s+$/g, '');
+    const starwars = document.getElementById('starwarsScroll');
+    starwars.innerText = seoText + "\n\n" + seoText;
+    let scrollPos = 0;
+    function doStarwarsScroll() {
+      let textH = starwars.scrollHeight;
+      scrollPos += 0.52;
+      if (scrollPos > textH / 2) scrollPos = 0;
+      starwars.style.transform = `translateY(${-scrollPos}px)`;
+      requestAnimationFrame(doStarwarsScroll);
+    }
+    doStarwarsScroll();
+    // ---- Terminal boot + revision marker
+    function randomIP() {
+      return Array(4)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * 256))
+        .join('.');
+    }
+    function hexPayload() {
+      return '0x' + (Math.random() * 1e8 || 0).toString(16).padStart(7, '0');
+    }
+    let progressStatus = [false, false, false];
+    const REVISION_MARK = '=== PromptForge INDEX REVISION: v4.23 — 2025-07-12 ===';
+    const bootLines = [
+      () => `<span class="info" style="color:#ffec4b;background:#210a20;">${REVISION_MARK}</span>`,
+      () => `<span class="sys">[BOOT]</span> Launching <b>PromptForge Underground</b>`,
+      () => `<span class="cmd">sudo apt-get insta11 promptforge-core</span>`,
+      () => `<span class="info">Authenticating as root@${randomIP()} ...</span>`,
+      () => `<span class="warn">WARNING: Unstable kernel detected (patched)</span>`,
+      () => `<span class="cmd">mount /dev/sdz0 /mnt/ai_vault -o encrypted</span>`,
+      () => `<span class="err">Error: /dev/sdz0 not found, falling back...</span>`,
+      () => `<span class="cmd">mount /dev/sda1 /mnt/ai_vault -o encrypted</span>`,
+      () => `<span class="info">Vault mounted at /mnt/ai_vault</span>`,
+      () => `<span class="cmd">wget https://promptforge.online/pool/j1nx-ai_b3ta.deb</span>`,
+      () => `<span class="cmd">dpkg -i j1nx-ai_b3ta.deb</span>`,
+      () => `<span class="progress" id="progress1">Progress [                    ] 0%</span>`,
+      () => `<span class="info">Unpacking j1nx-core...</span>`,
+      () => `<span class="progress" id="progress2">Progress [                    ] 0%</span>`,
+      () => `<span class="info">Injecting custom payload: <span class="sudo">${hexPayload()}</span></span>`,
+      () => `<span class="info">Linking meme-generator batch...</span>`,
+      () => `<span class="progress" id="progress3">Progress [                    ] 0%</span>`,
+      () => `<span class="info">Bypassing AI filter protocols...</span>`,
+      () => `<span class="warn">[WARN] Unfiltered mode enabled. Trace: masked.</span>`,
+      () => `<span class="sys">System Ready: <span style="color:#ffec4b;">ALL SYSTEMS GREEN</span></span>`,
+      () => `<span class="info">Type '<b>main</b>' to unlock PromptForge, or '<b>help</b>' for commands.</span>`,
+      () => `<span class="info">Available: help, about, contact, clear, passkey, main</span>`,
+    ];
+    let lineIdx = 0,
+      isBooted = false;
+    const fakeryEl = document.getElementById('fakery');
+    const cmdHintsEl = document.getElementById('cmdHints');
+    const input = document.getElementById('terminalInput');
+    function showError(msg, code) {
+      fakeryEl.innerHTML += `<br><span class="err">TERMINAL ERROR: ${msg} [${code}]</span>`;
+      console.error(`[PromptForge TERMINAL ERROR ${code}] ${msg}`);
+    }
+    function updateProgressBar(idx, id, cb) {
+      let percent = 0;
+      function tick() {
+        percent++;
+        let barLen = Math.floor(percent / 5);
+        let spaces = 20 - barLen;
+        let html =
+          percent < 100
+            ? `Progress [${'='.repeat(barLen)}${' '.repeat(spaces)}] ${percent}%`
+            : `<span class="complete">Progress [${'='.repeat(20)}] 100% — COMPLETE</span>`;
+        let el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+        if (percent < 100) setTimeout(tick, 8 + Math.random() * 11);
+        else {
+          progressStatus[idx] = true;
+          if (cb) setTimeout(cb, 450);
+        }
+      }
+      tick();
+    }
+    function showNextLine() {
+      try {
+        if (lineIdx < bootLines.length) {
+          let out = [];
+          for (let i = 0; i < lineIdx; ++i)
+            out.push(typeof bootLines[i] === 'function' ? bootLines[i]() : bootLines[i]);
+          if (lineIdx === 10)
+            setTimeout(() => updateProgressBar(0, 'progress1', () => showNextLine()), 160);
+          if (lineIdx === 12)
+            setTimeout(() => updateProgressBar(1, 'progress2', () => showNextLine()), 160);
+          if (lineIdx === 14)
+            setTimeout(() => updateProgressBar(2, 'progress3', () => showNextLine()), 160);
+          if (![10, 12, 14].includes(lineIdx)) {
+            out.push(typeof bootLines[lineIdx] === 'function' ? bootLines[lineIdx]() : bootLines[lineIdx]);
+            fakeryEl.innerHTML = out.join('<br>');
+            fakeryEl.scrollTop = fakeryEl.scrollHeight;
+            lineIdx++;
+            let delay = 650 + Math.random() * 670;
+            setTimeout(showNextLine, delay);
+          } else {
+            out.push(typeof bootLines[lineIdx] === 'function' ? bootLines[lineIdx]() : bootLines[lineIdx]);
+            fakeryEl.innerHTML = out.join('<br>');
+            fakeryEl.scrollTop = fakeryEl.scrollHeight;
+            lineIdx++;
+          }
+        } else {
+          isBooted = true;
+          setTimeout(() => {
+            fakeryEl.innerHTML = bootLines.map((f) => (typeof f === 'function' ? f() : f)).join('<br>');
+            fakeryEl.scrollTop = fakeryEl.scrollHeight;
+            cmdHintsEl.innerHTML = "Type <b>main</b>, <b>passkey</b>, or <b>help</b> and press Enter.";
+            input.disabled = false;
+            input.focus();
+          }, 800);
+        }
+      } catch (e) {
+        showError('Boot sequence failed. Report this code: [boot-seq-0423]', 'boot-seq-0423');
+      }
+    }
+    input.disabled = true;
+    fakeryEl.innerHTML = '';
+    cmdHintsEl.innerHTML = '';
+    showNextLine();
+
+    input.value = '';
+    function processCommand(cmd) {
+      cmd = cmd.trim().toLowerCase();
+      let resp = '';
+      switch (cmd) {
+        case 'help':
+          resp = '<span class="info">main — Sign in | help — Show help | about — Info | contact — Contact | passkey — Dev pass | clear — Clear</span>';
+          break;
+        case 'about':
+          resp = "<span class='info'>PromptForge.online — Built by rebels, medics, and meme lords. All features unlocked. AI power for the underground.</span>";
+          break;
+        case 'contact':
+          resp = "<span class='info'>admin@goreandgiggles.com | X: @GoreandGiggles | Bluesky: goreandgiggles.bsky.social</span>";
+          break;
+        case 'passkey':
+          showPasskey();
+          return;
+        case 'main':
+          window.location.href = 'main.html';
+          return;
+        case 'clear':
+          fakeryEl.innerHTML = '';
+          return;
+        default:
+          resp = `<span class='err'>Unknown command: <b>${cmd}</b>. Type 'help'.</span>`;
+      }
+      fakeryEl.innerHTML += '<br><br>' + resp;
+      fakeryEl.scrollTop = fakeryEl.scrollHeight;
+    }
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        let cmd = input.value;
+        input.value = '';
+        processCommand(cmd);
+      }
+    });
+    function focusInput() {
+      if (!document.getElementById('passkeyPopup')) {
+        input.focus();
+        setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 10);
+      }
+    }
+    window.onclick = focusInput;
+    input.addEventListener('blur', () => setTimeout(focusInput, 60));
+    setInterval(() => {
+      if (document.activeElement !== input && !document.getElementById('passkeyPopup')) focusInput();
+    }, 800);
+
+    // --- PASSKEY MODAL (fully working)
+    function showPasskey() {
+      if (document.getElementById('passkeyPopup')) {
+        let passInput = document.getElementById('passkeyInput');
+        document.getElementById('passkeyPopup').style.display = 'flex';
+        setTimeout(() => {
+          passInput.focus();
+          passInput.setSelectionRange(passInput.value.length, passInput.value.length);
+        }, 80);
+        return;
+      }
+      let modal = document.createElement('div');
+      modal.id = 'passkeyPopup';
+      modal.innerHTML = `
+        <div class="modal-warning">
+          <svg class="modal-icon" viewBox="0 0 90 90">
+            <polygon points="45,10 85,78 5,78" style="fill:#ffe800;stroke:#111;stroke-width:6" />
+            <text x="45" y="65" text-anchor="middle" font-size="46" font-weight="bold" fill="#b30000" font-family="monospace">!</text>
+          </svg>
+          <strong>RESTRICTED DEVELOPER ACCESS</strong>
+          <div class="modal-text">This area is for authorized PromptForge devs only.<br>
+          Unauthorized access is strictly prohibited.<br>
+          Enter your 6-digit dev passkey to continue.</div>
+          <input id="passkeyInput" type="tel" autocomplete="off" placeholder="6-digit Dev Passkey" maxlength="6" inputmode="numeric" pattern="[0-9]*" />
+          <button class="access-btn" id="accessBtn" disabled>ENTER SYSTEM</button>
+          <span class="modal-note">All actions monitored. Unapproved entry will be logged.<br>System security protocols are in effect.</span>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      let passInput = document.getElementById('passkeyInput');
+      let accessBtn = document.getElementById('accessBtn');
+      setTimeout(() => {
+        passInput.focus();
+        passInput.setSelectionRange(passInput.value.length, passInput.value.length);
+      }, 100);
+
+      function checkInput() {
+        passInput.value = passInput.value.replace(/\D/g, '');
+        if (passInput.value.length === 6) {
+          accessBtn.disabled = false;
+          accessBtn.style.opacity = '1';
+        } else {
+          accessBtn.disabled = true;
+          accessBtn.style.opacity = '0.55';
+        }
+      }
+      passInput.addEventListener('input', checkInput);
+
+      function doClosePasskey() {
+        document.body.removeEventListener('focusin', modalFocusTrap, true);
+        document.getElementById('passkeyPopup').remove();
+        window.location.href = 'main.html';
+      }
+      passInput.addEventListener('keydown', function (e) {
+        checkInput();
+        if (e.key === 'Enter' && !accessBtn.disabled) doClosePasskey();
+      });
+      accessBtn.addEventListener('click', function () {
+        if (!accessBtn.disabled) doClosePasskey();
+      });
+      function modalFocusTrap(e) {
+        if (document.getElementById('passkeyPopup') && !modal.contains(e.target)) {
+          passInput.focus();
+        }
+      }
+      document.body.addEventListener('focusin', modalFocusTrap, true);
+    }
+  </script>
+</body>
+</html>
+<section class="tool-block pf-hud-vidascii" style="margin:48px auto 88px auto; max-width:1240px; padding:0; background:none; position:relative; z-index:6;">
+
+  <style>
+    .pf-hud-vidascii * { box-sizing:border-box; }
+    .pf-hudpanel {
+      background:linear-gradient(135deg,rgba(8,14,22,.92) 82%,rgba(15,38,46,.67) 100%);
+      border:2.7px solid #21e4e1cc;
+      border-radius:24px 24px 30px 30px/14px 14px 32px 32px;
+      box-shadow:0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #093d42d8 inset;
+      position:relative; padding:0 0 41px 0; margin:0 0 30px 0;
+      overflow:visible;
+      animation:pf-panel-flicker 3.3s infinite alternate;
+    }
+    @keyframes pf-panel-flicker {
+      0%,100% { box-shadow:0 0 54px #18fff560,0 1.5px 15px #11fafb88,0 0 0 6px #093d42d8 inset; }
+      92% { box-shadow:0 0 72px #26fff690,0 1.5px 18px #1bfcffcc,0 0 0 7px #093d42fa inset; }
+    }
+    .pf-hudpanel-title {
+      font-family:'Fira Mono',monospace; font-size:2.65em; letter-spacing:.13em;
+      color:#12fdfa; text-shadow:0 0 21px #2cfad6,0 1.5px 18px #16e2ff,0 0 45px #ff4bfa5e;
+      margin:0; padding:38px 44px 12px 38px; text-align:left; line-height:1.09;
+      border-bottom:2.7px solid #21e4e1cc;
+      border-radius:24px 24px 0 0/14px 14px 0 0;
+      background:linear-gradient(90deg,rgba(22,44,54,0.44) 66%,rgba(34,21,51,.23) 100%);
+      box-shadow:0 7px 30px #10f4b94a inset;
+      position:relative;
+    }
+    .pf-hudpanel-title svg { vertical-align:-14px; margin-right:17px; filter:drop-shadow(0 0 8px #11fcfcbe);}
+    .pf-hud-hint { font-size:.99em; color:#00ffc9a2; font-family:'Fira Mono',monospace; margin-left:18px; text-shadow:0 0 8px #12fdfa70; }
+    .pf-hud-controls-row {
+      display:flex; flex-wrap:wrap; gap:38px 3vw; align-items:center; justify-content:flex-start;
+      margin:34px 34px 11px 34px;
+    }
+    .pf-hud-controls-col {
+      display:flex; flex-direction:column; gap:18px;
+    }
+    .pf-hud-sliderpanel {
+      display:flex;flex-wrap:wrap;gap:24px 2vw;align-items:center;justify-content:flex-start;
+      margin:13px 44px 5px 38px;
+    }
+    .pf-hud-glowbox {
+      background:rgba(21,26,31,0.97);
+      border:2.5px solid #10fcfc;
+      border-radius:17px; box-shadow:0 0 36px #21e4e1cc,0 0 0 7px #21e4e155 inset;
+      padding:16px 16px 12px 20px; margin:0 22px 17px 22px;
+      min-height:320px; max-height:610px; overflow:auto; position:relative;
+      transition:box-shadow .22s;
+      font-family:'Fira Mono',monospace; font-size:1.13em;
+    }
+    .pf-hud-glowbox:focus-within,.pf-hud-glowbox:active { box-shadow:0 0 59px #12fdfa,0 0 0 9px #00ffc994 inset; }
+    .pf-hud-slider {
+      width:220px; accent-color:#10fcfc; height:11px; margin-top:8px;
+      border-radius:8px; box-shadow:0 1px 15px #11fafbaa;
+      background:linear-gradient(90deg,#111,#10fcfc 90%,#ff4baf 100%);
+      outline:none; transition:.13s;
+    }
+    .pf-hud-slider:focus { box-shadow:0 0 23px #18fff588,0 0 0 4px #1e4affbb; }
+    .pf-hud-label {
+      color:#21e4e1; font-size:1.11em; font-family:'Fira Mono',monospace;
+      letter-spacing:.07em; margin-bottom:3px;
+      text-shadow:0 1px 7px #12fdfa50;
+      display:flex;align-items:center;gap:7px;
+    }
+    .pf-hud-dropdown, .pf-hud-dropdown:focus {
+      font-family:'Fira Mono',monospace;font-size:1.13em;
+      padding:9px 12px; border-radius:11px; background:#131b23;
+      color:#12fdfa; border:2.2px solid #10fcfc; box-shadow:0 1.5px 8px #10f4b9cc;
+      outline:none; margin-top:3px;
+      transition:.16s;
+    }
+    .pf-hud-dropdown:focus { border-color:#ff4baf; color:#ff4baf; }
+    .pf-hud-toggle {
+      accent-color:#ff4baf; transform:scale(1.6);margin-right:6px;transition:.18s;
+    }
+    .pf-hud-toggle:focus { outline:2.5px solid #10fcfc; }
+    .pf-hud-togglelabel { color:#ff4baf;font-size:1.14em;margin-right:19px;font-family:'Fira Mono',monospace; }
+    .pf-hud-exportrow {
+      display:flex;gap:24px;align-items:center;justify-content:center;
+      margin:18px 0 0 0;
+    }
+    .pf-hud-exportbtn {
+      background:linear-gradient(90deg,#181b21 70%,#212c3a 100%);
+      color:#10fcfc;font-family:'Fira Mono',monospace;font-size:1.19em;
+      border:2.5px solid #10fcfc;border-radius:14px;box-shadow:0 2px 19px #10fcfc88;
+      padding:15px 38px;cursor:pointer;transition:.17s;display:flex;align-items:center;gap:13px;
+      text-shadow:0 0 14px #10fcfc88;
+      position:relative;overflow:hidden;
+    }
+    .pf-hud-exportbtn:hover, .pf-hud-exportbtn:focus {
+      color:#ff4baf; border-color:#ff4baf; box-shadow:0 2px 38px #ff4baf99;
+      background:linear-gradient(90deg,#20162a 85%,#242354 100%);
+    }
+    .pf-hud-tip {
+      color:#ffd166;font-size:1em;font-family:'Fira Mono',monospace;
+      margin:16px 0 0 36px;opacity:.78;
+      text-shadow:0 0 8px #ffd16644;
+    }
+    /* 3D panel edge effect */
+    .pf-hud-vidascii:before {
+      content:""; display:block; position:absolute; z-index:2; left:7px; top:6px; right:7px; bottom:10px;
+      border-radius:32px 32px 34px 34px/18px 18px 38px 38px;
+      border:2px solid #0e2a3f80; pointer-events:none;
+      box-shadow:0 0 15px #10fcfc33,0 0 4px #ff4baf99;
+      filter:blur(1.6px); opacity:.58;
+    }
+    .pf-hud-slider::-webkit-slider-thumb {
+      appearance:none;
+      background:#ff4baf;
+      border-radius:50%; border:3.2px solid #12fdfa;
+      width:24px; height:24px; box-shadow:0 0 11px #12fdfa,0 1.5px 8px #ff4bafcc;
+      transition:.14s;
+    }
+    .pf-hud-slider:focus::-webkit-slider-thumb { border-color:#ffd166; }
+    .pf-hud-slider::-moz-range-thumb {
+      background:#ff4baf;
+      border-radius:50%; border:3.2px solid #12fdfa;
+      width:24px; height:24px; box-shadow:0 0 11px #12fdfa,0 1.5px 8px #ff4bafcc;
+    }
+    .pf-hud-slider:focus::-moz-range-thumb { border-color:#ffd166; }
+    /* Remove spinners from number input in Chrome */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance:none; margin:0;
+    }
+    input[type=number] { -moz-appearance:textfield; }
+    /* Hide file input button, custom label */
+    .pf-hud-fileinput { opacity:0;width:0;position:absolute;z-index:-1;}
+    .pf-hud-filelabel {
+      display:inline-flex;align-items:center;gap:14px;
+      font-family:'Fira Mono',monospace;font-size:1.18em;
+      background:linear-gradient(90deg,#181b21 60%,#212c3a 100%);
+      color:#ffd166; border:2.5px solid #ffd166;
+      border-radius:14px; box-shadow:0 2px 19px #ffd16680;
+      padding:13px 32px; cursor:pointer; margin-top:7px;
+      text-shadow:0 0 13px #ffd16699;
+      transition:.17s;
+      position:relative;overflow:hidden;
+    }
+    .pf-hud-filelabel:hover, .pf-hud-filelabel:focus {
+      color:#fff; border-color:#fff; background:linear-gradient(90deg,#292a3a 85%,#343254 100%);
+      box-shadow:0 2px 38px #ffd166aa;
+    }
+    /* Tooltip */
+    .pf-hud-tooltip {
+      display:inline-block; position:relative; cursor:help;
+      color:#21e4e1; text-shadow:0 0 6px #21e4e1;
+    }
+    .pf-hud-tooltip:hover::after, .pf-hud-tooltip:focus::after {
+      content:attr(data-tip); position:absolute; left:0; top:1.9em;
+      background:#111b22e0; color:#10fcfc; font-size:.98em; font-family:'Fira Mono',monospace;
+      border-radius:9px; padding:8px 16px; box-shadow:0 0 13px #21e4e1bb;
+      white-space:nowrap; z-index:10; opacity:1;
+      animation:pf-hud-tip-flicker .8s;
+    }
+    @keyframes pf-hud-tip-flicker { 0%{opacity:0;} 100%{opacity:1;} }
+  </style>
+
+  <div class="pf-hudpanel">
+    <div class="pf-hudpanel-title">
+      <svg viewBox="0 0 36 36" width="43" height="43">
+        <rect x="5" y="8" width="26" height="20" rx="5" fill="none" stroke="#ff4baf" stroke-width="2"/>
+        <circle cx="30" cy="10" r="2.3" fill="#ff65f6"/>
+        <rect x="15.5" y="14" width="5" height="8" rx="1.3" fill="#ff65f6"/>
+      </svg>
+      Video ➔ ASCII <span style="color:#ff4baf;font-size:.53em;">[HUD]</span>
+      <span class="pf-hud-hint">Convert any short video into glowing, animated ASCII art</span>
+    </div>
+
+    <form id="vidascii-hud-controls" autocomplete="off" style="margin-top:30px;">
+      <div class="pf-hud-controls-row">
+        <label class="pf-hud-filelabel pf-hud-tooltip" data-tip="Pick or drop a short .mp4/.webm video (max 8s)">
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <rect x="2.5" y="6" width="23" height="16" rx="5" fill="none" stroke="#ffd166" stroke-width="2.3"/>
+            <polygon points="10,12 19,17 10,17" fill="#ffd166"/>
+          </svg>
+          <span>Select Video</span>
+          <input type="file" id="vidascii-file" class="pf-hud-fileinput" accept="video/mp4,video/webm">
+        </label>
+
+        <label class="pf-hud-label pf-hud-tooltip" data-tip="Switch between ASCII, blocks, edges, or neon">
+          Render Mode
+          <select id="vidascii-mode" class="pf-hud-dropdown">
+            <option value="ascii">Classic ASCII</option>
+            <option value="block">Block Mosaic</option>
+            <option value="edge">Edge/Haunted</option>
+            <option value="neon">Neon Pulse</option>
+          </select>
+        </label>
+
+        <label class="pf-hud-label pf-hud-tooltip" data-tip="Change output color palette">
+          Palette
+          <select id="vidascii-theme" class="pf-hud-dropdown">
+            <option value="cyber">Cyber Aqua</option>
+            <option value="ghoul">Ghoul Green</option>
+            <option value="bloody">Bloody Red</option>
+            <option value="void">Violet Void</option>
+            <option value="mono">Monochrome</option>
+            <option value="random">Randomized</option>
+          </select>
+        </label>
+
+        <label class="pf-hud-label pf-hud-tooltip" data-tip="Switch between classic ASCII, binary, or katakana">
+          Charset
+          <select id="vidascii-charset" class="pf-hud-dropdown">
+            <option value=" .:-=+*#%@">Classic (" .:-=+*#%@")</option>
+            <option value=" ░▒▓█">Blocky (" ░▒▓█")</option>
+            <option value=" 01">Binary (" 01")</option>
+            <option value="@#W$9876543210?!abc;:+=-,._ ">Dense Art</option>
+            <option value="アァイイウエオカキクケコサシスセソタチツテトナニヌネノ">Katakana</option>
+          </select>
+        </label>
+        
+        <label class="pf-hud-label pf-hud-tooltip" style="min-width:160px;">
+          <input type="checkbox" id="vidascii-haunt" class="pf-hud-toggle">
+          <span class="pf-hud-togglelabel">Haunted</span>
+        </label>
+      </div>
+
+      <div class="pf-hud-sliderpanel">
+        <div class="pf-hud-controls-col">
+          <label class="pf-hud-label">Frame Size <span style="color:#ffd166;font-size:.96em;">(bigger = more detail)</span></label>
+          <input type="range" id="vidascii-size" class="pf-hud-slider" min="48" max="220" step="8" value="112">
+          <span id="vidascii-size-label" style="color:#10fcfc;font-size:1.06em;margin-left:7px;">112 px</span>
+        </div>
+        <div class="pf-hud-controls-col">
+          <label class="pf-hud-label">Frame Skip <span style="color:#ffd166;font-size:.96em;">(lower = smoother)</span></label>
+          <input type="range" id="vidascii-skip" class="pf-hud-slider" min="1" max="6" step="1" value="2">
+          <span id="vidascii-skip-label" style="color:#10fcfc;font-size:1.06em;margin-left:7px;">2</span>
+        </div>
+        <div class="pf-hud-controls-col">
+          <label class="pf-hud-label">Gamma</label>
+          <input type="range" id="vidascii-gamma" class="pf-hud-slider" min="0.5" max="2.5" step="0.05" value="1.0">
+          <span id="vidascii-gamma-label" style="color:#10fcfc;font-size:1.06em;margin-left:7px;">1.0</span>
+        </div>
+        <div class="pf-hud-controls-col">
+          <label class="pf-hud-label">Saturation</label>
+          <input type="range" id="vidascii-sat" class="pf-hud-slider" min="0" max="2" step="0.05" value="1">
+          <span id="vidascii-sat-label" style="color:#10fcfc;font-size:1.06em;margin-left:7px;">1.0</span>
+        </div>
+        <div class="pf-hud-controls-col" style="min-width:150px;">
+          <label class="pf-hud-label">Toggles</label>
+          <label style="display:flex;align-items:center;gap:9px;margin-top:3px;">
+            <input type="checkbox" id="vidascii-invert" class="pf-hud-toggle">
+            <span class="pf-hud-togglelabel" style="color:#ff4baf;">Invert</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:9px;">
+            <input type="checkbox" id="vidascii-glow" class="pf-hud-toggle" checked>
+            <span class="pf-hud-togglelabel" style="color:#10fcfc;">Glow</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:9px;">
+            <input type="checkbox" id="vidascii-color" class="pf-hud-toggle" checked>
+            <span class="pf-hud-togglelabel" style="color:#12fcfc;">Color</span>
+          </label>
+        </div>
+      </div>
+    </form>
+    
+    <div class="pf-hud-glowbox">
+      <pre id="vidascii-output" style="font-family:'Fira Mono',monospace;font-size:1.13em;line-height:1.17;letter-spacing:0.08em; color:#10f4b9;text-shadow:0 0 17px #10ffc9,0 0 4px #fff; background:none; margin:0; min-height:320px;max-height:600px;overflow:auto;transition:box-shadow .22s;"></pre>
+    </div>
+
+    <div class="pf-hud-exportrow">
+      <button id="vidascii-export-txt" type="button" class="pf-hud-exportbtn pf-hud-tooltip" data-tip="Export ASCII art as .txt">
+        <svg width="28" height="28" viewBox="0 0 28 28">
+          <rect x="4" y="4" width="20" height="20" rx="4" fill="none" stroke="#10fcfc" stroke-width="2.2"/>
+          <text x="50%" y="63%" text-anchor="middle" font-size="15" fill="#10fcfc" font-family="Fira Mono,monospace">TXT</text>
+        </svg>
+        Export TXT
+      </button>
+      <button id="vidascii-export-png" type="button" class="pf-hud-exportbtn pf-hud-tooltip" data-tip="Snapshot PNG of current ASCII frame">
+        <svg width="28" height="28" viewBox="0 0 28 28">
+          <rect x="4" y="7" width="20" height="14" rx="3" fill="none" stroke="#ffd166" stroke-width="2.2"/>
+          <circle cx="14" cy="14" r="3.5" fill="#ffd166"/>
+        </svg>
+        Export PNG
+      </button>
+      <button id="vidascii-export-gif" type="button" class="pf-hud-exportbtn pf-hud-tooltip" data-tip="Export full ASCII animation as GIF">
+        <svg width="28" height="28" viewBox="0 0 28 28">
+          <circle cx="14" cy="14" r="10" fill="none" stroke="#ff4baf" stroke-width="2.2"/>
+          <circle cx="14" cy="14" r="6" fill="none" stroke="#ff4baf" stroke-width="2.2"/>
+          <rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="#ff4baf" stroke-width="1.2"/>
+        </svg>
+        Export GIF
+      </button>
+    </div>
+    <div class="pf-hud-tip">
+      Pro tip: Play with <b>Edge/Haunted</b> modes &amp; palettes for wildest effects. All runs locally. No upload. <br>
+      <span style="color:#ffd166;">GIF export</span> can take a few seconds on long videos.
+    </div>
+  </div>
+</section>
+
+<!-- GIF + PNG export scripts (already included before) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+<script>
+/* [PUT ALL THE SAME ADVANCED ENGINE/LOGIC FROM PREVIOUS BLOCK HERE, UNCHANGED] */
+/* For brevity here, just copy-paste the full script section from previous answer into this spot—ALL controls are named identically. */
+/* If you want me to drop the entire JS block in this message, just say so! */
+</script>
+<section class="tool-block pf-hud-textascii" style="margin:48px auto 88px auto; max-width:1240px; padding:0; background:none; position:relative; z-index:7;">
+
+  <style>
+    .pf-hud-textascii * { box-sizing:border-box; }
+    .pf-hudpanel-txt {
+      background:linear-gradient(135deg,rgba(12,19,26,.95) 80%,rgba(12,38,46,.62) 100%);
+      border:2.7px solid #12fcfc;
+      border-radius:26px 26px 30px 30px/16px 16px 32px 32px;
+      box-shadow:0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset;
+      position:relative; padding:0 0 40px 0; margin:0 0 30px 0;
+      overflow:visible; animation:pf-panel-flicker 3.5s infinite alternate;
+    }
+    .pf-hudpanel-txt-title {
+      font-family:'Fira Mono',monospace; font-size:2.55em; letter-spacing:.13em;
+      color:#12fdfa; text-shadow:0 0 22px #2cfad6,0 1.5px 18px #16e2ff,0 0 45px #ff4bfa4e;
+      margin:0; padding:34px 38px 12px 34px; text-align:left; line-height:1.09;
+      border-bottom:2.5px solid #12fcfc;
+      border-radius:26px 26px 0 0/16px 16px 0 0;
+      background:linear-gradient(90deg,rgba(22,44,54,0.44) 66%,rgba(34,21,51,.23) 100%);
+      box-shadow:0 7px 30px #10f4b94a inset; position:relative;
+    }
+    .pf-hudpanel-txt-title svg { vertical-align:-12px; margin-right:15px; filter:drop-shadow(0 0 7px #10fcfc);}
+    .pf-hud-hint { font-size:.99em; color:#00ffc9a2; font-family:'Fira Mono',monospace; margin-left:14px; text-shadow:0 0 8px #12fdfa70; }
+    .pf-hud-controls-txtrow { display:flex;flex-wrap:wrap;gap:38px 3vw;align-items:center;justify-content:flex-start; margin:30px 34px 11px 34px;}
+    .pf-hud-txtinput { font-family:'Fira Mono',monospace;font-size:1.16em;padding:19px 22px;min-width:340px;min-height:80px;max-width:560px;max-height:200px;width:100%;
+      background:#1a2029;color:#12fcfc;border:2.5px solid #12fcfc;border-radius:12px;box-shadow:0 0 16px #12fcfc44;
+      outline:none;resize:vertical;margin-bottom:7px;transition:.15s;}
+    .pf-hud-txtinput:focus { border-color:#ff4baf; color:#ff4baf; box-shadow:0 0 22px #ff4baf88; }
+    .pf-hudpanel-txtlabel { color:#12fcfc; font-size:1.11em; font-family:'Fira Mono',monospace; letter-spacing:.07em; margin-bottom:3px; text-shadow:0 1px 7px #12fdfa50; display:flex;align-items:center;gap:7px;}
+    .pf-hudpanel-txtselect, .pf-hudpanel-txtselect:focus { font-family:'Fira Mono',monospace;font-size:1.10em;padding:8px 11px;border-radius:10px;background:#131b23;color:#12fdfa;border:2px solid #12fcfc;box-shadow:0 1.5px 8px #12fcfcaa;outline:none;transition:.16s;}
+    .pf-hudpanel-txtselect:focus { border-color:#ff4baf; color:#ff4baf; }
+    .pf-hud-toggles-row { display:flex;gap:13px;margin-top:8px; }
+    .pf-hudpanel-txt-toggle { accent-color:#ff4baf;transform:scale(1.25);margin-right:7px; }
+    .pf-hudpanel-txt-tlabel { color:#ff4baf;font-size:1.12em;font-family:'Fira Mono',monospace;margin-right:11px;}
+    .pf-hudpanel-txt-sliderpanel { display:flex;flex-wrap:wrap;gap:24px 2vw;align-items:center;justify-content:flex-start;margin:13px 44px 5px 38px;}
+    .pf-hudpanel-txtslider { width:210px; accent-color:#10fcfc; height:11px; margin-top:8px; border-radius:8px; box-shadow:0 1px 15px #11fafbaa; background:linear-gradient(90deg,#111,#10fcfc 90%,#ff4baf 100%); outline:none; transition:.13s;}
+    .pf-hudpanel-txtslider:focus { box-shadow:0 0 23px #18fff588,0 0 0 4px #1e4affbb; }
+    .pf-hudpanel-txt-glowbox { background:rgba(21,26,31,0.97); border:2.5px solid #10fcfc; border-radius:17px; box-shadow:0 0 32px #21e4e1cc,0 0 0 7px #21e4e155 inset; padding:16px 16px 12px 20px; margin:0 22px 17px 22px; min-height:180px; max-height:410px; overflow:auto; position:relative; transition:box-shadow .22s; font-family:'Fira Mono',monospace; font-size:1.15em;}
+    .pf-hudpanel-txt-glowbox:focus-within,.pf-hudpanel-txt-glowbox:active { box-shadow:0 0 59px #12fdfa,0 0 0 9px #00ffc994 inset; }
+    .pf-hudpanel-txt-exportrow { display:flex;gap:24px;align-items:center;justify-content:center;margin:18px 0 0 0;}
+    .pf-hudpanel-txt-exportbtn { background:linear-gradient(90deg,#181b21 70%,#212c3a 100%); color:#10fcfc;font-family:'Fira Mono',monospace;font-size:1.15em; border:2.5px solid #10fcfc;border-radius:14px;box-shadow:0 2px 19px #10fcfc88; padding:13px 35px;cursor:pointer;transition:.17s;display:flex;align-items:center;gap:13px; text-shadow:0 0 14px #10fcfc88; position:relative;overflow:hidden;}
+    .pf-hudpanel-txt-exportbtn:hover, .pf-hudpanel-txt-exportbtn:focus { color:#ff4baf; border-color:#ff4baf; box-shadow:0 2px 38px #ff4baf99; background:linear-gradient(90deg,#20162a 85%,#242354 100%);}
+    .pf-hudpanel-txt-tip { color:#ffd166;font-size:.99em;font-family:'Fira Mono',monospace; margin:16px 0 0 36px;opacity:.78; text-shadow:0 0 8px #ffd16644;}
+    .pf-hud-tooltip { display:inline-block; position:relative; cursor:help; color:#21e4e1; text-shadow:0 0 6px #21e4e1; }
+    .pf-hud-tooltip:hover::after, .pf-hud-tooltip:focus::after { content:attr(data-tip); position:absolute; left:0; top:1.7em; background:#111b22e0; color:#10fcfc; font-size:.98em; font-family:'Fira Mono',monospace; border-radius:9px; padding:8px 16px; box-shadow:0 0 13px #21e4e1bb; white-space:nowrap; z-index:10; opacity:1; animation:pf-hud-tip-flicker .8s;}
+    @keyframes pf-hud-tip-flicker { 0%{opacity:0;} 100%{opacity:1;} }
+  </style>
+
+  <div class="pf-hudpanel-txt">
+    <div class="pf-hudpanel-txt-title">
+      <svg viewBox="0 0 36 36" width="40" height="40">
+        <rect x="5" y="8" width="26" height="20" rx="5" fill="none" stroke="#12fcfc" stroke-width="2"/>
+        <circle cx="30" cy="10" r="2.3" fill="#ffd166"/>
+        <rect x="13.5" y="14" width="9" height="8" rx="1.3" fill="#ffd166"/>
+      </svg>
+      Text ➔ ASCII <span style="color:#ff4baf;font-size:.56em;">[HUD]</span>
+      <span class="pf-hud-hint">Convert any text into ASCII/FIGlet banner art &mdash; glowing, colored, animated</span>
+    </div>
+
+    <form id="textascii-hud-controls" autocomplete="off" style="margin-top:28px;">
+      <div class="pf-hud-controls-txtrow">
+        <div style="flex:1;min-width:350px;">
+          <label class="pf-hudpanel-txtlabel pf-hud-tooltip" data-tip="Paste or type text, up to 12 lines.">
+            Text to convert
+          </label>
+          <textarea id="txtascii-input" class="pf-hud-txtinput" rows="4" maxlength="640" placeholder="Type or paste your text here..."></textarea>
+        </div>
+        <div style="min-width:244px;max-width:270px;">
+          <label class="pf-hudpanel-txtlabel pf-hud-tooltip" data-tip="Choose ASCII/FIGlet font style.">
+            Font
+            <select id="txtascii-font" class="pf-hudpanel-txtselect" style="margin-left:7px;">
+              <option value="Standard">Standard</option>
+              <option value="Ghost">Ghost</option>
+              <option value="Rectangles">Rectangles</option>
+              <option value="Slant">Slant</option>
+              <option value="Big">Big</option>
+              <option value="Small">Small</option>
+              <option value="Bloody">Bloody</option>
+              <option value="3-D">3D</option>
+            </select>
+          </label>
+          <label class="pf-hudpanel-txtlabel pf-hud-tooltip" data-tip="Pick ASCII charset for non-FIGlet.">
+            Charset
+            <select id="txtascii-charset" class="pf-hudpanel-txtselect" style="margin-left:7px;">
+              <option value=" .:-=+*#%@">Classic (" .:-=+*#%@")</option>
+              <option value=" ░▒▓█">Blocky (" ░▒▓█")</option>
+              <option value=" 01">Binary (" 01")</option>
+              <option value="@#W$9876543210?!abc;:+=-,._ ">Dense Art</option>
+            </select>
+          </label>
+        </div>
+        <div style="min-width:185px;">
+          <label class="pf-hudpanel-txtlabel pf-hud-tooltip" data-tip="Text align.">
+            Align
+            <select id="txtascii-align" class="pf-hudpanel-txtselect" style="margin-left:7px;">
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+            </select>
+          </label>
+          <div class="pf-hud-toggles-row">
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="txtascii-glow" class="pf-hudpanel-txt-toggle" checked>
+              <span class="pf-hudpanel-txt-tlabel">Glow</span>
+            </label>
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="txtascii-color" class="pf-hudpanel-txt-toggle" checked>
+              <span class="pf-hudpanel-txt-tlabel" style="color:#10fcfc;">Color</span>
+            </label>
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="txtascii-haunt" class="pf-hudpanel-txt-toggle">
+              <span class="pf-hudpanel-txt-tlabel" style="color:#ffd166;">Haunted</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="pf-hudpanel-txt-sliderpanel">
+        <div>
+          <label class="pf-hudpanel-txtlabel">Font Size</label>
+          <input type="range" id="txtascii-size" class="pf-hudpanel-txtslider" min="0.65" max="2.4" step="0.01" value="1.16">
+          <span id="txtascii-size-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.16x</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-txtlabel">Line Height</label>
+          <input type="range" id="txtascii-lh" class="pf-hudpanel-txtslider" min="1.0" max="2.7" step="0.01" value="1.13">
+          <span id="txtascii-lh-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.13</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-txtlabel">Letter Spacing</label>
+          <input type="range" id="txtascii-ls" class="pf-hudpanel-txtslider" min="0" max="0.5" step="0.01" value="0.08">
+          <span id="txtascii-ls-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">0.08em</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-txtlabel">Jitter FX</label>
+          <input type="range" id="txtascii-jitter" class="pf-hudpanel-txtslider" min="0" max="4" step="1" value="0">
+          <span id="txtascii-jitter-label" style="color:#ff4baf;font-size:1.04em;margin-left:7px;">Off</span>
+        </div>
+      </div>
+    </form>
+
+    <div class="pf-hudpanel-txt-glowbox">
+      <pre id="txtascii-output" style="font-family:'Fira Mono',monospace;font-size:1.16em;line-height:1.13;letter-spacing:0.08em;color:#12fcfc;text-shadow:0 0 13px #12fcfc,0 0 4px #fff; background:none; margin:0; min-height:100px;max-height:340px;overflow:auto;transition:box-shadow .22s;"></pre>
+    </div>
+
+    <div class="pf-hudpanel-txt-exportrow">
+      <button id="txtascii-export-txt" type="button" class="pf-hudpanel-txt-exportbtn pf-hud-tooltip" data-tip="Export as .txt">
+        <svg width="27" height="27" viewBox="0 0 27 27"><rect x="4" y="4" width="19" height="19" rx="4" fill="none" stroke="#10fcfc" stroke-width="2.2"/><text x="50%" y="63%" text-anchor="middle" font-size="14" fill="#10fcfc" font-family="Fira Mono,monospace">TXT</text></svg>
+        Export TXT
+      </button>
+      <button id="txtascii-export-png" type="button" class="pf-hudpanel-txt-exportbtn pf-hud-tooltip" data-tip="Export as PNG">
+        <svg width="27" height="27" viewBox="0 0 27 27"><rect x="4" y="7" width="19" height="13" rx="3" fill="none" stroke="#ffd166" stroke-width="2.2"/><circle cx="13.5" cy="13.5" r="3" fill="#ffd166"/></svg>
+        Export PNG
+      </button>
+      <button id="txtascii-export-svg" type="button" class="pf-hudpanel-txt-exportbtn pf-hud-tooltip" data-tip="Export as SVG">
+        <svg width="27" height="27" viewBox="0 0 27 27"><rect x="4" y="4" width="19" height="19" rx="5" fill="none" stroke="#ff4baf" stroke-width="2.2"/><text x="50%" y="63%" text-anchor="middle" font-size="14" fill="#ff4baf" font-family="Fira Mono,monospace">SVG</text></svg>
+        Export SVG
+      </button>
+    </div>
+    <div class="pf-hudpanel-txt-tip">
+      Works fully offline. Try “Ghost” or “Bloody” fonts + Haunted for wildest results.<br>
+      Export works with all coloring, glow, FX.
+    </div>
+  </div>
+</section>
+<!-- FIGlet/JS logic below. Add html2canvas from CDN if not present for PNG export -->
+<script src="https://cdn.jsdelivr.net/npm/figlet@1.5.2/umd/figlet.min.js"></script>
+<script>
+(function(){
+  // Simple colorize (cycling, haunted) palette
+  const colorize = (text, color, glow, haunt, jitter) => {
+    let out = "";
+    for(let i=0; i<text.length; ++i){
+      let c = text[i];
+      if(c === " ") { out += " "; continue; }
+      let style = `color:${color};`;
+      if(glow) style += "text-shadow:0 0 11px #10fcfc,0 0 24px #ff4baf;";
+      if(haunt && Math.random()<.22) style += `filter:hue-rotate(${Math.floor(Math.random()*360)}deg);`;
+      if(jitter && c!=='\n') style += `position:relative;top:${Math.random()*jitter-jitter/2}px;left:${Math.random()*jitter-jitter/2}px;`;
+      out += `<span style="${style}">${c}</span>`;
+    }
+    return out;
+  };
+  function updateAscii(){
+    let input = document.getElementById('txtascii-input').value || '';
+    let font = document.getElementById('txtascii-font').value;
+    let charset = document.getElementById('txtascii-charset').value;
+    let align = document.getElementById('txtascii-align').value;
+    let size = +document.getElementById('txtascii-size').value;
+    let lh = +document.getElementById('txtascii-lh').value;
+    let ls = +document.getElementById('txtascii-ls').value;
+    let glow = document.getElementById('txtascii-glow').checked;
+    let color = document.getElementById('txtascii-color').checked;
+    let haunt = document.getElementById('txtascii-haunt').checked;
+    let jitter = +document.getElementById('txtascii-jitter').value;
+    document.getElementById('txtascii-size-label').textContent = size.toFixed(2) + "x";
+    document.getElementById('txtascii-lh-label').textContent = lh.toFixed(2);
+    document.getElementById('txtascii-ls-label').textContent = ls.toFixed(2) + "em";
+    document.getElementById('txtascii-jitter-label').textContent = (jitter>0?jitter:"Off");
+    let output = document.getElementById('txtascii-output');
+    // Use FIGlet if font not "Standard"
+    if(font !== "Standard"){
+      figlet.text(input, {font: font}, function(err, data){
+        let lines = data.split('\n');
+        let out = '';
+        for(let line of lines){
+          let pad = align === "center" ? Math.floor((32-line.length)/2) : (align === "right" ? 32-line.length : 0);
+          out += " ".repeat(Math.max(0,pad)) + line + "\n";
+        }
+        out = colorize(out, color?"#12fcfc":"#fff", glow, haunt, jitter);
+        output.innerHTML = `<span style="font-size:${size}em;line-height:${lh};letter-spacing:${ls}em;display:block;">${out}</span>`;
+      });
+    } else {
+      // "Standard" mode: use charset mapping
+      let lines = input.split('\n');
+      let out = '';
+      for(let line of lines){
+        let chars = '';
+        for(let i=0;i<line.length;i++){
+          let c = line[i];
+          let idx = Math.floor(i/line.length*charset.length);
+          chars += charset[idx%charset.length];
+        }
+        let pad = align === "center" ? Math.floor((32-chars.length)/2) : (align === "right" ? 32-chars.length : 0);
+        out += " ".repeat(Math.max(0,pad)) + chars + "\n";
+      }
+      out = colorize(out, color?"#12fcfc":"#fff", glow, haunt, jitter);
+      output.innerHTML = `<span style="font-size:${size}em;line-height:${lh};letter-spacing:${ls}em;display:block;">${out}</span>`;
+    }
+  }
+  ['txtascii-input','txtascii-font','txtascii-charset','txtascii-align','txtascii-size','txtascii-lh','txtascii-ls','txtascii-glow','txtascii-color','txtascii-haunt','txtascii-jitter'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', updateAscii);
+  });
+  updateAscii();
+  // Export logic
+  document.getElementById('txtascii-export-txt').onclick = function(){
+    let text = document.getElementById('txtascii-output').innerText;
+    let blob = new Blob([text], {type:'text/plain'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ascii_art.txt'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+  };
+  document.getElementById('txtascii-export-png').onclick = function(){
+    if(typeof window.html2canvas!=="function"){
+      let s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";
+      document.head.appendChild(s); setTimeout(()=>this.onclick(),600); return;
+    }
+    let pre = document.getElementById('txtascii-output');
+    html2canvas(pre,{backgroundColor:null,scale:2}).then(canvas=>{
+      canvas.toBlob(blob=>{
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'ascii_art.png'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+      });
+    });
+  };
+  document.getElementById('txtascii-export-svg').onclick = function(){
+    let pre = document.getElementById('txtascii-output');
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="480"><foreignObject width="100%" height="100%"><div style="font-family:'Fira Mono',monospace;font-size:42px;color:#12fcfc;background:#181b21;">${pre.innerHTML.replace(/"/g,"'")}</div></foreignObject></svg>`;
+    let blob = new Blob([svg], {type:'image/svg+xml'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ascii_art.svg'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+  };
+})();
+</script>
+<section class="tool-block pf-hud-imgascii" style="margin:48px auto 88px auto; max-width:1240px; padding:0; background:none; position:relative; z-index:8;">
+  <style>
+    .pf-hud-imgascii * { box-sizing:border-box; }
+    .pf-hudpanel-img {
+      background:linear-gradient(135deg,rgba(18,26,32,.95) 81%,rgba(22,44,54,.63) 100%);
+      border:2.7px solid #10fcfc;
+      border-radius:26px 26px 30px 30px/16px 16px 32px 32px;
+      box-shadow:0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset;
+      position:relative; padding:0 0 44px 0; margin:0 0 30px 0;
+      overflow:visible; animation:pf-panel-flicker 3.2s infinite alternate;
+    }
+    .pf-hudpanel-img-title {
+      font-family:'Fira Mono',monospace; font-size:2.45em; letter-spacing:.13em;
+      color:#10fcfc; text-shadow:0 0 21px #10fcfc,0 1.5px 18px #16e2ff,0 0 45px #ff4bfa4e;
+      margin:0; padding:34px 38px 12px 34px; text-align:left; line-height:1.09;
+      border-bottom:2.5px solid #10fcfc;
+      border-radius:26px 26px 0 0/16px 16px 0 0;
+      background:linear-gradient(90deg,rgba(22,44,54,0.44) 66%,rgba(34,21,51,.23) 100%);
+      box-shadow:0 7px 30px #10f4b94a inset; position:relative;
+    }
+    .pf-hudpanel-img-title svg { vertical-align:-12px; margin-right:15px; filter:drop-shadow(0 0 7px #10fcfc);}
+    .pf-hud-hint { font-size:.99em; color:#00ffc9a2; font-family:'Fira Mono',monospace; margin-left:14px; text-shadow:0 0 8px #12fdfa70; }
+    .pf-hud-controls-imgrow { display:flex;flex-wrap:wrap;gap:38px 3vw;align-items:center;justify-content:flex-start; margin:30px 34px 11px 34px;}
+    .pf-hud-imginputlabel {
+      display:inline-flex;align-items:center;gap:14px;
+      font-family:'Fira Mono',monospace;font-size:1.13em;
+      background:linear-gradient(90deg,#181b21 60%,#212c3a 100%);
+      color:#ffd166; border:2.5px solid #ffd166; border-radius:14px; box-shadow:0 2px 19px #ffd16680;
+      padding:13px 32px; cursor:pointer; margin-top:7px; text-shadow:0 0 13px #ffd16699; transition:.17s; position:relative;overflow:hidden;
+    }
+    .pf-hud-imginputlabel:hover, .pf-hud-imginputlabel:focus { color:#fff; border-color:#fff; background:linear-gradient(90deg,#292a3a 85%,#343254 100%); box-shadow:0 2px 38px #ffd166aa;}
+    .pf-hud-imginput { opacity:0;width:0;position:absolute;z-index:-1;}
+    .pf-hud-imgpanel-label { color:#10fcfc; font-size:1.10em; font-family:'Fira Mono',monospace; letter-spacing:.07em; margin-bottom:3px; text-shadow:0 1px 7px #10fcfc70; display:flex;align-items:center;gap:7px;}
+    .pf-hud-imgpanel-dropdown, .pf-hud-imgpanel-dropdown:focus { font-family:'Fira Mono',monospace;font-size:1.11em;padding:8px 11px;border-radius:10px;background:#131b23;color:#10fcfc;border:2px solid #10fcfc;box-shadow:0 1.5px 8px #10fcfcaa;outline:none;transition:.16s;}
+    .pf-hud-imgpanel-dropdown:focus { border-color:#ff4baf; color:#ff4baf; }
+    .pf-hud-imgtoggles-row { display:flex;gap:12px;margin-top:8px; }
+    .pf-hud-imgpanel-toggle { accent-color:#ff4baf;transform:scale(1.18);margin-right:6px;}
+    .pf-hud-imgpanel-tlabel { color:#ff4baf;font-size:1.11em;font-family:'Fira Mono',monospace;margin-right:11px;}
+    .pf-hud-imgpanel-sliderpanel { display:flex;flex-wrap:wrap;gap:24px 2vw;align-items:center;justify-content:flex-start;margin:13px 44px 5px 38px;}
+    .pf-hud-imgpanel-slider { width:170px; accent-color:#10fcfc; height:11px; margin-top:8px; border-radius:8px; box-shadow:0 1px 15px #11fafbaa; background:linear-gradient(90deg,#111,#10fcfc 90%,#ff4baf 100%); outline:none; transition:.13s;}
+    .pf-hud-imgpanel-slider:focus { box-shadow:0 0 23px #18fff588,0 0 0 4px #1e4affbb; }
+    .pf-hud-imgpanel-glowbox { background:rgba(21,26,31,0.97); border:2.5px solid #10fcfc; border-radius:17px; box-shadow:0 0 32px #21e4e1cc,0 0 0 7px #21e4e155 inset; padding:16px 16px 12px 20px; margin:0 22px 17px 22px; min-height:180px; max-height:430px; overflow:auto; position:relative; transition:box-shadow .22s; font-family:'Fira Mono',monospace; font-size:1.12em;}
+    .pf-hud-imgpanel-glowbox:focus-within,.pf-hud-imgpanel-glowbox:active { box-shadow:0 0 59px #12fdfa,0 0 0 9px #00ffc994 inset; }
+    .pf-hud-imgpanel-exportrow { display:flex;gap:24px;align-items:center;justify-content:center;margin:18px 0 0 0;}
+    .pf-hud-imgpanel-exportbtn { background:linear-gradient(90deg,#181b21 70%,#212c3a 100%); color:#10fcfc;font-family:'Fira Mono',monospace;font-size:1.15em; border:2.5px solid #10fcfc;border-radius:14px;box-shadow:0 2px 19px #10fcfc88; padding:13px 35px;cursor:pointer;transition:.17s;display:flex;align-items:center;gap:13px; text-shadow:0 0 14px #10fcfc88; position:relative;overflow:hidden;}
+    .pf-hud-imgpanel-exportbtn:hover, .pf-hud-imgpanel-exportbtn:focus { color:#ff4baf; border-color:#ff4baf; box-shadow:0 2px 38px #ff4baf99; background:linear-gradient(90deg,#20162a 85%,#242354 100%);}
+    .pf-hud-imgpanel-tip { color:#ffd166;font-size:.99em;font-family:'Fira Mono',monospace; margin:16px 0 0 36px;opacity:.78; text-shadow:0 0 8px #ffd16644;}
+    .pf-hud-tooltip { display:inline-block; position:relative; cursor:help; color:#21e4e1; text-shadow:0 0 6px #21e4e1; }
+    .pf-hud-tooltip:hover::after, .pf-hud-tooltip:focus::after { content:attr(data-tip); position:absolute; left:0; top:1.7em; background:#111b22e0; color:#10fcfc; font-size:.98em; font-family:'Fira Mono',monospace; border-radius:9px; padding:8px 16px; box-shadow:0 0 13px #21e4e1bb; white-space:nowrap; z-index:10; opacity:1; animation:pf-hud-tip-flicker .8s;}
+    @keyframes pf-hud-tip-flicker { 0%{opacity:0;} 100%{opacity:1;} }
+  </style>
+  <div class="pf-hudpanel-img">
+    <div class="pf-hudpanel-img-title">
+      <svg viewBox="0 0 36 36" width="40" height="40">
+        <rect x="5" y="8" width="26" height="20" rx="5" fill="none" stroke="#10fcfc" stroke-width="2"/>
+        <circle cx="30" cy="10" r="2.3" fill="#ffd166"/>
+        <rect x="13.5" y="14" width="9" height="8" rx="1.3" fill="#ffd166"/>
+      </svg>
+      Image ➔ ASCII <span style="color:#ff4baf;font-size:.56em;">[HUD]</span>
+      <span class="pf-hud-hint">Convert any image to glowing, animated ASCII art &mdash; live, colored, haunted</span>
+    </div>
+    <form id="imgascii-hud-controls" autocomplete="off" style="margin-top:28px;">
+      <div class="pf-hud-controls-imgrow">
+        <label class="pf-hud-imginputlabel pf-hud-tooltip" data-tip="Pick or drop a PNG/JPG/GIF/WebP image.">
+          <svg width="28" height="28" viewBox="0 0 28 28">
+            <rect x="2.5" y="6" width="23" height="16" rx="5" fill="none" stroke="#ffd166" stroke-width="2.3"/>
+            <rect x="9" y="11" width="6" height="6" rx="2" fill="#ffd166"/>
+            <rect x="17" y="14" width="5" height="3" rx="1.3" fill="#ffd166"/>
+          </svg>
+          <span>Select Image</span>
+          <input type="file" id="imgascii-file" class="pf-hud-imginput" accept="image/png,image/jpeg,image/webp,image/gif">
+        </label>
+        <label class="pf-hud-imgpanel-label pf-hud-tooltip" data-tip="Switch between ASCII, blocks, edges, neon.">
+          Mode
+          <select id="imgascii-mode" class="pf-hud-imgpanel-dropdown">
+            <option value="ascii">Classic ASCII</option>
+            <option value="block">Pixel Blocks</option>
+            <option value="edge">Edge/Haunted</option>
+            <option value="neon">Neon Pulse</option>
+          </select>
+        </label>
+        <label class="pf-hud-imgpanel-label pf-hud-tooltip" data-tip="Change output color palette">
+          Palette
+          <select id="imgascii-theme" class="pf-hud-imgpanel-dropdown">
+            <option value="cyber">Cyber Aqua</option>
+            <option value="ghoul">Ghoul Green</option>
+            <option value="bloody">Bloody Red</option>
+            <option value="void">Violet Void</option>
+            <option value="mono">Monochrome</option>
+            <option value="random">Randomized</option>
+          </select>
+        </label>
+        <label class="pf-hud-imgpanel-label pf-hud-tooltip" data-tip="Pick ASCII charset.">
+          Charset
+          <select id="imgascii-charset" class="pf-hud-imgpanel-dropdown">
+            <option value=" .:-=+*#%@">Classic (" .:-=+*#%@")</option>
+            <option value=" ░▒▓█">Blocky (" ░▒▓█")</option>
+            <option value=" 01">Binary (" 01")</option>
+            <option value="@#W$9876543210?!abc;:+=-,._ ">Dense Art</option>
+            <option value="アァイイウエオカキクケコサシスセソタチツテトナニヌネノ">Katakana</option>
+          </select>
+        </label>
+        <label class="pf-hud-imgpanel-label pf-hud-tooltip" style="min-width:144px;">
+          <input type="checkbox" id="imgascii-haunt" class="pf-hud-imgpanel-toggle">
+          <span class="pf-hud-imgpanel-tlabel">Haunted</span>
+        </label>
+        <label class="pf-hud-imgpanel-label pf-hud-tooltip" style="min-width:144px;">
+          <input type="checkbox" id="imgascii-dither" class="pf-hud-imgpanel-toggle">
+          <span class="pf-hud-imgpanel-tlabel" style="color:#10fcfc;">Dither</span>
+        </label>
+      </div>
+      <div class="pf-hud-imgpanel-sliderpanel">
+        <div>
+          <label class="pf-hud-imgpanel-label">Width</label>
+          <input type="range" id="imgascii-width" class="pf-hud-imgpanel-slider" min="36" max="200" step="2" value="100">
+          <span id="imgascii-width-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">100 px</span>
+        </div>
+        <div>
+          <label class="pf-hud-imgpanel-label">Height</label>
+          <input type="range" id="imgascii-height" class="pf-hud-imgpanel-slider" min="12" max="80" step="2" value="38">
+          <span id="imgascii-height-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">38 px</span>
+        </div>
+        <div>
+          <label class="pf-hud-imgpanel-label">Gamma</label>
+          <input type="range" id="imgascii-gamma" class="pf-hud-imgpanel-slider" min="0.5" max="2.5" step="0.05" value="1.0">
+          <span id="imgascii-gamma-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.0</span>
+        </div>
+        <div>
+          <label class="pf-hud-imgpanel-label">Saturation</label>
+          <input type="range" id="imgascii-sat" class="pf-hud-imgpanel-slider" min="0" max="2" step="0.05" value="1">
+          <span id="imgascii-sat-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.0</span>
+        </div>
+        <div>
+          <label class="pf-hud-imgpanel-label">Toggles</label>
+          <label style="display:flex;align-items:center;gap:9px;margin-top:3px;">
+            <input type="checkbox" id="imgascii-invert" class="pf-hud-imgpanel-toggle">
+            <span class="pf-hud-imgpanel-tlabel" style="color:#ff4baf;">Invert</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:9px;">
+            <input type="checkbox" id="imgascii-glow" class="pf-hud-imgpanel-toggle" checked>
+            <span class="pf-hud-imgpanel-tlabel" style="color:#10fcfc;">Glow</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:9px;">
+            <input type="checkbox" id="imgascii-color" class="pf-hud-imgpanel-toggle" checked>
+            <span class="pf-hud-imgpanel-tlabel" style="color:#12fcfc;">Color</span>
+          </label>
+        </div>
+      </div>
+    </form>
+    <div class="pf-hud-imgpanel-glowbox">
+      <pre id="imgascii-output" style="font-family:'Fira Mono',monospace;font-size:1.12em;line-height:1.13;letter-spacing:0.08em;color:#10fcfc;text-shadow:0 0 13px #10fcfc,0 0 4px #fff; background:none; margin:0; min-height:100px;max-height:340px;overflow:auto;transition:box-shadow .22s;"></pre>
+    </div>
+    <div class="pf-hud-imgpanel-exportrow">
+      <button id="imgascii-export-txt" type="button" class="pf-hud-imgpanel-exportbtn pf-hud-tooltip" data-tip="Export as .txt">
+        <svg width="27" height="27" viewBox="0 0 27 27"><rect x="4" y="4" width="19" height="19" rx="4" fill="none" stroke="#10fcfc" stroke-width="2.2"/><text x="50%" y="63%" text-anchor="middle" font-size="14" fill="#10fcfc" font-family="Fira Mono,monospace">TXT</text></svg>
+        Export TXT
+      </button>
+      <button id="imgascii-export-png" type="button" class="pf-hud-imgpanel-exportbtn pf-hud-tooltip" data-tip="Export as PNG">
+        <svg width="27" height="27" viewBox="0 0 27 27"><rect x="4" y="7" width="19" height="13" rx="3" fill="none" stroke="#ffd166" stroke-width="2.2"/><circle cx="13.5" cy="13.5" r="3" fill="#ffd166"/></svg>
+        Export PNG
+      </button>
+      <button id="imgascii-export-svg" type="button" class="pf-hud-imgpanel-exportbtn pf-hud-tooltip" data-tip="Export as SVG">
+        <svg width="27" height="27" viewBox="0 0 27 27"><rect x="4" y="4" width="19" height="19" rx="5" fill="none" stroke="#ff4baf" stroke-width="2.2"/><text x="50%" y="63%" text-anchor="middle" font-size="14" fill="#ff4baf" font-family="Fira Mono,monospace">SVG</text></svg>
+        Export SVG
+      </button>
+    </div>
+    <div class="pf-hud-imgpanel-tip">
+      Dither gives a true “photo-to-ASCII” vibe. Haunted mode = random color/glow/jitter FX. <br>
+      Exports use all FX, and work offline.
+    </div>
+  </div>
+</section>
+<!-- JS: ASCII engine, PNG export, dither, etc -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+(function(){
+  // Palette logic, edge, dither, and ASCII mapping all built in.
+  const themes = {
+    cyber:  { fg:'#10f4b9', bg:'#101317', glow:'#12fcfc', accent:'#ff4baf' },
+    ghoul:  { fg:'#3ffa8c', bg:'#061f15', glow:'#57ff57', accent:'#0ffb' },
+    bloody: { fg:'#ff4baf', bg:'#180711', glow:'#ffd166', accent:'#ff1919' },
+    void:   { fg:'#b57fff', bg:'#191a30', glow:'#fff', accent:'#fff' },
+    mono:   { fg:'#e1e1e1', bg:'#0d0d0d', glow:'#fff', accent:'#bbb' }
+  };
+  function pickTheme(name){
+    if(name === 'random'){
+      return {
+        fg:'#'+(~~(Math.random()*0xffffff)).toString(16).padStart(6,'0'),
+        bg:'#'+(~~(Math.random()*0xffffff)).toString(16).padStart(6,'0'),
+        glow:'#'+(~~(Math.random()*0xffffff)).toString(16).padStart(6,'0'),
+        accent:'#'+(~~(Math.random()*0xffffff)).toString(16).padStart(6,'0')
+      }
+    }
+    return themes[name]||themes.cyber;
+  }
+  function sobelEdge(src, w, h){
+    const out = new Uint8ClampedArray(w*h);
+    const gx=[[-1,0,1],[-2,0,2],[-1,0,1]], gy=[[1,2,1],[0,0,0],[-1,-2,-1]];
+    for(let y=1;y<h-1;y++) for(let x=1;x<w-1;x++){
+      let sumX=0,sumY=0;
+      for(let dy=-1;dy<=1;dy++) for(let dx=-1;dx<=1;dx++){
+        const idx=4*((y+dy)*w+(x+dx));
+        let lum=0.299*src[idx]+0.587*src[idx+1]+0.114*src[idx+2];
+        sumX+=lum*gx[dy+1][dx+1];
+        sumY+=lum*gy[dy+1][dx+1];
+      }
+      let v=Math.sqrt(sumX*sumX+sumY*sumY);
+      out[y*w+x]=v>128?255:0;
+    }
+    return out;
+  }
+  // Dither: Atkinson, simple but looks good
+  function ditherAtkinson(img, w, h){
+    let out = new Uint8ClampedArray(img);
+    for(let y=0;y<h;y++) for(let x=0;x<w;x++){
+      let idx=(y*w+x)*4;
+      let oldR=out[idx],oldG=out[idx+1],oldB=out[idx+2];
+      let lum = 0.299*oldR + 0.587*oldG + 0.114*oldB;
+      let newVal = lum>128?255:0, err = (lum-newVal)/8;
+      out[idx]=out[idx+1]=out[idx+2]=newVal;
+      for(let k=1;k<=6;k++){
+        let nx=x+[1,2,0,-1,0,1][k-1], ny=y+[0,0,1,1,2,2][k-1];
+        if(nx>=0&&nx<w&&ny>=0&&ny<h){
+          let nidx=(ny*w+nx)*4;
+          out[nidx]+=err; out[nidx+1]+=err; out[nidx+2]+=err;
+        }
+      }
+    }
+    return out;
+  }
+  function mapAscii(img, w, h, opts, edgeMap) {
+    const {chars, invert, color, glow, gamma, sat, mode, palette, haunt, fontWeight} = opts;
+    let ascii = '', jitter=haunt?2:0;
+    for (let y=0; y<h; y+=2) {
+      for (let x=0; x<w; x++) {
+        const i = (y*w + x)*4;
+        let r=img[i],g=img[i+1],b=img[i+2],a=img[i+3]/255;
+        r = Math.pow(r/255,gamma)*255; g = Math.pow(g/255,gamma)*255; b = Math.pow(b/255,gamma)*255;
+        let avg = (r+g+b)/3; r = avg + (r-avg)*sat; g = avg + (g-avg)*sat; b = avg + (b-avg)*sat;
+        if(haunt && Math.random()<.06){r=Math.random()*255;g=Math.random()*255;b=Math.random()*255;}
+        let lum = 0.299*r + 0.587*g + 0.114*b;
+        if (invert) lum = 255-lum;
+        if(mode==='edge' && edgeMap){ if(edgeMap[y*w+x]<180) {ascii+=' '; continue;} lum=255;}
+        let ch = chars[Math.floor(lum/(256/chars.length))] || chars[0];
+        if(mode==='block'){
+          ascii+=`<span style="background:rgb(${r|0},${g|0},${b|0});color:${palette.bg};display:inline-block;width:1.05em;">${ch}</span>`;
+          continue;
+        }
+        let shadow=glow?`0 0 11px ${palette.glow},0 0 21px ${palette.fg},0 0 4px ${palette.accent}`:'none';
+        let clr=color?`rgb(${r|0},${g|0},${b|0})`:palette.fg;
+        if(mode==='neon'){
+          shadow+=`,0 0 ${Math.random()*22+6|0}px ${palette.accent}`;
+          if(Math.random()<.13) clr=palette.accent;
+          if(Math.random()<.07) shadow+=`,0 0 32px #fff`;
+        }
+        let style=`color:${clr};font-weight:${fontWeight};text-shadow:${shadow};${haunt&&Math.random()<.04?`filter:hue-rotate(${(Math.random()*240-120)|0}deg);`:''}${haunt&&jitter?`position:relative;top:${(Math.random()*jitter-jitter/2)|0}px;left:${(Math.random()*jitter-jitter/2)|0}px;`:''}`;
+        ascii += `<span style="${style}">${ch}</span>`;
+      }
+      ascii += "\n";
+    }
+    return ascii;
+  }
+  // Controls state/handlers
+  let img = null, canvas = null, ctx = null, loaded = false;
+  let width=100, height=38, charset=" .:-=+*#%@", mode="ascii", invert=false, color=true, glow=true, theme="cyber", gamma=1, sat=1, haunt=false, fontWeight="bold", dither=false;
+  function get(id){return document.getElementById(id);}
+  function updateLabels() {
+    get('imgascii-width-label').textContent = width+" px";
+    get('imgascii-height-label').textContent = height+" px";
+    get('imgascii-gamma-label').textContent = gamma.toFixed(2);
+    get('imgascii-sat-label').textContent = sat.toFixed(2);
+  }
+  // Bind controls
+  get('imgascii-width').oninput = e=>{width=+e.target.value;updateLabels();if(loaded)renderAscii();};
+  get('imgascii-height').oninput = e=>{height=+e.target.value;updateLabels();if(loaded)renderAscii();};
+  get('imgascii-charset').oninput = e=>{charset=e.target.value;if(loaded)renderAscii();};
+  get('imgascii-mode').oninput = e=>{mode=e.target.value;fontWeight=(mode==="block")?"900":(mode==="neon"?"bolder":"bold");if(loaded)renderAscii();};
+  get('imgascii-invert').oninput = e=>{invert=e.target.checked;if(loaded)renderAscii();};
+  get('imgascii-glow').oninput = e=>{glow=e.target.checked;if(loaded)renderAscii();};
+  get('imgascii-color').oninput = e=>{color=e.target.checked;if(loaded)renderAscii();};
+  get('imgascii-theme').oninput = e=>{theme=e.target.value;if(loaded)renderAscii();};
+  get('imgascii-gamma').oninput = e=>{gamma=+e.target.value;updateLabels();if(loaded)renderAscii();};
+  get('imgascii-sat').oninput = e=>{sat=+e.target.value;updateLabels();if(loaded)renderAscii();};
+  get('imgascii-haunt').oninput = e=>{haunt=e.target.checked;if(loaded)renderAscii();};
+  get('imgascii-dither').oninput = e=>{dither=e.target.checked;if(loaded)renderAscii();};
+  // File input
+  get('imgascii-file').onchange = function(e){
+    let file = e.target.files[0];
+    if(!file) return;
+    let url = URL.createObjectURL(file);
+    img = new window.Image();
+    img.src = url; img.crossOrigin="anonymous";
+    img.onload = ()=>{
+      canvas = document.createElement('canvas');
+      ctx = canvas.getContext('2d');
+      loaded = true; renderAscii();
+    };
+    img.onerror = ()=>{
+      get('imgascii-output').innerHTML = `<span style="color:#fa3aff;">Failed to load image. Try PNG, JPG, GIF, or WebP.</span>`;
+    };
+  };
+  function renderAscii(){
+    if(!img || !ctx || !loaded) return;
+    canvas.width = width; canvas.height = height;
+    ctx.drawImage(img,0,0,width,height);
+    let data = ctx.getImageData(0,0,width,height).data;
+    if(dither) data = ditherAtkinson(data, width, height);
+    let opts = {chars:charset, invert, color, glow, gamma, sat, mode, palette:pickTheme(theme), haunt, fontWeight};
+    let edgeMap=null;
+    if(mode==='edge') edgeMap=sobelEdge(data,width,height);
+    let ascii = mapAscii(data, width, height, opts, edgeMap);
+    get('imgascii-output').innerHTML = ascii;
+  }
+  // Drag and drop
+  const toolBlock = document.querySelector('.pf-hud-imgascii');
+  toolBlock.addEventListener('dragover',e=>{e.preventDefault();toolBlock.style.boxShadow="0 0 77px #10ffc9,0 0 40px #ff4bfa";});
+  toolBlock.addEventListener('dragleave',e=>{e.preventDefault();toolBlock.style.boxShadow="0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset";});
+  toolBlock.addEventListener('drop',e=>{
+    e.preventDefault();toolBlock.style.boxShadow="0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset";
+    let files = e.dataTransfer.files;
+    if(files&&files[0]){ get('imgascii-file').files=files; get('imgascii-file').onchange({target:{files:files}});}
+  });
+  // Export logic
+  get('imgascii-export-txt').onclick = function(){
+    let text = document.getElementById('imgascii-output').innerText;
+    let blob = new Blob([text], {type:'text/plain'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ascii_image.txt'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+  };
+  get('imgascii-export-png').onclick = function(){
+    let pre = document.getElementById('imgascii-output');
+    html2canvas(pre,{backgroundColor:null,scale:2}).then(canvas=>{
+      canvas.toBlob(blob=>{
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'ascii_image.png'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+      });
+    });
+  };
+  get('imgascii-export-svg').onclick = function(){
+    let pre = document.getElementById('imgascii-output');
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640"><foreignObject width="100%" height="100%"><div style="font-family:'Fira Mono',monospace;font-size:39px;color:#10fcfc;background:#181b21;">${pre.innerHTML.replace(/"/g,"'")}</div></foreignObject></svg>`;
+    let blob = new Blob([svg], {type:'image/svg+xml'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ascii_image.svg'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+  };
+  // Randomize on haunted
+  setInterval(()=>{
+    if(get('imgascii-haunt').checked){
+      if(Math.random()<.33) get('imgascii-theme').value='random';
+      if(Math.random()<.13) get('imgascii-mode').value=['ascii','block','edge','neon'][Math.floor(Math.random()*4)];
+      if(Math.random()<.23) get('imgascii-gamma').value=(0.8+Math.random()*1.5).toFixed(2);
+      if(Math.random()<.28) get('imgascii-sat').value=(0.6+Math.random()*1.4).toFixed(2);
+      ['imgascii-theme','imgascii-mode','imgascii-gamma','imgascii-sat'].forEach(id=>{get(id).dispatchEvent(new Event('input'));});
+    }
+  }, 1700);
+  // Update labels init
+  updateLabels();
+})();
+</script>
+<section class="tool-block pf-hud-figlet-explorer" style="margin:48px auto 99px auto; max-width:1240px; padding:0; background:none; position:relative; z-index:9;">
+  <style>
+    .pf-hud-figlet-explorer * { box-sizing:border-box; }
+    .pf-hudpanel-font {
+      background:linear-gradient(135deg,rgba(14,21,28,.97) 83%,rgba(22,44,54,.66) 100%);
+      border:2.7px solid #10fcfc;
+      border-radius:26px 26px 30px 30px/16px 16px 32px 32px;
+      box-shadow:0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset;
+      position:relative; padding:0 0 44px 0; margin:0 0 30px 0;
+      overflow:visible; animation:pf-panel-flicker 3.1s infinite alternate;
+    }
+    .pf-hudpanel-font-title {
+      font-family:'Fira Mono',monospace; font-size:2.3em; letter-spacing:.13em;
+      color:#10fcfc; text-shadow:0 0 19px #10fcfc,0 1.5px 18px #16e2ff,0 0 40px #ff4bfa4e;
+      margin:0; padding:32px 38px 12px 34px; text-align:left; line-height:1.09;
+      border-bottom:2.5px solid #10fcfc;
+      border-radius:26px 26px 0 0/16px 16px 0 0;
+      background:linear-gradient(90deg,rgba(22,44,54,0.34) 66%,rgba(34,21,51,.23) 100%);
+      box-shadow:0 7px 30px #10f4b94a inset; position:relative;
+    }
+    .pf-hudpanel-font-title svg { vertical-align:-12px; margin-right:15px; filter:drop-shadow(0 0 7px #10fcfc);}
+    .pf-hud-hint { font-size:.99em; color:#00ffc9a2; font-family:'Fira Mono',monospace; margin-left:14px; text-shadow:0 0 8px #12fdfa70; }
+    .pf-hud-controls-fontrow { display:flex;flex-wrap:wrap;gap:30px 3vw;align-items:center;justify-content:flex-start; margin:30px 34px 18px 34px;}
+    .pf-hud-fontinput { font-family:'Fira Mono',monospace;font-size:1.19em;padding:14px 24px;min-width:300px;max-width:480px;width:100%;background:#1a2029;color:#12fcfc;border:2.5px solid #12fcfc;border-radius:12px;box-shadow:0 0 16px #12fcfc44;outline:none;resize:none;margin-bottom:4px;transition:.15s;}
+    .pf-hud-fontinput:focus { border-color:#ff4baf; color:#ff4baf; box-shadow:0 0 22px #ff4baf88; }
+    .pf-hudpanel-fontlabel { color:#10fcfc; font-size:1.09em; font-family:'Fira Mono',monospace; letter-spacing:.07em; margin-bottom:3px; text-shadow:0 1px 7px #10fcfc70; display:flex;align-items:center;gap:7px;}
+    .pf-hudpanel-font-dropdown, .pf-hudpanel-font-dropdown:focus { font-family:'Fira Mono',monospace;font-size:1.11em;padding:8px 11px;border-radius:10px;background:#131b23;color:#10fcfc;border:2px solid #10fcfc;box-shadow:0 1.5px 8px #10fcfcaa;outline:none;transition:.16s;}
+    .pf-hudpanel-font-dropdown:focus { border-color:#ff4baf; color:#ff4baf; }
+    .pf-hud-fonttoggles-row { display:flex;gap:13px;margin-top:8px; }
+    .pf-hudpanel-font-toggle { accent-color:#ff4baf;transform:scale(1.15);margin-right:7px; }
+    .pf-hudpanel-font-tlabel { color:#ff4baf;font-size:1.09em;font-family:'Fira Mono',monospace;margin-right:10px;}
+    .pf-hudpanel-font-sliderpanel { display:flex;flex-wrap:wrap;gap:24px 2vw;align-items:center;justify-content:flex-start;margin:13px 44px 5px 38px;}
+    .pf-hudpanel-fontslider { width:170px; accent-color:#10fcfc; height:11px; margin-top:8px; border-radius:8px; box-shadow:0 1px 15px #11fafbaa; background:linear-gradient(90deg,#111,#10fcfc 90%,#ff4baf 100%); outline:none; transition:.13s;}
+    .pf-hudpanel-fontslider:focus { box-shadow:0 0 23px #18fff588,0 0 0 4px #1e4affbb; }
+    .pf-hud-font-randombtn {
+      background:linear-gradient(90deg,#212c3a 60%,#181b21 100%);
+      color:#ffd166; border:2px solid #ffd166; border-radius:10px; box-shadow:0 2px 12px #ffd16660;
+      font-family:'Fira Mono',monospace;font-size:1.06em; padding:10px 22px;cursor:pointer;margin-left:9px;
+      transition:.14s;display:inline-flex;align-items:center;gap:9px;
+    }
+    .pf-hud-font-randombtn:hover, .pf-hud-font-randombtn:focus { background:linear-gradient(90deg,#20162a 85%,#242354 100%); color:#fff; border-color:#fff; box-shadow:0 2px 22px #ffd16699;}
+    .pf-hud-font-hero { background:rgba(21,26,31,0.97); border:2.5px solid #10fcfc; border-radius:17px; box-shadow:0 0 32px #21e4e1cc,0 0 0 7px #21e4e155 inset; padding:18px 18px 14px 23px; margin:0 22px 23px 22px; min-height:60px; max-height:320px; overflow:auto; position:relative; transition:box-shadow .22s; font-family:'Fira Mono',monospace; font-size:1.13em;}
+    .pf-hud-font-hero:focus-within,.pf-hud-font-hero:active { box-shadow:0 0 59px #12fdfa,0 0 0 9px #00ffc994 inset; }
+    .pf-hud-font-hero-exportrow { display:flex;gap:20px;align-items:center;justify-content:flex-end;margin:7px 22px 0 22px;}
+    .pf-hud-font-hero-exportbtn { background:linear-gradient(90deg,#181b21 70%,#212c3a 100%); color:#10fcfc;font-family:'Fira Mono',monospace;font-size:1.08em; border:2px solid #10fcfc;border-radius:12px;box-shadow:0 2px 15px #10fcfc77; padding:8px 21px;cursor:pointer;transition:.14s;display:flex;align-items:center;gap:9px; text-shadow:0 0 9px #10fcfc88; position:relative;overflow:hidden;}
+    .pf-hud-font-hero-exportbtn:hover, .pf-hud-font-hero-exportbtn:focus { color:#ff4baf; border-color:#ff4baf; box-shadow:0 2px 20px #ff4baf99;}
+    .pf-hud-font-scroll { max-height:220px; overflow-y:auto; background:#171c20e0; border-radius:15px; margin:26px 22px 0 22px; padding:12px 17px 18px 17px; box-shadow:0 0 13px #10fcfc60; border:1.5px solid #10fcfc60;}
+    .pf-hud-font-preview-block { border-left:3.6px solid #ff4baf99; margin:0 0 25px 0; padding:0 0 0 18px; position:relative; }
+    .pf-hud-font-preview-head { display:flex;align-items:center;gap:16px; }
+    .pf-hud-font-preview-label { color:#10fcfc;font-size:1.1em;font-family:'Fira Mono',monospace;font-weight:600;margin-bottom:2px;margin-right:13px;}
+    .pf-hud-font-preview-copybtn { background:none;border:none;outline:none;color:#ffd166;font-size:1em;cursor:pointer;padding:2px 10px;border-radius:5px;transition:.14s; }
+    .pf-hud-font-preview-copybtn:hover { background:#ffd16633;color:#fff; }
+    .pf-hud-font-preview-txt { font-family:'Fira Mono',monospace;font-size:.99em;line-height:1.09;letter-spacing:0.01em;color:#fff;word-break:break-all;padding-bottom:5px;text-shadow:0 0 12px #10fcfc99,0 0 5px #ff4baf66;}
+    .pf-hud-font-tip { color:#ffd166;font-size:.99em;font-family:'Fira Mono',monospace; margin:12px 0 0 36px;opacity:.79; text-shadow:0 0 8px #ffd16644;}
+    .pf-hud-tooltip { display:inline-block; position:relative; cursor:help; color:#21e4e1; text-shadow:0 0 6px #21e4e1; }
+    .pf-hud-tooltip:hover::after, .pf-hud-tooltip:focus::after { content:attr(data-tip); position:absolute; left:0; top:1.7em; background:#111b22e0; color:#10fcfc; font-size:.98em; font-family:'Fira Mono',monospace; border-radius:9px; padding:8px 16px; box-shadow:0 0 13px #21e4e1bb; white-space:nowrap; z-index:10; opacity:1; animation:pf-hud-tip-flicker .8s;}
+    @keyframes pf-hud-tip-flicker { 0%{opacity:0;} 100%{opacity:1;} }
+  </style>
+  <div class="pf-hudpanel-font">
+    <div class="pf-hudpanel-font-title">
+      <svg viewBox="0 0 36 36" width="40" height="40">
+        <rect x="5" y="8" width="26" height="20" rx="5" fill="none" stroke="#10fcfc" stroke-width="2"/>
+        <circle cx="30" cy="10" r="2.3" fill="#ffd166"/>
+        <rect x="10.5" y="14" width="15" height="8" rx="1.3" fill="#ffd166"/>
+      </svg>
+      FIGlet Font Explorer <span style="color:#ff4baf;font-size:.56em;">[HUD]</span>
+      <span class="pf-hud-hint">Try every FIGlet font with live neon preview &mdash; export, copy, play</span>
+    </div>
+    <form id="figlet-explorer-controls" autocomplete="off" style="margin-top:28px;">
+      <div class="pf-hud-controls-fontrow">
+        <div style="flex:1;min-width:320px;">
+          <label class="pf-hudpanel-fontlabel pf-hud-tooltip" data-tip="Type your text here (single-line recommended for max fonts)">
+            Text
+          </label>
+          <input id="figlet-input" class="pf-hud-fontinput" maxlength="64" value="PROMPTFORGE HUD">
+        </div>
+        <div style="min-width:250px;">
+          <label class="pf-hudpanel-fontlabel pf-hud-tooltip" data-tip="Pick a font for hero preview/export.">
+            Font
+            <select id="figlet-font-select" class="pf-hudpanel-font-dropdown" style="margin-left:7px;"></select>
+            <button type="button" id="figlet-font-random" class="pf-hud-font-randombtn pf-hud-tooltip" data-tip="Try a random font!">
+              <svg width="17" height="17" viewBox="0 0 18 18"><path fill="#ffd166" d="M9 1.8l1.08 3.33h3.5l-2.84 2.08 1.09 3.32-2.83-2.07-2.83 2.07 1.09-3.32L4.42 5.13h3.5z"/></svg>
+              Random
+            </button>
+          </label>
+        </div>
+        <div style="min-width:180px;">
+          <div class="pf-hud-fonttoggles-row">
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="figlet-glow" class="pf-hudpanel-font-toggle" checked>
+              <span class="pf-hudpanel-font-tlabel">Glow</span>
+            </label>
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="figlet-haunt" class="pf-hudpanel-font-toggle">
+              <span class="pf-hudpanel-font-tlabel" style="color:#ffd166;">Haunted</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="pf-hudpanel-font-sliderpanel">
+        <div>
+          <label class="pf-hudpanel-fontlabel">Font Size</label>
+          <input type="range" id="figlet-size" class="pf-hudpanel-fontslider" min="0.7" max="2.2" step="0.01" value="1.1">
+          <span id="figlet-size-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.1x</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-fontlabel">Letter Spacing</label>
+          <input type="range" id="figlet-ls" class="pf-hudpanel-fontslider" min="0" max="0.35" step="0.01" value="0.04">
+          <span id="figlet-ls-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">0.04em</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-fontlabel">Line Height</label>
+          <input type="range" id="figlet-lh" class="pf-hudpanel-fontslider" min="0.8" max="2.1" step="0.01" value="1.13">
+          <span id="figlet-lh-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.13</span>
+        </div>
+      </div>
+    </form>
+    <div class="pf-hud-font-hero" id="figlet-hero-output"></div>
+    <div class="pf-hud-font-hero-exportrow">
+      <button id="figlet-hero-export-txt" type="button" class="pf-hud-font-hero-exportbtn pf-hud-tooltip" data-tip="Export as .txt">
+        <svg width="21" height="21" viewBox="0 0 21 21"><rect x="2.5" y="2.5" width="16" height="16" rx="3" fill="none" stroke="#10fcfc" stroke-width="1.7"/><text x="50%" y="60%" text-anchor="middle" font-size="10" fill="#10fcfc" font-family="Fira Mono,monospace">TXT</text></svg>
+        Export TXT
+      </button>
+      <button id="figlet-hero-export-png" type="button" class="pf-hud-font-hero-exportbtn pf-hud-tooltip" data-tip="Export as PNG">
+        <svg width="21" height="21" viewBox="0 0 21 21"><rect x="2.5" y="5" width="16" height="10" rx="2" fill="none" stroke="#ffd166" stroke-width="1.7"/><circle cx="10.5" cy="10.5" r="2.1" fill="#ffd166"/></svg>
+        Export PNG
+      </button>
+      <button id="figlet-hero-copy" type="button" class="pf-hud-font-hero-exportbtn pf-hud-tooltip" data-tip="Copy to clipboard">
+        <svg width="18" height="18" viewBox="0 0 18 18"><rect x="3" y="3" width="10" height="10" rx="2" fill="none" stroke="#10fcfc" stroke-width="1.5"/><rect x="7" y="7" width="8" height="8" rx="2" fill="none" stroke="#ffd166" stroke-width="1.2"/></svg>
+        Copy
+      </button>
+    </div>
+    <div class="pf-hud-font-scroll" id="figlet-scroll-list">
+      <!-- Font previews will be inserted here -->
+    </div>
+    <div class="pf-hud-font-tip">
+      Scroll down for all available fonts &mdash; click copy to grab any style! Haunted mode = color FX.<br>
+      <span style="color:#ffd166;">Pro tip:</span> Try a single word for max punch.
+    </div>
+  </div>
+</section>
+<!-- FIGlet font explorer logic, html2canvas for PNG export -->
+<script src="https://cdn.jsdelivr.net/npm/figlet@1.5.2/umd/figlet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+(function(){
+  const hero = document.getElementById('figlet-hero-output');
+  const input = document.getElementById('figlet-input');
+  const fontSelect = document.getElementById('figlet-font-select');
+  const randomBtn = document.getElementById('figlet-font-random');
+  const glow = document.getElementById('figlet-glow');
+  const haunt = document.getElementById('figlet-haunt');
+  const size = document.getElementById('figlet-size');
+  const ls = document.getElementById('figlet-ls');
+  const lh = document.getElementById('figlet-lh');
+  const sizeLabel = document.getElementById('figlet-size-label');
+  const lsLabel = document.getElementById('figlet-ls-label');
+  const lhLabel = document.getElementById('figlet-lh-label');
+  let fonts = [];
+  // Colorizer (haunted FX)
+  function colorize(text, glow, haunt) {
+    let out = "";
+    for(let i=0;i<text.length;++i){
+      let c = text[i];
+      if(c===" ") { out += " "; continue; }
+      let style = `color:${haunt?(["#10fcfc","#ffd166","#ff4baf","#b57fff","#fff"][i%5]):"#10fcfc"};`;
+      if(glow) style += "text-shadow:0 0 13px #10fcfc,0 0 28px #ff4baf,0 0 9px #ffd166;";
+      if(haunt && Math.random()<.18) style += `filter:hue-rotate(${Math.floor(Math.random()*360)}deg);`;
+      out += `<span style="${style}">${c}</span>`;
+    }
+    return out;
+  }
+  // Render HERO
+  function renderHero(){
+    let txt = input.value||'';
+    let font = fontSelect.value;
+    let _size = +size.value, _ls = +ls.value, _lh = +lh.value;
+    sizeLabel.textContent = _size.toFixed(2) + "x";
+    lsLabel.textContent = _ls.toFixed(2) + "em";
+    lhLabel.textContent = _lh.toFixed(2);
+    figlet.text(txt, {font: font}, function(err, data){
+      let out = colorize(data, glow.checked, haunt.checked);
+      hero.innerHTML = `<span style="font-size:${_size}em;line-height:${_lh};letter-spacing:${_ls}em;display:block;">${out}</span>`;
+    });
+  }
+  // Render Scroll list
+  function renderScrollList(){
+    let txt = input.value||'';
+    let _glow = glow.checked, _haunt = haunt.checked, _ls = +ls.value, _lh = +lh.value;
+    let block = "";
+    fonts.forEach(font=>{
+      figlet.text(txt, {font: font}, function(err, data){
+        let out = colorize(data, _glow, _haunt);
+        let id = "figlet-preview-"+font.replace(/\W/g,'_');
+        block += `<div class="pf-hud-font-preview-block" id="${id}">
+          <div class="pf-hud-font-preview-head">
+            <span class="pf-hud-font-preview-label">${font}</span>
+            <button class="pf-hud-font-preview-copybtn" onclick="navigator.clipboard.writeText(this.parentNode.parentNode.querySelector('.pf-hud-font-preview-txt').innerText)">Copy</button>
+          </div>
+          <div class="pf-hud-font-preview-txt" style="font-size:1em;line-height:${_lh};letter-spacing:${_ls}em;">${out}</div>
+        </div>`;
+        if(document.getElementById('figlet-scroll-list')) document.getElementById('figlet-scroll-list').innerHTML = block;
+      });
+    });
+  }
+  // Populate font select dropdown and previews
+  figlet.defaults({fontPath:'https://cdn.jsdelivr.net/npm/figlet/fonts/'});
+  figlet.preloadFonts([
+    "Standard","Ghost","Rectangles","Slant","Big","Small","Bloody","3-D","Block","Script","Doom","Banner","Univers","Speed","Mini","Acrobatic"
+  ], function(){
+    figlet.fonts(function(err, fontList){
+      fonts = fontList.sort();
+      fonts.forEach(font=>{
+        let opt = document.createElement('option');
+        opt.value = font; opt.textContent = font;
+        fontSelect.appendChild(opt);
+      });
+      fontSelect.value = "Standard";
+      renderHero();
+      renderScrollList();
+    });
+  });
+  // Listeners
+  [input,fontSelect,glow,haunt,size,ls,lh].forEach(el=>el.addEventListener('input',()=>{renderHero();renderScrollList();}));
+  randomBtn.onclick = function(){
+    if(!fonts.length) return;
+    let rand = fonts[Math.floor(Math.random()*fonts.length)];
+    fontSelect.value = rand; renderHero();
+  };
+  // Export/copy for HERO
+  document.getElementById('figlet-hero-export-txt').onclick = function(){
+    let text = hero.innerText;
+    let blob = new Blob([text], {type:'text/plain'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'figlet_font.txt'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+  };
+  document.getElementById('figlet-hero-export-png').onclick = function(){
+    html2canvas(hero,{backgroundColor:null,scale:2}).then(canvas=>{
+      canvas.toBlob(blob=>{
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'figlet_font.png'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+      });
+    });
+  };
+  document.getElementById('figlet-hero-copy').onclick = function(){
+    navigator.clipboard.writeText(hero.innerText);
+  };
+})();
+</script>
+<section class="tool-block pf-hud-colorizer" style="margin:48px auto 99px auto; max-width:1240px; padding:0; background:none; position:relative; z-index:11;">
+  <style>
+    .pf-hud-colorizer * { box-sizing:border-box; }
+    .pf-hudpanel-colorizer {
+      background:linear-gradient(135deg,rgba(17,27,32,.96) 80%,rgba(22,44,54,.69) 100%);
+      border:2.7px solid #10fcfc;
+      border-radius:26px 26px 30px 30px/16px 16px 32px 32px;
+      box-shadow:0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset;
+      position:relative; padding:0 0 48px 0; margin:0 0 30px 0;
+      overflow:visible; animation:pf-panel-flicker 3.1s infinite alternate;
+    }
+    .pf-hudpanel-colorizer-title {
+      font-family:'Fira Mono',monospace; font-size:2.2em; letter-spacing:.13em;
+      color:#10fcfc; text-shadow:0 0 18px #10fcfc,0 1.5px 18px #16e2ff,0 0 38px #ff4bfa4e;
+      margin:0; padding:32px 38px 12px 34px; text-align:left; line-height:1.09;
+      border-bottom:2.5px solid #10fcfc;
+      border-radius:26px 26px 0 0/16px 16px 0 0;
+      background:linear-gradient(90deg,rgba(22,44,54,0.34) 66%,rgba(34,21,51,.23) 100%);
+      box-shadow:0 7px 30px #10f4b94a inset; position:relative;
+    }
+    .pf-hudpanel-colorizer-title svg { vertical-align:-12px; margin-right:15px; filter:drop-shadow(0 0 7px #10fcfc);}
+    .pf-hud-hint { font-size:.99em; color:#00ffc9a2; font-family:'Fira Mono',monospace; margin-left:14px; text-shadow:0 0 8px #12fdfa70; }
+    .pf-hud-controls-colorrow { display:flex;flex-wrap:wrap;gap:34px 2.2vw;align-items:flex-start;justify-content:flex-start; margin:30px 34px 18px 34px;}
+    .pf-hud-colorinput { font-family:'Fira Mono',monospace;font-size:1.11em;padding:14px 24px;min-width:290px;min-height:60px;max-width:480px;max-height:160px;width:100%;background:#1a2029;color:#10fcfc;border:2.5px solid #12fcfc;border-radius:12px;box-shadow:0 0 16px #12fcfc44;outline:none;resize:vertical;margin-bottom:4px;transition:.15s;}
+    .pf-hud-colorinput:focus { border-color:#ff4baf; color:#ff4baf; box-shadow:0 0 22px #ff4baf88; }
+    .pf-hudpanel-colorizer-label { color:#10fcfc; font-size:1.08em; font-family:'Fira Mono',monospace; letter-spacing:.07em; margin-bottom:3px; text-shadow:0 1px 7px #10fcfc70; display:flex;align-items:center;gap:7px;}
+    .pf-hudpanel-colorizer-dropdown, .pf-hudpanel-colorizer-dropdown:focus { font-family:'Fira Mono',monospace;font-size:1.09em;padding:8px 11px;border-radius:10px;background:#131b23;color:#10fcfc;border:2px solid #10fcfc;box-shadow:0 1.5px 8px #10fcfcaa;outline:none;transition:.16s;}
+    .pf-hudpanel-colorizer-dropdown:focus { border-color:#ff4baf; color:#ff4baf; }
+    .pf-hud-colorizer-toggles-row { display:flex;gap:13px;margin-top:8px; }
+    .pf-hudpanel-colorizer-toggle { accent-color:#ff4baf;transform:scale(1.15);margin-right:7px; }
+    .pf-hudpanel-colorizer-tlabel { color:#ff4baf;font-size:1.09em;font-family:'Fira Mono',monospace;margin-right:10px;}
+    .pf-hudpanel-colorizer-sliderpanel { display:flex;flex-wrap:wrap;gap:22px 2vw;align-items:center;justify-content:flex-start;margin:13px 44px 9px 38px;}
+    .pf-hudpanel-colorizer-slider { width:170px; accent-color:#10fcfc; height:11px; margin-top:8px; border-radius:8px; box-shadow:0 1px 15px #11fafbaa; background:linear-gradient(90deg,#111,#10fcfc 90%,#ff4baf 100%); outline:none; transition:.13s;}
+    .pf-hudpanel-colorizer-slider:focus { box-shadow:0 0 23px #18fff588,0 0 0 4px #1e4affbb; }
+    .pf-hud-colorizer-randombtn {
+      background:linear-gradient(90deg,#212c3a 60%,#181b21 100%);
+      color:#ffd166; border:2px solid #ffd166; border-radius:10px; box-shadow:0 2px 12px #ffd16660;
+      font-family:'Fira Mono',monospace;font-size:1.07em; padding:10px 22px;cursor:pointer;margin-left:9px;
+      transition:.14s;display:inline-flex;align-items:center;gap:9px;
+    }
+    .pf-hud-colorizer-randombtn:hover, .pf-hud-colorizer-randombtn:focus { background:linear-gradient(90deg,#20162a 85%,#242354 100%); color:#fff; border-color:#fff; box-shadow:0 2px 22px #ffd16699;}
+    .pf-hud-colorizer-glowbox { background:rgba(21,26,31,0.97); border:2.5px solid #10fcfc; border-radius:17px; box-shadow:0 0 32px #21e4e1cc,0 0 0 7px #21e4e155 inset; padding:17px 18px 15px 21px; margin:0 22px 17px 22px; min-height:120px; max-height:320px; overflow:auto; position:relative; transition:box-shadow .22s; font-family:'Fira Mono',monospace; font-size:1.11em;}
+    .pf-hud-colorizer-glowbox:focus-within,.pf-hud-colorizer-glowbox:active { box-shadow:0 0 59px #12fdfa,0 0 0 9px #00ffc994 inset; }
+    .pf-hud-colorizer-exportrow { display:flex;gap:22px;align-items:center;justify-content:flex-end;margin:10px 22px 0 22px;}
+    .pf-hud-colorizer-exportbtn { background:linear-gradient(90deg,#181b21 70%,#212c3a 100%); color:#10fcfc;font-family:'Fira Mono',monospace;font-size:1.08em; border:2px solid #10fcfc;border-radius:12px;box-shadow:0 2px 15px #10fcfc77; padding:8px 21px;cursor:pointer;transition:.14s;display:flex;align-items:center;gap:9px; text-shadow:0 0 9px #10fcfc88; position:relative;overflow:hidden;}
+    .pf-hud-colorizer-exportbtn:hover, .pf-hud-colorizer-exportbtn:focus { color:#ff4baf; border-color:#ff4baf; box-shadow:0 2px 20px #ff4baf99;}
+    .pf-hud-colorizer-tip { color:#ffd166;font-size:.99em;font-family:'Fira Mono',monospace; margin:13px 0 0 36px;opacity:.79; text-shadow:0 0 8px #ffd16644;}
+    .pf-hud-tooltip { display:inline-block; position:relative; cursor:help; color:#21e4e1; text-shadow:0 0 6px #21e4e1; }
+    .pf-hud-tooltip:hover::after, .pf-hud-tooltip:focus::after { content:attr(data-tip); position:absolute; left:0; top:1.7em; background:#111b22e0; color:#10fcfc; font-size:.98em; font-family:'Fira Mono',monospace; border-radius:9px; padding:8px 16px; box-shadow:0 0 13px #21e4e1bb; white-space:nowrap; z-index:10; opacity:1; animation:pf-hud-tip-flicker .8s;}
+    @keyframes pf-hud-tip-flicker { 0%{opacity:0;} 100%{opacity:1;} }
+  </style>
+  <div class="pf-hudpanel-colorizer">
+    <div class="pf-hudpanel-colorizer-title">
+      <svg viewBox="0 0 36 36" width="40" height="40">
+        <rect x="5" y="8" width="26" height="20" rx="5" fill="none" stroke="#10fcfc" stroke-width="2"/>
+        <circle cx="30" cy="10" r="2.3" fill="#ffd166"/>
+        <rect x="9.5" y="14" width="17" height="8" rx="1.3" fill="#ffd166"/>
+      </svg>
+      ASCII/ANSI Colorizer <span style="color:#ff4baf;font-size:.56em;">[HUD]</span>
+      <span class="pf-hud-hint">Colorize, animate, and export any text, ASCII art, or ANSI block</span>
+    </div>
+    <form id="colorizer-hud-controls" autocomplete="off" style="margin-top:28px;">
+      <div class="pf-hud-controls-colorrow">
+        <div style="flex:1;min-width:310px;">
+          <label class="pf-hudpanel-colorizer-label pf-hud-tooltip" data-tip="Paste any ASCII/ANSI art or text here.">
+            Input
+          </label>
+          <textarea id="colorizer-input" class="pf-hud-colorinput" rows="4" maxlength="600" placeholder="Paste ASCII/ANSI or type anything…"></textarea>
+        </div>
+        <div style="min-width:220px;">
+          <label class="pf-hudpanel-colorizer-label pf-hud-tooltip" data-tip="Choose a color mode or animated FX.">
+            Mode
+            <select id="colorizer-mode" class="pf-hudpanel-colorizer-dropdown" style="margin-left:7px;">
+              <option value="classic">Classic</option>
+              <option value="rainbow">Rainbow</option>
+              <option value="matrix">Matrix</option>
+              <option value="random">Random</option>
+              <option value="haunt">Haunted</option>
+              <option value="custom">Custom</option>
+            </select>
+          </label>
+          <label class="pf-hudpanel-colorizer-label pf-hud-tooltip" data-tip="Pick a preset palette.">
+            Palette
+            <select id="colorizer-palette" class="pf-hudpanel-colorizer-dropdown" style="margin-left:7px;">
+              <option value="cyber">Cyber Aqua</option>
+              <option value="vapor">Vaporwave</option>
+              <option value="ghoul">Ghoul Green</option>
+              <option value="bloody">Bloody Red</option>
+              <option value="mono">Monochrome</option>
+              <option value="random">Randomized</option>
+            </select>
+          </label>
+        </div>
+        <div style="min-width:150px;">
+          <div class="pf-hud-colorizer-toggles-row">
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="colorizer-glow" class="pf-hudpanel-colorizer-toggle" checked>
+              <span class="pf-hudpanel-colorizer-tlabel">Glow</span>
+            </label>
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="colorizer-animate" class="pf-hudpanel-colorizer-toggle">
+              <span class="pf-hudpanel-colorizer-tlabel" style="color:#ffd166;">Animate</span>
+            </label>
+            <label style="display:flex;align-items:center;">
+              <input type="checkbox" id="colorizer-haunt" class="pf-hudpanel-colorizer-toggle">
+              <span class="pf-hudpanel-colorizer-tlabel" style="color:#ff4baf;">Haunt</span>
+            </label>
+          </div>
+          <button type="button" id="colorizer-randomize" class="pf-hud-colorizer-randombtn pf-hud-tooltip" data-tip="Randomize all settings!">
+            <svg width="17" height="17" viewBox="0 0 18 18"><path fill="#ffd166" d="M9 1.8l1.08 3.33h3.5l-2.84 2.08 1.09 3.32-2.83-2.07-2.83 2.07 1.09-3.32L4.42 5.13h3.5z"/></svg>
+            Randomize
+          </button>
+        </div>
+      </div>
+      <div class="pf-hudpanel-colorizer-sliderpanel">
+        <div>
+          <label class="pf-hudpanel-colorizer-label">Font Size</label>
+          <input type="range" id="colorizer-size" class="pf-hudpanel-colorizer-slider" min="0.8" max="2.4" step="0.01" value="1.12">
+          <span id="colorizer-size-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.12x</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-colorizer-label">Line Height</label>
+          <input type="range" id="colorizer-lh" class="pf-hudpanel-colorizer-slider" min="1.0" max="2.2" step="0.01" value="1.13">
+          <span id="colorizer-lh-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">1.13</span>
+        </div>
+        <div>
+          <label class="pf-hudpanel-colorizer-label">Letter Spacing</label>
+          <input type="range" id="colorizer-ls" class="pf-hudpanel-colorizer-slider" min="0" max="0.5" step="0.01" value="0.08">
+          <span id="colorizer-ls-label" style="color:#10fcfc;font-size:1.04em;margin-left:7px;">0.08em</span>
+        </div>
+      </div>
+    </form>
+    <div class="pf-hud-colorizer-glowbox">
+      <pre id="colorizer-output" style="font-family:'Fira Mono',monospace;font-size:1.12em;line-height:1.13;letter-spacing:0.08em;color:#10fcfc;text-shadow:0 0 13px #10fcfc,0 0 4px #fff; background:none; margin:0; min-height:90px;max-height:260px;overflow:auto;transition:box-shadow .22s;"></pre>
+    </div>
+    <div class="pf-hud-colorizer-exportrow">
+      <button id="colorizer-export-txt" type="button" class="pf-hud-colorizer-exportbtn pf-hud-tooltip" data-tip="Export as .txt">
+        <svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="3" fill="none" stroke="#10fcfc" stroke-width="1.6"/><text x="50%" y="60%" text-anchor="middle" font-size="10" fill="#10fcfc" font-family="Fira Mono,monospace">TXT</text></svg>
+        Export TXT
+      </button>
+      <button id="colorizer-export-png" type="button" class="pf-hud-colorizer-exportbtn pf-hud-tooltip" data-tip="Export as PNG">
+        <svg width="20" height="20" viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="8" rx="2" fill="none" stroke="#ffd166" stroke-width="1.6"/><circle cx="10" cy="10" r="2" fill="#ffd166"/></svg>
+        Export PNG
+      </button>
+      <button id="colorizer-copy" type="button" class="pf-hud-colorizer-exportbtn pf-hud-tooltip" data-tip="Copy to clipboard">
+        <svg width="16" height="16" viewBox="0 0 16 16"><rect x="2" y="2" width="7" height="7" rx="1.3" fill="none" stroke="#10fcfc" stroke-width="1.1"/><rect x="5" y="5" width="8" height="8" rx="1.3" fill="none" stroke="#ffd166" stroke-width="1.1"/></svg>
+        Copy
+      </button>
+    </div>
+    <div class="pf-hud-colorizer-tip">
+      Use <b>Rainbow</b> or <b>Haunted</b> for wildest FX. Animate = real-time color cycling. <br>
+      All exports preserve glow &amp; color.
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  // Color palettes
+  const palettes = {
+    cyber: ["#10fcfc","#ffd166","#ff4baf","#fff","#b57fff"],
+    vapor: ["#e0aaff","#a3c4f3","#3f37c9","#560bad","#ff61a6"],
+    ghoul: ["#13fa57","#25fad2","#01e57a","#10fcfc","#70ffa2"],
+    bloody:["#ff1654","#ff4baf","#ffd166","#e63946","#fff"],
+    mono:  ["#e1e1e1","#c7c7c7","#aaa","#fff","#10fcfc"],
+    random:[]
+  };
+  function randomColor() {
+    return "#"+(~~(Math.random()*0xffffff)).toString(16).padStart(6,"0");
+  }
+  function colorize(text, mode, palette, glow, haunt, animate, t=0) {
+    let colors = palette==="random" ? Array.from({length:20}, randomColor) : palettes[palette]||palettes.cyber;
+    if(mode==="random") colors = Array.from({length:80}, randomColor);
+    let out = "", idx = 0, len = text.replace(/\n/g,'').length;
+    for(let i=0; i<text.length; ++i){
+      let c = text[i];
+      if(c === " " || c === "\n") { out += c; continue; }
+      let color = "#10fcfc";
+      if(mode==="classic") color = "#10fcfc";
+      else if(mode==="rainbow") color = `hsl(${(idx*25+(animate?t*50:0))%360},100%,65%)`;
+      else if(mode==="matrix") color = ["#10fcfc","#0aff6c","#15e8c9","#fff"][idx%4];
+      else if(mode==="haunt"||haunt) color = ["#10fcfc","#ffd166","#ff4baf","#fff","#b57fff"][Math.floor(Math.random()*5)];
+      else if(mode==="custom") color = colors[idx%colors.length]||"#10fcfc";
+      else color = colors[idx%colors.length]||"#10fcfc";
+      let style = `color:${color};`;
+      if(glow) style += `text-shadow:0 0 14px ${color},0 0 34px #10fcfc,0 0 7px #fff;`;
+      if(haunt && Math.random()<.11) style += `filter:hue-rotate(${Math.floor(Math.random()*360)}deg);`;
+      out += `<span style="${style}">${c}</span>`;
+      idx++;
+    }
+    return out;
+  }
+  // Controls state
+  let input = document.getElementById('colorizer-input');
+  let mode = document.getElementById('colorizer-mode');
+  let palette = document.getElementById('colorizer-palette');
+  let glow = document.getElementById('colorizer-glow');
+  let animate = document.getElementById('colorizer-animate');
+  let haunt = document.getElementById('colorizer-haunt');
+  let size = document.getElementById('colorizer-size');
+  let lh = document.getElementById('colorizer-lh');
+  let ls = document.getElementById('colorizer-ls');
+  let sizeLabel = document.getElementById('colorizer-size-label');
+  let lhLabel = document.getElementById('colorizer-lh-label');
+  let lsLabel = document.getElementById('colorizer-ls-label');
+  let output = document.getElementById('colorizer-output');
+  let lastT = 0, animId = null;
+  function updateLabels() {
+    sizeLabel.textContent = (+size.value).toFixed(2)+"x";
+    lhLabel.textContent = (+lh.value).toFixed(2);
+    lsLabel.textContent = (+ls.value).toFixed(2)+"em";
+  }
+  function renderColorizer(t=0){
+    let txt = input.value||'';
+    output.innerHTML = `<span style="font-size:${+size.value}em;line-height:${+lh.value};letter-spacing:${+ls.value}em;display:block;">${
+      colorize(txt, mode.value, palette.value, glow.checked, haunt.checked, animate.checked, t)
+    }</span>`;
+  }
+  function triggerRender(){ updateLabels(); renderColorizer(); }
+  [input,mode,palette,glow,animate,haunt,size,lh,ls].forEach(el=>el.addEventListener('input',triggerRender));
+  // Animation
+  function startAnim(){
+    if(animId) cancelAnimationFrame(animId);
+    function animloop(t){
+      renderColorizer(t/900);
+      animId = requestAnimationFrame(animloop);
+    }
+    if(animate.checked) animId = requestAnimationFrame(animloop);
+    else renderColorizer();
+  }
+  animate.addEventListener('input',startAnim);
+  haunt.addEventListener('input',startAnim);
+  triggerRender();
+  // Randomize
+  document.getElementById('colorizer-randomize').onclick = ()=>{
+    mode.value = ["classic","rainbow","matrix","random","haunt"][Math.floor(Math.random()*5)];
+    palette.value = ["cyber","vapor","ghoul","bloody","mono","random"][Math.floor(Math.random()*6)];
+    glow.checked = Math.random()<.85;
+    animate.checked = Math.random()<.65;
+    haunt.checked = Math.random()<.42;
+    size.value = (0.9 + Math.random()*1.3).toFixed(2);
+    lh.value = (1.05 + Math.random()*0.95).toFixed(2);
+    ls.value = (0.01 + Math.random()*0.45).toFixed(2);
+    triggerRender();
+  };
+  // Export logic
+  document.getElementById('colorizer-export-txt').onclick = function(){
+    let text = output.innerText;
+    let blob = new Blob([text], {type:'text/plain'});
+    let a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'color_ascii.txt'; document.body.appendChild(a); a.click();
+    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+  };
+  document.getElementById('colorizer-export-png').onclick = function(){
+    html2canvas(output,{backgroundColor:null,scale:2}).then(canvas=>{
+      canvas.toBlob(blob=>{
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = 'color_ascii.png'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(a.href);}, 300);
+      });
+    });
+  };
+  document.getElementById('colorizer-copy').onclick = function(){
+    navigator.clipboard.writeText(output.innerText);
+  };
+  // Drag/drop input
+  let toolBlock = document.querySelector('.pf-hud-colorizer');
+  toolBlock.addEventListener('dragover',e=>{e.preventDefault();toolBlock.style.boxShadow="0 0 77px #10ffc9,0 0 40px #ff4bfa";});
+  toolBlock.addEventListener('dragleave',e=>{e.preventDefault();toolBlock.style.boxShadow="0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset";});
+  toolBlock.addEventListener('drop',e=>{
+    e.preventDefault();toolBlock.style.boxShadow="0 0 54px #18fff550, 0 1.5px 15px #11fafb70, 0 0 0 6px #0b3643d8 inset";
+    let txt = "";
+    if(e.dataTransfer.files&&e.dataTransfer.files[0]){
+      let reader = new FileReader();
+      reader.onload = function(ev){ input.value = ev.target.result; triggerRender(); }
+      reader.readAsText(e.dataTransfer.files[0]);
+    }else if(e.dataTransfer.getData("text")){
+      input.value = e.dataTransfer.getData("text"); triggerRender();
+    }
+  });
+})();
+</script>
