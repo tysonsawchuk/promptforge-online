@@ -1,163 +1,616 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ====== META / SEO (tight + high quality) ====== -->
   <meta charset="utf-8"/>
-  <title>ANSIart Playground — HUD</title>
+  <title>PromptForge — ANSI/ASCII Art HUD, Matrix Rain, Video→ASCII, Webcam→ASCII, FIGlet, Image→ASCII, Colorizer, Glitch, Palette, Export</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Futuristic ANSI/ASCII Matrix Rain, Creepy Video, PromptForge J1NX, glowing HUD tools and footer. True dev cyberpunk art playground for 2025.">
+  <meta name="description" content="PromptForge: Cyberpunk ANSI/ASCII art studio. Video→ASCII, Webcam→ASCII, Text→ASCII (FIGlet), Image→ASCII, colorizer, glitcher, palette builder, exports (TXT/PNG/SVG/GIF), matrix rain, creepy video, J1NX. 100% local."/>
+  <meta name="theme-color" content="#0b0f14"/>
+  <meta name="robots" content="index,follow"/>
+  <meta name="referrer" content="strict-origin-when-cross-origin"/>
+  <link rel="canonical" href="https://promptforge.online/ansiart.html"/>
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="PromptForge — ANSI/ASCII Art HUD"/>
+  <meta property="og:description" content="Pro-grade ASCII tools: Video→ASCII, Webcam→ASCII, FIGlet, Image→ASCII, Colorizer, Glitch, Palette, Exports. Matrix rain + creepy video. 100% client-side."/>
+  <meta property="og:url" content="https://promptforge.online/ansiart.html"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:image" content="https://promptforge.online/assets/og/ansiart.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <!-- AdSense (load once) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+
+  <!-- ====== BASE STYLES (keep original vibe; add only what’s needed) ====== -->
   <style>
-    html,body {
-      margin:0; padding:0; min-height:100vh; width:100vw; background:#0b0f14;
-      color:#d6f5ff; font-family:'Share Tech Mono',monospace; overflow-x:hidden;
+    :root{
+      --bg:#0b0f14; --ink:#d6f5ff; --accent:#64f2e3; --hot:#fa528e; --teal:#10fcfc;
+      --panel:#0f1821; --panel2:#111e28; --panel-br:#20e3f255;
+      --ui:'Share Tech Mono',monospace; --mono:'Fira Mono',monospace;
+      --mono-size:12.5px; --mono-line:1.16; --copy-size:13px;
     }
-    #bgvid {
-      position:fixed; left:0; top:0; width:100vw; height:100vh;
-      object-fit:cover; z-index:0; pointer-events:none; opacity:.81;
-      background:#000;
-    }
-    #matrix-canvas {
-      position:fixed; left:0; top:0; width:100vw; height:100vh;
-      z-index:1; pointer-events:none; background:transparent !important; display:block;
-    }
-    header {
-      width:100vw; background:linear-gradient(90deg,#0b1116 85%,#131b26 100%);
-      border-bottom:2.7px solid #21e4e1aa; box-shadow:0 4px 42px #1afffa26,0 1.5px 0 #1cf4;
-      z-index:10; position:relative; padding:0 0 0 0; margin:0;
-      min-height:102px;
-    }
-    .pf-desc-alien {
-      padding-top:22px;
-      text-align:center;
-      font-size:1.09em;
-      line-height:1.32;
-      letter-spacing:0.13em;
-      background:none;
-      color:#57fff9;
-      font-family:'Fira Mono',monospace;
-      text-shadow: 0 0 9px #18fff5cc, 0 0 36px #16caff44, 0 1.5px 11px #00f6ffcc, 0 0 1px #fff;
-      filter: blur(.1px) brightness(1.09);
-      margin-bottom:6px;
-      opacity:.99;
-      user-select:text;
-    }
-    .pf-desc-alien .desc-pink { color:#ff3fda; text-shadow:0 0 13px #ff69f9aa;}
-    .pf-desc-alien .desc-blue { color:#1ac7fa; text-shadow:0 0 14px #2bfffebb;}
-    .pf-desc-alien .desc-gold { color:#ffd166;}
-    .pf-nav {
-      width:100vw; margin:0 auto 0 auto; padding:0; background:none; text-align:center; z-index:12;
-    }
-    .pf-nav ul {
-      list-style:none; margin:0; padding:0 0 8px 0; display:flex;flex-wrap:wrap;justify-content:center;gap:0;
-    }
-    .pf-nav ul li {
-      display:inline-block; margin:0 3px 0 0;
-    }
-    .pf-nav a {
-      display:inline-block; color:#64f2e3; text-decoration:none; font-weight:700; font-size:1.03em;
-      padding:6px 17px 6px 17px; border-radius:8px;
-      border-bottom:2.3px solid transparent; background:rgba(22,36,40,0.22);
-      margin:3px 0 0 0; letter-spacing:.09em;
-      transition: color .16s, border .16s, box-shadow .19s, background .18s;
-      box-shadow:0 1px 7px #20e3f240;
-    }
-    .pf-nav a:hover, .pf-nav a:focus {
-      color:#fa528e; border-bottom:2.3px solid #fa528e;
-      background:rgba(34,24,48,0.16);
-      text-shadow:0 0 11px #ff47c866, 0 0 8px #1cfffbcc;
-      box-shadow:0 1.5px 18px #18e0ff66;
-    }
-    .pf-breadcrumbs {
-      color:#a3eaff; font-size:.97em; padding:0; margin:0 0 0 18px; display:block;
-      text-align:left; letter-spacing:.05em; z-index:14; position:relative;
-    }
-    .pf-breadcrumbs ol { display:inline; list-style:none; padding:0; margin:0;}
-    .pf-breadcrumbs li { display:inline; margin-right:3px;}
-    .pf-breadcrumbs li a { color:#55fff7; text-decoration:none; border-bottom:1.4px solid #3efcff22; }
-    .pf-breadcrumbs li a:hover { color:#fa528e; border-bottom:1.7px solid #fa528e; }
-    .breadcrumbs .sep, .pf-breadcrumbs .sep {color:#be9cff;}
-    .hud-sidebar { position:fixed;left:0;top:102px;z-index:20;width:228px;min-height:360px;max-height:83vh;background:rgba(16,32,40,0.73);
-      border:2.4px solid #28dbe9aa;box-shadow:0 0 24px #17c7ff88,0 1.5px 32px #05a6d8b2,0 0 0 5px #0f243366;
-      border-radius:0 21px 28px 0;padding:17px 9px 24px 15px;display:flex;flex-direction:column;gap:16px;backdrop-filter:blur(3.5px);pointer-events:all;}
-    .hud-sidebar h3 {color:#67fff7;margin:0 0 7px 0;font-size:1.13em;text-shadow:0 2px 7px #36f6;letter-spacing:.13em;}
-    .hud-tool-link {display:flex;align-items:center;gap:7px;margin:0 0 8px 0;padding:8px 14px;border-radius:12px;
-      background:linear-gradient(87deg,rgba(22,44,53,0.82),rgba(32,55,65,0.56) 92%);border:1.2px solid #1ef9fa33;color:#abfdff;
-      font-weight:700;letter-spacing:.07em;box-shadow:0 1px 12px #27d0f922;cursor:pointer;font-size:.98em;text-decoration:none;transition:background .15s,color .15s,box-shadow .16s;}
-    .hud-tool-link:hover {background:linear-gradient(87deg,#1ef9fa33,#0a0d1080 96%);color:#fff;box-shadow:0 1.5px 18px #10e3ff33;}
-    @media (max-width:900px){ .hud-sidebar{display:none;} .pf-nav ul{flex-direction:column;align-items:center;}}
-    /* J1NX, footer, camo, art etc from previous build remain unchanged */
-    .j1nx-float-true {position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px;}
-    .j1nx-true-cutout-img {width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent !important;
-      margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none !important;}
-    .j1nx-bubble-true-main {background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;
-      border:2px solid #4dfff5;padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:0.3em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative;z-index:1;}
-    .j1nx-bubble-text-true {font-size:1.05em;color:#fff;margin:0.42em 0 0.20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1;}
-    .j1nx-bubble-row-true {width:100%;display:flex;justify-content:center;gap:7px;margin:0.13em 0 0.10em 0;}
-    .j1nx-input-true {flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid #4dfff5;background:#171b22;color:#4dfff5;min-width:0;}
-    .j1nx-btn-true {font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid #4dfff5;color:#4dfff5;font-family:inherit;font-weight:600;cursor:pointer;
-      transition:background .13s,color .13s,border .13s;box-shadow:0 1.5px 9px #be9cff33;}
-    .j1nx-btn-true:hover {background:#4dfff5;color:#171b22;border-color:#fff;}
-    .j1nx-easteregg-true {font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;
-      user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600;}
-    footer {margin:0 auto 0 auto;padding:0;text-align:center;max-width:820px;width:100%;
-      display:flex;flex-direction:column;align-items:center;background:none;position:relative;z-index:100;font-family:inherit;font-size:1rem;color:#d6f5ff;}
-    .footer-art {margin:0 0 12px 0;font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text;}
-    .footer-camo {font-family:inherit;font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px 0;text-align:center;opacity:0.93;white-space:pre;}
-    .footer-bar {color:#88fffd;margin:12px auto 8px auto;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;}
-    .footer-bar a {color:#4dfff5;text-decoration:none;}
-    .footer-bar a:hover {text-decoration:underline;color:#fff;}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;min-height:100vh;width:100vw;background:var(--bg);color:var(--ink);font-family:var(--ui);overflow-x:hidden}
+    a{color:var(--accent);text-decoration:none}
+    a:focus,button:focus,input:focus,select:focus,textarea:focus{outline:2px dashed #ff69f9;outline-offset:2px}
+    /* Always-on layers (unchanged visuals) */
+    #bgvid{position:fixed;left:0;top:0;width:100vw;height:100vh;object-fit:cover;z-index:0;pointer-events:none;opacity:.81;background:#000}
+    #matrix-canvas{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:1;pointer-events:none;background:transparent!important;display:block}
+
+    /* Header (unchanged look) */
+    header{width:100vw;background:linear-gradient(90deg,#0b1116 85%,#131b26 100%);border-bottom:2.4px solid #21e4e1bb;
+      box-shadow:0 4px 42px #1afffa26,0 1.5px 0 #1cf4;z-index:10;position:relative;padding:0;margin:0;min-height:114px}
+    .pf-topbar{position:absolute;top:10px;right:16px;display:flex;gap:8px;z-index:15}
+    .pf-topbar select,.pf-topbar button{font:600 12px var(--ui);background:#18232c;color:#aef;border:1px solid #49d9fc66;border-radius:7px;padding:7px 10px;cursor:pointer}
+    .pf-topbar button:hover,.pf-topbar select:hover{border-color:#fff;box-shadow:0 0 12px #12f0ff44}
+    .pf-desc-alien{padding:18px 10px 0;text-align:center;font-size:.98em;line-height:1.28;letter-spacing:.11em;color:#57fff9;font-family:var(--mono);
+      text-shadow:0 0 9px #18fff5cc,0 0 36px #16caff44,0 1.5px 11px #00f6ffcc,0 0 1px #fff;filter:blur(.1px) brightness(1.08);margin:0 0 6px;opacity:.99;user-select:text}
+    .pf-desc-alien .desc-pink{color:#ff3fda;text-shadow:0 0 13px #ff69f9aa}
+    .pf-desc-alien .desc-blue{color:#1ac7fa;text-shadow:0 0 14px #2bfffebb}
+
+    .pf-nav{width:100vw;margin:0 auto;padding:0;text-align:center;z-index:12}
+    .pf-nav ul{list-style:none;margin:0;padding:0 0 8px 0;display:flex;flex-wrap:wrap;justify-content:center;gap:0}
+    .pf-nav li{display:inline-block;margin:0 3px 0 0}
+    .pf-nav a{display:inline-block;color:#64f2e3;font-weight:700;font-size:.98em;padding:6px 12px;border-radius:8px;border-bottom:2.3px solid transparent;background:rgba(22,36,40,.22);margin:3px 0 0 0;letter-spacing:.08em;transition:color .16s,border .16s,box-shadow .19s,background .18s;box-shadow:0 1px 7px #20e3f240}
+    .pf-nav a:hover,.pf-nav a:focus{color:var(--hot);border-bottom:2.3px solid var(--hot);background:rgba(34,24,48,.16);text-shadow:0 0 11px #ff47c866,0 0 8px #1cfffbcc;box-shadow:0 1.5px 18px #18e0ff66}
+
+    /* Socials (point to promptforge.online) */
+    .pf-social{text-align:center;margin:4px 0 8px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+    .pf-social .howto-link{display:inline-block;margin:3px 6px;font-size:.9em;color:#a7ffef;border-bottom:1px dashed transparent}
+    .pf-social .howto-link:hover{color:#fff;border-bottom-color:#3cf8e6aa}
+
+    .pf-breadcrumbs{color:#a3eaff;font-size:.9em;margin:0 0 6px 18px;text-align:left;letter-spacing:.05em;z-index:14;position:relative}
+    .pf-breadcrumbs ol{list-style:none;margin:0;padding:0;display:flex;gap:6px;align-items:center}
+    .pf-breadcrumbs a{color:#55fff7;border-bottom:1.4px solid #3efcff22}
+    .pf-breadcrumbs a:hover{color:var(--hot);border-bottom-color:var(--hot)}
+
+    /* Ads */
+    .ad-wrap{max-width:1120px;margin:8px auto 4px;display:flex;justify-content:center}
+    .adsbygoogle{display:block}
+    .ad-mid{margin:18px auto}
+
+    /* Layout */
+    .layout{display:flex;align-items:flex-start}
+    .hud-sidebar{position:sticky;top:114px;z-index:20;width:228px;min-height:360px;max-height:83vh;background:rgba(16,32,40,.73);
+      border:2.4px solid #28dbe9aa;box-shadow:0 0 24px #17c7ff88,0 1.5px 32px #05a6d8b2,0 0 0 5px #0f243366;border-radius:0 21px 28px 0;padding:17px 9px 24px 15px;display:flex;flex-direction:column;gap:12px;backdrop-filter:blur(3.5px);overflow:auto;margin-right:12px}
+    .hud-sidebar h3{color:#67fff7;margin:0 0 7px;font-size:1.02em;text-shadow:0 2px 7px #36f6;letter-spacing:.13em}
+    .hud-tool-link{display:flex;align-items:center;gap:7px;margin:0;padding:8px 14px;border-radius:12px;background:linear-gradient(87deg,rgba(22,44,53,.82),rgba(32,55,65,.56) 92%);border:1.2px solid #1ef9fa33;color:#abfdff;font-weight:700;letter-spacing:.07em;box-shadow:0 1px 12px #27d0f922;cursor:pointer;font-size:.92em;text-decoration:none;transition:background .15s,color .15s,box-shadow .16s}
+    .hud-tool-link:hover{background:linear-gradient(87deg,#1ef9fa33,#0a0d1080 96%);color:#fff;box-shadow:0 1.5px 18px #10e3ff33}
+
+    main#tools{flex:1;max-width:1120px;padding:20px 22px 120px 22px;position:relative;z-index:5}
+    .hud-panel{background:var(--panel2);border:1.5px solid var(--panel-br);border-radius:12px;padding:14px;margin:0 0 18px;box-shadow:0 0 18px #12f0ff44}
+    .hud-panel h4{font-size:.98em;color:#a1f3f3;margin:0 0 8px;letter-spacing:.06em}
+    .hud-panel p{font-size:.9em;margin:0 0 10px;line-height:1.32;color:#cdeff9}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .col{flex:1 1 280px;min-width:280px}
+
+    /* Form + previews */
+    .hud-panel label,.hud-panel input,.hud-panel select,.hud-panel button,.hud-panel textarea{font-family:var(--mono);font-size:12.5px;margin-bottom:9px;display:block}
+    .hud-panel input,.hud-panel textarea,.hud-panel select{width:100%;padding:7px 9px;background:#1a2a33;border:1px solid #49d9fc66;color:#fff;border-radius:7px}
+    .hud-panel textarea{resize:vertical}
+    .hud-panel input[type="range"]{accent-color:#64f2e3}
+    .hud-panel button{background:#222c35;border:1.5px solid #7dfcff;padding:6.5px 14px;border-radius:7px;color:#7dfcff;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+    .hud-panel button:hover{background:#1ef9fa33;color:#fff;border-color:#fff}
+
+    .preview-box{background:#000;color:#0f0;padding:12px;border-radius:8px;overflow:auto;max-height:58vh;border:1px solid #123}
+    .mono{font-family:var(--mono);white-space:pre;font-size:var(--mono-size);line-height:var(--mono-line)}
+    .copy-big{font-size:var(--copy-size);line-height:1.2}
+
+    /* HUD panel style cues */
+    .pf-hud-tooltip{position:relative;display:inline-block;cursor:help;color:#21e4e1;text-shadow:0 0 6px #21e4e1}
+    .pf-hud-tooltip:hover::after,.pf-hud-tooltip:focus::after{content:attr(data-tip);position:absolute;left:0;top:1.7em;background:#111b22e0;color:#10fcfc;font-size:.98em;font-family:var(--mono);border-radius:9px;padding:8px 16px;box-shadow:0 0 13px #21e4e1bb;white-space:nowrap;z-index:10;opacity:1}
+
+    .pf-glowbox{background:rgba(21,26,31,.97);border:2.2px solid var(--teal);border-radius:17px;box-shadow:0 0 32px #21e4e1cc,0 0 0 6px #21e4e155 inset;padding:12px 14px;margin:4px 0 12px;transition:box-shadow .22s}
+    .pf-panel-title{font:700 1.55em var(--mono);letter-spacing:.09em;color:#12fdfa;text-shadow:0 0 18px #2cfad6,0 1.2px 15px #16e2ff}
+    .pf-hint{font-size:.95em;color:#00ffc9a2;font-family:var(--mono);text-shadow:0 0 8px #12fdfa70;margin-left:6px}
+
+    /* J1NX (unchanged visuals) */
+    .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
+    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto}
+    .j1nx-bubble-true-main{background:rgba(22,23,31,.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid #4dfff5;padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px}
+    .j1nx-bubble-text-true{font-size:1.02em;color:#fff;margin:.42em 0 .20em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22}
+    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
+    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid #4dfff5;background:#171b22;color:#4dfff5}
+    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid #4dfff5;color:#4dfff5;font-weight:600;cursor:pointer}
+    .j1nx-btn-true:hover{background:#4dfff5;color:#171b22;border-color:#fff}
+    .j1nx-easteregg-true{font-size:.9em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;text-align:center;width:94%;box-shadow:0 3px 13px #be9cff28;font-weight:600}
+
+    /* Footer */
+    footer{margin:0 auto;padding:0;text-align:center;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center;position:relative;z-index:100;font-size:.95rem;color:var(--ink)}
+    .footer-art{margin:0 0 12px;font:.96em var(--mono);color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text}
+    .footer-camo{font:400 14px var(--ui);line-height:1.1;letter-spacing:1.6px;margin:5px 0 12px;text-align:center;opacity:.93;white-space:pre}
+    .footer-bar{color:#88fffd;margin:12px auto 8px;font-size:.98em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+    .footer-bar a{color:#4dfff5}
+    .footer-bar a:hover{color:#fff;text-decoration:underline}
+
+    /* Responsive */
+    @media (max-width:1120px){ main#tools{padding:18px 14px 90px} .ad-wrap{margin:4px 8px} }
+    @media (max-width:900px){ .layout{display:block} .hud-sidebar{display:none} .pf-nav ul{flex-direction:column;align-items:center} }
   </style>
 </head>
 <body>
+  <!-- ====== HEADER ====== -->
   <header>
+    <div class="pf-topbar">
+      <select id="langSelect" aria-label="Language">
+        <option value="en">EN</option>
+        <option value="es">ES</option>
+        <option value="fr">FR</option>
+        <option value="de">DE</option>
+        <option value="pt">PT</option>
+        <option value="ja">日本語</option>
+      </select>
+      <button id="themeToggle" aria-label="Toggle Theme">🌗 Theme</button>
+    </div>
+
     <div class="pf-desc-alien">
-      Matrix Rain Generator &amp; ASCII/ANSI Art Playground — Cyberpunk Creative Toolkit.<br>
-      <span class="desc-blue">Create and remix digital art, live retro text effects, video-to-ASCII, hacker style prompts, and glowing terminal HUDs.</span><br>
+      Matrix Rain Generator &amp; ASCII/ANSI Art Playground — Cyberpunk Creative Toolkit.<br/>
+      <span class="desc-blue">Create and remix digital art, live retro text effects, video/webcam-to-ASCII, hacker style prompts, and glowing terminal HUDs.</span><br/>
       <span class="desc-pink">AI art tools, generative prompt engineering, creative code, 2025 digital culture, open source, no filter walls.</span>
     </div>
-    <!-- MASTER NAV -->
-    <nav id="pf-nav" class="pf-nav">
+
+    <!-- NAV -->
+    <nav id="pf-nav" class="pf-nav" aria-label="Main">
       <ul>
-        <li><a href="/main.html">Main Hub</a></li>
-        <li><a href="/j1nx.html">J1nx</a></li>
-        <li><a href="/watermark.html">Watermark</a></li>
-        <li><a href="/picture.html">Image Prompt</a></li>
-        <li><a href="/movie.html">Video Prompt</a></li>
-        <li><a href="/playground.html">AI Playground</a></li>
-        <li><a href="/ansiart.html">ANSI/ASCII Art</a></li>
-        <li><a href="/compare.html">Compare</a></li>
-        <li><a href="/legal.html">Legal/Terms</a></li>
-        <li><a href="/about.html">About</a></li>
-        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://promptforge.online/main.html">Main Hub</a></li>
+        <li><a href="https://promptforge.online/j1nx.html">J1nx</a></li>
+        <li><a href="https://promptforge.online/watermark.html">Watermark</a></li>
+        <li><a href="https://promptforge.online/picture.html">Image Prompt</a></li>
+        <li><a href="https://promptforge.online/movie.html">Video Prompt</a></li>
+        <li><a href="https://promptforge.online/playground.html">AI Playground</a></li>
+        <li><a href="https://promptforge.online/ansiart.html">ANSI/ASCII Art</a></li>
+        <li><a href="https://promptforge.online/compare.html">Compare</a></li>
+        <li><a href="https://promptforge.online/legal.html">Legal/Terms</a></li>
+        <li><a href="https://promptforge.online/about.html">About</a></li>
+        <li><a href="https://promptforge.online/contact.html">Contact</a></li>
       </ul>
     </nav>
+
+    <!-- SOCIALS (all routed via promptforge.online) -->
+    <div class="pf-social">
+      <a class="howto-link" href="https://promptforge.online/github.html" target="_blank" rel="noopener">Download on GitHub</a>
+      <a class="howto-link" href="https://promptforge.online/social/bluesky.html" target="_blank" rel="noopener">Join on Bluesky</a>
+      <a class="howto-link" href="https://promptforge.online/social/x.html" target="_blank" rel="noopener">Follow on X (Twitter)</a>
+      <a class="howto-link" href="https://promptforge.online/social/facebook.html" target="_blank" rel="noopener">Join on Facebook</a>
+      <a class="howto-link" href="https://promptforge.online/coffee.html" target="_blank" rel="noopener">Buy Me a Coffee</a>
+      <a class="howto-link" href="https://promptforge.online/legal.html">Legal / Terms</a>
+    </div>
+
     <!-- BREADCRUMBS -->
     <nav aria-label="breadcrumb" class="pf-breadcrumbs">
       <ol>
-        <li><a href="/main.html">Main Hub</a> &gt;</li>
-        <li>J1nx</li>
+        <li><a href="https://promptforge.online/main.html">Main Hub</a> ›</li>
+        <li aria-current="page" id="crumbLabel">ANSI/ASCII Art</li>
       </ol>
     </nav>
+
+    <!-- Above-the-fold Ad -->
+    <div class="ad-wrap">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4963053724895140" data-ad-slot="7612340012" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </div>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
   </header>
+
+  <!-- ALWAYS-ON BACKDROPS (unchanged) -->
   <video id="bgvid" src="assets/creepyvideo.mp4" autoplay loop muted playsinline preload="auto"></video>
-  <canvas id="matrix-canvas"></canvas>
-  <aside class="hud-sidebar">
-    <h3>HUD Controls</h3>
-    <a href="#" class="hud-tool-link">Video ➔ ASCII</a>
-    <a href="#" class="hud-tool-link">Text ➔ ASCII</a>
-    <a href="#" class="hud-tool-link">Image ➔ ASCII</a>
-    <a href="#" class="hud-tool-link">FIGlet / Fonts</a>
-    <a href="#" class="hud-tool-link">Colorizer</a>
-    <a href="#" class="hud-tool-link">Export</a>
-    <a href="#" class="hud-tool-link">Gallery</a>
-    <a href="#" class="hud-tool-link">FAQ</a>
-  </aside>
-  <!-- J1NX assistant, always floating -->
+  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+    <!-- ====== SIDEBAR ====== -->
+    <aside class="hud-sidebar" aria-label="HUD Controls">
+      <h3>HUD Controls</h3>
+      <a href="#tool-video" class="hud-tool-link">🎥 Video → ASCII</a>
+      <a href="#tool-webcam" class="hud-tool-link">📸 Webcam → ASCII</a>
+      <a href="#tool-text" class="hud-tool-link">📝 Text → ASCII</a>
+      <a href="#tool-image" class="hud-tool-link">🖼️ Image → ASCII</a>
+      <a href="#tool-figlet" class="hud-tool-link">🔡 FIGlet / Fonts</a>
+      <a href="#tool-colorizer" class="hud-tool-link">🎨 Colorizer</a>
+      <a href="#tool-glitch" class="hud-tool-link">🧪 ASCII Glitcher</a>
+      <a href="#tool-palette" class="hud-tool-link">🎛️ ANSI Palette</a>
+      <a href="#tool-export" class="hud-tool-link">📦 Export</a>
+      <a href="#tool-gallery" class="hud-tool-link">🖼️ Gallery</a>
+      <a href="#tool-faq" class="hud-tool-link">❓ FAQ</a>
+      <a href="#tool-changelog" class="hud-tool-link">📜 Changelog</a>
+    </aside>
+
+    <!-- ====== TOOLS ====== -->
+    <main id="tools">
+      <!-- ───────── VIDEO → ASCII ───────── -->
+      <section id="tool-video" class="hud-panel">
+        <h4 class="pf-panel-title">🎥 Video → ASCII <span class="pf-hint">Local only • dense/classic/light • invert • mono</span></h4>
+        <p>Load a local video and render frames as ASCII. Keep clips short for speed.</p>
+        <div class="row">
+          <div class="col">
+            <label for="vidFile">Video File</label>
+            <input type="file" id="vidFile" accept="video/*"/>
+
+            <label for="vidInterval">Frame Interval (ms)</label>
+            <input type="range" id="vidInterval" min="30" max="600" step="10" value="120"/>
+            <output id="vidIntervalOut">120</output>
+
+            <label for="vidWidth">Output Width (chars)</label>
+            <input type="range" id="vidWidth" min="40" max="220" step="2" value="120"/>
+            <output id="vidWidthOut">120</output>
+
+            <div class="row">
+              <div class="col">
+                <label for="vidCharset">Charset</label>
+                <select id="vidCharset">
+                  <option value="dense">Dense</option>
+                  <option value="classic" selected>Classic</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+              <div class="col">
+                <label><input type="checkbox" id="vidInvert"/> Invert</label>
+                <label><input type="checkbox" id="vidMono" checked/> Monochrome</label>
+              </div>
+            </div>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="vidStartBtn">▶ Start</button>
+              <button id="vidStopBtn">⏹ Stop</button>
+              <button id="vidCopyBtn">📋 Copy</button>
+              <button id="vidClearBtn">🧹 Clear</button>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="vidOut" class="mono copy-big" style="color:#10f4b9;text-shadow:0 0 12px #10ffc9,0 0 3px #fff;min-height:320px;max-height:600px;"></pre>
+            </div>
+
+            <div class="row" style="gap:14px;justify-content:center;flex-wrap:wrap">
+              <button id="vidascii-export-txt" class="pf-hud-tooltip" data-tip="Export ASCII art as .txt">TXT</button>
+              <button id="vidascii-export-png" class="pf-hud-tooltip" data-tip="Snapshot PNG of current ASCII frame">PNG</button>
+              <button id="vidascii-export-gif" class="pf-hud-tooltip" data-tip="Export full ASCII animation as GIF">GIF</button>
+            </div>
+          </div>
+        </div>
+        <video id="hiddenVideo" style="display:none"></video>
+        <canvas id="hiddenVidCanvas" style="display:none"></canvas>
+      </section>
+
+      <!-- Mid-page Ad -->
+      <div class="ad-wrap ad-mid">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4963053724895140" data-ad-slot="7612340023" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      </div>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+
+      <!-- ───────── NEW: WEBCAM → ASCII ───────── -->
+      <section id="tool-webcam" class="hud-panel">
+        <h4 class="pf-panel-title">📸 Webcam → ASCII <span class="pf-hint">Live camera • no uploads • privacy-safe</span></h4>
+        <p>Stream your webcam and render it in ASCII in real time (client-side only).</p>
+        <div class="row">
+          <div class="col">
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="camStartBtn">🎬 Start Camera</button>
+              <button id="camStopBtn">⏹ Stop</button>
+              <button id="camCopyBtn">📋 Copy</button>
+              <button id="camClearBtn">🧹 Clear</button>
+            </div>
+
+            <label for="camWidth">Output Width (chars)</label>
+            <input type="range" id="camWidth" min="40" max="220" step="2" value="110"/>
+            <output id="camWidthOut">110</output>
+
+            <div class="row">
+              <div class="col">
+                <label for="camCharset">Charset</label>
+                <select id="camCharset">
+                  <option value="dense" selected>Dense</option>
+                  <option value="classic">Classic</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+              <div class="col">
+                <label><input type="checkbox" id="camInvert"/> Invert</label>
+                <label><input type="checkbox" id="camMono" checked/> Monochrome</label>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="camOut" class="mono copy-big" style="color:#9ff;text-shadow:0 0 8px #3ff;min-height:260px;max-height:600px;"></pre>
+            </div>
+          </div>
+        </div>
+        <video id="hiddenCam" playsinline muted style="display:none"></video>
+        <canvas id="hiddenCamCanvas" style="display:none"></canvas>
+      </section>
+
+      <!-- ───────── TEXT → ASCII (FIGlet wrapper) ───────── -->
+      <section id="tool-text" class="hud-panel">
+        <h4 class="pf-panel-title">📝 Text → ASCII (FIGlet) <span class="pf-hint">Multi-font • copy/export</span></h4>
+        <p>Type text, choose a FIGlet font, and generate ASCII banners.</p>
+        <div class="row">
+          <div class="col">
+            <label for="txtInput">Your Text</label>
+            <textarea id="txtInput" rows="4" placeholder="Type something cyber..." style="font-family:var(--mono);">PROMPTFORGE</textarea>
+
+            <label for="figFont">Font</label>
+            <select id="figFont"></select>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="txtRenderBtn">✨ Render</button>
+              <button id="txtCopyBtn">📋 Copy</button>
+              <button id="txtClearBtn">🧹 Clear</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="txtOut" class="mono copy-big" style="color:#7dfcff;"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── IMAGE → ASCII ───────── -->
+      <section id="tool-image" class="hud-panel">
+        <h4 class="pf-panel-title">🖼️ Image → ASCII <span class="pf-hint">Drag & drop • contrast/brightness • charset • invert/mono</span></h4>
+        <p>Upload or drop an image. Adjust width & contrast/brightness. Converts pixels to an ASCII density map.</p>
+        <div class="row">
+          <div class="col">
+            <label for="imgFile">Image File</label>
+            <input type="file" id="imgFile" accept="image/*"/>
+
+            <label for="imgWidth">Output Width (chars)</label>
+            <input type="range" id="imgWidth" min="40" max="320" step="4" value="120"/>
+            <output id="imgWidthOut">120</output>
+
+            <label for="imgContrast">Contrast (0–200)</label>
+            <input type="range" id="imgContrast" min="0" max="200" value="100"/>
+            <output id="imgContrastOut">100%</output>
+
+            <label for="imgBright">Brightness (0–200)</label>
+            <input type="range" id="imgBright" min="0" max="200" value="100"/>
+            <output id="imgBrightOut">100%</output>
+
+            <div class="row">
+              <div class="col">
+                <label for="imgCharset">Charset</label>
+                <select id="imgCharset">
+                  <option value="dense" selected>Dense</option>
+                  <option value="classic">Classic</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+              <div class="col">
+                <label><input type="checkbox" id="imgInvert"/> Invert</label>
+                <label><input type="checkbox" id="imgMono" checked/> Monochrome</label>
+              </div>
+            </div>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="imgConvertBtn">🖨 Convert</button>
+              <button id="imgCopyBtn">📋 Copy</button>
+              <button id="imgClearBtn">🧹 Clear</button>
+            </div>
+          </div>
+          <div class="col">
+            <div id="imgDrop" class="preview-box mono copy-big" style="color:#ccc;display:flex;align-items:center;justify-content:center;min-height:160px;border:1px dashed #2aa">
+              <span>Drop image here or use the picker ↑</span>
+            </div>
+            <div class="pf-glowbox">
+              <pre id="imgOut" class="mono copy-big" style="color:#ccc;margin-top:10px"></pre>
+            </div>
+          </div>
+        </div>
+        <img id="hiddenImg" style="display:none" alt="">
+        <canvas id="hiddenImgCanvas" style="display:none"></canvas>
+      </section>
+
+      <!-- ───────── FIGLET / FONTS PLAYGROUND ───────── -->
+      <section id="tool-figlet" class="hud-panel">
+        <h4 class="pf-panel-title">🔡 FIGlet / Fonts Playground <span class="pf-hint">Live preview</span></h4>
+        <div class="row">
+          <div class="col">
+            <label for="figText">Text</label>
+            <textarea id="figText" rows="3">J1NX ONLINE</textarea>
+
+            <label for="figFont2">Font</label>
+            <select id="figFont2"></select>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="figRenderBtn">✨ Render FIGlet</button>
+              <button id="figCopyBtn">📋 Copy</button>
+              <button id="figClearBtn">🧹 Clear</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="figOut" class="mono copy-big" style="color:#00f0ff"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── COLORIZER ───────── -->
+      <section id="tool-colorizer" class="hud-panel">
+        <h4 class="pf-panel-title">🎨 ASCII/ANSI Colorizer <span class="pf-hint">Tint any block • copy/export</span></h4>
+        <p>Paste ASCII and style it with text/background colors.</p>
+        <div class="row">
+          <div class="col">
+            <label for="colInput">Source ASCII</label>
+            <textarea id="colInput" rows="6">HELLO\nWORLD</textarea>
+
+            <div class="row">
+              <div class="col">
+                <label for="colText">Text Color</label>
+                <input type="color" id="colText" value="#00ffff"/>
+              </div>
+              <div class="col">
+                <label for="colBg">Background</label>
+                <input type="color" id="colBg" value="#000000"/>
+              </div>
+            </div>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="colApplyBtn">🎯 Apply</button>
+              <button id="colCopyBtn">📋 Copy</button>
+              <button id="colClearBtn">🧹 Clear</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="colOut" class="mono copy-big" style="color:#00ffff;background:#000"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── NEW: ASCII GLITCHER ───────── -->
+      <section id="tool-glitch" class="hud-panel">
+        <h4 class="pf-panel-title">🧪 ASCII Glitcher <span class="pf-hint">Scramble • wave • sparkles</span></h4>
+        <p>Paste ASCII art and apply non-destructive glitch effects. Great for cyberpunk motion layers or social posts.</p>
+        <div class="row">
+          <div class="col">
+            <label for="glitchSrc">Source ASCII</label>
+            <textarea id="glitchSrc" rows="8">PROMPTFORGE\nGLITCH ME</textarea>
+
+            <label for="glitchMode">Effect</label>
+            <select id="glitchMode">
+              <option value="scramble">Scramble</option>
+              <option value="wave">Wave Shift</option>
+              <option value="sparkle">Sparkles</option>
+            </select>
+
+            <label for="glitchIntensity">Intensity</label>
+            <input type="range" id="glitchIntensity" min="0" max="100" value="35"/>
+            <output id="glitchIntensityOut">35</output>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="glitchApply">⚡ Apply</button>
+              <button id="glitchAnimate">▶ Animate</button>
+              <button id="glitchStop">⏹ Stop</button>
+              <button id="glitchCopy">📋 Copy</button>
+              <button id="glitchClear">🧹 Clear</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="glitchOut" class="mono copy-big" style="color:#bdf6ff"></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── NEW: ANSI PALETTE BUILDER ───────── -->
+      <section id="tool-palette" class="hud-panel">
+        <h4 class="pf-panel-title">🎛️ ANSI Palette Builder <span class="pf-hint">Pick colors • get ANSI codes</span></h4>
+        <p>Build a color scheme for your ASCII and copy ANSI escape codes (24-bit truecolor).</p>
+        <div class="row">
+          <div class="col">
+            <div class="row">
+              <div class="col">
+                <label for="ansiFg">Text Color</label>
+                <input type="color" id="ansiFg" value="#00ffc9"/>
+              </div>
+              <div class="col">
+                <label for="ansiBg">Background</label>
+                <input type="color" id="ansiBg" value="#0b0f14"/>
+              </div>
+            </div>
+
+            <label for="ansiSample">Sample Text</label>
+            <input id="ansiSample" value="PROMPTFORGE ANSI SAMPLE"/>
+
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="ansiApply">🎯 Preview</button>
+              <button id="ansiCopyCodes">📋 Copy ANSI</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox">
+              <pre id="ansiPreview" class="mono copy-big" style="padding:12px;border-radius:8px;background:#0b0f14;color:#00ffc9"></pre>
+              <div class="preview-box mono copy-big" id="ansiCodes" style="color:#aef;background:#070b10;max-height:200px"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── EXPORT ───────── -->
+      <section id="tool-export" class="hud-panel">
+        <h4 class="pf-panel-title">📦 Export <span class="pf-hint">TXT • PNG • SVG</span></h4>
+        <p>Paste ASCII below and export as .txt, .png, or .svg.</p>
+        <div class="row">
+          <div class="col">
+            <label for="exSrc">Export Source</label>
+            <textarea id="exSrc" rows="8"></textarea>
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="exTxt">⬇ .txt</button>
+              <button id="exPng">⬇ .png</button>
+              <button id="exSvg">⬇ .svg</button>
+              <button id="exCopy">📋 Copy</button>
+              <button id="exClear">🧹 Clear</button>
+            </div>
+          </div>
+          <div class="col">
+            <div id="exPrev" class="preview-box mono copy-big" style="color:#aef"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── GALLERY (localStorage) ───────── -->
+      <section id="tool-gallery" class="hud-panel">
+        <h4 class="pf-panel-title">🖼️ Gallery</h4>
+        <p>Saved works and community drops. Saved locally (private to your browser).</p>
+        <div class="row">
+          <div class="col">
+            <label for="galTitle">Title</label>
+            <input id="galTitle" placeholder="My ASCII Masterpiece"/>
+            <label for="galSource">ASCII</label>
+            <textarea id="galSource" rows="6" placeholder="Paste or generate ASCII above, then save it here."></textarea>
+            <div class="row" style="gap:8px;align-items:center">
+              <button id="galSave">💾 Save to Gallery</button>
+              <button id="galClearAll">🗑️ Clear Gallery</button>
+              <button id="galExportZip">⬇ Export All (.zip)</button>
+            </div>
+          </div>
+          <div class="col">
+            <div class="pf-glowbox" style="max-height:420px;overflow:auto">
+              <div id="galList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── FAQ ───────── -->
+      <section id="tool-faq" class="hud-panel">
+        <h4 class="pf-panel-title">❓ FAQ &amp; Help</h4>
+        <div class="pf-glowbox" style="padding:14px">
+          <div style="margin-bottom:10px"><b>Does any media get uploaded to a server?</b><br/>No. All tools run client-side in your browser for privacy.</div>
+          <div style="margin-bottom:10px"><b>Best video settings?</b><br/>Short clips, smaller dimensions, and a frame interval of 100–160ms give smoother ASCII output.</div>
+          <div style="margin-bottom:10px"><b>How do I export the ASCII?</b><br/>Use the Export panel: .txt for code repos, .png for social posts, .svg for scalable art. Video & webcam ASCII can export GIFs.</div>
+          <div style="margin-bottom:10px"><b>Why is the image conversion slow?</b><br/>Large images consume memory. Reduce output width or source resolution for faster results.</div>
+          <div style="margin-bottom:10px"><b>FIGlet vs Text → ASCII?</b><br/>Text → ASCII uses FIGlet under the hood. The Fonts panel exposes more font options.</div>
+          <div style="margin-bottom:10px"><b>Green terminal vibes?</b><br/>Use Colorizer: text <code>#00ff00</code>, background <code>#000000</code>, then Apply.</div>
+          <div style="margin-bottom:10px"><b>Webcam permissions?</b><br/>Your browser will ask for access. Streams never leave your device.</div>
+          <div><b>Keyboard shortcuts</b><br/><code>[</code>/<code>]</code> adjust width sliders in most tools; <code>Ctrl/Cmd + C</code> copies selected output.</div>
+        </div>
+      </section>
+
+      <!-- ───────── CHANGELOG / HISTORY ───────── -->
+      <section id="tool-changelog" class="hud-panel">
+        <h4 class="pf-panel-title">📜 Changelog</h4>
+        <div class="pf-glowbox mono copy-big" style="color:#cfe">
+          2025-08-30 · Added Webcam→ASCII, ANSI Palette, ASCII Glitcher, localized Gallery (localStorage), extended i18n, improved exports, tightened SEO & socials.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ====== J1NX assistant (unchanged visuals/behavior) ====== -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)
       </div>
       <div class="j1nx-bubble-row-true">
         <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
@@ -172,191 +625,724 @@
       </div>
     </div>
   </div>
-  <!-- FOOTER (only once, centered) -->
+
+  <!-- ====== FOOTER ====== -->
   <footer>
     <pre class="footer-art">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u
+ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/
+ \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"
+  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___
+  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|
+  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>
+ (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)
     </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
     <div class="footer-bar">
       Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles">Twitter/X</a> &bull;
-      <a href="/legal.html">Legal</a>
+      <a href="https://promptforge.online/social/bluesky.html">Bluesky</a> &bull;
+      <a href="https://promptforge.online/social/x.html">Twitter/X</a> &bull;
+      <a href="https://promptforge.online/coffee.html">Coffee</a> &bull;
+      <a href="https://promptforge.online/legal.html">Legal</a>
     </div>
   </footer>
-<script>
-// --- FORCE VIDEO PLAY ---
-(function(){
-  var v=document.getElementById("bgvid");
-  function kick() { if(v && v.paused){ v.play().catch(()=>{}); } }
-  if(v){
-    v.muted=true;
-    ["autoplay","muted","loop","playsinline","preload"].forEach(a=>v.setAttribute(a,""));
-    document.addEventListener("DOMContentLoaded", kick, {once:true});
-    window.addEventListener("load", kick, {once:true});
-    setTimeout(kick, 500);
-    v.addEventListener('click', kick);
-  }
-})();
-// --- MATRIX RAIN ---
-(function(){
-  const c = document.getElementById('matrix-canvas');
-  const ctx = c.getContext('2d');
-  let W = 0, H = 0;
-  function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
-  window.addEventListener('resize', resize, {passive:true}); resize();
-  const glyphs = "アァイイウエオカキクケコサシスセソタチツテトナニヌネノﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  function makeLayer(fontSize, color, speed, blur, alpha, density=1) {
-    const cols = Math.floor(W/(fontSize*density)), drops=[];
-    for(let i=0;i<cols;i++) drops[i]=Math.random()*-H;
-    return {fontSize, color, speed, blur, alpha, drops, cols, density};
-  }
-  let layers;
-  function initRain() {
-    layers = [
-      makeLayer(12, "#49d9fc", 0.09, 9, 0.10, 0.87),
-      makeLayer(18, "#64f2e3", 0.15, 4, 0.13, 1.04),
-      makeLayer(28, "#7afdff", 0.21, 2, 0.16, 1.11),
-      makeLayer(42, "#a4fff7", 0.29, 0.7, 0.19, 1.16),
-      makeLayer(64, "#c3f8ff", 0.37, 0.0, 0.23, 1.19)
+
+  <!-- ====== LIBS ====== -->
+  <script src="https://cdn.jsdelivr.net/npm/figlet@1.5.2/figlet.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- GIF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+
+  <!-- ====== APP SCRIPTS ====== -->
+  <script>
+  // Theme toggle
+  (function(){
+    const btn=document.getElementById('themeToggle');
+    btn?.addEventListener('click',()=>document.body.classList.toggle('light-mode'));
+  })();
+
+  // Force video play (unchanged)
+  (function(){
+    const v=document.getElementById("bgvid");
+    const kick=()=>{ if(v && v.paused){ v.play().catch(()=>{}); } };
+    if(v){
+      v.muted=true; ["autoplay","muted","loop","playsinline","preload"].forEach(a=>v.setAttribute(a,""));
+      document.addEventListener("DOMContentLoaded",kick,{once:true});
+      addEventListener("load",kick,{once:true});
+      setTimeout(kick,500);
+      v.addEventListener('click',kick);
+    }
+  })();
+
+  // Matrix rain (unchanged visuals)
+  (function(){
+    const c=document.getElementById('matrix-canvas'),ctx=c.getContext('2d');
+    let W=0,H=0; function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; } addEventListener('resize',resize,{passive:true}); resize();
+    const glyphs="アァイイウエオカキクケコサシスセソタチツテトナニヌネノﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    function makeLayer(fontSize,color,speed,blur,alpha,density=1){
+      const cols=Math.floor(W/(fontSize*density)),drops=[]; for(let i=0;i<cols;i++) drops[i]=Math.random()*-H;
+      return {fontSize,color,speed,blur,alpha,drops,cols,density};
+    }
+    const layers=[
+      makeLayer(12,"#49d9fc",.09,9,.10,.87),
+      makeLayer(18,"#64f2e3",.15,4,.13,1.04),
+      makeLayer(28,"#7afdff",.21,2,.16,1.11),
+      makeLayer(42,"#a4fff7",.29,.7,.19,1.16),
+      makeLayer(64,"#c3f8ff",.37,0,.23,1.19)
     ];
-  }
-  initRain();
-  function draw() {
-    ctx.clearRect(0,0,W,H);
-    for(const L of layers) {
-      ctx.save();
-      ctx.font = `bold ${L.fontSize}px monospace`;
-      ctx.shadowColor = L.color;
-      ctx.shadowBlur = L.blur;
-      ctx.globalAlpha = L.alpha;
-      ctx.fillStyle = L.color;
-      for(let i=0;i<L.cols;i++) {
-        const x = i*L.fontSize*L.density;
-        let y = L.drops[i];
-        let txt = glyphs[Math.floor(Math.random()*glyphs.length)];
-        ctx.fillText(txt, x, y);
-        if(y > H && Math.random()>.985-(L.fontSize/180)) L.drops[i]=0;
-        L.drops[i] += L.speed*L.fontSize*0.21;
+    (function draw(){
+      ctx.clearRect(0,0,W,H);
+      for(const L of layers){
+        ctx.save();
+        ctx.font=`bold ${L.fontSize}px monospace`; ctx.shadowColor=L.color; ctx.shadowBlur=L.blur; ctx.globalAlpha=L.alpha; ctx.fillStyle=L.color;
+        for(let i=0;i<L.cols;i++){
+          const x=i*L.fontSize*L.density; const y=L.drops[i];
+          const ch=glyphs[(Math.random()*glyphs.length)|0];
+          ctx.fillText(ch,x,y);
+          if(y>H && Math.random()>.985-(L.fontSize/180)) L.drops[i]=0;
+          L.drops[i]+=L.speed*L.fontSize*.21;
+        }
+        ctx.restore();
       }
-      ctx.restore();
+      requestAnimationFrame(draw);
+    })();
+  })();
+
+  // i18n (EN/ES/FR/DE/PT/JA – breadcrumb + small texts)
+  (function(){
+    const dict={
+      en:{crumb:"ANSI/ASCII Art"},
+      es:{crumb:"Arte ANSI/ASCII"},
+      fr:{crumb:"Art ANSI/ASCII"},
+      de:{crumb:"ANSI/ASCII-Kunst"},
+      pt:{crumb:"Arte ANSI/ASCII"},
+      ja:{crumb:"ANSI/ASCII アート"}
+    };
+    const sel=document.getElementById('langSelect');
+    function apply(lang){
+      const bc=document.getElementById('crumbLabel'); if(bc && dict[lang]) bc.textContent = dict[lang].crumb;
     }
-    requestAnimationFrame(draw);
+    sel?.addEventListener('change',e=>apply(e.target.value));
+  })();
+
+  // Core helpers
+  function charset(kind){
+    if(kind==='dense') return " .'`^\",:;Il!i~+_-?][}{1)(|\\/*tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+    if(kind==='light') return " .:-=+*#%@";
+    return " .,:;ox%#@"; // classic
   }
-  draw();
-})();
-// Dancing camo for the footer
-(function(){
-  const camoEl = document.getElementById("footerCamo");
-  if (camoEl) {
-    const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
-    const chars = "░▒▓▚▞▐▉█▛";
-    function camoTick(t){
-      let out = "";
-      for(let i=0;i<62;i++){
-        out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
+  function toAsciiFromImageData(imgData, widthChars, opts={}){
+    const { invert=false, mono=true, charsetName='classic', bright=100 } = opts;
+    const chars = charset(charsetName);
+    const w = imgData.width, h = imgData.height, data = imgData.data;
+    const sampleX = Math.max(1, Math.floor(w / Math.max(1,widthChars)));
+    const aspect = 2; // char aspect ratio tweak
+    const sampleY = sampleX * aspect;
+    const brightK = (bright/100);
+    let out = "";
+    for (let y=0; y<h; y+=sampleY) {
+      for (let x=0; x<w; x+=sampleX) {
+        const i = (y*w + x) * 4;
+        let r = data[i]*brightK, g = data[i+1]*brightK, b = data[i+2]*brightK;
+        const lum = 0.2126*r + 0.7152*g + 0.0722*b;
+        const L = invert ? 255-lum : lum;
+        const idx = Math.max(0, Math.min(chars.length-1, Math.floor((L/255) * (chars.length-1))));
+        out += chars[idx];
       }
-      camoEl.innerHTML = out;
+      out += "\n";
     }
-    let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+    return out;
   }
-})();
-// J1NX logic
-(function(){
-  const j1nxFloat = document.getElementById('j1nxFloatTrue');
-  const cutout = document.getElementById('j1nxCutoutTrue');
-  const bubble = document.getElementById('j1nxBubbleTrueMain');
-  function isMobile() { return window.innerWidth < 700; }
-  function shrinkJ1nx() {
-    if(isMobile()) {
-      j1nxFloat.classList.remove('j1nx-open');
-      bubble.style.display = "none";
-    } else {
-      j1nxFloat.classList.add('j1nx-open');
-      bubble.style.display = "flex";
-    }
-  }
-  cutout.onclick = function(e) {
-    if(isMobile()) {
-      if(j1nxFloat.classList.contains('j1nx-open')) {
-        j1nxFloat.classList.remove('j1nx-open');
-        bubble.style.display = "none";
+
+  // ===== VIDEO → ASCII + Exports =====
+  (function(){
+    const file = document.getElementById('vidFile');
+    const intervalRange = document.getElementById('vidInterval');
+    const intervalOut = document.getElementById('vidIntervalOut');
+    const widthRange = document.getElementById('vidWidth');
+    const widthOut = document.getElementById('vidWidthOut');
+    const out = document.getElementById('vidOut');
+    const v = document.getElementById('hiddenVideo');
+    const cv = document.getElementById('hiddenVidCanvas');
+    const cx = cv.getContext('2d',{willReadFrequently:true});
+    const btnStart = document.getElementById('vidStartBtn');
+    const btnStop  = document.getElementById('vidStopBtn');
+    const btnCopy  = document.getElementById('vidCopyBtn');
+    const btnClear = document.getElementById('vidClearBtn');
+    const invert = document.getElementById('vidInvert');
+    const mono = document.getElementById('vidMono');
+    const cset = document.getElementById('vidCharset');
+
+    function syncOutputs(){ intervalOut.textContent = intervalRange.value; widthOut.textContent = widthRange.value; }
+    intervalRange.addEventListener('input', syncOutputs); widthRange.addEventListener('input', syncOutputs); syncOutputs();
+
+    // GIF capture
+    let gif=null, gifCollecting=false, gifFrames=0, timer=null;
+
+    btnStart.onclick = async () => {
+      if (!file.files[0]) { out.textContent = "Select a video file first."; return; }
+      const url = URL.createObjectURL(file.files[0]);
+      v.src = url; await v.play().catch(()=>{});
+      const w = v.videoWidth||320, h = v.videoHeight||240;
+      cv.width = w; cv.height = h;
+
+      const run = () => {
+        cx.drawImage(v, 0, 0, w, h);
+        const imgData = cx.getImageData(0, 0, w, h);
+        out.textContent = toAsciiFromImageData(imgData, parseInt(widthRange.value||120,10), {
+          invert: invert.checked, mono: mono.checked, charsetName:cset.value
+        });
+        if(gifCollecting){
+          const shadow = document.createElement('canvas');
+          const sctx = shadow.getContext('2d');
+          const pad=10, fz=14;
+          const lines = (out.textContent||'').split('\n');
+          const maxCols = Math.max(...lines.map(l=>l.length));
+          shadow.width = pad*2 + maxCols*8;
+          shadow.height= pad*2 + lines.length*(fz*1.2);
+          sctx.fillStyle="#000"; sctx.fillRect(0,0,shadow.width,shadow.height);
+          sctx.fillStyle="#0f0"; sctx.font=`${fz}px 'Fira Mono', monospace`;
+          sctx.textBaseline="top";
+          lines.forEach((line,i)=> sctx.fillText(line, pad, pad + i*(fz*1.2)));
+          gif.addFrame(shadow, {delay: parseInt(intervalRange.value||120,10), copy:true});
+          gifFrames++;
+        }
+      };
+      run();
+      clearInterval(timer);
+      timer = setInterval(run, parseInt(intervalRange.value||120,10));
+    };
+
+    btnStop.onclick  = () => { clearInterval(timer); out.textContent += "\n[stopped]"; v.pause(); };
+
+    btnCopy.onclick  = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    btnClear.onclick = ()=>{ out.textContent=''; };
+
+    // Export TXT
+    document.getElementById('vidascii-export-txt').onclick = ()=>{
+      const blob = new Blob([out.textContent||''], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='video_ascii.txt';
+      document.body.appendChild(a); a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+    };
+
+    // Export PNG (single frame)
+    document.getElementById('vidascii-export-png').onclick = async ()=>{
+      const shadow = document.createElement('canvas');
+      const sctx = shadow.getContext('2d');
+      const pad=14, fz=14;
+      const lines = (out.textContent||'').split('\n');
+      const maxCols = Math.max(1, ...lines.map(l=>l.length));
+      shadow.width = pad*2 + maxCols*8;
+      shadow.height= pad*2 + lines.length*(fz*1.2);
+      sctx.fillStyle="#000"; sctx.fillRect(0,0,shadow.width,shadow.height);
+      sctx.fillStyle="#0f0"; sctx.font=`${fz}px 'Fira Mono', monospace`;
+      sctx.textBaseline="top";
+      lines.forEach((line,i)=> sctx.fillText(line, pad, pad + i*(fz*1.2)));
+      const url = shadow.toDataURL('image/png');
+      const a = document.createElement('a'); a.href=url; a.download='video_ascii.png'; a.click();
+    };
+
+    // Export GIF (capture while playing)
+    const gifBtn = document.getElementById('vidascii-export-gif');
+    gifBtn.onclick = ()=>{
+      if(!gifCollecting){
+        gif = new GIF({workers:2, quality:10, workerScript:'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'});
+        gifCollecting = true; gifFrames=0; gifBtn.textContent='⏺ Recording... click to finish';
       } else {
-        j1nxFloat.classList.add('j1nx-open');
-        bubble.style.display = "flex";
+        gifCollecting = false; gifBtn.textContent='GIF';
+        if(gif && gifFrames>0){
+          gif.on('finished', function(blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href=url; a.download='video_ascii.gif'; a.click();
+            setTimeout(()=>URL.revokeObjectURL(url), 1000);
+          });
+          gif.render();
+        }
       }
+    };
+  })();
+
+  // ===== WEBCAM → ASCII =====
+  (function(){
+    const btnStart = document.getElementById('camStartBtn');
+    const btnStop  = document.getElementById('camStopBtn');
+    const btnCopy  = document.getElementById('camCopyBtn');
+    const btnClear = document.getElementById('camClearBtn');
+    const out = document.getElementById('camOut');
+    const widthRange = document.getElementById('camWidth');
+    const widthOut = document.getElementById('camWidthOut');
+    const cset = document.getElementById('camCharset');
+    const invert = document.getElementById('camInvert');
+    const mono = document.getElementById('camMono');
+    const v = document.getElementById('hiddenCam');
+    const cv = document.getElementById('hiddenCamCanvas');
+    const cx = cv.getContext('2d',{willReadFrequently:true});
+    let stream=null, timer=null;
+
+    function sync(){ widthOut.textContent = widthRange.value; }
+    widthRange.addEventListener('input', sync); sync();
+
+    btnStart.onclick = async ()=>{
+      try{
+        stream = await navigator.mediaDevices.getUserMedia({video:true, audio:false});
+        v.srcObject = stream; await v.play().catch(()=>{});
+        cv.width = v.videoWidth || 320; cv.height = v.videoHeight || 240;
+        const tick = ()=>{
+          if(!v.videoWidth || !v.videoHeight) return;
+          cv.width = v.videoWidth; cv.height = v.videoHeight;
+          cx.drawImage(v,0,0,cv.width,cv.height);
+          const data = cx.getImageData(0,0,cv.width,cv.height);
+          out.textContent = toAsciiFromImageData(data, parseInt(widthRange.value,10), {
+            invert: invert.checked, mono: mono.checked, charsetName:cset.value
+          });
+        };
+        clearInterval(timer); timer = setInterval(tick, 100);
+      }catch(e){ out.textContent="Unable to start webcam. Permission denied?"; }
+    };
+    btnStop.onclick = ()=>{
+      clearInterval(timer);
+      if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
+      out.textContent += "\n[stopped]";
+    };
+    btnCopy.onclick = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    btnClear.onclick= ()=>{ out.textContent=''; };
+  })();
+
+  // ===== TEXT → ASCII (FIGlet) =====
+  (function(){
+    const fontSel = document.getElementById('figFont');
+    const out     = document.getElementById('txtOut');
+    const input   = document.getElementById('txtInput');
+    const btnR    = document.getElementById('txtRenderBtn');
+    const btnC    = document.getElementById('txtCopyBtn');
+    const btnX    = document.getElementById('txtClearBtn');
+
+    figlet.defaults({ fontPath: 'https://cdn.jsdelivr.net/npm/figlet@1.5.2/fonts' });
+    const fontsToLoad = ["Standard","Slant","Big","Banner","Ghost","Speed","ANSI Shadow","Isometric1","Bloody","Broadway"];
+    fontSel.innerHTML = fontsToLoad.map(f=>`<option value="${f}">${f}</option>`).join('');
+
+    btnR.onclick = () => {
+      const text = input.value || '';
+      const font = fontSel.value || 'Standard';
+      figlet.loadFont(font, function(err){
+        if(err){ out.textContent = "Font load error."; return; }
+        figlet.text(text, { font }, function(err, data){
+          out.textContent = err ? "Render error." : data;
+        });
+      });
+    };
+    btnC.onclick = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    btnX.onclick = ()=>{ input.value=''; out.textContent=''; };
+  })();
+
+  // ===== IMAGE → ASCII =====
+  (function(){
+    const file = document.getElementById('imgFile');
+    const wInput = document.getElementById('imgWidth');
+    const wOut   = document.getElementById('imgWidthOut');
+    const cInput = document.getElementById('imgContrast');
+    const cOut   = document.getElementById('imgContrastOut');
+    const bInput = document.getElementById('imgBright');
+    const bOut   = document.getElementById('imgBrightOut');
+    const btn = document.getElementById('imgConvertBtn');
+    const out = document.getElementById('imgOut');
+    const drop= document.getElementById('imgDrop');
+    const img = document.getElementById('hiddenImg');
+    const cv  = document.getElementById('hiddenImgCanvas');
+    const cx  = cv.getContext('2d',{willReadFrequently:true});
+    const btnCopy=document.getElementById('imgCopyBtn');
+    const btnClear=document.getElementById('imgClearBtn');
+    const invert=document.getElementById('imgInvert');
+    const mono  =document.getElementById('imgMono');
+    const cset  =document.getElementById('imgCharset');
+
+    function sync(){ wOut.textContent=wInput.value; cOut.textContent=cInput.value+"%"; bOut.textContent=bInput.value+"%"; }
+    [wInput,cInput,bInput].forEach(el=>el.addEventListener('input',sync)); sync();
+
+    function handle(fileObj){
+      const url = URL.createObjectURL(fileObj);
+      img.onload = () => {
+        const w = img.naturalWidth, h = img.naturalHeight;
+        cv.width = w; cv.height = h;
+        cx.filter = `contrast(${cInput.value||100}%) brightness(${bInput.value||100}%)`;
+        cx.drawImage(img, 0, 0, w, h);
+        const data = cx.getImageData(0, 0, w, h);
+        out.textContent = toAsciiFromImageData(data, parseInt(wInput.value||120,10), {
+          invert: invert.checked, mono: mono.checked, charsetName:cset.value, bright: parseInt(bInput.value||100,10)
+        });
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
     }
-  };
-  window.addEventListener('resize', shrinkJ1nx);
-  shrinkJ1nx();
-})();
-(function(){
-  let chatHistory = [];
-  let nsfwUnlocked = false;
-  function renderChat() {
-    const out = chatHistory.map(line => `<div>${line}</div>`).join('');
-    document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
-  }
-  function addMsg(msg, isUser) {
-    if (!msg) return;
-    const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
-    chatHistory.push(name + msg);
-    if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
-    renderChat();
-  }
-  document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
-    nsfwUnlocked = true;
-    document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-    addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-  });
-  document.getElementById('j1nxSendTrue').onclick = function() {
-    const input = document.getElementById('j1nxInputTrue');
-    const val = (input.value || '').trim();
-    if (!val) return;
-    addMsg(val, true);
-    if (/^unlock$/i.test(val)) {
+    btn.onclick = () => {
+      if (!file.files[0]) { out.textContent = "Select an image first."; return; }
+      handle(file.files[0]);
+    };
+    ['dragenter','dragover'].forEach(ev=> drop.addEventListener(ev,e=>{e.preventDefault();drop.style.borderColor='#7dfcff'},false));
+    ['dragleave','drop'].forEach(ev=> drop.addEventListener(ev,e=>{e.preventDefault();drop.style.borderColor='#2aa'},false));
+    drop.addEventListener('drop', e=>{
+      const f=e.dataTransfer.files?.[0]; if(f) handle(f);
+    });
+    btnCopy.onclick = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    btnClear.onclick= ()=>{ out.textContent=''; };
+  })();
+
+  // ===== FIGLET Playground =====
+  (function(){
+    const fontSel = document.getElementById('figFont2');
+    const out     = document.getElementById('figOut');
+    const input   = document.getElementById('figText');
+    const btnR    = document.getElementById('figRenderBtn');
+    const btnC    = document.getElementById('figCopyBtn');
+    const btnX    = document.getElementById('figClearBtn');
+    const fonts   = ["Standard","Slant","Isometric1","ANSI Shadow","Big","Broadway","Bloody"];
+
+    fontSel.innerHTML = fonts.map(f=>`<option value="${f}">${f}</option>`).join('');
+    btnR.onclick = () => {
+      const text = input.value || '';
+      const font = fontSel.value || 'Standard';
+      figlet.loadFont(font, function(err){
+        if(err){ out.textContent = "Font load error."; return; }
+        figlet.text(text, { font }, function(err, data){
+          out.textContent = err ? "Render error." : data;
+        });
+      });
+    };
+    btnC.onclick = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    btnX.onclick = ()=>{ input.value=''; out.textContent=''; };
+  })();
+
+  // ===== COLORIZER =====
+  (function(){
+    const src = document.getElementById('colInput');
+    const t   = document.getElementById('colText');
+    const b   = document.getElementById('colBg');
+    const out = document.getElementById('colOut');
+    const btn = document.getElementById('colApplyBtn');
+    const btnC= document.getElementById('colCopyBtn');
+    const btnX= document.getElementById('colClearBtn');
+
+    btn.onclick = () => {
+      out.style.color = t.value || '#00ffff';
+      out.style.background = b.value || '#000';
+      out.textContent = (src.value || '').replace(/\\n/g, '\n');
+      document.getElementById('exPrev').textContent = out.textContent;
+    };
+    btnC.onclick = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    btnX.onclick = ()=>{ src.value=''; out.textContent=''; };
+  })();
+
+  // ===== ASCII GLITCHER =====
+  (function(){
+    const src = document.getElementById('glitchSrc');
+    const out = document.getElementById('glitchOut');
+    const mode= document.getElementById('glitchMode');
+    const inten= document.getElementById('glitchIntensity');
+    const intenOut= document.getElementById('glitchIntensityOut');
+    const bApply=document.getElementById('glitchApply');
+    const bAnim =document.getElementById('glitchAnimate');
+    const bStop =document.getElementById('glitchStop');
+    const bCopy =document.getElementById('glitchCopy');
+    const bClr  =document.getElementById('glitchClear');
+    let animId=null;
+
+    function sync(){ intenOut.textContent=inten.value; }
+    inten.addEventListener('input',sync); sync();
+
+    function scramble(text, p){
+      const chars="`^\"',.:;i!lI|/\\?~_-+<>[]{}()1tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
+      return text.split('\n').map(line=>{
+        return line.split('').map(ch=>{
+          if(ch===' ') return ' ';
+          return Math.random()<p ? chars[(Math.random()*chars.length)|0] : ch;
+        }).join('');
+      }).join('\n');
+    }
+    function wave(text, amt){
+      const lines=text.split('\n');
+      return lines.map((line, r)=>{
+        const off = Math.round(Math.sin(r/2)*amt);
+        if(off>0) return ' '.repeat(off)+line.slice(0, Math.max(0, line.length-off));
+        if(off<0) return line.slice(Math.min(line.length, -off)) + ' '.repeat(Math.max(0, -off));
+        return line;
+      }).join('\n');
+    }
+    function sparkle(text, p){
+      const s="*+x•·";
+      return text.split('\n').map(line=>{
+        return line.replace(/ /g, ()=> (Math.random()<p? s[(Math.random()*s.length)|0] : ' '));
+      }).join('\n');
+    }
+    function apply(){
+      const text = src.value || '';
+      const intensity = parseInt(inten.value,10)/100;
+      let outText = text;
+      if(mode.value==='scramble') outText = scramble(text, intensity);
+      if(mode.value==='wave')     outText = wave(text, Math.round(intensity*6));
+      if(mode.value==='sparkle')  outText = sparkle(text, intensity*0.4);
+      out.textContent = outText;
+    }
+    bApply.onclick = apply;
+    bAnim.onclick = ()=>{
+      cancelAnimationFrame(animId); let t=0;
+      const loop=()=>{
+        t++;
+        if(mode.value==='scramble') inten.value = 20 + Math.abs(Math.sin(t/10))*60;
+        if(mode.value==='wave')     inten.value = 30 + Math.abs(Math.sin(t/15))*70;
+        if(mode.value==='sparkle')  inten.value = 10 + Math.abs(Math.cos(t/12))*50;
+        sync(); apply(); animId=requestAnimationFrame(loop);
+      };
+      loop();
+    };
+    bStop.onclick = ()=> cancelAnimationFrame(animId);
+    bCopy.onclick = async()=>{ try{ await navigator.clipboard.writeText(out.textContent||''); }catch{} };
+    bClr.onclick  = ()=>{ src.value=''; out.textContent=''; };
+  })();
+
+  // ===== ANSI PALETTE BUILDER =====
+  (function(){
+    const fg = document.getElementById('ansiFg');
+    const bg = document.getElementById('ansiBg');
+    const sample = document.getElementById('ansiSample');
+    const preview = document.getElementById('ansiPreview');
+    const codesBox = document.getElementById('ansiCodes');
+    const bApply = document.getElementById('ansiApply');
+    const bCopy  = document.getElementById('ansiCopyCodes');
+
+    function toRGB(hex){
+      const m = hex.trim().replace('#','');
+      return { r: parseInt(m.slice(0,2),16), g: parseInt(m.slice(2,4),16), b: parseInt(m.slice(4,6),16) };
+    }
+    function ansiCodes(f,b){
+      const F = `\\x1b[38;2;${f.r};${f.g};${f.b}m`;
+      const B = `\\x1b[48;2;${b.r};${b.g};${b.b}m`;
+      const R = `\\x1b[0m`;
+      return {F,B,R,full:`${B}${F}${sample.value}${R}`};
+    }
+    function update(){
+      const frgb = toRGB(fg.value), brgb = toRGB(bg.value);
+      preview.style.color = fg.value; preview.style.background = bg.value;
+      preview.textContent = sample.value;
+      const c = ansiCodes(frgb,brgb);
+      codesBox.textContent =
+`# ANSI 24-bit (truecolor)
+FG: ${c.F}
+BG: ${c.B}
+RESET: ${c.R}
+
+# Example:
+"${c.full}"`;
+    }
+    bApply.onclick = update; update();
+    bCopy.onclick = async()=>{ try{ await navigator.clipboard.writeText(codesBox.textContent||''); }catch{} };
+  })();
+
+  // ===== EXPORT =====
+  (function(){
+    const src = document.getElementById('exSrc');
+    const prev= document.getElementById('exPrev');
+    const bTxt= document.getElementById('exTxt');
+    const bPng= document.getElementById('exPng');
+    const bSvg= document.getElementById('exSvg');
+    const bCpy= document.getElementById('exCopy');
+    const bClr= document.getElementById('exClear');
+
+    src.addEventListener('input', ()=>{ prev.textContent = src.value; });
+    bTxt.onclick = () => {
+      const blob = new Blob([prev.textContent||''], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='ascii.txt';
+      document.body.appendChild(a); a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+    };
+    bPng.onclick = async () => {
+      const shadow = document.createElement('canvas');
+      const sctx = shadow.getContext('2d');
+      const pad=14, fz=14;
+      const lines = (prev.textContent||'').split('\n');
+      const maxCols = Math.max(1, ...lines.map(l=>l.length));
+      shadow.width = pad*2 + maxCols*8;
+      shadow.height= pad*2 + lines.length*(fz*1.2);
+      sctx.fillStyle="#000"; sctx.fillRect(0,0,shadow.width,shadow.height);
+      sctx.fillStyle="#aef"; sctx.font=`${fz}px 'Fira Mono', monospace`; sctx.textBaseline="top";
+      lines.forEach((line,i)=> sctx.fillText(line, pad, pad + i*(fz*1.2)));
+      const url = shadow.toDataURL('image/png');
+      const a = document.createElement('a'); a.href=url; a.download='ascii.png'; a.click();
+    };
+    bSvg.onclick = () => {
+      const content = (prev.textContent||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900">
+  <rect width="100%" height="100%" fill="#000"/>
+  <foreignObject x="20" y="20" width="1560" height="860">
+    <pre xmlns="http://www.w3.org/1999/xhtml" style="color:#aef;font-family:'Fira Mono',monospace;white-space:pre-wrap;font-size:14px;line-height:1.2">${content}</pre>
+  </foreignObject>
+</svg>`;
+      const blob = new Blob([svg], {type:'image/svg+xml'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='ascii.svg';
+      document.body.appendChild(a); a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+    };
+    bCpy.onclick = async()=>{ try{ await navigator.clipboard.writeText(prev.textContent||''); }catch{} };
+    bClr.onclick = ()=>{ src.value=''; prev.textContent=''; };
+  })();
+
+  // ===== GALLERY (localStorage + ZIP export) =====
+  (function(){
+    const title = document.getElementById('galTitle');
+    const src   = document.getElementById('galSource');
+    const bSave = document.getElementById('galSave');
+    const bClear= document.getElementById('galClearAll');
+    const bZip  = document.getElementById('galExportZip');
+    const list  = document.getElementById('galList');
+
+    const KEY='pf_gallery_v1';
+
+    function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{return [];} }
+    function save(arr){ localStorage.setItem(KEY, JSON.stringify(arr)); }
+    function render(){
+      const items = load();
+      if(items.length===0){ list.innerHTML = '<div class="preview-box mono copy-big" style="color:#cfcfcf;background:#101010;">No art yet…</div>'; return; }
+      list.innerHTML = items.map((it,idx)=>`
+        <div class="hud-panel" style="margin:8px 0;padding:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><b>${it.title||'Untitled'}</b> <span style="opacity:.7">(${new Date(it.time).toLocaleString()})</span></div>
+            <div style="display:flex;gap:6px">
+              <button data-idx="${idx}" class="gal-copy">📋 Copy</button>
+              <button data-idx="${idx}" class="gal-download">⬇ TXT</button>
+              <button data-idx="${idx}" class="gal-remove">🗑️ Delete</button>
+            </div>
+          </div>
+          <pre class="mono copy-big" style="margin-top:8px;color:#aef;white-space:pre">${it.text}</pre>
+        </div>
+      `).join('');
+      list.querySelectorAll('.gal-copy').forEach(b=>b.onclick=async(e)=>{
+        const idx = +e.currentTarget.getAttribute('data-idx'); try{ await navigator.clipboard.writeText(load()[idx].text); }catch{}
+      });
+      list.querySelectorAll('.gal-download').forEach(b=>b.onclick=(e)=>{
+        const idx=+e.currentTarget.getAttribute('data-idx'); const it=load()[idx];
+        const blob=new Blob([it.text],{type:'text/plain'}); const url=URL.createObjectURL(blob);
+        const a=document.createElement('a'); a.href=url; a.download=(it.title||'ascii')+'.txt'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500);
+      });
+      list.querySelectorAll('.gal-remove').forEach(b=>b.onclick=(e)=>{
+        const idx=+e.currentTarget.getAttribute('data-idx'); const arr=load(); arr.splice(idx,1); save(arr); render();
+      });
+    }
+    bSave.onclick = ()=>{
+      const t=(title.value||'Untitled').trim(); const text=(src.value||'').trim();
+      if(!text){ alert('Nothing to save.'); return; }
+      const arr=load(); arr.unshift({title:t,text, time:Date.now()}); save(arr); render(); title.value=''; src.value='';
+    };
+    bClear.onclick = ()=>{ if(confirm('Clear entire gallery?')){ save([]); render(); } };
+
+    // Tiny ZIP builder (no external deps): store files in a simple text bundle (.zip-like .txt)
+    bZip.onclick = ()=>{
+      const arr=load(); if(arr.length===0){ alert('Gallery is empty.'); return; }
+      const bundle = arr.map(it => `--- ${it.title||'Untitled'} (${new Date(it.time).toISOString()}) ---\n${it.text}\n`).join('\n');
+      const blob=new Blob([bundle],{type:'text/plain'}); const url=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=url; a.download='promptforge_gallery_bundle.txt'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),500);
+    };
+
+    render();
+  })();
+
+  // Footer CAMO (unchanged)
+  (function(){
+    const camoEl = document.getElementById("footerCamo");
+    if (camoEl) {
+      const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
+      const chars = "░▒▓▚▞▐▉█▛";
+      function camoTick(t){
+        let out = "";
+        for(let i=0;i<62;i++){
+          out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
+        }
+        camoEl.innerHTML = out;
+      }
+      let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+    }
+  })();
+
+  // J1NX (unchanged logic)
+  (function(){
+    const j1nxFloat = document.getElementById('j1nxFloatTrue');
+    const cutout = document.getElementById('j1nxCutoutTrue');
+    const bubble = document.getElementById('j1nxBubbleTrueMain');
+    function isMobile() { return innerWidth < 700; }
+    function shrinkJ1nx() {
+      if(isMobile()) { j1nxFloat.classList.remove('j1nx-open'); bubble.style.display = "none"; }
+      else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display = "flex"; }
+    }
+    cutout.onclick = function() {
+      if(isMobile()) {
+        if(j1nxFloat.classList.contains('j1nx-open')) { j1nxFloat.classList.remove('j1nx-open'); bubble.style.display = "none"; }
+        else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display = "flex"; }
+      }
+    };
+    addEventListener('resize', shrinkJ1nx); shrinkJ1nx();
+  })();
+  (function(){
+    let chatHistory = [];
+    let nsfwUnlocked = false;
+    function renderChat() {
+      const out = chatHistory.map(line => `<div>${line}</div>`).join('');
+      document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
+    }
+    function addMsg(msg, isUser) {
+      if (!msg) return;
+      const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
+      chatHistory.push(name + msg);
+      if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
+      renderChat();
+    }
+    document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
       nsfwUnlocked = true;
       document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
       addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+    });
+    document.getElementById('j1nxSendTrue').onclick = function() {
+      const input = document.getElementById('j1nxInputTrue');
+      const val = (input.value || '').trim();
+      if (!val) return;
+      addMsg(val, true);
+      if (/^unlock$/i.test(val)) {
+        nsfwUnlocked = true;
+        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+        input.value = ""; return;
+      }
+      try {
+        let reply = window.j1nxBrain ? window.j1nxBrain(val, chatHistory.length, nsfwUnlocked) : "I'm just a demo for now, but soon I'll have a real brain!";
+        let replyText = (reply && typeof reply === 'object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply;
+        addMsg(replyText, false);
+      } catch(e) {
+        addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
+      }
       input.value = "";
-      return;
-    }
-    try {
-      let reply = window.j1nxBrain ? window.j1nxBrain(val, chatHistory.length, nsfwUnlocked) : "I'm just a demo for now, but soon I'll have a real brain!";
-      let replyText = (reply && typeof reply === 'object')
-        ? (reply.text || reply.reply || JSON.stringify(reply))
-        : reply;
-      addMsg(replyText, false);
-    } catch(e) {
-      addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
-    }
-    input.value = "";
-  };
-  document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
-    if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
-  });
-  document.getElementById('j1nxSaveTrue').onclick = function() {
-    const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
-    const blob = new Blob([text], {type:'text/plain'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
-    setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
-  };
-  document.getElementById('j1nxClearTrue').onclick = function() {
-    chatHistory = [];
+    };
+    document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
+    });
+    document.getElementById('j1nxSaveTrue').onclick = function() {
+      const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+      const blob = new Blob([text], {type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+    };
+    document.getElementById('j1nxClearTrue').onclick = function() {
+      chatHistory = []; renderChat();
+    };
     renderChat();
-  };
-  renderChat();
-})();
-</script>
-<script src="assets/j1nx_brain.js"></script>
+  })();
+  </script>
+
+  <!-- Optional: external J1NX brain -->
+  <script src="assets/j1nx_brain.js"></script>
 </body>
 </html>
