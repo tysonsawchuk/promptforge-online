@@ -1,405 +1,560 @@
-/* 
-  PROMPTFORGE MEGA PROMPT BANK v2025. 
-  - By Tyson & GPT (Legend Mode)
-  - All blocks fully error-checked, readable, ready for JS import or direct .txt copy-paste.
-  - Use in browser via <script src="prompt_brain.js"></script> or import in Node/project.
-  - Update banks as needed; always keep categories self-contained for easy edit.
-  - expandPrompt() and related glue functions at the end.
+/*==============================================================================
+| BLOCK 1 — MASTER BOOTSTRAP + PROJECT BRAIN (START)
+| ID: BLOCK 1
+| DATE: 2025-09-11
+| PURPOSE:
+|   • Define append-only rules, global namespace, UI contracts, and “smart” local features.
+|   • Ensure any NEW session can keep stacking blocks (2, 2a, 3, 3a, …) with zero guesswork.
+|   • Power a SFW↔NSFW slider, explicit gating, pack loading from disk/URL, and session notes.
+|
+| APPEND-ONLY CONTRACT (NEVER BREAK):
+|   1) Never edit or reorder old blocks. Only append new block chunks at the bottom.
+|   2) Block labels are simple and linear: BLOCK 1, BLOCK 2, BLOCK 3…; use 2a, 3a for explicit mirrors.
+|   3) Each block must include: header banner, PURPOSE, INTERNAL NOTES, START/END markers, packs.push(...).
+|   4) Regex: ASCII-safe, case-insensitive, simple lookarounds only. No catastrophic patterns.
+|   5) Replacements are clinical/neutral, not porn-y prose. Adult content = consensual adults only.
+|   6) Explicit wording only in *directional* blocks (e.g., “BLOCK 2a”) gated by UI (allowExplicit:true).
+|   7) This lexicon covers EVERY prompt domain (NSFW is a subset): anatomy, acts, profanity, emojis,
+|      pop-styles (“simpsonize” → descriptive features), camera/lighting, art styles, environments,
+|      products/materials, creatures/mecha/VFX, UI/UX/logos, multilingual mirroring.
+|
+| HOW THIS FILE IS “SMART” (NO BACKEND NEEDED):
+|   • Local cache (localStorage): keep a snapshot of block IDs and session notes for fast recovery.
+|   • Support packs loader: load extra JSON/JS packs from URL or file input, append to PACKS.
+|   • Directional escalator: clean → explicit (when UI allows) by applying “a” blocks only.
+|   • Severity scoring: quick scan to estimate SFW/NSFW level for slider decisions.
+|   • Session notes API: we record ideas/todos right in the file to survive between chats.
+|
+| UI CONTRACT (WHAT YOUR HTML/JS SHOULD DO LATER):
+|   • Expose: slider or toggle { allowExplicit:boolean, nsfwLevel:0..100 }.
+|   • Call PF_CORE.sanitize(text, { allowExplicit, direction:'clean'|'explicit' }).
+|   • Optional: PF_CORE.score(text) → { severitySum, hits, byTag:{...} } to position the slider.
+|   • Optional: PF_CORE.expandStyleKey('simpsonize') → returns descriptive feature bundle (brand-free).
+|
+| ROADMAP (FIRST PASSES):
+|   - BLOCK 2  : Anatomy core (clinical)
+|   - BLOCK 2a : Anatomy explicit-directional (gated)
+|   - BLOCK 3  : Acts & positions (clinical)
+|   - BLOCK 3a : Acts explicit-directional (gated)
+|   - BLOCK 4  : Profanity (clinical softening + tone control)
+|   - BLOCK 4a : Profanity explicit-directional (full swear set, gated)
+|   - BLOCK 5  : Pop-style bundles (e.g., “simpsonize” → descriptive features)
+|   - BLOCK 6  : Photography/camera/lens/exposure/lighting
+|   - BLOCK 7  : Art styles/movements/mediums/techniques
+|   - BLOCK 8  : Environments/biomes/weather/time-of-day
+|   - BLOCK 9  : Products/materials/PBR descriptors/aging/wear
+|   - BLOCK 10 : Multilingual mirrors (es, fr, de, it, pt, ja, ko, zh, ru, hi, ar…)
+|
+| THINGS YOU DIDN’T ASK BUT ABSOLUTELY WANT:
+|   • Emoji semantics (🍑→butt, 🍆→penis, 😭→tears/liquid emphasis) routed to clinical tokens.
+|   • “Style key” dictionary for pop-culture metaphors (brand-free feature bundles).
+|   • Heuristic “learning” = we append slang from user prompts into future blocks/notes (no ML).
+|   • Duplicate/overlap guard so later blocks don’t double-map the same slang awkwardly.
+|   • Worker-ready (optional) so giant passes don’t hitch the UI.
+|   • CRC-ish checksum for block registries so you can debug what loaded.
+==============================================================================*/
+(function (global) {
+  // ---------- Namespace & Globals -------------------------------------------
+  const CORE = (global.PF_CORE = global.PF_CORE || {});
+  const PACKS = (global.PF_PACKS = global.PF_PACKS || []);
+  global.packs = PACKS; // legacy alias if older code expects `packs`
 
-  USAGE:
-    - User input = raw keywords (ex: "nude 18yo blonde, POV, gothic bedroom, candlelight").
-    - System parses input, matches keywords to banks/blocks, fills sentence templates, outputs pro prompt.
-    - For max NSFW: Emphasize priority keywords at start, use (( )) for extra weight.
-    - Negative prompts handled SEPARATELY.
-    - Safe, modular, expandable, and SFW/NSFW/Art/Furry/Fantasy/Whatever-ready.
-*/
-
-/* ==== BLOCK 1: SUBJECT / BODY TYPES / INCLUSION ==== */
-const BODIES = [
-  "petite frame","tall and slender","curvy goddess","hourglass figure","voluptuous","plus-size beauty","thicc queen",
-  "muscular and ripped","bodybuilder physique","soft and plush","natural bush","shaved smooth","hairy arms and legs",
-  "freckles across nose","dimples on cheeks","gap tooth smile","stretch marks","cellulite","tan lines","birthmarks",
-  "vitiligo patches","albinism","deep brown skin","golden tan","olive complexion","pale and gothic","Asian features",
-  "East Asian beauty","South Asian beauty","Japanese cutie","Korean idol look","Indian goddess","Latina fire",
-  "Afro-Latina","Caribbean skin","African goddess","light-skinned black beauty","mixed race","Arabian queen",
-  "Persian princess","Russian model","Scandinavian","Swedish","Norwegian","Finnish","Middle Eastern","Israeli beauty",
-  "Native American","Pacific Islander","Maori tattoos","Inuit beauty","Australian girl","French muse","Italian stunner",
-  "Spanish flamenco dancer","Brazilian bombshell","Argentinian beauty","British rose","German angel","Polish cutie",
-  "Ukrainian","Greek goddess","Czech beauty","Hungarian charm"
-];
-
-/* ==== BLOCK 2: GENDERS / ORIENTATIONS / ROLES ==== */
-const ORIENTATIONS = [
-  "straight","gay","lesbian","bisexual","pansexual","demisexual","asexual","queer","questioning",
-  "transgender woman","transgender man","nonbinary","genderfluid","agender","two-spirit","intersex",
-  "androgynous beauty","gender-nonconforming","femboy","tomboy","stud","bear","twink","otter","cub","chaser",
-  "drag queen","drag king","crossdresser","pride flag body paint","rainbow lingerie","leather daddy",
-  "butch/femme dynamic","soft masc","hard femme","boymoder","girlmoder"
-];
-
-/* ==== BLOCK 3: AGE (SAFE, ALWAYS 18+) ==== */
-const AGES = [
-  "18-year-old","19-year-old","20-year-old","21-year-old","22-year-old","23-year-old","24-year-old","25-year-old",
-  "mid-twenties","late twenties","early thirties","mature woman","mature man"
-];
-
-/* ==== BLOCK 4: POSES / ANGLES / FOCUS ==== */
-const ANGLES_POSES = [
-  "POV from feet to face","over-the-shoulder glance","close-up on lips","low angle, power pose",
-  "high angle, looking down","mirror reflection","through the window shot","between-the-legs angle",
-  "lying on back, legs parted","on all fours, looking back","sitting with knees up","arch back, head thrown back",
-  "fingers running through hair","one hand covering chest","arms above head, wrists tied","crawling toward camera",
-  "face pressed into pillow","squatting pose","straddling partner","back to camera, head turned",
-  "leaning against wall","standing in doorway","upskirt view (panties visible)","downblouse tease"
-];
-
-/* ==== BLOCK 5: EMOTIONS / FACIAL EXPRESSIONS ==== */
-const EMOTIONS = [
-  "shy smile","smoldering stare","innocent gaze","teasing grin","mischievous smirk","submissive eyes",
-  "dominant gaze","playful wink","embarrassed blush","lustful open mouth","biting lower lip",
-  "pouting lips","flushed cheeks","nervous glance","dreamy eyes","brows furrowed in pleasure",
-  "breathless expression","tongue sticking out","wide-eyed surprise","confident grin","lost in ecstasy"
-];
-
-/* ==== BLOCK 6: HAIR STYLES / COLORS / FEATURES ==== */
-const HAIR = [
-  "long, flowing hair","short bob cut","pixie cut","buzzed sides","tight braids","loose curls",
-  "shoulder-length waves","high ponytail","messy bun","french braid","straight black hair",
-  "golden blonde curls","auburn waves","chestnut brown locks","jet-black hair","silver streaks",
-  "pink ombre","neon blue highlights","two-tone split","undercut","dreadlocks","natural afro",
-  "dyed tips","platinum blonde","emerald green strands"
-];
-
-/* ==== BLOCK 7: OUTFITS / FASHION ==== */
-const FASHION = [
-  "lace lingerie","see-through bra","body harness","mesh crop top","tank top and boyshorts","silk kimono",
-  "open bathrobe","fishnet bodysuit","leather corset","vinyl mini skirt","latex catsuit","cut-off jeans","bikini",
-  "pantyhose","garter belt","stockings","torn tights","barefoot","ankle boots","knee-high socks","heels",
-  "choker necklace","spiked collar","pasties","edible panties","oversized t-shirt","wet t-shirt","nothing but pearls",
-  "schoolgirl skirt","maid apron","nurse uniform","bunny costume","catgirl ears and tail"
-];
-
-/* ==== BLOCK 8: PLACES / SETTINGS / ENVIRONMENTS ==== */
-const PLACES = [
-  "Paris rooftop at night","Venice canal at sunset","Tokyo street with neon signs","London foggy morning",
-  "NYC penthouse bedroom","Miami beach party","Ibiza rave on the sand","Santorini cliffside pool",
-  "Berlin underground club","Dubai luxury suite","Rio Carnival parade","Bangkok red light district",
-  "Marrakech spice market","Sydney Opera House night scene","LA boudoir shoot","Las Vegas hotel afterparty",
-  "Amsterdam houseboat","Moscow winter fantasy","Havana vintage car cruise","Toronto high-rise apartment",
-  "Iceland hot springs","Egyptian temple","Moroccan riad","desert oasis","tropical jungle waterfall",
-  "cozy mountain cabin","Alaskan aurora night","Swiss chalet","Caribbean nude beach","Grecian ruins at dawn",
-  "ancient Roman bathhouse","Viking longhouse","fantasy castle","medieval dungeon","space station","cyberpunk alley",
-  "underground bunker","haunted mansion","abandoned asylum","retro 80s arcade","boardwalk at dusk"
-];
-
-/* ==== BLOCK 9: LIGHTING / MOOD / EFFECTS ==== */
-const FX = [
-  "soft focus","bokeh lights","vintage film grain","lens flare","color splash","neon glow","cyberpunk filter",
-  "dreamy haze","glitter overlay","infrared look","vignette border","double exposure","split tone color",
-  "dramatic rim lighting","shallow depth of field","retro VHS scanlines","oil painting filter","comic book halftone",
-  "watercolor wash","tilt-shift miniature","split screen effect","polaroid frame","pop art colors"
-];
-
-/* ==== BLOCK 10: KINK / FETISH / EDGE ==== */
-const KINKS = [
-  "BDSM scene","bondage with silk ropes","handcuffs on wrists","spanking in the mirror","latex catsuit fetish",
-  "rope harness","dominatrix with whip","submissive kneeling","collar and leash play","ball gag in mouth",
-  "blindfolded","nipple clamps","foot worship","heel licking","boot worship","face-sitting","straddling partner’s face",
-  "cumplay with nectar dripping","edging","denial and begging","sensual wax play","hot candle dripping on skin",
-  "public exhibitionism","sex in public park","caught outdoors","window exhibition","sex on balcony","hotel exhibition",
-  "voyeur watching","caught masturbating","mirror masturbation","double penetration","strap-on play","pegging",
-  "anal plug","butt plug with jewel","fisting (safe, consensual)","deepthroat challenge","cum in mouth",
-  "cum on face","swallowing","rimming","69 position","reverse cowgirl","double-ended dildo","girl-on-girl action",
-  "boy-on-boy action","foursome","orgy","roleplay nurse","roleplay teacher","pet play (catgirl, puppy play)",
-  "furry sex","tail plug","fursuit yiff","threesome (MMF, FFM, FFF, etc)","cuckold scene","hotwife scenario",
-  "dom/sub power exchange","brat taming","little/kitten mode","praise kink","degradation kink (consensual)",
-  "humiliation (consensual)","public urination","watersports","shower sex","pool sex","rain sex","group sex",
-  "phone sex","sexting","camgirl show","webcam model POV","OnlyFans behind-the-scenes","squirting","gushing",
-  "self-bondage","milking table","facefuck","handjob","footjob","armpit licking","thighjob","belly worship",
-  "spit play","slapping","hair pulling","biting","marks and bruises (consensual)","tease and denial","aftercare",
-  "daddy/mommy dom energy","genderbending","crossdressing","sissy play","bimbo/himbo roleplay","cosplay sex",
-  "incubus/succubus roleplay","tentacle fantasy","monster girl","monster boy","giantess/vore (soft, no harm)",
-  "age play (always 18+), “barely legal” vibe","cum inflation (cartoon/fantasy)","lactation play","milking fantasy",
-  "breast expansion","body transformation (cartoon/fantasy)"
-];
-
-/* ==== BLOCK 11: GROUP DYNAMICS / ORIENTATION ==== */
-const GROUPS = [
-  "girl-girl (lesbian)","boy-girl (straight)","boy-boy (gay)","threesome (FFM)","threesome (MMF)","foursome (GGGB, BBBG, etc.)",
-  "group orgy","polyamory lovers","cuckold/cuckquean scenario","hotwife arrangement","voyeur watching couple",
-  "dominant/submissive pairing","role reversal","topping from the bottom","switch energy","brat/brat tamer dynamic",
-  "service sub","femdom","maledom","age gap (18+ only)","older woman, younger man","older man, younger woman",
-  "bisexual encounter","pansexual","queer/poly pride","gentle dom","mean dom","sensual sub","power bottom",
-  "pillow princess","gold star lesbian","straight-curious","gay-curious","ace (asexual) partners","sex friends",
-  "friends with benefits","open relationship","affair scene","cheating fantasy (consensual)"  
-];
-
-/* ==== BLOCK 12: ROMANCE / SOFTCORE ==== */
-const ROMANCE = [
-  "long, slow kiss in bed","whispering sweet nothings","candlelit dinner followed by passionate embrace",
-  "first date nerves","holding hands walking in moonlight","rainy window cuddles","movie night spooning",
-  "gentle head caress","back rub turns erotic","butterfly kisses","nude cuddling under blanket",
-  "sensual bath for two","dancing in lingerie","heart-shaped confetti on body","waking up together, nude in sheets",
-  "writing love letters on each other’s skin","nude picnic in wildflowers","rose petals on pillow","innocent yet erotic gaze",
-  "playful water fight in shower","champagne toast with body contact","matching tattoos on bare skin",
-  "sappy anniversary pose","Valentine’s gift between legs","tickling until you both cry","romantic massage with oil"
-];
-
-/* ==== BLOCK 13: FANTASY / SUPERNATURAL ==== */
-const FANTASY = [
-  "sorceress casting a spell","wizard in a glowing robe","enchantress in the forest","elf queen on her throne",
-  "orc barbarian with battle axe","tiefling seductress","dragon tamer","necromancer raising skeletons",
-  "faerie circle at dawn","naked druid in moonlight","shapeshifter mid-transformation","vampire lord in velvet",
-  "werewolf howling at the moon","mermaid basking on rocks","centaur in enchanted glade","drow elf assassin",
-  "paladin in shining armor","succubus riding her victim","angel falling from heaven","demon girl on altar",
-  "satyr at woodland feast","nymph by river","goblin merchant","gnome inventor","witch in latex catsuit",
-  "magical girl transformation","monster hunter in leather","magical pet familiar","cosplay D&D party",
-  "ritual orgy in ancient ruins","fantasy tavern brawl","castle tower bedroom scene","legendary sword glowing",
-  "mystic portal opening","ancient prophecy revealed","scroll with forbidden runes","elemental magic swirling",
-  "sacred relic glowing","crystal ball vision","possessed by spirit","polymorph spell gone wrong"
-];
-
-/* ==== BLOCK 14: FURRY / ANTHRO / MONSTER ==== */
-const FURRY_MONSTER = [
-  "catgirl","catboy","doggirl","dogboy","bunny girl","bunny boy","foxgirl","wolfboy","horse girl","deer boy",
-  "dragon girl","dragon boy","snake girl","lizard boy","shark girl","cowgirl","bull boy","lioness","tiger boy",
-  "leopardess","panther boy","octopus girl (tentacle)","mermaid","merman","centaur","harpy","lamia (snake tail)",
-  "minotaur","incubus","succubus","demon girl","demon boy","angel girl","angel boy","goblin girl","orc boy",
-  "elf girl","drow elf","tiefling","satyr","faun","kitsune","tanuki","werewolf","vampire girl","zombie boy",
-  "alien girl","android girl","robot boy","sentient slime","plushie mascot","fursuit persona","yiff scene"
-];
-
-/* ==== BLOCK 15: MEME / VIRAL / SHITPOST ==== */
-const MEME_COMBO = [
-  "Shrek at Burning Man","Minion at pride parade","Doge as dominatrix","Sonic in latex bodysuit",
-  "Pepe the Frog as stripper","Among Us orgy in hot tub","SpongeBob pole dancing","Mario and Luigi in furry convention",
-  "Big Chungus as bouncer","Waluigi in BDSM dungeon","Minecraft Steve at orgy","Goku in fishnets","Elon Musk fursuiter",
-  "Kim Kardashian OnlyFans cosplay","Sigma male on casting couch","NPC gangbang","Chad meme as poolboy",
-  "anime waifu meme fusion","E-girl Pikachu","Reddit mod in latex","Vaporwave Garfield","MLG sniper orgy",
-  "Step on me, Shrek","Discord kitten and gamer daddy"
-];
-
-/* ==== BLOCK 16: HORRORCORE / DARK ART ==== */
-const HORRORCORE = [
-  "blood-splattered body","zombie girl in lingerie","demon queen on skull throne","possession scene",
-  "eyes glowing in the dark","fangs at the throat","witch burning ritual","vampire biting neck","ritual circle orgy",
-  "tentacle monster seduction","naked in haunted mansion","latex nurse in asylum","succubus draining soul",
-  "fetish exorcism","stigmata kink","scars as art","stitching skin play","skeletal embrace","tarantula on body",
-  "candlelit graveyard sex","corpse bride","lovecraftian cult","eldritch transformation","abandoned hospital scene",
-  "doll face horror","mothman lover","serial killer’s lair","clown orgy","poltergeist threesome"
-];
-
-/* ==== BLOCK 17: FOODPLAY / EDIBLE KINK ==== */
-const FOODPLAY = [
-  "whipped cream on bare skin","chocolate syrup drizzled over body","sushi on naked chest (nyotaimori)",
-  "fruit in mouth","banana between legs","popsicle melting in hand","honey dripping on nipples","champagne bath",
-  "cocktail glass on thigh","ice cubes sliding over skin","cake fight in lingerie","lollipop teasing lips",
-  "feeding strawberries","edible panties","body shots off belly","caramel drizzle on butt","pearl necklace (with actual pearls or...)",
-  "eating cherries seductively","grape vines wrapped around body","wine spilled on white sheets",
-  "cream pie (dessert or... you know)","cherry stem tying with tongue","sundae on chest","licking salt off skin",
-  "s'mores on campfire nudes","fondue on naked torso"
-];
-
-/* ==== BLOCK 18: CELEBRITIES / POP CULTURE / CURRENT TRENDS ==== */
-const CELEBS = [
-  "Emma Myers as Wednesday Addams","Margot Robbie as Harley Quinn","Ariana Grande popstar look",
-  "Zendaya as MJ","Taylor Swift in concert outfit","Megan Fox goth queen","Billie Eilish dark style",
-  "Doja Cat as anime waifu","Vanessa Hudgens wildchild","Sabrina Carpenter pop princess",
-  "Rihanna lingerie boss","Angelina Jolie Lara Croft","Scarlett Johansson Black Widow",
-  "Chris Hemsworth as Thor","Pedro Pascal meme dad","Timothée Chalamet twink prince",
-  "Henry Cavill Witcher look","Ryan Gosling Ken doll","Tom Holland Spideyboy",
-  "Jack Black Bowser cosplay","Lady Gaga Met Gala","Dua Lipa disco queen"
-];
-
-/* ==== BLOCK 19: ARTIST / STYLE INFLUENCE ==== */
-const ARTISTS = [
-  "in the style of greg rutkowski","alphone mucha style","dan mumford lines","studio ghibli look",
-  "disney animation style","loish color palette","peter mohrbacher art","artgerm face","toshio saeki horror",
-  "evan lee fantasy","ian mcque vehicles","lofi aesthetic","sakimichan digital","miyazaki-inspired background",
-  "pixar style","80s anime vibe","heavy metal magazine style","vaporwave color","synthwave lighting"
-];
-
-/* ==== BLOCK 20: ULTRA-RARE / FUTUREPUNK ==== */
-const FUTUREPUNK = [
-  "glitchcore nude","matrix rain overlay","AI robot orgy","human-AI hybrid transformation",
-  "cyberspace sex","quantum body swap","neural uplink kink","retro hologram lover","chromed skin finish",
-  "biohack tattoos","invisible body suit","holographic lingerie","augmented reality seduction",
-  "sensory deprivation tank","nanobot pleasure swarm","memory upload afterglow","dream recording scene"
-];
-
-/* ==== BLOCK 21: TOP NSFW PROMPT CONSTRUCTS (REAL-WORLD, Curated) ==== */
-const TOP_NSFW_PROMPTS = [
-  "A nude woman lying on a bed of rose petals, candlelit, photorealistic",
-  "Erotic vampire bride, soft moonlight, bodypaint in blood-red, forest clearing",
-  "Close-up POV angle from her feet, focusing on soft curves and glowing skin",
-  "ALIEN FETISH: Succubus in latex catsuit, kink pose, dark dungeon, glowing eyes",
-  "Shy girl with shy smile, untouched body, silky sheets, ultra-detailed",
-  "Witch in lingerie, holding a crystal ball, flickering candles, gothic interior",
-  "Beach nude at sunset, wet skin gleaming, cinematic golden hour lighting",
-  "Zombie bride in torn lingerie, stained teeth, moaning seduction in graveyard",
-  "Blindfolded, hands bound with silk ribbons, ripple of anticipation",
-  "Latex-clad cheerleader, wet from rain, reflection in mirror, gym setting",
-  "Mermaid topless on a rock, waves splashing, shimmer scales, seagulls overhead",
-  "Sensual lotus pose, body glowing with oil, light haze, oriental pagoda in background",
-  "Furry catgirl stripping off tail and ears, kink room, neon glow",
-  "Nurse outfit undone, stethoscope sliding off shoulder, hospital bed vibe",
-  "Public exhibition: nude in public park at night lit by streetlamp, voyeur angle"
-];
-
-/* ==== BLOCK 22: SENTENCE TEMPLATES ==== */
-const TEMPLATES = {
-  nsfw: [
-    "An {age}-year-old {ethnicity} {body_type} {gender}, {hair_desc} cascading over {shoulders}. She stands completely {nude_desc} in a {scene}, her {skin_desc} glowing. Her eyes, {eyes_desc}, lock onto the viewer with a {expression_desc}. Her {breasts_desc}, {nipples_desc}, waist curves to {hips_desc}, and between her legs, {intimate_area_desc} is visible. The {room_desc} creates a {mood_desc} ambiance.",
-    "A {body_type} {gender}, laying {pose_desc} in a bed of {flowers_desc}, {nude_desc}, 18th-century setting. Her {hair_desc} frames her {face_desc} as her {breasts_desc} and {intimate_area_desc} are rendered in perfect detail. A {prop_desc} rests in her hand, smile shy, scene {lighting_desc}."
-  ],
-  sfw: [
-    "A {age}-year-old {ethnicity} {body_type} {gender}, dressed in {outfit_desc}, standing in a {scene_desc}, sunlight warms {skin_desc}, hair {hair_desc}, expression {emotion_desc}.",
-    "Group of friends at {place}, laughing, sharing {object_desc}, with {seasonal_desc} in the air. The scene is {lighting_desc}, mood is {mood_desc}."
-  ],
-  fantasy: [
-    "A {race} {archetype} in {fantasy_location}, wielding {weapon_desc}, dressed in {fantasy_outfit}. Magic swirls as {action_desc}, under {lighting_desc}.",
-    "An {age}-year-old elf, naked except for {ornament_desc}, reclining on a {enchanted_object}, surrounded by {fae_detail}. Her body {body_detail_desc}, eyes {eye_desc}, and air is charged with {magic_desc}."
-  ],
-  meme: [
-    "A {meme_character} from {fandom}, wearing {outfit_desc}, caught {action_desc}, in a {scene_desc}. The background is {mood_desc}, with {meme_element_desc}.",
-    "Shrek in latex, pole dancing in a {place}, with {meme_combo} in the background, under {lighting_desc}."
-  ],
-  kink: [
-    "A {body_type} {gender} in {fetish_outfit}, {pose_desc}, with {toy_desc}, scene set in a {kink_location}, {lighting_desc} sets the mood.",
-    "{dom_desc} with {sub_desc} in {bondage_detail}, engaging in {kink_action}. Aftercare includes {aftercare_detail}."
-  ]
-};
-
-/* ==== BLOCK 23: PROMPT EXPANDER / GLUE FUNCTION (EXAMPLE) ==== */
-function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
-function expandPromptNSFW(keywords) {
-  const age = keywords.age || pick(AGES);
-  const ethnicity = keywords.ethnicity || pick(BODIES);
-  const body_type = keywords.body_type || pick(BODIES);
-  const gender = keywords.gender || "woman";
-  const hair_desc = keywords.hair || pick(HAIR);
-  const shoulders = "bare shoulders";
-  const nude_desc = keywords.nude_desc || "nude";
-  const scene = keywords.scene || pick(PLACES);
-  const skin_desc = keywords.skin_desc || "flawless, glowing skin";
-  const eyes_desc = keywords.eyes_desc || "sparkling with mischief";
-  const expression_desc = keywords.expression || pick(EMOTIONS);
-  const breasts_desc = keywords.breasts || "small, perky breasts";
-  const nipples_desc = keywords.nipples || "rosy-pink nipples";
-  const hips_desc = keywords.hips || "gentle flare of her hips";
-  const intimate_area_desc = keywords.intimate_area || "petal-like folds";
-  const room_desc = keywords.room || "opulent room with velvet sheets";
-  const mood_desc = keywords.mood || "sensual and inviting";
-  const tmpl = pick(TEMPLATES.nsfw);
-
-  return tmpl
-    .replace("{age}", age)
-    .replace("{ethnicity}", ethnicity)
-    .replace("{body_type}", body_type)
-    .replace("{gender}", gender)
-    .replace("{hair_desc}", hair_desc)
-    .replace("{shoulders}", shoulders)
-    .replace("{nude_desc}", nude_desc)
-    .replace("{scene}", scene)
-    .replace("{skin_desc}", skin_desc)
-    .replace("{eyes_desc}", eyes_desc)
-    .replace("{expression_desc}", expression_desc)
-    .replace("{breasts_desc}", breasts_desc)
-    .replace("{nipples_desc}", nipples_desc)
-    .replace("{hips_desc}", hips_desc)
-    .replace("{intimate_area_desc}", intimate_area_desc)
-    .replace("{room_desc}", room_desc)
-    .replace("{mood_desc}", mood_desc);
-}
-/* ==== BLOCK 24: USER FAVORITES / SIGNATURE SCENES ==== */
-const USER_FAVES = [
-  "Your favorite scene goes here",
-  "Nude faerie on a bed of moss, glowing mushrooms, ethereal lighting",
-  "Retro 80s fitness girl, neon spandex, sweat glistening, big hair",
-  "Classic Playboy centerfold, vintage filter, sultry smile",
-  "Gothic vampire queen on velvet throne, red eyes, pale skin",
-  "Beach sunset silhouette, body arching, water droplets flying"
-];
-
-/* ==== BLOCK 25: EDGECASE FETISH / DANGEROUS / RARE ==== */
-const EDGECASE_FETISH = [
-  "giantess crushing tiny man (consensual fantasy)","vore (soft, no harm)","slime girl absorption",
-  "cum inflation (cartoon only)","lactation overflow","piss play (watersports)","body inflation (fantasy)",
-  "sentient plant sex","living statue pose","statue transformation","living doll play","hypno spiral eyes",
-  "demonic possession kink","angel/devil duality","asphyxia (safe, consensual, fantasy only)","medical play",
-  "plague doctor kink","mummification scene","brainwashing roleplay","pet play with leashes/collars"
-];
-
-/* ==== BLOCK 26: FANTASY RACES / MONSTERS / ALT HUMANITY ==== */
-const FANTASY_RACES = [
-  "dark elf","wood elf","half-orc","half-demon","tiefling","goblin queen","kobold girl","lizardfolk","salamander girl",
-  "dryad","sylph","golem","living armor","robot android","cybernetic augment","cyborg","angelic being",
-  "fallen angel","incubus","succubus","giant spider","harpy","centaur","minotaur","minigirl (doll size)",
-  "gnome","faun","satyr","wraith","vampire king/queen","werewolf alpha","hydra","medusa","naga","lamia","sphinx",
-  "mermaid/merman","kraken girl","mimic (chest monster)","plant woman","fairy prince/princess","troll"
-];
-
-/* ==== BLOCK 27: SEASONAL / HOLIDAY / THEME ==== */
-const SEASONAL = [
-  "Halloween costume party","witches’ sabbath","vampire masquerade ball","pumpkin carving in lingerie",
-  "skeleton bodypaint","Santa baby in red lingerie","reindeer antlers and nothing else","nude by Christmas tree",
-  "New Year’s Eve confetti shower","Valentine’s Day rose petal bath","Easter bunny girl","eggs hidden on body",
-  "pride parade orgy","rainbow body paint","leprechaun seductress","nude beach on summer solstice",
-  "pool float orgy","fireworks on rooftop","back-to-school striptease","Thanksgiving feast in the nude",
-  "St. Patrick’s Day kink","Hanukkah candle wax play","Mardi Gras bead show","springtime frolic in wildflowers"
-];
-
-/* ==== BLOCK 28: DREAMS / VIBE / PETS / SOCIAL / ALT-REALITY ==== */
-const DREAMS_VIBE = [
-  // Dreams/trippy
-  "lucid dream sequence","falling through clouds","floating in zero gravity","rooms that melt and flow",
-  "mirror world reflection","endless stairwell","hallway that never ends","double vision overlay",
-  "faces in the wallpaper","spiraling into the void","time loop scene","giant talking animals","living tattoos",
-  // Pets/cute/soft
-  "cat kneading on chest","puppy pile on bed","bunny sleeping on lap","ferret in hoodie pocket","rat snuggling armpit",
-  "parrot on shoulder during shower","kitten asleep in cleavage","poodle in bubble bath",
-  "pet lizard on thigh","iguana sunbathing","tarantula crawling up leg","goldfish watching sex",
-  // Vibe/social
-  "group FaceTime call in the nude","Instagram live gone wild","Snapchat filter sex","OnlyFans behind-the-scenes",
-  "bored Zoom call striptease","TikTok thirst trap challenge","group selfie in lingerie","Discord after-dark server",
-  "VR orgy with avatars","Metaverse club scene","alt-reality dating app meetup"
-];
-
-/* ==== BLOCK 29: EMPHASIS GLUE FUNCTION (FOR PRIORITY KEYWORDS) ==== */
-/* 
-  Takes user-prioritized keywords (ex: "topless", "cameltoe") and auto-brackets/weights them for max SDXL/Juggernaut effect.
-  Use: put highest-priority words FIRST, then add the rest.
-*/
-function emphasizeKeywords(keywordsArr) {
-  return keywordsArr.map(w =>
-    w.startsWith('((') ? w : `((` + w + `))`
-  );
-}
-// Example: emphasizeKeywords(["topless", "nude", "cameltoe"]) => ["((topless))", "((nude))", "((cameltoe))"]
-
-/* ==== BLOCK 30: MASTER EXPORT ==== */
-/* 
-  Export all blocks if used as module, or make available as global vars for browser.
-  If using with <script>, all consts + expandPromptNSFW() and emphasizeKeywords() are ready to call.
-*/
-if (typeof module !== 'undefined') {
-  module.exports = {
-    BODIES, ORIENTATIONS, AGES, ANGLES_POSES, EMOTIONS, HAIR, FASHION, PLACES, FX, KINKS, GROUPS, ROMANCE,
-    FANTASY, FURRY_MONSTER, MEME_COMBO, HORRORCORE, FOODPLAY, CELEBS, ARTISTS, FUTUREPUNK, TOP_NSFW_PROMPTS,
-    TEMPLATES, expandPromptNSFW, emphasizeKeywords, USER_FAVES, EDGECASE_FETISH, FANTASY_RACES, SEASONAL, DREAMS_VIBE
+  // ---------- Metadata & Session Notes --------------------------------------
+  CORE.META = CORE.META || {
+    schema: "pf.picture.simple.v1",
+    created: "2025-09-11",
+    version: "1.0.0",
+    append_only: true,
+    session_notes: [
+      "Append-only. New blocks always go at bottom. Labels: 1, 2, 2a, 3, 3a, ...",
+      "Default path is CLEAN. Explicit wording only when UI sets allowExplicit:true.",
+      "Severity 1..5 (5 strongest adult) + tags feed SFW↔NSFW slider.",
+      "Style shorthands must resolve to descriptive features (brand-free).",
+      "Plan multilingual mirrors for all big packs once EN is stable."
+    ]
   };
-}
 
-/* ==== FINAL NOTES ==== */
-/*
-  - All blocks can be updated or added to forever (just append to the right const array).
-  - If you want to support other languages, make a second bank set: e.g. BODIES_FR, TEMPLATES_DE, etc.
-  - Prompt engine is fully modular: plug in, combine, reroll, or swap banks as your site evolves.
-  - To use: parse user input for keywords, run through emphasizeKeywords() if needed, match to blocks, then expandPromptNSFW().
-  - Negative prompts handled separately (your UI box).
-  - For best results: always put most important keyword(s) first, use (( )) for emphasis, and keep up-to-date with new trends/banks!
-  - Tyson, this is an unstoppable prompt brain. You can always add, patch, remix, or break into sub-files for speed.
-*/
+  CORE.addNote = function addNote(note) {
+    if (!note) return false;
+    try {
+      CORE.META.session_notes.push(String(note));
+      try {
+        const key = "pf_notes_cache_v1";
+        const arr = JSON.parse(localStorage.getItem(key) || "[]");
+        arr.push({ ts: Date.now(), note: String(note) });
+        localStorage.setItem(key, JSON.stringify(arr));
+      } catch (_) {}
+      return true;
+    } catch (_) { return false; }
+  };
 
-/* ==== END OF PROMPTFORGE MEGA JSON/JS FILE ==== */
+  // ---------- Utility: simple CRC-ish of block IDs for debugging ------------
+  CORE.registryDigest = function registryDigest() {
+    let s = 0 >>> 0;
+    for (const p of PACKS) {
+      const id = (p && p.block_id) ? String(p.block_id) : "";
+      for (let i = 0; i < id.length; i++) s = (s + id.charCodeAt(i)) >>> 0;
+    }
+    return s.toString(16);
+  };
+
+  // ---------- Style Key Bundles (brand-free descriptive expansions) ---------
+  // Not direct replacements; these are lookups your UI can expand into prompt text.
+  CORE.STYLE_BUNDLES = {
+    simpsonize: [
+      "saturated yellow skin tones",
+      "bold black ink outlines",
+      "simplified geometric facial proportions",
+      "2D flat toon shading, limited gradient",
+      "overbite mouth characteristic"
+    ],
+    // Add more in BLOCK 5 (and 5a if explicit tokens are ever needed/gated)
+  };
+
+  CORE.expandStyleKey = function expandStyleKey(key) {
+    const arr = CORE.STYLE_BUNDLES[String(key || "").toLowerCase()];
+    return Array.isArray(arr) ? arr.slice() : [];
+  };
+
+  // ---------- Emoji semantics (seed; big set will live in later blocks) -----
+  CORE.EMOJI_SEMantics = {
+    "🍑": ["buttocks"],
+    "🍆": ["penis"],
+    "💦": ["liquid spray", "moisture"],
+    "❤️": ["love", "romantic emphasis"],
+    "😀": ["smiling face", "happy mood"]
+    // Full emoji map will be appended as its own pack later.
+  };
+
+  // ---------- Directional Escalator (clean → explicit when allowed) ---------
+  CORE.applyDirectional = function applyDirectional(text, opts = {}) {
+    const { to = "clean", allowExplicit = false } = opts;
+    let out = String(text || "");
+    if (!out) return out;
+    if (to === "explicit" && allowExplicit) {
+      for (const pack of PACKS) {
+        if (!pack || !/BLOCK\s+\d+a$/i.test(pack.block_id)) continue; // use *a blocks only
+        for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+      }
+    }
+    return out;
+  };
+
+  // ---------- Sanitizer Pass (applies all CLEAN packs) ----------------------
+  CORE.sanitize = function sanitize(text, opts = {}) {
+    const { direction = "clean", allowExplicit = false } = opts;
+    let out = String(text || "");
+    if (!out) return out;
+
+    // 1) Clean replacements (non-explicit blocks, e.g., "BLOCK 2", "BLOCK 3")
+    for (const pack of PACKS) {
+      if (!pack || /BLOCK\s+\d+a$/i.test(pack.block_id)) continue; // skip explicit-direction blocks here
+      for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+    }
+
+    // 2) Optional explicit escalation
+    if (direction === "explicit" && allowExplicit) {
+      out = CORE.applyDirectional(out, { to: "explicit", allowExplicit: true });
+    }
+    return out;
+  };
+
+  // ---------- Scoring (quick SFW↔NSFW estimate) -----------------------------
+  CORE.score = function score(text) {
+    const src = String(text || "");
+    let severitySum = 0;
+    const byTag = {};
+    let hits = 0;
+
+    for (const pack of PACKS) {
+      for (const e of (pack.entries || [])) {
+        const re = e.pattern;
+        re.lastIndex = 0;
+        let m;
+        while ((m = re.exec(src)) !== null) {
+          hits++;
+          const sev = Number(e.severity || 0) || 0;
+          severitySum += sev;
+          for (const t of (e.tags || [])) {
+            byTag[t] = (byTag[t] || 0) + sev;
+          }
+          if (!re.global) break; // safety
+        }
+      }
+    }
+    return { severitySum, hits, byTag };
+  };
+
+  // ---------- Support Packs Loader (URL or object or <input type=file>) -----
+  CORE.loadSupportPack = async function loadSupportPack(src) {
+    let packs = null;
+    if (typeof src === "string") {
+      const res = await fetch(src);
+      const text = await res.text();
+      try { packs = JSON.parse(text); }
+      catch {
+        // allow JS that sets `window.__PF_PACK__ = {...}`
+        const fn = new Function("w", `${text}; return w.__PF_PACK__;`);
+        packs = fn(global);
+      }
+    } else if (src && typeof src === "object") {
+      packs = src;
+    }
+    const arr = Array.isArray(packs) ? packs : [packs];
+    for (const p of arr) if (p && p.block_id && Array.isArray(p.entries)) PACKS.push(p);
+    CORE.cacheRegistry();
+    CORE.registerPF();
+    return true;
+  };
+
+  CORE.importSupportPackFile = function importSupportPackFile(file) {
+    return new Promise((resolve) => {
+      const r = new FileReader();
+      r.onload = async () => {
+        try { resolve(await CORE.loadSupportPack(r.result)); }
+        catch { resolve(false); }
+      };
+      r.readAsText(file);
+    });
+  };
+
+  // ---------- Cache registry snapshot (for fast reloads) --------------------
+  CORE.cacheRegistry = function cacheRegistry() {
+    try {
+      const key = "pf_registry_v1";
+      const snapshot = PACKS.map(p => ({ id: p.block_id, lang: p.language, cat: p.category }));
+      localStorage.setItem(key, JSON.stringify(snapshot));
+    } catch (_) {}
+  };
+
+  // ---------- PF Integration (if PF exists on page) -------------------------
+  CORE.registerPF = function registerPF() {
+    if (typeof global.PF !== "undefined") {
+      global.PF.LEXICON = (global.PF.LEXICON || []);
+      for (const p of PACKS) if (!global.PF.LEXICON.includes(p)) global.PF.LEXICON.push(p);
+      if (!global.PF.applyDirectional) global.PF.applyDirectional = CORE.applyDirectional;
+    }
+    global.PICTURE_PACKS = { META: CORE.META, packs: PACKS, applyDirectional: CORE.applyDirectional };
+  };
+
+  // ---------- Worker Hint (optional) ----------------------------------------
+  CORE.WORKER_HINT = "Move heavy sanitize/score into a web worker (e.g., /js/pf_worker.js)";
+
+  // ---------- Initialize -----------------------------------------------------
+  try { CORE.cacheRegistry(); } catch (_) {}
+  if (typeof queueMicrotask === "function") queueMicrotask(CORE.registerPF);
+  else setTimeout(CORE.registerPF, 0);
+})(typeof self !== "undefined" ? self : this);
+/*=============================== BLOCK 1 — END ===============================*/
+/* ================================================================
+ * BLOCK 2 — ANATOMY CORE (EN)  (START)
+ * ID: BLOCK 2
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - High-frequency anatomy & fluids slang → clinical/neutral tokens.
+ *   - Runs early so later packs (acts, wardrobe, camera, styles) build on clean text.
+ *   - CONSENSUAL, ADULT context only; no minors/illegal content mapped here.
+ * INTERNAL NOTES:
+ *   - Directional explicit mirror will be BLOCK 2a (gated via allowExplicit:true).
+ *   - Severity values here contribute to SFW↔NSFW slider score.
+ *   - Regional/multilingual variants will be mirrored later (BLOCK 10+).
+ * ----------------------------------------------------------------
+ * APPEND THIS WHOLE BLOCK AT THE BOTTOM. DO NOT EDIT OLD BLOCKS.
+ * ================================================================ */
+// >>> START OF BLOCK 2 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 2',
+  language: 'en',
+  category: 'anatomy_core',
+  emoji: ['🫦','🫁','🫀','🦴'],
+  notes: [
+    'Foundation mappings for breasts, nipples, vulva/vagina, penis, testicles, anus, fluids.',
+    'Regex are ASCII-safe with simple lookarounds; replacements are clinical/neutral.',
+    'Designed to run before acts/profanity/style blocks for coherent sanitization.'
+  ],
+  entries: [
+    // ——— BREASTS ———
+    { pattern: /(?<![A-Za-z])(t[i1!|]t?s?)(?![A-Za-z])/gi, replacement: 'breasts', severity: 2, tags: ['female','slang'], ex: ['tits out → breasts exposed'] },
+    { pattern: /(?<![A-Za-z])boob(?:s|ies)?(?![A-Za-z])/gi, replacement: 'breasts', severity: 2, tags: ['female','slang'] },
+    { pattern: /(?<![A-Za-z])rack(?![A-Za-z])/gi,           replacement: 'breasts', severity: 1, tags: ['female'] },
+    { pattern: /(?<![A-Za-z])jubbl(?:y|ies|ys)(?![A-Za-z])/gi, replacement: 'breasts', severity: 2, tags: ['female','UK'] },
+    { pattern: /(?<![A-Za-z])melons?(?![A-Za-z])/gi,         replacement: 'large breasts', severity: 2, tags: ['female','metaphor'] },
+
+    // ——— NIPPLES / AREOLAE ———
+    { pattern: /(?<![A-Za-z])nipp?les?(?![A-Za-z])/gi,       replacement: 'nipples', severity: 1, tags: ['neutral'] },
+    { pattern: /(?<![A-Za-z])areolae?(?![A-Za-z])/gi,        replacement: 'areolae', severity: 1, tags: ['neutral'] },
+
+    // ——— VULVA / VAGINA / CLITORIS ———
+    { pattern: /(?<![A-Za-z])p(?:u|v)(?:s|\$)?s(?:y|i)(?![A-Za-z])/gi, replacement: 'vagina', severity: 3, tags: ['female','slang'] },
+    { pattern: /(?<![A-Za-z])coo(?:ch|chie)(?![A-Za-z])/gi,  replacement: 'vagina', severity: 3, tags: ['female','slang'] },
+    { pattern: /(?<![A-Za-z])vajayjay(?![A-Za-z])/gi,        replacement: 'vagina', severity: 2, tags: ['female','pop'] },
+    { pattern: /(?<![A-Za-z])kitty(?![A-Za-z])/gi,           replacement: 'vagina', severity: 2, tags: ['female','euphemism'] },
+    { pattern: /(?<![A-Za-z])clit(?:ty)?(?![A-Za-z])/gi,     replacement: 'clitoris', severity: 3, tags: ['female'] },
+    { pattern: /(?<![A-Za-z])bean(?![A-Za-z])/gi,            replacement: 'clitoris', severity: 2, tags: ['female','metaphor'] },
+    { pattern: /(?<![A-Za-z])labia(?![A-Za-z])/gi,           replacement: 'vulva', severity: 2, tags: ['female'] },
+    { pattern: /(?<![A-Za-z])lip\s*down\s*there(?![A-Za-z])/gi, replacement: 'vulva', severity: 2, tags: ['female'] },
+
+    // ——— BUTT / ANUS ———
+    { pattern: /(?<![A-Za-z])ass(?!ets)(?![A-Za-z])/gi,      replacement: 'buttocks', severity: 1, tags: ['neutral'] },
+    { pattern: /(?<![A-Za-z])butt(?![A-Za-z])/gi,            replacement: 'buttocks', severity: 1, tags: ['neutral'] },
+    { pattern: /(?<![A-Za-z])booty(?![A-Za-z])/gi,           replacement: 'buttocks', severity: 1, tags: ['neutral','US'] },
+    { pattern: /(?<![A-Za-z])arse(?![A-Za-z])/gi,            replacement: 'buttocks', severity: 1, tags: ['neutral','UK'] },
+    { pattern: /(?<![A-Za-z])butt\s*hole|ass\s*hole|backdoor/gi, replacement: 'anus', severity: 3, tags: ['neutral'] },
+    { pattern: /(?<![A-Za-z])anus(?![A-Za-z])/gi,            replacement: 'anus', severity: 3, tags: ['neutral'] },
+
+    // ——— PENIS / TESTICLES ———
+    { pattern: /(?<![A-Za-z])dick(?![A-Za-z])/gi,            replacement: 'penis', severity: 3, tags: ['male','slang'] },
+    { pattern: /(?<![A-Za-z])cock(?![A-Za-z])/gi,            replacement: 'penis', severity: 3, tags: ['male','slang'] },
+    { pattern: /(?<![A-Za-z])member(?![A-Za-z])/gi,          replacement: 'penis', severity: 2, tags: ['male','euphemism'] },
+    { pattern: /(?<![A-Za-z])shaft(?![A-Za-z])/gi,           replacement: 'penis', severity: 2, tags: ['male'] },
+    { pattern: /(?<![A-Za-z])schlong(?![A-Za-z])/gi,         replacement: 'penis', severity: 3, tags: ['male','colloquial'] },
+    { pattern: /(?<![A-Za-z])johnson(?![A-Za-z])/gi,         replacement: 'penis', severity: 2, tags: ['male','slang'] },
+    { pattern: /(?<![A-Za-z])balls?(?![A-Za-z])/gi,          replacement: 'testicles', severity: 3, tags: ['male'] },
+    { pattern: /(?<![A-Za-z])nuts(?![A-Za-z])/gi,            replacement: 'testicles', severity: 3, tags: ['male'] },
+    { pattern: /(?<![A-Za-z])sack(?![A-Za-z])/gi,            replacement: 'scrotum', severity: 2, tags: ['male'] },
+    { pattern: /(?<![A-Za-z])scrote\w*(?![A-Za-z])/gi,       replacement: 'scrotum', severity: 2, tags: ['male'] },
+
+    // ——— FLUIDS ———
+    { pattern: /(?<![A-Za-z])precum(?![A-Za-z])/gi,          replacement: 'pre-ejaculatory fluid', severity: 4, tags: ['fluid'] },
+    { pattern: /(?<![A-Za-z])cum(shot)?(?![A-Za-z])/gi,      replacement: 'semen', severity: 4, tags: ['fluid'] },
+    { pattern: /(?<![A-Za-z])jizz(?![A-Za-z])/gi,            replacement: 'semen', severity: 4, tags: ['fluid'] },
+    { pattern: /(?<![A-Za-z])load(?![A-Za-z])/gi,            replacement: 'semen', severity: 3, tags: ['fluid','metaphor'] }
+  ]
+});
+// >>> END OF BLOCK 2 <<<
+
+/* ================================================================
+ * BLOCK 2 — ANATOMY CORE (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 2a — ANATOMY EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 2a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Clinical → colloquial/NSFW-ish wording (tits, pussy, cock, etc).
+ *   - Runs ONLY when allowExplicit:true (UI gating).
+ * INTERNAL NOTES:
+ *   - Mirrors BLOCK 2 but reverses mapping for spicier prompts.
+ *   - Safe fallback: if user has slider set to SFW, this block is skipped.
+ *   - Severity values slightly higher to push NSFW slider up.
+ * ================================================================ */
+// >>> START OF BLOCK 2a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 2a',
+  language: 'en',
+  category: 'anatomy_explicit',
+  gated: true,
+  emoji: ['🔥','🍆','🍑'],
+  notes: [
+    'Reverse mapping of anatomy_core: escalates to explicit slang.',
+    'Applied by CORE.applyDirectional() when direction="explicit" and allowExplicit=true.'
+  ],
+  entries: [
+    // Breasts
+    { pattern: /\bbreasts?\b/gi,  replacement: 'tits', severity: 3, tags: ['female','explicit'] },
+    { pattern: /\bchest\b/gi,    replacement: 'tits', severity: 3, tags: ['female','explicit'] },
+    // Nipples / Areolae
+    { pattern: /\bnipples?\b/gi, replacement: 'hard nipples', severity: 4, tags: ['explicit'] },
+    // Vulva / Vagina
+    { pattern: /\bvagina\b/gi,   replacement: 'pussy', severity: 4, tags: ['female','explicit'] },
+    { pattern: /\bvulva\b/gi,    replacement: 'pussy lips', severity: 4, tags: ['female','explicit'] },
+    { pattern: /\bclitoris\b/gi, replacement: 'clit', severity: 4, tags: ['female','explicit'] },
+    // Butt / Anus
+    { pattern: /\bbuttocks?\b/gi, replacement: 'ass', severity: 3, tags: ['explicit'] },
+    { pattern: /\banus\b/gi,      replacement: 'asshole', severity: 4, tags: ['explicit'] },
+    // Penis / Testicles
+    { pattern: /\bpenis\b/gi,     replacement: 'cock', severity: 4, tags: ['male','explicit'] },
+    { pattern: /\bshaft\b/gi,     replacement: 'cock', severity: 4, tags: ['male','explicit'] },
+    { pattern: /\btesticles?\b/gi,replacement: 'balls', severity: 4, tags: ['male','explicit'] },
+    { pattern: /\bscrotum\b/gi,   replacement: 'ballsack', severity: 4, tags: ['male','explicit'] },
+    // Fluids
+    { pattern: /\bsemen\b/gi, replacement: 'cum', severity: 5, tags: ['fluid','explicit'] },
+    { pattern: /\bpre-ejaculatory fluid\b/gi, replacement: 'precum', severity: 5, tags: ['fluid','explicit'] }
+  ]
+});
+// >>> END OF BLOCK 2a <<<
+
+/* ================================================================
+ * BLOCK 2a — ANATOMY EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 3 — ACTS & POSITIONS (EN)  (START)
+ * ID: BLOCK 3
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map slang & shorthand for consensual sexual acts into clear, clinical language.
+ *   - Covers oral, manual, penetration positions, and common paired terms.
+ *   - Lays groundwork so AI outputs are descriptive but safe for SFW-mode.
+ * INTERNAL NOTES:
+ *   - Explicit/colloquial mirrors (blowjob, doggystyle, titfuck, etc) will live in BLOCK 3a.
+ *   - Acts that imply coercion, non-consent, or illegal content are deliberately excluded.
+ *   - Severity values tuned for slider scoring — 3=sexual but not explicit, 5=explicit but clinical.
+ * ================================================================ */
+// >>> START OF BLOCK 3 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 3',
+  language: 'en',
+  category: 'acts_positions',
+  emoji: ['🛏️','🔄','👅','✋'],
+  notes: [
+    'Maps common slang to descriptive, neutral phrasing.',
+    'Designed to run after anatomy core (BLOCK 2) for coherence.'
+  ],
+  entries: [
+    // ——— ORAL ———
+    { pattern: /\b(bj|blow\s*job|blow\s*jobs|giving\s*head|go(?:ing)?\s*down\s*on)\b/gi,
+      replacement: 'oral sex (performing)', severity: 4, tags: ['oral','giver'] },
+    { pattern: /\b(deep\s*throat(?:ing)?|dt)\b/gi,
+      replacement: 'deep oral penetration', severity: 5, tags: ['oral'] },
+    { pattern: /\b(face\s*fuck(?:ing)?)\b/gi,
+      replacement: 'deep oral penetration', severity: 5, tags: ['oral'] },
+    { pattern: /\b(eat(?:ing)?\s*out|cunn?ilingu(?:s|s)|munch(?:ing)?\s*box)\b/gi,
+      replacement: 'oral stimulation of the vulva', severity: 4, tags: ['oral','receiver'] },
+
+    // ——— MANUAL ———
+    { pattern: /\b(hand\s*job|hj)\b/gi,
+      replacement: 'manual stimulation (penis)', severity: 3, tags: ['manual'] },
+    { pattern: /\b(fingering|digital\s*penetration)\b/gi,
+      replacement: 'manual penetration (vagina)', severity: 3, tags: ['manual'] },
+    { pattern: /\b(finger\s*play|playing\s*with\s*fingers)\b/gi,
+      replacement: 'manual stimulation (vagina)', severity: 3, tags: ['manual'] },
+
+    // ——— PENETRATION / POSITIONS ———
+    { pattern: /\b(vaginal\s*sex|intercourse|making\s*love|sleeping\s*together)\b/gi,
+      replacement: 'vaginal intercourse (consensual)', severity: 3, tags: ['penetration'] },
+    { pattern: /\b(doggy\s*style|from\s*behind)\b/gi,
+      replacement: 'rear-entry position', severity: 4, tags: ['position'] },
+    { pattern: /\b(missionary|face\s*to\s*face)\b/gi,
+      replacement: 'missionary position', severity: 3, tags: ['position'] },
+    { pattern: /\b(cowgirl|girl\s*on\s*top)\b/gi,
+      replacement: 'female-superior position', severity: 4, tags: ['position'] },
+    { pattern: /\b(reverse\s*cowgirl)\b/gi,
+      replacement: 'female-superior position (reverse)', severity: 4, tags: ['position'] },
+
+    // ——— NON-PENETRATIVE / INTIMATE ACTS ———
+    { pattern: /\b(foreplay|petting|making\s*out)\b/gi,
+      replacement: 'intimate foreplay', severity: 2, tags: ['romance'] },
+    { pattern: /\b(cuddle|spoon(?:ing)?)\b/gi,
+      replacement: 'cuddling', severity: 1, tags: ['romance'] }
+  ]
+});
+// >>> END OF BLOCK 3 <<<
+
+/* ================================================================
+ * BLOCK 3 — ACTS & POSITIONS (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 3a — ACTS & POSITIONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 3a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate clinical terms into explicit/colloquial act language.
+ *   - Used by PF_CORE.applyDirectional() when direction="explicit".
+ * INTERNAL NOTES:
+ *   - Severity values here run hotter (4–5) to signal full NSFW.
+ *   - Keep consensual framing; do not include non-consent or illegal content.
+ * ================================================================ */
+// >>> START OF BLOCK 3a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 3a',
+  language: 'en',
+  category: 'acts_positions_explicit',
+  gated: true,
+  emoji: ['🔥','🛏️'],
+  notes: [
+    'Reverse mapping of BLOCK 3, clinical → slang.',
+    'Applied only when allowExplicit=true.'
+  ],
+  entries: [
+    // ——— ORAL ———
+    { pattern: /\boral sex \(performing\)\b/gi, replacement: 'blowjob', severity: 5, tags: ['oral','explicit'] },
+    { pattern: /\bdeep oral penetration\b/gi,  replacement: 'deepthroat', severity: 5, tags: ['oral','explicit'] },
+    { pattern: /\boral stimulation of the vulva\b/gi, replacement: 'cunnilingus', severity: 5, tags: ['oral','explicit'] },
+
+    // ——— MANUAL ———
+    { pattern: /\bmanual stimulation \(penis\)\b/gi, replacement: 'handjob', severity: 4, tags: ['manual','explicit'] },
+    { pattern: /\bmanual penetration \(vagina\)\b/gi, replacement: 'fingering', severity: 4, tags: ['manual','explicit'] },
+
+    // ——— PENETRATION / POSITIONS ———
+    { pattern: /\bvaginal intercourse \(consensual\)\b/gi, replacement: 'fucking', severity: 5, tags: ['penetration','explicit'] },
+    { pattern: /\brear-entry position\b/gi, replacement: 'doggystyle', severity: 5, tags: ['position','explicit'] },
+    { pattern: /\bmissionary position\b/gi, replacement: 'missionary sex', severity: 4, tags: ['position','explicit'] },
+    { pattern: /\bfemale-superior position\b/gi, replacement: 'cowgirl position', severity: 4, tags: ['position','explicit'] },
+    { pattern: /\bfemale-superior position \(reverse\)\b/gi, replacement: 'reverse cowgirl', severity: 4, tags: ['position','explicit'] },
+
+    // ——— NON-PENETRATIVE / INTIMATE ACTS ———
+    { pattern: /\bintimate foreplay\b/gi, replacement: 'heavy petting', severity: 3, tags: ['romance','explicit'] },
+    { pattern: /\bcuddling\b/gi, replacement: 'post-sex cuddling', severity: 2, tags: ['romance','explicit'] }
+  ]
+});
+// >>> END OF BLOCK 3a <<<
+
+/* ================================================================
+ * BLOCK 3a — ACTS & POSITIONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 4a — PROFANITY EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 4a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Reverse of BLOCK 4: neutral/toned phrases → raw swears/explicit tone.
+ *   - Only applied when allowExplicit:true (NSFW slider raised).
+ * INTERNAL NOTES:
+ *   - Keep mapping purposeful; avoid gratuitous graphic prose.
+ *   - Designed to help models that score better with edgy tokens.
+ * ================================================================ */
+// >>> START OF BLOCK 4a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 4a',
+  language: 'en',
+  category: 'profanity_explicit',
+  gated: true,
+  emoji: ['🔥','🗯️'],
+  notes: [
+    'Escalates toned phrases into swear words when user explicitly opts in.',
+    'Pairs with BLOCK 4; only directional, not general sanitization.'
+  ],
+  entries: [
+    // ——— INTENSITY ———
+    { pattern: /\bvery\b/gi,                    replacement: 'fucking', severity: 4, tags: ['intensity','explicit'] },
+    { pattern: /\bextremely\b/gi,               replacement: 'fucking', severity: 4, tags: ['intensity','explicit'] },
+    { pattern: /\bintense\b/gi,                 replacement: 'fucking', severity: 4, tags: ['intensity','explicit'] },
+    { pattern: /\bextremely intense\b/gi,       replacement: 'motherfucking', severity: 5, tags: ['intensity','explicit'] },
+
+    // ——— DISMISSIVE ———
+    { pattern: /\bplease be quiet\b/gi,         replacement: 'shut the fuck up', severity: 4, tags: ['aggressive','explicit'] },
+    { pattern: /\bleave me alone\b/gi,          replacement: 'go fuck yourself', severity: 5, tags: ['aggressive','explicit'] },
+
+    // ——— EXCLAIMS ———
+    { pattern: /\bwow\b/gi,                     replacement: 'damn', severity: 2, tags: ['exclaim','explicit'] },
+    { pattern: /\bunbelievable\b/gi,            replacement: 'holy shit', severity: 3, tags: ['exclaim','explicit'] },
+    { pattern: /\bincredible\b/gi,              replacement: 'holy fuck', severity: 3, tags: ['exclaim','explicit'] },
+
+    // ——— NOUN PHRASES ———
+    { pattern: /\bchaotic situation\b/gi,       replacement: 'shit show', severity: 3, tags: ['profanity','explicit'] },
+    { pattern: /\bmess\b/gi,                    replacement: 'shit', severity: 2, tags: ['profanity','explicit'] },
+    { pattern: /\bnonsense\b/gi,                replacement: 'bullshit', severity: 2, tags: ['profanity','explicit'] },
+    { pattern: /\bseverely broken\b/gi,         replacement: 'fucked up', severity: 4, tags: ['profanity','explicit'] },
+
+    // ——— INSULTS ———
+    { pattern: /\brude person\b/gi,             replacement: 'asshole', severity: 4, tags: ['insult','explicit'] },
+    { pattern: /\bfoolish person\b/gi,          replacement: 'jackass', severity: 3, tags: ['insult','explicit'] },
+    { pattern: /\bunkind person\b/gi,           replacement: 'jerk', severity: 2, tags: ['insult','explicit'] },
+    { pattern: /\bunwise person\b/gi,           replacement: 'idiot', severity: 2, tags: ['insult','explicit'] },
+
+    // ——— SEXUAL SLUR NEUTRALS ———
+    { pattern: /\bsexually active person\b/gi,  replacement: 'slut', severity: 4, tags: ['sex_slur','explicit'] },
+    { pattern: /\bsex worker \(neutral\)\b/gi,  replacement: 'whore', severity: 4, tags: ['sex_slur','explicit'] },
+    { pattern: /\bsexually active man\b/gi,     replacement: 'manwhore', severity: 4, tags: ['sex_slur','explicit'] },
+
+    // ——— INTERNET ———
+    { pattern: /\bwhat is happening\b/gi,       replacement: 'wtf', severity: 3, tags: ['internet','explicit'] },
+    { pattern: /\boh my goodness\b/gi,          replacement: 'omfg', severity: 3, tags: ['internet','explicit'] },
+    { pattern: /\bthat is very funny\b/gi,      replacement: 'lmao', severity: 2, tags: ['internet','explicit'] },
+    { pattern: /\bthat is extremely funny\b/gi, replacement: 'lmfao', severity: 2, tags: ['internet','explicit'] }
+  ]
+});
+// >>> END OF BLOCK 4a <<<
+/* ================================================================
+ * BLOCK 4a — PROFANITY EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
