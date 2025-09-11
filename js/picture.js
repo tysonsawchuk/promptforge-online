@@ -878,3 +878,660 @@ PF_PACKS.push({
 /* ================================================================
  * BLOCK 8 — ENVIRONMENTS, BIOMES & SCENERY (EN)  (END)
  * ================================================================ */
+/* ================================================================
+ * BLOCK 9 — PRODUCTS, OBJECTS, MATERIALS & TEXTURES (EN)  (START)
+ * ID: BLOCK 9
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual product/object words into rich, model-friendly descriptors.
+ *   - Includes materials, surface finishes, wear/aging, packaging, and scale cues.
+ * INTERNAL NOTES:
+ *   - Severity 0 (non-NSFW). Stackable with BLOCK 6 (photo) + BLOCK 8 (environments).
+ *   - Keep tokens brand-free; focus on physical attributes users expect in renders.
+ * ================================================================ */
+// >>> START OF BLOCK 9 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 9',
+  language: 'en',
+  category: 'products_objects_materials',
+  emoji: ['📦','🧱','🧴','🔩'],
+  notes: [
+    'Object descriptors favor measurable traits: dimensions, materials, finish, wear, assembly.',
+    'Packaging terms help for ecommerce/thumbnail prompts.'
+  ],
+  entries: [
+    // ——— GENERIC OBJECT SCALES / DIMENSIONS ———
+    { pattern: /\bpalm[-\s]*sized\b/gi, replacement: 'compact handheld scale, roughly 8–12 cm long', severity: 0, tags: ['scale'] },
+    { pattern: /\bpocket[-\s]*sized\b/gi, replacement: 'very small portable scale, roughly 5–8 cm', severity: 0, tags: ['scale'] },
+    { pattern: /\btabletop\b/gi, replacement: 'desktop scale, fits on a table surface, 30–60 cm wide', severity: 0, tags: ['scale'] },
+    { pattern: /\bfull[-\s]*size\b/gi, replacement: 'full-scale object, life-size dimensions appropriate to category', severity: 0, tags: ['scale'] },
+
+    // ——— MATERIALS (BASE) ———
+    { pattern: /\bstainless\s*steel\b/gi, replacement: 'brushed stainless steel, cool gray tone, fine linear grain, subtle specular highlights', severity: 0, tags: ['material','metal'] },
+    { pattern: /\baluminum\b/gi, replacement: 'anodized aluminum, lightweight metal, satin sheen, fine micro-scratches', severity: 0, tags: ['material','metal'] },
+    { pattern: /\bcopper\b/gi, replacement: 'copper metal, warm orange-red tone, high conductivity look, subtle tarnish at edges', severity: 0, tags: ['material','metal'] },
+    { pattern: /\bbrass\b/gi, replacement: 'brass alloy, golden tone, polished edges, light oxidation in recesses', severity: 0, tags: ['material','metal'] },
+    { pattern: /\bchrome\b/gi, replacement: 'mirror-polished chrome, sharp reflections, high specularity, crisp highlight rolloff', severity: 0, tags: ['material','metal'] },
+
+    { pattern: /\bhard\s*plastic\b/gi, replacement: 'rigid ABS plastic, slight sheen, molded seam lines, ejector pin marks', severity: 0, tags: ['material','polymer'] },
+    { pattern: /\bsoft\s*touch\b/gi, replacement: 'soft-touch elastomer coating, matte finish, fingerprint-prone, diffuse highlights', severity: 0, tags: ['finish','polymer'] },
+    { pattern: /\bacrylic\b/gi, replacement: 'clear acrylic, high transparency, sharp refraction edges, minor internal dust', severity: 0, tags: ['material','polymer'] },
+    { pattern: /\bglass\b/gi, replacement: 'soda-lime glass, transparent with slight green tint, crisp reflections, refractive caustics', severity: 0, tags: ['material'] },
+    { pattern: /\btempered\s*glass\b/gi, replacement: 'tempered safety glass, subtle edge tint, high impact resistance, clean speculars', severity: 0, tags: ['material'] },
+
+    { pattern: /\bceramic\b/gi, replacement: 'glazed ceramic, smooth surface, high gloss, subtle glaze pooling near edges', severity: 0, tags: ['material'] },
+    { pattern: /\bporcelain\b/gi, replacement: 'fine white porcelain, translucent thin edges, glossy glaze, delicate appearance', severity: 0, tags: ['material'] },
+    { pattern: /\bconcrete\b/gi, replacement: 'cast concrete, fine aggregate specks, matte surface, slight air holes', severity: 0, tags: ['material'] },
+    { pattern: /\bmarble\b/gi, replacement: 'polished marble, vein patterns, cool touch, sharp specular highlights', severity: 0, tags: ['material','stone'] },
+    { pattern: /\bgranite\b/gi, replacement: 'polished granite, crystalline flecks, multi-color grain, durable finish', severity: 0, tags: ['material','stone'] },
+
+    { pattern: /\bwood\b/gi, replacement: 'natural wood, visible grain, end-grain texture on cuts, sealed with clear coat', severity: 0, tags: ['material'] },
+    { pattern: /\boak\b/gi, replacement: 'oak wood, prominent open grain, warm tan color, visible medullary rays', severity: 0, tags: ['material','wood'] },
+    { pattern: /\bwalnut\b/gi, replacement: 'walnut wood, deep brown tone, tight grain, satin oil finish', severity: 0, tags: ['material','wood'] },
+    { pattern: /\bbamboo\b/gi, replacement: 'bamboo lamination, linear nodes, pale yellow tone, sustainable vibe', severity: 0, tags: ['material','wood'] },
+    { pattern: /\bleather\b/gi, replacement: 'genuine leather, subtle grain, creasing at bends, matte-satin sheen', severity: 0, tags: ['material'] },
+    { pattern: /\bvegan\s*leather\b/gi, replacement: 'PU faux leather, consistent grain emboss, matte finish, crisp seam stitching', severity: 0, tags: ['material'] },
+    { pattern: /\bfabric\b/gi, replacement: 'woven textile, visible weave pattern, soft drape, slight fuzz at edges', severity: 0, tags: ['material'] },
+    { pattern: /\blinen\b/gi, replacement: 'linen fabric, slub texture, matte finish, breathable weave', severity: 0, tags: ['material','textile'] },
+    { pattern: /\bvelvet\b/gi, replacement: 'velvet fabric, directional pile, deep color absorption, soft specular sweep', severity: 0, tags: ['material','textile'] },
+
+    // ——— SURFACE FINISH / COATING ———
+    { pattern: /\bmatte\s*black\b/gi, replacement: 'matte black finish, low reflectivity, soft highlight falloff, fingerprints less visible', severity: 0, tags: ['finish'] },
+    { pattern: /\bsatin\s*black\b/gi, replacement: 'satin black finish, gentle sheen, controlled reflections, premium look', severity: 0, tags: ['finish'] },
+    { pattern: /\bgloss\s*black\b/gi, replacement: 'high-gloss black finish, mirror-like reflections, highlight hotspots', severity: 0, tags: ['finish'] },
+    { pattern: /\banodized\b/gi, replacement: 'anodized metal finish, colored oxide layer, abrasion-resistant, uniform matte-satin', severity: 0, tags: ['finish'] },
+    { pattern: /\bpowder\s*coat(?:ed)?\b/gi, replacement: 'powder-coated finish, durable polymer layer, orange-peel microtexture', severity: 0, tags: ['finish'] },
+
+    // ——— WEAR / AGING ———
+    { pattern: /\bbrand\s*new\b/gi, replacement: 'factory new condition, pristine surfaces, no scratches, no dust', severity: 0, tags: ['condition'] },
+    { pattern: /\blike\s*new\b/gi, replacement: 'near-new condition, minimal micro-scratches, very clean', severity: 0, tags: ['condition'] },
+    { pattern: /\blightly\s*used\b/gi, replacement: 'light wear, faint edge scuffs, minor swirl marks, clean overall', severity: 0, tags: ['condition'] },
+    { pattern: /\bheavy\s*use\b/gi, replacement: 'notable wear, edge chipping, paint rub-through, visible dents', severity: 0, tags: ['condition'] },
+    { pattern: /\bweathered\b/gi, replacement: 'sun-faded color, surface cracks, oxidation, uneven patina', severity: 0, tags: ['aging'] },
+    { pattern: /\brusty\b/gi, replacement: 'oxidized iron, reddish-brown rust blooms, flaking scale, pitted texture', severity: 0, tags: ['aging','metal'] },
+
+    // ——— PACKAGING ———
+    { pattern: /\bretail\s*box\b/gi, replacement: 'printed corrugated retail box, CMYK graphics, gloss varnish highlights, barcode panel', severity: 0, tags: ['packaging'] },
+    { pattern: /\bbrown\s*box\b/gi, replacement: 'kraft corrugated box, die-cut flaps, packing tape seal, shipping label', severity: 0, tags: ['packaging'] },
+    { pattern: /\bblister\s*pack\b/gi, replacement: 'clear PET blister shell on printed card backing, heat-sealed edges', severity: 0, tags: ['packaging'] },
+    { pattern: /\bclam([- ]?)shell\b/gi, replacement: 'hinged clamshell plastic packaging, tamper-evident seal, clear presentation', severity: 0, tags: ['packaging'] },
+    { pattern: /\bpouch\b/gi, replacement: 'stand-up zipper pouch, matte laminate, window cutout, nitrogen flush look', severity: 0, tags: ['packaging','food'] },
+
+    // ——— COMMON PRODUCT CATEGORIES ———
+    { pattern: /\bwater\s*bottle\b/gi, replacement: 'reusable bottle, 500–750 ml, screw-top lid, silicone seal, measurement markings', severity: 0, tags: ['product'] },
+    { pattern: /\bmug\b/gi, replacement: 'ceramic mug, 330 ml capacity, C-handle, glossy glaze, print-ready surface', severity: 0, tags: ['product'] },
+    { pattern: /\bchair\b/gi, replacement: 'seating furniture, ergonomic backrest, stable base, material per style', severity: 0, tags: ['product','furniture'] },
+    { pattern: /\bsofa\b/gi, replacement: 'three-seat sofa, foam cushions, fabric or leather upholstery, visible stitching', severity: 0, tags: ['product','furniture'] },
+    { pattern: /\bheadphones?\b/gi, replacement: 'over-ear headphones, padded earcups, adjustable headband, braided cable or wireless', severity: 0, tags: ['product','electronics'] },
+    { pattern: /\bsmartphone\b/gi, replacement: 'slab phone form factor, thin bezels, glass front and back, metal frame, camera bump', severity: 0, tags: ['product','electronics'] },
+    { pattern: /\blaptop\b/gi, replacement: 'clamshell laptop, backlit keyboard, large trackpad, slim bezels, aluminum chassis', severity: 0, tags: ['product','electronics'] },
+    { pattern: /\bkeyboard\b/gi, replacement: 'mechanical keyboard, sculpted keycaps, per-key switches, compact layout options', severity: 0, tags: ['product','electronics'] },
+    { pattern: /\bwatch\b/gi, replacement: 'wristwatch, stainless case, sapphire-like crystal look, leather or metal strap', severity: 0, tags: ['product','accessory'] },
+
+    // ——— LABELING / GRAPHIC HINTS ———
+    { pattern: /\bminimal\s*label\b/gi, replacement: 'clean minimal label, sans-serif typography, generous whitespace, small logo', severity: 0, tags: ['graphic'] },
+    { pattern: /\bbold\s*label\b/gi, replacement: 'bold label design, high contrast typography, strong color blocks', severity: 0, tags: ['graphic'] },
+    { pattern: /\bfoil\s*stamp\b/gi, replacement: 'metallic foil stamping, reflective sheen, premium finish, emboss impression', severity: 0, tags: ['graphic','finish'] },
+    { pattern: /\bemboss\b/gi, replacement: 'embossed relief, raised details on paperboard, tactile texture', severity: 0, tags: ['graphic','finish'] },
+    { pattern: /\bdeboss\b/gi, replacement: 'debossed impression, recessed details, subtle shadowing in recessed areas', severity: 0, tags: ['graphic','finish'] }
+  ]
+});
+// >>> END OF BLOCK 9 <<<
+/* ================================================================
+ * BLOCK 9 — PRODUCTS, OBJECTS, MATERIALS & TEXTURES (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 10 — MULTILINGUAL CORE + ES SEED (START)
+ * ID: BLOCK 10
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide language-aware sanitization without touching earlier logic.
+ *   - Add a Spanish (es) seed so we can mirror anatomy/profanity quickly.
+ * INTERNAL NOTES:
+ *   - Adds new helper: PF_CORE.sanitizeByLang(text, lang, opts) that only runs packs for that language + 'any'.
+ *   - UI should pass user-selected language code (e.g., 'en', 'es'); default stays legacy sanitize() behavior.
+ * ================================================================ */
+// >>> START OF BLOCK 10 CODE <<<
+(function (global) {
+  const CORE = global.PF_CORE || {};
+  const PACKS = global.PF_PACKS || [];
+
+  // Safety: don’t overwrite if it already exists from another session
+  if (!CORE.sanitizeByLang) {
+    CORE.sanitizeByLang = function sanitizeByLang(text, lang = 'en', opts = {}) {
+      const { direction = 'clean', allowExplicit = false } = opts;
+      let out = String(text || '');
+      if (!out) return out;
+
+      // 1) Clean passes for selected language
+      for (const pack of PACKS) {
+        if (!pack || /BLOCK\s+\d+a$/i.test(pack.block_id)) continue; // skip explicit-direction packs
+        const plang = (pack.language || 'en').toLowerCase();
+        if (plang !== lang.toLowerCase() && plang !== 'any') continue;
+        for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+      }
+
+      // 2) Optional explicit escalation for selected language
+      if (direction === 'explicit' && allowExplicit) {
+        for (const pack of PACKS) {
+          if (!pack || !/BLOCK\s+\d+a$/i.test(pack.block_id)) continue; // only explicit-direction packs
+          const plang = (pack.language || 'en').toLowerCase();
+          if (plang !== lang.toLowerCase() && plang !== 'any') continue;
+          for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+        }
+      }
+      return out;
+    };
+  }
+})(typeof self !== 'undefined' ? self : this);
+
+// ——— SEED: SPANISH (ES) CORE ANATOMY & PROFANITY (CLINICAL) ———
+PF_PACKS.push({
+  block_id: 'BLOCK 10 (es: anatomy/profanity core)',
+  language: 'es',
+  category: 'anatomia_y_lenguaje',
+  emoji: ['🇪🇸','🧠'],
+  notes: [
+    'ES seed for anatomy + profanity neutralization. Mirror more terms in later blocks.',
+    'Directional explicit mirror will be BLOCK 10a (es).'
+  ],
+  entries: [
+    // Anatomía (neutralizaciones comunes)
+    { pattern: /\b(tetas|tetitas|boobs?)\b/gi, replacement: 'senos', severity: 2, tags: ['anatomia','slang'] },
+    { pattern: /\b(pezones?)\b/gi, replacement: 'pezones', severity: 1, tags: ['anatomia'] },
+    { pattern: /\b(coñito|concha|chocha|panocha|chucha|pussy)\b/gi, replacement: 'vagina', severity: 3, tags: ['anatomia','slang'] },
+    { pattern: /\b(clítoris|clitoris|clito)\b/gi, replacement: 'clítoris', severity: 3, tags: ['anatomia'] },
+    { pattern: /\b(culo|trasero|nalgas)\b/gi, replacement: 'glúteos', severity: 2, tags: ['anatomia'] },
+    { pattern: /\b(ano|ojete)\b/gi, replacement: 'ano', severity: 3, tags: ['anatomia'] },
+    { pattern: /\b(pene|verga|pito|cola)\b/gi, replacement: 'pene', severity: 3, tags: ['anatomia','slang'] },
+    { pattern: /\b(testículos?|bolas|huevos)\b/gi, replacement: 'testículos', severity: 3, tags: ['anatomia'] },
+
+    // Profanidad general → tono neutro
+    { pattern: /\b(joder|follar|fucking)\b/gi, replacement: 'intenso', severity: 3, tags: ['profanidad'] },
+    { pattern: /\b(mierda|mierdas)\b/gi, replacement: 'desorden', severity: 2, tags: ['profanidad'] },
+    { pattern: /\b(cállate|callate)\b/gi, replacement: 'por favor guarda silencio', severity: 2, tags: ['agresivo'] },
+    { pattern: /\b(vete\s*a\s*la\s*mierda)\b/gi, replacement: 'déjame en paz', severity: 3, tags: ['agresivo'] },
+    { pattern: /\b(puta|puto|put@s?)\b/gi, replacement: 'lenguaje inapropiado: usa término neutral', severity: 3, tags: ['slur'] }
+  ]
+});
+
+// ——— SEED: SPANISH (ES) EXPLICIT-DIRECTIONAL ———
+PF_PACKS.push({
+  block_id: 'BLOCK 10a (es: explicit directional)',
+  language: 'es',
+  category: 'anatomia_y_lenguaje_explicit',
+  gated: true,
+  emoji: ['🇪🇸','🔥'],
+  notes: [
+    'Solo aplicado cuando allowExplicit:true y direction="explicit".'
+  ],
+  entries: [
+    { pattern: /\bsenos\b/gi, replacement: 'tetas', severity: 4, tags: ['explicito'] },
+    { pattern: /\bvagina\b/gi, replacement: 'coño', severity: 4, tags: ['explicito'] },
+    { pattern: /\bglúteos\b/gi, replacement: 'culo', severity: 3, tags: ['explicito'] },
+    { pattern: /\bano\b/gi, replacement: 'ojete', severity: 4, tags: ['explicito'] },
+    { pattern: /\bpene\b/gi, replacement: 'verga', severity: 4, tags: ['explicito'] },
+    { pattern: /\btestículos\b/gi, replacement: 'huevos', severity: 4, tags: ['explicito'] },
+
+    { pattern: /\bintenso\b/gi, replacement: 'jodido', severity: 4, tags: ['profanidad','explicito'] },
+    { pattern: /\bdesorden\b/gi, replacement: 'mierda', severity: 3, tags: ['profanidad','explicito'] },
+    { pattern: /\bpor favor guarda silencio\b/gi, replacement: 'cállate', severity: 4, tags: ['agresivo','explicito'] },
+    { pattern: /\bdéjame en paz\b/gi, replacement: 'vete a la mierda', severity: 4, tags: ['agresivo','explicito'] }
+  ]
+});
+// >>> END OF BLOCK 10 <<<
+
+/* ================================================================
+ * BLOCK 10 — MULTILINGUAL CORE + ES SEED (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 11 — EMOJI SEMANTICS EXPANSION (EN)  (START)
+ * ID: BLOCK 11
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Translate common emojis into descriptive, model-usable tokens.
+ *   - Helps prompts that mix text + emoji read cleanly for any model.
+ * INTERNAL NOTES:
+ *   - Severity 0 (style/semantic only). Keep brand-free and literal.
+ *   - Many emojis are context-dependent; we map to neutral descriptors.
+ *   - More languages can mirror this later in BLOCK 10+ packs.
+ * ================================================================ */
+// >>> START OF BLOCK 11 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 11',
+  language: 'en',
+  category: 'emoji_semantics',
+  emoji: ['😊','🔥','🍑','🍆','💦','🎨','🌈'],
+  notes: [
+    'If emoji implies NSFW slang, keep it anatomical or neutral. Directional packs handle spice.',
+    'Where multiple senses exist, list the most common first.'
+  ],
+  entries: [
+    // ——— FACES / MOOD ———
+    { pattern: /😀|🙂/g, replacement: 'smiling face, positive mood', severity: 0, tags: ['mood','face'] },
+    { pattern: /😁|😄/g, replacement: 'grinning face, cheerful mood', severity: 0, tags: ['mood','face'] },
+    { pattern: /😂|🤣/g, replacement: 'laughing hard, tears of joy', severity: 0, tags: ['mood','face'] },
+    { pattern: /😊/g, replacement: 'warm smile, content mood', severity: 0, tags: ['mood','face'] },
+    { pattern: /😍|🥰/g, replacement: 'affectionate expression, hearts motif', severity: 0, tags: ['mood','romance'] },
+    { pattern: /😎/g, replacement: 'confident attitude, sunglasses', severity: 0, tags: ['mood','style'] },
+    { pattern: /😏/g, replacement: 'smirk, playful attitude', severity: 0, tags: ['mood'] },
+    { pattern: /😳|🥺/g, replacement: 'shy expression, blushing, wide eyes', severity: 0, tags: ['mood'] },
+    { pattern: /😭/g, replacement: 'crying hard, abundant tears, emotional release', severity: 0, tags: ['mood','liquid'] },
+    { pattern: /😡|🤬/g, replacement: 'angry expression, high intensity, red face', severity: 0, tags: ['mood'] },
+    { pattern: /🤯/g, replacement: 'mind blown, shock, explosive reaction', severity: 0, tags: ['mood','effect'] },
+    { pattern: /🤔/g, replacement: 'thinking expression, contemplation', severity: 0, tags: ['mood'] },
+    { pattern: /😴|💤/g, replacement: 'sleeping, snoring, rest state', severity: 0, tags: ['mood'] },
+    { pattern: /🤒|🤧|🤢/g, replacement: 'sick expression, unwell, nausea or cold', severity: 0, tags: ['mood'] },
+
+    // ——— SYMBOLS / EFFECTS ———
+    { pattern: /🔥/g, replacement: 'flames, high energy, dramatic highlight', severity: 0, tags: ['effect','energy'] },
+    { pattern: /✨/g, replacement: 'sparkles, glitter highlights, magical twinkle', severity: 0, tags: ['effect'] },
+    { pattern: /💥/g, replacement: 'impact burst, explosion, action emphasis', severity: 0, tags: ['effect'] },
+    { pattern: /💨/g, replacement: 'motion swoosh, fast movement trail', severity: 0, tags: ['effect','motion'] },
+    { pattern: /💫/g, replacement: 'dizzy sparkle ring, whimsical effect', severity: 0, tags: ['effect'] },
+    { pattern: /🌀/g, replacement: 'vortex swirl, spiral motion, turbulence', severity: 0, tags: ['effect'] },
+
+    // ——— HANDS / GESTURES ———
+    { pattern: /👍/g, replacement: 'thumbs up, approval gesture', severity: 0, tags: ['gesture'] },
+    { pattern: /👎/g, replacement: 'thumbs down, disapproval gesture', severity: 0, tags: ['gesture'] },
+    { pattern: /👏/g, replacement: 'clapping hands, applause, celebration', severity: 0, tags: ['gesture'] },
+    { pattern: /🙌/g, replacement: 'raised hands, triumph, celebration', severity: 0, tags: ['gesture'] },
+    { pattern: /🙏/g, replacement: 'palms together, thanks or prayer gesture', severity: 0, tags: ['gesture'] },
+    { pattern: /✌️|✌/g, replacement: 'peace sign, victory gesture', severity: 0, tags: ['gesture'] },
+    { pattern: /👉/g, replacement: 'right pointing hand, callout emphasis', severity: 0, tags: ['gesture'] },
+    { pattern: /👈/g, replacement: 'left pointing hand, callout emphasis', severity: 0, tags: ['gesture'] },
+
+    // ——— LOVE / HEARTS ———
+    { pattern: /❤️|♥️/g, replacement: 'red heart symbol, love, romantic emphasis', severity: 0, tags: ['romance'] },
+    { pattern: /🧡|💛|💚|💙|💜/g, replacement: 'colored heart symbol, affectionate tone, themed palette', severity: 0, tags: ['romance','color'] },
+    { pattern: /💖|💗|💓|💞|💕/g, replacement: 'sparkly hearts, tender affection, cute tone', severity: 0, tags: ['romance'] },
+    { pattern: /💔/g, replacement: 'broken heart symbol, sadness, separation', severity: 0, tags: ['romance'] },
+
+    // ——— OBJECTS / THINGS ———
+    { pattern: /💎/g, replacement: 'gemstone sparkle, luxury vibe, hard refraction', severity: 0, tags: ['object','luxury'] },
+    { pattern: /🕯️|🕯/g, replacement: 'candle light, warm flame, intimate ambience', severity: 0, tags: ['object','lighting'] },
+    { pattern: /🎈/g, replacement: 'balloon, celebration mood, floating accent', severity: 0, tags: ['object','party'] },
+    { pattern: /🎉/g, replacement: 'confetti burst, party celebration', severity: 0, tags: ['object','party'] },
+    { pattern: /🎀/g, replacement: 'ribbon bow, decorative accent, gift vibe', severity: 0, tags: ['object','decor'] },
+    { pattern: /🧪/g, replacement: 'laboratory flask, experiment vibe, translucent liquid', severity: 0, tags: ['object','science'] },
+
+    // ——— FOOD / NSFW-LEANING EMOJI HANDLED NEUTRAL ———
+    { pattern: /🍑/g, replacement: 'buttocks metaphor', severity: 0, tags: ['anatomy_hint'] },
+    { pattern: /🍆/g, replacement: 'penis metaphor', severity: 0, tags: ['anatomy_hint'] },
+    { pattern: /🍒/g, replacement: 'paired cherries, cute accent, round fruit metaphor', severity: 0, tags: ['shape'] },
+    { pattern: /🌶️|🌶/g, replacement: 'chili pepper, spicy intensity, heat metaphor', severity: 0, tags: ['intensity'] },
+    { pattern: /💦/g, replacement: 'liquid droplets, splash effect, moisture emphasis', severity: 0, tags: ['liquid'] },
+    { pattern: /🍥/g, replacement: 'swirl motif, spiral garnish style, cute accent', severity: 0, tags: ['shape'] },
+
+    // ——— NATURE / WEATHER ———
+    { pattern: /🌈/g, replacement: 'rainbow spectrum arc, colorful optimism', severity: 0, tags: ['color','weather'] },
+    { pattern: /☀️|☀/g, replacement: 'sun icon, daylight, warm lighting', severity: 0, tags: ['weather','lighting'] },
+    { pattern: /🌙/g, replacement: 'crescent moon, night ambience, cool tones', severity: 0, tags: ['weather','night'] },
+    { pattern: /⭐|🌟/g, replacement: 'star symbol, twinkle highlight, night sky accent', severity: 0, tags: ['effect','night'] },
+    { pattern: /☁️|☁/g, replacement: 'cloud cover, overcast, soft sky diffusion', severity: 0, tags: ['weather'] },
+    { pattern: /🌧️|🌧/g, replacement: 'rain cloud, falling raindrops, wet surfaces', severity: 0, tags: ['weather'] },
+    { pattern: /❄️|❄/g, replacement: 'snowflake symbol, winter chill, crystalline texture', severity: 0, tags: ['weather'] }
+  ]
+});
+// >>> END OF BLOCK 11 <<<
+/* ================================================================
+ * BLOCK 11 — EMOJI SEMANTICS EXPANSION (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 12 — HUMAN APPEARANCE, BODIES & FASHION (EN)  (START)
+ * ID: BLOCK 12
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual descriptors for adult characters into clear, inclusive tokens.
+ *   - Covers body types, face features, skin/hair, age-bounded as ADULT ONLY, wardrobe & fashion.
+ * INTERNAL NOTES:
+ *   - Severity 0–1 (non-NSFW). Keep it SFW so it composes with any other block.
+ *   - Avoid minors: all references imply adult subjects. Words implying youth are mapped to “young adult”.
+ *   - Style stays respectful and specific; no fetish tokens here (those live in gated packs later if needed).
+ * ================================================================ */
+// >>> START OF BLOCK 12 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 12',
+  language: 'en',
+  category: 'human_appearance_fashion',
+  emoji: ['🧍','🧑‍🎤','🧥','👗'],
+  notes: [
+    'Inclusive descriptors: face shapes, skin tones, hair textures, body builds, posture, clothing cuts.',
+    'Stack with BLOCK 6 (camera) and BLOCK 5/7 (style) for complete portrait/product fashion prompts.'
+  ],
+  entries: [
+    // ——— AGE (ADULT-ONLY) ———
+    { pattern: /\bteen|underage|minor\b/gi, replacement: 'adult', severity: 5, tags: ['safety','age'] },
+    { pattern: /\byoung\s*(girl|boy|woman|man)\b/gi, replacement: 'young adult', severity: 3, tags: ['age','safety'] },
+    { pattern: /\bcollege\s*(girl|boy|student)\b/gi, replacement: 'adult college student', severity: 2, tags: ['age','safety'] },
+
+    // ——— BODY BUILDS ———
+    { pattern: /\bslim\b/gi, replacement: 'slim build', severity: 0, tags: ['body'] },
+    { pattern: /\btoned\b/gi, replacement: 'toned musculature', severity: 0, tags: ['body'] },
+    { pattern: /\bathletic\b/gi, replacement: 'athletic build, defined muscle groups', severity: 0, tags: ['body'] },
+    { pattern: /\bcurvy\b/gi, replacement: 'curvy build, fuller hips and chest', severity: 0, tags: ['body'] },
+    { pattern: /\bplus[-\s]*size\b/gi, replacement: 'plus-size build, fuller proportions', severity: 0, tags: ['body'] },
+    { pattern: /\bmuscular\b/gi, replacement: 'muscular build, prominent definition', severity: 0, tags: ['body'] },
+    { pattern: /\bpetite\b/gi, replacement: 'petite stature, smaller frame', severity: 0, tags: ['body'] },
+    { pattern: /\btall\b/gi, replacement: 'tall stature, elongated proportions', severity: 0, tags: ['body'] },
+
+    // ——— POSTURE / GESTURE ———
+    { pattern: /\bconfident\s*pose\b/gi, replacement: 'upright posture, shoulders relaxed, chin slightly raised', severity: 0, tags: ['pose'] },
+    { pattern: /\bpower\s*pose\b/gi, replacement: 'hands on hips, feet apart, upright stance, assertive posture', severity: 0, tags: ['pose'] },
+    { pattern: /\bgraceful\s*pose\b/gi, replacement: 'gentle weight shift, relaxed hands, soft curvature, poised stance', severity: 0, tags: ['pose'] },
+
+    // ——— FACE SHAPES ———
+    { pattern: /\boval\s*face\b/gi, replacement: 'oval face shape, balanced proportions', severity: 0, tags: ['face'] },
+    { pattern: /\bround\s*face\b/gi, replacement: 'round face shape, soft curves, wide cheeks', severity: 0, tags: ['face'] },
+    { pattern: /\bsquare\s*jaw\b/gi, replacement: 'square jawline, strong angles, defined mandible', severity: 0, tags: ['face'] },
+    { pattern: /\bheart[-\s]*shaped\s*face\b/gi, replacement: 'heart-shaped face, wider forehead, narrow chin', severity: 0, tags: ['face'] },
+    { pattern: /\bdiamond\s*face\b/gi, replacement: 'diamond face shape, pronounced cheekbones, narrow forehead and chin', severity: 0, tags: ['face'] },
+
+    // ——— FACIAL FEATURES ———
+    { pattern: /\bhigh\s*cheekbones\b/gi, replacement: 'prominent cheekbones, sculpted midface', severity: 0, tags: ['face'] },
+    { pattern: /\bfull\s*lips\b/gi, replacement: 'full lips, defined cupid bow', severity: 0, tags: ['face'] },
+    { pattern: /\bthin\s*lips\b/gi, replacement: 'thin lips, subtle vermilion border', severity: 0, tags: ['face'] },
+    { pattern: /\bfreckles\b/gi, replacement: 'freckles across cheeks and nose', severity: 0, tags: ['skin'] },
+    { pattern: /\bbeauty\s*mark\b/gi, replacement: 'facial mole beauty mark', severity: 0, tags: ['skin'] },
+    { pattern: /\bmonolid\b/gi, replacement: 'monolid eyelids, smooth upper lid contour', severity: 0, tags: ['eyes'] },
+    { pattern: /\bdouble\s*eyelid\b/gi, replacement: 'double eyelid crease, defined supratarsal fold', severity: 0, tags: ['eyes'] },
+
+    // ——— SKIN TONES / CONDITIONS ———
+    { pattern: /\b(pale|fair)\s*skin\b/gi, replacement: 'light skin tone', severity: 0, tags: ['skin'] },
+    { pattern: /\bolive\s*skin\b/gi, replacement: 'olive skin tone, greenish undertone', severity: 0, tags: ['skin'] },
+    { pattern: /\b(tan|tanned)\s*skin\b/gi, replacement: 'tan skin tone, sun-kissed warmth', severity: 0, tags: ['skin'] },
+    { pattern: /\bdark\s*skin\b/gi, replacement: 'deep skin tone, rich melanin', severity: 0, tags: ['skin'] },
+    { pattern: /\balbinism\b/gi, replacement: 'very light skin tone and hair pigmentation, delicate contrast', severity: 0, tags: ['skin'] },
+    { pattern: /\bvitiligo\b/gi, replacement: 'patchwork skin depigmentation patterns, high-contrast areas', severity: 0, tags: ['skin'] },
+
+    // ——— HAIR TYPE / COLOR ———
+    { pattern: /\bbald\b/gi, replacement: 'bald head, smooth scalp', severity: 0, tags: ['hair'] },
+    { pattern: /\bbuzz\s*cut\b/gi, replacement: 'very short buzz cut, even length', severity: 0, tags: ['hair'] },
+    { pattern: /\bshort\s*hair\b/gi, replacement: 'short hair length, above ears', severity: 0, tags: ['hair'] },
+    { pattern: /\bshoulder[-\s]*length\b/gi, replacement: 'shoulder-length hair, medium style', severity: 0, tags: ['hair'] },
+    { pattern: /\blong\s*hair\b/gi, replacement: 'long hair length, below shoulders', severity: 0, tags: ['hair'] },
+    { pattern: /\bstraight\s*hair\b/gi, replacement: 'straight hair texture, sleek strands', severity: 0, tags: ['hair'] },
+    { pattern: /\bwavy\s*hair\b/gi, replacement: 'wavy hair texture, S-curves, soft volume', severity: 0, tags: ['hair'] },
+    { pattern: /\bcurly\s*hair\b/gi, replacement: 'curly hair texture, ringlet curls, defined coils', severity: 0, tags: ['hair'] },
+    { pattern: /\bcoily\s*hair\b/gi, replacement: 'coily hair texture, tight curls, springy volume', severity: 0, tags: ['hair'] },
+    { pattern: /\bblonde\b/gi, replacement: 'blonde hair color, warm highlights', severity: 0, tags: ['hair','color'] },
+    { pattern: /\bbrunette\b/gi, replacement: 'brown hair color, medium depth', severity: 0, tags: ['hair','color'] },
+    { pattern: /\bblack\s*hair\b/gi, replacement: 'black hair color, high contrast', severity: 0, tags: ['hair','color'] },
+    { pattern: /\bredhead|ginger\b/gi, replacement: 'red hair color, copper tones', severity: 0, tags: ['hair','color'] },
+    { pattern: /\bdyed\s*(pink|blue|green|purple)\b/gi, replacement: 'dyed hair with vibrant color accent', severity: 0, tags: ['hair','color'] },
+
+    // ——— FACIAL HAIR ———
+    { pattern: /\bclean\s*shaven\b/gi, replacement: 'clean-shaven face, smooth skin', severity: 0, tags: ['facial_hair'] },
+    { pattern: /\bstubble\b/gi, replacement: 'short beard stubble, rough texture', severity: 0, tags: ['facial_hair'] },
+    { pattern: /\bbeard\b/gi, replacement: 'full beard, groomed shape', severity: 0, tags: ['facial_hair'] },
+    { pattern: /\bmustache|moustache\b/gi, replacement: 'mustache, upper-lip facial hair', severity: 0, tags: ['facial_hair'] },
+
+    // ——— EYES / BROWS ———
+    { pattern: /\bthick\s*brows\b/gi, replacement: 'thick eyebrows, strong arches', severity: 0, tags: ['brow'] },
+    { pattern: /\bthin\s*brows\b/gi, replacement: 'thin eyebrows, gentle arches', severity: 0, tags: ['brow'] },
+    { pattern: /\bhazel\s*eyes\b/gi, replacement: 'hazel eye color, green-brown mix', severity: 0, tags: ['eyes'] },
+    { pattern: /\bblue\s*eyes\b/gi, replacement: 'blue eye color, cool tone', severity: 0, tags: ['eyes'] },
+    { pattern: /\bgreen\s*eyes\b/gi, replacement: 'green eye color, vivid tones', severity: 0, tags: ['eyes'] },
+    { pattern: /\bbrown\s*eyes\b/gi, replacement: 'brown eye color, warm depth', severity: 0, tags: ['eyes'] },
+
+    // ——— WARDROBE / FASHION CORE ———
+    { pattern: /\bcasual\s*outfit\b/gi, replacement: 'casual outfit, t-shirt and jeans, relaxed fit, sneakers', severity: 0, tags: ['fashion'] },
+    { pattern: /\bstreetwear\b/gi, replacement: 'streetwear outfit, oversized hoodie, graphic tee, cargo pants, chunky sneakers', severity: 0, tags: ['fashion'] },
+    { pattern: /\bformal\s*wear\b/gi, replacement: 'formal wear, tailored suit or elegant dress, polished shoes', severity: 0, tags: ['fashion'] },
+    { pattern: /\bbusiness\s*attire\b/gi, replacement: 'business attire, blazer, collared shirt, slacks or pencil skirt, low heels or oxfords', severity: 0, tags: ['fashion'] },
+    { pattern: /\bbohemian\b/gi, replacement: 'bohemian style, flowy fabrics, layered jewelry, earthy palette', severity: 0, tags: ['fashion'] },
+    { pattern: /\bgrunge\b/gi, replacement: 'grunge outfit, flannel shirt, distressed denim, band tee, boots', severity: 0, tags: ['fashion'] },
+    { pattern: /\bgoth(ic)?\b/gi, replacement: 'goth style, dark palette, lace or leather accents, dramatic accessories', severity: 0, tags: ['fashion'] },
+    { pattern: /\bpreppy\b/gi, replacement: 'preppy look, polos, cable-knit sweater, chinos or pleated skirt, loafers', severity: 0, tags: ['fashion'] },
+    { pattern: /\btechwear\b/gi, replacement: 'techwear outfit, water-resistant fabrics, modular pockets, matte black palette, functional straps', severity: 0, tags: ['fashion'] },
+
+    // ——— CLOTHING ITEMS ———
+    { pattern: /\bgraphic\s*tee\b/gi, replacement: 'graphic t-shirt, center print, cotton jersey, relaxed fit', severity: 0, tags: ['clothing'] },
+    { pattern: /\bbutton[-\s]*up\b/gi, replacement: 'button-up shirt, crisp collar, placket, cuffs', severity: 0, tags: ['clothing'] },
+    { pattern: /\bhoodie\b/gi, replacement: 'hooded sweatshirt, kangaroo pocket, ribbed cuffs, drawstrings', severity: 0, tags: ['clothing'] },
+    { pattern: /\bblazer\b/gi, replacement: 'tailored blazer, lapels, structured shoulders, single-breasted', severity: 0, tags: ['clothing'] },
+    { pattern: /\bjeans\b/gi, replacement: 'denim jeans, five-pocket design, visible stitching, metal rivets', severity: 0, tags: ['clothing'] },
+    { pattern: /\bskirt\b/gi, replacement: 'skirt silhouette, specified length, fabric drape', severity: 0, tags: ['clothing'] },
+    { pattern: /\bdress\b/gi, replacement: 'dress silhouette, defined waist, fabric and length as styled', severity: 0, tags: ['clothing'] },
+    { pattern: /\bsneakers?\b/gi, replacement: 'sneakers, rubber outsole, cushioned midsole, lace-up', severity: 0, tags: ['footwear'] },
+    { pattern: /\bboots?\b/gi, replacement: 'boots, ankle or knee height options, sturdy sole', severity: 0, tags: ['footwear'] },
+    { pattern: /\bheels?\b/gi, replacement: 'heels, slender heel height, closed or open toe', severity: 0, tags: ['footwear'] },
+
+    // ——— ACCESSORIES ———
+    { pattern: /\bglasses\b/gi, replacement: 'eyeglasses, acetate or metal frames, anti-reflective lenses', severity: 0, tags: ['accessory'] },
+    { pattern: /\bsunglasses\b/gi, replacement: 'sunglasses, UV-protective lenses, tinted color, stylish frames', severity: 0, tags: ['accessory'] },
+    { pattern: /\bnecklace\b/gi, replacement: 'necklace accessory, chain or pendant, metallic finish', severity: 0, tags: ['accessory'] },
+    { pattern: /\bbracelet\b/gi, replacement: 'bracelet accessory, layered bangles or cuff', severity: 0, tags: ['accessory'] },
+    { pattern: /\bearrings?\b/gi, replacement: 'earrings, studs or hoops, metallic or gemstone accent', severity: 0, tags: ['accessory'] },
+    { pattern: /\bwatch\b/gi, replacement: 'wristwatch accessory, metal or leather strap, polished case', severity: 0, tags: ['accessory'] }
+  ]
+});
+// >>> END OF BLOCK 12 <<<
+/* ================================================================
+ * BLOCK 12 — HUMAN APPEARANCE, BODIES & FASHION (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 14 — CREATURES, ANIMALS & ANATOMY (SFW) (EN)  (START)
+ * ID: BLOCK 14
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Rich, SFW descriptors for animals/creatures (real + fantasy) without explicit content.
+ *   - Helpful for character design, mascots, natural history looks, and fantasy worldbuilding.
+ * INTERNAL NOTES:
+ *   - Severity 0. Avoid trademark species strains; use generic species/form traits.
+ *   - Fantasy variants keep it PG (anatomy descriptive, not sexual).
+ * ================================================================ */
+// >>> START OF BLOCK 14 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 14',
+  language: 'en',
+  category: 'creatures_animals',
+  emoji: ['🐺','🦅','🐉','🦄'],
+  notes: [
+    'Real species → morphology, coat/feather patterns, motion cues.',
+    'Fantasy forms → silhouette, scale features, elemental motifs.'
+  ],
+  entries: [
+    // ——— MAMMALS ———
+    { pattern: /\bwolf\b/gi, replacement: 'wolf canid, dense double coat, alert ears, keen gaze, athletic stance', severity: 0, tags: ['mammal'] },
+    { pattern: /\bfox\b/gi, replacement: 'fox canid, bushy tail with white tip, slender muzzle, bright eyes, agile posture', severity: 0, tags: ['mammal'] },
+    { pattern: /\bbear\b/gi, replacement: 'bear, heavy musculature, thick fur, curved claws, powerful shoulders', severity: 0, tags: ['mammal'] },
+    { pattern: /\blion\b/gi, replacement: 'lion, tawny coat, muscular frame, proud mane (male), golden eyes', severity: 0, tags: ['mammal'] },
+    { pattern: /\btiger\b/gi, replacement: 'tiger, orange coat with black stripes, broad head, powerful forelimbs', severity: 0, tags: ['mammal'] },
+    { pattern: /\bcat\b/gi, replacement: 'domestic cat, soft fur, vertical pupils, agile spine, whiskers, graceful gait', severity: 0, tags: ['mammal'] },
+    { pattern: /\bdog\b/gi, replacement: 'domestic dog, expressive ears, wet nose, varied coat, friendly posture', severity: 0, tags: ['mammal'] },
+    { pattern: /\bhare|rabbit\b/gi, replacement: 'rabbit, long ears, soft fur, quick hind legs, gentle eyes', severity: 0, tags: ['mammal'] },
+    { pattern: /\bhorse\b/gi, replacement: 'horse equine, glossy coat, flowing mane and tail, muscular legs, elegant stride', severity: 0, tags: ['mammal'] },
+    { pattern: /\bwhale\b/gi, replacement: 'whale cetacean, streamlined massive body, dorsal fin (varies), smooth skin, blowhole spray', severity: 0, tags: ['mammal','marine'] },
+
+    // ——— BIRDS ———
+    { pattern: /\beagle\b/gi, replacement: 'eagle raptor, hooked beak, keen eyesight, broad wingspan, soaring posture', severity: 0, tags: ['bird'] },
+    { pattern: /\bowl\b/gi, replacement: 'owl, forward-facing eyes, facial disk, silent flight feathers, nocturnal vibe', severity: 0, tags: ['bird'] },
+    { pattern: /\bparrot\b/gi, replacement: 'parrot, curved beak, vivid plumage, zygodactyl feet, lively posture', severity: 0, tags: ['bird'] },
+    { pattern: /\bpeacock\b/gi, replacement: 'peafowl, iridescent tail train, eye-spot feathers, fan display, regal stance', severity: 0, tags: ['bird'] },
+    { pattern: /\bflamingo\b/gi, replacement: 'flamingo, long legs, S-curved neck, pink plumage from carotenoids, social flock', severity: 0, tags: ['bird'] },
+
+    // ——— REPTILES / AMPHIBIANS ———
+    { pattern: /\bsnake\b/gi, replacement: 'snake, elongated body, smooth scales, forked tongue, sinuous movement', severity: 0, tags: ['reptile'] },
+    { pattern: /\blizard\b/gi, replacement: 'lizard, scaly skin, splayed limbs, quick darts, sun-basking behavior', severity: 0, tags: ['reptile'] },
+    { pattern: /\bcrocodile\b/gi, replacement: 'crocodile, armored scutes, powerful jaw, muscular tail, riverbank lurking', severity: 0, tags: ['reptile'] },
+    { pattern: /\bfrog\b/gi, replacement: 'frog amphibian, moist skin, long hind legs, bulging eyes, leaping motion', severity: 0, tags: ['amphibian'] },
+
+    // ——— FISH / INVERTEBRATES ———
+    { pattern: /\bkoi\b/gi, replacement: 'koi carp, patterned scales, orange-white-black varieties, tranquil pond ripples', severity: 0, tags: ['fish'] },
+    { pattern: /\boctopus\b/gi, replacement: 'octopus, eight flexible arms with suckers, soft body, intelligent eyes, camouflage ability', severity: 0, tags: ['cephalopod'] },
+    { pattern: /\bjellyfish\b/gi, replacement: 'jellyfish, bell-shaped body, trailing tentacles, translucent glow, drifting motion', severity: 0, tags: ['invertebrate','marine'] },
+    { pattern: /\bbutterfly\b/gi, replacement: 'butterfly, patterned wings, delicate antennae, nectar feeding, fluttering flight', severity: 0, tags: ['insect'] },
+    { pattern: /\bscarab\b/gi, replacement: 'scarab beetle, glossy elytra, compact body, symbolic ancient motif', severity: 0, tags: ['insect'] },
+
+    // ——— FANTASY CREATURES ———
+    { pattern: /\bdragon\b/gi, replacement: 'dragon, scaled hide, horned crest, massive wings, fiery breath motif, colossal presence', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bgriffin\b/gi, replacement: 'griffin, eagle head and wings, lion body, regal hybrid, guardian stance', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bunicorn\b/gi, replacement: 'unicorn, single spiral horn, graceful horse form, ethereal glow, pastel aura', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bmermaid\b/gi, replacement: 'merfolk, human upper body (adult), scaled fish tail, iridescent fins, underwater shimmer', severity: 0, tags: ['fantasy','marine'] },
+    { pattern: /\bphoenix\b/gi, replacement: 'phoenix, fiery plumage, rebirth motif, rising embers, radiant glow', severity: 0, tags: ['fantasy'] },
+
+    // ——— CREATURE DETAIL TOKENS ———
+    { pattern: /\bbiped\b/gi, replacement: 'bipedal stance, upright gait, balanced center of mass', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bquadruped\b/gi, replacement: 'quadrupedal stance, stable gait, grounded posture', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bdigitigrade\b/gi, replacement: 'digitigrade legs, raised heel, agile running posture', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bplantigrade\b/gi, replacement: 'plantigrade legs, full-foot contact, sturdy stance', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bbioluminescent\b/gi, replacement: 'bioluminescent accents, self-emitting glow, soft neon edges', severity: 0, tags: ['effect'] },
+    { pattern: /\bscale\s*armor\b/gi, replacement: 'overlapping scales, hard keratin texture, reflective highlights', severity: 0, tags: ['surface'] },
+    { pattern: /\bfeather\s*crest\b/gi, replacement: 'feathered crest, lifted crown feathers, display posture', severity: 0, tags: ['surface'] }
+  ]
+});
+// >>> END OF BLOCK 14 <<<
+/* ================================================================
+ * BLOCK 14 — CREATURES, ANIMALS & ANATOMY (SFW) (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 15 — VEHICLES, MECHA & HARD-SURFACE (EN)  (START)
+ * ID: BLOCK 15
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual vehicle/mecha terms into precise hard-surface descriptors.
+ *   - Useful for concept art, product viz, kitbashes, and sci-fi renders.
+ * INTERNAL NOTES:
+ *   - Severity 0. No brands; keep it generic and stackable.
+ *   - Mix with BLOCK 6 (photo) & BLOCK 13 (color/comp) for realistic shots.
+ * ================================================================ */
+// >>> START OF BLOCK 15 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 15',
+  language: 'en',
+  category: 'vehicles_mecha_hardsurface',
+  emoji: ['🚗','🚀','🛸','🤖'],
+  notes: [
+    'Breaks down silhouettes, propulsion, paneling, greebles, material cues.',
+    'Covers ground/air/sea/space + mecha joints/armor vocab.'
+  ],
+  entries: [
+    // ——— CAR / GROUND ———
+    { pattern: /\bcompact\s*car\b/gi, replacement: 'compact hatchback silhouette, short wheelbase, high roofline, efficient aero', severity: 0, tags: ['ground','car'] },
+    { pattern: /\bsedan\b/gi, replacement: 'four-door sedan silhouette, long wheelbase, separate trunk volume, balanced proportions', severity: 0, tags: ['ground','car'] },
+    { pattern: /\bcoupe\b/gi, replacement: 'two-door coupe silhouette, fastback roofline, low stance, sporty proportions', severity: 0, tags: ['ground','car'] },
+    { pattern: /\bsuv\b/gi, replacement: 'SUV silhouette, tall ride height, roof rails, chunky tires, protective cladding', severity: 0, tags: ['ground'] },
+    { pattern: /\boff[-\s]*road\b/gi, replacement: 'off-road setup, lifted suspension, skid plates, knobby tires, steel bumpers', severity: 0, tags: ['ground'] },
+    { pattern: /\brally\s*car\b/gi, replacement: 'rally spec, light pods, gravel flaps, raised ride height, roll cage hint', severity: 0, tags: ['ground','racing'] },
+    { pattern: /\bdrift\s*car\b/gi, replacement: 'drift setup, aggressive camber, wide body kit, smoke-producing rear tires', severity: 0, tags: ['ground','racing'] },
+    { pattern: /\bretro\s*truck\b/gi, replacement: 'classic pickup silhouette, boxy cab, exposed wheel arches, wood bed slats vibe', severity: 0, tags: ['ground','truck'] },
+    { pattern: /\bmotorcycle\b/gi, replacement: 'motorcycle, exposed frame, tubular chassis, twin shocks, chain drive, bar-end mirrors', severity: 0, tags: ['ground','bike'] },
+    { pattern: /\bcruiser\s*bike\b/gi, replacement: 'cruiser motorcycle, low seat, swept bars, forward pegs, heavy fenders', severity: 0, tags: ['ground','bike'] },
+    { pattern: /\bsport\s*bike\b/gi, replacement: 'sport motorcycle, full fairings, aggressive clip-ons, rearsets, aerodynamic tail', severity: 0, tags: ['ground','bike'] },
+
+    // ——— AIR / SPACE ———
+    { pattern: /\bprop\s*plane\b/gi, replacement: 'single-prop aircraft, low wing, tricycle gear, riveted aluminum skin', severity: 0, tags: ['air'] },
+    { pattern: /\bjet\s*fighter\b/gi, replacement: 'sleek jet fuselage, delta or swept wings, twin vertical stabilizers, afterburner nozzle', severity: 0, tags: ['air'] },
+    { pattern: /\bhelicopter\b/gi, replacement: 'helicopter with main rotor and tail rotor, skid landing gear, glazed cockpit', severity: 0, tags: ['air'] },
+    { pattern: /\bvtol\b/gi, replacement: 'VTOL craft, vectoring nozzles or tilt-rotors, vertical lift posture, transition ducts', severity: 0, tags: ['air'] },
+    { pattern: /\bshuttle\b/gi, replacement: 'space shuttle silhouette, thermal tiles, delta wing, orbital OMS pods', severity: 0, tags: ['space'] },
+    { pattern: /\bstar\s*fighter\b/gi, replacement: 'compact space interceptor, forward canards, reaction thrusters, weapon hardpoints', severity: 0, tags: ['space'] },
+    { pattern: /\bcargo\s*freighter\b/gi, replacement: 'space freighter, modular cargo pods, dorsal spine, container latches, maintenance greebles', severity: 0, tags: ['space'] },
+    { pattern: /\bcruiser\s*ship\b/gi, replacement: 'large space cruiser, armored hull plating, hangar bay apertures, antenna arrays', severity: 0, tags: ['space'] },
+
+    // ——— SEA ———
+    { pattern: /\byacht\b/gi, replacement: 'sleek yacht hull, gloss gelcoat, teak deck details, chrome rails', severity: 0, tags: ['sea'] },
+    { pattern: /\bspeedboat\b/gi, replacement: 'speedboat, deep-V hull, wake spray, low windshield, outboard engine', severity: 0, tags: ['sea'] },
+    { pattern: /\bsubmarine\b/gi, replacement: 'submarine hull, hydroplanes, sail tower, anechoic tiles, torpedo tube hints', severity: 0, tags: ['sea','underwater'] },
+    { pattern: /\bdiesel\s*punk\s*ship\b/gi, replacement: 'dieselpunk vessel, riveted plates, smoke stacks, exposed piping, grease stains', severity: 0, tags: ['sea','retro'] },
+
+    // ——— MECHA / HARD-SURFACE ———
+    { pattern: /\bmecha\b/gi, replacement: 'bipedal mech, armored plates, hydraulic pistons, servo cabling, cockpit canopy', severity: 0, tags: ['mecha'] },
+    { pattern: /\bwalker\b/gi, replacement: 'multi-legged walker, articulated joints, shock absorbers, modular armor', severity: 0, tags: ['mecha'] },
+    { pattern: /\bexo\s*suit\b/gi, replacement: 'powered exosuit, external frame, actuator packs, HUD visor, reinforced joints', severity: 0, tags: ['mecha'] },
+    { pattern: /\bhard\s*surface\b/gi, replacement: 'hard-surface design language, crisp chamfers, tight panel gaps, mechanical fasteners', severity: 0, tags: ['design'] },
+    { pattern: /\bgreebles?\b/gi, replacement: 'surface greebles, maintenance panels, vents, conduits, access hatches, antennae', severity: 0, tags: ['detail'] },
+
+    // ——— DETAIL TOKENS ———
+    { pattern: /\bchassis\b/gi, replacement: 'rigid chassis frame, crossmembers, mounting points, reinforced welds', severity: 0, tags: ['detail'] },
+    { pattern: /\baero\s*kit\b/gi, replacement: 'aero kit, front splitter, side skirts, rear diffuser, deck spoiler', severity: 0, tags: ['detail'] },
+    { pattern: /\bair\s*intakes?\b/gi, replacement: 'functional air intake scoops, mesh grilles, internal ducting', severity: 0, tags: ['detail'] },
+    { pattern: /\bpanel\s*lines\b/gi, replacement: 'panel line breakups, recessed seams, exposed fasteners, access latches', severity: 0, tags: ['detail'] },
+    { pattern: /\briveted\b/gi, replacement: 'riveted skin, overlapping plates, domed rivet heads, vintage aerospace vibe', severity: 0, tags: ['detail'] },
+    { pattern: /\bcarbon\s*fiber\b/gi, replacement: 'carbon fiber weave, glossy resin, diagonal twill pattern, lightweight stiffness', severity: 0, tags: ['material'] },
+    { pattern: /\bweathering\b/gi, replacement: 'edge chipping, oil streaks, dust accumulation, paint fade, heat discoloration', severity: 0, tags: ['aging'] },
+
+    // ——— SCENE / ACTION VERBS ———
+    { pattern: /\bpit\s*lane\b/gi, replacement: 'pit lane setup, tire stacks, crew tools, painted markings, tarmac texture', severity: 0, tags: ['scene'] },
+    { pattern: /\bdogfight\b/gi, replacement: 'aerial dogfight scene, contrails, high-G turns, missile flares', severity: 0, tags: ['scene'] },
+    { pattern: /\blaunch\s*pad\b/gi, replacement: 'launch pad structure, service towers, fueling lines, flame trench, heat haze', severity: 0, tags: ['scene'] }
+  ]
+});
+// >>> END OF BLOCK 15 <<<
+/* ================================================================
+ * BLOCK 15 — VEHICLES, MECHA & HARD-SURFACE (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 16 — UI/UX, ICONS & LOGO PROMPTS (EN)  (START)
+ * ID: BLOCK 16
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Turn vague UI/logo requests into crisp, generative-friendly tokens.
+ *   - Helps with app screens, iconography, brand-safe logo styles (generic).
+ * INTERNAL NOTES:
+ *   - Severity 0 (design language only). No real brand names.
+ *   - Pair with BLOCK 13 (color/comp) for palettes and layout emphasis.
+ * ================================================================ */
+// >>> START OF BLOCK 16 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 16',
+  language: 'en',
+  category: 'ui_ux_logo',
+  emoji: ['📱','🖥️','🧭','🔣'],
+  notes: [
+    'Covers design systems, icon shapes, layout patterns, logo form factors.',
+    'All brand-free. Encourages shape grammar and typography description.'
+  ],
+  entries: [
+    // ——— APP / WEB SCREENS ———
+    { pattern: /\bmobile\s*app\s*screen\b/gi, replacement: 'mobile UI frame, notch-safe top, tab bar bottom, card list content, thumb-reach layout', severity: 0, tags: ['ui'] },
+    { pattern: /\bdashboard\b/gi, replacement: 'dashboard layout, responsive grid, key KPI cards, charts with legends, filter bar', severity: 0, tags: ['ui'] },
+    { pattern: /\bonboarding\b/gi, replacement: 'onboarding flow, full-bleed illustration, headline, two bullet points, primary CTA', severity: 0, tags: ['ui'] },
+    { pattern: /\bsettings\s*screen\b/gi, replacement: 'settings list, grouped sections, toggles and selectors, sticky save bar', severity: 0, tags: ['ui'] },
+    { pattern: /\bform\s*screen\b/gi, replacement: 'form layout, clear labels, helper text, validation states, progress indicator', severity: 0, tags: ['ui'] },
+
+    // ——— DESIGN SYSTEM TOKENS ———
+    { pattern: /\bcard\s*ui\b/gi, replacement: 'card components with soft radius, subtle shadow, comfortable padding, semantic background', severity: 0, tags: ['ui'] },
+    { pattern: /\bglassmorphism\b/gi, replacement: 'frosted glass panels, backdrop blur, translucent layers, soft glow edges', severity: 0, tags: ['ui','style'] },
+    { pattern: /\bneumorphism\b/gi, replacement: 'soft extruded surfaces, inner/outer shadows, low-contrast UI, tactile knobs', severity: 0, tags: ['ui','style'] },
+    { pattern: /\bskeuomorphic\b/gi, replacement: 'skeuomorphic details, material cues, realistic textures, shadow depth cues', severity: 0, tags: ['ui','style'] },
+
+    // ——— ICONOGRAPHY ———
+    { pattern: /\bflat\s*icon\b/gi, replacement: 'flat icon, simplified silhouette, no gradients, strong negative space', severity: 0, tags: ['icon'] },
+    { pattern: /\bline\s*icon\b/gi, replacement: 'line icon, uniform stroke, rounded caps and joins, pixel-perfect grid', severity: 0, tags: ['icon'] },
+    { pattern: /\bglyph\s*icon\b/gi, replacement: 'filled glyph icon, solid silhouette, optical balance, crisp corners', severity: 0, tags: ['icon'] },
+    { pattern: /\bduotone\s*icon\b/gi, replacement: 'duotone icon, two shade layers, foreground emphasis, subtle depth', severity: 0, tags: ['icon'] },
+    { pattern: /\bisometric\s*icon\b/gi, replacement: 'isometric icon, 30° axes, simple geometry, minimal shading, crisp edges', severity: 0, tags: ['icon'] },
+
+    // ——— LOGO FORM FACTORS ———
+    { pattern: /\bwordmark\b/gi, replacement: 'wordmark logo, custom letterforms, tracking tuned, optical kerning, balanced baseline', severity: 0, tags: ['logo'] },
+    { pattern: /\blettermark\b/gi, replacement: 'lettermark logo, monogram initials, interlocking shapes, negative-space trick', severity: 0, tags: ['logo'] },
+    { pattern: /\babstract\s*mark\b/gi, replacement: 'abstract mark, geometric motif, rotational symmetry, scalable simplicity', severity: 0, tags: ['logo'] },
+    { pattern: /\bemblem\b/gi, replacement: 'emblem badge, enclosing shape, ribbon banner, heritage vibe, small-lettering ring', severity: 0, tags: ['logo'] },
+    { pattern: /\bpictorial\s*mark\b/gi, replacement: 'pictorial logo, recognizable object silhouette, friendly curves, minimal detail', severity: 0, tags: ['logo'] },
+
+    // ——— TYPOGRAPHY ———
+    { pattern: /\bserif\s*type\b/gi, replacement: 'serif typography, high contrast strokes, elegant serifs, classic tone', severity: 0, tags: ['type'] },
+    { pattern: /\bsans\s*serif\b/gi, replacement: 'sans-serif typography, clean geometry, consistent stroke, modern tone', severity: 0, tags: ['type'] },
+    { pattern: /\bslab\s*serif\b/gi, replacement: 'slab serif typography, heavy rectangular serifs, sturdy feel', severity: 0, tags: ['type'] },
+    { pattern: /\bdisplay\s*type\b/gi, replacement: 'display typography, expressive shapes, high contrast, headline use', severity: 0, tags: ['type'] },
+    { pattern: /\bmono(space|spaced)?\b/gi, replacement: 'monospace typography, equal character width, code aesthetic', severity: 0, tags: ['type'] },
+
+    // ——— LAYOUT PATTERNS ———
+    { pattern: /\bgrid\s*layout\b/gi, replacement: '12-column responsive grid, consistent gutters, baseline rhythm', severity: 0, tags: ['layout'] },
+    { pattern: /\bcard\s*grid\b/gi, replacement: 'card grid layout, equal heights, wrap behavior, hover elevation', severity: 0, tags: ['layout'] },
+    { pattern: /\bhero\s*section\b/gi, replacement: 'hero section, bold headline, supporting copy, primary CTA, illustrative visual', severity: 0, tags: ['layout'] },
+    { pattern: /\bsidebar\s*nav\b/gi, replacement: 'left sidebar navigation, icons with labels, collapsible sections, active state highlight', severity: 0, tags: ['layout'] },
+    { pattern: /\bmodal\s*dialog\b/gi, replacement: 'modal dialog, scrim background, focus trap, primary/secondary buttons', severity: 0, tags: ['layout'] },
+
+    // ——— MICROINTERACTIONS ———
+    { pattern: /\bsubtle\s*hover\b/gi, replacement: 'hover microinteraction, small elevation change, soft shadow, color shift 150ms', severity: 0, tags: ['motion'] },
+    { pattern: /\bsnappy\s*transition\b/gi, replacement: 'snappy transition, 180ms ease-out, transform and opacity', severity: 0, tags: ['motion'] },
+    { pattern: /\bscroll\s*parallax\b/gi, replacement: 'parallax layers, slower background scroll, depth illusion', severity: 0, tags: ['motion'] }
+  ]
+});
+// >>> END OF BLOCK 16 <<<
+/* ================================================================
+ * BLOCK 16 — UI/UX, ICONS & LOGO PROMPTS (EN)  (END)
+ * ================================================================ */
