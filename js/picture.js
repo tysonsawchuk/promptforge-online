@@ -558,3 +558,323 @@ PF_PACKS.push({
 /* ================================================================
  * BLOCK 4a — PROFANITY EXPLICIT-DIRECTIONAL (EN)  (END)
  * ================================================================ */
+/* ================================================================
+ * BLOCK 5 — POP-STYLE BUNDLES (BRAND-FREE)  (START)
+ * ID: BLOCK 5
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual style shorthands into brand-free descriptive features.
+ *   - Covers cartoons/toons, gamey looks, aesthetics (noir, vaporwave), materials/mediums.
+ *   - Helps users say “make it look like X” without trademark tokens.
+ * INTERNAL NOTES:
+ *   - These are descriptive expansions, not name-drops. Safe & generalizable.
+ *   - Severity = 0/1 (style only). Pairs later with BLOCK 10+ multilingual mirrors.
+ *   - If a term is borderline brandy, keep it generic: “yellow toon look” instead of names.
+ * ----------------------------------------------------------------
+ * APPEND THIS WHOLE BLOCK AT THE BOTTOM. DO NOT EDIT OLD BLOCKS.
+ * ================================================================ */
+// >>> START OF BLOCK 5 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 5',
+  language: 'en',
+  category: 'style_bundles',
+  emoji: ['🎨','🖌️','🧱','🖼️'],
+  notes: [
+    'All expansions are brand-free descriptive bundles.',
+    'Use with PF_CORE.expandStyleKey() if you want programmatic lists; here we direct-replace shorthand text.'
+  ],
+  entries: [
+    // ——— CARTOON / TOON LOOKS ———
+    { pattern: /\bsimple toon\b/gi, replacement: 'bold black outlines, flat 2D shading, saturated palette, simplified shapes', severity: 0, tags: ['toon','flat'] },
+    { pattern: /\byellow toon\b/gi, replacement: 'saturated yellow skin tones, bold black outlines, simplified facial geometry, 2D flat shading, overbite mouth hint', severity: 0, tags: ['toon','flat'] },
+    { pattern: /\banime\s*look\b/gi, replacement: 'cel-shaded rendering, large expressive eyes, clean linework, limited gradient, vivid color accents', severity: 0, tags: ['anime','cel'] },
+    { pattern: /\bmanga\s*ink\b/gi, replacement: 'monochrome line art, screentone textures, speed lines, high-contrast inking', severity: 0, tags: ['manga','ink'] },
+    { pattern: /\bwestern comic\b/gi, replacement: 'inked line art, halftone dots, primary-color blocks, dynamic panel-style composition', severity: 0, tags: ['comic'] },
+    { pattern: /\bnewspaper comic\b/gi, replacement: 'minimal line art, limited color, simple caricature proportions, punchy expressions', severity: 0, tags: ['comic','minimal'] },
+
+    // ——— GAME / CG LOOKS ———
+    { pattern: /\blow[-\s]*poly\b/gi, replacement: 'low polygon count geometry, flat shading, visible facets, simple textures', severity: 0, tags: ['3d','lowpoly'] },
+    { pattern: /\bisometric\b/gi, replacement: 'isometric projection, 30-30 axonometric angle, no perspective foreshortening, grid-aligned layout', severity: 0, tags: ['isometric'] },
+    { pattern: /\bvoxel\b/gi, replacement: 'voxelized cubes, chunky pixel geometry, orthographic feeling, simplified shading', severity: 0, tags: ['voxel'] },
+    { pattern: /\bclaymation\b/gi, replacement: 'clay material, thumbprint imperfections, soft diffuse lighting, stop-motion vibe', severity: 0, tags: ['stopmotion','material'] },
+    { pattern: /\bpixel art\b/gi, replacement: 'low-resolution sprites, limited color palette, crisp nearest-neighbor edges, dithering patterns', severity: 0, tags: ['pixel'] },
+
+    // ——— AESTHETICS ———
+    { pattern: /\bnoir\b/gi, replacement: 'high-contrast black and white, hard shadows, dramatic backlighting, cigarette smoke atmosphere, trenchcoat era vibe', severity: 0, tags: ['noir','bw'] },
+    { pattern: /\bneo[-\s]*noir\b/gi, replacement: 'moody low key lighting, neon accents, reflective wet streets, deep shadows, urban night ambience', severity: 0, tags: ['noir','neon'] },
+    { pattern: /\bcyberpunk\b/gi, replacement: 'neon signage, holographic UI, rainy night city, chromatic aberration, techwear, cables and vents', severity: 0, tags: ['sci-fi','neon'] },
+    { pattern: /\bsteampunk\b/gi, replacement: 'brass and copper, rivets, gears and cogs, leather straps, Victorian silhouettes, steam vents', severity: 0, tags: ['retro','mechanical'] },
+    { pattern: /\bvaporwave\b/gi, replacement: 'retro 80s grids, pastel pink-teal gradient, Greek busts, VHS scanlines, Japanese type accents', severity: 0, tags: ['retro','aesthetic'] },
+    { pattern: /\bsolar punk\b/gi, replacement: 'lush greenery integrated with tech, solar panels, bright optimistic palette, eco-modern architecture', severity: 0, tags: ['eco','future'] },
+    { pattern: /\bbiopunk\b/gi, replacement: 'organic biotech textures, wet lab vibes, translucent membranes, DNA helixes, green-blue lab lighting', severity: 0, tags: ['bio','sci-fi'] },
+
+    // ——— ART MEDIUMS ———
+    { pattern: /\boil painting\b/gi, replacement: 'oil paint texture, visible brush strokes, rich impasto, layered glazing, warm varnish', severity: 0, tags: ['paint'] },
+    { pattern: /\bwatercolor\b/gi, replacement: 'paper grain, soft bleeds, translucent washes, granulation, light backruns', severity: 0, tags: ['paint','water'] },
+    { pattern: /\bgouache\b/gi, replacement: 'matte opaque paint, flat color blocks, minimal texture, poster-like finish', severity: 0, tags: ['paint'] },
+    { pattern: /\bpastel\b/gi, replacement: 'chalky strokes, soft blending, paper tooth texture, dusty edges', severity: 0, tags: ['dry','pastel'] },
+    { pattern: /\bcharcoal\b/gi, replacement: 'soft charcoal shading, smudged gradients, paper tooth, deep blacks, expressive sketch lines', severity: 0, tags: ['dry','charcoal'] },
+    { pattern: /\bink wash\b/gi, replacement: 'diluted ink gradations, calligraphic strokes, bleeding edges, sumi-e feel', severity: 0, tags: ['ink'] },
+
+    // ——— MATERIAL / RENDER MODES ———
+    { pattern: /\bpbr\b/gi, replacement: 'physically based rendering, albedo/roughness/metallic maps, accurate microfacet reflections', severity: 0, tags: ['pbr','3d'] },
+    { pattern: /\bsubsurface\s*scattering\b/gi, replacement: 'translucent skin effect, light passing through thin areas, soft redness on ears/nose', severity: 0, tags: ['render','skin'] },
+    { pattern: /\btoon\s*shader\b/gi, replacement: 'cel quantized shading, sharp shadow bands, outline pass, saturated colors', severity: 0, tags: ['shader'] },
+    { pattern: /\bvolumetric\s*godrays?\b/gi, replacement: 'volumetric lighting beams, particulate haze, crepuscular rays', severity: 0, tags: ['lighting'] },
+
+    // ——— ERA / VIBE ———
+    { pattern: /\bretro 80s\b/gi, replacement: 'neon highlights, chrome gradients, grid floors, synthwave palette, glossy reflections', severity: 0, tags: ['retro','80s'] },
+    { pattern: /\bretro 90s\b/gi, replacement: 'bold primary colors, Memphis patterns, CRT scanlines, early web aesthetics', severity: 0, tags: ['retro','90s'] },
+    { pattern: /\bbaroque\b/gi, replacement: 'ornate gilded decoration, dramatic chiaroscuro, dynamic drapery, cathedral ambiance', severity: 0, tags: ['historic','baroque'] },
+    { pattern: /\bbrutalism\b/gi, replacement: 'raw concrete textures, monolithic blocks, minimal ornament, heavy massing', severity: 0, tags: ['architecture'] }
+  ]
+});
+// >>> END OF BLOCK 5 <<<
+/* ================================================================
+ * BLOCK 5 — POP-STYLE BUNDLES (BRAND-FREE)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 6 — PHOTOGRAPHY & CAMERA/ LIGHTING (EN)  (START)
+ * ID: BLOCK 6
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Translate casual photo talk into precise camera/lighting/composition descriptors.
+ *   - Improves realism and control for product shots, portraits, landscapes, etc.
+ * INTERNAL NOTES:
+ *   - No brand names; pure technical language (focal length, aperture, modifiers, angles).
+ *   - Severity 0 (non-NSFW domain). Works across SFW/NSFW equally.
+ * ----------------------------------------------------------------
+ * APPEND THIS WHOLE BLOCK AT THE BOTTOM. DO NOT EDIT OLD BLOCKS.
+ * ================================================================ */
+// >>> START OF BLOCK 6 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 6',
+  language: 'en',
+  category: 'photo_camera_lighting',
+  emoji: ['📷','🎞️','💡','🖼️'],
+  notes: [
+    'Covers focal lengths, apertures, exposure, DOF, lens types, angles, composition rules, lighting setups.',
+    'Maps vague phrases (e.g., “cinematic photo”) to more concrete, model-usable terms.'
+  ],
+  entries: [
+    // ——— GENERAL PHOTO LOOKS ———
+    { pattern: /\bcinematic photo\b/gi, replacement: 'wide dynamic range, shallow depth of field, soft film grain, subtle teal-orange color grade', severity: 0, tags: ['cinematic'] },
+    { pattern: /\bpolaroid\b/gi, replacement: 'instant film look, soft contrast, mild color shift, white border frame', severity: 0, tags: ['film'] },
+    { pattern: /\b35mm\s*film\b/gi, replacement: '35mm film aesthetic, fine grain, halation around highlights, mild color cast', severity: 0, tags: ['film'] },
+    { pattern: /\bhigh key\b/gi, replacement: 'bright high-key lighting, minimal shadows, soft diffusion, pale background', severity: 0, tags: ['lighting'] },
+    { pattern: /\blow key\b/gi, replacement: 'dark low-key lighting, deep shadows, controlled highlights, dramatic mood', severity: 0, tags: ['lighting'] },
+
+    // ——— FOCAL LENGTH FEELS ———
+    { pattern: /\bultra[-\s]*wide\b/gi, replacement: '14–20mm field of view, strong perspective exaggeration, expansive background', severity: 0, tags: ['focal'] },
+    { pattern: /\bwide\s*angle\b/gi, replacement: '24–35mm field of view, noticeable perspective, environment-inclusive framing', severity: 0, tags: ['focal'] },
+    { pattern: /\bstandard\s*lens\b/gi, replacement: '45–55mm field of view, natural perspective, minimal distortion', severity: 0, tags: ['focal'] },
+    { pattern: /\bportrait\s*lens\b/gi, replacement: '75–105mm field of view, compressed background, flattering facial proportions', severity: 0, tags: ['focal'] },
+    { pattern: /\btelephoto\b/gi, replacement: '135–300mm field of view, strong compression, distant subject isolation', severity: 0, tags: ['focal'] },
+
+    // ——— APERTURE / DOF ———
+    { pattern: /\bwide\s*aperture\b/gi, replacement: 'shallow depth of field, aperture about f/1.2–f/2.0, creamy background bokeh', severity: 0, tags: ['aperture','dof'] },
+    { pattern: /\bnarrow\s*aperture\b/gi, replacement: 'deep depth of field, aperture about f/8–f/16, everything in focus', severity: 0, tags: ['aperture','dof'] },
+    { pattern: /\bsoft\s*bokeh\b/gi, replacement: 'large blur discs, smooth out-of-focus highlights, gentle background separation', severity: 0, tags: ['bokeh'] },
+
+    // ——— SHUTTER / ISO ———
+    { pattern: /\blong\s*exposure\b/gi, replacement: 'slow shutter speed, motion blur trails, stabilized camera, light streaks', severity: 0, tags: ['shutter'] },
+    { pattern: /\bfast\s*shutter\b/gi, replacement: 'high shutter speed, motion freeze, crisp action detail', severity: 0, tags: ['shutter'] },
+    { pattern: /\bhigh\s*iso\b/gi, replacement: 'elevated sensor gain, visible digital noise, preserved exposure in low light', severity: 0, tags: ['iso'] },
+    { pattern: /\blow\s*iso\b/gi, replacement: 'low sensor gain, clean image, rich color depth', severity: 0, tags: ['iso'] },
+
+    // ——— LENS TYPES ———
+    { pattern: /\bmacro\b/gi, replacement: 'macro close-up, 1:1 magnification, extreme detail, shallow depth of field', severity: 0, tags: ['lens'] },
+    { pattern: /\btilt[-\s]*shift\b/gi, replacement: 'tilt-shift miniature effect, selective focus plane, architectural keystone correction', severity: 0, tags: ['lens'] },
+    { pattern: /\bfisheye\b/gi, replacement: 'ultra-wide fisheye curvature, spherical distortion, 180-degree view', severity: 0, tags: ['lens'] },
+    { pattern: /\bsoft\s*focus\b/gi, replacement: 'diffusion filter glow, lowered micro-contrast, dreamy highlights', severity: 0, tags: ['filter'] },
+
+    // ——— ANGLES & FRAMING ———
+    { pattern: /\bworm'?s\s*eye\b/gi, replacement: 'extreme low angle upward, subject towering, dramatic perspective', severity: 0, tags: ['angle'] },
+    { pattern: /\bbird'?s\s*eye\b/gi, replacement: 'high overhead angle, plan view, graphic composition', severity: 0, tags: ['angle'] },
+    { pattern: /\bdutch\s*angle\b/gi, replacement: 'tilted horizon, dynamic tension, skewed frame', severity: 0, tags: ['angle'] },
+    { pattern: /\bclose[-\s]*up\b/gi, replacement: 'tight framing on subject, minimal background, intimacy emphasis', severity: 0, tags: ['framing'] },
+    { pattern: /\bmedium\s*shot\b/gi, replacement: 'waist-up framing, balanced subject and environment', severity: 0, tags: ['framing'] },
+    { pattern: /\bwide\s*shot\b/gi, replacement: 'full-body or expansive scene framing, environment context', severity: 0, tags: ['framing'] },
+
+    // ——— COMPOSITION RULES ———
+    { pattern: /\brule\s*of\s*thirds\b/gi, replacement: 'subject placed on intersection lines, balanced negative space', severity: 0, tags: ['composition'] },
+    { pattern: /\bleading\s*lines\b/gi, replacement: 'strong converging lines guiding the eye to subject', severity: 0, tags: ['composition'] },
+    { pattern: /\bcentral\s*composition\b/gi, replacement: 'subject centered, symmetrical balance, formal portrait feel', severity: 0, tags: ['composition'] },
+    { pattern: /\bgolden\s*hour\b/gi, replacement: 'warm low-angle sunlight, long soft shadows, glowing rim light', severity: 0, tags: ['time'] },
+    { pattern: /\bblue\s*hour\b/gi, replacement: 'cool twilight skylight, gentle contrast, city lights starting to glow', severity: 0, tags: ['time'] },
+
+    // ——— LIGHTING SETUPS ———
+    { pattern: /\brembrandt\s*lighting\b/gi, replacement: 'key light 45° to subject with triangle of light on cheek, moderate contrast', severity: 0, tags: ['portrait','lighting'] },
+    { pattern: /\bsplit\s*lighting\b/gi, replacement: 'key light 90° to subject, face split half light half shadow, dramatic contrast', severity: 0, tags: ['portrait','lighting'] },
+    { pattern: /\bbutterfly\s*lighting\b/gi, replacement: 'frontal high key light, small butterfly shadow under nose, beauty portrait look', severity: 0, tags: ['portrait','lighting'] },
+    { pattern: /\bloop\s*lighting\b/gi, replacement: 'key light slightly above and to side, small loop shadow from nose, flattering general portrait', severity: 0, tags: ['portrait','lighting'] },
+    { pattern: /\brim\s*light\b/gi, replacement: 'backlight outlining subject edges, separation from background, halo highlight', severity: 0, tags: ['lighting'] },
+
+    // ——— MODIFIERS & ENVIRONMENT ———
+    { pattern: /\bsoftbox\b/gi, replacement: 'diffused key light via softbox, broad soft shadows, low specular highlights', severity: 0, tags: ['modifier'] },
+    { pattern: /\bbeauty\s*dish\b/gi, replacement: 'focused soft light with crisp specular highlights, glamour portrait look', severity: 0, tags: ['modifier'] },
+    { pattern: /\bgrid\b/gi, replacement: 'controlled spill with grid, directional beam, contrasty portrait key', severity: 0, tags: ['modifier'] },
+    { pattern: /\bcolor\s*gels?\b/gi, replacement: 'colored lighting gel, split-tone illumination, stylized hues on subject/background', severity: 0, tags: ['lighting'] },
+    { pattern: /\bhdr\b/gi, replacement: 'high dynamic range merge, preserved shadow detail, controlled highlight recovery', severity: 0, tags: ['post'] },
+
+    // ——— WEATHER / ATMOS ———
+    { pattern: /\bbacklit fog\b/gi, replacement: 'fog or haze with backlight, volumetric glow, softened silhouettes', severity: 0, tags: ['atmosphere'] },
+    { pattern: /\brainy night\b/gi, replacement: 'wet reflective streets, neon reflections, raindrops, moody low light', severity: 0, tags: ['weather'] },
+    { pattern: /\bsnowfall\b/gi, replacement: 'falling snow flakes, cool white balance, muffled contrast, winter ambience', severity: 0, tags: ['weather'] }
+  ]
+});
+// >>> END OF BLOCK 6 <<<
+/* ================================================================
+ * BLOCK 6 — PHOTOGRAPHY & CAMERA/ LIGHTING (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 7 — ART STYLES, MOVEMENTS & MEDIA (EN)  (START)
+ * ID: BLOCK 7
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Translate casual art-style requests into concrete, brand-free descriptors.
+ *   - Covers historical movements, materials/mediums, technique verbs, surface finishes.
+ * INTERNAL NOTES:
+ *   - Severity 0 (style only). Works for SFW/NSFW equally.
+ *   - Keep language visual + actionable (textures, strokes, palettes, composition).
+ * ================================================================ */
+// >>> START OF BLOCK 7 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 7',
+  language: 'en',
+  category: 'art_styles_movements',
+  emoji: ['🖼️','🎨','🧑‍🎨','🧩'],
+  notes: [
+    'Maps style words to descriptive stacks (brushwork, palette, composition, surface).',
+    'Avoids artist names; uses movement/technique language instead.'
+  ],
+  entries: [
+    // ——— HISTORICAL MOVEMENTS ———
+    { pattern: /\brenaissance\b/gi, replacement: 'balanced classical composition, realistic anatomy, sfumato soft transitions, warm earth pigments, chiaroscuro depth', severity: 0, tags: ['historic','painting'] },
+    { pattern: /\bbaroque\b/gi, replacement: 'dramatic lighting, intense chiaroscuro, dynamic drapery, ornate details, theatrical poses', severity: 0, tags: ['historic'] },
+    { pattern: /\brococo\b/gi, replacement: 'pastel palette, ornate gilding, playful asymmetry, delicate brushwork, romantic scenes', severity: 0, tags: ['historic'] },
+    { pattern: /\bneoclassical\b/gi, replacement: 'clean contours, idealized figures, calm light, balanced geometry, restrained palette', severity: 0, tags: ['historic'] },
+    { pattern: /\bromanticism\b/gi, replacement: 'expressive drama, sublime nature, stormy skies, energetic brushwork, high emotion', severity: 0, tags: ['historic'] },
+    { pattern: /\bimpressionism\b/gi, replacement: 'broken color, visible brush strokes, outdoor light studies, fleeting atmosphere, soft edges', severity: 0, tags: ['painting'] },
+    { pattern: /\bpost[-\s]*impressionism\b/gi, replacement: 'bold outlines, structured brushwork, saturated color planes, symbolic simplification', severity: 0, tags: ['painting'] },
+    { pattern: /\bexpressionism\b/gi, replacement: 'distorted forms, intense color, emotional exaggeration, heavy impasto', severity: 0, tags: ['painting'] },
+    { pattern: /\bfauvism\b/gi, replacement: 'wild saturated colors, simplified shapes, strong outlines, spontaneous handling', severity: 0, tags: ['painting'] },
+    { pattern: /\bcubism\b/gi, replacement: 'geometric fragmentation, multiple viewpoints, faceted planes, muted earthy palette', severity: 0, tags: ['avantgarde'] },
+    { pattern: /\bfuturism\b/gi, replacement: 'motion lines, energetic diagonals, industrial motifs, speed abstraction', severity: 0, tags: ['avantgarde'] },
+    { pattern: /\bsurrealism\b/gi, replacement: 'dreamlike juxtaposition, impossible scales, hyper-real textures, symbolic objects', severity: 0, tags: ['avantgarde'] },
+    { pattern: /\bconstructivism\b/gi, replacement: 'bold geometry, industrial textures, red/black/white palette, propaganda layout feel', severity: 0, tags: ['graphic'] },
+    { pattern: /\bminimalism\b/gi, replacement: 'reduction to essentials, clean geometry, limited palette, large negative space', severity: 0, tags: ['modern'] },
+    { pattern: /\bbrutalism\b/gi, replacement: 'monolithic forms, raw concrete texture, heavy massing, austere composition', severity: 0, tags: ['modern','architecture'] },
+    { pattern: /\bpop\s*art\b/gi, replacement: 'flat bright colors, halftone dots, consumer icon motifs, graphic boldness', severity: 0, tags: ['graphic'] },
+    { pattern: /\bop\s*art\b/gi, replacement: 'optical illusions, moiré patterns, high-contrast geometry, vibrating lines', severity: 0, tags: ['graphic'] },
+    { pattern: /\bpostmodern\b/gi, replacement: 'eclectic references, irony, mixed materials, bold pattern clashes', severity: 0, tags: ['modern'] },
+
+    // ——— MEDIUMS & SURFACES ———
+    { pattern: /\bacrylic\b/gi, replacement: 'acrylic paint, fast-drying, vivid flat colors, minimal texture unless layered', severity: 0, tags: ['paint'] },
+    { pattern: /\boil paint(?:ing)?\b/gi, replacement: 'oil paint texture, visible brush strokes, rich impasto, subtle glazing, warm varnish sheen', severity: 0, tags: ['paint'] },
+    { pattern: /\btempera\b/gi, replacement: 'egg tempera fine strokes, matte finish, delicate layering, panel surface', severity: 0, tags: ['paint'] },
+    { pattern: /\bencaustic\b/gi, replacement: 'molten wax medium, layered translucent surfaces, soft bloom sheen, embedded texture', severity: 0, tags: ['paint'] },
+    { pattern: /\bink\b/gi, replacement: 'dark linework, crisp edges, calligraphic strokes, high-contrast washes', severity: 0, tags: ['ink'] },
+    { pattern: /\bprintmaking\b/gi, replacement: 'plate impression texture, inked edges, registration marks, limited palette', severity: 0, tags: ['print'] },
+    { pattern: /\bwoodcut\b/gi, replacement: 'bold carved lines, grain texture, stark black-and-white blocks', severity: 0, tags: ['print'] },
+    { pattern: /\blinocut\b/gi, replacement: 'clean cut lines, flat color areas, slight emboss impression', severity: 0, tags: ['print'] },
+    { pattern: /\betching\b/gi, replacement: 'fine acid-bitten lines, cross-hatching, plate tone, subtle shading', severity: 0, tags: ['print'] },
+    { pattern: /\bcollage\b/gi, replacement: 'cut paper layers, torn edges, mixed materials, overlapping textures', severity: 0, tags: ['mixed'] },
+    { pattern: /\bmixed media\b/gi, replacement: 'combined materials, layered textures, varied surface treatments', severity: 0, tags: ['mixed'] },
+
+    // ——— TECHNIQUE VERBS ———
+    { pattern: /\bimpasto\b/gi, replacement: 'thick paint application, raised brush ridges, tactile texture, raking light highlights', severity: 0, tags: ['technique'] },
+    { pattern: /\bglazing\b/gi, replacement: 'thin translucent paint layers, luminous depth, color stacking', severity: 0, tags: ['technique'] },
+    { pattern: /\bscumbling\b/gi, replacement: 'dry-brush veil, broken light layer, soft atmospheric texture', severity: 0, tags: ['technique'] },
+    { pattern: /\bsfumato\b/gi, replacement: 'smoky transitions, invisible edges, subtle tonal gradients', severity: 0, tags: ['technique'] },
+    { pattern: /\bchiaroscuro\b/gi, replacement: 'strong light-dark contrast, modeled volumes, dramatic shadows', severity: 0, tags: ['technique'] },
+    { pattern: /\bpointillism\b/gi, replacement: 'dot-based color mixing, optical blending, shimmering edges', severity: 0, tags: ['technique'] },
+    { pattern: /\bstippling\b/gi, replacement: 'dense dot shading, gradual tonal build-up, pen-and-ink texture', severity: 0, tags: ['technique'] },
+
+    // ——— FINISHES / LOOKS ———
+    { pattern: /\bmatte\s*finish\b/gi, replacement: 'non-reflective matte surface, muted highlights, soft texture', severity: 0, tags: ['finish'] },
+    { pattern: /\bgloss\s*finish\b/gi, replacement: 'high gloss surface, specular highlights, reflective sheen', severity: 0, tags: ['finish'] },
+    { pattern: /\bsatin\s*finish\b/gi, replacement: 'soft semi-gloss sheen, gentle highlights, smooth surface', severity: 0, tags: ['finish'] },
+    { pattern: /\bpatina\b/gi, replacement: 'aged surface oxidation, green-blue copper tones, weathered wear', severity: 0, tags: ['finish'] },
+    { pattern: /\bdistressed\b/gi, replacement: 'edge wear, scratches, faded pigment, scuffed surfaces, vintage vibe', severity: 0, tags: ['finish'] }
+  ]
+});
+// >>> END OF BLOCK 7 <<<
+/* ================================================================
+ * BLOCK 7 — ART STYLES, MOVEMENTS & MEDIA (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 8 — ENVIRONMENTS, BIOMES & SCENERY (EN)  (START)
+ * ID: BLOCK 8
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual place/scene words into detailed environmental descriptors.
+ *   - Useful for landscapes, cityscapes, interiors, weather, time-of-day.
+ * INTERNAL NOTES:
+ *   - Severity 0 (environment only). Mix with BLOCK 6 lighting for realism.
+ *   - Keep tokens generic and stackable (materials, scale cues, mood words).
+ * ================================================================ */
+// >>> START OF BLOCK 8 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 8',
+  language: 'en',
+  category: 'environments_biomes',
+  emoji: ['🏞️','🌆','🏙️','🏜️'],
+  notes: [
+    'Biomes + architecture + interiors with stackable details (materials, scale, atmosphere).',
+    'Avoid real-world brand/landmark names; focus on type descriptors.'
+  ],
+  entries: [
+    // ——— NATURAL BIOMES ———
+    { pattern: /\btemperate\s*forest\b/gi, replacement: 'mixed deciduous trees, mossy undergrowth, dappled light, damp soil, scattered ferns', severity: 0, tags: ['biome','forest'] },
+    { pattern: /\bconifer\s*forest\b/gi, replacement: 'tall pines and firs, needle carpet, cool blue-green palette, shafts of light', severity: 0, tags: ['biome','forest'] },
+    { pattern: /\btropical\s*rainforest\b/gi, replacement: 'dense canopy layers, broadleaf plants, humid mist, lianas and epiphytes, rich biodiversity', severity: 0, tags: ['biome','jungle'] },
+    { pattern: /\bsavanna\b/gi, replacement: 'golden grasses, scattered acacia trees, heat shimmer, distant wildlife silhouettes', severity: 0, tags: ['biome','grassland'] },
+    { pattern: /\bdesert\b/gi, replacement: 'rolling dunes, rippled sand texture, mirage haze, harsh sunlight, sparse shrubs', severity: 0, tags: ['biome','arid'] },
+    { pattern: /\btundra\b/gi, replacement: 'low shrubs and lichens, permafrost ground, cold wind, overcast skies, muted palette', severity: 0, tags: ['biome','cold'] },
+    { pattern: /\bmountain\s*range\b/gi, replacement: 'jagged peaks, alpine meadows, snow caps, thin air haze, dramatic vistas', severity: 0, tags: ['biome','alpine'] },
+    { pattern: /\bwetlands?\b/gi, replacement: 'reeds and cattails, shallow pools, reflective water, foggy morning atmosphere', severity: 0, tags: ['biome','water'] },
+    { pattern: /\bcoast(line)?\b/gi, replacement: 'rocky shoreline, foamy surf, tidal pools, seabirds, salt spray in the air', severity: 0, tags: ['biome','coastal'] },
+    { pattern: /\bcoral\s*reef\b/gi, replacement: 'underwater corals, colorful fish, caustic light patterns, clear tropical water', severity: 0, tags: ['biome','underwater'] },
+
+    // ——— WEATHER / TIME ———
+    { pattern: /\bgolden\s*hour\b/gi, replacement: 'warm low-angle sunlight, long shadows, glowing rim light, calm mood', severity: 0, tags: ['time','light'] },
+    { pattern: /\bblue\s*hour\b/gi, replacement: 'cool twilight skylight, gentle contrast, city lights starting to glow', severity: 0, tags: ['time','light'] },
+    { pattern: /\bstormy\s*sky\b/gi, replacement: 'towering cumulonimbus clouds, dramatic contrast, wind-blown rain curtains', severity: 0, tags: ['weather'] },
+    { pattern: /\bclear\s*night\b/gi, replacement: 'star-filled sky, crisp air, faint milky way band, cool color cast', severity: 0, tags: ['time','night'] },
+    { pattern: /\bfoggy\s*morning\b/gi, replacement: 'low rolling fog, softened silhouettes, diffused light, damp atmosphere', severity: 0, tags: ['weather','morning'] },
+
+    // ——— CITY / EXTERIORS ———
+    { pattern: /\bdowntown\b/gi, replacement: 'dense urban core, high-rise glass facades, traffic light reflections, busy crosswalks', severity: 0, tags: ['city'] },
+    { pattern: /\bold\s*town\b/gi, replacement: 'cobblestone streets, masonry facades, narrow alleys, wrought iron balconies, warm lamplight', severity: 0, tags: ['city','historic'] },
+    { pattern: /\bsuburbs?\b/gi, replacement: 'tree-lined streets, detached houses, trimmed lawns, parked cars, mailboxes', severity: 0, tags: ['city','residential'] },
+    { pattern: /\bindustrial\s*zone\b/gi, replacement: 'steel frameworks, smokestacks, shipping containers, gritty textures, sodium lights', severity: 0, tags: ['city','industrial'] },
+    { pattern: /\bharbor\b/gi, replacement: 'piers and docks, moored boats, rope and bollards, gulls, shimmering water', severity: 0, tags: ['city','maritime'] },
+    { pattern: /\bmarket\s*street\b/gi, replacement: 'open stalls, awnings, hanging lights, colorful produce crates, bustling crowd', severity: 0, tags: ['city','commerce'] },
+
+    // ——— INTERIORS ———
+    { pattern: /\bmodern\s*loft\b/gi, replacement: 'open-plan interior, exposed brick and beams, large windows, polished concrete floor', severity: 0, tags: ['interior','modern'] },
+    { pattern: /\bminimal\s*apartment\b/gi, replacement: 'white walls, clean lines, light wood furniture, airy layout, soft natural light', severity: 0, tags: ['interior','minimal'] },
+    { pattern: /\bboho\s*living\s*room\b/gi, replacement: 'layered textiles, rattan furniture, plants, patterned rugs, warm ambient light', severity: 0, tags: ['interior','boho'] },
+    { pattern: /\bfuturistic\s*corridor\b/gi, replacement: 'sleek panels, LED strip lighting, reflective floors, subtle fog, vanishing-point perspective', severity: 0, tags: ['interior','sci-fi'] },
+    { pattern: /\bbaroque\s*hall\b/gi, replacement: 'ornate gilded moldings, marble columns, crystal chandeliers, frescoed ceilings', severity: 0, tags: ['interior','historic'] },
+    { pattern: /\bcozy\s*cabin\b/gi, replacement: 'timber walls, stone fireplace, warm lamplight, wool blankets, snowy window view', severity: 0, tags: ['interior','rustic'] },
+
+    // ——— TRANSPORT / INFRASTRUCTURE ———
+    { pattern: /\brail\s*station\b/gi, replacement: 'arched platforms, metal trusses, schedule boards, crowds, motion blur trains', severity: 0, tags: ['transport'] },
+    { pattern: /\bsubway\s*platform\b/gi, replacement: 'tiled walls, fluorescent lighting, arriving train wind, directional signage', severity: 0, tags: ['transport'] },
+    { pattern: /\bhighway\s*overpass\b/gi, replacement: 'concrete pillars, layered road decks, traffic streaks at night, urban hum', severity: 0, tags: ['transport'] },
+    { pattern: /\bairport\s*terminal\b/gi, replacement: 'glass curtain walls, rolling suitcases, departure boards, bright skylights', severity: 0, tags: ['transport'] },
+
+    // ——— FANTASY / SCI-FI SETTINGS ———
+    { pattern: /\bfantasy\s*forest\b/gi, replacement: 'oversized mushrooms, bioluminescent plants, misty glades, ancient runes, soft magical glow', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bcrystal\s*cavern\b/gi, replacement: 'prismatic crystal clusters, refracted light beams, glittering facets, subterranean echo', severity: 0, tags: ['fantasy','underground'] },
+    { pattern: /\bsky\s*city\b/gi, replacement: 'floating platforms, suspension bridges in clouds, wind turbines, sunlit mist', severity: 0, tags: ['sci-fi'] },
+    { pattern: /\bdesert\s*colony\b/gi, replacement: 'domed shelters, sand-blasted panels, wind-carved rocks, solar arrays, heat shimmer', severity: 0, tags: ['sci-fi','arid'] },
+    { pattern: /\bunderwater\s*lab\b/gi, replacement: 'thick porthole windows, blue caustic light, drifting particles, steel corridors', severity: 0, tags: ['sci-fi','underwater'] }
+  ]
+});
+// >>> END OF BLOCK 8 <<<
+/* ================================================================
+ * BLOCK 8 — ENVIRONMENTS, BIOMES & SCENERY (EN)  (END)
+ * ================================================================ */
