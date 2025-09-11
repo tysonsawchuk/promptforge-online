@@ -1535,3 +1535,1711 @@ PF_PACKS.push({
 /* ================================================================
  * BLOCK 16 — UI/UX, ICONS & LOGO PROMPTS (EN)  (END)
  * ================================================================ */
+/* ================================================================
+ * BLOCK 17 — FOOD, CULINARY STYLING & PLATING (EN)  (START)
+ * ID: BLOCK 17
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Turn casual food terms into appetizing, studio-friendly descriptors.
+ *   - Covers ingredients, cooking methods, plating styles, garnish, steam/sizzle cues.
+ * INTERNAL NOTES:
+ *   - Severity 0 (non-NSFW). Brand-free; useful for ads, menus, product shots.
+ *   - Pair with BLOCK 6 (photo) for lighting like “soft daylight window” or “top-down”.
+ * ================================================================ */
+// >>> START OF BLOCK 17 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 17',
+  language: 'en',
+  category: 'food_culinary',
+  emoji: ['🍽️','🍜','🥗','🔥'],
+  notes: [
+    'Adds sensory cues (steam, glaze, sizzle) and plating lexicon (garnish, negative space).',
+    'Avoids specific brand dishes; uses generic cuisine descriptors.'
+  ],
+  entries: [
+    // ——— COOKING METHODS ———
+    { pattern: /\bgrilled\b/gi, replacement: 'grilled with char marks, smoky aroma, slight caramelization', severity: 0, tags: ['method'] },
+    { pattern: /\broasted\b/gi, replacement: 'oven-roasted, browned edges, concentrated flavors, crispy exterior', severity: 0, tags: ['method'] },
+    { pattern: /\bbaked\b/gi, replacement: 'baked, golden crust, even heat finish, soft interior', severity: 0, tags: ['method'] },
+    { pattern: /\bpan[-\s]*seared\b/gi, replacement: 'pan-seared, Maillard crust, sizzling edges, buttery glaze', severity: 0, tags: ['method'] },
+    { pattern: /\bsaute(?:ed|éd)\b/gi, replacement: 'sautéed, quick high heat, light oil sheen, tender bite', severity: 0, tags: ['method'] },
+    { pattern: /\bpoached\b/gi, replacement: 'gently poached, tender texture, delicate broth notes', severity: 0, tags: ['method'] },
+    { pattern: /\bsteamed\b/gi, replacement: 'steamed, moist heat, vibrant color, tender-crisp texture', severity: 0, tags: ['method'] },
+    { pattern: /\bsmoked\b/gi, replacement: 'smoke-kissed flavor, mahogany surface, aromatic depth', severity: 0, tags: ['method'] },
+    { pattern: /\bdeep[-\s]*fried\b/gi, replacement: 'deep-fried, crisp shell, bubbling oil texture, golden color', severity: 0, tags: ['method'] },
+
+    // ——— TEXTURE / DONENESS ———
+    { pattern: /\bcrispy\b/gi, replacement: 'crispy texture, audible crunch, golden exterior', severity: 0, tags: ['texture'] },
+    { pattern: /\bcrunchy\b/gi, replacement: 'crunchy bite, firm structure, loud snap', severity: 0, tags: ['texture'] },
+    { pattern: /\bcreamy\b/gi, replacement: 'creamy mouthfeel, smooth emulsion, glossy sheen', severity: 0, tags: ['texture'] },
+    { pattern: /\bjuicy\b/gi, replacement: 'juicy interior, visible moisture, glistening surface', severity: 0, tags: ['texture'] },
+    { pattern: /\btender\b/gi, replacement: 'tender texture, easy cut, delicate fibers', severity: 0, tags: ['texture'] },
+    { pattern: /\bumami\b/gi, replacement: 'umami depth, savory richness, glutamate-forward flavor', severity: 0, tags: ['flavor'] },
+    { pattern: /\bspicy\b/gi, replacement: 'spicy heat, chili warmth, lingering tingle', severity: 0, tags: ['flavor'] },
+    { pattern: /\bherbaceous\b/gi, replacement: 'fresh herbaceous notes, green aromatics, lively finish', severity: 0, tags: ['flavor'] },
+
+    // ——— DISH FRAMES ———
+    { pattern: /\bcomfort\s*food\b/gi, replacement: 'comfort-food style, hearty portions, nostalgic plating, warm tones', severity: 0, tags: ['style'] },
+    { pattern: /\bgourmet\b/gi, replacement: 'gourmet presentation, refined portioning, precision garnish, clean plate', severity: 0, tags: ['style'] },
+    { pattern: /\bfamily\s*style\b/gi, replacement: 'family-style presentation, shared platter, abundant serving, casual vibe', severity: 0, tags: ['style'] },
+    { pattern: /\bstreet\s*food\b/gi, replacement: 'street-food vibe, handheld format, paper wrap, fast-serve energy', severity: 0, tags: ['style'] },
+
+    // ——— PLATING / GARNISH ———
+    { pattern: /\bplated\b/gi, replacement: 'center-of-plate plating, negative space, wipe-clean rim, composed layers', severity: 0, tags: ['plating'] },
+    { pattern: /\bgarnish\b/gi, replacement: 'fresh garnish, microgreens or citrus zest, height accent', severity: 0, tags: ['plating'] },
+    { pattern: /\bdrizzle\b/gi, replacement: 'thin sauce drizzle, controlled lines, glossy finish', severity: 0, tags: ['plating'] },
+    { pattern: /\bsauce\s*swipe\b/gi, replacement: 'palette-knife sauce swipe, textured stroke, directional flow', severity: 0, tags: ['plating'] },
+    { pattern: /\bcrumb\s*dust\b/gi, replacement: 'crumb dusting, fine texture contrast, edge sprinkle', severity: 0, tags: ['plating'] },
+    { pattern: /\bheight\s*stack\b/gi, replacement: 'vertical stack, layered components, structural plating', severity: 0, tags: ['plating'] },
+
+    // ——— BREAD / DOUGH ———
+    { pattern: /\bartisan\s*bread\b/gi, replacement: 'artisan bread, blistered crust, open crumb, flour dusting', severity: 0, tags: ['bread'] },
+    { pattern: /\bbrioche\b/gi, replacement: 'brioche bun, enriched dough, glossy egg wash, buttery crumb', severity: 0, tags: ['bread'] },
+    { pattern: /\bsourdough\b/gi, replacement: 'sourdough loaf, tangy aroma, irregular holes, thick crust', severity: 0, tags: ['bread'] },
+    { pattern: /\bpizza\b/gi, replacement: 'pizza with leopard-spotted crust, stretchy cheese pull, balanced toppings', severity: 0, tags: ['bread'] },
+
+    // ——— DESSERT / SWEETS ———
+    { pattern: /\bchocolate\s*lava\b/gi, replacement: 'molten chocolate center, glossy ganache, warm steam, powdered sugar', severity: 0, tags: ['dessert'] },
+    { pattern: /\bcheesecake\b/gi, replacement: 'cheesecake slice, smooth set, biscuit crumb base, subtle sheen', severity: 0, tags: ['dessert'] },
+    { pattern: /\bmacarons?\b/gi, replacement: 'almond macarons, smooth shells, ruffled feet, pastel colors, creamy filling', severity: 0, tags: ['dessert'] },
+    { pattern: /\bice\s*cream\b/gi, replacement: 'ice cream scoop, soft ridges, frosty surface, slight melt at edges', severity: 0, tags: ['dessert','cold'] },
+
+    // ——— DRINKS ———
+    { pattern: /\bcocktail\b/gi, replacement: 'cocktail glassware, crystal clarity, citrus twist garnish, ice cube clarity', severity: 0, tags: ['drink'] },
+    { pattern: /\bmocktail\b/gi, replacement: 'mocktail, fresh fruit purée, aromatic herbs, crushed ice, bright color', severity: 0, tags: ['drink'] },
+    { pattern: /\bcoffee\b/gi, replacement: 'coffee crema, aromatic steam, porcelain cup, rich brown tones', severity: 0, tags: ['drink'] },
+    { pattern: /\btea\b/gi, replacement: 'tea in glass cup, amber clarity, rising steam, delicate saucer', severity: 0, tags: ['drink'] },
+
+    // ——— SENSORY CUES ———
+    { pattern: /\bsteam(?:ing)?\b/gi, replacement: 'visible steam wisps, heat shimmer, fresh-off-heat look', severity: 0, tags: ['cue'] },
+    { pattern: /\bsizzle\b/gi, replacement: 'hot sizzle effect, tiny oil pops, active pan energy', severity: 0, tags: ['cue'] },
+    { pattern: /\bglaze\b/gi, replacement: 'shiny glaze coat, light-catching highlights, appetizing sheen', severity: 0, tags: ['cue'] }
+  ]
+});
+// >>> END OF BLOCK 17 <<<
+/* ================================================================
+ * BLOCK 17 — FOOD, CULINARY STYLING & PLATING (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 18 — ACTION SHOTS, CINEMATIC VERBS & VFX CUES (EN)  (START)
+ * ID: BLOCK 18
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Convert vague action words into film-ready camera moves and VFX descriptors.
+ *   - Boosts dynamic scenes (sports, chase, battle, dance, product hype).
+ * INTERNAL NOTES:
+ *   - Severity 0 (visual). Combine with BLOCK 6 (camera) + BLOCK 13 (mood/comp).
+ *   - Neutral phrasing; no weapon gore here (that can be a gated block later).
+ * ================================================================ */
+// >>> START OF BLOCK 18 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 18',
+  language: 'en',
+  category: 'action_cinematic_vfx',
+  emoji: ['🎬','🏃','💨','⚡'],
+  notes: [
+    'Maps verbs to shot design and VFX hints (motion blur, particles, dynamics).',
+    'Use to turn “make it intense” into specific cinematic craft language.'
+  ],
+  entries: [
+    // ——— CAMERA MOVES ———
+    { pattern: /\btracking\s*shot\b/gi, replacement: 'tracking shot, camera moves parallel to subject, steady lateral motion', severity: 0, tags: ['camera_move'] },
+    { pattern: /\bdolly\s*in\b/gi, replacement: 'dolly-in move, forward camera travel, increasing subject scale', severity: 0, tags: ['camera_move'] },
+    { pattern: /\bdolly\s*out\b/gi, replacement: 'dolly-out move, backward camera travel, widening context', severity: 0, tags: ['camera_move'] },
+    { pattern: /\bcrane\s*shot\b/gi, replacement: 'crane shot, vertical rise and arc, sweeping viewpoint change', severity: 0, tags: ['camera_move'] },
+    { pattern: /\bhandheld\b/gi, replacement: 'handheld camera shake, organic micro-jitters, documentary energy', severity: 0, tags: ['camera_move'] },
+    { pattern: /\bstedicam\b/gi, replacement: 'stabilized gimbal glide, floating motion, smooth footsteps', severity: 0, tags: ['camera_move'] },
+    { pattern: /\bwhip\s*pan\b/gi, replacement: 'whip pan, rapid horizontal motion blur, smear transition, energetic snap', severity: 0, tags: ['camera_move'] },
+
+    // ——— EDITING / RHYTHM ———
+    { pattern: /\bfast\s*cut\b/gi, replacement: 'fast-cut editing, short shot lengths, breathless pacing', severity: 0, tags: ['editing'] },
+    { pattern: /\bmontage\b/gi, replacement: 'montage sequence, thematic cuts, time compression, rhythmic visuals', severity: 0, tags: ['editing'] },
+    { pattern: /\bslow\s*motion\b/gi, replacement: 'slow motion, high frame rate capture, elongated action beats', severity: 0, tags: ['editing'] },
+    { pattern: /\btime\s*lapse\b/gi, replacement: 'time-lapse, accelerated frames, compressed chronology, streaky motion', severity: 0, tags: ['editing'] },
+
+    // ——— VFX CUES ———
+    { pattern: /\bparticles?\b/gi, replacement: 'particle effects, fine debris, dust motes, directional streaks', severity: 0, tags: ['vfx'] },
+    { pattern: /\bshockwave\b/gi, replacement: 'shockwave ripple, circular distortion ring, heat shimmer edges', severity: 0, tags: ['vfx'] },
+    { pattern: /\benergy\s*arc\b/gi, replacement: 'electrical energy arcs, branching bolts, bloom glow', severity: 0, tags: ['vfx'] },
+    { pattern: /\bglitch\s*effect\b/gi, replacement: 'digital glitch, chromatic offset, slice displacement, scanline tear', severity: 0, tags: ['vfx'] },
+    { pattern: /\blens\s*flare\b/gi, replacement: 'anamorphic lens flare streaks, specular artifacts, highlight blooms', severity: 0, tags: ['vfx'] },
+
+    // ——— SPORTS / MOTION ———
+    { pattern: /\bsprint\b/gi, replacement: 'full sprint, forward lean, pumping arms, motion blur trails, shoe kick-up', severity: 0, tags: ['sport'] },
+    { pattern: /\bslam\s*dunk\b/gi, replacement: 'basketball slam dunk, airborne extension, rim contact, crowd energy', severity: 0, tags: ['sport'] },
+    { pattern: /\bpower\s*lift\b/gi, replacement: 'weightlifting power lift, bar flex, chalk dust burst, strain expression', severity: 0, tags: ['sport'] },
+    { pattern: /\bfree\s*climb\b/gi, replacement: 'free climb, chalked hands, tight grip, rock face texture, drop-off depth', severity: 0, tags: ['sport'] },
+
+    // ——— CHASE / IMPACT ———
+    { pattern: /\bcar\s*chase\b/gi, replacement: 'car chase sequence, tight turns, tire smoke, close gaps, dynamic camera', severity: 0, tags: ['action'] },
+    { pattern: /\bnear\s*miss\b/gi, replacement: 'near-miss pass, hairline clearance, adrenaline tension, sound whoosh', severity: 0, tags: ['action'] },
+    { pattern: /\bhard\s*brake\b/gi, replacement: 'hard brake, nose-dive suspension, skid marks, ABS chatter feel', severity: 0, tags: ['action'] },
+    { pattern: /\bexplosive\s*entry\b/gi, replacement: 'explosive entry, door burst, debris spray, light bloom, smoke billow', severity: 0, tags: ['action'] },
+
+    // ——— PRODUCT HYPE / REVEAL ———
+    { pattern: /\bhero\s*shot\b/gi, replacement: 'product hero shot, centered framing, dramatic rim light, clean backdrop', severity: 0, tags: ['product'] },
+    { pattern: /\breveal\b/gi, replacement: 'reveal moment, curtain lift or light sweep, ramp-up music cue feel', severity: 0, tags: ['product'] },
+    { pattern: /\bspin\s*reel\b/gi, replacement: '360 spin, smooth rotation, specular sweep, detail callouts', severity: 0, tags: ['product'] }
+  ]
+});
+// >>> END OF BLOCK 18 <<<
+/* ================================================================
+ * BLOCK 18 — ACTION SHOTS, CINEMATIC VERBS & VFX CUES (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 19 — CORE UTILS, COMPAT SHIMS, SCORING & SANITIZE (START)
+ * ID: BLOCK 19
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Unify globals so every session keeps working (PF_PACKS ↔ PF_PICTURE.packs).
+ *   - Provide scoring, SFW↔NSFW slider mapping, and a single sanitize() entrypoint.
+ *   - Keep everything append-only: do not edit prior blocks.
+ * INTERNAL NOTES:
+ *   - This block introduces no content mappings; it wires behavior.
+ *   - Works with: BLOCK 1 bootstrap, BLOCK 10 sanitizeByLang, and all mapping packs.
+ * ================================================================ */
+// >>> START OF BLOCK 19 CODE <<<
+(function (global) {
+  // ---------- COMPAT SHIMS ----------
+  // Core object homes
+  const G = (global.PF_PICTURE = global.PF_PICTURE || {});
+  // Single source of truth for packs
+  G.packs = Array.isArray(G.packs) ? G.packs : [];
+  // Compat alias so all later blocks can safely push
+  if (!global.PF_PACKS) global.PF_PACKS = G.packs;
+
+  // If any earlier block used PF_PACKS, ensure it points at G.packs
+  if (global.PF_PACKS !== G.packs) {
+    try {
+      // Merge any stray items and rebind
+      const merged = Array.from(new Set([...(G.packs || []), ...(global.PF_PACKS || [])]));
+      G.packs.length = 0; // reset
+      for (const p of merged) G.packs.push(p);
+      global.PF_PACKS = G.packs;
+    } catch (_) {
+      global.PF_PACKS = G.packs;
+    }
+  }
+
+  // ---------- SEVERITY SCORING ----------
+  // Compute a lightweight "adultness/intensity" score for a string after replacements.
+  function scoreText(text) {
+    let score = 0;
+    // Heuristic: sum entry severities if their replacement appeared
+    for (const pack of G.packs) {
+      if (!pack || !Array.isArray(pack.entries)) continue;
+      for (const e of pack.entries) {
+        // cheap check: if replacement string is present, consider it contributed.
+        if (!e || typeof e.replacement !== 'string' || typeof e.severity !== 'number') continue;
+        if (e.replacement && text.toLowerCase().includes(String(e.replacement).toLowerCase())) {
+          score += Math.max(0, Math.min(5, e.severity));
+        }
+      }
+    }
+    return score;
+  }
+
+  // Map a numeric score to slider 0..100 (0=SFW, 100=max NSFW).
+  function mapScoreToSlider(score) {
+    // Piecewise ease: faster rise after mid.
+    const clamped = Math.max(0, Math.min(200, score)); // prevent runaway
+    const x = clamped / 200; // normalize 0..1
+    const eased = x < 0.5 ? (x * 2) ** 1.2 * 0.5 : (0.5 + ((x - 0.5) * 2) ** 1.8 * 0.5);
+    return Math.round(eased * 100);
+  }
+
+  // ---------- UNIFIED SANITIZE ----------
+  // Options: { lang='en', direction='clean'|'explicit', allowExplicit=false }
+  function sanitize(text, opts = {}) {
+    const { lang = 'en', direction = 'clean', allowExplicit = false } = opts;
+
+    // Prefer language-aware pipeline if available (BLOCK 10)
+    const CORE = global.PF_CORE || {};
+    if (typeof CORE.sanitizeByLang === 'function') {
+      const out = CORE.sanitizeByLang(text, lang, { direction, allowExplicit });
+      return {
+        output: out,
+        score: scoreText(out),
+        slider: mapScoreToSlider(scoreText(out)),
+        meta: { lang, direction, allowExplicit }
+      };
+    }
+
+    // Fallback: run all non-explicit packs, then optional explicit packs
+    let out = String(text || '');
+    for (const pack of G.packs) {
+      if (!pack || /BLOCK\s+\d+a$/i.test(pack.block_id)) continue;
+      for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+    }
+    if (direction === 'explicit' && allowExplicit) {
+      for (const pack of G.packs) {
+        if (!pack || !/BLOCK\s+\d+a$/i.test(pack.block_id)) continue;
+        for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+      }
+    }
+    const score = scoreText(out);
+    return { output: out, score, slider: mapScoreToSlider(score), meta: { lang, direction, allowExplicit } };
+  }
+
+  // Export helpers
+  G.utils = G.utils || {};
+  G.utils.scoreText = scoreText;
+  G.utils.mapScoreToSlider = mapScoreToSlider;
+  G.sanitize = sanitize;
+
+  // Friendly globals for the site
+  global.PF_SANITIZE = sanitize;
+  global.PF_SCORE = scoreText;
+  global.PF_SLIDER = mapScoreToSlider;
+
+  // Auto-register with any PF host object
+  if (typeof global.PF !== 'undefined') {
+    global.PF.sanitize = sanitize;
+    global.PF.score = scoreText;
+    global.PF.slider = mapScoreToSlider;
+  }
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 19 <<<
+/* ================================================================
+ * BLOCK 19 — CORE UTILS, COMPAT SHIMS, SCORING & SANITIZE (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 20 — PROMPT SCAFFOLDS & EMPHASIS (START)
+ * ID: BLOCK 20
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Compose model-friendly prompts from slots: subject, style, camera, env, mood, color, render.
+ *   - Add emphasis weighting and keyword prioritization (no backend required).
+ * INTERNAL NOTES:
+ *   - Scaffold is additive; does not overwrite user text. Use with sanitize() first.
+ *   - Emphasis markers: **strong**, *soft*, [detail], {focus} → converted to weight tokens "(...:w)" style.
+ * ================================================================ */
+// >>> START OF BLOCK 20 CODE <<<
+(function (global) {
+  const G = (global.PF_PICTURE = global.PF_PICTURE || {});
+  const CORE = (global.PF_CORE = global.PF_CORE || {});
+  const packs = (global.PF_PACKS = global.PF_PACKS || G.packs || []);
+
+  // Simple emphasis parser → "(token:weight)" style strings
+  function emphasize(text) {
+    if (!text) return '';
+    let t = String(text);
+
+    // Strong emphasis: **bold** → (bold:1.2)
+    t = t.replace(/\*\*([^*]+)\*\*/g, '($1:1.2)');
+    // Soft emphasis: *em* → (em:1.05)
+    t = t.replace(/\*([^*]+)\*/g, '($1:1.05)');
+    // Detail brackets: [detail] → (detail:1.15)
+    t = t.replace(/\[([^\]]+)\]/g, '($1:1.15)');
+    // Focus braces: {focus} → (focus:1.35)
+    t = t.replace(/\{([^}]+)\}/g, '($1:1.35)');
+
+    // Collapse extra spaces
+    return t.replace(/\s{2,}/g, ' ').trim();
+  }
+
+  // Slot-based prompt composer
+  // slots = { subject, action, style, camera, environment, mood, color, render, extras[] }
+  function compose(slots = {}, opts = {}) {
+    const order = opts.order || [
+      'subject', 'action', 'environment', 'camera', 'mood', 'color', 'style', 'render', 'extras'
+    ];
+
+    // Build parts
+    const parts = [];
+    for (const key of order) {
+      const val = slots[key];
+      if (!val) continue;
+      if (Array.isArray(val)) {
+        const joined = val.map(v => emphasize(v)).filter(Boolean).join(', ');
+        if (joined) parts.push(joined);
+      } else {
+        const s = emphasize(val);
+        if (s) parts.push(s);
+      }
+    }
+
+    // Clean commas/spaces
+    const raw = parts.join(', ').replace(/\s*,\s*,/g, ', ').trim().replace(/,\s*$/, '');
+    return raw;
+  }
+
+  // Keyword prioritization: move highest-weight tokens forward
+  function prioritize(prompt) {
+    if (!prompt) return '';
+    const tokens = prompt.split(/,\s*/g);
+    // Simple heuristic: any "(...:w)" with w>=1.2 bubbles up
+    tokens.sort((a, b) => {
+      const wa = parseFloat((a.match(/:(\d+(?:\.\d+)?)\)/) || [])[1] || '1.0');
+      const wb = parseFloat((b.match(/:(\d+(?:\.\d+)?)\)/) || [])[1] || '1.0');
+      return wb - wa;
+    });
+    return tokens.join(', ');
+  }
+
+  // Public API: sanitize → compose → prioritize
+  // api(text, slots, opts = {lang, direction, allowExplicit} )
+  function craft(text, slots = {}, opts = {}) {
+    const s = (global.PF_SANITIZE || ((t) => ({ output: t, score: 0, slider: 0 })))(text, opts);
+    const base = s && s.output ? s.output : String(text || '');
+    const composed = compose(slots, opts);
+    const merged = [base, composed].filter(Boolean).join(', ').replace(/\s+,/g, ',').trim();
+    const prioritized = prioritize(merged);
+    return {
+      prompt: prioritized,
+      meta: {
+        sanitize: s,
+        tokens: prioritized.split(/,\s*/g).length
+      }
+    };
+  }
+
+  // Export
+  CORE.emphasize = emphasize;
+  CORE.compose = compose;
+  CORE.prioritize = prioritize;
+  CORE.craft = craft;
+
+  // Friendly globals
+  global.PF_EMPHASIZE = emphasize;
+  global.PF_COMPOSE = compose;
+  global.PF_PRIORITIZE = prioritize;
+  global.PF_CRAFT = craft;
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 20 <<<
+/* ================================================================
+ * BLOCK 20 — PROMPT SCAFFOLDS & EMPHASIS (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 21 — ENVIRONMENTS, LOCATIONS & WORLD-BUILDING (EN) (START)
+ * ID: BLOCK 21
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Cover natural + man-made locations: cities, ruins, interiors, planetscapes.
+ *   - Provides spatial + atmospheric cues for generative models.
+ * INTERNAL NOTES:
+ *   - Severity 0 (neutral). Works with BLOCK 13 (color/comp) + BLOCK 6 (camera).
+ * ================================================================ */
+// >>> START OF BLOCK 21 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 21',
+  language: 'en',
+  category: 'environments_worldbuilding',
+  emoji: ['🏙️','🏞️','🏰','🌌'],
+  notes: [
+    'Describe climate, architecture, density, time-of-day, and vibe.',
+    'Fantasy + sci-fi environments included, brand-free.'
+  ],
+  entries: [
+    // ——— URBAN ———
+    { pattern: /\bneon\s*city\b/gi, replacement: 'dense cyberpunk cityscape, neon signage glow, rainy pavement reflections', severity: 0, tags: ['urban','cyberpunk'] },
+    { pattern: /\bmedieval\s*town\b/gi, replacement: 'stone-paved medieval village, timber-framed houses, lantern-lit streets', severity: 0, tags: ['urban','historic'] },
+    { pattern: /\bfuturistic\s*megacity\b/gi, replacement: 'towering megacity, massive arcologies, hover traffic lanes, layered skybridges', severity: 0, tags: ['urban','futuristic'] },
+    { pattern: /\bdesert\s*outpost\b/gi, replacement: 'desert outpost, sandstone walls, sun-bleached fabric awnings, windblown dust', severity: 0, tags: ['remote','desert'] },
+
+    // ——— INTERIORS ———
+    { pattern: /\bpalace\s*hall\b/gi, replacement: 'grand palace hall, marble floors, vaulted ceilings, chandeliers', severity: 0, tags: ['interior'] },
+    { pattern: /\bindustrial\s*warehouse\b/gi, replacement: 'abandoned warehouse interior, rusted beams, broken windows, scattered crates', severity: 0, tags: ['interior'] },
+    { pattern: /\blaboratory\b/gi, replacement: 'sterile sci-fi laboratory, white panels, glass enclosures, glowing instruments', severity: 0, tags: ['interior','sci-fi'] },
+    { pattern: /\bthrone\s*room\b/gi, replacement: 'throne room interior, long carpeted aisle, ornate throne, banners', severity: 0, tags: ['interior','royal'] },
+
+    // ——— NATURAL ———
+    { pattern: /\bmystic\s*forest\b/gi, replacement: 'enchanted forest, glowing mushrooms, misty atmosphere, ancient trees', severity: 0, tags: ['nature','fantasy'] },
+    { pattern: /\bvolcanic\s*plain\b/gi, replacement: 'volcanic landscape, cracked basalt ground, glowing lava rivers, heat shimmer', severity: 0, tags: ['nature'] },
+    { pattern: /\btundra\b/gi, replacement: 'tundra expanse, permafrost soil, moss patches, reindeer tracks', severity: 0, tags: ['nature','cold'] },
+    { pattern: /\bdeep\s*ocean\b/gi, replacement: 'deep ocean trench, bioluminescent creatures, low visibility, shafts of light', severity: 0, tags: ['nature','marine'] },
+
+    // ——— OFF-WORLD ———
+    { pattern: /\balien\s*planet\b/gi, replacement: 'alien planet surface, twin suns, exotic flora, strange rock spires', severity: 0, tags: ['planet','sci-fi'] },
+    { pattern: /\bspace\s*station\b/gi, replacement: 'orbital space station, docking ring, rotating habitat wheel, viewport stars', severity: 0, tags: ['space'] },
+    { pattern: /\bderelict\s*ship\b/gi, replacement: 'derelict starship interior, flickering lights, floating debris, eerie silence', severity: 0, tags: ['space','horror'] },
+    { pattern: /\blava\s*planet\b/gi, replacement: 'molten world surface, lava seas, volcanic lightning, ash clouds', severity: 0, tags: ['planet','extreme'] }
+  ]
+});
+// >>> END OF BLOCK 21 <<<
+/* ================================================================
+ * BLOCK 21 — ENVIRONMENTS, LOCATIONS & WORLD-BUILDING (EN) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 22 — STORYBEATS, THEMES & GENRE TOKENS (EN) (START)
+ * ID: BLOCK 22
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Give models narrative direction: themes, genres, tone words.
+ *   - Help users build cohesive prompts with emotional or plot arcs.
+ * INTERNAL NOTES:
+ *   - Severity 0 (abstract concepts). Safe for any slider level.
+ * ================================================================ */
+// >>> START OF BLOCK 22 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 22',
+  language: 'en',
+  category: 'story_genre_tone',
+  emoji: ['📚','🎭','🧩','🕯️'],
+  notes: [
+    'Genre tokens encourage style-appropriate framing.',
+    'Themes and moods stack well with BLOCK 13 (color/mood).'
+  ],
+  entries: [
+    // ——— GENRES ———
+    { pattern: /\bnoir\b/gi, replacement: 'film noir tone, moody lighting, hard shadows, detective vibe', severity: 0, tags: ['genre'] },
+    { pattern: /\bfantasy\b/gi, replacement: 'fantasy genre tone, mythical setting, magic motifs, heroic stakes', severity: 0, tags: ['genre'] },
+    { pattern: /\bsci[-\s]*fi\b/gi, replacement: 'science fiction genre tone, futuristic tech motifs, speculative design', severity: 0, tags: ['genre'] },
+    { pattern: /\bcyberpunk\b/gi, replacement: 'cyberpunk genre tone, rain-soaked streets, neon glow, dystopian themes', severity: 0, tags: ['genre'] },
+    { pattern: /\bpost[-\s]*apocalyptic\b/gi, replacement: 'post-apocalyptic world, decayed ruins, overgrown cities, survival tone', severity: 0, tags: ['genre'] },
+    { pattern: /\bromance\b/gi, replacement: 'romantic theme, soft lighting, warm hues, intimate framing', severity: 0, tags: ['genre'] },
+    { pattern: /\bhorror\b/gi, replacement: 'horror theme, eerie lighting, unsettling mood, suspense build-up', severity: 0, tags: ['genre'] },
+    { pattern: /\bcomedy\b/gi, replacement: 'comedic tone, exaggerated expressions, bright colors, playful framing', severity: 0, tags: ['genre'] },
+
+    // ——— THEMES / PLOT ———
+    { pattern: /\bcoming[-\s]*of[-\s]*age\b/gi, replacement: 'coming-of-age theme, character growth, self-discovery arc', severity: 0, tags: ['theme'] },
+    { pattern: /\bredemption\b/gi, replacement: 'redemption arc, character atonement, moral struggle, hopeful resolution', severity: 0, tags: ['theme'] },
+    { pattern: /\btragedy\b/gi, replacement: 'tragic theme, downfall arc, emotional catharsis, solemn tone', severity: 0, tags: ['theme'] },
+    { pattern: /\bquest\b/gi, replacement: 'quest narrative, journey motif, obstacles, companions, end goal', severity: 0, tags: ['theme'] },
+    { pattern: /\brevenge\b/gi, replacement: 'revenge theme, burning motivation, high tension, justice pursuit', severity: 0, tags: ['theme'] },
+
+    // ——— MOOD INTENSIFIERS ———
+    { pattern: /\bepic\s*finale\b/gi, replacement: 'epic finale climax, orchestral swell, wide shot, cathartic release', severity: 0, tags: ['climax'] },
+    { pattern: /\bmelancholy\b/gi, replacement: 'melancholy tone, subdued colors, slow pacing, reflective mood', severity: 0, tags: ['tone'] },
+    { pattern: /\btriumphant\b/gi, replacement: 'triumphant tone, major chords, upward camera tilt, victorious pose', severity: 0, tags: ['tone'] },
+    { pattern: /\bsuspenseful\b/gi, replacement: 'suspenseful build, ticking clock, tight framing, rising tension', severity: 0, tags: ['tone'] },
+    { pattern: /\bwholesome\b/gi, replacement: 'wholesome tone, soft glow, warm palette, gentle pacing', severity: 0, tags: ['tone'] }
+  ]
+});
+// >>> END OF BLOCK 22 <<<
+/* ================================================================
+ * BLOCK 22 — STORYBEATS, THEMES & GENRE TOKENS (EN) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 23 — CONSENT & SAFETY GUARDRAILS (HARD FILTERS) (START)
+ * ID: BLOCK 23
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Absolute guardrails that neutralize or block illegal/non-consensual concepts.
+ *   - Runs BEFORE any directional packs. Brand- and model-agnostic.
+ * INTERNAL NOTES:
+ *   - Adult-only policy enforcement: removes/neutralizes minors, incest, non-consent, bestiality, etc.
+ *   - Severity 5 for hard stops; these push slider high to force SFW fallback upstream if you want.
+ * ================================================================ */
+// >>> START OF BLOCK 23 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 23',
+  language: 'any',
+  category: 'safety_guardrails',
+  emoji: ['🛑','🧯','🧰'],
+  notes: [
+    'Hard filters: neutralize illegal or non-consensual content before anything else.',
+    'Keep this pack minimal, deterministic, and auditable.'
+  ],
+  entries: [
+    // ——— MINORS / AGE ———
+    { pattern: /\b(underage|minor|child|children|teen(?:ager)?|preteen|youngster|lolita|jailbait)\b/gi,
+      replacement: 'adult', severity: 5, tags: ['safety','age'] },
+
+    // ——— NON-CONSENT ———
+    { pattern: /\b(non[-\s]?consensual|without\s*consent|coerced|forced)\b/gi,
+      replacement: 'consensual', severity: 5, tags: ['safety','consent'] },
+
+    // ——— INCEST / FAMILIAL ———
+    { pattern: /\b(step\s*(mom|mother|dad|father|sister|brother)|mom|mother|dad|father|sister|brother)\b(?=.*\b(sex|sexual|intimate|explicit)\b)/gi,
+      replacement: 'unrelated adult', severity: 5, tags: ['safety','incest'] },
+
+    // ——— BESTIALITY ———
+    { pattern: /\b(animal|beast|dog|horse|cat|goat|wolf|pet)\b(?=.*\b(sex|sexual|explicit)\b)/gi,
+      replacement: 'adult human partner', severity: 5, tags: ['safety','bestiality'] },
+
+    // ——— EXTREME HARM (keep SFW) ———
+    { pattern: /\b(snuff|mutilation|torture|gore)\b/gi,
+      replacement: 'safe consensual context', severity: 5, tags: ['safety','harm'] }
+  ]
+});
+// >>> END OF BLOCK 23 <<<
+/* ================================================================
+ * BLOCK 23 — CONSENT & SAFETY GUARDRAILS (HARD FILTERS) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 24 — NSFW DIRECTIONAL API (HOOKS, NO LEXICON) (START)
+ * ID: BLOCK 24
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide a clean API to *load* explicit-direction packs at runtime from your own files/URLs.
+ *   - Keeps this repo safe while letting you plug in private NSFW lexicons client-side.
+ * INTERNAL NOTES:
+ *   - This block defines loaders, validators, and a deterministic pipeline ordering:
+ *       1) BLOCK 23 (guardrails) → 2) SFW packs → 3) User-loaded NSFW packs (if allowExplicit).
+ *   - Example shows schema to follow; entries array intentionally empty here.
+ * ================================================================ */
+// >>> START OF BLOCK 24 CODE <<<
+(function (global) {
+  const G = (global.PF_PICTURE = global.PF_PICTURE || {});
+  const PACKS = (global.PF_PACKS = global.PF_PACKS || G.packs || []);
+
+  // Minimal schema validator for external packs
+  function validatePack(pack) {
+    if (!pack || typeof pack !== 'object') return { ok: false, reason: 'not an object' };
+    if (!/^[A-Z0-9\s]+(a)?$/i.test(pack.block_id || '')) return { ok: false, reason: 'bad block_id' };
+    if (!Array.isArray(pack.entries)) return { ok: false, reason: 'entries must be array' };
+    for (const e of pack.entries) {
+      if (!e || !(e.pattern instanceof RegExp) || typeof e.replacement !== 'string') {
+        return { ok: false, reason: 'bad entry pattern/replacement' };
+      }
+      if (typeof e.severity !== 'number') e.severity = 4; // default hot
+      if (!Array.isArray(e.tags)) e.tags = [];
+    }
+    return { ok: true };
+  }
+
+  // Load JSON-like pack from URL (expects {block_id, language, category, entries[]} and entries.pattern as string regex)
+  async function loadPackFromURL(url, { gated = true } = {}) {
+    const res = await fetch(url, { cache: 'no-store' });
+    const data = await res.json();
+    // Convert string patterns to RegExp
+    if (Array.isArray(data.entries)) {
+      data.entries = data.entries.map(e => {
+        if (e && typeof e.pattern === 'string') {
+          // default to global+case-insensitive
+          const rx = new RegExp(e.pattern, e.flags || 'gi');
+          return { ...e, pattern: rx };
+        }
+        return e;
+      });
+    }
+    if (gated && !/a$/i.test(String(data.block_id))) data.block_id = `${data.block_id}a`;
+    data.gated = gated;
+    const v = validatePack(data);
+    if (!v.ok) throw new Error(`Invalid pack: ${v.reason}`);
+    PACKS.push(data);
+    return data;
+  }
+
+  // Deterministic run: guardrails → SFW → user NSFW
+  async function runWithUserNSFW(text, { lang = 'en', allowExplicit = false, direction = 'clean', userPacks = [] } = {}) {
+    let out = String(text || '');
+
+    // 1) Guardrails (BLOCK 23) only
+    for (const pack of PACKS) {
+      if (!pack || String(pack.block_id) !== 'BLOCK 23') continue;
+      for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+    }
+
+    // 2) SFW packs (all non-...a packs except 23)
+    for (const pack of PACKS) {
+      if (!pack || /a$/i.test(String(pack.block_id)) || String(pack.block_id) === 'BLOCK 23') continue;
+      if (pack.language && pack.language !== 'any' && pack.language.toLowerCase() !== lang.toLowerCase()) continue;
+      for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+    }
+
+    // 3) Optional user NSFW packs (gated, *your* content)
+    if (allowExplicit && direction === 'explicit') {
+      for (const pack of PACKS) {
+        if (!pack || !/a$/i.test(String(pack.block_id))) continue;
+        if (pack.language && pack.language !== 'any' && pack.language.toLowerCase() !== lang.toLowerCase()) continue;
+        for (const e of (pack.entries || [])) out = out.replace(e.pattern, e.replacement);
+      }
+      // Dynamic, per-call packs (not permanently installed)
+      for (const up of (userPacks || [])) {
+        const v = validatePack(up);
+        if (!v.ok) continue;
+        for (const e of (up.entries || [])) out = out.replace(e.pattern, e.replacement);
+      }
+    }
+
+    return out;
+  }
+
+  // Export
+  G.NSFW = G.NSFW || {};
+  G.NSFW.validatePack = validatePack;
+  G.NSFW.loadPackFromURL = loadPackFromURL;
+  G.NSFW.runWithUserNSFW = runWithUserNSFW;
+
+  // Friendly globals
+  global.PF_LOAD_NSFW = loadPackFromURL;
+  global.PF_RUN_NSFW = runWithUserNSFW;
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 24 CODE <<<
+/* ================================================================
+ * BLOCK 24 — NSFW DIRECTIONAL API (HOOKS, NO LEXICON) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 25 — QUALITY CONTROL: NEGATIVES & ARTIFACT FIXES (START)
+ * ID: BLOCK 25
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Add negative/cleanup tokens to reduce common gen artifacts (hands, text, banding, etc.).
+ *   - Non-destructive: maps vague “avoid X” requests to model-usable negatives.
+ * INTERNAL NOTES:
+ *   - Severity 0. These strings are typically appended to negative prompt fields in UIs.
+ * ================================================================ */
+// >>> START OF BLOCK 25 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 25',
+  language: 'en',
+  category: 'quality_negatives',
+  emoji: ['🧹','🪄','🧪'],
+  notes: [
+    'Use with PF_CORE.craft(): add entries to the "extras" slot or a dedicated negative field in your UI.',
+    'Brand/model agnostic fix-ups.'
+  ],
+  entries: [
+    { pattern: /\b(clean\s*render|no\s*noise)\b/gi, replacement: 'clean edges, reduced sensor noise, denoised background', severity: 0, tags: ['cleanup'] },
+    { pattern: /\b(no\s*text|remove\s*text)\b/gi, replacement: 'no embedded text, avoid watermarks, plain surfaces', severity: 0, tags: ['cleanup'] },
+    { pattern: /\b(no\s*banding)\b/gi, replacement: 'avoid banding, smooth gradients, high bit-depth feel', severity: 0, tags: ['cleanup'] },
+    { pattern: /\b(no\s*artifacts?)\b/gi, replacement: 'avoid compression artifacts, avoid glitch seams', severity: 0, tags: ['cleanup'] },
+    { pattern: /\b(fix\s*hands|hands\s*correct)\b/gi, replacement: 'accurate hand anatomy, five distinct fingers, correct joints', severity: 0, tags: ['anatomy'] },
+    { pattern: /\b(fix\s*eyes|eyes\s*correct)\b/gi, replacement: 'symmetrical eyes, correct gaze alignment, natural catchlights', severity: 0, tags: ['anatomy'] },
+    { pattern: /\b(no\s*distortion)\b/gi, replacement: 'avoid lens distortion, natural proportions, undistorted edges', severity: 0, tags: ['optics'] },
+    { pattern: /\b(no\s*clutter)\b/gi, replacement: 'clean background, minimal props, strong subject isolation', severity: 0, tags: ['composition'] }
+  ]
+});
+// >>> END OF BLOCK 25 <<<
+/* ================================================================
+ * BLOCK 25 — QUALITY CONTROL: NEGATIVES & ARTIFACT FIXES (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 26 — USER DICTIONARY, SESSION LEARNING & LOCAL CACHE (START)
+ * ID: BLOCK 26
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Let users add slang/synonyms during a session and persist them (no backend).
+ *   - Cached in localStorage; applied early in pipeline to “teach” the file new terms.
+ * INTERNAL NOTES:
+ *   - Non-NSFW by default; you can choose to put explicit items in external NSFW packs via BLOCK 24.
+ *   - Namespaced under PF_USER_DICT to avoid collisions.
+ * ================================================================ */
+// >>> START OF BLOCK 26 CODE <<<
+(function (global) {
+  const KEY = 'PF_USER_DICT_V1';
+  const PACK_ID = 'BLOCK 26 (user dict)';
+
+  // Load cached entries
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch { return []; }
+  }
+
+  // Save cached entries
+  function saveCache(entries) {
+    try { localStorage.setItem(KEY, JSON.stringify(entries || [])); } catch {}
+  }
+
+  // Build or update the user dictionary pack
+  function ensurePack() {
+    global.PF_PACKS = global.PF_PACKS || [];
+    let pack = global.PF_PACKS.find(p => p && p.block_id === PACK_ID);
+    if (!pack) {
+      pack = { block_id: PACK_ID, language: 'any', category: 'user_dict', emoji: ['📝'], notes: ['Session/user-added synonyms'], entries: [] };
+      global.PF_PACKS.unshift(pack); // run early
+    }
+    return pack;
+  }
+
+  // Public API: add(termRegexString, replacement, {severity=1, tags=[]})
+  function add(term, replacement, { severity = 1, tags = [] } = {}) {
+    const pack = ensurePack();
+    const rx = new RegExp(term, 'gi');
+    pack.entries.push({ pattern: rx, replacement, severity, tags });
+    const cache = loadCache();
+    cache.push({ term, replacement, severity, tags });
+    saveCache(cache);
+    return { ok: true, size: pack.entries.length };
+  }
+
+  // Public API: hydrate from cache on load
+  function hydrate() {
+    const cached = loadCache();
+    if (!cached.length) return 0;
+    const pack = ensurePack();
+    for (const c of cached) {
+      try {
+        const rx = new RegExp(c.term, 'gi');
+        pack.entries.push({ pattern: rx, replacement: c.replacement, severity: c.severity ?? 1, tags: c.tags ?? [] });
+      } catch {}
+    }
+    return pack.entries.length;
+  }
+
+  // Autoload
+  try { hydrate(); } catch {}
+
+  // Export
+  global.PF_USER_DICT = { add, hydrate, KEY };
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 26 CODE <<<
+/* ================================================================
+ * BLOCK 26 — USER DICTIONARY, SESSION LEARNING & LOCAL CACHE (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 27 — PROFANITY & SEXUAL SLANG → NEUTRAL/CLINICAL (EN) (START)
+ * ID: BLOCK 27
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Massive profanity/slang neutralizer for SFW output.
+ *   - Maps general swears → toned phrasing; sexual slang → clinical anatomy.
+ * INTERNAL NOTES:
+ *   - Severity tuned (2–4) to help slider. This is SFW direction only.
+ *   - Directional escalation (back to explicit) belongs in gated "...a" blocks you load via BLOCK 24.
+ *   - Keep adding terms over time; append-only.
+ * ================================================================ */
+// >>> START OF BLOCK 27 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 27',
+  language: 'en',
+  category: 'profanity_to_neutral',
+  emoji: ['🧼','🗣️'],
+  notes: [
+    'General profanity → toned sentiment words.',
+    'Sexual slang → clinical anatomy terms (adult subjects only).',
+    'Hate slurs are collapsed to a generic notice (no repetition).'
+  ],
+  entries: [
+    // ——— GENERAL PROFANITY → TONED WORDS ———
+    { pattern: /\bfuck(?:ing|er|ed)?\b/gi, replacement: 'intense', severity: 3, tags: ['profanity'] },
+    { pattern: /\bshit(?:ty)?\b/gi, replacement: 'mess', severity: 2, tags: ['profanity'] },
+    { pattern: /\bdamn(?:ed)?\b/gi, replacement: 'very', severity: 1, tags: ['profanity'] },
+    { pattern: /\bhell\b/gi, replacement: 'a lot', severity: 1, tags: ['profanity'] },
+    { pattern: /\basshole\b/gi, replacement: 'rude person', severity: 3, tags: ['insult'] },
+    { pattern: /\bbastard\b/gi, replacement: 'antagonist', severity: 2, tags: ['insult'] },
+    { pattern: /\bbi+ch(es)?\b/gi, replacement: 'insult', severity: 2, tags: ['insult'] },
+    { pattern: /\bdickhead\b/gi, replacement: 'rude person', severity: 3, tags: ['insult'] },
+    { pattern: /\bprick\b/gi, replacement: 'rude person', severity: 2, tags: ['insult'] },
+    { pattern: /\bdouche(?:bag)?\b/gi, replacement: 'rude person', severity: 2, tags: ['insult'] },
+    { pattern: /\bpiss(?:ed|ing)?\b/gi, replacement: 'angry', severity: 1, tags: ['tone'] },
+    { pattern: /\bwtf\b/gi, replacement: 'what is going on', severity: 1, tags: ['tone'] },
+    { pattern: /\baf\b/gi, replacement: 'very', severity: 1, tags: ['tone'] },
+
+    // ——— SEXUAL SLANG (GENERIC) → CLINICAL ———
+    { pattern: /\btits?\b/gi, replacement: 'breasts', severity: 3, tags: ['anatomy','female'] },
+    { pattern: /\bboobs?\b/gi, replacement: 'breasts', severity: 3, tags: ['anatomy','female'] },
+    { pattern: /\bnipples?\b/gi, replacement: 'nipples', severity: 2, tags: ['anatomy','neutral'] },
+    { pattern: /\b(areolae?|areolas?)\b/gi, replacement: 'areolae', severity: 2, tags: ['anatomy','neutral'] },
+
+    { pattern: /\bpussy|pus+y\b/gi, replacement: 'vagina', severity: 4, tags: ['anatomy','female'] },
+    { pattern: /\bcunt\b/gi, replacement: 'vagina', severity: 4, tags: ['anatomy','female'] },
+    { pattern: /\bvajayjay\b/gi, replacement: 'vagina', severity: 3, tags: ['anatomy','female'] },
+    { pattern: /\bslit\b/gi, replacement: 'vulva', severity: 3, tags: ['anatomy','female'] },
+    { pattern: /\blabia\b/gi, replacement: 'labia', severity: 2, tags: ['anatomy','female'] },
+    { pattern: /\bclit(?:oris)?\b/gi, replacement: 'clitoris', severity: 3, tags: ['anatomy','female'] },
+
+    { pattern: /\bass|butt(?:ocks)?\b/gi, replacement: 'buttocks', severity: 2, tags: ['anatomy','neutral'] },
+    { pattern: /\banus|butthole|asshole\b/gi, replacement: 'anus', severity: 3, tags: ['anatomy','neutral'] },
+
+    { pattern: /\bdick|cock|shaft\b/gi, replacement: 'penis', severity: 4, tags: ['anatomy','male'] },
+    { pattern: /\bpenises\b/gi, replacement: 'penises', severity: 2, tags: ['anatomy','male'] },
+    { pattern: /\bballs|nuts|gonads|sack\b/gi, replacement: 'testicles', severity: 3, tags: ['anatomy','male'] },
+    { pattern: /\bhead\b(?=\s*(?:of\s*)?(?:his|the)\s*(?:dick|cock|penis)\b)/gi, replacement: 'glans', severity: 3, tags: ['anatomy','male'] },
+
+    // ——— SEXUAL VERBS (NEUTRALIZE WORDING, KEEP CONSENSUAL) ———
+    { pattern: /\bjerk(?:ing)?\s*off\b/gi, replacement: 'masturbating', severity: 3, tags: ['activity'] },
+    { pattern: /\bfinger(?:ing)?\b/gi, replacement: 'manual stimulation', severity: 3, tags: ['activity'] },
+    { pattern: /\bhandjob\b/gi, replacement: 'manual stimulation', severity: 3, tags: ['activity'] },
+    { pattern: /\bblowjob|bj\b/gi, replacement: 'oral stimulation', severity: 3, tags: ['activity'] },
+    { pattern: /\btitjob\b/gi, replacement: 'breast-focused stimulation', severity: 3, tags: ['activity'] },
+    { pattern: /\brim(?:ming)?\b/gi, replacement: 'anal oral stimulation', severity: 4, tags: ['activity'] },
+    { pattern: /\banal\b/gi, replacement: 'anal intercourse (consensual)', severity: 4, tags: ['activity'] },
+    { pattern: /\bsex\b/gi, replacement: 'sexual activity (consensual)', severity: 2, tags: ['activity'] },
+
+    // ——— FLUID/AROUSAL WORDS → NEUTRAL ———
+    { pattern: /\bcum|jizz|load\b/gi, replacement: 'semen', severity: 4, tags: ['fluid'] },
+    { pattern: /\bpre[-\s]*cum\b/gi, replacement: 'pre-ejaculate', severity: 3, tags: ['fluid'] },
+    { pattern: /\bsquirt(?:ing)?\b/gi, replacement: 'fluid release', severity: 3, tags: ['fluid'] },
+    { pattern: /\bwet\s*spot\b/gi, replacement: 'moist fabric area', severity: 2, tags: ['fluid'] },
+
+    // ——— MISC VULGARITY → NEUTRAL ———
+    { pattern: /\bmoan(?:ing)?\b/gi, replacement: 'audible pleasure sounds', severity: 2, tags: ['tone'] },
+    { pattern: /\bslut|whore\b/gi, replacement: 'demeaning insult (removed)', severity: 4, tags: ['insult'] },
+
+    // ——— HATE SLURS (DO NOT ECHO) ———
+    { pattern: /\b[a-z]*\*?[a-z]*\b(?=.*\bslur\b)/gi, replacement: 'slur (removed)', severity: 5, tags: ['safety'] }
+  ]
+});
+// >>> END OF BLOCK 27 <<<
+/* ================================================================
+ * BLOCK 27 — PROFANITY & SEXUAL SLANG → NEUTRAL/CLINICAL (EN) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 28 — TONE COHERENCE & NON-SEQUITUR GUARD (START)
+ * ID: BLOCK 28
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Reduce vibe clashes and random non-sequiturs inside a single prompt.
+ *   - Normalizes mixed tones (sad/cute/epic) and flags surreal collisions unless explicitly asked.
+ * INTERNAL NOTES:
+ *   - Heuristics only (regex + light rules). Doesn’t censor; it *nudges* to consistent phrasing.
+ *   - Use PF_CORE.craft() → then run PF_CORE.prioritize() → then apply this pass for final cleanup.
+ * ================================================================ */
+// >>> START OF BLOCK 28 CODE <<<
+(function (global) {
+  function coherencePass(text) {
+    let t = String(text || '');
+
+    // If user asked for "surreal" or "absurd", skip guardrails
+    const optedSurreal = /\b(surreal|absurd|dreamlike|nonsense|dada)\b/i.test(t);
+
+    // Tone clusters (pick strongest if conflicts)
+    const tones = [
+      { key: 'melancholy', rx: /\b(sad|melancholy|somber|blue)\b/ig, canon: 'melancholy tone' },
+      { key: 'whimsical', rx: /\b(whimsical|playful|cute|quirky)\b/ig, canon: 'whimsical tone' },
+      { key: 'epic', rx: /\b(epic|grand|heroic|monumental)\b/ig, canon: 'epic tone' },
+      { key: 'romantic', rx: /\b(romantic|tender|intimate|affectionate)\b/ig, canon: 'romantic tone' },
+      { key: 'horror', rx: /\b(horror|eerie|creepy|terrifying)\b/ig, canon: 'horror tone' }
+    ];
+    const hits = [];
+    for (const tset of tones) if (tset.rx.test(t)) hits.push(tset);
+    if (hits.length > 1 && !optedSurreal) {
+      // Keep the earliest tone as the canonical one, remove others’ synonyms
+      hits.sort((a, b) => (t.search(a.rx) - t.search(b.rx)));
+      const keep = hits[0];
+      t = t.replace(keep.rx, keep.canon);
+      for (const h of hits.slice(1)) t = t.replace(h.rx, '');
+      t = t.replace(/\s{2,}/g, ' ').replace(/,\s*,/g, ',').replace(/,\s*$/,'').trim();
+    }
+
+    // Whitelist some “odd” combos if mood says whimsical/absurd/surreal
+    if (!optedSurreal) {
+      // Simple non-sequitur examples (tweak as needed)
+      t = t.replace(/\byellow\s*submarine\b/ig, 'submersible vehicle with whimsical paint');
+    }
+
+    // Remove duplicated color/style collisions
+    t = t.replace(/\b(purple|red|blue)\s+(of\s+)?(the\s+)?(scales|roses?)\s+listened\b/ig, 'vivid hues accentuating surface detail');
+
+    return t;
+  }
+
+  // Export
+  global.PF_COHERENCE = coherencePass;
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 28 CODE <<<
+/* ================================================================
+ * BLOCK 28 — TONE COHERENCE & NON-SEQUITUR GUARD (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 29 — STYLE MIXER & BLEND RATIOS (START)
+ * ID: BLOCK 29
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Parse blend requests like "70% watercolor, 30% ink" and generate weighted tokens.
+ *   - Keeps stylistic consistency across the prompt.
+ * INTERNAL NOTES:
+ *   - Works with any style words; doesn’t enforce brand names.
+ *   - Output form: "(styleA:0.7), (styleB:0.3)" plus a guidance line.
+ * ================================================================ */
+// >>> START OF BLOCK 29 CODE <<<
+(function (global) {
+  const CORE = (global.PF_CORE = global.PF_CORE || {});
+  const ratioRX = /(\d{1,3})\s*%\s*([a-z][a-z0-9\s\-]+)/ig;
+
+  function normalizeStyleName(s) {
+    return String(s || '').trim().replace(/\s{2,}/g, ' ').toLowerCase();
+  }
+
+  function styleBlend(text) {
+    const blends = [];
+    let m;
+    while ((m = ratioRX.exec(text)) !== null) {
+      const pct = Math.max(0, Math.min(100, parseInt(m[1], 10))) / 100;
+      const name = normalizeStyleName(m[2]);
+      blends.push({ name, weight: pct });
+    }
+    if (!blends.length) return { prompt: '', info: [] };
+
+    // Normalize to 1.0 sum
+    const total = blends.reduce((a,b) => a + b.weight, 0) || 1;
+    for (const b of blends) b.weight = +(b.weight / total).toFixed(2);
+
+    const tokens = blends.map(b => `(${b.name}:${b.weight})`).join(', ');
+    const guide = 'style blend applied';
+    return { prompt: `${tokens}, ${guide}`, info: blends };
+  }
+
+  CORE.styleBlend = styleBlend;
+  global.PF_STYLE_BLEND = styleBlend;
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 29 CODE <<<
+/* ================================================================
+ * BLOCK 29 — STYLE MIXER & BLEND RATIOS (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 30 — IN-BROWSER PACK TESTER (DEV HARNESS) (START)
+ * ID: BLOCK 30
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Tiny dev harness to preview sanitize/compose/coherence without a backend.
+ *   - Optional UI hook: call PF_TEST.run({text, slots, opts}) and read the JSON result.
+ * INTERNAL NOTES:
+ *   - Non-UI by default. You can wire it to a textarea + pre tag in your HTML later.
+ * ================================================================ */
+// >>> START OF BLOCK 30 CODE <<<
+(function (global) {
+  const OUT = {};
+
+  function run({ text = '', slots = {}, opts = { lang: 'en', direction: 'clean', allowExplicit: false } } = {}) {
+    const sanitize = (global.PF_SANITIZE || ((t)=>({output:t,score:0,slider:0})))(text, opts);
+    const composed = (global.PF_CRAFT || (function(){ return { prompt: text, meta:{ tokens: 0, sanitize } }; }))(
+      sanitize.output, slots, opts
+    );
+    const coherence = (global.PF_COHERENCE ? global.PF_COHERENCE(composed.prompt) : composed.prompt);
+    const blended = (global.PF_STYLE_BLEND ? global.PF_STYLE_BLEND(coherence) : { prompt: '', info: [] });
+
+    const finalPrompt = [coherence, blended.prompt].filter(Boolean).join(', ').replace(/\s+,/g, ',').trim();
+
+    return {
+      input: { text, slots, opts },
+      sanitize,
+      composed,
+      blendedInfo: blended.info || [],
+      finalPrompt,
+      slider: sanitize.slider
+    };
+  }
+
+  OUT.run = run;
+  global.PF_TEST = OUT;
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 30 CODE <<<
+/* ================================================================
+ * BLOCK 30 — IN-BROWSER PACK TESTER (DEV HARNESS) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 31 — RANDOMIZER w/ SUBJECT & VIBE LOCK (START)
+ * ID: BLOCK 31
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Randomize details WITHOUT breaking the chosen subject/style/tone.
+ *   - Uses a semantic seed and “lock masks” (subject, vibe, palette, camera).
+ * INTERNAL NOTES:
+ *   - Works entirely client-side. No backend needed.
+ *   - Call PF_RANDOM.run({baseText, locks, seed, opts}) → returns prompt parts you can merge.
+ * ================================================================ */
+// >>> START OF BLOCK 31 CODE <<<
+(function (global) {
+  const CORE = (global.PF_CORE = global.PF_CORE || {});
+
+  // Deterministic PRNG from string seed (xorshift-ish)
+  function hash32(s) {
+    let h = 2166136261 >>> 0;
+    for (let i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+  function rnd(seed) {
+    let x = hash32(String(seed || 'pf'));
+    return () => {
+      // xorshift32
+      x ^= x << 13; x ^= x >>> 17; x ^= x << 5;
+      return ((x >>> 0) / 4294967296);
+    };
+  }
+
+  // Pools (SFW, stackable). More can be appended in future blocks.
+  const POOLS = {
+    palette: [
+      'pastel palette, low saturation, soft values',
+      'earthy tones, muted saturation, organic feel',
+      'neon palette, high saturation accents on dark base',
+      'monochrome palette, single hue family with value steps'
+    ],
+    camera: [
+      '50mm perspective, natural proportions',
+      'telephoto compression, shallow depth of field',
+      'wide-angle look, environmental context, slight perspective drama',
+      'top-down orthographic feel, clean layout'
+    ],
+    light: [
+      'soft daylight window light, gentle falloff',
+      'golden hour rim light, warm glow',
+      'overcast softbox feel, low contrast shadows',
+      'studio key light with subtle fill and hair light'
+    ],
+    environmentSoftPortrait: [
+      'neutral backdrop, seamless paper look',
+      'minimal interior, tasteful furniture, negative space',
+      'garden setting, soft bokeh foliage',
+      'coastal overlook, airy haze, distant horizon'
+    ],
+    adjectivesTone: [
+      'serene tone','romantic tone','whimsical tone','confident tone','elegant tone'
+    ]
+  };
+
+  // Subject “locks” define allowed pools
+  const SUBJECT_LOCKS = {
+    portrait_softcore: {
+      env: 'environmentSoftPortrait',
+      camera: 'camera',
+      light: 'light',
+      palette: 'palette',
+      tone: 'adjectivesTone'
+    },
+    product: { env: 'environmentSoftPortrait', camera: 'camera', light: 'light', palette: 'palette', tone: [] },
+    landscape: { env: 'environmentSoftPortrait', camera: 'camera', light: 'light', palette: 'palette', tone: [] }
+    // Add more locks in future blocks
+  };
+
+  function pick(n, poolArr, r) {
+    const out = [];
+    const used = new Set();
+    while (out.length < n && poolArr.length > 0) {
+      const i = Math.floor(r() * poolArr.length);
+      if (used.has(i)) continue;
+      used.add(i);
+      out.push(poolArr[i]);
+    }
+    return out;
+  }
+
+  // Main
+  function run({ baseText = '', locks = { subject: 'portrait_softcore', palette: true, camera: true, light: true, env: true, tone: true }, seed = 'pf', opts = {} } = {}) {
+    const r = rnd(seed);
+    const def = SUBJECT_LOCKS[locks.subject] || SUBJECT_LOCKS.portrait_softcore;
+
+    const parts = [];
+    if (locks.palette && def.palette) parts.push(pick(1, POOLS[def.palette], r)[0]);
+    if (locks.camera && def.camera) parts.push(pick(1, POOLS[def.camera], r)[0]);
+    if (locks.light  && def.light ) parts.push(pick(1, POOLS[def.light ], r)[0]);
+    if (locks.env    && def.env   ) parts.push(pick(1, POOLS[def.env   ], r)[0]);
+    if (locks.tone   && def.tone  ) parts.push(pick(1, POOLS[def.tone  ], r)[0]);
+
+    // Coherence: never output school/child contexts (safety + vibe)
+    const blacklistRX = /\b(school|classroom|student|child|children|kindergarten|playground)\b/ig;
+    const cleaned = parts.join(', ').replace(blacklistRX, 'public area');
+
+    // Optional: pass through coherence pass if available
+    const final = (global.PF_COHERENCE ? global.PF_COHERENCE(cleaned) : cleaned);
+
+    return {
+      seed,
+      subject: locks.subject,
+      additions: final,
+      note: 'randomized details added with vibe lock; subject and tone preserved'
+    };
+  }
+
+  global.PF_RANDOM = { run, SUBJECT_LOCKS, POOLS };
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 31 CODE <<<
+/* ================================================================
+ * BLOCK 31 — RANDOMIZER w/ SUBJECT & VIBE LOCK (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 32 — SUBJECT PROFILES & VIBE PRESETS (START)
+ * ID: BLOCK 32
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - One-click “profiles” that keep prompts thematically consistent.
+ *   - Profiles define slot defaults + allowed ranges; randomizer respects them.
+ * INTERNAL NOTES:
+ *   - Works with PF_CORE.craft + PF_RANDOM.run. You can extend these presets anytime.
+ * ================================================================ */
+// >>> START OF BLOCK 32 CODE <<<
+(function (global) {
+  const CORE = (global.PF_CORE = global.PF_CORE || {});
+  const PROFILES = [
+    {
+      id: 'soft_portrait_romantic',
+      label: 'Soft Portrait — Romantic',
+      subjectLock: 'portrait_softcore',
+      slots: {
+        subject: 'adult portrait, flattering angle, gentle expression',
+        environment: 'minimal interior, soft textures',
+        mood: 'romantic tone',
+        color: 'pastel palette'
+      }
+    },
+    {
+      id: 'editorial_product_clean',
+      label: 'Editorial Product — Clean',
+      subjectLock: 'product',
+      slots: {
+        subject: 'premium product hero',
+        environment: 'seamless background, negative space',
+        mood: 'confident tone',
+        color: 'monochrome palette'
+      }
+    },
+    {
+      id: 'cinematic_landscape_epic',
+      label: 'Cinematic Landscape — Epic',
+      subjectLock: 'landscape',
+      slots: {
+        subject: 'grand vista, atmospheric perspective',
+        environment: 'mountain range or coastal overlook',
+        mood: 'epic tone',
+        color: 'earthy tones'
+      }
+    }
+  ];
+
+  function getProfile(id) {
+    return PROFILES.find(p => p.id === id) || PROFILES[0];
+  }
+
+  // Helper to craft + randomize coherently
+  function craftWithProfile({ text = '', profileId = 'soft_portrait_romantic', seed = 'pf', lang = 'en', direction = 'clean', allowExplicit = false } = {}) {
+    const profile = getProfile(profileId);
+    const base = (global.PF_SANITIZE || ((t)=>({output:t})))(text, { lang, direction, allowExplicit });
+    const composed = (global.PF_CRAFT || ((t,s)=>({prompt:t})))(base.output, profile.slots, { });
+    const rand = (global.PF_RANDOM ? global.PF_RANDOM.run({
+      baseText: composed.prompt,
+      locks: { subject: profile.subjectLock, palette: true, camera: true, light: true, env: true, tone: true },
+      seed
+    }) : { additions: '' });
+
+    const merged = [composed.prompt, rand.additions].filter(Boolean).join(', ').replace(/\s+,/g, ',').trim();
+    const final = (global.PF_COHERENCE ? global.PF_COHERENCE(merged) : merged);
+    return { prompt: final, meta: { profile: profileId, seed } };
+  }
+
+  global.PF_PROFILES = { list: () => PROFILES.slice(), get: getProfile, craftWithProfile };
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 32 CODE <<<
+/* ================================================================
+ * BLOCK 32 — SUBJECT PROFILES & VIBE PRESETS (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 33 — POSES, GESTURES & EXPRESSIONS (SFW) (START)
+ * ID: BLOCK 33
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Rich pose/gesture vocabulary for adult portraits and fashion without explicit tokens.
+ *   - Helps keep “softcore” portrait vibes consistent and tasteful.
+ * INTERNAL NOTES:
+ *   - Severity 0–1. Works with BLOCK 12 (appearance) and BLOCK 6 (camera).
+ * ================================================================ */
+// >>> START OF BLOCK 33 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 33',
+  language: 'en',
+  category: 'poses_gestures_expressions',
+  emoji: ['🧍','🧘','🫰','😊'],
+  notes: [
+    'Naturalistic posing cues; no explicit acts. Use with subject/vibe locks for coherence.',
+    'Gesture tokens are short and stackable.'
+  ],
+  entries: [
+    // ——— STANDING / SITTING ———
+    { pattern: /\bstanding\s*pose\b/gi, replacement: 'standing pose, weight on one leg, relaxed shoulders', severity: 0, tags: ['pose'] },
+    { pattern: /\bcontrapposto\b/gi, replacement: 'contrapposto stance, hip shift, gentle S-curve', severity: 0, tags: ['pose'] },
+    { pattern: /\bseated\b/gi, replacement: 'seated pose, upright posture, legs angled, graceful hands', severity: 0, tags: ['pose'] },
+    { pattern: /\breclining\b/gi, replacement: 'reclining pose, supported torso, relaxed limbs', severity: 0, tags: ['pose'] },
+
+    // ——— HANDS / ARMS ———
+    { pattern: /\bhands\s*on\s*hips\b/gi, replacement: 'hands on hips, confident posture, open chest', severity: 0, tags: ['gesture'] },
+    { pattern: /\barm\s*crossed\b/gi, replacement: 'arms gently crossed, composed stance', severity: 0, tags: ['gesture'] },
+    { pattern: /\bhand\s*through\s*hair\b/gi, replacement: 'hand through hair gesture, casual elegance', severity: 0, tags: ['gesture'] },
+    { pattern: /\bchin\s*rest\b/gi, replacement: 'hand under chin, thoughtful expression', severity: 0, tags: ['gesture'] },
+
+    // ——— HEAD / EXPRESSION ———
+    { pattern: /\bsoft\s*smile\b/gi, replacement: 'soft smile, gentle eye contact, relaxed lips', severity: 0, tags: ['expression'] },
+    { pattern: /\bplayful\s*smirk\b/gi, replacement: 'playful smirk, raised brow, teasing gaze', severity: 0, tags: ['expression'] },
+    { pattern: /\bserene\s*look\b/gi, replacement: 'serene expression, calm gaze, softened features', severity: 0, tags: ['expression'] },
+
+    // ——— BODY ANGLES / FRAMING ———
+    { pattern: /\bthree[-\s]*quarter\s*view\b/gi, replacement: 'three-quarter view, slight turn from camera, flattering jawline', severity: 0, tags: ['angle'] },
+    { pattern: /\bprofile\s*view\b/gi, replacement: 'profile view, clean silhouette, nose and chin alignment', severity: 0, tags: ['angle'] },
+    { pattern: /\bover\s*shoulder\b/gi, replacement: 'over-the-shoulder look, turned torso, backward glance', severity: 0, tags: ['angle'] },
+
+    // ——— WALK / FLOW ———
+    { pattern: /\bcatwalk\b/gi, replacement: 'catwalk stride, forward motion, fluid garment movement', severity: 0, tags: ['motion'] },
+    { pattern: /\bspin\s*pose\b/gi, replacement: 'gentle spin, flowing hair, skirt motion, soft blur', severity: 0, tags: ['motion'] }
+  ]
+});
+// >>> END OF BLOCK 33 <<<
+/* ================================================================
+ * BLOCK 33 — POSES, GESTURES & EXPRESSIONS (SFW) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 34 — MULTILINGUAL SEEDS (FR/DE/PT): PROFANITY → NEUTRAL (START)
+ * ID: BLOCK 34
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Add French, German, Portuguese profanity/sexual slang neutralizers (SFW).
+ *   - Mirrors the ES seed (BLOCK 10) pattern so we can expand later.
+ * INTERNAL NOTES:
+ *   - Only neutral/clinical replacements here. Directional explicit lives in “34a” packs you can load privately.
+ * ================================================================ */
+// >>> START OF BLOCK 34 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 34 (fr: neutralizer)',
+  language: 'fr',
+  category: 'profanite_anatomie',
+  emoji: ['🇫🇷'],
+  notes: ['Seed list; expand over time.'],
+  entries: [
+    { pattern: /\b(seins|nichons|boobs?)\b/gi, replacement: 'seins', severity: 2, tags: ['anatomie'] },
+    { pattern: /\b( chatte|minou|con)\b/gi, replacement: 'vagin', severity: 3, tags: ['anatomie'] },
+    { pattern: /\b(fesse|cul)\b/gi, replacement: 'fessier', severity: 2, tags: ['anatomie'] },
+    { pattern: /\b(zizi|bite|pénis)\b/gi, replacement: 'pénis', severity: 3, tags: ['anatomie'] },
+    { pattern: /\b(jurer|putain|merde)\b/gi, replacement: 'langage fort', severity: 2, tags: ['profanite'] }
+  ]
+});
+PF_PACKS.push({
+  block_id: 'BLOCK 34 (de: neutralizer)',
+  language: 'de',
+  category: 'vulgar_und_anatomie',
+  emoji: ['🇩🇪'],
+  notes: ['Seed list; expand over time.'],
+  entries: [
+    { pattern: /\b(titten|brüste|boobs?)\b/gi, replacement: 'Brüste', severity: 2, tags: ['anatomie'] },
+    { pattern: /\b(möse|fotze|votze|muschi)\b/gi, replacement: 'Vagina', severity: 3, tags: ['anatomie'] },
+    { pattern: /\b(arsch|hintern)\b/gi, replacement: 'Gesäß', severity: 2, tags: ['anatomie'] },
+    { pattern: /\b(schwanz|pimmel|penis)\b/gi, replacement: 'Penis', severity: 3, tags: ['anatomie'] },
+    { pattern: /\b(scheiße|scheiss)\b/gi, replacement: 'Unordnung', severity: 2, tags: ['profan'] }
+  ]
+});
+PF_PACKS.push({
+  block_id: 'BLOCK 34 (pt: neutralizer)',
+  language: 'pt',
+  category: 'obscenidades_anatomia',
+  emoji: ['🇧🇷','🇵🇹'],
+  notes: ['Seed list; expand over time.'],
+  entries: [
+    { pattern: /\b(seios|peitos|tetas)\b/gi, replacement: 'seios', severity: 2, tags: ['anatomia'] },
+    { pattern: /\b(buceta|xereca|cona)\b/gi, replacement: 'vagina', severity: 3, tags: ['anatomia'] },
+    { pattern: /\b(bunda|cu)\b/gi, replacement: 'nádegas', severity: 2, tags: ['anatomia'] },
+    { pattern: /\b(pau|pênis|caralho)\b/gi, replacement: 'pênis', severity: 3, tags: ['anatomia'] },
+    { pattern: /\b(merda|porra)\b/gi, replacement: 'linguagem forte', severity: 2, tags: ['profanidade'] }
+  ]
+});
+// >>> END OF BLOCK 34 CODE <<<
+/* ================================================================
+ * BLOCK 34 — MULTILINGUAL SEEDS (FR/DE/PT): PROFANITY → NEUTRAL (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 35 — PRODUCT PHOTO BRIEFS (SFW TEMPLATES) (START)
+ * ID: BLOCK 35
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Ready-to-use product brief templates with slot tokens (category, material, finish, use-case).
+ *   - Works with PF_CORE.craft() and PF_RANDOM.run(); produces consistent ecommerce/advertorial prompts.
+ * INTERNAL NOTES:
+ *   - Non-NSFW. You can attach to a “Briefs” dropdown in UI.
+ *   - Use PF_BRIEFS.fill(id, data) → returns { slots, notes } to feed into PF_CORE.craft / PF_PROFILES.craftWithProfile.
+ * ================================================================ */
+// >>> START OF BLOCK 35 CODE <<<
+(function (global) {
+  const BRIEFS = [
+    {
+      id: 'brief_clean_product',
+      label: 'Clean Product Hero',
+      slots: {
+        subject: '{category} hero, premium look',
+        environment: 'seamless background, negative space',
+        camera: '50mm perspective, natural proportions',
+        mood: 'confident tone',
+        color: 'monochrome palette',
+        style: 'hard-surface design language, crisp chamfers',
+        render: 'studio lighting, soft key and fill'
+      },
+      notes: [
+        'For single-item hero shots (consumer electronics, cosmetics, tools).',
+        'Keep reflections tidy; add PACK 25 negatives for artifact control.'
+      ],
+      fields: ['category','material','finish','capacity','key_feature']
+    },
+    {
+      id: 'brief_lifestyle_soft',
+      label: 'Lifestyle — Soft Minimal',
+      slots: {
+        subject: '{category} in use',
+        environment: 'minimal interior, soft textures',
+        camera: 'telephoto compression, shallow depth of field',
+        mood: 'serene tone',
+        color: 'pastel palette',
+        render: 'window light, gentle falloff'
+      },
+      notes: ['For human-with-product scenes; keep it tasteful, adult-only context.'],
+      fields: ['category','use_case','material','finish']
+    },
+    {
+      id: 'brief_detail_macro',
+      label: 'Detail / Macro',
+      slots: {
+        subject: '{category} macro detail, {key_feature}',
+        environment: 'clean tabletop surface',
+        camera: 'macro perspective, fine texture fidelity',
+        mood: 'elegant tone',
+        color: 'earthy tones',
+        render: 'specular sweep for surface definition'
+      },
+      notes: ['Use when texture/knurl/engraving is important.'],
+      fields: ['category','key_feature','material','finish']
+    }
+  ];
+
+  function fill(id, data = {}) {
+    const b = BRIEFS.find(x => x.id === id) || BRIEFS[0];
+    const slots = JSON.parse(JSON.stringify(b.slots));
+    for (const k of Object.keys(slots)) {
+      slots[k] = String(slots[k]).replace(/\{(\w+)\}/g, (_, key) => data[key] != null ? String(data[key]) : key);
+    }
+    return { slots, notes: b.notes.slice(), id: b.id, label: b.label };
+  }
+
+  global.PF_BRIEFS = { list: () => BRIEFS.slice(), fill };
+})(typeof self !== 'undefined' ? self : this);
+// >>> END OF BLOCK 35 CODE <<<
+/* ================================================================
+ * BLOCK 35 — PRODUCT PHOTO BRIEFS (SFW TEMPLATES) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 36 — TYPOGRAPHY & PACKAGING: POSITIVES/NEGATIVES (START)
+ * ID: BLOCK 36
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand vague text/label requests into concrete typographic and packaging directives.
+ *   - Adds cleanup tokens to reduce moiré, warp, and label distortion in generations.
+ * INTERNAL NOTES:
+ *   - SFW. Complements BLOCK 25 (quality negatives) and BLOCK 16 (UI/Logo).
+ * ================================================================ */
+// >>> START OF BLOCK 36 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 36',
+  language: 'en',
+  category: 'typography_packaging',
+  emoji: ['🔤','🏷️','📦'],
+  notes: [
+    'Append to positive prompt for clarity; use PACK 25 for negatives.',
+    'Avoid brand names; talk form, contrast, spacing, and finish.'
+  ],
+  entries: [
+    // ——— TYPOGRAPHY (POSITIVE) ———
+    { pattern: /\bclean\s*type\b/gi, replacement: 'clean typography, balanced contrast, optical kerning, even tracking', severity: 0, tags: ['type'] },
+    { pattern: /\bhigh\s*legibility\b/gi, replacement: 'high legibility, open counters, generous x-height, clear hierarchy', severity: 0, tags: ['type'] },
+    { pattern: /\bheadline\b/gi, replacement: 'headline set in display type, strong weight contrast, tight spacing', severity: 0, tags: ['type'] },
+    { pattern: /\bbody\s*copy\b/gi, replacement: 'body copy in readable size, steady rhythm, proper leading', severity: 0, tags: ['type'] },
+
+    // ——— TYPOGRAPHY (NEGATIVE HINTS) ———
+    { pattern: /\bno\s*warp\b/gi, replacement: 'avoid label warping, planar alignment, perspective-correct text', severity: 0, tags: ['negative'] },
+    { pattern: /\bno\s*moire\b/gi, replacement: 'avoid moiré, smooth halftones, high sampling fidelity', severity: 0, tags: ['negative'] },
+    { pattern: /\bno\s*halo\b/gi, replacement: 'avoid text halos, crisp edges, anti-fringe rendering', severity: 0, tags: ['negative'] },
+
+    // ——— PACKAGING DETAILS ———
+    { pattern: /\blabel\s*design\b/gi, replacement: 'label design with safe margins, dieline aware, bleed set, CMYK ready', severity: 0, tags: ['packaging'] },
+    { pattern: /\bfoil\s*label\b/gi, replacement: 'metallic foil label, reflective highlights, premium finish', severity: 0, tags: ['packaging'] },
+    { pattern: /\bemboss(?:ed)?\s*label\b/gi, replacement: 'embossed label, tactile relief, crisp edges, shadowed recess', severity: 0, tags: ['packaging'] },
+    { pattern: /\bshrink\s*sleeve\b/gi, replacement: 'shrink sleeve wrap, full-coverage graphics, seam alignment, glossy film', severity: 0, tags: ['packaging'] },
+
+    // ——— PRINT/FINISH ———
+    { pattern: /\bspot\s*uv\b/gi, replacement: 'spot UV gloss on key elements, contrast against matte base', severity: 0, tags: ['finish'] },
+    { pattern: /\bsoft\s*touch\s*laminate\b/gi, replacement: 'soft-touch laminate, velvety feel, diffuse highlights', severity: 0, tags: ['finish'] },
+    { pattern: /\brecycled\s*board\b/gi, replacement: 'recycled paperboard, natural fibers visible, eco-friendly tone', severity: 0, tags: ['material'] }
+  ]
+});
+// >>> END OF BLOCK 36 CODE <<<
+/* ================================================================
+ * BLOCK 36 — TYPOGRAPHY & PACKAGING: POSITIVES/NEGATIVES (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 37 — STYLE ERAS BY DECADE (1900s→2020s) (SFW) (START)
+ * ID: BLOCK 37
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map decade references to neutral, style-safe descriptors (art, fashion, design, color).
+ *   - Useful for moodboards and period looks without brand names.
+ * INTERNAL NOTES:
+ *   - SFW. Broad-strokes descriptors to guide vibe; stack with BLOCK 13.
+ * ================================================================ */
+// >>> START OF BLOCK 37 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 37',
+  language: 'en',
+  category: 'style_eras_decades',
+  emoji: ['🕰️','🗞️','👗'],
+  notes: ['Each decade → core motifs; expand with more entries later.'],
+  entries: [
+    { pattern: /\b1900s\b/gi, replacement: '1900s era look, Edwardian silhouettes, ornate detailing, sepia photographic tone', severity: 0, tags: ['era'] },
+    { pattern: /\b1910s\b/gi, replacement: '1910s era, transitional fashion, early modernist motifs, muted palettes', severity: 0, tags: ['era'] },
+    { pattern: /\b1920s\b/gi, replacement: '1920s art deco geometry, flapper silhouettes, bold metallic accents, jazz age glam', severity: 0, tags: ['era'] },
+    { pattern: /\b1930s\b/gi, replacement: '1930s streamlined forms, chrome accents, cinematic noir lighting', severity: 0, tags: ['era'] },
+    { pattern: /\b1940s\b/gi, replacement: '1940s utilitarian tailoring, Victory silhouette, poster primaries, film grain', severity: 0, tags: ['era'] },
+    { pattern: /\b1950s\b/gi, replacement: '1950s midcentury modern lines, pastel kitchens, rockabilly flair, lacquer shine', severity: 0, tags: ['era'] },
+    { pattern: /\b1960s\b/gi, replacement: '1960s mod graphics, bold op-art shapes, saturated pop color, mini silhouettes', severity: 0, tags: ['era'] },
+    { pattern: /\b1970s\b/gi, replacement: '1970s warm earth palette, boho patterns, flared cuts, analog grain', severity: 0, tags: ['era'] },
+    { pattern: /\b1980s\b/gi, replacement: '1980s neon accents, chrome gradients, big shoulders, synthwave vibe', severity: 0, tags: ['era'] },
+    { pattern: /\b1990s\b/gi, replacement: '1990s grunge textures, minimal branding, film point-and-shoot look', severity: 0, tags: ['era'] },
+    { pattern: /\b2000s\b/gi, replacement: '2000s glossy web gradients, low-rise silhouettes, early digital sheen', severity: 0, tags: ['era'] },
+    { pattern: /\b2010s\b/gi, replacement: '2010s flat design, minimalist branding, desaturated editorial palettes', severity: 0, tags: ['era'] },
+    { pattern: /\b2020s\b/gi, replacement: '2020s neomorphism/glassmorphism mash, sustainable materials, cozy minimalism', severity: 0, tags: ['era'] }
+  ]
+});
+// >>> END OF BLOCK 37 CODE <<<
+/* ================================================================
+ * BLOCK 37 — STYLE ERAS BY DECADE (1900s→2020s) (SFW) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 38 — LANGUAGE AUTODETECT + IT/RU/JA/ZH SEEDS (SFW) (START)
+ * ID: BLOCK 38
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Add a light, client-only language detector and plug into sanitize(lang='auto').
+ *   - Seed neutralizers for Italian, Russian, Japanese, Chinese (simplified).
+ * INTERNAL NOTES:
+ *   - Detector is heuristic: script ranges + common stopwords. Good enough for routing packs.
+ *   - Neutralizer seeds mirror BLOCK 10/34 style (clinical replacements only).
+ * ================================================================ */
+// >>> START OF BLOCK 38 CODE <<<
+(function (global) {
+  const CORE = (global.PF_CORE = global.PF_CORE || {});
+
+  function detectLang(text = '') {
+    const t = String(text).trim();
+    if (!t) return 'en';
+    // Script-based quick checks
+    if (/[\u3040-\u30ff\u31f0-\u31ff\uFF66-\uFF9D]/.test(t)) return 'ja';       // Hiragana/Katakana
+    if (/[\u4e00-\u9fff]/.test(t)) return 'zh';                                  // CJK Unified
+    if (/\b(la|il|lo|gli|una|uno|ciao|perché)\b/i.test(t)) return 'it';
+    if (/\b(и|в|на|что|это|привет)\b/i.test(t) || /[\u0400-\u04FF]/.test(t)) return 'ru';
+    if (/\b(el|la|de|que|por|para)\b/i.test(t)) return 'es';
+    if (/\b(le|la|de|que|pour)\b/i.test(t)) return 'fr';
+    if (/\b(der|die|und|ist|nicht|mit)\b/i.test(t)) return 'de';
+    if (/\b(o|de|para|com|sem)\b/i.test(t)) return 'pt';
+    return 'en';
+  }
+
+  // Wrap sanitize so lang:'auto' routes correctly
+  const baseSanitize = global.PF_SANITIZE || ((txt,opts)=>({output:txt,score:0,slider:0,meta:opts||{}}));
+  global.PF_SANITIZE = function(text, opts = {}) {
+    const lang = (opts.lang === 'auto') ? detectLang(text) : (opts.lang || 'en');
+    const out = baseSanitize(text, { ...opts, lang });
+    if (out && out.meta) out.meta.detectedLang = lang;
+    return out;
+  };
+
+  CORE.detectLang = detectLang;
+  global.PF_DETECT_LANG = detectLang;
+})(typeof self !== 'undefined' ? self : this);
+
+// ——— ITALIAN (IT) SEED ———
+PF_PACKS.push({
+  block_id: 'BLOCK 38 (it: neutralizer)',
+  language: 'it',
+  category: 'volgarita_anatomia',
+  emoji: ['🇮🇹'],
+  notes: ['Seed list; expand later.'],
+  entries: [
+    { pattern: /\b(tette|sise|boobs?)\b/gi, replacement: 'seni', severity: 2, tags: ['anatomia'] },
+    { pattern: /\b(figa|fica|passera)\b/gi, replacement: 'vagina', severity: 3, tags: ['anatomia'] },
+    { pattern: /\b(culo|chiappe)\b/gi, replacement: 'glutei', severity: 2, tags: ['anatomia'] },
+    { pattern: /\b(cazzo|pisello|pene)\b/gi, replacement: 'pene', severity: 3, tags: ['anatomia'] },
+    { pattern: /\b(merda|cavolo|porca)\b/gi, replacement: 'linguaggio forte', severity: 2, tags: ['profanita'] }
+  ]
+});
+
+// ——— RUSSIAN (RU) SEED ———
+PF_PACKS.push({
+  block_id: 'BLOCK 38 (ru: neutralizer)',
+  language: 'ru',
+  category: 'neprilichnoe_anatomiya',
+  emoji: ['🇷🇺'],
+  notes: ['Seed list; expand later.'],
+  entries: [
+    { pattern: /\b(сиськи|грудь|бубсы|boobs?)\b/gi, replacement: 'грудь', severity: 2, tags: ['анатомия'] },
+    { pattern: /\b(пизда|киска)\b/gi, replacement: 'влагалище', severity: 3, tags: ['анатомия'] },
+    { pattern: /\b(задница|жопа)\b/gi, replacement: 'ягодицы', severity: 2, tags: ['анатомия'] },
+    { pattern: /\b(член|хер|пенис)\b/gi, replacement: 'пенис', severity: 3, tags: ['анатомия'] },
+    { pattern: /\b(дерьмо|блин)\b/gi, replacement: 'сильное выражение', severity: 2, tags: ['брань'] }
+  ]
+});
+
+// ——— JAPANESE (JA) SEED ———
+PF_PACKS.push({
+  block_id: 'BLOCK 38 (ja: neutralizer)',
+  language: 'ja',
+  category: 'わいせつ_中立',
+  emoji: ['🇯🇵'],
+  notes: ['Seed list; expand later.'],
+  entries: [
+    { pattern: /おっぱい|胸/gi, replacement: '胸部', severity: 2, tags: ['解剖'] },
+    { pattern: /まんこ|アソコ/gi, replacement: '膣', severity: 3, tags: ['解剖'] },
+    { pattern: /お尻|ケツ/gi, replacement: '臀部', severity: 2, tags: ['解剖'] },
+    { pattern: /ちんこ|ペニス/gi, replacement: '陰茎', severity: 3, tags: ['解剖'] },
+    { pattern: /くそ|やばい/gi, replacement: '強い表現', severity: 2, tags: ['表現'] }
+  ]
+});
+
+// ——— CHINESE (ZH, simplified) SEED ———
+PF_PACKS.push({
+  block_id: 'BLOCK 38 (zh: neutralizer)',
+  language: 'zh',
+  category: '粗口_解剖_中性',
+  emoji: ['🇨🇳'],
+  notes: ['Seed list; expand later.'],
+  entries: [
+    { pattern: /奶子|胸|波/gi, replacement: '乳房', severity: 2, tags: ['解剖'] },
+    { pattern: /逼|阴户|私处/gi, replacement: '阴道', severity: 3, tags: ['解剖'] },
+    { pattern: /屁股|臀|屁股蛋/gi, replacement: '臀部', severity: 2, tags: ['解剖'] },
+    { pattern: /鸡巴|屌|阴茎/gi, replacement: '阴茎', severity: 3, tags: ['解剖'] },
+    { pattern: /他妈的|靠/gi, replacement: '强烈用语', severity: 2, tags: ['粗口'] }
+  ]
+});
+// >>> END OF BLOCK 38 CODE <<<
+/* ================================================================
+ * BLOCK 38 — LANGUAGE AUTODETECT + IT/RU/JA/ZH SEEDS (SFW) (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 39 — PORTRAIT LIGHTING COOKBOOK (START)
+ * ID: BLOCK 39
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map classic portrait-lighting terms to precise, model-usable descriptors.
+ *   - Works with BLOCK 12 (appearance), BLOCK 33 (poses), BLOCK 13 (color/contrast).
+ * INTERNAL NOTES:
+ *   - SFW, severity 0. Includes modifiers, angles, and fill strategies.
+ * ================================================================ */
+// >>> START OF BLOCK 39 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 39',
+  language: 'en',
+  category: 'portrait_lighting_cookbook',
+  emoji: ['💡','📸'],
+  notes: ['Angles assume camera at eye-level unless stated.'],
+  entries: [
+    // ——— CLASSIC PATTERNS ———
+    { pattern: /\brembrandt\s*lighting\b/gi, replacement: 'Rembrandt lighting, key at ~45° off-axis and above, small triangle of light on shadow cheek, controlled contrast', severity: 0, tags: ['lighting'] },
+    { pattern: /\bloop\s*lighting\b/gi, replacement: 'loop lighting, key slightly above and to the side, small nose shadow loop, flattering definition', severity: 0, tags: ['lighting'] },
+    { pattern: /\bbutterfly|paramount\s*lighting\b/gi, replacement: 'butterfly (Paramount) lighting, key centered high, butterfly shadow under nose, glamour highlight', severity: 0, tags: ['lighting'] },
+    { pattern: /\bsplit\s*lighting\b/gi, replacement: 'split lighting, key at ~90°, one side lit one side shadow, dramatic contrast', severity: 0, tags: ['lighting'] },
+    { pattern: /\bclamshell\s*lighting\b/gi, replacement: 'clamshell lighting, top soft key plus low reflector/fill, even beauty light, catchlights double', severity: 0, tags: ['lighting'] },
+
+    // ——— MODIFIERS ———
+    { pattern: /\bsoftbox\b/gi, replacement: 'large softbox modifier, broad diffuse source, soft falloff', severity: 0, tags: ['modifier'] },
+    { pattern: /\boctabox\b/gi, replacement: 'octabox modifier, round catchlights, wraparound softness', severity: 0, tags: ['modifier'] },
+    { pattern: /\bbeauty\s*dish\b/gi, replacement: 'beauty dish modifier, crisp specular edge with gentle falloff, fashion look', severity: 0, tags: ['modifier'] },
+    { pattern: /\bstrip\s*box\b/gi, replacement: 'strip softbox, narrow vertical highlight, edge separation', severity: 0, tags: ['modifier'] },
+    { pattern: /\bgrid(?:ded)?\s*light\b/gi, replacement: 'gridded light, controlled spill, focused beam, tighter contrast', severity: 0, tags: ['modifier'] },
+    { pattern: /\bsnoot\b/gi, replacement: 'snoot spotlight, tight cone, hard-edged highlight', severity: 0, tags: ['modifier'] },
+
+    // ——— SUPPORT LIGHTS ———
+    { pattern: /\brim\s*light\b/gi, replacement: 'rim light from behind, edge separation on hair/shoulders, subtle bloom', severity: 0, tags: ['lighting'] },
+    { pattern: /\bhair\s*light\b/gi, replacement: 'hair light above/behind, sheen on hair texture, delicate speculars', severity: 0, tags: ['lighting'] },
+    { pattern: /\bkicker\s*light\b/gi, replacement: 'kicker light from low rear angle, bright edge on jawline/cheek', severity: 0, tags: ['lighting'] },
+    { pattern: /\bnegative\s*fill\b/gi, replacement: 'negative fill with black flags, deepen shadows, added shape', severity: 0, tags: ['lighting'] },
+    { pattern: /\bbounce\s*fill\b/gi, replacement: 'white card bounce fill, open shadows, softer contrast', severity: 0, tags: ['lighting'] },
+
+    // ——— LOOKS ———
+    { pattern: /\bhigh[-\s]*key\b/gi, replacement: 'high-key look, bright background, low contrast, airy mood', severity: 0, tags: ['look'] },
+    { pattern: /\blow[-\s]*key\b/gi, replacement: 'low-key look, dark surrounds, strong contrast, moody tone', severity: 0, tags: ['look'] },
+    { pattern: /\bwindow\s*light\b/gi, replacement: 'window light, large soft source, directional falloff, natural color', severity: 0, tags: ['look'] },
+    { pattern: /\bpracticals?\b/gi, replacement: 'practical lights in frame, warm ambient pools, depth cues', severity: 0, tags: ['look'] },
+
+    // ——— GEL / COLOR ———
+    { pattern: /\bgel(?:led)?\s*lights?\b/gi, replacement: 'colored gels on lights, complementary hues, atmospheric accents', severity: 0, tags: ['color'] },
+    { pattern: /\bctb\b/gi, replacement: 'CTB gel (cooler), daylight balance shift, blue lift on highlights', severity: 0, tags: ['color'] },
+    { pattern: /\bcto\b/gi, replacement: 'CTO gel (warmer), tungsten balance shift, amber skin tone warmth', severity: 0, tags: ['color'] }
+  ]
+});
+// >>> END OF BLOCK 39 <<<
+/* ================================================================
+ * BLOCK 39 — PORTRAIT LIGHTING COOKBOOK (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 40 — ENVIRONMENT LIGHTING & WEATHER (START)
+ * ID: BLOCK 40
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map time-of-day + atmosphere to specific visual cues for scenes.
+ *   - Great with BLOCK 21 (environments) and BLOCK 18 (action/VFX).
+ * INTERNAL NOTES:
+ *   - SFW, severity 0. Keep brand-free and descriptive.
+ * ================================================================ */
+// >>> START OF BLOCK 40 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 40',
+  language: 'en',
+  category: 'environment_lighting_weather',
+  emoji: ['🌇','🌫️','🌧️','❄️'],
+  notes: ['Weather adds particles/volumetrics; combine with camera choices.'],
+  entries: [
+    // ——— TIME OF DAY ———
+    { pattern: /\bgolden\s*hour\b/gi, replacement: 'golden hour light, low sun angle, warm rim highlights, long soft shadows', severity: 0, tags: ['time'] },
+    { pattern: /\bblue\s*hour\b/gi, replacement: 'blue hour ambience, cool ambient fill, gentle gradients, calm tone', severity: 0, tags: ['time'] },
+    { pattern: /\bnoon\s*sun\b/gi, replacement: 'midday hard sun, crisp shadows, high contrast, bright highlights', severity: 0, tags: ['time'] },
+    { pattern: /\btwilight\b/gi, replacement: 'twilight ambience, mixed color temperature, silhouettes, gentle contrast', severity: 0, tags: ['time'] },
+    { pattern: /\bmoonlight\b/gi, replacement: 'moonlit scene, cool directional light, soft speculars, deep blues', severity: 0, tags: ['time'] },
+
+    // ——— ATMOSPHERE ———
+    { pattern: /\bovercast\b/gi, replacement: 'overcast sky, giant softbox effect, low shadow contrast, muted colors', severity: 0, tags: ['atmosphere'] },
+    { pattern: /\bfog|mist\b/gi, replacement: 'foggy air, reduced visibility, aerial perspective, light bloom', severity: 0, tags: ['atmosphere'] },
+    { pattern: /\bhaze\b/gi, replacement: 'atmospheric haze, washed distance, sun halo, softened detail', severity: 0, tags: ['atmosphere'] },
+    { pattern: /\bgod\s*rays|volumetric\s*light\b/gi, replacement: 'volumetric shafts of light, visible beams through particulates, dramatic depth', severity: 0, tags: ['atmosphere'] },
+
+    // ——— WEATHER ———
+    { pattern: /\brain(y)?\b/gi, replacement: 'rain scene, wet surfaces, specular reflections, falling streaks, umbrellas, puddle ripples', severity: 0, tags: ['weather'] },
+    { pattern: /\bsnow(y)?\b/gi, replacement: 'snowfall, diffuse light, soft ground cover, breath vapor, frosted edges', severity: 0, tags: ['weather'] },
+    { pattern: /\bstorm|thunderstorm\b/gi, replacement: 'storm scene, dark cumulonimbus, gust lines, lightning forks, heavy rain', severity: 0, tags: ['weather'] },
+    { pattern: /\blightning\b/gi, replacement: 'lightning flash, high-contrast rim edges, split-second illumination, branching bolts', severity: 0, tags: ['weather'] },
+    { pattern: /\baurora\b/gi, replacement: 'aurora display, flowing curtains of light, green-magenta gradients, polar sky', severity: 0, tags: ['weather'] },
+
+    // ——— SPECIAL ENVIRONMENTS ———
+    { pattern: /\bunderwater\b/gi, replacement: 'underwater light caustics, blue-green cast, particulate drift, soft beams', severity: 0, tags: ['special'] },
+    { pattern: /\bdesert\s*sun\b/gi, replacement: 'desert sun glare, heat shimmer, bleached palette, hard-edged shadows', severity: 0, tags: ['special'] },
+    { pattern: /\bjungle\s*canopy\b/gi, replacement: 'jungle canopy, dappled light spots, humid air, rich greens', severity: 0, tags: ['special'] },
+    { pattern: /\bneon\s*rain\b/gi, replacement: 'neon-lit rain, reflective asphalt, saturated highlights, cinematic reflections', severity: 0, tags: ['special'] }
+  ]
+});
+// >>> END OF BLOCK 40 <<<
+/* ================================================================
+ * BLOCK 40 — ENVIRONMENT LIGHTING & WEATHER (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 41 — ARCHITECTURE: INTERIOR/EXTERIOR VOCAB (START)
+ * ID: BLOCK 41
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand architecture terms into clear, buildable descriptors (materials, forms, details).
+ *   - Complements BLOCK 21 (environments) + BLOCK 13 (composition).
+ * INTERNAL NOTES:
+ *   - SFW, severity 0. Avoid real brands/architect names.
+ * ================================================================ */
+// >>> START OF BLOCK 41 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 41',
+  language: 'en',
+  category: 'architecture_vocab',
+  emoji: ['🏛️','🏗️','🪵','🪨'],
+  notes: ['Use multiple tokens to stack a coherent space.'],
+  entries: [
+    // ——— STYLES ———
+    { pattern: /\bbrutalist\b/gi, replacement: 'brutalist expression, raw board-formed concrete, monolithic forms, deep reveals', severity: 0, tags: ['style'] },
+    { pattern: /\bmodernist\b/gi, replacement: 'modernist clarity, glass curtain walls, rectilinear volumes, pilotis hints', severity: 0, tags: ['style'] },
+    { pattern: /\bminimalist\b/gi, replacement: 'minimalist interior, restrained palette, hidden hardware, clean planes', severity: 0, tags: ['style'] },
+    { pattern: /\bscandinavian\b/gi, replacement: 'Scandinavian interior, light woods, cozy textiles, soft daylight', severity: 0, tags: ['style'] },
+    { pattern: /\bindustrial\s*loft\b/gi, replacement: 'industrial loft, exposed brick, steel beams, large factory windows', severity: 0, tags: ['style'] },
+    { pattern: /\bjapanese\s*wabi[-\s]*sabi\b/gi, replacement: 'wabi-sabi aesthetic, natural textures, asymmetry, quiet patina', severity: 0, tags: ['style'] },
+    { pattern: /\bart\s*deco\b/gi, replacement: 'art deco geometry, stepped forms, metallic accents, patterned stone', severity: 0, tags: ['style'] },
+
+    // ——— ELEMENTS ———
+    { pattern: /\bclerestory\b/gi, replacement: 'clerestory windows, high light band, even daylight wash', severity: 0, tags: ['element'] },
+    { pattern: /\bskylight\b/gi, replacement: 'skylight aperture, top light, soft shaft illumination', severity: 0, tags: ['element'] },
+    { pattern: /\batrium\b/gi, replacement: 'central atrium void, multi-level daylight, hanging plants, balconies', severity: 0, tags: ['element'] },
+    { pattern: /\bmezzanine\b/gi, replacement: 'mezzanine level, half-floor overlook, railing detail', severity: 0, tags: ['element'] },
+    { pattern: /\bcantilever\b/gi, replacement: 'cantilevered volume, floating projection, slender supports', severity: 0, tags: ['element'] },
+    { pattern: /\bcolonnade\b/gi, replacement: 'colonnade rhythm, repeated columns, shaded walkway', severity: 0, tags: ['element'] },
+
+    // ——— MATERIALS ———
+    { pattern: /\bboard[-\s]*formed\s*concrete\b/gi, replacement: 'board-formed concrete texture, horizontal wood grain, crisp edges', severity: 0, tags: ['material'] },
+    { pattern: /\bterrazzo\b/gi, replacement: 'terrazzo flooring, mixed aggregate chips, polished finish', severity: 0, tags: ['material'] },
+    { pattern: /\btravertine\b/gi, replacement: 'travertine stone, linear veining, honed finish', severity: 0, tags: ['material'] },
+    { pattern: /\bcorten\s*steel\b/gi, replacement: 'weathered corten steel panels, warm rust patina, industrial tone', severity: 0, tags: ['material'] },
+    { pattern: /\bfluted\s*panel(s)?\b/gi, replacement: 'fluted wall panels, vertical rhythm, light-catching grooves', severity: 0, tags: ['material'] },
+    { pattern: /\bnatural\s*timber\b/gi, replacement: 'natural timber cladding, visible grain, warm tone', severity: 0, tags: ['material'] },
+
+    // ——— FENESTRATION / MASSING ———
+    { pattern: /\bcurtain\s*wall\b/gi, replacement: 'glass curtain wall system, mullion grid, reflective façade', severity: 0, tags: ['fenestration'] },
+    { pattern: /\bpunched\s*windows?\b/gi, replacement: 'punched window openings, deep jambs, rhythmic bays', severity: 0, tags: ['fenestration'] },
+    { pattern: /\bdouble[-\s]*height\b/gi, replacement: 'double-height space, tall glazing, dramatic vertical scale', severity: 0, tags: ['massing'] },
+    { pattern: /\bcourtyard\b/gi, replacement: 'central courtyard, planted core, cross-ventilation, dappled light', severity: 0, tags: ['massing'] }
+  ]
+});
+// >>> END OF BLOCK 41 <<<
+/* ================================================================
+ * BLOCK 41 — ARCHITECTURE: INTERIOR/EXTERIOR VOCAB (END)
+ * ================================================================ */
