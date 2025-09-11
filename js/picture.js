@@ -4164,3 +4164,1002 @@ PF_PACKS.push({
 /* ================================================================
  * BLOCK 51a — FLUIDS & MARKS EXPLICIT-DIRECTIONAL (EN)  (END)
  * ================================================================ */
+/* ================================================================
+ * BLOCK 52 — STYLE COHERENCE & VIBE ENGINE (API)  (START)
+ * ID: BLOCK 52
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide a programmable way to keep “the same vibe” across randomize calls.
+ *   - Exposes PF_CORE.applyVibe(text, {profile, intensity, seed}) and PF_CORE.setVibe(profile).
+ * INTERNAL NOTES:
+ *   - Non-destructive post-processor: injects small adjective bundles and swaps synonyms.
+ *   - Works with SFW↔NSFW slider: we never inject explicit terms unless allowExplicit:true.
+ * ================================================================ */
+(function (global) {
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.VIBES = CORE.VIBES || {
+    romantic_soft: {
+      clean: ['soft backlight','warm glow','gentle palette','subtle grain'],
+      nsfw:  ['slow teasing vibe','lingering touch tone']
+    },
+    glam_high_contrast: {
+      clean: ['crisp highlights','deep shadow contrast','mirror sheen','polished look'],
+      nsfw:  ['bold seductive energy','club-scene sexiness']
+    },
+    gritty_noir: {
+      clean: ['hard shadows','moody atmosphere','film grain','smoky ambience'],
+      nsfw:  ['dangerous allure','gritty lust']
+    },
+    dreamy_pastel: {
+      clean: ['pastel wash','soft haze','airy highlights','whispered tones'],
+      nsfw:  ['tender intimacy','innocent but charged']
+    },
+    cyberpunk_neon: {
+      clean: ['neon reflections','rain-slick streets','holographic UI','chromatic fringe'],
+      nsfw:  ['edgy nightlife charge','sleazy back-alley tension']
+    },
+    natural_ambient: {
+      clean: ['ambient daylight','earthy textures','subtle breeze cues','organic palette'],
+      nsfw:  ['unhurried sensual tone','primal vibe']
+    }
+  };
+
+  function seededRand(seed) {
+    let x = Math.imul(0x9e3779b1, (seed|0) ^ 0x85ebca6b) >>> 0;
+    return function() { x ^= x << 13; x ^= x >>> 17; x ^= x << 5; return (x >>> 0) / 0xffffffff; };
+  }
+
+  CORE.setVibe = function setVibe(profile) {
+    CORE.META = CORE.META || {};
+    CORE.META.vibe = String(profile||'');
+    return CORE.META.vibe;
+  };
+
+  CORE.applyVibe = function applyVibe(text, opts={}) {
+    CORE.META = CORE.META || {};
+    const { profile = CORE.META.vibe || 'romantic_soft', intensity = 50, seed = 0, allowExplicit = false } = opts;
+    const vibe = CORE.VIBES[profile]; if (!vibe) return String(text||'');
+    const rnd = seededRand(seed);
+    const outParts = [ String(text||'') ];
+    const pool = [].concat(vibe.clean || []);
+    if (allowExplicit) pool.push(...(vibe.nsfw || []));
+    const picks = Math.max(1, Math.round((intensity/100) * 3));
+    for (let i=0; i<picks && pool.length; i++) {
+      const idx = Math.floor(rnd()*pool.length);
+      outParts.push(pool.splice(idx,1)[0]);
+    }
+    return outParts.join(', ');
+  };
+})(typeof self !== 'undefined' ? self : this);
+/* ================================================================
+ * BLOCK 52 — STYLE COHERENCE & VIBE ENGINE (API)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 53 — ROOMS, FURNITURE, AND SETS (EN)  (START)
+ * ID: BLOCK 53
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Describe indoor scenes for portraits, boudoir, kink sets. SFW by default.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 53',
+  language: 'en',
+  category: 'rooms_furniture_sets',
+  emoji: ['🛏️','🛋️','🪞','🕯️'],
+  notes: ['Good with wardrobe packs and vibe engine.'],
+  entries: [
+    { pattern: /\bbedroom\b/gi, replacement: 'bedroom set, pillows, sheets, ambient lamp light', severity: 0, tags: ['room'] },
+    { pattern: /\bbathroom\b/gi, replacement: 'bathroom set, tiled walls, mirror, running water', severity: 0, tags: ['room'] },
+    { pattern: /\bkitchen\b/gi, replacement: 'kitchen scene, countertops, utensils, warm light', severity: 0, tags: ['room'] },
+    { pattern: /\bstudio\b/gi, replacement: 'photo studio, seamless backdrop, softboxes', severity: 0, tags: ['room'] },
+    { pattern: /\bcandlelit\b/gi, replacement: 'candlelit atmosphere, warm flicker, shadows dancing', severity: 0, tags: ['lighting'] },
+    { pattern: /\bmirror\b/gi, replacement: 'full-length mirror reflecting subject', severity: 0, tags: ['prop'] },
+    { pattern: /\bvelvet\b/gi, replacement: 'velvet fabric, deep texture, light absorption', severity: 0, tags: ['material'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 53 — ROOMS, FURNITURE, AND SETS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 53a — ROOMS & FURNITURE EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Add risqué cues for beds, showers, furniture poses (adults only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 53a',
+  language: 'en',
+  category: 'rooms_furniture_explicit',
+  gated: true,
+  emoji: ['🔥','🛏️'],
+  entries: [
+    { pattern: /\bbedroom set, pillows, sheets, ambient lamp light\b/gi, replacement: 'rumpled bed, suggestive pillow arrangement', severity: 3, tags: ['explicit'] },
+    { pattern: /\bbathroom set, tiled walls, mirror, running water\b/gi, replacement: 'steamy shower scene, condensation on glass', severity: 3, tags: ['explicit'] },
+    { pattern: /\bmirror\b/gi, replacement: 'mirror positioned for voyeuristic reflection', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 53a — ROOMS & FURNITURE EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 54 — POSES & ACTIONS (EN)  (START)
+ * ID: BLOCK 54
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Describe body poses, actions, and interactions for characters. SFW by default.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 54',
+  language: 'en',
+  category: 'poses_actions',
+  emoji: ['🧍','🧎','🕺','🤝'],
+  notes: ['Pairs with anatomy, wardrobe, vibe engine. Keep default safe for work.'],
+  entries: [
+    { pattern: /\bstanding\b/gi, replacement: 'standing upright, relaxed posture', severity: 0, tags: ['pose'] },
+    { pattern: /\bsitting\b/gi, replacement: 'sitting on chair or floor, casual pose', severity: 0, tags: ['pose'] },
+    { pattern: /\blounging\b/gi, replacement: 'lounging, reclined, relaxed limbs', severity: 0, tags: ['pose'] },
+    { pattern: /\brunning\b/gi, replacement: 'running motion, forward lean, dynamic', severity: 0, tags: ['action'] },
+    { pattern: /\bwalking\b/gi, replacement: 'walking stride, natural gait', severity: 0, tags: ['action'] },
+    { pattern: /\bdancing\b/gi, replacement: 'dancing movement, expressive gesture', severity: 0, tags: ['action'] },
+    { pattern: /\bhandshake\b/gi, replacement: 'handshake greeting, clasped hands', severity: 0, tags: ['interaction'] },
+    { pattern: /\bhug\b/gi, replacement: 'friendly hug, arms wrapped', severity: 0, tags: ['interaction'] },
+    { pattern: /\bwhisper\b/gi, replacement: 'whispering near ear, secretive body language', severity: 0, tags: ['interaction'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 54 — POSES & ACTIONS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 54a — POSES & ACTIONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 54a
+ * PURPOSE:
+ *   - Escalate safe poses into sexual positions and acts (adults only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 54a',
+  language: 'en',
+  category: 'poses_actions_explicit',
+  gated: true,
+  emoji: ['🔥','🛏️'],
+  notes: ['Directional mirror of BLOCK 54; unlocks sexual acts vocabulary.'],
+  entries: [
+    { pattern: /\blounging, reclined, relaxed limbs\b/gi, replacement: 'sprawled on bed, legs parted suggestively', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsitting on chair or floor, casual pose\b/gi, replacement: 'straddling chair, suggestive posture', severity: 3, tags: ['explicit'] },
+    { pattern: /\bwhispering near ear, secretive body language\b/gi, replacement: 'hot breath in ear, seductive whisper', severity: 3, tags: ['explicit'] },
+    { pattern: /\bhug\b/gi, replacement: 'full body press embrace, pelvis contact', severity: 3, tags: ['explicit'] },
+    { pattern: /\bstanding upright, relaxed posture\b/gi, replacement: 'standing nude, hips cocked forward', severity: 4, tags: ['explicit'] },
+    { pattern: /\brunning motion, forward lean, dynamic\b/gi, replacement: 'thrusting motion, pelvis drive', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 54a — POSES & ACTIONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 55 — LIGHTING & CINEMATIC EFFECTS (EN)  (START)
+ * ID: BLOCK 55
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide vocabulary for lighting setups, gels, cinematic effects. SFW by default.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 55',
+  language: 'en',
+  category: 'lighting_cinema',
+  emoji: ['💡','🎥','🔦'],
+  notes: ['Pairs with vibe engine and room sets for scene mood control.'],
+  entries: [
+    { pattern: /\bsoft\s*light\b/gi, replacement: 'soft diffused light, flattering shadows', severity: 0, tags: ['lighting'] },
+    { pattern: /\bbacklit\b/gi, replacement: 'backlit silhouette, rim highlight', severity: 0, tags: ['lighting'] },
+    { pattern: /\brim\s*light\b/gi, replacement: 'rim lighting around subject, halo edge', severity: 0, tags: ['lighting'] },
+    { pattern: /\bcolored\s*gel\b/gi, replacement: 'colored gel lighting, magenta or teal wash', severity: 0, tags: ['lighting'] },
+    { pattern: /\bstrobe\b/gi, replacement: 'strobe flash burst, freeze motion', severity: 0, tags: ['lighting'] },
+    { pattern: /\bspotlight\b/gi, replacement: 'narrow spotlight, high contrast focus', severity: 0, tags: ['lighting'] },
+    { pattern: /\bpractical\s*lamps?\b/gi, replacement: 'practical lamp light sources visible in frame', severity: 0, tags: ['lighting'] },
+    { pattern: /\bsilhouette\b/gi, replacement: 'dark silhouette against bright background', severity: 0, tags: ['cinema'] },
+    { pattern: /\bbokeh\b/gi, replacement: 'bokeh background, blurred lights', severity: 0, tags: ['cinema'] },
+    { pattern: /\blens\s*flare\b/gi, replacement: 'lens flare streak, cinematic gleam', severity: 0, tags: ['cinema'] },
+    { pattern: /\bsmoke\b/gi, replacement: 'atmospheric haze, smoke machine effect', severity: 0, tags: ['cinema'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 55 — LIGHTING & CINEMATIC EFFECTS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 55a — LIGHTING & CINEMATIC EFFECTS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 55a
+ * PURPOSE:
+ *   - Escalate lighting into sweat-glow, erotic shadows, voyeuristic spotlights.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 55a',
+  language: 'en',
+  category: 'lighting_cinema_explicit',
+  gated: true,
+  emoji: ['🔥','💡'],
+  notes: ['Directional mirror of BLOCK 55; intensifies erotic mood.'],
+  entries: [
+    { pattern: /\bsoft diffused light, flattering shadows\b/gi, replacement: 'soft warm light on glistening skin', severity: 3, tags: ['explicit'] },
+    { pattern: /\bbacklit silhouette, rim highlight\b/gi, replacement: 'backlit body showing curves, teasing outline', severity: 4, tags: ['explicit'] },
+    { pattern: /\brim lighting around subject, halo edge\b/gi, replacement: 'rim light accentuating hips and chest', severity: 4, tags: ['explicit'] },
+    { pattern: /\bnarrow spotlight, high contrast focus\b/gi, replacement: 'spotlight isolating naked body, voyeuristic', severity: 5, tags: ['explicit'] },
+    { pattern: /\batmospheric haze, smoke machine effect\b/gi, replacement: 'steamy fog, sultry club vibe', severity: 3, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 55a — LIGHTING & CINEMATIC EFFECTS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 56 — CAMERA ANGLES & MOVEMENT (EN)  (START)
+ * ID: BLOCK 56
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide detailed vocabulary for shot angles, focal length, camera motion.
+ *   - Builds cinematic quality for renders. SFW by default.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 56',
+  language: 'en',
+  category: 'camera_angles_movement',
+  emoji: ['🎥','📷','🎞️'],
+  notes: ['Designed to give the model cinematic framing control.'],
+  entries: [
+    { pattern: /\bclose[-\s]*up\b/gi, replacement: 'close-up shot, tight framing on subject face', severity: 0, tags: ['angle'] },
+    { pattern: /\bextreme\s*close[-\s]*up\b/gi, replacement: 'extreme close-up, fills frame with detail', severity: 0, tags: ['angle'] },
+    { pattern: /\bmedium\s*shot\b/gi, replacement: 'medium shot, waist-up framing', severity: 0, tags: ['angle'] },
+    { pattern: /\bfull\s*body\b/gi, replacement: 'full body shot, head-to-toe composition', severity: 0, tags: ['angle'] },
+    { pattern: /\blower\s*angle\b/gi, replacement: 'low angle shot, looking upward', severity: 0, tags: ['angle'] },
+    { pattern: /\bhigh\s*angle\b/gi, replacement: 'high angle shot, looking downward', severity: 0, tags: ['angle'] },
+    { pattern: /\boverhead\b/gi, replacement: 'top-down overhead view', severity: 0, tags: ['angle'] },
+    { pattern: /\bPOV\b/gi, replacement: 'point-of-view shot, first-person framing', severity: 0, tags: ['angle'] },
+    { pattern: /\bwide\s*shot\b/gi, replacement: 'wide establishing shot, shows environment', severity: 0, tags: ['angle'] },
+    { pattern: /\btracking\s*shot\b/gi, replacement: 'tracking shot, camera moves with subject', severity: 0, tags: ['motion'] },
+    { pattern: /\bdolly\s*zoom\b/gi, replacement: 'dolly zoom effect, perspective warp', severity: 0, tags: ['motion'] },
+    { pattern: /\bpan\b/gi, replacement: 'panning camera motion, horizontal sweep', severity: 0, tags: ['motion'] },
+    { pattern: /\btilt\b/gi, replacement: 'tilt camera motion, vertical sweep', severity: 0, tags: ['motion'] },
+    { pattern: /\bhandheld\b/gi, replacement: 'handheld shaky cam, documentary feel', severity: 0, tags: ['motion'] },
+    { pattern: /\bsteadycam\b/gi, replacement: 'smooth stabilised steadycam shot', severity: 0, tags: ['motion'] },
+    { pattern: /\brack\s*focus\b/gi, replacement: 'rack focus effect, shifts subject sharpness', severity: 0, tags: ['cinema'] },
+    { pattern: /\bslow\s*motion\b/gi, replacement: 'slow-motion capture, dramatic time stretch', severity: 0, tags: ['cinema'] },
+    { pattern: /\bfast\s*motion\b/gi, replacement: 'time-lapse or fast-motion effect', severity: 0, tags: ['cinema'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 56 — CAMERA ANGLES & MOVEMENT (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 56a — CAMERA ANGLES & MOVEMENT EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 56a
+ * PURPOSE:
+ *   - Escalate neutral angles into erotic framing and fetish POVs (adults only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 56a',
+  language: 'en',
+  category: 'camera_angles_movement_explicit',
+  gated: true,
+  emoji: ['🔥','🎥'],
+  notes: ['Directional mirror of BLOCK 56; adds NSFW framing and intimacy cues.'],
+  entries: [
+    { pattern: /\bclose-up shot, tight framing on subject face\b/gi, replacement: 'close-up of lips and tongue', severity: 4, tags: ['explicit'] },
+    { pattern: /\bextreme close-up, fills frame with detail\b/gi, replacement: 'extreme close-up on intimate body part', severity: 5, tags: ['explicit'] },
+    { pattern: /\blower angle shot, looking upward\b/gi, replacement: 'low angle under-skirt or crotch view', severity: 5, tags: ['explicit'] },
+    { pattern: /\bPOV\b/gi, replacement: 'first-person POV from lover perspective', severity: 4, tags: ['explicit'] },
+    { pattern: /\bwide establishing shot, shows environment\b/gi, replacement: 'wide shot with nude subjects visible in setting', severity: 3, tags: ['explicit'] },
+    { pattern: /\bhandheld shaky cam, documentary feel\b/gi, replacement: 'handheld amateur POV, intimate realism', severity: 4, tags: ['explicit'] },
+    { pattern: /\brack focus effect, shifts subject sharpness\b/gi, replacement: 'focus pull from face to pelvis', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 56a — CAMERA ANGLES & MOVEMENT EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 57 — MATERIALS, TEXTURES & SURFACE EFFECTS (EN)  (START)
+ * ID: BLOCK 57
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide extensive vocabulary for surfaces, fabrics, liquids, reflective effects.
+ *   - Covers everything from leather, latex, silk, to metallic, glass, and wetness.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 57',
+  language: 'en',
+  category: 'materials_textures',
+  emoji: ['🪞','🪩','🛢️','🧵'],
+  notes: ['Combines wardrobe, lighting, and vibe engine for ultra-specific looks.'],
+  entries: [
+    { pattern: /\bleather\b/gi, replacement: 'shiny black leather surface, subtle creases', severity: 0, tags: ['material'] },
+    { pattern: /\blatex\b/gi, replacement: 'high-gloss latex, reflective surface, tight fit', severity: 0, tags: ['material'] },
+    { pattern: /\bvinyl\b/gi, replacement: 'glossy vinyl plastic material, specular highlights', severity: 0, tags: ['material'] },
+    { pattern: /\bsilk\b/gi, replacement: 'smooth silk fabric, soft folds, light sheen', severity: 0, tags: ['fabric'] },
+    { pattern: /\bsatin\b/gi, replacement: 'shiny satin, lustrous drape', severity: 0, tags: ['fabric'] },
+    { pattern: /\bvelvet\b/gi, replacement: 'matte velvet, deep light absorption', severity: 0, tags: ['fabric'] },
+    { pattern: /\bmesh\b/gi, replacement: 'sheer mesh, see-through grid pattern', severity: 0, tags: ['fabric'] },
+    { pattern: /\bmetallic\b/gi, replacement: 'metallic finish, chrome-like reflections', severity: 0, tags: ['surface'] },
+    { pattern: /\bglass\b/gi, replacement: 'transparent glass, refractive highlights', severity: 0, tags: ['surface'] },
+    { pattern: /\bmirror\b/gi, replacement: 'mirror surface, perfect reflection', severity: 0, tags: ['surface'] },
+    { pattern: /\bwax\b/gi, replacement: 'molten wax, dripping texture', severity: 0, tags: ['effect'] },
+    { pattern: /\bwater\b/gi, replacement: 'wet surface, droplets, glistening sheen', severity: 0, tags: ['effect'] },
+    { pattern: /\boil\b/gi, replacement: 'oil-slick shine, glossy coating', severity: 0, tags: ['effect'] },
+    { pattern: /\bpowder\b/gi, replacement: 'dusting of powder, soft matte residue', severity: 0, tags: ['effect'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 57 — MATERIALS, TEXTURES & SURFACE EFFECTS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 57a — MATERIALS & SURFACES EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Turn neutral materials into fetish objects, erotic surface language.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 57a',
+  language: 'en',
+  category: 'materials_textures_explicit',
+  gated: true,
+  emoji: ['🔥','🪩'],
+  notes: ['Directional mirror of BLOCK 57; adds NSFW fetish connotation.'],
+  entries: [
+    { pattern: /\bshiny black leather surface, subtle creases\b/gi, replacement: 'tight black leather fetish gear, squeaky shine', severity: 4, tags: ['explicit'] },
+    { pattern: /\bhigh-gloss latex, reflective surface, tight fit\b/gi, replacement: 'latex catsuit, skin-tight, erotic glare', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsheer mesh, see-through grid pattern\b/gi, replacement: 'see-through mesh lingerie revealing nipples', severity: 5, tags: ['explicit'] },
+    { pattern: /\bmolten wax, dripping texture\b/gi, replacement: 'hot wax dripping on skin', severity: 5, tags: ['explicit'] },
+    { pattern: /\bwet surface, droplets, glistening sheen\b/gi, replacement: 'body drenched, water streaming down curves', severity: 5, tags: ['explicit'] },
+    { pattern: /\boil-slick shine, glossy coating\b/gi, replacement: 'oiled-up skin, reflective and slippery', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 57a — MATERIALS & SURFACES EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 58 — ACCESSORIES, TOYS & PROPS (EN)  (START)
+ * ID: BLOCK 58
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Enumerate handheld props, accessories, kink gear. SFW names only.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 58',
+  language: 'en',
+  category: 'accessories_props',
+  emoji: ['🎭','🪢','🧸','🎲'],
+  notes: ['58a will escalate to explicit kink toys.'],
+  entries: [
+    { pattern: /\bmask\b/gi, replacement: 'face mask, masquerade style', severity: 0, tags: ['prop'] },
+    { pattern: /\bblindfold\b/gi, replacement: 'soft blindfold, satin or leather', severity: 0, tags: ['prop'] },
+    { pattern: /\brope\b/gi, replacement: 'rope, coiled neatly, natural fiber', severity: 0, tags: ['prop'] },
+    { pattern: /\bcandle\b/gi, replacement: 'pillar candle, dripping wax', severity: 0, tags: ['prop'] },
+    { pattern: /\bteddy\s*bear\b/gi, replacement: 'plush teddy bear prop', severity: 0, tags: ['prop'] },
+    { pattern: /\bdice\b/gi, replacement: 'pair of dice, tabletop prop', severity: 0, tags: ['prop'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 58 — ACCESSORIES, TOYS & PROPS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 58a — ACCESSORIES & TOYS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Kink gear, sex toys, BDSM equipment (opt-in only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 58a',
+  language: 'en',
+  category: 'accessories_props_explicit',
+  gated: true,
+  emoji: ['🖇️','🔗','🍆'],
+  notes: ['Adults only; replaces neutral props with sexualized versions.'],
+  entries: [
+    { pattern: /\bsoft blindfold, satin or leather\b/gi, replacement: 'blindfold for sensory play', severity: 4, tags: ['explicit'] },
+    { pattern: /\brope, coiled neatly, natural fiber\b/gi, replacement: 'bondage rope, tied shibari style', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpillar candle, dripping wax\b/gi, replacement: 'wax play candle for temperature play', severity: 4, tags: ['explicit'] },
+    { pattern: /\bpair of dice, tabletop prop\b/gi, replacement: 'strip dice game, erotic dare prop', severity: 3, tags: ['explicit'] },
+    { pattern: /\bmask\b/gi, replacement: 'gimp mask, fetish hood', severity: 5, tags: ['explicit'] },
+    { pattern: /\bteddy bear prop\b/gi, replacement: 'plush used as suggestive prop', severity: 3, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 58a — ACCESSORIES & TOYS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 59 — MULTI-PERSON INTERACTIONS (EN)  (START)
+ * ID: BLOCK 59
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Cover interactions between 2–4+ characters, SFW language.
+ *   - Sets up staging for groups, duos, crowds.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 59',
+  language: 'en',
+  category: 'multi_person_interactions',
+  emoji: ['🧍‍♀️','🧍‍♂️','🤝','🎭'],
+  notes: ['Pairs well with pose and camera packs. Neutral wording by default.'],
+  entries: [
+    { pattern: /\bduo\b/gi, replacement: 'two people interacting, balanced composition', severity: 0, tags: ['group'] },
+    { pattern: /\btrio\b/gi, replacement: 'three people in frame, triangular composition', severity: 0, tags: ['group'] },
+    { pattern: /\bgroup\b/gi, replacement: 'group scene, four or more participants', severity: 0, tags: ['group'] },
+    { pattern: /\bholding\s*hands\b/gi, replacement: 'holding hands, gentle contact', severity: 0, tags: ['interaction'] },
+    { pattern: /\bconversation\b/gi, replacement: 'chatting, speaking with gestures', severity: 0, tags: ['interaction'] },
+    { pattern: /\bdancing\s*together\b/gi, replacement: 'paired dancing, synchronized steps', severity: 0, tags: ['interaction'] },
+    { pattern: /\bsharing\s*meal\b/gi, replacement: 'sharing food, seated together at table', severity: 0, tags: ['interaction'] },
+    { pattern: /\bteamwork\b/gi, replacement: 'team activity, cooperative gesture', severity: 0, tags: ['interaction'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 59 — MULTI-PERSON INTERACTIONS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 59a — MULTI-PERSON INTERACTIONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Escalate group scenes into sexual contexts (consensual, adult only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 59a',
+  language: 'en',
+  category: 'multi_person_interactions_explicit',
+  gated: true,
+  emoji: ['🔥','👥'],
+  notes: ['Explicit group dynamics, balanced to avoid non-consensual implication.'],
+  entries: [
+    { pattern: /\btwo people interacting, balanced composition\b/gi, replacement: 'intimate couple, foreplay focus', severity: 4, tags: ['explicit'] },
+    { pattern: /\bthree people in frame, triangular composition\b/gi, replacement: 'threesome scene, consensual trio', severity: 5, tags: ['explicit'] },
+    { pattern: /\bgroup scene, four or more participants\b/gi, replacement: 'group sex orgy, consensual multi-partner', severity: 5, tags: ['explicit'] },
+    { pattern: /\bholding hands, gentle contact\b/gi, replacement: 'hand holding during intimacy', severity: 3, tags: ['explicit'] },
+    { pattern: /\bchatting, speaking with gestures\b/gi, replacement: 'dirty talk exchange', severity: 4, tags: ['explicit'] },
+    { pattern: /\bpaired dancing, synchronized steps\b/gi, replacement: 'sensual grinding dance', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 59a — MULTI-PERSON INTERACTIONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 60 — ROLEPLAY ARCHETYPES (EN)  (START)
+ * ID: BLOCK 60
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Define common roleplay costumes and character archetypes (neutral versions).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 60',
+  language: 'en',
+  category: 'roleplay_archetypes',
+  emoji: ['🎭','🕵️','👩‍⚕️','👨‍🍳'],
+  notes: ['Archetypes only, not sexual context until 60a.'],
+  entries: [
+    { pattern: /\bmaid\b/gi, replacement: 'house maid uniform, apron, headband', severity: 0, tags: ['costume'] },
+    { pattern: /\bnurse\b/gi, replacement: 'nurse outfit, medical cap, white dress', severity: 0, tags: ['costume'] },
+    { pattern: /\bpolice\b/gi, replacement: 'police uniform, badge, duty belt', severity: 0, tags: ['costume'] },
+    { pattern: /\bchef\b/gi, replacement: 'chef whites, tall hat, kitchen props', severity: 0, tags: ['costume'] },
+    { pattern: /\bschool\s*uniform\b/gi, replacement: 'academic uniform, blazer and skirt', severity: 0, tags: ['costume'] },
+    { pattern: /\bscientist\b/gi, replacement: 'lab coat, goggles, clipboard', severity: 0, tags: ['costume'] },
+    { pattern: /\bknight\b/gi, replacement: 'medieval knight armor, sword prop', severity: 0, tags: ['costume'] },
+    { pattern: /\bwitch\b/gi, replacement: 'witch costume, pointed hat, broom', severity: 0, tags: ['costume'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 60 — ROLEPLAY ARCHETYPES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 60a — ROLEPLAY ARCHETYPES EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Turn archetypes into sexual fantasies (consensual, adult only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 60a',
+  language: 'en',
+  category: 'roleplay_archetypes_explicit',
+  gated: true,
+  emoji: ['🔥','🎭'],
+  notes: ['Unlocks NSFW variants of roleplay costumes.'],
+  entries: [
+    { pattern: /\bhouse maid uniform, apron, headband\b/gi, replacement: 'sexy French maid lingerie, fishnet stockings', severity: 5, tags: ['explicit'] },
+    { pattern: /\bnurse outfit, medical cap, white dress\b/gi, replacement: 'risqué nurse costume, cleavage cutout', severity: 4, tags: ['explicit'] },
+    { pattern: /\bpolice uniform, badge, duty belt\b/gi, replacement: 'dominant cop roleplay outfit, cuffs ready', severity: 4, tags: ['explicit'] },
+    { pattern: /\bacademic uniform, blazer and skirt\b/gi, replacement: 'short skirt schoolgirl fantasy, knee-high socks', severity: 5, tags: ['explicit'] },
+    { pattern: /\blab coat, goggles, clipboard\b/gi, replacement: 'mad scientist seduction, coat open', severity: 4, tags: ['explicit'] },
+    { pattern: /\bwitch costume, pointed hat, broom\b/gi, replacement: 'sultry witch lingerie, thigh-high boots', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 60a — ROLEPLAY ARCHETYPES EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 61 — CONSENSUAL FETISH CATEGORIES (EN)  (START)
+ * ID: BLOCK 61
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map out broad fetish/kink categories in neutral or clinical language.
+ *   - Keeps terms usable without being instantly NSFW until slider activates.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 61',
+  language: 'en',
+  category: 'fetish_categories',
+  emoji: ['🖇️','🪢','🔗','🧷'],
+  notes: ['Clinical, opt-in vocabulary for kink themes. 61a escalates.'],
+  entries: [
+    { pattern: /\bbondage\b/gi, replacement: 'bondage scenario, restrained posture', severity: 2, tags: ['kink'] },
+    { pattern: /\bdominance\b/gi, replacement: 'dominant role, commanding body language', severity: 2, tags: ['kink'] },
+    { pattern: /\bsubmission\b/gi, replacement: 'submissive posture, lowered gaze', severity: 2, tags: ['kink'] },
+    { pattern: /\broleplay\b/gi, replacement: 'roleplay scenario, characters acting', severity: 1, tags: ['kink'] },
+    { pattern: /\bimpact\s*play\b/gi, replacement: 'impact play context, controlled striking', severity: 3, tags: ['kink'] },
+    { pattern: /\bsensory\s*play\b/gi, replacement: 'sensory play, blindfolds or temperature contrasts', severity: 2, tags: ['kink'] },
+    { pattern: /\bvoyeurism\b/gi, replacement: 'voyeuristic scenario, observed by others', severity: 3, tags: ['kink'] },
+    { pattern: /\bexhibitionism\b/gi, replacement: 'exhibitionism scenario, willingly exposed', severity: 3, tags: ['kink'] },
+    { pattern: /\bconsensual\s*power\s*exchange\b/gi, replacement: 'negotiated power dynamic', severity: 2, tags: ['kink'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 61 — CONSENSUAL FETISH CATEGORIES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 61a — FETISH CATEGORIES EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Expand clinical fetish terms into explicit sexual descriptions.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 61a',
+  language: 'en',
+  category: 'fetish_categories_explicit',
+  gated: true,
+  emoji: ['🔥','🪢','🔗'],
+  notes: ['Adults only; includes explicit terminology and scenario details.'],
+  entries: [
+    { pattern: /\bbondage scenario, restrained posture\b/gi, replacement: 'bound with ropes, wrists tied above head', severity: 5, tags: ['explicit'] },
+    { pattern: /\bdominant role, commanding body language\b/gi, replacement: 'dominant partner giving orders, controlling movement', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsubmissive posture, lowered gaze\b/gi, replacement: 'kneeling submissive, awaiting instruction', severity: 4, tags: ['explicit'] },
+    { pattern: /\bimpact play context, controlled striking\b/gi, replacement: 'spanking, flogging with safe word protocol', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsensory play, blindfolds or temperature contrasts\b/gi, replacement: 'ice cube trails and wax drips on skin', severity: 5, tags: ['explicit'] },
+    { pattern: /\bvoyeuristic scenario, observed by others\b/gi, replacement: 'being watched during sexual act', severity: 5, tags: ['explicit'] },
+    { pattern: /\bexhibitionism scenario, willingly exposed\b/gi, replacement: 'public sex fantasy, consensual display', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 61a — FETISH CATEGORIES EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 62 — AFTERCARE, CONSENT & SAFETY (EN)  (START)
+ * ID: BLOCK 62
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Ensure prompts can reference safe practices, aftercare, and negotiation.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 62',
+  language: 'en',
+  category: 'aftercare_safety',
+  emoji: ['🛟','🤝','🩹'],
+  notes: ['This block stays SFW but is vital for balanced kink prompts.'],
+  entries: [
+    { pattern: /\baftercare\b/gi, replacement: 'aftercare routine, cuddling, checking comfort', severity: 0, tags: ['safety'] },
+    { pattern: /\bsafeword\b/gi, replacement: 'clear safeword protocol established', severity: 0, tags: ['safety'] },
+    { pattern: /\bnegotiation\b/gi, replacement: 'scene negotiation, boundaries discussed', severity: 0, tags: ['safety'] },
+    { pattern: /\bcheck[-\s]*in\b/gi, replacement: 'verbal check-in during scene', severity: 0, tags: ['safety'] },
+    { pattern: /\bmutual\s*consent\b/gi, replacement: 'mutual consent confirmed', severity: 0, tags: ['safety'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 62 — AFTERCARE, CONSENT & SAFETY (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 63 — BODY REACTIONS & FACIAL EXPRESSIONS (EN)  (START)
+ * ID: BLOCK 63
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Capture subtle to strong bodily reactions and emotional expressions.
+ *   - Neutral/SFW by default, works with vibe engine.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 63',
+  language: 'en',
+  category: 'body_reactions_faces',
+  emoji: ['😊','😮','😳','🥵'],
+  notes: ['Focus on cinematic, renderable descriptions. 63a will escalate.'],
+  entries: [
+    { pattern: /\bsmile\b/gi, replacement: 'gentle smile, softened eyes', severity: 0, tags: ['face'] },
+    { pattern: /\blaugh\b/gi, replacement: 'laughter, open mouth grin, crinkled eyes', severity: 0, tags: ['face'] },
+    { pattern: /\bblush\b/gi, replacement: 'cheeks flushed with warmth', severity: 0, tags: ['face'] },
+    { pattern: /\btearful\b/gi, replacement: 'eyes glassy with tears, emotional look', severity: 0, tags: ['face'] },
+    { pattern: /\bgasp\b/gi, replacement: 'gasping expression, parted lips', severity: 0, tags: ['face'] },
+    { pattern: /\bsigh\b/gi, replacement: 'deep exhale, relaxed shoulders', severity: 0, tags: ['reaction'] },
+    { pattern: /\bshiver\b/gi, replacement: 'slight shiver, goosebumps visible', severity: 0, tags: ['reaction'] },
+    { pattern: /\bsweat\b/gi, replacement: 'light sheen of sweat on skin', severity: 0, tags: ['reaction'] },
+    { pattern: /\bheartbeat\b/gi, replacement: 'pulse visible in neck, quickened heartbeat', severity: 0, tags: ['reaction'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 63 — BODY REACTIONS & FACIAL EXPRESSIONS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 63a — BODY REACTIONS & FACIAL EXPRESSIONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Escalate to erotic body language, climax cues, pornographic facial expressions.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 63a',
+  language: 'en',
+  category: 'body_reactions_faces_explicit',
+  gated: true,
+  emoji: ['🔥','🥵','💦'],
+  notes: ['Adults only; NSFW slider must be on to trigger.'],
+  entries: [
+    { pattern: /\bgasping expression, parted lips\b/gi, replacement: 'moaning mouth, tongue visible, head tilted back', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcheeks flushed with warmth\b/gi, replacement: 'face flushed from arousal', severity: 4, tags: ['explicit'] },
+    { pattern: /\bslight shiver, goosebumps visible\b/gi, replacement: 'full-body shiver during climax', severity: 5, tags: ['explicit'] },
+    { pattern: /\blight sheen of sweat on skin\b/gi, replacement: 'sweat dripping down chest and stomach', severity: 5, tags: ['explicit'] },
+    { pattern: /\bdeep exhale, relaxed shoulders\b/gi, replacement: 'exhausted post-orgasm sigh', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpulse visible in neck, quickened heartbeat\b/gi, replacement: 'throbbing veins, racing heartbeat from arousal', severity: 5, tags: ['explicit'] },
+    { pattern: /\blaughter, open mouth grin, crinkled eyes\b/gi, replacement: 'breathless giggle during sex', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 63a — BODY REACTIONS & FACIAL EXPRESSIONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 64 — VOCALIZATIONS & SOUND CUES (EN)  (START)
+ * ID: BLOCK 64
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Let prompts describe soundscape: voices, breaths, environment. Neutral first.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 64',
+  language: 'en',
+  category: 'vocalizations_sounds',
+  emoji: ['🔊','🎙️','🎶'],
+  notes: ['Complements vibe engine; 64a escalates to erotic moans.'],
+  entries: [
+    { pattern: /\bwhisper\b/gi, replacement: 'whispering softly, hushed tone', severity: 0, tags: ['sound'] },
+    { pattern: /\bsing\b/gi, replacement: 'soft singing, melodic voice', severity: 0, tags: ['sound'] },
+    { pattern: /\bfootsteps\b/gi, replacement: 'footsteps sound, approaching presence', severity: 0, tags: ['sound'] },
+    { pattern: /\bheartbeat\b/gi, replacement: 'audible heartbeat sound', severity: 0, tags: ['sound'] },
+    { pattern: /\bwind\b/gi, replacement: 'wind whooshing sound', severity: 0, tags: ['sound'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 64 — VOCALIZATIONS & SOUND CUES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 64a — VOCALIZATIONS & SOUND CUES EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Unlock erotic sounds, moans, dirty talk cues, climax audio.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 64a',
+  language: 'en',
+  category: 'vocalizations_sounds_explicit',
+  gated: true,
+  emoji: ['🔥','🎙️'],
+  notes: ['Adults only; triggers vocal erotic cues.'],
+  entries: [
+    { pattern: /\bwhispering softly, hushed tone\b/gi, replacement: 'whispering dirty talk', severity: 5, tags: ['explicit'] },
+    { pattern: /\baudible heartbeat sound\b/gi, replacement: 'ragged breathing and moans', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsoft singing, melodic voice\b/gi, replacement: 'breathless moaning melody', severity: 5, tags: ['explicit'] },
+    { pattern: /\bfootsteps sound, approaching presence\b/gi, replacement: 'bed creaks and wet slapping sounds', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 64a — VOCALIZATIONS & SOUND CUES EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 65 — CLOTHING STATES & DISARRAY (EN)  (START)
+ * ID: BLOCK 65
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Describe clothing condition and state changes (neutral first).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 65',
+  language: 'en',
+  category: 'clothing_states',
+  emoji: ['👔','👗','🧵'],
+  notes: ['Helps prompts transition outfits between neat and casual.'],
+  entries: [
+    { pattern: /\bwrinkled\s*shirt\b/gi, replacement: 'wrinkled shirt fabric, casual look', severity: 0, tags: ['clothing'] },
+    { pattern: /\buntucked\b/gi, replacement: 'shirt untucked, relaxed styling', severity: 0, tags: ['clothing'] },
+    { pattern: /\bunbuttoned\b/gi, replacement: 'unbuttoned top, open neckline', severity: 0, tags: ['clothing'] },
+    { pattern: /\bunzipped\b/gi, replacement: 'zipper undone, loose garment', severity: 0, tags: ['clothing'] },
+    { pattern: /\btorn\b/gi, replacement: 'torn clothing, frayed edges', severity: 0, tags: ['clothing'] },
+    { pattern: /\bdisheveled\b/gi, replacement: 'hair or clothing in messy state', severity: 0, tags: ['look'] },
+    { pattern: /\bmissing\s*shoe\b/gi, replacement: 'one shoe missing, casual imbalance', severity: 0, tags: ['clothing'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 65 — CLOTHING STATES & DISARRAY (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 65a — CLOTHING STATES & DISARRAY EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Escalate clothing state into sexual disarray and removal.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 65a',
+  language: 'en',
+  category: 'clothing_states_explicit',
+  gated: true,
+  emoji: ['🔥','👗'],
+  notes: ['Adults only; used to show stripping, half-dressed states.'],
+  entries: [
+    { pattern: /\bshirt untucked, relaxed styling\b/gi, replacement: 'shirt half-removed, exposing chest', severity: 4, tags: ['explicit'] },
+    { pattern: /\bunbuttoned top, open neckline\b/gi, replacement: 'blouse unbuttoned exposing bra', severity: 4, tags: ['explicit'] },
+    { pattern: /\bzipper undone, loose garment\b/gi, replacement: 'pants unzipped, underwear peeking', severity: 4, tags: ['explicit'] },
+    { pattern: /\btorn clothing, frayed edges\b/gi, replacement: 'torn lingerie, deliberate rough play damage', severity: 5, tags: ['explicit'] },
+    { pattern: /\bhair or clothing in messy state\b/gi, replacement: 'sex-tousled hair, clothes in disarray', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 65a — CLOTHING STATES & DISARRAY EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 66 — LOCATIONS, LANDMARKS & EVENTS (EN)  (START)
+ * ID: BLOCK 66
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Cover real-life places, cities, current events keywords for context.
+ *   - Allows mixing modern culture into prompts.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 66',
+  language: 'en',
+  category: 'locations_events',
+  emoji: ['🌍','🗽','🗺️','🎉'],
+  notes: ['Broad coverage of global sites and major events.'],
+  entries: [
+    { pattern: /\bnew\s*york\b/gi, replacement: 'New York City skyline, urban streets, taxis', severity: 0, tags: ['city'] },
+    { pattern: /\blondon\b/gi, replacement: 'London landmarks, Big Ben, red buses', severity: 0, tags: ['city'] },
+    { pattern: /\bparis\b/gi, replacement: 'Paris, Eiffel Tower view, café tables', severity: 0, tags: ['city'] },
+    { pattern: /\btokyo\b/gi, replacement: 'Tokyo neon streets, Shibuya crossing', severity: 0, tags: ['city'] },
+    { pattern: /\bcoachella\b/gi, replacement: 'Coachella music festival, desert crowd', severity: 0, tags: ['event'] },
+    { pattern: /\bworld\s*cup\b/gi, replacement: 'World Cup stadium, cheering fans', severity: 0, tags: ['event'] },
+    { pattern: /\bcomic[-\s]*con\b/gi, replacement: 'Comic-Con convention floor, cosplay crowd', severity: 0, tags: ['event'] },
+    { pattern: /\bmet\s*gala\b/gi, replacement: 'Met Gala red carpet, high fashion display', severity: 0, tags: ['event'] },
+    { pattern: /\b2024\s*election\b/gi, replacement: '2024 election rally, political signage', severity: 0, tags: ['event'] },
+    { pattern: /\bconcert\b/gi, replacement: 'live concert stage, crowd cheering', severity: 0, tags: ['event'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 66 — LOCATIONS, LANDMARKS & EVENTS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 66a — LOCATIONS & EVENTS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Optional sexualized interpretations of locations/events (fantasy settings).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 66a',
+  language: 'en',
+  category: 'locations_events_explicit',
+  gated: true,
+  emoji: ['🔥','🌆'],
+  notes: ['NSFW slider required; adds fantasy of public or themed play.'],
+  entries: [
+    { pattern: /\bCoachella music festival, desert crowd\b/gi, replacement: 'sweaty crowd grind at Coachella, bodies pressed', severity: 4, tags: ['explicit'] },
+    { pattern: /\bComic-Con convention floor, cosplay crowd\b/gi, replacement: 'cosplay kink party scene, skimpy costumes', severity: 4, tags: ['explicit'] },
+    { pattern: /\bMet Gala red carpet, high fashion display\b/gi, replacement: 'risqué couture, sheer gowns exposing skin', severity: 4, tags: ['explicit'] },
+    { pattern: /\bconcert stage, crowd cheering\b/gi, replacement: 'crowd surfing, sweat-slick bodies pressed together', severity: 3, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 66a — LOCATIONS & EVENTS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 67 — FOOD, DRINK & SENSORY INDULGENCE (EN)  (START)
+ * ID: BLOCK 67
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand culinary and drink references for prompts. Neutral first.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 67',
+  language: 'en',
+  category: 'food_drink',
+  emoji: ['🍷','🍫','🍓','🥂'],
+  notes: ['Pairs with vibe engine and rooms (kitchen, dining). 67a escalates.'],
+  entries: [
+    { pattern: /\bchocolate\b/gi, replacement: 'rich chocolate, glossy surface, decadent tone', severity: 0, tags: ['food'] },
+    { pattern: /\bstrawberries\b/gi, replacement: 'fresh strawberries, red juicy fruit', severity: 0, tags: ['food'] },
+    { pattern: /\bchampagne\b/gi, replacement: 'sparkling champagne, golden bubbles', severity: 0, tags: ['drink'] },
+    { pattern: /\bwhipped\s*cream\b/gi, replacement: 'soft whipped cream, fluffy texture', severity: 0, tags: ['food'] },
+    { pattern: /\bwine\b/gi, replacement: 'red wine in crystal glass, legs visible', severity: 0, tags: ['drink'] },
+    { pattern: /\bcoffee\b/gi, replacement: 'steaming coffee cup, aromatic scent', severity: 0, tags: ['drink'] },
+    { pattern: /\bcocktail\b/gi, replacement: 'colorful cocktail, garnished glass', severity: 0, tags: ['drink'] },
+    { pattern: /\bfeast\b/gi, replacement: 'lavish feast, table spread with dishes', severity: 0, tags: ['food'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 67 — FOOD, DRINK & SENSORY INDULGENCE (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 67a — FOOD, DRINK & SENSORY EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Turn culinary items into erotic play props and scenarios.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 67a',
+  language: 'en',
+  category: 'food_drink_explicit',
+  gated: true,
+  emoji: ['🔥','🍓','🍷'],
+  notes: ['Adults only; adds body play, dripping, licking scenarios.'],
+  entries: [
+    { pattern: /\brich chocolate, glossy surface, decadent tone\b/gi, replacement: 'melted chocolate dripped on skin', severity: 5, tags: ['explicit'] },
+    { pattern: /\bfresh strawberries, red juicy fruit\b/gi, replacement: 'strawberries eaten off partner body', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsparkling champagne, golden bubbles\b/gi, replacement: 'champagne poured over chest, licked off', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsoft whipped cream, fluffy texture\b/gi, replacement: 'whipped cream spread across nipples', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcolorful cocktail, garnished glass\b/gi, replacement: 'body shot taken off stomach or thighs', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 67a — FOOD, DRINK & SENSORY EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 68 — TECHNOLOGY, SCREENS & MODERN DEVICES (EN)  (START)
+ * ID: BLOCK 68
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Cover phones, computers, VR headsets, live-stream settings.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 68',
+  language: 'en',
+  category: 'technology_devices',
+  emoji: ['📱','💻','📷','🎧'],
+  notes: ['Can be combined with NSFW mirror for sexting, cam shows.'],
+  entries: [
+    { pattern: /\bsmartphone\b/gi, replacement: 'smartphone device, glowing screen', severity: 0, tags: ['tech'] },
+    { pattern: /\blaptop\b/gi, replacement: 'open laptop, backlit keyboard', severity: 0, tags: ['tech'] },
+    { pattern: /\bcamera\b/gi, replacement: 'DSLR camera on tripod, lens glare', severity: 0, tags: ['tech'] },
+    { pattern: /\bwebcam\b/gi, replacement: 'webcam mounted, recording light on', severity: 0, tags: ['tech'] },
+    { pattern: /\bheadphones\b/gi, replacement: 'over-ear headphones, cushioned cups', severity: 0, tags: ['tech'] },
+    { pattern: /\bVR\s*headset\b/gi, replacement: 'VR headset, user immersed in virtual space', severity: 0, tags: ['tech'] },
+    { pattern: /\blive[-\s]*stream\b/gi, replacement: 'live-stream broadcast setup, ring light', severity: 0, tags: ['tech'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 68 — TECHNOLOGY, SCREENS & MODERN DEVICES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 68a — TECHNOLOGY & DEVICES EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Sexting, camming, recorded scenarios (adults only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 68a',
+  language: 'en',
+  category: 'technology_devices_explicit',
+  gated: true,
+  emoji: ['🔥','📱','📷'],
+  notes: ['Adds NSFW streaming/cyberplay content.'],
+  entries: [
+    { pattern: /\bsmartphone device, glowing screen\b/gi, replacement: 'sexting on phone, naughty selfie taken', severity: 5, tags: ['explicit'] },
+    { pattern: /\bwebcam mounted, recording light on\b/gi, replacement: 'cam show streaming explicit performance', severity: 5, tags: ['explicit'] },
+    { pattern: /\blive-stream broadcast setup, ring light\b/gi, replacement: 'OnlyFans style live show', severity: 5, tags: ['explicit'] },
+    { pattern: /\bVR headset, user immersed in virtual space\b/gi, replacement: 'VR sex simulation, immersive fantasy', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 68a — TECHNOLOGY & DEVICES EXPLICIT-DIRECTIONAL (EN)  (END)
+ /* ================================================================
+ * BLOCK 69 — POP CULTURE, MEDIA & INTERNET SLANG (EN)  (START)
+ * ID: BLOCK 69
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Allow prompts to reference pop culture icons, trending memes, viral internet language.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 69',
+  language: 'en',
+  category: 'popculture_memes',
+  emoji: ['📱','🎶','😂','📺'],
+  notes: ['Safe but current references. 69a escalates with NSFW humor.'],
+  entries: [
+    { pattern: /\btiktok\b/gi, replacement: 'TikTok trend, vertical video style', severity: 0, tags: ['internet'] },
+    { pattern: /\bviral\b/gi, replacement: 'viral moment, trending hashtag', severity: 0, tags: ['internet'] },
+    { pattern: /\bmeme\b/gi, replacement: 'internet meme format, reaction image energy', severity: 0, tags: ['internet'] },
+    { pattern: /\bnetflix\b/gi, replacement: 'Netflix binge session, streaming backdrop', severity: 0, tags: ['media'] },
+    { pattern: /\bmarvel\b/gi, replacement: 'Marvel superhero universe reference', severity: 0, tags: ['media'] },
+    { pattern: /\banime\b/gi, replacement: 'anime aesthetic, cel-shaded style', severity: 0, tags: ['media'] },
+    { pattern: /\bgamer\b/gi, replacement: 'gamer culture reference, RGB glow', severity: 0, tags: ['culture'] },
+    { pattern: /\bemoji\b/gi, replacement: 'emoji usage, playful tone', severity: 0, tags: ['internet'] },
+    { pattern: /\bhashtag\b/gi, replacement: 'social media hashtag, trending topic', severity: 0, tags: ['internet'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 69 — POP CULTURE, MEDIA & INTERNET SLANG (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 69a — POP CULTURE & MEME NSFW REMIX (EN)  (START)
+ * PURPOSE:
+ *   - Let prompts go raunchy with meme humor, NSFW TikTok trends, sexualized references.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 69a',
+  language: 'en',
+  category: 'popculture_memes_explicit',
+  gated: true,
+  emoji: ['🔥','😂','🍑'],
+  notes: ['Adds spicy meme language, TikTok thirst trap energy.'],
+  entries: [
+    { pattern: /\bTikTok trend, vertical video style\b/gi, replacement: 'thirst trap TikTok, hips swaying', severity: 4, tags: ['explicit'] },
+    { pattern: /\bviral moment, trending hashtag\b/gi, replacement: 'viral thirst trap, NSFW trend', severity: 3, tags: ['explicit'] },
+    { pattern: /\binternet meme format, reaction image energy\b/gi, replacement: 'NSFW meme format, suggestive punchline', severity: 3, tags: ['explicit'] },
+    { pattern: /\bNetflix binge session, streaming backdrop\b/gi, replacement: 'Netflix and chill turning sexual', severity: 4, tags: ['explicit'] },
+    { pattern: /\banime aesthetic, cel-shaded style\b/gi, replacement: 'ecchi anime vibe, exaggerated curves', severity: 4, tags: ['explicit'] },
+    { pattern: /\bgamer culture reference, RGB glow\b/gi, replacement: 'NSFW gamer girl stream setup', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 69a — POP CULTURE & MEME NSFW REMIX (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 70 — WEATHER, SEASONS & NATURAL SETTINGS (EN)  (START)
+ * ID: BLOCK 70
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide environmental cues for mood: rain, storms, seasons.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 70',
+  language: 'en',
+  category: 'weather_seasons',
+  emoji: ['🌧️','☀️','❄️','🍂'],
+  notes: ['Pairs with vibe engine for mood shift. 70a adds erotic weather play.'],
+  entries: [
+    { pattern: /\brain\b/gi, replacement: 'rain falling, wet streets, droplets on glass', severity: 0, tags: ['weather'] },
+    { pattern: /\bstorm\b/gi, replacement: 'storm clouds, lightning flash, dramatic sky', severity: 0, tags: ['weather'] },
+    { pattern: /\bsnow\b/gi, replacement: 'snowfall, white landscape, frosty breath', severity: 0, tags: ['weather'] },
+    { pattern: /\bsummer\b/gi, replacement: 'summer sun, golden hour light, warm tones', severity: 0, tags: ['season'] },
+    { pattern: /\bwinter\b/gi, replacement: 'winter chill, breath misting, cozy layers', severity: 0, tags: ['season'] },
+    { pattern: /\bautumn\b/gi, replacement: 'autumn leaves, orange foliage, crisp air', severity: 0, tags: ['season'] },
+    { pattern: /\bspring\b/gi, replacement: 'spring bloom, fresh greenery, soft breeze', severity: 0, tags: ['season'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 70 — WEATHER, SEASONS & NATURAL SETTINGS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 70a — WEATHER & SEASONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Eroticize weather settings: wet clothes, heat sweat, snow play.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 70a',
+  language: 'en',
+  category: 'weather_seasons_explicit',
+  gated: true,
+  emoji: ['🔥','🌧️'],
+  notes: ['Adds wet look, soaked clothes, steamy breath erotica.'],
+  entries: [
+    { pattern: /\brain falling, wet streets, droplets on glass\b/gi, replacement: 'clothes soaked, see-through fabric', severity: 5, tags: ['explicit'] },
+    { pattern: /\bstorm clouds, lightning flash, dramatic sky\b/gi, replacement: 'storm sex fantasy, bodies slick with rain', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsummer sun, golden hour light, warm tones\b/gi, replacement: 'sweaty summer skin glistening', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsnowfall, white landscape, frosty breath\b/gi, replacement: 'nude bodies in snow, steam rising', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 70a — WEATHER & SEASONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+ * ================================================================ */
