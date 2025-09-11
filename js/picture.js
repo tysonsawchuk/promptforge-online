@@ -3243,3 +3243,924 @@ PF_PACKS.push({
 /* ================================================================
  * BLOCK 41 — ARCHITECTURE: INTERIOR/EXTERIOR VOCAB (END)
  * ================================================================ */
+/* ================================================================
+ * BLOCK 42 — WARDROBE & FABRICS (EN)  (START)
+ * ID: BLOCK 42
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand clothing/wardrobe terms into detailed, brand-free descriptors (street → couture → lingerie).
+ *   - SFW by default; avoids explicit phrasing while still being precise for renders.
+ * INTERNAL NOTES:
+ *   - Pairs with BLOCK 42a for explicit-directional mirroring when allowExplicit:true.
+ *   - Materials/fabric tokens emphasize texture, transparency, drape, sheen, stretch.
+ * ================================================================ */
+// >>> START OF BLOCK 42 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 42',
+  language: 'en',
+  category: 'wardrobe_fabrics',
+  emoji: ['👗','🧵','🧷','🧦'],
+  notes: [
+    'Clothing descriptors stay neutral; no porn-y prose. Stack with photo/pose blocks.',
+    'Use fabric + cut + detail for best results (e.g., “silk slip dress with lace trim”).'
+  ],
+  entries: [
+    // ——— BASE GARMENTS ———
+    { pattern: /\bt[-\s]*shirt\b/gi,       replacement: 'crew-neck t-shirt, soft cotton jersey, relaxed fit', severity: 0, tags: ['casual'] },
+    { pattern: /\btank\s*top\b/gi,        replacement: 'sleeveless tank top, ribbed knit, fitted silhouette', severity: 0, tags: ['casual'] },
+    { pattern: /\bcrop\s*top\b/gi,        replacement: 'cropped top, short hemline, close fit', severity: 0, tags: ['casual'] },
+    { pattern: /\bhoodie\b/gi,             replacement: 'pullover hoodie, kangaroo pocket, brushed fleece lining, drawstring hood', severity: 0, tags: ['casual'] },
+    { pattern: /\bbutton[-\s]*down\b/gi,  replacement: 'button-down shirt, crisp woven cotton, pointed collar, cuffed sleeves', severity: 0, tags: ['smart'] },
+    { pattern: /\bblouse\b/gi,            replacement: 'lightweight blouse, soft drape, subtle sheen, gentle gathers', severity: 0, tags: ['smart'] },
+    { pattern: /\bbodysuit\b/gi,          replacement: 'form-fitting bodysuit, stretch knit, clean tucked finish', severity: 0, tags: ['base'] },
+
+    // ——— LEGS ———
+    { pattern: /\bjeans\b/gi,              replacement: 'denim jeans, 5-pocket, subtle whiskering, straight or slim cut', severity: 0, tags: ['denim'] },
+    { pattern: /\bhigh[-\s]*waist(ed)?\b/gi, replacement: 'high-rise waistline, elongated leg proportion', severity: 0, tags: ['cut'] },
+    { pattern: /\bleggings\b/gi,          replacement: 'stretch leggings, matte finish, snug silhouette, opaque knit', severity: 0, tags: ['athleisure'] },
+    { pattern: /\byoga\s*pants\b/gi,      replacement: 'performance stretch pants, moisture-wicking, high-rise waistband', severity: 0, tags: ['athleisure'] },
+    { pattern: /\bmini\s*skirt\b/gi,      replacement: 'mini skirt, above-the-knee hem, fitted hip, clean hem', severity: 1, tags: ['skirt'] },
+    { pattern: /\bpencil\s*skirt\b/gi,    replacement: 'pencil skirt, tailored fit, knee length, slit vent', severity: 0, tags: ['skirt'] },
+    { pattern: /\bthigh[-\s]*highs?\b/gi, replacement: 'thigh-high stockings, elastic stay-up band, sheer denier', severity: 1, tags: ['hosiery'] },
+
+    // ——— DRESSES / OUTER ———
+    { pattern: /\bslip\s*dress\b/gi,      replacement: 'bias-cut slip dress, silk-like drape, delicate straps, subtle sheen', severity: 1, tags: ['dress'] },
+    { pattern: /\bsun\s*dress\b/gi,       replacement: 'light sundress, airy cotton, floral print option, breezy silhouette', severity: 0, tags: ['dress'] },
+    { pattern: /\bplunging\s*neckline\b/gi, replacement: 'deep V neckline, elongated décolletage line', severity: 1, tags: ['detail'] },
+    { pattern: /\bopen\s*back\b/gi,       replacement: 'open-back detail, low scoop, strap emphasis', severity: 1, tags: ['detail'] },
+    { pattern: /\bkimono\s*robe\b/gi,     replacement: 'kimono-style robe, wide sleeves, loose sash tie, flowing drape', severity: 0, tags: ['outer'] },
+    { pattern: /\btrench\s*coat\b/gi,     replacement: 'belted trench coat, storm flaps, double-breasted front, gabardine', severity: 0, tags: ['outer'] },
+
+    // ——— LINGERIE (NEUTRAL) ———
+    { pattern: /\bpush[-\s]*up\s*bra\b/gi, replacement: 'underwire bra with lift, molded cups, adjustable straps', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bbralette\b/gi,          replacement: 'soft bralette, unlined, delicate lace overlay', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bpanties\b/gi,           replacement: 'brief-style underwear, soft elastic trim, comfortable fit', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bthong\b/gi,             replacement: 'minimal-coverage underwear, narrow back strap, low rise', severity: 2, tags: ['lingerie'] },
+    { pattern: /\bg[-\s]*string\b/gi,     replacement: 'string-back underwear, minimal coverage, slim side straps', severity: 2, tags: ['lingerie'] },
+    { pattern: /\bgarter\s*belt\b/gi,     replacement: 'garter belt, adjustable straps, clip fasteners for stockings', severity: 2, tags: ['lingerie'] },
+    { pattern: /\bfishnets?\b/gi,         replacement: 'fishnet stockings, diamond mesh pattern, elastic cuff', severity: 1, tags: ['hosiery'] },
+    { pattern: /\bbustier\b/gi,           replacement: 'structured bustier top, boning channels, fitted bodice', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bcorset\b/gi,            replacement: 'corset with lacing, hourglass shaping, steel or plastic boning', severity: 1, tags: ['lingerie'] },
+
+    // ——— FABRICS / TEXTURES ———
+    { pattern: /\bsilk\b/gi,              replacement: 'silk-like fabric, fluid drape, soft luster', severity: 0, tags: ['fabric'] },
+    { pattern: /\bsatin\b/gi,             replacement: 'satin weave, glossy face, smooth hand-feel', severity: 0, tags: ['fabric'] },
+    { pattern: /\blace\b/gi,              replacement: 'lace textile, floral motifs, semi-sheer openness', severity: 1, tags: ['fabric'] },
+    { pattern: /\bmesh\b/gi,              replacement: 'fine mesh fabric, breathable net structure, semi-sheer', severity: 1, tags: ['fabric'] },
+    { pattern: /\bvelvet\b/gi,            replacement: 'velvet pile, directional sheen, plush texture', severity: 0, tags: ['fabric'] },
+    { pattern: /\bchiffon\b/gi,           replacement: 'light chiffon, translucent veil, soft flutter', severity: 0, tags: ['fabric'] },
+    { pattern: /\btulle\b/gi,             replacement: 'tulle netting, fine hex mesh, airy volume', severity: 0, tags: ['fabric'] },
+    { pattern: /\bleather\b/gi,           replacement: 'leather material, subtle grain, matte to semi-gloss finish', severity: 0, tags: ['material'] },
+    { pattern: /\blatex\b/gi,             replacement: 'latex rubber finish, high-gloss sheen, tight stretch', severity: 1, tags: ['material'] }
+  ]
+});
+// >>> END OF BLOCK 42 <<<
+/* ================================================================
+ * BLOCK 42 — WARDROBE & FABRICS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 42a — WARDROBE EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 42a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate neutral wardrobe tokens into spicy/NSFW-leaning phrasing (opt-in only).
+ *   - Applied by PF_CORE.applyDirectional() when allowExplicit:true and direction='explicit'.
+ * INTERNAL NOTES:
+ *   - Keep consensual adult framing; avoid graphic porn prose. Focus on attire transparency/reveal.
+ * ================================================================ */
+// >>> START OF BLOCK 42a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 42a',
+  language: 'en',
+  category: 'wardrobe_explicit',
+  gated: true,
+  emoji: ['🔥','🧦','🕸️'],
+  notes: ['Directional mirror of BLOCK 42.'],
+  entries: [
+    { pattern: /\bbodysuit\b/gi,                 replacement: 'skin-tight bodysuit', severity: 3, tags: ['explicit'] },
+    { pattern: /\bthigh-high stockings\b/gi,     replacement: 'thigh-high stockings with garters', severity: 3, tags: ['explicit'] },
+    { pattern: /\bdeep V neckline\b/gi,          replacement: 'plunging cleavage-baring neckline', severity: 4, tags: ['explicit'] },
+    { pattern: /\bopen-back detail\b/gi,         replacement: 'open back that bares a lot of skin', severity: 3, tags: ['explicit'] },
+    { pattern: /\bstring-back underwear\b/gi,    replacement: 'g-string thong', severity: 4, tags: ['explicit'] },
+    { pattern: /\bbrief-style underwear\b/gi,    replacement: 'low-rise panties', severity: 3, tags: ['explicit'] },
+    { pattern: /\bdelicate lace overlay\b/gi,    replacement: 'sheer lace that shows through', severity: 4, tags: ['explicit'] },
+    { pattern: /\bfishnet stockings\b/gi,        replacement: 'fishnet stockings revealing skin', severity: 3, tags: ['explicit'] },
+    { pattern: /\blatex rubber finish\b/gi,      replacement: 'tight latex that clings to every curve', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsemi-sheer\b/gi,                replacement: 'see-through', severity: 4, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 42a <<<
+/* ================================================================
+ * BLOCK 42a — WARDROBE EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 43 — BODY DESCRIPTORS & PROPORTIONS (EN)  (START)
+ * ID: BLOCK 43
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map casual body-shape adjectives to neutral, adult-only descriptors.
+ *   - Avoid minors/age cues; focus on physique, posture, proportions.
+ * INTERNAL NOTES:
+ *   - Mirrors in BLOCK 43a will escalate to colloquial/slang when allowed.
+ * ================================================================ */
+// >>> START OF BLOCK 43 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 43',
+  language: 'en',
+  category: 'body_descriptors',
+  emoji: ['🧍','🧍‍♀️','📏'],
+  notes: [
+    'Adult-only physique language; no age diminutives.',
+    'Use positive, descriptive adjectives; avoid judgmental phrasing.'
+  ],
+  entries: [
+    // ——— GENERAL BUILD ———
+    { pattern: /\bathletic\b/gi,      replacement: 'athletic build, defined musculature, balanced proportions', severity: 0, tags: ['build'] },
+    { pattern: /\bcurvy\b/gi,         replacement: 'curvy figure, fuller hips and chest, soft contours', severity: 1, tags: ['build'] },
+    { pattern: /\bslim\b/gi,          replacement: 'slim build, narrow waist, light frame', severity: 0, tags: ['build'] },
+    { pattern: /\bthick\b/gi,         replacement: 'full-figured build, strong thighs and hips', severity: 1, tags: ['build'] },
+    { pattern: /\bhourglass\b/gi,     replacement: 'hourglass proportions, pronounced waist-to-hip contrast', severity: 0, tags: ['proportion'] },
+    { pattern: /\bpear[-\s]*shaped\b/gi, replacement: 'pear-shaped proportions, fuller hips, narrower shoulders', severity: 0, tags: ['proportion'] },
+    { pattern: /\bapple[-\s]*shaped\b/gi, replacement: 'apple-shaped proportions, fuller torso, slimmer legs', severity: 0, tags: ['proportion'] },
+
+    // ——— FEATURES ———
+    { pattern: /\btoned\s*abs\b/gi,   replacement: 'defined abdominal muscles', severity: 0, tags: ['feature'] },
+    { pattern: /\bstrong\s*legs\b/gi, replacement: 'powerful legs, visible quad and calf definition', severity: 0, tags: ['feature'] },
+    { pattern: /\bwide\s*hips\b/gi,   replacement: 'wide hip structure, rounded silhouette', severity: 0, tags: ['feature'] },
+    { pattern: /\bround\s*butt\b/gi, replacement: 'rounded gluteal shape', severity: 1, tags: ['feature'] },
+    { pattern: /\bbroad\s*shoulders\b/gi, replacement: 'broad shoulder width, tapered torso', severity: 0, tags: ['feature'] },
+    { pattern: /\blong\s*legs\b/gi,   replacement: 'long leg proportion, elongated femur-to-torso ratio', severity: 0, tags: ['feature'] }
+  ]
+});
+// >>> END OF BLOCK 43 <<<
+/* ================================================================
+ * BLOCK 43 — BODY DESCRIPTORS & PROPORTIONS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 43a — BODY DESCRIPTORS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 43a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Colloquial/slang escalations of physique terms (opt-in only; adults).
+ * ================================================================ */
+// >>> START OF BLOCK 43a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 43a',
+  language: 'en',
+  category: 'body_descriptors_explicit',
+  gated: true,
+  emoji: ['🔥','🧍‍♀️'],
+  notes: ['Directional mirror of BLOCK 43; pairs with BLOCK 2a semantics.'],
+  entries: [
+    { pattern: /\bcurvy figure, fuller hips and chest, soft contours\b/gi, replacement: 'thick and curvy', severity: 3, tags: ['explicit'] },
+    { pattern: /\bhourglass proportions, pronounced waist-to-hip contrast\b/gi, replacement: 'hourglass body, tight waist, big curves', severity: 3, tags: ['explicit'] },
+    { pattern: /\brounded gluteal shape\b/gi, replacement: 'big round ass', severity: 4, tags: ['explicit'] },
+    { pattern: /\bdefined abdominal muscles\b/gi, replacement: 'tight abs', severity: 2, tags: ['explicit'] },
+    { pattern: /\bbroad shoulder width, tapered torso\b/gi, replacement: 'wide shoulders, V-taper', severity: 2, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 43a <<<
+/* ================================================================
+ * BLOCK 43a — BODY DESCRIPTORS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 44 — POSES & GESTURES (EN)  (START)
+ * ID: BLOCK 44
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual pose/gesture terms for portraits, fashion, action.
+ *   - Non-NSFW domain; stack with wardrobe/face/camera blocks.
+ * ================================================================ */
+// >>> START OF BLOCK 44 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 44',
+  language: 'en',
+  category: 'poses_gestures',
+  emoji: ['🧍','🤳','🏃'],
+  notes: ['Action verbs and iconic poses rendered as camera-friendly descriptors.'],
+  entries: [
+    { pattern: /\bcontrapposto\b/gi,          replacement: 'contrapposto stance, weight on one leg, S-curve torso', severity: 0, tags: ['pose'] },
+    { pattern: /\bs[-\s]*curve\s*pose\b/gi,  replacement: 'S-curve pose, hip pop, shoulder tilt, elegant line', severity: 0, tags: ['pose'] },
+    { pattern: /\bpower\s*pose\b/gi,         replacement: 'power pose, feet apart, hands on hips, chin lifted', severity: 0, tags: ['pose'] },
+    { pattern: /\bover[-\s]*the[-\s]*shoulder\b/gi, replacement: 'over-the-shoulder glance, turned torso, gaze back to camera', severity: 0, tags: ['pose'] },
+    { pattern: /\bhair\s*flip\b/gi,          replacement: 'dynamic hair flip, motion arc, captured mid-swing', severity: 0, tags: ['gesture'] },
+    { pattern: /\bhand\s*on\s*hip(s)?\b/gi,  replacement: 'one hand on hip, elbow flare, confident stance', severity: 0, tags: ['gesture'] },
+    { pattern: /\barms\s*crossed\b/gi,       replacement: 'arms crossed across chest, assertive posture', severity: 0, tags: ['gesture'] },
+    { pattern: /\breaching\s*out\b/gi,       replacement: 'arm extended toward camera, shallow depth perspective', severity: 0, tags: ['gesture'] },
+    { pattern: /\bkneel(?:ing)?\b/gi,         replacement: 'kneeling pose, upright spine, composed hands placement', severity: 0, tags: ['pose'] },
+    { pattern: /\bcrouch(?:ing)?\b/gi,        replacement: 'low crouch, weight on toes, balanced posture', severity: 0, tags: ['pose'] },
+    { pattern: /\bmid[-\s]*jump\b/gi,        replacement: 'mid-air leap, frozen motion, limbs extended', severity: 0, tags: ['action'] },
+    { pattern: /\bsprint(?:ing)?\b/gi,        replacement: 'sprinting action, forward lean, trailing motion blur', severity: 0, tags: ['action'] }
+  ]
+});
+// >>> END OF BLOCK 44 <<<
+/* ================================================================
+ * BLOCK 44 — POSES & GESTURES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 45 — FACIAL EXPRESSIONS & GAZE (EN)  (START)
+ * ID: BLOCK 45
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map casual expression words to precise visual cues for face rendering.
+ *   - SFW by default; 45a provides NSFW-leaning escalations.
+ * ================================================================ */
+// >>> START OF BLOCK 45 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 45',
+  language: 'en',
+  category: 'facial_expressions',
+  emoji: ['🙂','😉','😍','😮‍💨'],
+  notes: ['Describe micro-features: eyelids, brows, lip tension, mouth shape, gaze direction.'],
+  entries: [
+    { pattern: /\bsoft\s*smile\b/gi,        replacement: 'subtle smile, corners lifted, relaxed cheeks', severity: 0, tags: ['smile'] },
+    { pattern: /\bsmirk\b/gi,                replacement: 'one-sided smirk, slight brow raise, playful expression', severity: 0, tags: ['smile'] },
+    { pattern: /\bpout\b/gi,                 replacement: 'gentle lip pout, lower lip emphasis, softened jaw', severity: 0, tags: ['lips'] },
+    { pattern: /\bbiting\s*lip\b/gi,        replacement: 'teeth lightly catching lower lip, suggestive tension', severity: 1, tags: ['lips'] },
+    { pattern: /\bbedroom\s*eyes\b/gi,      replacement: 'half-lidded gaze, slow blink, relaxed brow line', severity: 1, tags: ['gaze'] },
+    { pattern: /\bwink\b/gi,                 replacement: 'single eye closed, cheek raised, playful cue', severity: 0, tags: ['gaze'] },
+    { pattern: /\bflushed\s*cheeks\b/gi,    replacement: 'warm cheek flush, slight skin redness, heightened emotion', severity: 0, tags: ['blush'] },
+    { pattern: /\bafterglow\b/gi,           replacement: 'relaxed eyelids, gentle smile, warm skin tone, calm breathing', severity: 1, tags: ['mood'] }
+  ]
+});
+// >>> END OF BLOCK 45 <<<
+/* ================================================================
+ * BLOCK 45 — FACIAL EXPRESSIONS & GAZE (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 45a — FACIAL EXPRESSIONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 45a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate certain cues into overtly sexualized facial expressions for adult content.
+ * ================================================================ */
+// >>> START OF BLOCK 45a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 45a',
+  language: 'en',
+  category: 'facial_expressions_explicit',
+  gated: true,
+  emoji: ['🔥','😛'],
+  notes: ['Directional mirror of BLOCK 45.'],
+  entries: [
+    { pattern: /\bgentle lip pout, lower lip emphasis, softened jaw\b/gi, replacement: 'kissy pout', severity: 2, tags: ['explicit'] },
+    { pattern: /\bteeth lightly catching lower lip, suggestive tension\b/gi, replacement: 'lip bite (sexy)', severity: 3, tags: ['explicit'] },
+    { pattern: /\bhalf-lidded gaze, slow blink, relaxed brow line\b/gi, replacement: 'bedroom eyes (seductive)', severity: 3, tags: ['explicit'] },
+    { pattern: /\brelaxed eyelids, gentle smile, warm skin tone, calm breathing\b/gi, replacement: 'post-sex afterglow', severity: 3, tags: ['explicit'] },
+    { pattern: /\bplayful expression\b/gi, replacement: 'lewd playful look', severity: 3, tags: ['explicit'] },
+    { pattern: /\bheightened emotion\b/gi, replacement: 'porny flushed face', severity: 4, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 45a <<<
+/* ================================================================
+ * BLOCK 45a — FACIAL EXPRESSIONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 46 — KINK & BDSM (CLINICAL, CONSENSUAL) (EN)  (START)
+ * ID: BLOCK 46
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide neutral descriptors for consensual kink elements (props, roles, scenes).
+ *   - Avoid dangerous/illegal content; safety-first language. Adults only.
+ * INTERNAL NOTES:
+ *   - Mirrors mapped in 46a for spicier synonyms. Keep this block calm/clinical.
+ * ================================================================ */
+// >>> START OF BLOCK 46 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 46',
+  language: 'en',
+  category: 'kink_bdsm_clinical',
+  emoji: ['🪢','🕯️','🎭','🧷'],
+  notes: [
+    'Always consensual, negotiated, safe signals implied.',
+    'Focus on visual props, positions, and scene descriptors.'
+  ],
+  entries: [
+    // ——— PROPS / RESTRAINTS ———
+    { pattern: /\brope\s*bondage\b/gi,         replacement: 'rope bondage (consensual), symmetrical harness patterns', severity: 3, tags: ['bondage'] },
+    { pattern: /\bshibari\b/gi,                 replacement: 'decorative rope harness (consensual), balanced tension, neat knots', severity: 3, tags: ['bondage'] },
+    { pattern: /\bblindfold\b/gi,               replacement: 'soft blindfold, sensory reduction, trust emphasis', severity: 2, tags: ['sensory'] },
+    { pattern: /\bgag\b/gi,                     replacement: 'ball gag (consensual), breathable fit, safe signals arranged', severity: 3, tags: ['prop'] },
+    { pattern: /\bhandcuffs?\b/gi,              replacement: 'padded cuffs with quick-release hardware', severity: 2, tags: ['restraint'] },
+    { pattern: /\bspread(er)?\s*bar\b/gi,       replacement: 'adjustable spreader bar, controlled limb spacing', severity: 3, tags: ['restraint'] },
+
+    // ——— ROLES / DYNAMICS ———
+    { pattern: /\bdominant\b/gi,                replacement: 'dominant role (consensual power exchange)', severity: 2, tags: ['role'] },
+    { pattern: /\bsubmissive\b/gi,              replacement: 'submissive role (consensual power exchange)', severity: 2, tags: ['role'] },
+    { pattern: /\bswitch\b/gi,                  replacement: 'switch role (flexible power exchange)', severity: 1, tags: ['role'] },
+
+    // ——— SCENES / SENSATIONS ———
+    { pattern: /\bimpact\s*play\b/gi,           replacement: 'light impact play (consensual), safe zones, warmed skin', severity: 3, tags: ['scene'] },
+    { pattern: /\bwax\s*play\b/gi,              replacement: 'warm wax drip (consensual), safe temperature, skin-safe candles', severity: 3, tags: ['scene'] },
+    { pattern: /\bedge\s*play\b/gi,             replacement: 'edging (consensual arousal control)', severity: 3, tags: ['scene'] },
+    { pattern: /\bservice\s*submission\b/gi,    replacement: 'service-oriented submission, attentive tasks, ritual tone', severity: 2, tags: ['scene'] }
+  ]
+});
+// >>> END OF BLOCK 46 <<<
+/* ================================================================
+ * BLOCK 46 — KINK & BDSM (CLINICAL, CONSENSUAL) (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 46a — KINK & BDSM EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 46a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate neutral kink descriptors into spicier colloquialisms (adults only, opt-in).
+ * ================================================================ */
+// >>> START OF BLOCK 46a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 46a',
+  language: 'en',
+  category: 'kink_bdsm_explicit',
+  gated: true,
+  emoji: ['🔥','🪢','🖤'],
+  notes: ['Directional mirror of BLOCK 46.'],
+  entries: [
+    { pattern: /\brope bondage \(consensual\), symmetrical harness patterns\b/gi, replacement: 'tight rope bondage, full body harness', severity: 4, tags: ['explicit'] },
+    { pattern: /\bdecorative rope harness \(consensual\), balanced tension, neat knots\b/gi, replacement: 'shibari rope harness', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsoft blindfold, sensory reduction, trust emphasis\b/gi, replacement: 'blindfolded', severity: 3, tags: ['explicit'] },
+    { pattern: /\bball gag \(consensual\), breathable fit, safe signals arranged\b/gi, replacement: 'gagged', severity: 4, tags: ['explicit'] },
+    { pattern: /\bpadded cuffs with quick-release hardware\b/gi, replacement: 'restrained in cuffs', severity: 3, tags: ['explicit'] },
+    { pattern: /\badjustable spreader bar, controlled limb spacing\b/gi, replacement: 'legs spread with a bar', severity: 4, tags: ['explicit'] },
+    { pattern: /\blight impact play \(consensual\), safe zones, warmed skin\b/gi, replacement: 'ass spanking', severity: 4, tags: ['explicit'] },
+    { pattern: /\bwarm wax drip \(consensual\), safe temperature, skin-safe candles\b/gi, replacement: 'hot wax play', severity: 4, tags: ['explicit'] },
+    { pattern: /\bedging \(consensual arousal control\)\b/gi, replacement: 'edging control', severity: 4, tags: ['explicit'] },
+    { pattern: /\bservice-oriented submission, attentive tasks, ritual tone\b/gi, replacement: 'service sub scene', severity: 3, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 46a <<<
+/* ================================================================
+ * BLOCK 46a — KINK & BDSM EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 42 — WARDROBE & FABRICS (EN)  (START)
+ * ID: BLOCK 42
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand clothing/wardrobe terms into detailed, brand-free descriptors (street → couture → lingerie).
+ *   - SFW by default; avoids explicit phrasing while still being precise for renders.
+ * INTERNAL NOTES:
+ *   - Pairs with BLOCK 42a for explicit-directional mirroring when allowExplicit:true.
+ *   - Materials/fabric tokens emphasize texture, transparency, drape, sheen, stretch.
+ * ================================================================ */
+// >>> START OF BLOCK 42 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 42',
+  language: 'en',
+  category: 'wardrobe_fabrics',
+  emoji: ['👗','🧵','🧷','🧦'],
+  notes: [
+    'Clothing descriptors stay neutral; no porn-y prose. Stack with photo/pose blocks.',
+    'Use fabric + cut + detail for best results (e.g., “silk slip dress with lace trim”).'
+  ],
+  entries: [
+    // ——— BASE GARMENTS ———
+    { pattern: /\bt[-\s]*shirt\b/gi,       replacement: 'crew-neck t-shirt, soft cotton jersey, relaxed fit', severity: 0, tags: ['casual'] },
+    { pattern: /\btank\s*top\b/gi,        replacement: 'sleeveless tank top, ribbed knit, fitted silhouette', severity: 0, tags: ['casual'] },
+    { pattern: /\bcrop\s*top\b/gi,        replacement: 'cropped top, short hemline, close fit', severity: 0, tags: ['casual'] },
+    { pattern: /\bhoodie\b/gi,             replacement: 'pullover hoodie, kangaroo pocket, brushed fleece lining, drawstring hood', severity: 0, tags: ['casual'] },
+    { pattern: /\bbutton[-\s]*down\b/gi,  replacement: 'button-down shirt, crisp woven cotton, pointed collar, cuffed sleeves', severity: 0, tags: ['smart'] },
+    { pattern: /\bblouse\b/gi,            replacement: 'lightweight blouse, soft drape, subtle sheen, gentle gathers', severity: 0, tags: ['smart'] },
+    { pattern: /\bbodysuit\b/gi,          replacement: 'form-fitting bodysuit, stretch knit, clean tucked finish', severity: 0, tags: ['base'] },
+
+    // ——— LEGS ———
+    { pattern: /\bjeans\b/gi,              replacement: 'denim jeans, 5-pocket, subtle whiskering, straight or slim cut', severity: 0, tags: ['denim'] },
+    { pattern: /\bhigh[-\s]*waist(ed)?\b/gi, replacement: 'high-rise waistline, elongated leg proportion', severity: 0, tags: ['cut'] },
+    { pattern: /\bleggings\b/gi,          replacement: 'stretch leggings, matte finish, snug silhouette, opaque knit', severity: 0, tags: ['athleisure'] },
+    { pattern: /\byoga\s*pants\b/gi,      replacement: 'performance stretch pants, moisture-wicking, high-rise waistband', severity: 0, tags: ['athleisure'] },
+    { pattern: /\bmini\s*skirt\b/gi,      replacement: 'mini skirt, above-the-knee hem, fitted hip, clean hem', severity: 1, tags: ['skirt'] },
+    { pattern: /\bpencil\s*skirt\b/gi,    replacement: 'pencil skirt, tailored fit, knee length, slit vent', severity: 0, tags: ['skirt'] },
+    { pattern: /\bthigh[-\s]*highs?\b/gi, replacement: 'thigh-high stockings, elastic stay-up band, sheer denier', severity: 1, tags: ['hosiery'] },
+
+    // ——— DRESSES / OUTER ———
+    { pattern: /\bslip\s*dress\b/gi,      replacement: 'bias-cut slip dress, silk-like drape, delicate straps, subtle sheen', severity: 1, tags: ['dress'] },
+    { pattern: /\bsun\s*dress\b/gi,       replacement: 'light sundress, airy cotton, floral print option, breezy silhouette', severity: 0, tags: ['dress'] },
+    { pattern: /\bplunging\s*neckline\b/gi, replacement: 'deep V neckline, elongated décolletage line', severity: 1, tags: ['detail'] },
+    { pattern: /\bopen\s*back\b/gi,       replacement: 'open-back detail, low scoop, strap emphasis', severity: 1, tags: ['detail'] },
+    { pattern: /\bkimono\s*robe\b/gi,     replacement: 'kimono-style robe, wide sleeves, loose sash tie, flowing drape', severity: 0, tags: ['outer'] },
+    { pattern: /\btrench\s*coat\b/gi,     replacement: 'belted trench coat, storm flaps, double-breasted front, gabardine', severity: 0, tags: ['outer'] },
+
+    // ——— LINGERIE (NEUTRAL) ———
+    { pattern: /\bpush[-\s]*up\s*bra\b/gi, replacement: 'underwire bra with lift, molded cups, adjustable straps', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bbralette\b/gi,          replacement: 'soft bralette, unlined, delicate lace overlay', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bpanties\b/gi,           replacement: 'brief-style underwear, soft elastic trim, comfortable fit', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bthong\b/gi,             replacement: 'minimal-coverage underwear, narrow back strap, low rise', severity: 2, tags: ['lingerie'] },
+    { pattern: /\bg[-\s]*string\b/gi,     replacement: 'string-back underwear, minimal coverage, slim side straps', severity: 2, tags: ['lingerie'] },
+    { pattern: /\bgarter\s*belt\b/gi,     replacement: 'garter belt, adjustable straps, clip fasteners for stockings', severity: 2, tags: ['lingerie'] },
+    { pattern: /\bfishnets?\b/gi,         replacement: 'fishnet stockings, diamond mesh pattern, elastic cuff', severity: 1, tags: ['hosiery'] },
+    { pattern: /\bbustier\b/gi,           replacement: 'structured bustier top, boning channels, fitted bodice', severity: 1, tags: ['lingerie'] },
+    { pattern: /\bcorset\b/gi,            replacement: 'corset with lacing, hourglass shaping, steel or plastic boning', severity: 1, tags: ['lingerie'] },
+
+    // ——— FABRICS / TEXTURES ———
+    { pattern: /\bsilk\b/gi,              replacement: 'silk-like fabric, fluid drape, soft luster', severity: 0, tags: ['fabric'] },
+    { pattern: /\bsatin\b/gi,             replacement: 'satin weave, glossy face, smooth hand-feel', severity: 0, tags: ['fabric'] },
+    { pattern: /\blace\b/gi,              replacement: 'lace textile, floral motifs, semi-sheer openness', severity: 1, tags: ['fabric'] },
+    { pattern: /\bmesh\b/gi,              replacement: 'fine mesh fabric, breathable net structure, semi-sheer', severity: 1, tags: ['fabric'] },
+    { pattern: /\bvelvet\b/gi,            replacement: 'velvet pile, directional sheen, plush texture', severity: 0, tags: ['fabric'] },
+    { pattern: /\bchiffon\b/gi,           replacement: 'light chiffon, translucent veil, soft flutter', severity: 0, tags: ['fabric'] },
+    { pattern: /\btulle\b/gi,             replacement: 'tulle netting, fine hex mesh, airy volume', severity: 0, tags: ['fabric'] },
+    { pattern: /\bleather\b/gi,           replacement: 'leather material, subtle grain, matte to semi-gloss finish', severity: 0, tags: ['material'] },
+    { pattern: /\blatex\b/gi,             replacement: 'latex rubber finish, high-gloss sheen, tight stretch', severity: 1, tags: ['material'] }
+  ]
+});
+// >>> END OF BLOCK 42 <<<
+/* ================================================================
+ * BLOCK 42 — WARDROBE & FABRICS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 42a — WARDROBE EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 42a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate neutral wardrobe tokens into spicy/NSFW-leaning phrasing (opt-in only).
+ *   - Applied by PF_CORE.applyDirectional() when allowExplicit:true and direction='explicit'.
+ * INTERNAL NOTES:
+ *   - Keep consensual adult framing; avoid graphic porn prose. Focus on attire transparency/reveal.
+ * ================================================================ */
+// >>> START OF BLOCK 42a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 42a',
+  language: 'en',
+  category: 'wardrobe_explicit',
+  gated: true,
+  emoji: ['🔥','🧦','🕸️'],
+  notes: ['Directional mirror of BLOCK 42.'],
+  entries: [
+    { pattern: /\bbodysuit\b/gi,                 replacement: 'skin-tight bodysuit', severity: 3, tags: ['explicit'] },
+    { pattern: /\bthigh-high stockings\b/gi,     replacement: 'thigh-high stockings with garters', severity: 3, tags: ['explicit'] },
+    { pattern: /\bdeep V neckline\b/gi,          replacement: 'plunging cleavage-baring neckline', severity: 4, tags: ['explicit'] },
+    { pattern: /\bopen-back detail\b/gi,         replacement: 'open back that bares a lot of skin', severity: 3, tags: ['explicit'] },
+    { pattern: /\bstring-back underwear\b/gi,    replacement: 'g-string thong', severity: 4, tags: ['explicit'] },
+    { pattern: /\bbrief-style underwear\b/gi,    replacement: 'low-rise panties', severity: 3, tags: ['explicit'] },
+    { pattern: /\bdelicate lace overlay\b/gi,    replacement: 'sheer lace that shows through', severity: 4, tags: ['explicit'] },
+    { pattern: /\bfishnet stockings\b/gi,        replacement: 'fishnet stockings revealing skin', severity: 3, tags: ['explicit'] },
+    { pattern: /\blatex rubber finish\b/gi,      replacement: 'tight latex that clings to every curve', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsemi-sheer\b/gi,                replacement: 'see-through', severity: 4, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 42a <<<
+/* ================================================================
+ * BLOCK 42a — WARDROBE EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 43 — BODY DESCRIPTORS & PROPORTIONS (EN)  (START)
+ * ID: BLOCK 43
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map casual body-shape adjectives to neutral, adult-only descriptors.
+ *   - Avoid minors/age cues; focus on physique, posture, proportions.
+ * INTERNAL NOTES:
+ *   - Mirrors in BLOCK 43a will escalate to colloquial/slang when allowed.
+ * ================================================================ */
+// >>> START OF BLOCK 43 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 43',
+  language: 'en',
+  category: 'body_descriptors',
+  emoji: ['🧍','🧍‍♀️','📏'],
+  notes: [
+    'Adult-only physique language; no age diminutives.',
+    'Use positive, descriptive adjectives; avoid judgmental phrasing.'
+  ],
+  entries: [
+    // ——— GENERAL BUILD ———
+    { pattern: /\bathletic\b/gi,      replacement: 'athletic build, defined musculature, balanced proportions', severity: 0, tags: ['build'] },
+    { pattern: /\bcurvy\b/gi,         replacement: 'curvy figure, fuller hips and chest, soft contours', severity: 1, tags: ['build'] },
+    { pattern: /\bslim\b/gi,          replacement: 'slim build, narrow waist, light frame', severity: 0, tags: ['build'] },
+    { pattern: /\bthick\b/gi,         replacement: 'full-figured build, strong thighs and hips', severity: 1, tags: ['build'] },
+    { pattern: /\bhourglass\b/gi,     replacement: 'hourglass proportions, pronounced waist-to-hip contrast', severity: 0, tags: ['proportion'] },
+    { pattern: /\bpear[-\s]*shaped\b/gi, replacement: 'pear-shaped proportions, fuller hips, narrower shoulders', severity: 0, tags: ['proportion'] },
+    { pattern: /\bapple[-\s]*shaped\b/gi, replacement: 'apple-shaped proportions, fuller torso, slimmer legs', severity: 0, tags: ['proportion'] },
+
+    // ——— FEATURES ———
+    { pattern: /\btoned\s*abs\b/gi,   replacement: 'defined abdominal muscles', severity: 0, tags: ['feature'] },
+    { pattern: /\bstrong\s*legs\b/gi, replacement: 'powerful legs, visible quad and calf definition', severity: 0, tags: ['feature'] },
+    { pattern: /\bwide\s*hips\b/gi,   replacement: 'wide hip structure, rounded silhouette', severity: 0, tags: ['feature'] },
+    { pattern: /\bround\s*butt\b/gi, replacement: 'rounded gluteal shape', severity: 1, tags: ['feature'] },
+    { pattern: /\bbroad\s*shoulders\b/gi, replacement: 'broad shoulder width, tapered torso', severity: 0, tags: ['feature'] },
+    { pattern: /\blong\s*legs\b/gi,   replacement: 'long leg proportion, elongated femur-to-torso ratio', severity: 0, tags: ['feature'] }
+  ]
+});
+// >>> END OF BLOCK 43 <<<
+/* ================================================================
+ * BLOCK 43 — BODY DESCRIPTORS & PROPORTIONS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 43a — BODY DESCRIPTORS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 43a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Colloquial/slang escalations of physique terms (opt-in only; adults).
+ * ================================================================ */
+// >>> START OF BLOCK 43a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 43a',
+  language: 'en',
+  category: 'body_descriptors_explicit',
+  gated: true,
+  emoji: ['🔥','🧍‍♀️'],
+  notes: ['Directional mirror of BLOCK 43; pairs with BLOCK 2a semantics.'],
+  entries: [
+    { pattern: /\bcurvy figure, fuller hips and chest, soft contours\b/gi, replacement: 'thick and curvy', severity: 3, tags: ['explicit'] },
+    { pattern: /\bhourglass proportions, pronounced waist-to-hip contrast\b/gi, replacement: 'hourglass body, tight waist, big curves', severity: 3, tags: ['explicit'] },
+    { pattern: /\brounded gluteal shape\b/gi, replacement: 'big round ass', severity: 4, tags: ['explicit'] },
+    { pattern: /\bdefined abdominal muscles\b/gi, replacement: 'tight abs', severity: 2, tags: ['explicit'] },
+    { pattern: /\bbroad shoulder width, tapered torso\b/gi, replacement: 'wide shoulders, V-taper', severity: 2, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 43a <<<
+/* ================================================================
+ * BLOCK 43a — BODY DESCRIPTORS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 44 — POSES & GESTURES (EN)  (START)
+ * ID: BLOCK 44
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand casual pose/gesture terms for portraits, fashion, action.
+ *   - Non-NSFW domain; stack with wardrobe/face/camera blocks.
+ * ================================================================ */
+// >>> START OF BLOCK 44 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 44',
+  language: 'en',
+  category: 'poses_gestures',
+  emoji: ['🧍','🤳','🏃'],
+  notes: ['Action verbs and iconic poses rendered as camera-friendly descriptors.'],
+  entries: [
+    { pattern: /\bcontrapposto\b/gi,          replacement: 'contrapposto stance, weight on one leg, S-curve torso', severity: 0, tags: ['pose'] },
+    { pattern: /\bs[-\s]*curve\s*pose\b/gi,  replacement: 'S-curve pose, hip pop, shoulder tilt, elegant line', severity: 0, tags: ['pose'] },
+    { pattern: /\bpower\s*pose\b/gi,         replacement: 'power pose, feet apart, hands on hips, chin lifted', severity: 0, tags: ['pose'] },
+    { pattern: /\bover[-\s]*the[-\s]*shoulder\b/gi, replacement: 'over-the-shoulder glance, turned torso, gaze back to camera', severity: 0, tags: ['pose'] },
+    { pattern: /\bhair\s*flip\b/gi,          replacement: 'dynamic hair flip, motion arc, captured mid-swing', severity: 0, tags: ['gesture'] },
+    { pattern: /\bhand\s*on\s*hip(s)?\b/gi,  replacement: 'one hand on hip, elbow flare, confident stance', severity: 0, tags: ['gesture'] },
+    { pattern: /\barms\s*crossed\b/gi,       replacement: 'arms crossed across chest, assertive posture', severity: 0, tags: ['gesture'] },
+    { pattern: /\breaching\s*out\b/gi,       replacement: 'arm extended toward camera, shallow depth perspective', severity: 0, tags: ['gesture'] },
+    { pattern: /\bkneel(?:ing)?\b/gi,         replacement: 'kneeling pose, upright spine, composed hands placement', severity: 0, tags: ['pose'] },
+    { pattern: /\bcrouch(?:ing)?\b/gi,        replacement: 'low crouch, weight on toes, balanced posture', severity: 0, tags: ['pose'] },
+    { pattern: /\bmid[-\s]*jump\b/gi,        replacement: 'mid-air leap, frozen motion, limbs extended', severity: 0, tags: ['action'] },
+    { pattern: /\bsprint(?:ing)?\b/gi,        replacement: 'sprinting action, forward lean, trailing motion blur', severity: 0, tags: ['action'] }
+  ]
+});
+// >>> END OF BLOCK 44 <<<
+/* ================================================================
+ * BLOCK 44 — POSES & GESTURES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 45 — FACIAL EXPRESSIONS & GAZE (EN)  (START)
+ * ID: BLOCK 45
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map casual expression words to precise visual cues for face rendering.
+ *   - SFW by default; 45a provides NSFW-leaning escalations.
+ * ================================================================ */
+// >>> START OF BLOCK 45 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 45',
+  language: 'en',
+  category: 'facial_expressions',
+  emoji: ['🙂','😉','😍','😮‍💨'],
+  notes: ['Describe micro-features: eyelids, brows, lip tension, mouth shape, gaze direction.'],
+  entries: [
+    { pattern: /\bsoft\s*smile\b/gi,        replacement: 'subtle smile, corners lifted, relaxed cheeks', severity: 0, tags: ['smile'] },
+    { pattern: /\bsmirk\b/gi,                replacement: 'one-sided smirk, slight brow raise, playful expression', severity: 0, tags: ['smile'] },
+    { pattern: /\bpout\b/gi,                 replacement: 'gentle lip pout, lower lip emphasis, softened jaw', severity: 0, tags: ['lips'] },
+    { pattern: /\bbiting\s*lip\b/gi,        replacement: 'teeth lightly catching lower lip, suggestive tension', severity: 1, tags: ['lips'] },
+    { pattern: /\bbedroom\s*eyes\b/gi,      replacement: 'half-lidded gaze, slow blink, relaxed brow line', severity: 1, tags: ['gaze'] },
+    { pattern: /\bwink\b/gi,                 replacement: 'single eye closed, cheek raised, playful cue', severity: 0, tags: ['gaze'] },
+    { pattern: /\bflushed\s*cheeks\b/gi,    replacement: 'warm cheek flush, slight skin redness, heightened emotion', severity: 0, tags: ['blush'] },
+    { pattern: /\bafterglow\b/gi,           replacement: 'relaxed eyelids, gentle smile, warm skin tone, calm breathing', severity: 1, tags: ['mood'] }
+  ]
+});
+// >>> END OF BLOCK 45 <<<
+/* ================================================================
+ * BLOCK 45 — FACIAL EXPRESSIONS & GAZE (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 45a — FACIAL EXPRESSIONS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 45a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate certain cues into overtly sexualized facial expressions for adult content.
+ * ================================================================ */
+// >>> START OF BLOCK 45a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 45a',
+  language: 'en',
+  category: 'facial_expressions_explicit',
+  gated: true,
+  emoji: ['🔥','😛'],
+  notes: ['Directional mirror of BLOCK 45.'],
+  entries: [
+    { pattern: /\bgentle lip pout, lower lip emphasis, softened jaw\b/gi, replacement: 'kissy pout', severity: 2, tags: ['explicit'] },
+    { pattern: /\bteeth lightly catching lower lip, suggestive tension\b/gi, replacement: 'lip bite (sexy)', severity: 3, tags: ['explicit'] },
+    { pattern: /\bhalf-lidded gaze, slow blink, relaxed brow line\b/gi, replacement: 'bedroom eyes (seductive)', severity: 3, tags: ['explicit'] },
+    { pattern: /\brelaxed eyelids, gentle smile, warm skin tone, calm breathing\b/gi, replacement: 'post-sex afterglow', severity: 3, tags: ['explicit'] },
+    { pattern: /\bplayful expression\b/gi, replacement: 'lewd playful look', severity: 3, tags: ['explicit'] },
+    { pattern: /\bheightened emotion\b/gi, replacement: 'porny flushed face', severity: 4, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 45a <<<
+/* ================================================================
+ * BLOCK 45a — FACIAL EXPRESSIONS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 46 — KINK & BDSM (CLINICAL, CONSENSUAL) (EN)  (START)
+ * ID: BLOCK 46
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide neutral descriptors for consensual kink elements (props, roles, scenes).
+ *   - Avoid dangerous/illegal content; safety-first language. Adults only.
+ * INTERNAL NOTES:
+ *   - Mirrors mapped in 46a for spicier synonyms. Keep this block calm/clinical.
+ * ================================================================ */
+// >>> START OF BLOCK 46 CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 46',
+  language: 'en',
+  category: 'kink_bdsm_clinical',
+  emoji: ['🪢','🕯️','🎭','🧷'],
+  notes: [
+    'Always consensual, negotiated, safe signals implied.',
+    'Focus on visual props, positions, and scene descriptors.'
+  ],
+  entries: [
+    // ——— PROPS / RESTRAINTS ———
+    { pattern: /\brope\s*bondage\b/gi,         replacement: 'rope bondage (consensual), symmetrical harness patterns', severity: 3, tags: ['bondage'] },
+    { pattern: /\bshibari\b/gi,                 replacement: 'decorative rope harness (consensual), balanced tension, neat knots', severity: 3, tags: ['bondage'] },
+    { pattern: /\bblindfold\b/gi,               replacement: 'soft blindfold, sensory reduction, trust emphasis', severity: 2, tags: ['sensory'] },
+    { pattern: /\bgag\b/gi,                     replacement: 'ball gag (consensual), breathable fit, safe signals arranged', severity: 3, tags: ['prop'] },
+    { pattern: /\bhandcuffs?\b/gi,              replacement: 'padded cuffs with quick-release hardware', severity: 2, tags: ['restraint'] },
+    { pattern: /\bspread(er)?\s*bar\b/gi,       replacement: 'adjustable spreader bar, controlled limb spacing', severity: 3, tags: ['restraint'] },
+
+    // ——— ROLES / DYNAMICS ———
+    { pattern: /\bdominant\b/gi,                replacement: 'dominant role (consensual power exchange)', severity: 2, tags: ['role'] },
+    { pattern: /\bsubmissive\b/gi,              replacement: 'submissive role (consensual power exchange)', severity: 2, tags: ['role'] },
+    { pattern: /\bswitch\b/gi,                  replacement: 'switch role (flexible power exchange)', severity: 1, tags: ['role'] },
+
+    // ——— SCENES / SENSATIONS ———
+    { pattern: /\bimpact\s*play\b/gi,           replacement: 'light impact play (consensual), safe zones, warmed skin', severity: 3, tags: ['scene'] },
+    { pattern: /\bwax\s*play\b/gi,              replacement: 'warm wax drip (consensual), safe temperature, skin-safe candles', severity: 3, tags: ['scene'] },
+    { pattern: /\bedge\s*play\b/gi,             replacement: 'edging (consensual arousal control)', severity: 3, tags: ['scene'] },
+    { pattern: /\bservice\s*submission\b/gi,    replacement: 'service-oriented submission, attentive tasks, ritual tone', severity: 2, tags: ['scene'] }
+  ]
+});
+// >>> END OF BLOCK 46 <<<
+/* ================================================================
+ * BLOCK 46 — KINK & BDSM (CLINICAL, CONSENSUAL) (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 46a — KINK & BDSM EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 46a
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Escalate neutral kink descriptors into spicier colloquialisms (adults only, opt-in).
+ * ================================================================ */
+// >>> START OF BLOCK 46a CODE <<<
+PF_PACKS.push({
+  block_id: 'BLOCK 46a',
+  language: 'en',
+  category: 'kink_bdsm_explicit',
+  gated: true,
+  emoji: ['🔥','🪢','🖤'],
+  notes: ['Directional mirror of BLOCK 46.'],
+  entries: [
+    { pattern: /\brope bondage \(consensual\), symmetrical harness patterns\b/gi, replacement: 'tight rope bondage, full body harness', severity: 4, tags: ['explicit'] },
+    { pattern: /\bdecorative rope harness \(consensual\), balanced tension, neat knots\b/gi, replacement: 'shibari rope harness', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsoft blindfold, sensory reduction, trust emphasis\b/gi, replacement: 'blindfolded', severity: 3, tags: ['explicit'] },
+    { pattern: /\bball gag \(consensual\), breathable fit, safe signals arranged\b/gi, replacement: 'gagged', severity: 4, tags: ['explicit'] },
+    { pattern: /\bpadded cuffs with quick-release hardware\b/gi, replacement: 'restrained in cuffs', severity: 3, tags: ['explicit'] },
+    { pattern: /\badjustable spreader bar, controlled limb spacing\b/gi, replacement: 'legs spread with a bar', severity: 4, tags: ['explicit'] },
+    { pattern: /\blight impact play \(consensual\), safe zones, warmed skin\b/gi, replacement: 'ass spanking', severity: 4, tags: ['explicit'] },
+    { pattern: /\bwarm wax drip \(consensual\), safe temperature, skin-safe candles\b/gi, replacement: 'hot wax play', severity: 4, tags: ['explicit'] },
+    { pattern: /\bedging \(consensual arousal control\)\b/gi, replacement: 'edging control', severity: 4, tags: ['explicit'] },
+    { pattern: /\bservice-oriented submission, attentive tasks, ritual tone\b/gi, replacement: 'service sub scene', severity: 3, tags: ['explicit'] }
+  ]
+});
+// >>> END OF BLOCK 46a <<<
+/* ================================================================
+ * BLOCK 46a — KINK & BDSM EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 47 — COSMETICS, HAIR & GROOMING (EN)  (START)
+ * ID: BLOCK 47
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Capture makeup, hair styling, nails, grooming in detailed but SFW terms.
+ *   - Expand casual “makeup look” into concrete descriptors (smokey eye, glossy lip, etc).
+ * INTERNAL NOTES:
+ *   - BLOCK 47a will escalate to sultrier/glam/NSFW-leaning phrasing.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 47',
+  language: 'en',
+  category: 'cosmetics_hair_grooming',
+  emoji: ['💄','💇','💅','🪮'],
+  notes: ['Focus on visual traits, product finish, color language; keep brand-free.'],
+  entries: [
+    { pattern: /\bsmokey\s*eye\b/gi, replacement: 'smokey eye makeup, dark blended shadow, smudged liner, diffused edges', severity: 0, tags: ['makeup'] },
+    { pattern: /\bwinged\s*liner\b/gi, replacement: 'winged eyeliner, sharp flick, cat-eye shape', severity: 0, tags: ['makeup'] },
+    { pattern: /\bglossy\s*lips\b/gi, replacement: 'lip gloss finish, reflective shine, plump appearance', severity: 0, tags: ['makeup'] },
+    { pattern: /\bmatte\s*lips\b/gi, replacement: 'matte lipstick finish, velvety texture, no shine', severity: 0, tags: ['makeup'] },
+    { pattern: /\bblush\b/gi, replacement: 'soft cheek blush, warm tone, blended edges', severity: 0, tags: ['makeup'] },
+    { pattern: /\bhighlighter\b/gi, replacement: 'luminous highlighter, glowy cheekbone sheen, light catch', severity: 0, tags: ['makeup'] },
+    { pattern: /\bcontour\b/gi, replacement: 'contoured shading, defined cheek hollows, nose line sculpting', severity: 0, tags: ['makeup'] },
+
+    // ——— HAIR ———
+    { pattern: /\bponytail\b/gi, replacement: 'high ponytail, smooth crown, gathered back', severity: 0, tags: ['hair'] },
+    { pattern: /\bbraids?\b/gi, replacement: 'braided hair, neat plaits, woven texture', severity: 0, tags: ['hair'] },
+    { pattern: /\bpigtails?\b/gi, replacement: 'twin ponytails, symmetrical parting, playful look', severity: 0, tags: ['hair'] },
+    { pattern: /\bupdo\b/gi, replacement: 'styled updo, gathered bun, polished finish', severity: 0, tags: ['hair'] },
+    { pattern: /\bshaved\s*side\b/gi, replacement: 'undercut style, one side closely shaved', severity: 0, tags: ['hair'] },
+    { pattern: /\bcurly\b/gi, replacement: 'natural curls, voluminous coils, springy texture', severity: 0, tags: ['hair'] },
+    { pattern: /\bwavy\b/gi, replacement: 'soft beach waves, tousled movement', severity: 0, tags: ['hair'] },
+    { pattern: /\bstraight\s*hair\b/gi, replacement: 'sleek straight hair, smooth shine', severity: 0, tags: ['hair'] },
+
+    // ——— NAILS & GROOMING ———
+    { pattern: /\bmanicure\b/gi, replacement: 'well-groomed manicure, glossy finish, even nail shape', severity: 0, tags: ['nails'] },
+    { pattern: /\bpedicure\b/gi, replacement: 'pedicure, polished toes, clean cuticles', severity: 0, tags: ['nails'] },
+    { pattern: /\bpolished\s*nails\b/gi, replacement: 'nails with polish, uniform color coat', severity: 0, tags: ['nails'] },
+    { pattern: /\bbody\s*hair\s*removed\b/gi, replacement: 'smooth skin (groomed)', severity: 0, tags: ['grooming'] },
+    { pattern: /\bstubble\b/gi, replacement: 'short facial stubble, rough texture', severity: 0, tags: ['grooming'] },
+    { pattern: /\bbeard\b/gi, replacement: 'full beard, groomed shape, dense growth', severity: 0, tags: ['grooming'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 47 — COSMETICS, HAIR & GROOMING (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 47a — COSMETICS, HAIR & GROOMING EXPLICIT (EN)  (START)
+ * ID: BLOCK 47a
+ * PURPOSE:
+ *   - Escalate makeup/hair into sultry, glam, fetish-leaning language (opt-in).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 47a',
+  language: 'en',
+  category: 'cosmetics_hair_grooming_explicit',
+  gated: true,
+  emoji: ['🔥','💄'],
+  notes: ['Turns beauty cues into seductive/sexualized vibe.'],
+  entries: [
+    { pattern: /\bsmokey eye makeup, dark blended shadow, smudged liner, diffused edges\b/gi, replacement: 'dark sultry smokey eyes', severity: 3, tags: ['explicit'] },
+    { pattern: /\blip gloss finish, reflective shine, plump appearance\b/gi, replacement: 'wet glossy lips', severity: 3, tags: ['explicit'] },
+    { pattern: /\bcontoured shading, defined cheek hollows, nose line sculpting\b/gi, replacement: 'sharp seductive contour', severity: 2, tags: ['explicit'] },
+    { pattern: /\bhigh ponytail, smooth crown, gathered back\b/gi, replacement: 'high tight ponytail (dominatrix vibe)', severity: 3, tags: ['explicit'] },
+    { pattern: /\btwin ponytails, symmetrical parting, playful look\b/gi, replacement: 'pigtails (naughty look)', severity: 3, tags: ['explicit'] },
+    { pattern: /\bundercut style, one side closely shaved\b/gi, replacement: 'edgy shaved side, bad-girl energy', severity: 2, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 47a — COSMETICS, HAIR & GROOMING EXPLICIT (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 48 — EMOJI & SYMBOL EXPANSION (EN)  (START)
+ * ID: BLOCK 48
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map hundreds of emoji to neutral descriptors so prompts can use symbolic language.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 48',
+  language: 'en',
+  category: 'emoji_symbols',
+  emoji: ['😈','🍑','🍆','💦','🔥','🎃','🌊','⭐'],
+  notes: ['Expanded emoji semantics; can be combined with slider to drop explicit tone when needed.'],
+  entries: [
+    { pattern: /😈/g, replacement: 'mischievous devilish mood', severity: 1, tags: ['mood'] },
+    { pattern: /🍑/g, replacement: 'buttocks', severity: 1, tags: ['anatomy'] },
+    { pattern: /🍆/g, replacement: 'penis', severity: 3, tags: ['anatomy'] },
+    { pattern: /💦/g, replacement: 'splashing liquid', severity: 3, tags: ['fluid'] },
+    { pattern: /🔥/g, replacement: 'fire, intensity, passion', severity: 1, tags: ['mood'] },
+    { pattern: /🌊/g, replacement: 'ocean wave, wetness metaphor', severity: 1, tags: ['env'] },
+    { pattern: /⭐/g, replacement: 'sparkle, emphasis, highlight', severity: 0, tags: ['accent'] },
+    { pattern: /🎃/g, replacement: 'pumpkin, halloween vibe', severity: 0, tags: ['theme'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 48 — EMOJI & SYMBOL EXPANSION (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 49 — BODY ART & ADORNMENT (EN)  (START)
+ * ID: BLOCK 49
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Tattoos, piercings, scars, jewelry in detailed terms (stackable with anatomy/wardrobe).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 49',
+  language: 'en',
+  category: 'body_art_adornment',
+  emoji: ['🖋️','💎','🧷'],
+  notes: ['Focus on visual detail, placement, style.'],
+  entries: [
+    { pattern: /\btattoo\b/gi, replacement: 'tattoo body art, inked design, skin marking', severity: 1, tags: ['tattoo'] },
+    { pattern: /\bsleeve\s*tattoo\b/gi, replacement: 'full arm sleeve tattoo, continuous design', severity: 1, tags: ['tattoo'] },
+    { pattern: /\bpiercing\b/gi, replacement: 'body piercing with jewelry', severity: 1, tags: ['piercing'] },
+    { pattern: /\bnipple\s*piercing\b/gi, replacement: 'nipple piercing with barbells or rings', severity: 3, tags: ['piercing'] },
+    { pattern: /\bnavel\s*piercing\b/gi, replacement: 'belly button piercing with ring', severity: 2, tags: ['piercing'] },
+    { pattern: /\bscar\b/gi, replacement: 'visible scar, textured skin mark', severity: 0, tags: ['scar'] },
+    { pattern: /\bfreckles\b/gi, replacement: 'freckled complexion, scattered melanin spots', severity: 0, tags: ['skin'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 49 — BODY ART & ADORNMENT (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 50 — MULTILINGUAL MIRROR (ES/FR/DE)  (START)
+ * ID: BLOCK 50
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Mirror core anatomy (BLOCK 2/2a) into Spanish, French, German.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 50',
+  language: 'multi',
+  category: 'multilingual_core',
+  notes: ['Mirror of anatomy terms for ES, FR, DE. Future blocks will expand.'],
+  entries: [
+    { pattern: /\b(teta|senos)\b/gi, replacement: 'breasts', severity: 2, tags: ['es'] },
+    { pattern: /\b(verga|polla|pene)\b/gi, replacement: 'penis', severity: 3, tags: ['es'] },
+    { pattern: /\bconcha|coño|vagina\b/gi, replacement: 'vagina', severity: 3, tags: ['es'] },
+    { pattern: /\bsein\b/gi, replacement: 'breasts', severity: 2, tags: ['fr'] },
+    { pattern: /\bchatte|vagin\b/gi, replacement: 'vagina', severity: 3, tags: ['fr'] },
+    { pattern: /\bqueue|bite\b/gi, replacement: 'penis', severity: 3, tags: ['fr'] },
+    { pattern: /\bbrust(en)?\b/gi, replacement: 'breasts', severity: 2, tags: ['de'] },
+    { pattern: /\bscheide\b/gi, replacement: 'vagina', severity: 3, tags: ['de'] },
+    { pattern: /\bpenis\b/gi, replacement: 'penis', severity: 3, tags: ['de'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 50 — MULTILINGUAL MIRROR (ES/FR/DE)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 51 — FLUIDS & MARKS (EN)  (START)
+ * ID: BLOCK 51
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Add more granular coverage of bodily fluids, stains, residues (clinical neutral).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 51',
+  language: 'en',
+  category: 'fluids_marks',
+  emoji: ['💦','🩸'],
+  notes: ['Clinical, non-sensational descriptors. Mirror escalates to explicit in 51a.'],
+  entries: [
+    { pattern: /\bsaliva\b/gi, replacement: 'saliva, moist sheen, droplet texture', severity: 2, tags: ['fluid'] },
+    { pattern: /\bsweat\b/gi, replacement: 'sweat beads, glistening skin moisture', severity: 1, tags: ['fluid'] },
+    { pattern: /\btears\b/gi, replacement: 'tears, watery streaks on face', severity: 1, tags: ['fluid'] },
+    { pattern: /\bblood\b/gi, replacement: 'blood, red liquid, clinical depiction only', severity: 4, tags: ['fluid'] },
+    { pattern: /\bbruises?\b/gi, replacement: 'bruise marks, purplish discoloration', severity: 3, tags: ['mark'] },
+    { pattern: /\bhickeys?\b/gi, replacement: 'love bite marks, skin discoloration from suction', severity: 2, tags: ['mark'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 51 — FLUIDS & MARKS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 51a — FLUIDS & MARKS EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 51a
+ * PURPOSE:
+ *   - Escalate clinical fluids into raunchy, porn-industry slang (adults only).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 51a',
+  language: 'en',
+  category: 'fluids_marks_explicit',
+  gated: true,
+  emoji: ['🔥','💦'],
+  notes: ['Directional mirror for BLOCK 51.'],
+  entries: [
+    { pattern: /\bsaliva, moist sheen, droplet texture\b/gi, replacement: 'spit', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsweat beads, glistening skin moisture\b/gi, replacement: 'sweaty body', severity: 3, tags: ['explicit'] },
+    { pattern: /\btears, watery streaks on face\b/gi, replacement: 'teary-eyed', severity: 3, tags: ['explicit'] },
+    { pattern: /\bsemen\b/gi, replacement: 'cum', severity: 5, tags: ['explicit'] },
+    { pattern: /\blove bite marks, skin discoloration from suction\b/gi, replacement: 'fresh hickeys', severity: 3, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 51a — FLUIDS & MARKS EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
