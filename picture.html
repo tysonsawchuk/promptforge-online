@@ -1,714 +1,776 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge.online | AI Image Prompt Builder</title>
-  <meta name="description" content="PromptForge: The world’s best free AI prompt builder. Live AI news, creative tools, all models, ultra-modern UI.">
-  <meta name="keywords" content="AI prompt builder, MidJourney, DALL-E, Stable Diffusion, OpenArt, creative, AI news, templates, tools">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta property="og:title" content="PromptForge.online | AI Art Prompt Generator">
-  <meta property="og:description" content="Build prompts for every major model, get live AI news, explore templates, and stay creative. Free, unlimited, and pro-level.">
-  <meta property="og:image" content="/assets/promptforge-og-pic.png">
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <!-- Google AdSense (Styled in-page) -->
+  <!-- ===== META / SEO ===== -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptForge Online — NSFW/SFW Image & Video Prompt Builder</title>
+  <meta name="description" content="PromptForge: pro-grade SFW/NSFW prompt builder with engine profiles, token chips, sliders, export presets, and a futuristic mixer. Build cinematic, photoreal prompts for SDXL, Flux, Midjourney, Runway, and more." />
+  <meta name="keywords" content="PromptForge, prompt builder, SDXL, Flux, Midjourney, Runway, AI image prompts, NSFW prompts, SFW prompts, cinematic lighting, gel lighting, editorial, boudoir, video prompts, motion prompts, framing tokens" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://promptforge.online/builder" />
+  <link rel="icon" href="/favicon.ico" />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:site_name" content="PromptForge Online" />
+  <meta property="og:locale" content="en_CA" />
+  <meta property="og:title" content="PromptForge — Pro AI Prompt Builder" />
+  <meta property="og:description" content="Build elite SFW/NSFW prompts with engine-aware tokens, chip mixers, and one-click exporters." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://promptforge.online/" />
+  <meta property="og:image" content="/og/promptforge_og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PromptForge — Pro AI Prompt Builder" />
+  <meta name="twitter:description" content="Engine-aware prompt studio for SDXL, Flux, Midjourney, Runway, and more." />
+  <meta name="twitter:image" content="/og/promptforge_og.jpg" />
+  <meta name="theme-color" content="#0b0f14" />
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"PromptForge Online","url":"https://promptforge.online/","logo":"/og/logo.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social"]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Prompt Builder","item":"https://promptforge.online/builder"}]}
+  </script>
+  <!-- AdSense client (your ID) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+
+  <!-- ===== STYLES ===== -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Fira+Mono:wght@400;700&display=swap');
-    :root {
-      --brand: #64f2e3;
-      --brand2: #be9cff;
-      --accent: #ffe266;
-      --bg: #161c19;
-      --panel: #242e26;
-      --card: #20231f;
-      --shadow: 0 4px 40px #1a1a1a80;
-      --offwhite: #f4f6ef;
-      --link: #6ee6ff;
-      --danger: #fa527a;
-      --footer-bg: #191b19;
-      --menu-bg: #252628;
-      --menu-border: #363843;
-      --menu-hover: #1e293a;
+    :root{
+      --bg:#0b0f14; --panel:#10161d; --card:#121922; --edge:#232a33; --ink:#e7f7ff; --dim:#95a8b6;
+      --aqua:#64f2e3; --aqua2:#23d7ba; --vio:#be9cff; --hot:#fa528e; --gold:#ffd166; --ok:#50fa7b; --err:#ff637d;
     }
-    html,body{margin:0;padding:0;width:100vw;min-height:100vh;background:var(--bg);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.13em;}
-    .newsbar {
-      width:100vw; min-height:46px;
-      display:flex; align-items:center; justify-content:center;
-      background:linear-gradient(90deg,var(--bg),var(--footer-bg),var(--bg));
-      color:var(--brand2);font-weight:700;font-size:1.01em;
-      border-bottom:1.5px solid var(--brand2);
-      box-shadow:0 2px 10px #0004;
-      letter-spacing:.01em;
-      position:relative;z-index:20;
-    }
-    .newsbar .version {
-      margin-right:1.3em;padding:.16em .7em;background:var(--brand2);color:#24231f;
-      border-radius:8px;font-size:.97em;font-weight:700;vertical-align:middle;
-    }
-    .newsbar .ai-news {
-      margin:0 1.1em;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .newsbar a {color:var(--accent);text-decoration:none;}
-    .newsbar a:hover {color:var(--brand);}
-    .nav {background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:.85em 0 1.1em 0;}
-    .nav-l {display:flex;align-items:center;}
-    .nav .logo {font-family:'Fira Mono',monospace;font-size:2.08em;font-weight:900;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 .5em;}
-    .nav .breadcrumb {display:flex;gap:.95em;}
-    .nav .breadcrumb a {color:var(--brand);text-decoration:none;font-weight:600;letter-spacing:.04em;transition:.15s;}
-    .nav .breadcrumb a.active,.nav .breadcrumb a:focus {color:var(--accent);border-bottom:2.5px solid var(--accent);}
-    .nav .breadcrumb a:hover {color:var(--accent);}
-    .nav .socials {display:flex;gap:.85em;}
-    .nav .socials a {display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#2223;border-radius:7px;transition:.14s;}
-    .nav .socials a:hover {background:var(--brand2);}
-    .desc {max-width:820px;margin:0 auto 1.5em auto;text-align:center;color:var(--brand2);font-size:1.13em;}
-    .adsense-block {background:var(--panel);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
-    .mainbox {max-width:1420px;margin:2.3em auto 2em auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:2.5em 2.8em 2.2em 2.8em;}
-    /* Big scene input */
-    .scene-card {
-      background:var(--menu-bg);border-radius:16px;box-shadow:0 2px 14px #0003;margin-bottom:2em;padding:2em 2em 1.2em 2em;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-    }
-    .scene-card label {font-weight:800;color:var(--brand2);font-size:1.13em;margin-bottom:.5em;}
-    .scene-input {
-      min-width:340px;max-width:860px;width:90vw;
-      min-height:110px;max-height:350px;height:120px;
-      background:var(--card);color:var(--offwhite);border:2.2px solid var(--brand2);border-radius:11px;
-      font-size:1.19em;font-family:'Fira Mono',monospace;padding:1.1em 1.2em;margin-bottom:1em;
-      box-shadow:0 2px 18px #0002;resize:vertical;
-      transition:.16s;
-    }
-    .scene-input:focus {outline:none;border-color:var(--brand);}
-    .microhelp {margin-left:.7em;color:var(--accent);font-size:1.12em;cursor:pointer;user-select:none;position:relative;}
-    /* Custom menu */
-    .custom-menu {
-      background:var(--menu-bg);border-radius:14px;box-shadow:0 4px 20px #0003;padding:1.1em 0;min-width:320px;max-width:460px;margin:2em auto 2.2em auto;
-      display:block;
-    }
-    .custom-menu .menu-section {padding:.4em 2em;}
-    .custom-menu .menu-title {font-weight:900;color:var(--brand2);margin-bottom:.7em;font-size:1.09em;}
-    .custom-menu .menu-item {
-      display:flex;align-items:center;gap:.9em;
-      padding:.56em 0;font-size:1.11em;border-radius:9px;transition:.11s;
-      cursor:pointer;color:var(--offwhite);
-      border-bottom:1.1px solid var(--menu-border);
-    }
-    .custom-menu .menu-item.active, .custom-menu .menu-item:hover {background:var(--brand2);color:#23231f;}
-    .custom-menu .menu-icon {width:1.23em;height:1.23em;display:inline-block;}
-    .custom-menu .menu-right {margin-left:auto;font-size:.99em;color:var(--brand2);}
-    .custom-menu .chips {margin-left:1.3em;}
-    .custom-menu .menu-item:last-child {border-bottom:none;}
-    @media (max-width:900px){
-      .mainbox{padding:1em;}
-      .custom-menu {min-width:94vw;}
-      .scene-input {min-width:90vw;}
-    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui;overflow-x:hidden}
+    a{color:var(--aqua);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:3000;background:linear-gradient(180deg,rgba(13,18,25,.96),rgba(13,18,25,.82));backdrop-filter:blur(8px);border-bottom:1px solid #15212d}
+    .topbar .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--aqua),var(--vio));box-shadow:0 0 0 2px #1b242e}
+    .brand h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:clamp(18px,2.2vw,26px)}
+    .breadcrumbs{color:var(--dim);font-weight:600;font-size:.9em}
+    .navlinks,.socials{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .navlinks a{padding:6px 10px;border:1px solid #22303c;border-radius:8px;background:#0f151d;color:#cfefff}
+    .bmc-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid #3a5569;background:linear-gradient(135deg,#1f2b39,#141b22);color:#fff;font-weight:800}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch;margin:18px auto 10px;max-width:1200px}
+    .hero-card{background:linear-gradient(180deg,#0f141b,#0b1118);border:1px solid var(--edge);border-radius:18px;padding:20px}
+    .chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:999px;padding:7px 11px;font-size:13px;cursor:pointer}
+
+    /* Tool grid */
+    .tool{display:grid;grid-template-columns:300px 1fr;gap:18px;max-width:1200px;margin:14px auto 24px}
+    .sidebar{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:14px;position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto}
+    .group{margin:10px 0 14px}
+    .g-title{display:flex;align-items:center;gap:8px;font-weight:800;margin:0 0 6px 0}
+    .help{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid #39576b;color:#9fd;cursor:help;font-size:11px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    select,input[type="text"],textarea{width:100%;background:#0e151d;border:1px solid #243240;color:#d9f6ff;border-radius:10px;padding:10px 12px;font:inherit}
+    textarea{min-height:104px;resize:vertical}
+    .slider{appearance:none;width:100%} .slider::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--aqua)} .slider::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:#1a2631}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+    .btn{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#1a2a36,#111a22);border-color:#3a5569;color:#fff}
+    .btn.aqua{background:linear-gradient(135deg,#1c3138,#0e2a27);border-color:#1b7a74;color:#bff9f1}
+    .btn.hot{background:linear-gradient(135deg,#2a1621,#1a0e15);border-color:#7d1e45;color:#ffd8e8}
+
+    /* Main */
+    .main{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:16px}
+    .tabbar{display:flex;gap:8px;margin-bottom:10px}
+    .tab{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:9px;padding:7px 11px;font-weight:700;cursor:pointer}
+    .tab.active{background:linear-gradient(180deg,#15202a,#0f171f);border-color:#3a5569;color:#fff}
+    .beta{font-size:.72em;color:#ffd166;margin-left:6px}
+    .io{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    .io .card{background:#0e151d;border:1px solid #22303c;border-radius:12px;min-height:160px;padding:10px}
+    .io pre{white-space:pre-wrap;word-break:break-word;font-family:"Fira Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New";font-size:12.5px;line-height:1.4;margin:0}
+    .tokens{display:flex;flex-wrap:wrap;gap:8px;max-height:180px;overflow:auto;border:1px dashed #213041;border-radius:12px;padding:8px;background:#0b1219}
+    .token{padding:6px 9px;border-radius:999px;background:#0f1720;border:1px solid #203040;font-size:12px;cursor:pointer}
+    .token:hover{border-color:#3b6177}
+
+    /* Accordion (Help/FAQ) */
+    .accordion{border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--card)}
+    .acc-item+.acc-item{border-top:1px solid var(--edge)}
+    .acc-head{width:100%;text-align:left;padding:12px 14px;background:#101821;color:#dff;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .acc-head span{opacity:.8}
+    .acc-body{display:none;padding:12px 14px;background:#0f151d;color:#cfe}
+
+    /* J1NX + Footer */
+    .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
+    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent !important;margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none !important}
+    .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66, 0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative;z-index:1}
+    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .20em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1}
+    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
+    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
+    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:#aef7ee;font-weight:600;cursor:pointer}
+    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
+    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
+    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
+
+    footer{margin:24px auto 8px;padding:0;text-align:center;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center;background:none;position:relative;z-index:100}
+    .footer-art{margin:0 0 12px 0;font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text}
+    .footer-camo{font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px;text-align:center;opacity:.93;white-space:pre}
+    .footer-bar{color:#88fffd;margin:12px auto 8px;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+    .footer-bar a{color:var(--aqua)} .footer-bar a:hover{text-decoration:underline;color:#fff}
+
+    .ad-slot{display:block;min-height:100px;border:1px dashed #213041;border-radius:12px;padding:4px;margin:14px 0;background:#0b1219}
+    :focus-visible{outline:2px solid var(--aqua);outline-offset:2px;border-radius:8px}
   </style>
 </head>
 <body>
-  <div class="newsbar">
-    <span class="version">v4.5.1</span>
-    <span class="ai-news" id="ai-news-headline">Loading latest AI news...</span>
-  </div>
-  <nav class="nav">
-    <div class="nav-l">
-      <span class="logo">PromptForge</span>
-      <span class="breadcrumb">
-        <a href="main.html">Main</a>
-        <a href="picture.html" class="active">Image</a>
-        <a href="movie.html">Movie</a>
-        <a href="watermark.html">Watermark</a>
-        <a href="j1nx.html">J1nx</a>
-        <a href="aihacks.html">AI Hacks</a>
-        <a href="ansiart.html">AnsiArt</a>
-        <a href="compare.html">Compare</a>
-      </span>
-    </div>
-    <div class="socials">
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
-      <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
-    </div>
-  </nav>
-  <div class="desc">
-    <b>Build the world's best AI art prompts.</b>
-    <span style="color:var(--accent);">Every model, every tool, live AI news, and pro workflow—no paywall, ever.</span>
-  </div>
-  <div class="adsense-block">
-    <!-- AdSense loads here, styled as native -->
-    <ins class="adsbygoogle"
-      style="display:block;min-width:320px;min-height:60px;"
-      data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="5732117276"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-  <div class="mainbox">
-    <!-- Scene Input / Main Idea -->
-    <div class="scene-card">
-      <label for="scene-desc">Scene / Prompt Idea
-        <span class="microhelp" onclick="showHelp('scene')">?</span>
-      </label>
-      <textarea id="scene-desc" class="scene-input" placeholder="Describe your picture idea, subject, style, mood, color, background, camera, and action here..."></textarea>
-    </div>
-    <!-- Model Selection -->
-    <div class="custom-menu" id="model-menu">
-      <div class="menu-section">
-        <div class="menu-title">Choose Model <span class="microhelp" onclick="showHelp('model')">?</span></div>
-        <div class="menu-item active"><span class="menu-icon">🎨</span>MidJourney v6</div>
-        <div class="menu-item"><span class="menu-icon">🖌️</span>DALL·E 3</div>
-        <div class="menu-item"><span class="menu-icon">🧬</span>Stable Diffusion XL</div>
-        <div class="menu-item"><span class="menu-icon">🌈</span>OpenArt</div>
-      </div>
-      <div class="menu-section">
-        <div class="menu-title">Advanced Models</div>
-        <div class="menu-item"><span class="menu-icon">🤖</span>Playground V2</div>
-        <div class="menu-item"><span class="menu-icon">🧊</span>Kandinsky</div>
-        <div class="menu-item"><span class="menu-icon">💎</span>Juggernaut XL</div>
-        <div class="menu-item"><span class="menu-icon">👁️</span>CyberRealistic</div>
-      </div>
-    </div>
-    <!-- Art Style Selection (MULTISELECT with chips) -->
-    <div class="custom-menu" id="style-menu">
-      <div class="menu-section">
-        <div class="menu-title">Art Styles <span class="microhelp" onclick="showHelp('style')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">🖼️</span>Photorealistic</div>
-        <div class="menu-item"><span class="menu-icon">💡</span>Hyperrealism</div>
-        <div class="menu-item"><span class="menu-icon">🎬</span>Film Still</div>
-        <div class="menu-item"><span class="menu-icon">📺</span>Anime</div>
-        <div class="menu-item"><span class="menu-icon">🎨</span>Digital Painting</div>
-        <div class="menu-item"><span class="menu-icon">🦸</span>Comic Book</div>
-        <div class="menu-item"><span class="menu-icon">🌊</span>Watercolor</div>
-        <div class="menu-item"><span class="menu-icon">👾</span>Pixel Art</div>
-        <div class="chips" id="style-chips"></div>
-      </div>
-    </div>
-    <!-- BLOCK 2 GOES BELOW -->
-    <!-- Lighting Selection -->
-    <div class="custom-menu" id="lighting-menu">
-      <div class="menu-section">
-        <div class="menu-title">Lighting <span class="microhelp" onclick="showHelp('lighting')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">☀️</span>Sunlight</div>
-        <div class="menu-item"><span class="menu-icon">🌆</span>Dusk</div>
-        <div class="menu-item"><span class="menu-icon">⛅</span>Overcast</div>
-        <div class="menu-item"><span class="menu-icon">🌇</span>Golden Hour</div>
-        <div class="menu-item"><span class="menu-icon">🌫️</span>Foggy</div>
-        <div class="menu-item"><span class="menu-icon">🌧️</span>Rainy</div>
-        <div class="menu-item"><span class="menu-icon">🌙</span>Night</div>
-        <div class="menu-item"><span class="menu-icon">💡</span>Studio</div>
-        <div class="menu-item"><span class="menu-icon">🔦</span>Spotlight</div>
-        <div class="menu-item"><span class="menu-icon">🕯️</span>Candlelight</div>
-        <div class="chips" id="lighting-chips"></div>
-      </div>
-    </div>
-
-    <!-- Camera Angle Selection -->
-    <div class="custom-menu" id="camera-menu">
-      <div class="menu-section">
-        <div class="menu-title">Camera Angle <span class="microhelp" onclick="showHelp('camera')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">👁️</span>Eye Level</div>
-        <div class="menu-item"><span class="menu-icon">⬆️</span>High Angle</div>
-        <div class="menu-item"><span class="menu-icon">⬇️</span>Low Angle</div>
-        <div class="menu-item"><span class="menu-icon">🎥</span>Overhead</div>
-        <div class="menu-item"><span class="menu-icon">🔍</span>Macro</div>
-        <div class="menu-item"><span class="menu-icon">🤳</span>POV/First Person</div>
-        <div class="menu-item"><span class="menu-icon">🔁</span>360°</div>
-        <div class="menu-item"><span class="menu-icon">🔄</span>Mirror/Reflected</div>
-        <div class="chips" id="camera-chips"></div>
-      </div>
-    </div>
-
-    <!-- Aspect Ratio Selection -->
-    <div class="custom-menu" id="aspect-menu">
-      <div class="menu-section">
-        <div class="menu-title">Aspect Ratio <span class="microhelp" onclick="showHelp('aspect')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">⬛</span>1:1 (Square)</div>
-        <div class="menu-item"><span class="menu-icon">⬜</span>16:9 (HD)</div>
-        <div class="menu-item"><span class="menu-icon">🔲</span>4:5 (Portrait)</div>
-        <div class="menu-item"><span class="menu-icon">🖼️</span>3:2</div>
-        <div class="menu-item"><span class="menu-icon">🔳</span>9:16 (Vertical)</div>
-        <div class="menu-item"><span class="menu-icon">🖥️</span>21:9 (UltraWide)</div>
-        <div class="menu-item"><span class="menu-icon">🔢</span>Custom</div>
-        <div class="chips" id="aspect-chips"></div>
-      </div>
-    </div>
-
-    <!-- Negative Prompts (Multi, Grouped, Chips) -->
-    <div class="custom-menu" id="negatives-menu">
-      <div class="menu-section">
-        <div class="menu-title">Negative Prompts <span class="microhelp" onclick="showHelp('negatives')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">🧹</span>Low Quality</div>
-        <div class="menu-item"><span class="menu-icon">💥</span>Artifacts/Errors</div>
-        <div class="menu-item"><span class="menu-icon">🚫</span>Watermark/Text</div>
-        <div class="menu-item"><span class="menu-icon">👹</span>Bad Anatomy</div>
-        <div class="menu-item"><span class="menu-icon">😵‍💫</span>Distorted/Mutated</div>
-        <div class="menu-item"><span class="menu-icon">😴</span>Boring Background</div>
-        <div class="menu-item"><span class="menu-icon">⚠️</span>Censored/Blocked</div>
-        <div class="menu-item"><span class="menu-icon">❌</span>Other/Custom</div>
-        <textarea id="neg-prompts" class="scene-input" style="margin-top:.9em;" rows="2" placeholder="Add your own negatives, separated by commas..."></textarea>
-        <div class="chips" id="neg-chips"></div>
-      </div>
-    </div>
-
-    <!-- Advanced Controls / Sliders / Params (side-by-side if wide screen) -->
-    <div style="display:flex;flex-wrap:wrap;gap:2.2em 3.5em;justify-content:center;">
-      <div class="custom-menu" id="controls-menu" style="min-width:320px;max-width:400px;">
-        <div class="menu-section">
-          <div class="menu-title">Pro Controls <span class="microhelp" onclick="showHelp('controls')">?</span></div>
-          <div class="menu-item" style="gap:2.1em;">
-            Creativity
-            <input type="range" min="0" max="100" value="18" id="creativity" style="flex:1;">
-            <span id="creativity-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">18</span>
-          </div>
-          <div class="menu-item" style="gap:2.1em;">
-            Steps
-            <input type="range" min="10" max="150" value="40" id="steps" style="flex:1;">
-            <span id="steps-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">40</span>
-          </div>
-          <div class="menu-item" style="gap:2.1em;">
-            CFG Scale
-            <input type="range" min="1" max="30" value="7" id="cfg" style="flex:1;">
-            <span id="cfg-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">7</span>
-          </div>
-          <div class="menu-item" style="gap:2.1em;">
-            Quality
-            <input type="range" min="1" max="20" value="12" id="quality" style="flex:1;">
-            <span id="quality-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">12</span>
-          </div>
-          <div class="menu-item" style="gap:2.1em;">
-            Seed
-            <input type="number" min="-1" max="4294967295" value="-1" id="seed" style="max-width:90px;border-radius:7px;padding:.32em;">
-          </div>
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar" role="navigation" aria-label="Primary">
+    <div class="inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>PromptForge <span class="breadcrumbs">/ Builder</span></h1>
+          <div class="breadcrumbs">Home ▸ Builder ▸ Image/Video</div>
         </div>
       </div>
-      <div class="custom-menu" id="outputs-menu" style="min-width:320px;max-width:400px;">
-        <div class="menu-section">
-          <div class="menu-title">Output & Settings <span class="microhelp" onclick="showHelp('outputs')">?</span></div>
-          <div class="menu-item" style="gap:2.1em;">
-            Outputs
-            <input type="range" min="1" max="8" value="1" id="output-cnt" style="flex:1;">
-            <span id="output-cnt-val" style="margin-left:.7em;font-weight:700;color:var(--brand2);">1</span>
+      <div class="navlinks">
+        <a href="/" title="Home">Home</a>
+        <a href="/builder" title="Prompt Builder">Builder</a>
+        <a href="/ansi" title="ANSIart Playground">ANSIart</a>
+        <a href="/monster" title="PromptForge Monster">Monster</a>
+        <a href="#panel-help" class="js-scroll-help" title="Help & FAQ">Help</a>
+      </div>
+      <div class="socials">
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" aria-label="Bluesky">Bsky</a>
+        <a href="https://x.com/GoreandGiggles" aria-label="Twitter/X">X</a>
+        <a class="bmc-btn" href="https://promptforge.online/support" aria-label="Buy Me a Coffee">☕ Buy Me a Coffee</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-card">
+        <h2>Build elite prompts for SDXL, Flux, Midjourney & Runway</h2>
+        <p>Toggle engines, genres, vibes and boosters. Drop tokens as chips. Export short/med/long. The text never looks default — it’s stitched, styled and contradiction-safe.</p>
+        <div class="chipbar" id="quickChips"></div>
+      </div>
+      <div class="hero-card">
+        <strong>SEO blurb:</strong>
+        <p>PromptForge Online is a professional prompt authoring studio for SFW/NSFW image and video generation. With engine profiles, negatives, lighting recipes, lens effects and token-dense packs, it crafts prompts that models actually obey — faster than Perchance-style mixers.</p>
+        <div class="chipbar">
+          <span class="chip" title="Engine-specific phrasing">engine-aware</span>
+          <span class="chip" title="Film-grade lighting patterns">cinematic lighting</span>
+          <span class="chip" title="Tasteful or explicit, your call">NSFW/SFW switch</span>
+          <span class="chip" title="Terse/Medium/Long">export presets</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== TOOL ===== -->
+  <section class="tool" id="tool">
+    <aside class="sidebar">
+      <div class="group">
+        <label class="g-title" for="engineSel">Engine <span class="help" title="Adds engine-specific tokens and auto-negatives.">?</span></label>
+        <select id="engineSel" aria-label="Engine"></select>
+      </div>
+      <div class="group row">
+        <div>
+          <label class="g-title" for="genreSel">Genre <span class="help" title="Sets sensible defaults (lighting, lens, palette)">?</span></label>
+          <select id="genreSel" aria-label="Genre"></select>
+        </div>
+        <div>
+          <label class="g-title" for="vibeSel">Vibe <span class="help" title="Softcore maps explicit slang → tasteful. Hardcore keeps explicit tokens.">?</span></label>
+          <select id="vibeSel" aria-label="Vibe">
+            <option value="softcore" selected>softcore</option>
+            <option value="hardcore">hardcore</option>
+            <option value="sfw">sfw</option>
+          </select>
+        </div>
+      </div>
+      <div class="group row">
+        <div>
+          <label class="g-title" for="styleSel">Style <span class="help" title="Sentence cadence: cinematic / poetic / tech">?</span></label>
+          <select id="styleSel" aria-label="Style">
+            <option>cinematic</option>
+            <option>poetic</option>
+            <option>tech</option>
+          </select>
+        </div>
+        <div>
+          <label class="g-title" for="partySel">Party <span class="help" title="Solo or group shorthand (mf, ff, mmf, fff)">?</span></label>
+          <select id="partySel" aria-label="Party">
+            <option value="solo">solo</option>
+            <option value="ff">ff</option>
+            <option value="mf">mf</option>
+            <option value="mmf">mmf</option>
+            <option value="fff">fff</option>
+          </select>
+        </div>
+      </div>
+      <div class="group">
+        <label class="g-title" for="boostRange">Boost Level <span class="help" title="Adds quality tokens: 0=off, 3=max">?</span></label>
+        <input type="range" id="boostRange" class="slider" min="0" max="3" step="1" value="2" />
+      </div>
+      <div class="group row">
+        <div>
+          <label class="g-title" for="lengthRange">Prompt Length <span class="help" title="Bias prompt verbosity: terse → rich">?</span></label>
+          <input type="range" id="lengthRange" class="slider" min="0" max="2" step="1" value="1" />
+        </div>
+        <div>
+          <label class="g-title" for="nsfwIntensity">NSFW Intensity <span class="help" title="Only applies if Allow Explicit + vibe ≠ SFW">?</span></label>
+          <input type="range" id="nsfwIntensity" class="slider" min="0" max="3" step="1" value="1" />
+        </div>
+      </div>
+      <div class="group">
+        <label class="g-title" for="explicitChk">Allow Explicit <span class="help" title="If off, we still build rich SFW prompts.">?</span></label>
+        <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="explicitChk" checked /> <span>Yes</span></label>
+      </div>
+
+      <!-- Futuristic Mixer -->
+      <div class="group">
+        <div class="g-title">Mixer Weights <span class="help" title="Tell the mixer what to favor">?</span></div>
+        <div class="row">
+          <label>Sets <input type="range" id="mixSet" class="slider" min="0" max="3" step="1" value="1"/></label>
+          <label>Lights <input type="range" id="mixLight" class="slider" min="0" max="3" step="1" value="2"/></label>
+        </div>
+        <div class="row">
+          <label>Lenses <input type="range" id="mixLens" class="slider" min="0" max="3" step="1" value="1"/></label>
+          <label>Wardrobe <input type="range" id="mixWard" class="slider" min="0" max="3" step="1" value="1"/></label>
+        </div>
+        <div class="row">
+          <label>Mood <input type="range" id="mixMood" class="slider" min="0" max="3" step="1" value="2"/></label>
+          <label>Lock Extras <input type="checkbox" id="mixLockExtras"/></label>
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="g-title" for="tokenSearch">Token Search <span class="help" title="Filter the token bank by text">?</span></label>
+        <input type="text" id="tokenSearch" placeholder="search tokens…"/>
+      </div>
+      <div class="group">
+        <label class="g-title" for="extrasInput">Extras <span class="help" title="Click tokens to add or type free-form.">?</span></label>
+        <textarea id="extrasInput" placeholder="e.g. light: clamshell, gel: tealorange, hair: blonde"></textarea>
+        <div class="tokens" id="tokenBank"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="buildBtn">Build</button>
+        <button class="btn" id="mixBtn" title="Add smart random chips based on Mixer Weights">Mix</button>
+        <button class="btn aqua" id="exportShort">Export Short</button>
+        <button class="btn aqua" id="exportMed">Export Med</button>
+        <button class="btn aqua" id="exportLong">Export Long</button>
+        <button class="btn hot" id="copyBtn">Copy Prompt</button>
+        <button class="btn" id="snapshotSave">Save Snapshot</button>
+        <button class="btn" id="snapshotLoad">Restore Snapshot</button>
+      </div>
+
+      <ins class="ad-slot"></ins>
+      <!-- To enable a real ad unit, replace with your slot:
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4963053724895140" data-ad-slot="YOUR_SLOT_ID" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script> -->
+    </aside>
+
+    <main class="main">
+      <div class="tabbar" role="tablist" aria-label="Builder Modes">
+        <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-image" data-tab="image">Image Builder</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-video" data-tab="video">Video Builder <span class="beta">beta</span></button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="panel-help" data-tab="help">Help</button>
+      </div>
+
+      <div id="panel-image">
+        <div class="group">
+          <label class="g-title" for="ideaInput">Your Idea <span class="help" title="Chatty text is fine — we parse intent and add tokens.">?</span></label>
+          <textarea id="ideaInput" placeholder="e.g. rooftop neon editorial portrait, windy hair, mirror, marble backdrop"></textarea>
+        </div>
+        <div class="io">
+          <div class="card">
+            <strong>Prompt</strong>
+            <pre id="promptOut"></pre>
           </div>
-          <div class="menu-item" style="gap:2.1em;">
-            Language
-            <select id="lang" style="flex:1;background:var(--card);color:var(--offwhite);border-radius:8px;">
-              <option value="en">English</option>
-              <option value="fr">French</option>
-              <option value="es">Spanish</option>
-              <option value="de">German</option>
-              <option value="ja">Japanese</option>
-              <option value="ru">Russian</option>
-              <option value="zh">Chinese</option>
-              <option value="it">Italian</option>
-              <option value="tr">Turkish</option>
+          <div class="card">
+            <div style="display:flex;align-items:center;justify-content:space-between"><strong>Negative</strong> <button class="btn" id="negEditToggle" style="padding:6px 10px;font-weight:700">edit</button></div>
+            <pre id="negativeOut"></pre>
+            <div id="negEditBox" style="display:none;margin-top:8px"><textarea id="negativeEdit" placeholder=", lowres, blurry, jpeg artifacts" style="min-height:80px"></textarea></div>
+          </div>
+        </div>
+        <div class="group" style="display:flex;gap:12px;align-items:center">
+          <div id="lengthBadge" class="breadcrumbs" aria-live="polite">Length: balanced</div>
+          <div id="countBadge" class="breadcrumbs" aria-live="polite">Tokens: 0</div>
+        </div>
+      </div>
+
+      <div id="panel-video" style="display:none">
+        <div class="row">
+          <div class="group">
+            <label class="g-title" for="shotSel">Shot Type <span class="help" title="ECU, CU, MS, LS with motion.">?</span></label>
+            <select id="shotSel">
+              <option value="shot: ecu">ECU</option>
+              <option value="shot: cu">CU</option>
+              <option value="shot: ms" selected>MS</option>
+              <option value="shot: ls">LS</option>
             </select>
           </div>
-          <div class="menu-item" style="gap:2.1em;">
-            Params
-            <input id="model-params" type="text" placeholder="e.g. --v 6 --hd --style raw" style="flex:1;background:var(--card);color:var(--offwhite);border-radius:8px;">
+          <div class="group">
+            <label class="g-title" for="moveSel">Move <span class="help" title="tracking / push / orbit">?</span></label>
+            <select id="moveSel">
+              <option>move: track</option>
+              <option>move: push</option>
+              <option>cam: orbit</option>
+            </select>
           </div>
         </div>
-      </div>
-    </div>
-    <!-- Next block: output/actions, stats, templates, J1nx, footer -->
-    <!-- OUTPUT, ACTIONS, PROMPT HISTORY/STATS -->
-    <div class="custom-menu" id="output-menu" style="max-width:900px;margin:2.8em auto 1.6em auto;">
-      <div class="menu-section" style="display:flex;flex-direction:column;align-items:stretch;">
-        <div class="menu-title" style="margin-bottom:.7em;">Prompt Output & Actions <span class="microhelp" onclick="showHelp('output')">?</span></div>
-        <div class="outputbox" id="prompt-output" contenteditable="true" spellcheck="false"
-          style="background:#181d17;border-radius:10px;border:2px solid var(--brand);min-height:80px;padding:1.05em;font-size:1.14em;word-break:break-all;margin-bottom:1.1em;"></div>
-        <div style="margin-bottom:1.2em;display:flex;flex-wrap:wrap;gap:1.1em 1.1em;align-items:center;">
-          <button type="button" class="randombtn" onclick="randomizePrompt()">🎲 Randomize</button>
-          <button type="button" class="clearbtn" onclick="clearForm()">Clear</button>
-          <button type="button" class="favbtn" onclick="favoritePrompt()">★ Favorite</button>
-          <button type="button" class="copybtn" onclick="copyPrompt()">Copy</button>
-          <button type="button" class="savebtn" onclick="savePrompt()">Save</button>
-          <button type="button" class="sharebtn" onclick="sharePrompt()">Share</button>
-          <button type="button" style="background:var(--accent);color:#23231f;font-weight:bold;padding:.72em 2.1em;border-radius:11px;font-size:1.09em;" onclick="generatePrompt()">🚀 Generate</button>
+        <div class="row">
+          <div class="group">
+            <label class="g-title" for="fpsSel">FPS</label>
+            <select id="fpsSel">
+              <option>fps: 24</option>
+              <option selected>fps: 30</option>
+              <option>fps: 60</option>
+            </select>
+          </div>
+          <div class="group">
+            <label class="g-title" for="aspectSel">Aspect</label>
+            <select id="aspectSel">
+              <option>ratio: 4:5</option>
+              <option selected>ratio: 3:2</option>
+              <option>ratio: 21:9</option>
+            </select>
+          </div>
         </div>
-        <div id="prompt-status" style="margin-bottom:.9em;color:var(--brand2);font-weight:900;"></div>
-      </div>
-      <div class="menu-section" style="display:flex;flex-wrap:wrap;gap:2.1em;">
-        <div style="flex:1;min-width:210px;max-width:370px;">
-          <div style="font-weight:700;color:var(--accent);margin-bottom:.44em;">Quick Stats</div>
-          <div id="stat-prompts">Prompts Built: <b>0</b></div>
-          <div id="stat-saved">Templates Saved: <b>0</b></div>
-          <div id="stat-fav">Favorites: <b>0</b></div>
-          <div id="stat-share">Shared: <b>0</b></div>
+        <div class="actions">
+          <button class="btn primary" id="buildVideo">Build Video Prompt</button>
         </div>
-        <div style="flex:1.3;min-width:210px;max-width:410px;">
-          <div style="font-weight:700;color:var(--brand2);margin-bottom:.44em;">Prompt History</div>
-          <div class="history" id="prompt-history" style="max-height:90px;overflow-y:auto;"></div>
-        </div>
-        <div style="flex:1.2;min-width:210px;max-width:410px;">
-          <div style="font-weight:700;color:var(--brand2);margin-bottom:.44em;">Favorites & Templates</div>
-          <div class="template-list" id="template-list" style="max-height:90px;overflow-y:auto;"></div>
+        <div class="card group">
+          <h3>Video Tips</h3>
+          <p>These tokens describe framing and motion — they don’t storyboard scenes. With <em>js/movie.js</em> loaded, we’ll map shot types to extra consistency tokens (e.g., motion smoothing, cut-safe phrasing) when available.</p>
         </div>
       </div>
-    </div>
 
-    <!-- J1NX: Modern Dock, Mood, Minimize, No NSFW in Code, Real Cutout -->
-    <div id="j1nx-ui" style="position:fixed;bottom:32px;right:36px;z-index:99;max-width:370px;transition:opacity .18s,transform .22s;">
-      <div class="j1nx-shell" style="position:relative;display:flex;align-items:flex-end;">
-        <img class="j1nx-cutout" src="/assets/j1nx-cutout.png" alt="J1nx" style="width:126px;position:relative;z-index:3;">
-        <div class="j1nx-bubble" id="j1nx-bubble"
-          style="background:#201733;border:2.5px solid var(--brand2);border-radius:18px 18px 24px 18px/18px 18px 42px 18px;box-shadow:0 4px 22px #be9cff45;padding:1.15em 1.1em .8em 1.19em;min-height:108px;min-width:220px;max-width:265px;position:relative;z-index:4;margin-bottom:14px;color:var(--offwhite);font-size:1.09em;">
-          <span class="j1nx-name" style="font-weight:900;color:var(--brand2);font-size:1.07em;">J1nx</span>
-          <span class="j1nx-mood" id="j1nx-mood">😎</span>
-          <span class="j1nx-min" title="Minimize J1nx" onclick="toggleJ1nxMin()" style="position:absolute;top:6px;right:10px;background:#4442;padding:.13em .55em;border-radius:8px;color:var(--brand2);font-weight:900;cursor:pointer;">–</span>
-          <div id="j1nx-speech" style="margin:.65em 0 .6em 0;">Hi! I'm J1nx. Ask for prompt tips or just say hi.</div>
-          <input id="j1nx-input" type="text" placeholder="Ask J1nx anything..." style="width:81%;margin-right:.5em;padding:.54em .8em;border-radius:7px;border:1.7px solid var(--brand2);background:#211e32;color:var(--offwhite);font-size:1.07em;">
-          <div style="margin-top:.5em;">
-            <button class="j1nx-btn" onclick="sendJ1nx()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;margin-right:.7em;">Send</button>
-            <button class="j1nx-btn" onclick="j1nxRandomTip()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">Random Tip</button>
-            <button class="j1nx-btn" title="Secret Mode" id="j1nx-easter" style="background:#b5ffb7;color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">★</button>
+      <div id="panel-help" style="display:none">
+        <div class="accordion" id="faq">
+          <div class="acc-item">
+            <button class="acc-head"><strong>Quick Start</strong><span>▼</span></button>
+            <div class="acc-body"><p>Type a chatty idea and click <b>Build</b>. Engines + Genres set smart defaults. Add chips from the token bank. Use <em>Boost</em> to intensify quality tokens. Export presets trim to short/med/long with clean punctuation.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head"><strong>Softcore vs. Hardcore vs. SFW</strong><span>▼</span></button>
+            <div class="acc-body"><p><b>SFW</b> adds strong safety negatives and cleans phrasing. <b>Softcore</b> implies details with tasteful mapping. <b>Hardcore</b> keeps explicit tokens when <b>Allow Explicit</b> is on.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head"><strong>Why PromptForge beats stock builders</strong><span>▼</span></button>
+            <div class="acc-body"><p>We don’t just concatenate words. Our packs resolve contradictions, dedupe overlaps, and stitch human-sounding sentences while staying token-dense so models obey. Engine profiles apply negatives that matter (e.g., deformations, banding, text artifacts).</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head"><strong>Saving & Snapshots</strong><span>▼</span></button>
+            <div class="acc-body"><p>Use <b>Save Snapshot</b> to store your current setup in localStorage and <b>Restore Snapshot</b> later — entirely client-side, no login.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head"><strong>Video prompts</strong><span>▼</span></button>
+            <div class="acc-body"><p>The Video Builder is a framing/motion composer. With <code>js/movie.js</code> loaded, we add stability tokens. It’s not a storyboard system (yet).</p></div>
           </div>
         </div>
+        <div class="card group">
+          <h3>About PromptForge</h3>
+          <p>Built in British Columbia by independent creators, PromptForge is a lean, fast authoring studio for image/video prompts. We obsess over small things (skin microtexture, photometric consistency, film-grade color) so your outputs feel high-end, not generic.</p>
+          <p>Everything runs client-side — zero servers, zero sign-in. Copy, export, or save snapshots locally. Pro-grade results, no lock-in.</p>
+        </div>
       </div>
+    </main>
+  </section>
+
+  <!-- ===== MODAL ===== -->
+  <div class="modal" id="modal" style="position:fixed;inset:0;background:rgba(2,6,10,.72);display:none;align-items:center;justify-content:center;z-index:5000">
+    <div class="modal-card" style="width:min(920px,92vw);background:linear-gradient(180deg,#0f151c,#0b1016);border:1px solid #263242;border-radius:16px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.45)">
+      <div class="modal-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px">
+        <strong>Prompt copied</strong>
+        <button class="close btn" id="closeModal" style="padding:6px 10px">Close</button>
+      </div>
+      <pre id="modalText" style="white-space:pre-wrap;word-break:break-word;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono','Courier New';font-size:12.5px;line-height:1.4;margin:0"></pre>
     </div>
-<!-- Block 4: Footer, camo, nav/social, microhelp JS, and all builder logic comes next -->
-    <!-- FOOTER: Centered, Nav Left, Socials Right, Camo Always Centered -->
-    <footer style="background:var(--footer-bg);padding:2.5em 0 1.6em 0;margin-top:4em;position:relative;">
-      <div class="footer-center">
-        <pre class="footer-art" style="text-align:center;font-family:'Fira Mono',monospace;font-size:1.02em;color:var(--brand2);">
+  </div>
+
+  <!-- ===== J1NX FLOAT ===== -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG? (I can do both.)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…</div>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\\ uU |  _"\\ u  \\/"_ \\/U|\' \\/ \'|uU|  _"\\ u|_ " _|  |" ___|   \\/"_ \\/U |  _"\\ uU /"___|u\\| ___"|/   
-\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    
-        </pre>
-      </div>
-      <pre class="footer-camo" id="footerCamo" style="text-align:center;font-size:1.5em;"></pre>
-      <div class="footer-row" style="max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:1.1em;border-top:2px solid var(--brand2);font-size:1.04em;">
-        <div class="footer-nav" style="display:flex;gap:1.15em;">
-          <a href="main.html">Main</a>
-          <a href="picture.html" class="active">Image</a>
-          <a href="movie.html">Movie</a>
-          <a href="watermark.html">Watermark</a>
-          <a href="j1nx.html">J1nx</a>
-          <a href="aihacks.html">AI Hacks</a>
-          <a href="ansiart.html">AnsiArt</a>
-          <a href="compare.html">Compare</a>
-        </div>
-        <div class="footer-socials" style="display:flex;gap:1em;">
-          <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
-          <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
-          <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
-        </div>
-      </div>
-    </footer>
-    <script>
-      // ========== GOOGLE AI NEWS BAR AUTO-UPDATE ==========
-      async function fetchGoogleAINews() {
-        try {
-          const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://ai.googleblog.com/feeds/posts/default');
-          const json = await res.json();
-          const items = json.items || [];
-          let i = 0;
-          function updateHeadline() {
-            if (items.length === 0) return;
-            const item = items[i % items.length];
-            document.getElementById('ai-news-headline').innerHTML = `<a href="${item.link}" target="_blank">${item.title}</a>`;
-            i++;
-          }
-          updateHeadline();
-          setInterval(updateHeadline, 9000);
-        } catch(e) {
-          document.getElementById('ai-news-headline').textContent = "Latest: Google AI Blog – auto-update failed (offline)";
-        }
-      }
-      fetchGoogleAINews();
-      // ========== FOOTER CAMO ==========
-      const camoColors = ["#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"];
-      function randomCamoChar(){ const chars = "░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
-      function renderCamo(tick=0){ let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out+=`<span style="color:${color}">${randomCamoChar()}</span>`;} out+="<br>";} document.getElementById("footerCamo").innerHTML=out; }
-      let camoTick = 0; setInterval(()=>{ renderCamo(camoTick++); },950); renderCamo();
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+    </pre>
+    <pre class="footer-camo" id="footerCamo"></pre>
+    <div class="footer-bar">
+      Made underground in BC, Canada • #PromptForge •
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> •
+      <a href="https://x.com/GoreandGiggles">Twitter/X</a> •
+      <a href="terms.html">Legal</a>
+    </div>
+  </footer>
 
-      // ========== MENU/CHIPS/MULTISELECT LOGIC ==========
-      function renderChips(id, arr) {
-        const box = document.getElementById(id);
-        box.innerHTML = arr.map((txt,idx)=>`<span class="chip">${txt}<span class="x" onclick="removeChip('${id}',${idx})">&times;</span></span>`).join('');
+  <!-- ===== SCRIPTS ===== -->
+  <!-- PF core BEFORE glue if you want expandStyleKey/sanitize/score -->
+  <script src="picture (5).js" defer></script>
+  <!-- Video brain -->
+  <script src="js/movie.js" defer></script>
+  <!-- J1NX brain -->
+  <script src="assets/j1nx_brain.js" defer></script>
+
+  <script>
+    // Smooth scroll to Help
+    document.addEventListener('click', (e)=>{
+      const a=e.target.closest('.js-scroll-help');
+      if(a){ e.preventDefault(); document.querySelector('[data-tab="help"]').click(); window.scrollTo({top:document.querySelector('#panel-help').getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth'}); }
+    });
+
+    // ===== UI SEEDS =====
+    const PF_UI = {
+      engines: ['sdxl','flux','midjourney','runway','kandinsky','leonardo','playground'],
+      genres : ['beauty','editorial','boudoir','fitness','swim','street','lifestyle','macro','product'],
+      quick : {
+        sets:['set: rooftop','set: studio-seamless','set: marble-floor','set: rain-street','set: neon-alley'],
+        lights:['light: clamshell','light: rim','gel: tealorange','gel: magenta-cyan','light: backlit fog'],
+        lenses:['lens: portrait 85mm','lens: wide 28mm','lens: macro 100mm','aperture: f/1.8','bokeh: creamy'],
+        wardrobe:['wardrobe: silk robe','wardrobe: lingerie black','wardrobe: denim jacket','jewelry: gold hoops'],
+        mood:['mood: tender','mood: sultry','mood: playful','mood: noir','mood: cyberpunk']
       }
-      function removeChip(id, idx) {
-        let arr = getArr(id);
-        arr.splice(idx,1);
-        setArr(id, arr);
-        renderChips(id, arr);
+    };
+
+    // Engine profiles
+    const ENGINE_PROFILES = {
+      sdxl: { pos:['photoreal','subsurface scattering','skin texture detail','sharp focus'], neg:['lowres','blurry','jpeg artifacts','overexposed','underexposed','extra fingers','mutated'] },
+      flux: { pos:['high dynamic range','filmic color grade','subtle grain'], neg:['low detail','flat lighting','banding'] },
+      midjourney: { pos:['--style raw','--v 6'], neg:['deformed','blurry','text artifacts'] },
+      runway: { pos:['video-ready framing','clean motion vectors'], neg:['strobing','rolling shutter'] },
+      kandinsky: { pos:['bold color harmony'], neg:['washed out'] },
+      leonardo: { pos:['hyperreal detail'], neg:['over-saturated'] },
+      playground: { pos:['balanced tones'], neg:['posterization'] }
+    };
+
+    const GENRE_DEFAULTS = {
+      beauty:  {extras:['makeup: soft glam','close-up','skin: luminous','light: butterfly']},
+      editorial:{extras:['wardrobe: designer vibe','light: rim','pose: strong stance']},
+      boudoir: {extras:['bedroom set','fabric: satin','light: high key','mood: intimate']},
+      fitness: {extras:['gym set','sweat sheen','backlight rim','pose: athletic']},
+      swim:    {extras:['beach set','wet look hair','golden hour','skin: sun-kissed']},
+      street:  {extras:['urban night rain','neon signage','chromatic aberration','mood: gritty']},
+      lifestyle:{extras:['natural window light','candid vibe','rule of thirds']},
+      macro:   {extras:['macro close-up','shallow depth of field','soft bokeh']},
+      product: {extras:['pbr','studio seamless','softbox','grid control','hdr']}
+    };
+
+    // Populate selects + chips + bank
+    const engineSel = document.getElementById('engineSel');
+    const genreSel  = document.getElementById('genreSel');
+    PF_UI.engines.forEach(e=>{ const o=document.createElement('option'); o.textContent=e; engineSel.appendChild(o); });
+    PF_UI.genres.forEach(g=>{ const o=document.createElement('option'); o.textContent=g; genreSel.appendChild(o); });
+
+    const quickChips = document.getElementById('quickChips');
+    ['sets','lights','lenses','wardrobe','mood'].forEach(k=>{
+      (PF_UI.quick[k]||[]).forEach(t=>{ const s=document.createElement('span'); s.className='chip'; s.textContent=t; s.onclick=()=>addExtra(t); quickChips.appendChild(s); });
+    });
+
+    const bank = document.getElementById('tokenBank');
+    const BANK_PRESETS = [
+      'cinematic photo','high key','low key','rim light','softbox','beauty dish','color gel','volumetric godrays',
+      'retro 80s','neo-noir','cyberpunk','vaporwave','toon shader','isometric','pixel art',
+      'subsurface scattering','macro','portrait lens','wide angle','telephoto','rule of thirds','leading lines'
+    ];
+    function renderBank(filter=''){ bank.innerHTML=''; BANK_PRESETS.filter(tok=>tok.toLowerCase().includes(filter.toLowerCase())).forEach(tok=>{ const el=document.createElement('span'); el.className='token'; el.textContent=tok; el.onclick=()=>addExtra(tok); bank.appendChild(el); }); }
+    document.getElementById('tokenSearch').addEventListener('input', e=>renderBank(e.target.value||'')); renderBank();
+
+    function addExtra(t){ const ta=document.getElementById('extrasInput'); const sep = ta.value.trim()? ', ' : ''; ta.value = ta.value + sep + t; }
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(b=>{
+      b.onclick=()=>{
+        document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('active'); x.setAttribute('aria-selected','false');});
+        b.classList.add('active'); b.setAttribute('aria-selected','true');
+        document.getElementById('panel-image').style.display = (b.dataset.tab==='image')?'block':'none';
+        document.getElementById('panel-video').style.display = (b.dataset.tab==='video')?'block':'none';
+        document.getElementById('panel-help').style.display  = (b.dataset.tab==='help')?'block':'none';
+      };
+    });
+
+    // Optional style-key expansion (PF_CORE)
+    function expandStyleKeys(str){
+      if (!window.PF_CORE || !window.PF_CORE.expandStyleKey) return str;
+      return String(str).replace(/style:([A-Za-z0-9_-]+)/g,(m,key)=>{
+        const parts = window.PF_CORE.expandStyleKey(key)||[];
+        return parts.length? parts.join(', '): key;
+      });
+    }
+
+    // Compose prompt
+    function composePrompt(ctx, extras){
+      const engine = (ENGINE_PROFILES[ctx.engine]||{pos:[],neg:[]});
+      const genre  = (GENRE_DEFAULTS[ctx.genre]?.extras)||[];
+      const allowExplicit = !!ctx.allowExplicit && ctx.vibe !== 'sfw';
+      const ideaRaw = document.getElementById('ideaInput').value || '';
+
+      let merged = [ideaRaw, ...genre, ...extras, ...engine.pos].filter(Boolean).join(', ');
+      merged = expandStyleKeys(merged);
+
+      let cleaned = window.PF_CORE && window.PF_CORE.sanitize
+        ? window.PF_CORE.sanitize(merged, { allowExplicit: allowExplicit, direction: allowExplicit? 'explicit':'clean' })
+        : merged;
+
+      // Length bias
+      const lengthBias = Number(document.getElementById('lengthRange').value||1);
+      if (lengthBias===0) cleaned = cleaned.split(', ').slice(0, 14).join(', ');
+      if (lengthBias===2) cleaned += ', narrative: atmospheric detail';
+
+      // Style cadence
+      if (ctx.style === 'poetic') cleaned = cleaned.replace(/, /g, '; ').replace(/\b(and|with)\b/gi,'—');
+      if (ctx.style === 'tech')   cleaned += ', metadata: ISO low, sharp optics, controlled lighting';
+
+      // Boosters
+      const boost = Number(document.getElementById('boostRange').value||0);
+      if (boost>0) cleaned += ', quality: ultra detail, microtexture';
+      if (boost>1) cleaned += ', photometric consistency, realistic skin';
+      if (boost>2) cleaned += ', cinematic color grade, wide dynamic range';
+
+      // NSFW intensity hint
+      const nsfwInt = Number(document.getElementById('nsfwIntensity').value||0);
+      if (allowExplicit && ctx.vibe!=='sfw' && nsfwInt>0) {
+        const tiers = ['suggestive details','sensual tone','explicit descriptors'];
+        cleaned += ', nsfw-tone: ' + tiers[Math.min(nsfwInt, tiers.length-1)];
       }
-      function getArr(id) {
-        if(id==="style-chips") return window._styles || [];
-        if(id==="lighting-chips") return window._lighting || [];
-        if(id==="camera-chips") return window._camera || [];
-        if(id==="aspect-chips") return window._aspect || [];
-        if(id==="neg-chips") return window._negs || [];
-        return [];
+
+      // Party hint
+      if (ctx.party && ctx.party!=='solo') cleaned += `, party: ${ctx.party}`;
+
+      // Negatives
+      let negatives = (engine.neg || []).slice();
+      if (ctx.vibe==='softcore') negatives.push('explicit nudity','graphic detail');
+      if (ctx.vibe==='sfw') negatives.push('nudity','sexual content');
+
+      const negAppend = (document.getElementById('negativeEdit').value||'').trim();
+      if (negAppend) negatives.push(negAppend);
+
+      try { if (window.PF_CORE && window.PF_CORE.score) console.debug('PF score', window.PF_CORE.score(cleaned)); } catch(_){}
+
+      return { prompt: cleaned.trim(), negative: negatives.join(', '), extras: extras };
+    }
+
+    function getCtx(){
+      return {
+        engine: document.getElementById('engineSel').value || 'sdxl',
+        genre:  document.getElementById('genreSel').value || 'beauty',
+        vibe:   document.getElementById('vibeSel').value || 'softcore',
+        party:  document.getElementById('partySel').value || 'solo',
+        style:  document.getElementById('styleSel').value || 'cinematic',
+        allowExplicit: document.getElementById('explicitChk').checked
+      };
+    }
+
+    function parseExtras(){
+      const idea = document.getElementById('ideaInput').value;
+      const intent = [];
+      if (/portrait|beauty|close\\s*up/i.test(idea)) intent.push('portrait lens');
+      if (/neon|night|cyber/i.test(idea)) intent.push('neo-noir','chromatic aberration');
+      return [...intent, ...document.getElementById('extrasInput').value.split(',').map(x=>x.trim()).filter(Boolean)];
+    }
+
+    function updateBadges(txt){
+      const tokens = txt.split(/[,;—]/).map(s=>s.trim()).filter(Boolean);
+      document.getElementById('countBadge').textContent = 'Tokens: ' + tokens.length;
+      const len = Number(document.getElementById('lengthRange').value||1);
+      document.getElementById('lengthBadge').textContent = 'Length: ' + (len===0?'terse':len===1?'balanced':'rich');
+    }
+
+    function buildImage(){
+      const out = composePrompt(getCtx(), parseExtras());
+      document.getElementById('promptOut').textContent = out.prompt || '';
+      document.getElementById('negativeOut').textContent = out.negative || '';
+      updateBadges(out.prompt||'');
+      return out;
+    }
+    document.getElementById('buildBtn').onclick = buildImage;
+
+    // Negatives editor
+    document.getElementById('negEditToggle').onclick = ()=>{
+      const box=document.getElementById('negEditBox');
+      box.style.display = (box.style.display==='none' || !box.style.display)? 'block':'none';
+    };
+
+    // Export + Modal
+    function openModal(text){
+      const m=document.getElementById('modal'); document.getElementById('modalText').textContent = text || '';
+      m.style.display='flex'; navigator.clipboard?.writeText(text||'').catch(()=>{});
+    }
+    document.getElementById('closeModal').onclick = ()=>{document.getElementById('modal').style.display='none'};
+
+    function exportBy(which){
+      const base = composePrompt(getCtx(), parseExtras());
+      let txt = base.prompt;
+      if (which==='short')  txt = txt.split(', ').slice(0,12).join(', ');
+      if (which==='medium') txt = txt.split(', ').slice(0,22).join(', ');
+      document.getElementById('promptOut').textContent = txt;
+      document.getElementById('negativeOut').textContent = base.negative;
+      updateBadges(txt); openModal(txt);
+    }
+    document.getElementById('exportShort').onclick = ()=>exportBy('short');
+    document.getElementById('exportMed').onclick   = ()=>exportBy('medium');
+    document.getElementById('exportLong').onclick  = ()=>exportBy('long');
+
+    document.getElementById('copyBtn').onclick = ()=>{ const text=document.getElementById('promptOut').textContent.trim(); if(text) openModal(text); };
+
+    // Snapshots
+    const SNAP_KEY='pf_builder_v1';
+    document.getElementById('snapshotSave').onclick = ()=>{
+      const data={
+        ctx:getCtx(),
+        idea: document.getElementById('ideaInput').value,
+        extras: document.getElementById('extrasInput').value,
+        neg: document.getElementById('negativeEdit').value,
+        length: document.getElementById('lengthRange').value,
+        nsfw: document.getElementById('nsfwIntensity').value
+      };
+      localStorage.setItem(SNAP_KEY, JSON.stringify(data));
+    };
+    document.getElementById('snapshotLoad').onclick = ()=>{
+      try{
+        const raw=localStorage.getItem(SNAP_KEY); if(!raw) return;
+        const d=JSON.parse(raw);
+        engineSel.value=d.ctx.engine; genreSel.value=d.ctx.genre;
+        document.getElementById('vibeSel').value=d.ctx.vibe;
+        document.getElementById('partySel').value=d.ctx.party;
+        document.getElementById('styleSel').value=d.ctx.style;
+        document.getElementById('explicitChk').checked=!!d.ctx.allowExplicit;
+        document.getElementById('ideaInput').value=d.idea||'';
+        document.getElementById('extrasInput').value=d.extras||'';
+        document.getElementById('negativeEdit').value=d.neg||'';
+        document.getElementById('lengthRange').value=d.length||'1';
+        document.getElementById('nsfwIntensity').value=d.nsfw||'1';
+        buildImage();
+      }catch(_){}
+    };
+
+    // Mixer
+    function randPick(arr,n){ const a=[...arr]; const out=[]; while(a.length&&out.length<n){ out.push(a.splice(Math.floor(Math.random()*a.length),1)[0]); } return out; }
+    function mixTokens(){
+      const w = (id)=>Number(document.getElementById(id).value||0);
+      const counts = {
+        sets: Math.round(w('mixSet')),
+        lights: Math.round(w('mixLight')),
+        lenses: Math.round(w('mixLens')),
+        wardrobe: Math.round(w('mixWard')),
+        mood: Math.round(w('mixMood'))
+      };
+      const chosen = [];
+      Object.keys(counts).forEach(k=>{ if(counts[k]>0) chosen.push(...randPick(PF_UI.quick[k]||[], counts[k])); });
+      if (!document.getElementById('mixLockExtras').checked) {
+        const ta=document.getElementById('extrasInput'); const sep = ta.value.trim()? ', ' : ''; ta.value = ta.value + sep + chosen.join(', ');
+      } else {
+        const idea=document.getElementById('ideaInput'); const sep = idea.value.trim()? ', ' : ''; idea.value = idea.value + sep + chosen.join(', ');
       }
-      function setArr(id, arr) {
-        if(id==="style-chips") window._styles = arr;
-        if(id==="lighting-chips") window._lighting = arr;
-        if(id==="camera-chips") window._camera = arr;
-        if(id==="aspect-chips") window._aspect = arr;
-        if(id==="neg-chips") window._negs = arr;
+      const btn=document.getElementById('mixBtn'); const old=btn.textContent; btn.textContent='Mixed!'; setTimeout(()=>btn.textContent=old,900);
+    }
+    document.getElementById('mixBtn').onclick = mixTokens;
+
+    // Build Video (hooks MovieCORE if present)
+    document.getElementById('buildVideo').onclick = ()=>{
+      const base = composePrompt(getCtx(), parseExtras());
+      const ex = [document.getElementById('shotSel').value, document.getElementById('moveSel').value, document.getElementById('fpsSel').value, document.getElementById('aspectSel').value];
+      let merged = base.prompt + ', ' + ex.join(', ');
+      try{
+        if (window.MovieCORE && typeof window.MovieCORE.enhance === 'function') {
+          merged = window.MovieCORE.enhance(merged, { shot: ex[0], move: ex[1], fps: ex[2], ratio: ex[3] });
+        } else if (window.MovieCORE && typeof window.MovieCORE.suggest === 'function') {
+          merged += ', ' + (window.MovieCORE.suggest(ex) || '');
+        }
+      }catch(_){}
+      document.getElementById('promptOut').textContent = merged;
+      document.getElementById('negativeOut').textContent = base.negative;
+      updateBadges(merged); openModal(merged);
+    };
+
+    // Footer camo
+    (function(){
+      const camoEl = document.getElementById("footerCamo");
+      if (camoEl) {
+        const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
+        const chars = "░▒▓▚▞▐▉█▛";
+        function camoTick(t){
+          let out = "";
+          for(let i=0;i<62;i++) out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
+          camoEl.innerHTML = out;
+        }
+        let t=0; camoTick(0); setInterval(()=>camoTick(++t), 1100);
       }
-      window._styles=[];window._lighting=[];window._camera=[];window._aspect=[];window._negs=[];
-      // For demo: click menu items to add chips (replace with real logic later)
-      document.querySelectorAll('.custom-menu').forEach(menu=>{
-        menu.querySelectorAll('.menu-item').forEach(item=>{
-          item.onclick = function() {
-            const chipsId = menu.querySelector('.chips')?.id;
-            if(!chipsId) return;
-            let arr = getArr(chipsId);
-            const txt = item.textContent.trim();
-            if(!arr.includes(txt)) arr.push(txt);
-            setArr(chipsId, arr);
-            renderChips(chipsId, arr);
-          };
+    })();
+
+    // J1NX UI + brain
+    (function(){
+      const j1nxFloat = document.getElementById('j1nxFloatTrue');
+      const cutout = document.getElementById('j1nxCutoutTrue');
+      const bubble = document.getElementById('j1nxBubbleTrueMain');
+      function isMobile() { return window.innerWidth < 700; }
+      function shrinkJ1nx() { if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display = "none"; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display = "flex"; } }
+      cutout.onclick = function(){ if(isMobile()){ const open=j1nxFloat.classList.toggle('j1nx-open'); bubble.style.display = open? 'flex':'none'; } };
+      window.addEventListener('resize', shrinkJ1nx); shrinkJ1nx();
+    })();
+    (function(){
+      let chatHistory = []; let nsfwUnlocked = false;
+      function renderChat(){ const out = chatHistory.map(line => `<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG?"; }
+      function addMsg(msg, isUser){ if (!msg) return; const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> "; chatHistory.push(name + msg); if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8); renderChat(); }
+      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
+        nsfwUnlocked = true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+      });
+      document.getElementById('j1nxSendTrue').onclick = function() {
+        const input = document.getElementById('j1nxInputTrue'); const val = (input.value || '').trim(); if (!val) return; addMsg(val, true);
+        if (/^unlock$/i.test(val)) { nsfwUnlocked = true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false); input.value = ""; return; }
+        try {
+          let reply = window.j1nxBrain ? window.j1nxBrain(val, chatHistory.length, nsfwUnlocked) : "(Missing assets/j1nx_brain.js)";
+          let replyText = (reply && typeof reply === 'object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply;
+          addMsg(replyText, false);
+        } catch(e) { addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false); }
+        input.value = "";
+      };
+      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click(); });
+      document.getElementById('j1nxSaveTrue').onclick = function() {
+        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+        const blob = new Blob([text], {type:'text/plain'}); const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+      };
+      document.getElementById('j1nxClearTrue').onclick = function(){ chatHistory = []; renderChat(); };
+      renderChat();
+    })();
+
+    // Accordion toggle
+    (function(){
+      document.querySelectorAll('.acc-head').forEach(h=>{
+        h.addEventListener('click',()=>{
+          const body=h.nextElementSibling; const open=body.style.display==='block';
+          body.style.display=open?'none':'block';
+          h.querySelector('span').textContent=open?'▼':'▲';
         });
       });
-
-      // ========== MICROHELP (Custom Popover, Not Tooltip) ==========
-      function showHelp(topic) {
-        const helpText = {
-          scene: "Describe your main scene, subject, mood, style, and any specific visual or emotional details you want.",
-          model: "Choose the AI model. Each model interprets prompts a bit differently—experiment for best results.",
-          style: "Select one or more styles to mix. Try photorealistic, anime, digital painting, or even comic book blends.",
-          lighting: "Pick the lighting for your image. Sunlight, dusk, studio, and special effects all impact the final look.",
-          camera: "Choose camera angles for story and drama—eye-level is natural, macro for detail, POV for immersion.",
-          aspect: "Aspect ratio changes the shape—square, portrait, cinematic, or custom for social or print.",
-          negatives: "Add negatives to block flaws (low quality, watermark, artifacts, etc). You can add custom ones too.",
-          controls: "Advanced: Fine-tune creativity, steps, CFG, quality, and random seed for best results.",
-          outputs: "Set number of images, UI language, and special model parameters here.",
-          output: "See your finished prompt, copy, favorite, save, or share. Click 'Generate' to assemble your master prompt!"
-        };
-        let box = document.createElement("div");
-        box.className = "microhelp-popover";
-        box.style = "position:fixed;z-index:999;background:var(--card);color:var(--offwhite);border-radius:8px;box-shadow:0 2px 12px #000a;padding:1.1em 1.6em;max-width:340px;top:15%;left:50%;transform:translateX(-50%);font-size:1.08em;font-weight:600;text-align:left;";
-        box.innerHTML = `<span style="color:var(--brand2);font-size:1.12em;font-weight:900;">Help</span><br>${helpText[topic]||'Ask J1nx for extra help!'}<br><br><button onclick="this.parentElement.remove()" style="margin-top:.7em;background:var(--brand2);color:#23231f;font-weight:bold;padding:.5em 1.25em;border-radius:8px;border:none;cursor:pointer;">Close</button>`;
-        document.body.appendChild(box);
-      }
-
-      // ========== ADVANCED CONTROLS / SLIDERS ==========
-      ["creativity","steps","cfg","quality","output-cnt"].forEach(id=>{
-        const el=document.getElementById(id), val=document.getElementById(id+"-val");
-        if(el&&val){ el.oninput=()=>{ val.textContent=el.value; }; }
-      });
-
-      // ========== PROMPT BUILDER / OUTPUT / HISTORY / FAVORITES ==========
-      function gatherPromptData() {
-        const data = {
-          scene: document.getElementById("scene-desc").value,
-          model: document.querySelector("#model-menu .menu-item.active")?.textContent.trim()||"",
-          styles: window._styles,
-          lighting: window._lighting,
-          camera: window._camera,
-          aspect: window._aspect,
-          negatives: window._negs.concat(document.getElementById("neg-prompts").value.split(",").map(x=>x.trim()).filter(Boolean)),
-          creativity: document.getElementById("creativity").value,
-          steps: document.getElementById("steps").value,
-          cfg: document.getElementById("cfg").value,
-          quality: document.getElementById("quality").value,
-          seed: document.getElementById("seed").value,
-          outputs: document.getElementById("output-cnt").value,
-          lang: document.getElementById("lang").value,
-          params: document.getElementById("model-params").value
-        };
-        return data;
-      }
-      function generatePrompt() {
-        const d = gatherPromptData();
-        let prompt = [];
-        if(d.scene) prompt.push(d.scene);
-        if(d.model) prompt.push(`[${d.model}]`);
-        if(d.styles.length) prompt.push("Style: "+d.styles.join(", "));
-        if(d.lighting.length) prompt.push("Lighting: "+d.lighting.join(", "));
-        if(d.camera.length) prompt.push("Camera: "+d.camera.join(", "));
-        if(d.aspect.length) prompt.push("Aspect: "+d.aspect.join(", "));
-        if(d.negatives.length) prompt.push("Negative: "+d.negatives.join(", "));
-        prompt.push(`Steps:${d.steps} CFG:${d.cfg} Quality:${d.quality} Seed:${d.seed} Outputs:${d.outputs}`);
-        if(d.params) prompt.push(`Params:${d.params}`);
-        document.getElementById("prompt-output").innerText = prompt.join(" | ");
-        document.getElementById("prompt-status").innerText = "Prompt generated!";
-        updateStats("prompts");
-        pushHistory(document.getElementById("prompt-output").innerText);
-        return prompt.join(" | ");
-      }
-      function copyPrompt() {
-        let txt = document.getElementById("prompt-output").innerText;
-        if (!txt) return;
-        navigator.clipboard.writeText(txt);
-        document.getElementById("prompt-status").innerText="Copied!";
-        updateStats("copied");
-      }
-      function savePrompt() {
-        let txt = document.getElementById("prompt-output").innerText;
-        if(!txt) return;
-        let saved = JSON.parse(localStorage.getItem("pf_saved_prompts")||"[]");
-        saved.push({ts:Date.now(), prompt:txt});
-        localStorage.setItem("pf_saved_prompts", JSON.stringify(saved));
-        document.getElementById("prompt-status").innerText="Saved!";
-        updateStats("saved");
-        updateHistory();
-      }
-      function sharePrompt() {
-        let txt = document.getElementById("prompt-output").innerText;
-        if(navigator.share) {
-          navigator.share({text:txt, title:"PromptForge AI Prompt"}).then(()=>{document.getElementById("prompt-status").innerText="Shared!";updateStats("shared");});
-        } else {
-          document.getElementById("prompt-status").innerText="Copy and share: "+txt;
-        }
-      }
-      function favoritePrompt() {
-        let txt = document.getElementById("prompt-output").innerText;
-        if(!txt) return;
-        let fav = JSON.parse(localStorage.getItem("pf_fav_prompts")||"[]");
-        fav.push({ts:Date.now(), prompt:txt});
-        localStorage.setItem("pf_fav_prompts", JSON.stringify(fav));
-        document.getElementById("prompt-status").innerText="Favorited!";
-        updateStats("fav");
-        updateFavorites();
-      }
-      function randomizePrompt() {
-        // For demo: pick random styles, lighting, negatives, sliders
-        let styleMenu = document.getElementById("style-menu").querySelectorAll(".menu-item"), n = styleMenu.length;
-        window._styles = [];
-        for(let i=0;i<n;i++) if(Math.random()>.5) window._styles.push(styleMenu[i].textContent.trim());
-        renderChips("style-chips", window._styles);
-
-        let lightingMenu = document.getElementById("lighting-menu").querySelectorAll(".menu-item");
-        window._lighting = [];
-        for(let i=0;i<lightingMenu.length;i++) if(Math.random()>.5) window._lighting.push(lightingMenu[i].textContent.trim());
-        renderChips("lighting-chips", window._lighting);
-
-        let cameraMenu = document.getElementById("camera-menu").querySelectorAll(".menu-item");
-        window._camera = [];
-        for(let i=0;i<cameraMenu.length;i++) if(Math.random()>.5) window._camera.push(cameraMenu[i].textContent.trim());
-        renderChips("camera-chips", window._camera);
-
-        let aspectMenu = document.getElementById("aspect-menu").querySelectorAll(".menu-item");
-        window._aspect = [];
-        for(let i=0;i<aspectMenu.length;i++) if(Math.random()>.5) window._aspect.push(aspectMenu[i].textContent.trim());
-        renderChips("aspect-chips", window._aspect);
-
-        let negMenu = document.getElementById("negatives-menu").querySelectorAll(".menu-item");
-        window._negs = [];
-        for(let i=0;i<negMenu.length;i++) if(Math.random()>.5) window._negs.push(negMenu[i].textContent.trim());
-        renderChips("neg-chips", window._negs);
-
-        document.getElementById("creativity").value = Math.floor(Math.random()*100);
-        document.getElementById("steps").value = Math.floor(Math.random()*140)+10;
-        document.getElementById("cfg").value = Math.floor(Math.random()*30)+1;
-        document.getElementById("quality").value = Math.floor(Math.random()*20)+1;
-        document.getElementById("output-cnt").value = Math.floor(Math.random()*8)+1;
-        document.getElementById("scene-desc").value = "A "+(Math.random()>.5?"mystical forest":"hyper-detailed cyberpunk city")+" at "+(Math.random()>.5?"sunrise":"night")+", "+(Math.random()>.5?"dramatic lighting":"soft focus")+".";
-        document.getElementById("neg-prompts").value = window._negs.join(", ");
-        generatePrompt();
-      }
-      function clearForm() {
-        window._styles=[];window._lighting=[];window._camera=[];window._aspect=[];window._negs=[];
-        ["style-chips","lighting-chips","camera-chips","aspect-chips","neg-chips"].forEach(id=>renderChips(id,[]));
-        document.getElementById("promptForm")?.reset();
-        document.getElementById("scene-desc").value="";
-        document.getElementById("neg-prompts").value="";
-        document.getElementById("prompt-output").innerText = "";
-        document.getElementById("prompt-status").innerText = "";
-      }
-      // HISTORY / FAVORITES
-      function pushHistory(txt){
-        let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
-        h.unshift({ts:Date.now(), prompt:txt});
-        if(h.length>30) h = h.slice(0,30);
-        localStorage.setItem("pf_history", JSON.stringify(h));
-        updateHistory();
-      }
-      function updateHistory(){
-        let h = JSON.parse(localStorage.getItem("pf_history")||"[]");
-        document.getElementById("prompt-history").innerHTML = h.map(e=>`<div style="margin-bottom:.3em;">${e.prompt}<button onclick="loadPrompt('${e.ts}')">Load</button></div>`).join('');
-      }
-      function updateFavorites(){
-        let f = JSON.parse(localStorage.getItem("pf_fav_prompts")||"[]");
-        document.getElementById("template-list").innerHTML = f.map(e=>`<div style="margin-bottom:.3em;">${e.prompt}<button onclick="loadPrompt('${e.ts}',true)">Load</button></div>`).join('');
-      }
-      function loadPrompt(ts, fav=false){
-        let arr = JSON.parse(localStorage.getItem(fav?"pf_fav_prompts":"pf_history")||"[]");
-        let item = arr.find(e=>e.ts==ts);
-        if(item){
-          document.getElementById("prompt-output").innerText = item.prompt;
-          document.getElementById("prompt-status").innerText = "Prompt loaded!";
-        }
-      }
-      window.onload = ()=>{ updateHistory(); updateFavorites(); };
-
-      // QUICK STATS
-      function updateStats(type){
-        let stats = JSON.parse(localStorage.getItem("pf_stats")||'{"prompts":0,"saved":0,"fav":0,"shared":0,"copied":0}');
-        stats[type]=(stats[type]||0)+1;
-        localStorage.setItem("pf_stats",JSON.stringify(stats));
-        document.getElementById("stat-prompts").innerHTML = `Prompts Built: <b>${stats.prompts}</b>`;
-        document.getElementById("stat-saved").innerHTML = `Templates Saved: <b>${stats.saved}</b>`;
-        document.getElementById("stat-fav").innerHTML = `Favorites: <b>${stats.fav}</b>`;
-        document.getElementById("stat-share").innerHTML = `Shared: <b>${stats.shared}</b>`;
-      }
-      updateStats(""); // Initialize
-
-      // J1NX AI DOCK: MOODS, MINIMIZE, SECRET UNLOCK
-      window._nsfwActive = false;
-      let j1nxState = { mood: "😎", clickCount: 0, minimized: false };
-      const j1nxTips = [
-        "Mix 2-4 art styles for wild results.",
-        "Did you know J1nx can change moods if you interact with her?",
-        "Camera angle changes story. Try Macro or Overhead for drama!",
-        "Try saving your favorite setups as templates.",
-        "Every model responds differently—experiment for best effect.",
-        "Need advanced tips? Try asking me something… unusual.",
-        "No idea what to make? Hit Randomize for surprises."
-      ];
-      const j1nxMoods = [
-        { mood:"😎", msg:"Hi! I'm J1nx. Ask me for prompt tips or just say hi." },
-        { mood:"🤔", msg:"I'm thinking... Ask about models, styles, or say 'give me a tip'." },
-        { mood:"😉", msg:"Some features are hidden for pro users. Can you find them?" },
-        { mood:"🤫", msg:"Secrets are everywhere if you know where to look..." },
-        { mood:"😇", msg:"Feeling creative today? Try something wild!" },
-        { mood:"😏", msg:"You're close to unlocking advanced options..." },
-        { mood:"🫦", msg:"Access granted. Let's build legendary prompts. (Extra tools enabled!)" }
-      ];
-      function setJ1nxMood(idx,msgOverride){
-        j1nxState.mood = j1nxMoods[idx].mood;
-        document.getElementById("j1nx-mood").innerText = j1nxState.mood;
-        document.getElementById("j1nx-speech").innerText = msgOverride||j1nxMoods[idx].msg;
-      }
-      function sendJ1nx() {
-        const input = document.getElementById("j1nx-input").value.trim().toLowerCase();
-        let out = "Try asking for a random tip, or just say hi!";
-        if(!input) { setJ1nxMood(1); return; }
-        if(input.includes("random")||input.includes("tip")) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
-        if(input.includes("unlock")||input.includes("real stuff")||input.includes("show me")||input.includes("i'm 18")||input.includes("secret")){
-          j1nxState.clickCount += 2;
-          if(j1nxState.clickCount>=3) unlockExtra();
-          out = "Hmmm... are you sure? Tap my star or ask again if you're really ready.";
-          setJ1nxMood(5,out); return;
-        }
-        if(input.length<3) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
-        setJ1nxMood(1,out);
-        document.getElementById("j1nx-input").value = "";
-      }
-      function j1nxRandomTip(){
-        setJ1nxMood(0,j1nxTips[Math.floor(Math.random()*j1nxTips.length)]);
-      }
-      function j1nxEasterEgg() {
-        j1nxState.clickCount++;
-        if(j1nxState.clickCount>=3 && !window._nsfwActive) unlockExtra();
-        else setJ1nxMood(2,"Something feels different... Try asking me for 'the real stuff'.");
-      }
-      function unlockExtra() {
-        window._nsfwActive = true;
-        setJ1nxMood(6,"Access granted. Extra tools are live! Be creative. 🔥");
-        // Here you can enable hidden fields/menus, negatives, or special pro content—never visible to bots!
-      }
-      function toggleJ1nxMin(){
-        j1nxState.minimized = !j1nxState.minimized;
-        document.getElementById("j1nx-ui").classList.toggle("minimized",j1nxState.minimized);
-        if(!j1nxState.minimized) setJ1nxMood(0);
-      }
-    </script>
-  </body>
+    })();
+  </script>
+</body>
 </html>
