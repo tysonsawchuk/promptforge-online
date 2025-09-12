@@ -9301,3 +9301,1147 @@ PF_PACKS.push({
   global.PF_CORE = Object.assign(CORE,{boost:CORE.boost, buildBoosted:CORE.buildBoosted});
 })(typeof self!=='undefined'?self:this);
 /* ============================== BLOCK 62 — END ============================== */
+/* ================================================================
+ * BLOCK 63 — HANDS & FEET v3 (REALISM + AI TOKENS)
+ * ID: BLOCK 63 • DATE: 2025-09-12
+ * PURPOSE: Detailed nails, toes, soles, anklets, foot poses that render clean.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 63',
+  language:'en',
+  category:'hands_feet_v3',
+  gated:true,
+  emoji:['🖐️','🦶'],
+  entries:[
+    { pattern:/\bfeet:\s*bare\b/gi,     replacement:'bare feet, clean soles, natural toes, subtle wrinkles', severity:2, tags:['feet'] },
+    { pattern:/\bfeet:\s*heels\b/gi,    replacement:'high heels, stiletto arch, calf flex engaged', severity:2, tags:['feet','fashion'] },
+    { pattern:/\bfeet:\s*toes\b/gi,     replacement:'painted toes, pedicure fresh, toe curl detail', severity:2, tags:['feet'] },
+    { pattern:/\bpose:\s*tiptoe\b/gi,   replacement:'tiptoeing, stretched calves, graceful arch', severity:2, tags:['feet','pose'] },
+    { pattern:/\bpose:\s*footup\b/gi,   replacement:'foot up on surface, bent knee, casual lean', severity:2, tags:['feet','pose'] }
+  ]
+});
+/* ============================== BLOCK 63 — END ============================== */
+/* ================================================================
+ * BLOCK 64 — BEDROOM TEXTILES & PROPS
+ * ID: BLOCK 64 • DATE: 2025-09-12
+ * PURPOSE: Duvets, knit throws, pillows, wrinkled sheets — realism cues.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 64',
+  language:'en',
+  category:'bedroom_textiles',
+  gated:false,
+  emoji:['🛏️','🧶'],
+  entries:[
+    { pattern:/\bbed:\s*sheets\b/gi,    replacement:'rumpled bedsheets, soft cotton texture, wrinkles and folds', severity:0, tags:['set','fabric'] },
+    { pattern:/\bbed:\s*duvet\b/gi,     replacement:'fluffy duvet, down loft, soft highlights', severity:0, tags:['set'] },
+    { pattern:/\bbed:\s*throw\b/gi,    replacement:'chunky knit throw blanket, cozy vibe', severity:0, tags:['set'] },
+    { pattern:/\bbed:\s*pillow\b/gi,    replacement:'pillows scattered, impression from body weight', severity:0, tags:['set'] }
+  ]
+});
+/* ============================== BLOCK 64 — END ============================== */
+/* ================================================================
+ * BLOCK 65 — CITY / URBAN SETS
+ * ID: BLOCK 65 • DATE: 2025-09-12
+ * PURPOSE: Rooftop, alley, subway, neon signs — cinematic city scenes.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 65',
+  language:'en',
+  category:'urban_sets',
+  gated:false,
+  emoji:['🏙️','🚇','🌃'],
+  entries:[
+    { pattern:/\bset:\s*rooftop\b/gi, replacement:'city rooftop, skyline lights, wind in hair', severity:0, tags:['urban'] },
+    { pattern:/\bset:\s*alley\b/gi,   replacement:'neon alleyway, wet pavement reflections, cyberpunk vibe', severity:0, tags:['urban','neon'] },
+    { pattern:/\bset:\s*subway\b/gi,  replacement:'empty subway car, moody overhead lights, motion blur', severity:0, tags:['urban'] },
+    { pattern:/\bset:\s*street\b/gi,  replacement:'rainy city street, puddle reflections, bokeh headlights', severity:0, tags:['urban'] }
+  ]
+});
+/* ============================== BLOCK 65 — END ============================== */
+/* ================================================================
+ * BLOCK 66 — ROLEPLAY WARDROBE KIT (TASTEFUL)
+ * ID: BLOCK 66 • DATE: 2025-09-12
+ * PURPOSE: Uniform tokens that models respond to without banned words.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 66',
+  language:'en',
+  category:'roleplay_wardrobe',
+  gated:true,
+  emoji:['🎭','🧥'],
+  entries:[
+    { pattern:/\brole:\s*nurse\b/gi,    replacement:'sexy nurse costume, white dress, red cross emblem', severity:3, tags:['wardrobe','roleplay'] },
+    { pattern:/\brole:\s*maid\b/gi,     replacement:'classic maid outfit, lace apron, frilly trim', severity:3, tags:['wardrobe','roleplay'] },
+    { pattern:/\brole:\s*office\b/gi,   replacement:'office attire, unbuttoned blouse, pencil skirt, glasses', severity:3, tags:['wardrobe','roleplay'] },
+    { pattern:/\brole:\s*cheer\b/gi,    replacement:'cheerleader uniform, pleated skirt, pom-poms', severity:3, tags:['wardrobe','roleplay'] }
+  ]
+});
+/* ============================== BLOCK 66 — END ============================== */
+/* ================================================================
+ * BLOCK 67 — POSE SYMMETRY & CORRECTIONS
+ * ID: BLOCK 67 • DATE: 2025-09-12
+ * PURPOSE: Forces mirrored limbs, seated balance, better kneeling poses.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 67',
+  language:'en',
+  category:'pose_symmetry',
+  gated:false,
+  emoji:['🪞','📐'],
+  entries:[
+    { pattern:/\bpose:\s*symkneel\b/gi, replacement:'symmetrical kneel, knees evenly spaced, hands balanced', severity:2, tags:['pose'] },
+    { pattern:/\bpose:\s*symstand\b/gi, replacement:'even weight on both feet, hips level, shoulders square', severity:1, tags:['pose'] },
+    { pattern:/\bpose:\s*mirrorpose\b/gi,replacement:'mirrored body halves, bilateral symmetry emphasized', severity:1, tags:['pose'] }
+  ]
+});
+/* ============================== BLOCK 67 — END ============================== */
+/* ================================================================
+ * BLOCK 68 — ENGINE PROFILES (TOKEN SWITCHER)
+ * ID: BLOCK 68 • DATE: 2025-09-12
+ * PURPOSE: One-call context switch for different AI engines (SDXL, MJ, Flux).
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.engineProfiles = {
+    sdxl: ['masterpiece','highres','photo-realistic','analog style','8k'],
+    mj:   ['trending on artstation','ultra realistic','insanely detailed'],
+    flux: ['cinematic lighting','hyperrealism','subsurface scattering','HDR'],
+  };
+  CORE.setEngine = function(engine){
+    const add = CORE.engineProfiles[engine];
+    if (!add) return [];
+    return add;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 68 — END ============================== */
+/* ================================================================
+ * BLOCK 69 — SENTENCE GLUE + PUNCTUATION ENGINE
+ * ID: BLOCK 69 • DATE: 2025-09-12
+ * PURPOSE: Joins fragments into a natural but vibey sentence structure.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.stitch = function stitch(fragments=[]){
+    if (!Array.isArray(fragments)) fragments = String(fragments).split(/,\s*/);
+    fragments = fragments.filter(Boolean).map(f=>f.trim());
+    // shuffle slight for vibe, but keep domain first
+    const out = fragments.join(', ')
+      .replace(/\s+,/g, ',')
+      .replace(/,{2,}/g, ',')
+      .replace(/ , /g, ', ')
+      .replace(/\s{2,}/g, ' ');
+    // capitalize first word
+    return out.charAt(0).toUpperCase() + out.slice(1);
+  };
+  // hook into build()
+  const origBuild = CORE.build;
+  CORE.build = function(ctx={}, opts={}){
+    const r = origBuild ? origBuild(ctx, opts) : {prompt:''};
+    r.prompt = CORE.stitch(r.prompt.split(','));
+    return r;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 69 — END ============================== */
+/* ================================================================
+ * BLOCK 80 — FABRIC MICROTEXTURES v3 (SILK • LATEX • VELVET • DENIM)
+ * ID: BLOCK 80 • DATE: 2025-09-12
+ * PURPOSE: Token-heavy fabric descriptors models key on.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 80',
+  language:'en',
+  category:'fabric_microtextures_v3',
+  gated:false,
+  emoji:['🧵','🪡'],
+  entries:[
+    { pattern:/\bfab:\s*silk\b/gi,   replacement:'silk, liquid-silk sheen, bias-cut drape, specular ripple, lustrous highlights', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*satin\b/gi,  replacement:'satin, glossy satin face, mirror-like speculars, soft fold gradients', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*velvet\b/gi, replacement:'velvet, light-eating nap, deep pile texture, rich lowlights', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*latex\b/gi,  replacement:'latex, high-gloss stretch, sharp specular edges, body-hugging', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*denim\b/gi,  replacement:'denim, twill weave, whisker creases, worn edges', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*mesh\b/gi,   replacement:'mesh, micro-diamonds, semi-transparent pattern fidelity', severity:0, tags:['fabric','sheer'] }
+  ]
+});
+/* ============================== BLOCK 80 — END ============================== */
+/* ================================================================
+ * BLOCK 81 — PROPS v2 (MARTINI • PHONE • CAMERA • MAGAZINES)
+ * ID: BLOCK 81 • DATE: 2025-09-12
+ * PURPOSE: Photogenic props with cinematic cues.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 81',
+  language:'en',
+  category:'props_v2',
+  gated:false,
+  emoji:['🍸','📱','📷'],
+  entries:[
+    { pattern:/\bprop:\s*martini\b/gi, replacement:'martini glass, olive on pick, condensation beads', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*phone\b/gi,   replacement:'smartphone in hand, screen glow on fingers', severity:0, tags:['prop','light'] },
+    { pattern:/\bprop:\s*camera\b/gi,  replacement:'camera in frame, vintage 35mm body, chrome highlights', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*mag\b/gi,     replacement:'fashion magazines scattered, glossy covers, stacked edges', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*mirror\b/gi,  replacement:'hand mirror, catchlight sparkle, reflective rim', severity:0, tags:['prop','mirror'] }
+  ]
+});
+/* ============================== BLOCK 81 — END ============================== */
+/* ================================================================
+ * BLOCK 82 — HAIR MOTION v2 (PONY SWING • BANG SWEEP • WIND)
+ * ID: BLOCK 82 • DATE: 2025-09-12
+ * PURPOSE: Dynamic hair cues that stack with action/lighting.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 82',
+  language:'en',
+  category:'hair_motion_v2',
+  gated:false,
+  emoji:['🌬️','💇‍♀️'],
+  entries:[
+    { pattern:/\bhair:\s*pony\s*swing\b/gi, replacement:'ponytail swinging, arc motion, crisp strands', severity:0, tags:['hair','motion'] },
+    { pattern:/\bhair:\s*bang\s*sweep\b/gi, replacement:'bangs swept aside, forehead reveal, airy strands', severity:0, tags:['hair','motion'] },
+    { pattern:/\bhair:\s*windswept\b/gi,    replacement:'windswept hair, directional flow, rimlit strands', severity:0, tags:['hair','motion'] }
+  ]
+});
+/* ============================== BLOCK 82 — END ============================== */
+/* ================================================================
+ * BLOCK 83 — BODY HIGHLIGHT MAP v3 (HIPBONES • SPINE • DIMPLE)
+ * ID: BLOCK 83 • DATE: 2025-09-12
+ * PURPOSE: Camera-readable highlight anchors; adult-only.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 83',
+  language:'en',
+  category:'body_highlight_map_v3',
+  gated:true,
+  emoji:['✨','🗺️'],
+  entries:[
+    { pattern:/\bhl:\s*hipbone\b/gi,  replacement:'hipbones defined, V-lines emphasized, gentle rim highlight', severity:3, tags:['finish'] },
+    { pattern:/\bhl:\s*spine\b/gi,    replacement:'spine highlight ridge, subtle vertebrae line', severity:3, tags:['finish'] },
+    { pattern:/\bhl:\s*dimples\b/gi,  replacement:'back dimples accent, shallow shadow cups', severity:2, tags:['finish'] },
+    { pattern:/\bhl:\s*collar\b/gi,   replacement:'collarbone catchlights, chest contour pop', severity:2, tags:['finish'] }
+  ]
+});
+/* ============================== BLOCK 83 — END ============================== */
+/* ================================================================
+ * BLOCK 84 — EXPOSURE / PHOTO TOKENS (ISO • SHUTTER • APERTURE)
+ * ID: BLOCK 84 • DATE: 2025-09-12
+ * PURPOSE: Photography-native tokens many models understand.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 84',
+  language:'en',
+  category:'photo_exposure_tokens',
+  gated:false,
+  emoji:['📸','🧮'],
+  entries:[
+    { pattern:/\biso:\s*(100|200|400|800)\b/gi, replacement:'ISO $1, clean grain structure', severity:0, tags:['photo'] },
+    { pattern:/\bf:\s*(1\.2|1\.4|1\.8|2\.8|4|5\.6)\b/gi, replacement:'aperture f/$1, depth control', severity:0, tags:['photo'] },
+    { pattern:/\bshutter:\s*(1\/\d{2,4}|1s|2s)\b/gi,     replacement:'shutter $1, motion rendering', severity:0, tags:['photo'] }
+  ]
+});
+/* ============================== BLOCK 84 — END ============================== */
+/* ================================================================
+ * BLOCK 85 — WHITE BALANCE & COLOR SCIENCE (DCP • HALATION)
+ * ID: BLOCK 85 • DATE: 2025-09-12
+ * PURPOSE: Subtle film/color keywords that often help.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 85',
+  language:'en',
+  category:'wb_color_science',
+  gated:false,
+  emoji:['⚗️','🌈'],
+  entries:[
+    { pattern:/\bwb:\s*tungsten\b/gi, replacement:'warm white balance, tungsten-lean, amber skin lift', severity:0, tags:['grade'] },
+    { pattern:/\bwb:\s*daylight\b/gi,  replacement:'daylight balance, neutral blues, clean whites', severity:0, tags:['grade'] },
+    { pattern:/\bhalation\b/gi,        replacement:'film halation glow around highlights', severity:0, tags:['grade','fx'] },
+    { pattern:/\bdcp:\s*skin\b/gi,     replacement:'skin-friendly color profile, gentle hue rolloff', severity:0, tags:['grade'] }
+  ]
+});
+/* ============================== BLOCK 85 — END ============================== */
+/* ================================================================
+ * BLOCK 86 — FLASH / SELFIE KIT (ON-CAMERA • MIRROR SELFIE • POP)
+ * ID: BLOCK 86 • DATE: 2025-09-12
+ * PURPOSE: Social-friendly looks; hard flash cues.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 86',
+  language:'en',
+  category:'flash_selfie_kit',
+  gated:false,
+  emoji:['⚡','🤳'],
+  entries:[
+    { pattern:/\bflash:\s*on\b/gi,     replacement:'on-camera flash, hard speculars, crisp shadows', severity:0, tags:['flash','fx'] },
+    { pattern:/\bselfie:\s*mirror\b/gi,replacement:'mirror selfie framing, phone visible, arm angle natural', severity:0, tags:['selfie','mirror'] },
+    { pattern:/\bflash:\s*pop\b/gi,    replacement:'single flash pop, frozen motion, highlight punch', severity:0, tags:['flash'] }
+  ]
+});
+/* ============================== BLOCK 86 — END ============================== */
+/* ================================================================
+ * BLOCK 87 — DEPTH & PARALLAX (FOREGROUND • MID • BACK)
+ * ID: BLOCK 87 • DATE: 2025-09-12
+ * PURPOSE: Strong depth cues that reduce “flat render”.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 87',
+  language:'en',
+  category:'depth_parallax',
+  gated:false,
+  emoji:['🧱','🌀'],
+  entries:[
+    { pattern:/\bdepth:\s*fg\b/gi,   replacement:'foreground element close to lens, soft blur occlusion', severity:0, tags:['depth'] },
+    { pattern:/\bdepth:\s*mid\b/gi,  replacement:'midground anchor around subject, clean separation', severity:0, tags:['depth'] },
+    { pattern:/\bdepth:\s*back\b/gi, replacement:'background bokeh field, compressed layers', severity:0, tags:['depth'] }
+  ]
+});
+/* ============================== BLOCK 87 — END ============================== */
+/* ================================================================
+ * BLOCK 88 — CONTRADICTION RESOLVER (NAKED vs OUTFIT, SOFT vs HARD)
+ * ID: BLOCK 88 • DATE: 2025-09-12
+ * PURPOSE: Remove mutually exclusive tokens so prompts stay sane.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+
+  const RULES = [
+    // if "wardrobe" and "naked" collide, prefer wardrobe for softcore; prefer naked for hardcore
+    { test: /naked/i, conflict: /(lace|sheer|latex|bodysuit|dress|corset)/i,
+      decide(ctx){ return (ctx?.vibe==='hardcore') ? 'naked' : 'ward'; } },
+    // softcore vs explicit slang
+    { test:/\b(oral sex|blowjob|cunnilingus|reverse cowgirl|doggystyle)\b/i,
+      conflict:/\bsoftcore\b/i, decide(){ return 'soft'; } }
+  ];
+
+  CORE.resolveContradictions = function resolve(text, ctx={}){
+    let out = String(text||'');
+    for (const r of RULES){
+      if (r.test.test(out) && r.conflict.test(out)){
+        const keep = r.decide(ctx);
+        if (keep==='naked') out = out.replace(r.conflict,'');
+        else if (keep==='ward') out = out.replace(r.test,'');
+        else if (keep==='soft') out = out.replace(r.test,'');
+      }
+    }
+    return out.replace(/\s{2,}/g,' ').replace(/\s+,/g,',');
+  };
+
+  // hook after build()
+  const prev = CORE.build;
+  CORE.build = function(ctx={}, opts={}){
+    const r = prev ? prev(ctx, opts) : {prompt:''};
+    r.prompt = CORE.resolveContradictions(r.prompt, ctx);
+    return r;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 88 — END ============================== */
+/* ================================================================
+ * BLOCK 89 — SOFTCORE GUARDRAIL v2 (TASTEFUL MAPPER)
+ * ID: BLOCK 89 • DATE: 2025-09-12
+ * PURPOSE: When vibe:'softcore', downshift explicit phrases to tasteful.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.softcoreMap = function(text){
+    return String(text||'')
+      .replace(/\b(blowjob|cunnilingus|handjob|titfuck|rear-entry|doggystyle)\b/gi,'tasteful implication')
+      .replace(/\b(pussy|cock|cum)\b/gi,'implied detail')
+      .replace(/\bspread\b/gi,'suggestive reveal');
+  };
+  const prev = CORE.build;
+  CORE.build = function(ctx={}, opts={}){
+    let r = prev ? prev(ctx, opts) : {prompt:''};
+    if (String(ctx?.vibe).toLowerCase()==='softcore') r.prompt = CORE.softcoreMap(r.prompt);
+    return r;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 89 — END ============================== */
+/* ================================================================
+ * BLOCK 90 — FALLBACK DEFAULTS (IF USER IS VAGUE)
+ * ID: BLOCK 90 • DATE: 2025-09-12
+ * PURPOSE: Ensure sane prompt even with minimal input.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.defaults = {
+    people: ['cam: beauty','lens:85','dof: shallow','pal: portra','NEG: bad anatomy'],
+    nature: ['natgrade: pastel','lcomp: rule thirds','asp: wide','NATNEG: banding']
+  };
+  CORE.buildSafe = function(ctx={}, extras=[], negatives=[]){
+    const domain = (ctx.domain==='nature')?'nature':'people';
+    const ex = [...(CORE.defaults[domain]||[]), ...(extras||[])];
+    return CORE.build(ctx, {extras: ex, negatives});
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 90 — END ============================== */
+/* ================================================================
+ * BLOCK 91 — SENTENCE STYLE PRESETS (POETIC • CINEMATIC • TECH)
+ * ID: BLOCK 91 • DATE: 2025-09-12
+ * PURPOSE: Final-pass tone that changes cadence and punctuation.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.styles = {
+    poetic(t){ return t.replace(/, /g, ', ').replace(/, ([^,]+),/g, '; $1,'); },
+    cinematic(t){ return t.replace(/, /g, ', ').replace(/\b(and|then)\b/gi, '—'); },
+    tech(t){ return t.replace(/, /g, ', ').replace(/\s+/g,' ').trim(); }
+  };
+  CORE.applyStyle = function(t, mode='cinematic'){
+    const f = CORE.styles[mode] || ((x)=>x);
+    return f(String(t||''));
+  };
+  const prev = CORE.build;
+  CORE.build = function(ctx={}, opts={}){
+    const r = prev ? prev(ctx, opts) : {prompt:''};
+    r.prompt = CORE.applyStyle(r.prompt, ctx.style || 'cinematic');
+    return r;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 91 — END ============================== */
+/* ================================================================
+ * BLOCK 92 — FINALIZER PIPE (ONE-CALL: PREPROCESS → BUILD → STYLE)
+ * ID: BLOCK 92 • DATE: 2025-09-12
+ * PURPOSE: Wraps everything into a single ergonomic call for HTML.
+ * USAGE:
+ *   PF_CORE.finalize(rawText, ctx, extras, negatives)
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.finalize = function(rawText='', ctx={}, extras=[], negatives=[]){
+    // normalize → buildSafe (with defaults) → boosted (optional)
+    const cleaned = CORE.normalizeAndSanitize ? CORE.normalizeAndSanitize(rawText, {allowExplicit:!!ctx.allowExplicit}) : String(rawText||'');
+    const base = CORE.buildSafe ? CORE.buildSafe(ctx, [cleaned, ...extras], negatives) : CORE.build(ctx, {extras:[cleaned, ...extras], negatives});
+    // tidy punctuation once more
+    base.prompt = CORE.stitch ? CORE.stitch(base.prompt.split(',')) : base.prompt;
+    return base;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 92 — END ============================== */
+/* ================================================================
+ * BLOCK 93 — ENGINE AUTO-NEGATIVES & PROFILES++
+ * ID: BLOCK 93 • DATE: 2025-09-12
+ * PURPOSE: Per-engine add-ons: positives + negatives + defaults.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.engineProfiles = Object.assign({}, CORE.engineProfiles, {
+    sdxl: ['masterpiece','highres','photorealistic','analog style','8k'],
+    mj:   ['trending on artstation','ultra realistic','insanely detailed','--style raw'],
+    flux: ['cinematic lighting','hyperrealism','subsurface scattering','HDR','film grain'],
+    runway:['cinematic look','storyboard frame','clean edges','temporal consistency'],
+    kandinsky:['painterly realism','clean contours','balanced palette'],
+    leonardo:['ultra-detailed','hires fix','studio lighting'],
+    playground:['photo-real','macro detail','diffusion sharp']
+  });
+  CORE.engineNegs = {
+    sdxl: ['NEG: moire','NEG: banding','NEG: bad anatomy','NEG: oversharp'],
+    mj:   ['NEG: extra digits','NEG: bad anatomy','NEG: posterize'],
+    flux: ['NEG: color shift','NEG: banding','NEG: oversharp'],
+    runway:['NEG: motion smear','NEG: jitter','NEG: ghost limbs'],
+    kandinsky:['NEG: muddy colors','NEG: halo'],
+    leonardo:['NEG: plastic skin','NEG: artifacts'],
+    playground:['NEG: color shift','NEG: halo','NEG: posterize']
+  };
+  CORE.applyEngine = function(engine, extras=[], negatives=[]){
+    const add = CORE.setEngine ? CORE.setEngine(engine) : (CORE.engineProfiles[engine]||[]);
+    const neg = CORE.engineNegs[engine] || [];
+    return { extras:[...(add||[]), ...extras], negatives:[...neg, ...negatives] };
+  };
+  global.PF_CORE = Object.assign(CORE,{applyEngine:CORE.applyEngine, engineNegs:CORE.engineNegs});
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 93 — END ============================== */
+/* ================================================================
+ * BLOCK 94 — HANDS-on-FACE MICROPOSES v4
+ * ID: BLOCK 94 • DATE: 2025-09-12
+ * PURPOSE: High-readability cues for portraits & glam.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 94',
+  language:'en',
+  category:'hands_face_v4',
+  gated:false,
+  emoji:['🤌','🙂'],
+  entries:[
+    { pattern:/\bpose:\s*chinrest\b/gi,  replacement:'one hand under chin, fingertips light, jawline defined', severity:1, tags:['pose','face'] },
+    { pattern:/\bpose:\s*cheekcup\b/gi,  replacement:'palm cupping cheek, soft squish, affectionate', severity:1, tags:['pose','face'] },
+    { pattern:/\bpose:\s*lipbite\b/gi,   replacement:'teeth on lower lip, subtle bite, teasing', severity:1, tags:['pose','face'] },
+    { pattern:/\bpose:\s*templetouch\b/gi, replacement:'fingertips at temple, thoughtful gaze', severity:0, tags:['pose','face'] },
+    { pattern:/\bpose:\s*hairveil\b/gi,  replacement:'hand drags hair curtain across face, one eye peeking', severity:1, tags:['pose','face','hair'] }
+  ]
+});
+/* ============================== BLOCK 94 — END ============================== */
+/* ================================================================
+ * BLOCK 95 — SUBWAY/ROOFTOP POSE ANCHORS
+ * ID: BLOCK 95 • DATE: 2025-09-12
+ * PURPOSE: Site-specific poses that “read” instantly.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 95',
+  language:'en',
+  category:'pose_site_urban_v2',
+  gated:true,
+  emoji:['🚇','🏙️'],
+  entries:[
+    { pattern:/\bpose:\s*subway\s*strap\b/gi, replacement:'holding subway strap, arm up, torso stretch, mid sway', severity:2, tags:['pose','urban'] },
+    { pattern:/\bpose:\s*subway\s*seat\b/gi,  replacement:'perched on subway seat edge, knees together, ankles crossed', severity:2, tags:['pose','urban'] },
+    { pattern:/\bpose:\s*roof\s*edge\b/gi,    replacement:'standing near roof ledge, wind stance, skyline behind', severity:2, tags:['pose','urban'] },
+    { pattern:/\bpose:\s*roof\s*recline\b/gi, replacement:'reclined on rooftop lounger, city lights bokeh', severity:2, tags:['pose','urban'] }
+  ]
+});
+/* ============================== BLOCK 95 — END ============================== */
+/* ================================================================
+ * BLOCK 96 — GLOVES & STOCKINGS COLORWAYS
+ * ID: BLOCK 96 • DATE: 2025-09-12
+ * PURPOSE: Long gloves, opera gloves, sheer/opaque stockings, color tokens.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 96',
+  language:'en',
+  category:'gloves_stockings',
+  gated:false,
+  emoji:['🧤','🧦'],
+  entries:[
+    { pattern:/\bglove:\s*opera\b/gi,    replacement:'opera-length gloves, satin sheen, elegant lines', severity:0, tags:['wardrobe'] },
+    { pattern:/\bglove:\s*mesh\b/gi,     replacement:'mesh gloves, fine net, pattern detail', severity:0, tags:['wardrobe','sheer'] },
+    { pattern:/\bstock:\s*sheer\b/gi,    replacement:'sheer stockings, 20 denier, leg shine', severity:0, tags:['wardrobe','sheer'] },
+    { pattern:/\bstock:\s*opaque\b/gi,   replacement:'opaque stockings, matte finish, smooth legs', severity:0, tags:['wardrobe'] },
+    { pattern:/\bstock:\s*fishnet\b/gi,  replacement:'fishnet stockings, diamond pattern', severity:0, tags:['wardrobe','fishnets'] },
+    { pattern:/\bcol:\s*jet\b/gi,        replacement:'jet black tone, deep inky value', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*ruby\b/gi,       replacement:'ruby red accent, saturated gem tone', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*ivory\b/gi,      replacement:'ivory off-white, warm neutral', severity:0, tags:['color'] }
+  ]
+});
+/* ============================== BLOCK 96 — END ============================== */
+/* ================================================================
+ * BLOCK 97 — ERROR HEATMAP (TOKEN FAIL ANALYZER)
+ * ID: BLOCK 97 • DATE: 2025-09-12
+ * PURPOSE: Track which tokens get removed by guardrails/contradiction solver.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  const KEY='pf_heatmap_v1';
+  function read(){ try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch{ return {}; } }
+  function write(x){ try{ localStorage.setItem(KEY, JSON.stringify(x)); }catch{} }
+  CORE.heatmap = CORE.heatmap || {
+    bump(kind, token){
+      const db = read(); db[kind]=db[kind]||{}; db[kind][token]=(db[kind][token]||0)+1; write(db);
+    },
+    export(){ return read(); },
+    clear(){ try{ localStorage.removeItem(KEY);}catch{} }
+  };
+  // wrap resolver to log drops
+  const prevResolve = CORE.resolveContradictions;
+  CORE.resolveContradictions = function(text, ctx){
+    const before = String(text||'');
+    const out = prevResolve ? prevResolve(before, ctx) : before;
+    const dropped = before.split(',').map(s=>s.trim()).filter(Boolean)
+      .filter(t => !out.includes(t) && /naked|lace|sheer|latex|bodysuit|blowjob|cunnilingus|doggystyle/i.test(t));
+    for(const d of dropped){ CORE.heatmap.bump('dropped', d); }
+    return out;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 97 — END ============================== */
+/* ================================================================
+ * BLOCK 98 — SHOOT TYPES / GENRES (TAXONOMY)
+ * ID: BLOCK 98 • DATE: 2025-09-12
+ * PURPOSE: One-word genre tags that cascade sensible defaults.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  const GENRE = {
+    beauty:   ['cam: beauty','lens:85','dof: shallow','makeup: winged','pal: portra'],
+    editorial:['style: editorial','fx: grain','pal: noir','asp: vertical'],
+    boudoir:  ['bed: sheets','mood: sensual','skin: sheen','light: window'],
+    fitness:  ['abs','defined','light: strip','pal: fujipro'],
+    swim:     ['bg: pool','skin: water','fx: flare','wb: daylight'],
+    street:   ['set: street','gel: cyberpunk','fx: grain'],
+    lifestyle:['sofa','coffee mug','soft smile','pal: portra'],
+    macro:    ['lens:135','dof: shallow','skin: pores'],
+    product:  ['fx: hdr','light: spot','asp: square']
+  };
+  CORE.applyGenre = function(genre, extras=[]){ return [...(GENRE[genre]||[]), ...extras]; };
+  global.PF_CORE = Object.assign(CORE,{applyGenre:CORE.applyGenre});
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 98 — END ============================== */
+/* ================================================================
+ * BLOCK 99 — LENS EFFECT CATALOG (TILT-SHIFT • SWIRL • DIFFUSION)
+ * ID: BLOCK 99 • DATE: 2025-09-12
+ * PURPOSE: Model-friendly lens artifacts & filters.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 99',
+  language:'en',
+  category:'lens_effects_catalog',
+  gated:false,
+  emoji:['🔭','🌪️','🫧'],
+  entries:[
+    { pattern:/\blens:\s*tilt\b/gi,    replacement:'tilt-shift focus plane, miniature effect', severity:0, tags:['lens','fx'] },
+    { pattern:/\blens:\s*swirl\b/gi,   replacement:'swirl bokeh (Petzval), vortex blur around edges', severity:0, tags:['lens','fx'] },
+    { pattern:/\bfilter:\s*promist\b/gi, replacement:'black pro-mist diffusion, halated highlights, soft bloom', severity:0, tags:['fx','filter'] },
+    { pattern:/\bfilter:\s*soft\b/gi,  replacement:'soft-focus diffusion, creamy skin, glow', severity:0, tags:['fx','filter'] },
+    { pattern:/\bbokeh:\s*large\b/gi,  replacement:'large disk bokeh balls, creamy background', severity:0, tags:['lens'] },
+    { pattern:/\bbokeh:\s*swirly\b/gi, replacement:'swirly bokeh field, curved background blur', severity:0, tags:['lens'] }
+  ]
+});
+/* ============================== BLOCK 99 — END ============================== */
+/* ================================================================
+ * BLOCK 100 — PRACTICAL FX (SMOKE • HAZE • CONFETTI • RAIN RIG)
+ * ID: BLOCK 100 • DATE: 2025-09-12
+ * PURPOSE: On-set style effects that render across engines.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 100',
+  language:'en',
+  category:'practical_fx',
+  gated:false,
+  emoji:['💨','🎊','🌧️'],
+  entries:[
+    { pattern:/\bfx:\s*smoke\b/gi,    replacement:'smoke plume, drifting layers, light scattering', severity:0, tags:['fx'] },
+    { pattern:/\bfx:\s*haze\b/gi,     replacement:'haze in air, volumetric depth, beam rays', severity:0, tags:['fx'] },
+    { pattern:/\bfx:\s*confetti\b/gi, replacement:'confetti burst, suspended paper bits, party vibe', severity:0, tags:['fx'] },
+    { pattern:/\bfx:\s*rainrig\b/gi,  replacement:'artificial rain rig, directional droplets, wet highlights', severity:0, tags:['fx','wet'] },
+    { pattern:/\bfx:\s*bubbles\b/gi,  replacement:'soap bubbles drifting, iridescent film, rainbow specks', severity:0, tags:['fx'] }
+  ]
+});
+/* ============================== BLOCK 100 — END ============================== */
+/* ================================================================
+ * BLOCK 101 — ENGINE TOKENS EXPANSION (CROSS-ECOSYSTEM)
+ * ID: BLOCK 101 • DATE: 2025-09-12
+ * PURPOSE: Tokens frequently seen across public prompt spaces.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 101',
+  language:'en',
+  category:'engine_tokens_x',
+  gated:false,
+  emoji:['🧠','🚀'],
+  entries:[
+    { pattern:/\btoken:\s*sdxl\b/gi,     replacement:'masterpiece, highres, photorealistic, 8k, ultra-detailed', severity:0, tags:['engine'] },
+    { pattern:/\btoken:\s*mj\b/gi,       replacement:'trending on artstation, ultra realistic, insanely detailed, --style raw', severity:0, tags:['engine'] },
+    { pattern:/\btoken:\s*flux\b/gi,     replacement:'cinematic lighting, HDR, hyperrealism, film grain', severity:0, tags:['engine'] },
+    { pattern:/\btoken:\s*runway\b/gi,   replacement:'storyboard frame, cinematic look, temporal consistency', severity:0, tags:['engine'] },
+    { pattern:/\btoken:\s*leo\b/gi,      replacement:'ultra-detailed, hires fix, studio lighting', severity:0, tags:['engine'] },
+    { pattern:/\btoken:\s*play\b/gi,     replacement:'photo-real, diffusion sharp, macro detail', severity:0, tags:['engine'] }
+  ]
+});
+/* ============================== BLOCK 101 — END ============================== */
+/* ================================================================
+ * BLOCK 102 — INTENT PARSER LITE (CHAT→TOKENS)
+ * ID: BLOCK 102 • DATE: 2025-09-12
+ * PURPOSE: Convert chatty phrases into token lists automatically.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  const RULES = [
+    { re:/\bclose[-\s]*up\b/i, add:['lens:85','cam: beauty','dof: shallow'] },
+    { re:/\bwide\s*shot\b/i,   add:['lens:35','asp: wide'] },
+    { re:/\bmake it moody\b/i, add:['mood: sensual','light: window','pal: noir'] },
+    { re:/\bclub\b|\bnight\b/i, add:['gel: cyberpunk','pract: neon','fx: haze'] },
+    { re:/\bsoft\b\s*light/i,  add:['filter: soft','pal: portra'] },
+    { re:/\bglam\b/i,          add:['style: editorial','fx: grain'] },
+    { re:/\bsweaty\b/i,        add:['skin: sweat'] },
+    { re:/\bwind\b/i,          add:['cloth: billow','hair: windswept'] },
+  ];
+  CORE.intent = function(text){
+    const t = String(text||'');
+    let out=[]; for(const r of RULES){ if (r.re.test(t)) out.push(...r.add); }
+    return out;
+  };
+  global.PF_CORE = Object.assign(CORE,{intent:CORE.intent});
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 102 — END ============================== */
+/* ================================================================
+ * BLOCK 103 — CONFLICT LOGGER (DEBUG)
+ * ID: BLOCK 103 • DATE: 2025-09-12
+ * PURPOSE: Log contradictions found/resolved for later tuning.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  const KEY='pf_conflictlog_v1';
+  function read(){ try{ return JSON.parse(localStorage.getItem(KEY)||'[]'); }catch{ return []; } }
+  function write(x){ try{ localStorage.setItem(KEY, JSON.stringify(x)); }catch{} }
+  CORE.conflicts = CORE.conflicts || {
+    push(entry){ const a=read(); a.push(Object.assign({ts:Date.now()}, entry)); write(a); },
+    list(){ return read(); },
+    clear(){ try{ localStorage.removeItem(KEY);}catch{} }
+  };
+  const prev = CORE.resolveContradictions;
+  CORE.resolveContradictions = function(text, ctx){
+    const before = String(text||'');
+    const out = prev ? prev(before, ctx) : before;
+    if (before!==out) CORE.conflicts.push({ctx, before, after: out});
+    return out;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 103 — END ============================== */
+/* ================================================================
+ * BLOCK 104 — SHOT TYPES (VIDEO & STILL) + FRAMING
+ * ID: BLOCK 104 • DATE: 2025-09-12
+ * PURPOSE: Universal cinema/stills vocabulary so engines obey framing.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 104',
+  language:'en',
+  category:'shot_types_vfx',
+  gated:false,
+  emoji:['🎥','🖼️'],
+  entries:[
+    { pattern:/\bshot:\s*ecu\b/gi,  replacement:'extreme close-up (ECU), frame fills with face detail', severity:0, tags:['shot'] },
+    { pattern:/\bshot:\s*cu\b/gi,   replacement:'close-up (CU), head and shoulders', severity:0, tags:['shot'] },
+    { pattern:/\bshot:\s*ms\b/gi,   replacement:'medium shot (MS), waist up', severity:0, tags:['shot'] },
+    { pattern:/\bshot:\s*ls\b/gi,   replacement:'long shot (LS), full body in frame', severity:0, tags:['shot'] },
+    { pattern:/\bmove:\s*track\b/gi,replacement:'tracking move, lateral slide, parallax', severity:0, tags:['move'] },
+    { pattern:/\bmove:\s*push\b/gi, replacement:'push-in move, slow dolly toward subject', severity:0, tags:['move'] },
+    { pattern:/\bfps:\s*(24|30|60)\b/gi, replacement:'frame rate $1 fps', severity:0, tags:['video'] },
+    { pattern:/\bratio:\s*(4:5|3:2|21:9)\b/gi, replacement:'aspect ratio $1', severity:0, tags:['aspect'] }
+  ]
+});
+/* ============================== BLOCK 104 — END ============================== */
+/* ================================================================
+ * BLOCK 105 — UI HINTS SCHEMA (CHIPS & EXAMPLES)
+ * ID: BLOCK 105 • DATE: 2025-09-12
+ * PURPOSE: Prebaked UI groups so HTML can render pickers instantly.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.uiHints = function(){
+    return {
+      genres:['beauty','editorial','boudoir','fitness','swim','street','lifestyle','macro','product'],
+      engines:['sdxl','mj','flux','runway','kandinsky','leonardo','playground'],
+      shots:['shot: ecu','shot: cu','shot: ms','shot: ls'],
+      lenses:['lens:35','lens:50','lens:85','lens:135'],
+      lights:['gel: cyan','gel: magenta','light: strip','light: window','filter: promist'],
+      sets:['set: rooftop','set: alley','bg: pool','bg: elevator','bg: hotel hall'],
+      wardrobe:['ward: bodysuit','fab: latex','stock: sheer','glove: opera'],
+      mood:['mood: sensual','mood: playful','pal: portra','pal: noir']
+    };
+  };
+  global.PF_CORE = Object.assign(CORE,{uiHints:CORE.uiHints});
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 105 — END ============================== */
+/* ================================================================
+ * BLOCK 106 — STUDIO LIGHTING RECIPES (CLAMSHELL • REMBRANDT • SPLIT)
+ * ID: BLOCK 106 • DATE: 2025-09-12
+ * PURPOSE: One-tap, photography-native lighting setups.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 106',
+  language:'en',
+  category:'studio_lighting_recipes',
+  gated:false,
+  emoji:['💡','🎯'],
+  entries:[
+    { pattern:/\blight:\s*clamshell\b/gi, replacement:'clamshell lighting: beauty dish high front + silver reflector under, catchlights double, shadowless skin', severity:0, tags:['light','beauty'] },
+    { pattern:/\blight:\s*rembrandt\b/gi, replacement:'Rembrandt lighting: 45° key high side, triangle cheek light, dramatic contrast', severity:0, tags:['light','classic'] },
+    { pattern:/\blight:\s*split\b/gi,     replacement:'split lighting: key from 90°, face half in shadow, graphic look', severity:0, tags:['light'] },
+    { pattern:/\blight:\s*butterfly\b/gi, replacement:'butterfly lighting: key directly above lens, butterfly nose shadow, glam highlight', severity:0, tags:['light','beauty'] },
+    { pattern:/\blight:\s*rim\s*sandwich\b/gi, replacement:'two rim lights left/right + soft frontal fill, sculpted edges', severity:0, tags:['light','rim'] }
+  ]
+});
+/* ============================== BLOCK 106 — END ============================== */
+/* ================================================================
+ * BLOCK 107 — GEL PATTERNS v2 (TRIADIC • COMPLEMENTARY • RAMP • CHECKER)
+ * ID: BLOCK 107 • DATE: 2025-09-12
+ * PURPOSE: Color theory presets for gels and practicals.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 107',
+  language:'en',
+  category:'gel_patterns_v2',
+  gated:false,
+  emoji:['🟪','🟦','🟧'],
+  entries:[
+    { pattern:/\bgel:\s*triadic\b/gi,       replacement:'triadic gels: red + blue + green, balanced saturation, separate planes', severity:0, tags:['gel','theory'] },
+    { pattern:/\bgel:\s*complement\b/gi,    replacement:'complementary gels: teal vs orange, skin pop, background separation', severity:0, tags:['gel','theory'] },
+    { pattern:/\bgel:\s*ramp\b/gi,          replacement:'color ramp gradient on backdrop, top-to-bottom hue shift', severity:0, tags:['gel','background'] },
+    { pattern:/\bgel:\s*checker\b/gi,       replacement:'checker neon pattern on wall, alternating squares, rhythmic spill', severity:0, tags:['gel','pattern'] }
+  ]
+});
+/* ============================== BLOCK 107 — END ============================== */
+/* ================================================================
+ * BLOCK 108 — SELFIE/PHONE CORRECTIVES (NEG + FIXES)
+ * ID: BLOCK 108 • DATE: 2025-09-12
+ * PURPOSE: Clean mirror/phone selfies: arm length, lens distortion, smudges.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 108',
+  language:'en',
+  category:'selfie_correctives',
+  gated:false,
+  emoji:['🤳','🧼'],
+  entries:[
+    { pattern:/\bNEG:\s*selfie\s*arm\b/gi,     replacement:'no stretched selfie arm, natural arm length', severity:0, tags:['neg','selfie'] },
+    { pattern:/\bNEG:\s*wideface\b/gi,         replacement:'no phone-lens facial distortion, natural proportions', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*smudge\b/gi,           replacement:'no mirror smudges, clean reflective surface', severity:0, tags:['neg','mirror'] },
+    { pattern:/\bselfie:\s*fix\b/gi,           replacement:'phone at chest level, slight downward tilt, flattering angle', severity:0, tags:['selfie'] }
+  ]
+});
+/* ============================== BLOCK 108 — END ============================== */
+/* ================================================================
+ * BLOCK 109 — COLOR THEORY TOKENS (COMPLEMENTARY • ANALOGOUS • TRIADIC)
+ * ID: BLOCK 109 • DATE: 2025-09-12
+ * PURPOSE: Global palette hints beyond gels.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 109',
+  language:'en',
+  category:'color_theory',
+  gated:false,
+  emoji:['🎨','🧭'],
+  entries:[
+    { pattern:/\bpal:\s*complementary\b/gi, replacement:'complementary palette, warm skin vs cool background', severity:0, tags:['grade'] },
+    { pattern:/\bpal:\s*analogous\b/gi,     replacement:'analogous palette, neighboring hues, smooth harmony', severity:0, tags:['grade'] },
+    { pattern:/\bpal:\s*triadic\b/gi,       replacement:'triadic palette, three equidistant hues, dynamic balance', severity:0, tags:['grade'] }
+  ]
+});
+/* ============================== BLOCK 109 — END ============================== */
+/* ================================================================
+ * BLOCK 110 — POSE CORRECTIVES (SEATED • STANDING • WEIGHT)
+ * ID: BLOCK 110 • DATE: 2025-09-12
+ * PURPOSE: Micro-fixes that kill awkward stance artifacts.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 110',
+  language:'en',
+  category:'pose_correctives',
+  gated:false,
+  emoji:['🧍','🪑'],
+  entries:[
+    { pattern:/\bposefix:\s*weight\s*even\b/gi,  replacement:'even weight distribution, hips level, relaxed knees', severity:0, tags:['pose'] },
+    { pattern:/\bposefix:\s*seated\s*angle\b/gi, replacement:'seated at 45°, spine tall, shoulders down', severity:0, tags:['pose'] },
+    { pattern:/\bposefix:\s*hand\s*claw\b/gi,    replacement:'no claw hands, relaxed fingers, natural curvature', severity:0, tags:['pose','neg'] }
+  ]
+});
+/* ============================== BLOCK 110 — END ============================== */
+/* ================================================================
+ * BLOCK 111 — BACKGROUND SURFACES (MARBLE • HERRINGBONE • SUBWAY TILE)
+ * ID: BLOCK 111 • DATE: 2025-09-12
+ * PURPOSE: Texture-rich backdrops that render crisply.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 111',
+  language:'en',
+  category:'background_surfaces',
+  gated:false,
+  emoji:['🧱','🪨'],
+  entries:[
+    { pattern:/\bbg:\s*marble\b/gi,       replacement:'polished marble surface, subtle veining, glossy reflections', severity:0, tags:['background'] },
+    { pattern:/\bbg:\s*herringbone\b/gi,  replacement:'herringbone wood floor, directional grain, warm tone', severity:0, tags:['background'] },
+    { pattern:/\bbg:\s*subway\s*tile\b/gi,replacement:'white subway tiles, beveled edges, grout lines', severity:0, tags:['background'] },
+    { pattern:/\bbg:\s*velvet\s*drape\b/gi,replacement:'velvet drape backdrop, deep folds, light-eating texture', severity:0, tags:['background','fabric'] }
+  ]
+});
+/* ============================== BLOCK 111 — END ============================== */
+/* ================================================================
+ * BLOCK 112 — ARCHITECTURE EXTERIORS (BROWNSTONE • MOTEL • FIRE ESCAPE)
+ * ID: BLOCK 112 • DATE: 2025-09-12
+ * PURPOSE: Outdoor scene variety for urban fashion/erotica.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 112',
+  language:'en',
+  category:'architecture_exteriors',
+  gated:false,
+  emoji:['🏨','🚒'],
+  entries:[
+    { pattern:/\barch:\s*brownstone\b/gi, replacement:'city brownstone steps, wrought-iron rail, stoop vibe', severity:0, tags:['urban','exterior'] },
+    { pattern:/\barch:\s*fire\s*escape\b/gi, replacement:'metal fire escape, grid shadows, gritty urban feel', severity:0, tags:['urban','exterior'] },
+    { pattern:/\barch:\s*motel\b/gi,     replacement:'retro roadside motel, neon vacancy sign, long corridor', severity:0, tags:['exterior','neon'] }
+  ]
+});
+/* ============================== BLOCK 112 — END ============================== */
+/* ================================================================
+ * BLOCK 113 — WATER PHYSICS v2 (CAUSTICS • TRAILS • MIST)
+ * ID: BLOCK 113 • DATE: 2025-09-12
+ * PURPOSE: Rich wet cues for pools, showers, rain rigs.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 113',
+  language:'en',
+  category:'water_physics_v2',
+  gated:false,
+  emoji:['💦','🌫️'],
+  entries:[
+    { pattern:/\bwater:\s*caustics\b/gi, replacement:'pool caustic light patterns on skin and tiles', severity:0, tags:['wet','fx'] },
+    { pattern:/\bwater:\s*trail\b/gi,    replacement:'droplet trails along curves, gravity streaks', severity:0, tags:['wet'] },
+    { pattern:/\bwater:\s*mist\b/gi,     replacement:'fine mist in air, micro droplets spark in light', severity:0, tags:['wet','fx'] }
+  ]
+});
+/* ============================== BLOCK 113 — END ============================== */
+/* ================================================================
+ * BLOCK 114 — TATTOO & PIERCING DETAIL (SUBTLE, CLEAN)
+ * ID: BLOCK 114 • DATE: 2025-09-12
+ * PURPOSE: Optional body detail that models often render well.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 114',
+  language:'en',
+  category:'ink_piercings',
+  gated:false,
+  emoji:['🖋️','🧿'],
+  entries:[
+    { pattern:/\bink:\s*sleeve\b/gi,      replacement:'tattoo sleeve, clean linework, healed ink look', severity:0, tags:['ink'] },
+    { pattern:/\bink:\s*micro\b/gi,       replacement:'small fine-line tattoo, delicate symbol', severity:0, tags:['ink'] },
+    { pattern:/\bpierce:\s*nose\b/gi,     replacement:'nose piercing, tiny stud, subtle glint', severity:0, tags:['piercing'] },
+    { pattern:/\bpierce:\s*navel\b/gi,    replacement:'navel piercing, gemstone sparkle', severity:0, tags:['piercing'] }
+  ]
+});
+/* ============================== BLOCK 114 — END ============================== */
+/* ================================================================
+ * BLOCK 115 — MATERIAL HARDWARE (ZIPPERS • BUCKLES • CHAINS)
+ * ID: BLOCK 115 • DATE: 2025-09-12
+ * PURPOSE: Accessory realism + specular candy.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 115',
+  language:'en',
+  category:'hardware_detail',
+  gated:false,
+  emoji:['⛓️','🔩'],
+  entries:[
+    { pattern:/\bhard:\s*zipper\b/gi, replacement:'metal zipper teeth, specular highlights, pull tab detail', severity:0, tags:['hardware'] },
+    { pattern:/\bhard:\s*buckle\b/gi, replacement:'belt buckle, brushed metal, realistic reflection', severity:0, tags:['hardware'] },
+    { pattern:/\bhard:\s*chain\b/gi,  replacement:'delicate chain drape, tiny links, catchlight sparkle', severity:0, tags:['hardware'] }
+  ]
+});
+/* ============================== BLOCK 115 — END ============================== */
+/* ================================================================
+ * BLOCK 116 — PROMPT LENGTH CONTROLLER (trimTo) + COMMA SMARTS
+ * ID: BLOCK 116 • DATE: 2025-09-12
+ * PURPOSE: Provide CORE.trimTo referenced by exporters; tidy punctuation.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.trimTo = function(text, mode='med'){
+    const max = (mode==='short')?10 : (mode==='long'?40:22); // fragments
+    let parts = String(text||'').split(',').map(s=>s.trim()).filter(Boolean);
+    if (parts.length > max) parts = parts.slice(0, max);
+    let out = parts.join(', ');
+    out = out.replace(/\s+,/g, ',').replace(/,{2,}/g, ',').replace(/\s{2,}/g,' ');
+    return out.charAt(0).toUpperCase() + out.slice(1);
+  };
+  global.PF_CORE = Object.assign(CORE,{trimTo:CORE.trimTo});
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 116 — END ============================== */
+/* ================================================================
+ * BLOCK 118 — SKIN TONE DIVERSITY TOKENS (NEUTRAL, RESPECTFUL)
+ * ID: BLOCK 118 • DATE: 2025-09-12
+ * PURPOSE: Inclusive, descriptive skin tone cues.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 118',
+  language:'en',
+  category:'skin_tone_diversity',
+  gated:false,
+  emoji:['🎨','🧑🏽‍🦰'],
+  entries:[
+    { pattern:/\bskin:\s*porcelain\b/gi, replacement:'porcelain skin tone, cool undertone', severity:0, tags:['skintone'] },
+    { pattern:/\bskin:\s*olive\b/gi,     replacement:'olive skin tone, green-gold undertone', severity:0, tags:['skintone'] },
+    { pattern:/\bskin:\s*amber\b/gi,     replacement:'amber skin tone, warm golden undertone', severity:0, tags:['skintone'] },
+    { pattern:/\bskin:\s*espresso\b/gi,  replacement:'deep espresso skin tone, rich lowlights', severity:0, tags:['skintone'] }
+  ]
+});
+/* ============================== BLOCK 118 — END ============================== */
+/* ================================================================
+ * BLOCK 119 — STUDIO LIGHTING RECIPES v2 (LOOP • SHORT • BROAD)
+ * PURPOSE: More portrait-native recipes the engines recognize.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 119',
+  language:'en',
+  category:'studio_lighting_recipes_v2',
+  gated:false,
+  emoji:['💡','🧭'],
+  entries:[
+    { pattern:/\blight:\s*loop\b/gi,    replacement:'loop lighting: key 30–45° off-camera, small nose shadow loop', severity:0, tags:['light','portrait'] },
+    { pattern:/\blight:\s*short\b/gi,   replacement:'short lighting: light the far cheek, slimming perspective', severity:0, tags:['light','portrait'] },
+    { pattern:/\blight:\s*broad\b/gi,   replacement:'broad lighting: light the near cheek, wider facial look', severity:0, tags:['light','portrait'] }
+  ]
+});
+/* ============================== BLOCK 119 — END ============================== */
+/* ================================================================
+ * BLOCK 120 — STUDIO MODIFIERS (BEAUTY DISH • STRIPBOX • SNOOT • BARN DOORS)
+ * PURPOSE: Physical modifier tokens that many models respond to.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 120',
+  language:'en',
+  category:'studio_modifiers',
+  gated:false,
+  emoji:['🛠️','📸'],
+  entries:[
+    { pattern:/\bmod:\s*beauty\s*dish\b/gi, replacement:'beauty dish specular highlight, round catchlight', severity:0, tags:['light','modifier'] },
+    { pattern:/\bmod:\s*stripbox\b/gi,     replacement:'stripbox edge light, slim highlight on body lines', severity:0, tags:['light','modifier'] },
+    { pattern:/\bmod:\s*snoot\b/gi,        replacement:'snoot spotlight, tight beam pool, hard falloff', severity:0, tags:['light','modifier'] },
+    { pattern:/\bmod:\s*barn\s*doors\b/gi, replacement:'barn doors flagging, controlled spill, graphic shadows', severity:0, tags:['light','modifier'] }
+  ]
+});
+/* ============================== BLOCK 120 — END ============================== */
+/* ================================================================
+ * BLOCK 121 — MOTION STREAKS v2 (REAR-CURTAIN • CITY TRAILS)
+ * PURPOSE: Clear motion language for dynamic looks.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 121',
+  language:'en',
+  category:'motion_streaks_v2',
+  gated:false,
+  emoji:['🏃‍♀️','💫'],
+  entries:[
+    { pattern:/\bfx:\s*rearcurtain\b/gi, replacement:'rear-curtain sync blur, subject sharp with trailing streaks', severity:0, tags:['fx','motion'] },
+    { pattern:/\bfx:\s*citytrails\b/gi,  replacement:'long exposure city light trails, vibrant streak lines', severity:0, tags:['fx','motion'] }
+  ]
+});
+/* ============================== BLOCK 121 — END ============================== */
+/* ================================================================
+ * BLOCK 122 — SEAMLESS PAPER COLORS (BACKGROUND #PALETTES)
+ * PURPOSE: Common studio background hues that render reliably.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 122',
+  language:'en',
+  category:'seamless_paper_colors',
+  gated:false,
+  emoji:['🧻','🎨'],
+  entries:[
+    { pattern:/\bbg:\s*seamless\s*bone\b/gi,    replacement:'seamless paper backdrop, bone off-white', severity:0, tags:['background'] },
+    { pattern:/\bbg:\s*seamless\s*thunder\b/gi, replacement:'seamless paper backdrop, thunder grey', severity:0, tags:['background'] },
+    { pattern:/\bbg:\s*seamless\s*coral\b/gi,   replacement:'seamless paper backdrop, coral pink', severity:0, tags:['background'] },
+    { pattern:/\bbg:\s*seamless\s*teal\b/gi,    replacement:'seamless paper backdrop, teal blue-green', severity:0, tags:['background'] }
+  ]
+});
+/* ============================== BLOCK 122 — END ============================== */
+/* ================================================================
+ * BLOCK 123 — FASHION ERA VIBES (70s • 90s • Y2K • INDIE-SLEAZE)
+ * PURPOSE: Style priors that nudge wardrobe, makeup, and grade coherently.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 123',
+  language:'en',
+  category:'fashion_era_vibes',
+  gated:false,
+  emoji:['🕶️','📼'],
+  entries:[
+    { pattern:/\bera:\s*70s\b/gi,  replacement:'1970s vibe, warm film tone, feathered hair, flare denim, analog grain', severity:0, tags:['era'] },
+    { pattern:/\bera:\s*90s\b/gi,  replacement:'1990s vibe, glossy magazine look, brown lipstick, thin brows', severity:0, tags:['era'] },
+    { pattern:/\bera:\s*y2k\b/gi,  replacement:'Y2K vibe, metallic shimmer, frosty highlight, mini handbag, cyber hints', severity:0, tags:['era'] },
+    { pattern:/\bera:\s*indie\b/gi,replacement:'indie-sleaze vibe, on-camera flash, messy glam, candid energy', severity:0, tags:['era'] }
+  ]
+});
+/* ============================== BLOCK 123 — END ============================== */
+/* ================================================================
+ * BLOCK 124 — CORE SANITY: DEDUPE & HEALTH CHECK WRAPPER
+ * PURPOSE: Final pass to deduplicate fragments and expose a simple check.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.dedupeFragments = function(str){
+    const parts = String(str||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const seen = new Set(); const out=[];
+    for (const p of parts){ const k=p.toLowerCase(); if (!seen.has(k)){ out.push(p); seen.add(k); } }
+    return out.join(', ');
+  };
+  const prevBuild = CORE.build;
+  CORE.build = function(ctx={}, opts={}){
+    const r = prevBuild ? prevBuild(ctx, opts) : {prompt:''};
+    r.prompt = CORE.dedupeFragments(r.prompt);
+    return r;
+  };
+  CORE.health = function(){
+    const base = CORE.check ? CORE.check() : {issues:['CORE.check missing'], totalPacks: (PF_PACKS||[]).length};
+    return { totalPacks: base.totalPacks, issues: base.issues };
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 124 — END ============================== */
+/* ================================================================
+ * BLOCK 125 — VERSION BANNER (for UI + debugging)
+ * PURPOSE: Stamp a friendly version + short capability summary.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || (global.PF_CORE = {});
+  CORE.__PF_VERSION__ = 'PF-Core v1.0 (session build)';
+  CORE.capabilities = [
+    'preprocess+typo guard','synonym mirror','domain router','compose+build+finalize',
+    'intent parser','engine profiles+auto-negs','genre presets','pose+wardrobe+fabric catalogs',
+    'lighting+gel recipes','lens+fx+filters','depth+parallax','neg artifacts v3',
+    'contradiction resolver','softcore taste map','schema dump','exporters','snapshot/restore',
+    'telemetry+heatmap+conflict logs','hot-loader','ui hints','style presets','sentence glue'
+  ];
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 125 — END ============================== */
+/* ================================================================
+ * BLOCK 126 — END NOTES / IMPLEMENTATION GUIDE (READ ME)
+ * PURPOSE: Session notes, HTML rules, file split plan, and future add-ons.
+ * ================================================================
+ * ✅ File layout (recommended):
+ *   - pf-core.js  (THIS file) — engines, packs, pipelines, utilities.
+ *   - ui.js       (support)   — DOM bindings, chip pickers, event wiring.
+ *   - packs/user.json         — optional user-learned packs hot-loaded at boot.
+ *
+ * ✅ Minimal HTML boot order:
+ *   <script src="pf-core.js"></script>
+ *   <script src="ui.js"></script>
+ *   ui.js should:
+ *     1) read raw input; call PF_CORE.autoSuggest or PF_CORE.finalize
+ *     2) display prompt + negatives; show 'learn' suggestions; 'Add to usermap'
+ *     3) offer engine + genre + style chips (PF_CORE.uiHints(), PF_CORE.schema())
+ *     4) export buttons: short/med/long (PF_CORE.exporters.*), snapshot download
+ *
+ * ✅ Privacy / storage:
+ *   - Telemetry/heatmap/conflict logs store in localStorage only.
+ *   - No network calls in this core. UI may offer “Export JSON” as a file.
+ *
+ * ✅ Key APIs for UI (one-liners you can call):
+ *   - PF_CORE.finalize(raw, ctx, extras, negatives) → {prompt, negative}
+ *   - PF_CORE.buildBoosted(ctx, extras, negs, level)
+ *   - PF_CORE.applyEngine(name, extras, negs) → {extras, negatives}
+ *   - PF_CORE.applyGenre(name, extras) → extras[]
+ *   - PF_CORE.intent(raw) → token extras[]
+ *   - PF_CORE.usermap.add({from:'clittorus', to:'clitoris'})
+ *   - PF_CORE.snapshot() / PF_CORE.restore(bundle)
+ *   - PF_CORE.loadPacks(arrayOfPackObjects)
+ *   - PF_CORE.schema() / PF_CORE.uiHints() — for chip rendering
+ *   - PF_CORE.health() — packs count + issues
+ *
+ * ✅ Sentence & sanity flow:
+ *   preprocess → (usermap) → composeRouted → build → resolveContradictions
+ *   → styleBrake → stitch → softcoreMap (if vibe:'softcore') → dedupeFragments
+ *   → applyStyle → trimTo (exporters) → prompt out
+ *
+ * ✅ Default fallbacks (if user is vague):
+ *   Use PF_CORE.buildSafe(ctx, extras, negatives) or PF_CORE.finalize(...)
+ *
+ * ✅ Engine profiles (quick):
+ *   extras/negatives = PF_CORE.applyEngine('flux' | 'sdxl' | 'mj' | 'runway' | 'kandinsky' | 'leonardo' | 'playground')
+ *
+ * 🚧 Known limits:
+ *   - Extreme contradictions still need human nudge. Heatmap+conflict logs help.
+ *   - Some engine tokens are ignored by certain models (harmless to include).
+ *
+ * 🧪 Quick test checklist (no console needed on tablet):
+ *   - PF_CORE.health() → see total packs + issues
+ *   - PF_CORE.finalize("editorial rooftop neon, windy hair", {domain:'people', allowExplicit:true}, PF_CORE.applyEngine('flux', PF_CORE.applyGenre('editorial')).extras)
+ *   - PF_CORE.snapshot() → JSON blob is non-empty
+ *
+ * 📦 Future add-ons (optional later; you’re already “complete”):
+ *   - Background paper library v2 (more color names)
+ *   - Location micro-anchors v3 (hotel bar, office boardroom, library stacks)
+ *   - Gesture microposes v5 (ankle cross, sleeve tug, collar pop)
+ *   - Text overlay kit (mag cover lines, date bugs) for mock covers (SFW)
+ *   - Batch prompt sampler (generate N slight variants per build)
+ *
+ * 🧩 Integration notes for ui.js:
+ *   - On input change: const extra = PF_CORE.intent(raw);
+ *     const applied = PF_CORE.applyEngine(engineSel, PF_CORE.applyGenre(genreSel, extra));
+ *     const out = PF_CORE.finalize(raw, ctx, applied.extras, applied.negatives);
+ *   - Show `out.prompt` and `out.negative` with copy buttons; also list `out.learn` if using autoSuggest.
+ *
+ * 🎯 Definition of Done for this core:
+ *   - Packs: portraits, fashion, boudoir, urban, nature, water, studio, props, fabrics, skin, hair,
+ *     hands/feet, poses (floorwork/symmetry/site), lighting+gels, lens+FX, depth, angles, color theory,
+ *     wardrobe variants, era vibes, backgrounds, architecture.
+ *   - Utilities: typo guard, synonym mirror, intent parser, engine profiles+auto-negs,
+ *     genre presets, contradiction resolver, softcore taste map, negatives v3, health check,
+ *     exporters, schema/ui hints, snapshot/restore, telemetry/heatmap, hot-loader,
+ *     sentence glue + style presets + length trim, dedupe, safe defaults, finalizer.
+ *
+ * ✅ This core is finished and ready for HTML integration.
+ * ================================================================ */
