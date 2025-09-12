@@ -5816,4 +5816,109 @@ PF_PACKS.push({
  * ------------------------------------------------
  * This is the most exhaustive NSFW+SFW prompt brain possible with current limits.
  * ================================================================ */
+/* ================================================================
+ * BLOCK 81 — HAIR STYLES, COLORS & FACE OPTIONS (EN) (START)
+ * PURPOSE:
+ *   - Big hair and face lexicon to allow prompt-level customization.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 81',
+  language: 'en',
+  category: 'hair_face',
+  emoji: ['💇','👱‍♀️','🧑‍🦰','🧔'],
+  notes: ['Supports sliders for face morphs and hair restyling.'],
+  entries: [
+    { pattern: /\bblonde\b/gi, replacement: 'blonde hair, golden strands', severity: 0, tags: ['hair'] },
+    { pattern: /\bbrunette\b/gi, replacement: 'brunette hair, chestnut shine', severity: 0, tags: ['hair'] },
+    { pattern: /\bredhead\b/gi, replacement: 'red hair, fiery copper tone', severity: 0, tags: ['hair'] },
+    { pattern: /\bplatinum\b/gi, replacement: 'platinum hair, icy white shine', severity: 0, tags: ['hair'] },
+    { pattern: /\bblack\s*hair\b/gi, replacement: 'black hair, silky sheen', severity: 0, tags: ['hair'] },
+    { pattern: /\bpixie\s*cut\b/gi, replacement: 'pixie cut, short playful style', severity: 0, tags: ['hair'] },
+    { pattern: /\blong\s*hair\b/gi, replacement: 'long flowing hair, past shoulders', severity: 0, tags: ['hair'] },
+    { pattern: /\bponytail\b/gi, replacement: 'high ponytail, strands swinging', severity: 0, tags: ['hair'] },
+    { pattern: /\bbangs\b/gi, replacement: 'straight bangs framing forehead', severity: 0, tags: ['hair'] },
+    { pattern: /\bfreckles\b/gi, replacement: 'freckles sprinkled across cheeks', severity: 0, tags: ['face'] },
+    { pattern: /\bmakeup\b/gi, replacement: 'soft glam makeup, glossy lips', severity: 0, tags: ['face'] },
+    { pattern: /\bscar\b/gi, replacement: 'face scar, rugged detail', severity: 0, tags: ['face'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 81 — HAIR STYLES, COLORS & FACE OPTIONS (EN) (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 81a — HAIR & FACE EXPLICIT DETAILS (EN) (START)
+ * PURPOSE:
+ *   - Erotic focus on facial expressions, messy hair, cum effects.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 81a',
+  language: 'en',
+  category: 'hair_face_explicit',
+  gated: true,
+  emoji: ['🔥','💦','😈'],
+  notes: ['Adult-only descriptors for facial reactions and hair messiness.'],
+  entries: [
+    { pattern: /\bsoft glam makeup, glossy lips\b/gi, replacement: 'smudged makeup, lipstick smeared from kissing', severity: 5, tags: ['explicit'] },
+    { pattern: /\blong flowing hair, past shoulders\b/gi, replacement: 'hair pulled, strands stuck to sweaty skin', severity: 5, tags: ['explicit'] },
+    { pattern: /\bfreckles sprinkled across cheeks\b/gi, replacement: 'freckled face flushed red from orgasm', severity: 4, tags: ['explicit'] },
+    { pattern: /\bface scar, rugged detail\b/gi, replacement: 'scarred face glistening with sweat', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 81a — HAIR & FACE EXPLICIT DETAILS (EN) (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 82 — SEXUAL POSITIONS & GROUP COMBOS (EN) (START)
+ * PURPOSE:
+ *   - Massive lexicon of common sex positions and group activity patterns.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 82',
+  language: 'en',
+  category: 'positions_groups',
+  emoji: ['🛏️','🔄','👥'],
+  notes: ['Neutral names, safe for artistic reference; 82a escalates detail.'],
+  entries: [
+    { pattern: /\bmissionary\b/gi, replacement: 'missionary position, partner on top', severity: 0, tags: ['position'] },
+    { pattern: /\bdoggy\s*style\b/gi, replacement: 'rear-entry position, hips raised', severity: 0, tags: ['position'] },
+    { pattern: /\bcowgirl\b/gi, replacement: 'woman-on-top position, straddling partner', severity: 0, tags: ['position'] },
+    { pattern: /\breverse\s*cowgirl\b/gi, replacement: 'reverse cowgirl, back turned while riding', severity: 0, tags: ['position'] },
+    { pattern: /\bspoon\b/gi, replacement: 'spooning position, bodies pressed from behind', severity: 0, tags: ['position'] },
+    { pattern: /\bstanding\s*sex\b/gi, replacement: 'standing embrace, lifted hips', severity: 0, tags: ['position'] },
+    { pattern: /\bgroup\s*sex\b/gi, replacement: 'multi-partner scene, synchronized rhythm', severity: 0, tags: ['group'] },
+    { pattern: /\bthreesome\b/gi, replacement: 'three participants, switching positions', severity: 0, tags: ['group'] },
+    { pattern: /\borgy\b/gi, replacement: 'larger group entanglement, overlapping bodies', severity: 0, tags: ['group'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 82 — SEXUAL POSITIONS & GROUP COMBOS (EN) (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 82a — POSITIONS & GROUP COMBOS EXPLICIT (EN) (START)
+ * PURPOSE:
+ *   - Add raw descriptors: penetration depth, fluids, sounds.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 82a',
+  language: 'en',
+  category: 'positions_groups_explicit',
+  gated: true,
+  emoji: ['🔥','💦'],
+  notes: ['Super graphic breakdown of sex acts.'],
+  entries: [
+    { pattern: /\bmissionary position, partner on top\b/gi, replacement: 'missionary, legs spread, deep thrusts, bed squeaking', severity: 5, tags: ['explicit'] },
+    { pattern: /\brear-entry position, hips raised\b/gi, replacement: 'doggy style, ass slapping, cum dripping', severity: 5, tags: ['explicit'] },
+    { pattern: /\bwoman-on-top position, straddling partner\b/gi, replacement: 'cowgirl riding, tits bouncing, wet squelching sound', severity: 5, tags: ['explicit'] },
+    { pattern: /\bspooning position, bodies pressed from behind\b/gi, replacement: 'slow spoon fuck, cum running down thighs', severity: 5, tags: ['explicit'] },
+    { pattern: /\bthree participants, switching positions\b/gi, replacement: 'threesome swapping holes, shared moans', severity: 5, tags: ['explicit'] },
+    { pattern: /\blarger group entanglement, overlapping bodies\b/gi, replacement: 'orgy with cum everywhere, bodies slick with sweat', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 82a — POSITIONS & GROUP COMBOS EXPLICIT (EN) (END)
+ * ================================================================ */
+
 
