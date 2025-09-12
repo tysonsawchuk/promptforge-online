@@ -7422,3 +7422,564 @@ PF_PACKS.push({
   };
 })(typeof self!=='undefined'?self:this);
 /* ============================== BLOCK 20 — END ============================== */
+/* ================================================================
+ * BLOCK 5c — DUO SYMMETRY & MIRROR DOUBLES (COMPOSITION+++)
+ * ID: BLOCK 5c
+ * DATE: 2025-09-12
+ * PURPOSE: Clean, camera-readable duo symmetry & mirror tricks.
+ * NOTE: severity 0 so they stack in any vibe.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 5c',
+  language:'en',
+  category:'duo_symmetry_mirror',
+  gated:false,
+  emoji:['🪞','🧭','🫂'],
+  entries:[
+    { pattern:/\bduo:\s*sym\b/gi,    replacement:'two subjects mirrored, shoulder-to-shoulder, symmetrical stance', severity:0, tags:['frame','mirror'] },
+    { pattern:/\bduo:\s*cross\b/gi,  replacement:'cross-body framing, one facing camera, one profile', severity:0, tags:['frame'] },
+    { pattern:/\bduo:\s*overlap\b/gi,replacement:'slight overlap, staggered depth, crisp separation lights', severity:0, tags:['frame','light'] },
+    { pattern:/\bmirror:\s*double\b/gi, replacement:'mirror double reflection, both faces visible, clean glass', severity:0, tags:['mirror'] },
+    { pattern:/\bmirror:\s*tri\b/gi, replacement:'triple reflection angles, kaleidoscope feel without distortion', severity:0, tags:['mirror','fx'] },
+    { pattern:/\bframe:\s*triangle\b/gi, replacement:'triangular composition, heads forming stable base', severity:0, tags:['frame'] }
+  ]
+});
+/* ============================== BLOCK 5c — END ============================== */
+/* ================================================================
+ * BLOCK 6d — RGB GEL & PRACTICAL COLOR KIT (LIGHTING+++)
+ * ID: BLOCK 6d
+ * DATE: 2025-09-12
+ * PURPOSE: One-word color gels and practicals that “read” instantly.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 6d',
+  language:'en',
+  category:'rgb_gels_practicals',
+  gated:false,
+  emoji:['🟦','🟥','🟩','💡'],
+  entries:[
+    { pattern:/\bgel:\s*magenta\b/gi, replacement:'magenta gel key, cyan rim, skin pops', severity:0, tags:['light','neon'] },
+    { pattern:/\bgel:\s*cyan\b/gi,    replacement:'cyan fill, warm tungsten practical in background', severity:0, tags:['light'] },
+    { pattern:/\bgel:\s*red\b/gi,     replacement:'red key from left, deep shadows, sin-city vibe', severity:0, tags:['light'] },
+    { pattern:/\bgel:\s*blue\b/gi,    replacement:'saturated blue wash, silver skin speculars', severity:0, tags:['light'] },
+    { pattern:/\bpract:\s*tungsten\b/gi, replacement:'warm tungsten lamp in scene, cozy highlights', severity:0, tags:['light'] },
+    { pattern:/\bpract:\s*neon\b/gi,  replacement:'neon signage practical, colored spill on skin', severity:0, tags:['light','neon'] },
+    { pattern:/\bpract:\s*candle\b/gi, replacement:'clustered candles as practicals, flicker texture', severity:0, tags:['light'] }
+  ]
+});
+/* ============================== BLOCK 6d — END ============================== */
+/* ================================================================
+ * BLOCK 8d — REFLECTIONS & GLASS SURFACES (SET++ FX)
+ * ID: BLOCK 8d
+ * DATE: 2025-09-12
+ * PURPOSE: Background/reflection helpers that sell realism.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 8d',
+  language:'en',
+  category:'reflections_glass',
+  gated:false,
+  emoji:['🪟','💧','🔮'],
+  entries:[
+    { pattern:/\bglass:\s*clean\b/gi,    replacement:'pristine glass, crisp reflections, no streaks', severity:0, tags:['glass'] },
+    { pattern:/\bglass:\s*streak\b/gi,   replacement:'subtle water streaks on glass, vertical trails', severity:0, tags:['glass','wet'] },
+    { pattern:/\bmirror:\s*hand\b/gi,    replacement:'handprint smudge on mirror, breath halo', severity:0, tags:['mirror','fx'] },
+    { pattern:/\breflect:\s*floor\b/gi,  replacement:'polished floor reflection, soft duplication', severity:0, tags:['fx'] },
+    { pattern:/\breflect:\s*city\b/gi,   replacement:'city lights reflecting in window, bokeh streaks', severity:0, tags:['urban','fx'] }
+  ]
+});
+/* ============================== BLOCK 8d — END ============================== */
+/* ================================================================
+ * BLOCK 3n — BODY HIGHLIGHT ZONES & SEXY MICRO-CUES
+ * ID: BLOCK 3n
+ * DATE: 2025-09-12
+ * PURPOSE: Compact descriptors for body highlights; explicit-gated.
+ * GATED: allowExplicit:true
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3n',
+  language:'en',
+  category:'body_highlights_explicit',
+  gated:true,
+  emoji:['✨','➕'],
+  entries:[
+    { pattern:/\bhl:\s*collarbone\b/gi, replacement:'highlighted collarbones, catchlights dancing', severity:2, tags:['finish'] },
+    { pattern:/\bhl:\s*underboob\b/gi,  replacement:'underboob sheen, lifted curve, soft shadow line', severity:3, tags:['breasts','finish'] },
+    { pattern:/\bhl:\s*hipdip\b/gi,     replacement:'hip dips emphasized, V-lines leading inward', severity:3, tags:['body','finish'] },
+    { pattern:/\bhl:\s*thighgap\b/gi,   replacement:'thigh gap light spill, inner line glow', severity:3, tags:['body','finish'] },
+    { pattern:/\bhl:\s*lowerback\b/gi,  replacement:'oiled lower back, deep arch highlight', severity:3, tags:['finish'] },
+    { pattern:/\bhl:\s*booty\b/gi,      replacement:'booty highlight on upper curve, glossy edge', severity:3, tags:['finish','ass'] }
+  ]
+});
+/* ============================== BLOCK 3n — END ============================== */
+/* ================================================================
+ * BLOCK 3o — CURVES CATALOG (BREAST / BUTT VARIANTS)
+ * ID: BLOCK 3o
+ * DATE: 2025-09-12
+ * PURPOSE: Tasteful size/shape variants that render well.
+ * GATED: allowExplicit:true (paired with wardrobe/pose for clarity)
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3o',
+  language:'en',
+  category:'curves_catalog_explicit',
+  gated:true,
+  emoji:['🍑','🫐'],
+  entries:[
+    { pattern:/\bcurves:\s*perk\b/gi, replacement:'perky small breasts, tight upper pole, high nipples', severity:2, tags:['breasts'] },
+    { pattern:/\bcurves:\s*full\b/gi, replacement:'full round breasts, soft lower pole, natural sway', severity:2, tags:['breasts'] },
+    { pattern:/\bcurves:\s*massive\b/gi, replacement:'very large breasts, heavy hang, supported by hands', severity:3, tags:['breasts'] },
+    { pattern:/\bcurves:\s*bubble\b/gi, replacement:'bubble butt, high shelf, deep lower curve', severity:2, tags:['ass'] },
+    { pattern:/\bcurves:\s*athletic\b/gi, replacement:'tight glutes, defined hamstring tie-in', severity:2, tags:['ass','fit'] },
+    { pattern:/\bcurves:\s*plush\b/gi, replacement:'plush hips and thighs, soft dimples, squeezeable', severity:2, tags:['ass','bbw'] }
+  ]
+});
+/* ============================== BLOCK 3o — END ============================== */
+/* ================================================================
+ * BLOCK 3p — COLOR SWATCHES (LINGERIE • FABRIC • ACCESSORIES)
+ * ID: BLOCK 3p
+ * DATE: 2025-09-12
+ * PURPOSE: Simple color tokens for outfits so you can vary looks.
+ * NOTE: severity 0; mix with 3f (lingerie/outfits) and 6d gels.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3p',
+  language:'en',
+  category:'color_swatches',
+  gated:false,
+  emoji:['🟥','🟪','⬛','🟨'],
+  entries:[
+    { pattern:/\bcol:\s*black\b/gi,   replacement:'inky black fabric, slimming lines', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*white\b/gi,   replacement:'pure white lace, bridal tease', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*red\b/gi,     replacement:'scarlet lingerie, seductive punch', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*emerald\b/gi, replacement:'emerald satin, jewel-tone sheen', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*royal\b/gi,   replacement:'royal blue mesh, cool contrast', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*blush\b/gi,   replacement:'blush pink lace, soft romantic vibe', severity:0, tags:['color'] },
+    { pattern:/\bcol:\s*neon\b/gi,    replacement:'neon accent straps, cyber tease', severity:0, tags:['color','neon'] },
+    { pattern:/\bcol:\s*gold\b/gi,    replacement:'gold chain accents, warm glints', severity:0, tags:['color','jewelry'] }
+  ]
+});
+/* ============================== BLOCK 3p — END ============================== */
+/* ================================================================
+ * BLOCK 11c — STARTER MACROS III (RGB • MIRROR • SYMMETRY)
+ * ID: BLOCK 11c
+ * DATE: 2025-09-12
+ * PURPOSE: More one-tap bangers leveraging new packs.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+  const S = CORE.STARTERS = CORE.STARTERS || {};
+
+  S['soft_mirror_sym'] = { ctx:{ vibe:'softcore', party:'ff', location:'mirror', wardrobe:'lace', allowExplicit:true, camera:'cam: beauty, lens:85, dof: shallow, grade: filmic' } };
+  S['soft_neon_balcony'] = { ctx:{ vibe:'softcore', party:'solo', location:'balcony', wardrobe:'club dress', allowExplicit:true, camera:'cam: voyeur, lens:135, gel: magenta, pract: neon' } };
+  S['soft_bed_blush'] = { ctx:{ vibe:'softcore', party:'solo', location:'bed', wardrobe:'lace', allowExplicit:true, camera:'cam: glamour, lens:50, dof: shallow, grade: filmic' } };
+
+  S['hard_rgb_chair'] = { ctx:{ vibe:'hardcore', party:'mf', location:'chair', wardrobe:'latex', allowExplicit:true, camera:'cam: studio, lens:85, gel: cyan' } };
+  S['hard_mirror_ff_sym'] = { ctx:{ vibe:'hardcore', party:'ff', location:'mirror', wardrobe:'sheer', allowExplicit:true, camera:'cam: beauty, lens:50, gel: red' } };
+  S['hard_afterrain_balcony'] = { ctx:{ vibe:'hardcore', party:'ff', location:'balcony', wardrobe:'sheer', allowExplicit:true, camera:'cam: voyeur, lens:135, state: after rain' } };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 11c — END ============================== */
+/* ================================================================
+ * BLOCK 17 — OUTPUT LENGTH PRESETS (SHORT • MED • LONG)
+ * ID: BLOCK 17
+ * DATE: 2025-09-12
+ * PURPOSE: Give HTML a quick length dial without changing content.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.trimTo = function trimTo(text, mode='med'){
+    const limit = mode==='short' ? 160 : mode==='long' ? 480 : 280; // chars
+    let t = String(text||'').trim();
+    if (t.length <= limit) return t;
+    // trim by fragment commas first
+    const parts = t.split(/\s*,\s*/).filter(Boolean);
+    let out=''; for (const p of parts){ if ((out + (out?', ':'') + p).length > limit) break; out += (out?', ':'') + p; }
+    return out || t.slice(0, limit);
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 17 — END ============================== */
+/* ================================================================
+ * BLOCK 21 — HTML HOOKS (EVENT NAMES & KEYS)
+ * ID: BLOCK 21
+ * DATE: 2025-09-12
+ * PURPOSE: Tiny registry so your HTML can stay dumb-simple.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.HOOKS = {
+    events: {
+      BUILD_CLICK: 'pf.build.click',
+      SWAP_FACE:   'pf.swap.face',
+      PICK_START:  'pf.pick.starter',
+      COPY_PROMPT: 'pf.copy.prompt'
+    },
+    keys: {
+      starters: Object.keys(CORE.STARTERS||{}),
+      personas: (CORE.UI && CORE.UI.pickers && CORE.UI.pickers.persona) || [],
+      parties:  (CORE.UI && CORE.UI.pickers && CORE.UI.pickers.party) || []
+    }
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 21 — END ============================== */
+/* ================================================================
+ * BLOCK 3q — WET FABRIC BEHAVIOR (SHEER CLING • TRANSLUCENCY • DRAPE)
+ * ID: BLOCK 3q • DATE: 2025-09-12 • GATED: allowExplicit:true
+ * PURPOSE: Camera-readable “wet cloth” cues that actually render.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3q',
+  language:'en',
+  category:'wet_fabric_explicit',
+  gated:true,
+  emoji:['💧','🧵'],
+  entries:[
+    { pattern:/\bwet:\s*sheer\b/gi,   replacement:'wet sheer mesh clinging to skin, translucency increased', severity:3, tags:['sheer','wet'] },
+    { pattern:/\bwet:\s*satin\b/gi,   replacement:'wet satin stuck to curves, specular streaks', severity:2, tags:['fabric','wet'] },
+    { pattern:/\bwet:\s*shirt\b/gi,   replacement:'white shirt soaked, nipples faintly visible', severity:3, tags:['sheer','wet','breasts'] },
+    { pattern:/\bwet:\s*skirt\b/gi,   replacement:'soaked skirt hugging hips, darkened hem', severity:2, tags:['fabric','wet'] },
+    { pattern:/\bwet:\s*hair\b/gi,    replacement:'soaked hair strands, drip trails on neck', severity:1, tags:['hair','wet'] },
+    { pattern:/\bdrip:\s*hem\b/gi,    replacement:'water dripping from hem corners, floor speckled', severity:0, tags:['wet','fx'] }
+  ]
+});
+/* ============================== BLOCK 3q — END ============================== */
+/* ================================================================
+ * BLOCK 6e — LIGHT CONTROL (BOUNCE • NEG FILL • FLAGS)
+ * ID: BLOCK 6e • DATE: 2025-09-12 • severity 0
+ * PURPOSE: Real photo gaffer cues for sculpted skin/curves.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 6e',
+  language:'en',
+  category:'light_control',
+  emoji:['🪞','🖤','🪧'],
+  entries:[
+    { pattern:/\blight:\s*bounce\b/gi,   replacement:'white bounce card under chin, soft fill', severity:0, tags:['light'] },
+    { pattern:/\blight:\s*neg\b/gi,      replacement:'black negative fill on shadow side, deeper contrast', severity:0, tags:['light'] },
+    { pattern:/\bflag:\s*edge\b/gi,      replacement:'flag to cut spill off background, cleaner separation', severity:0, tags:['light'] },
+    { pattern:/\bflag:\s*rim\b/gi,       replacement:'subtle rim flag shaping on shoulders and hips', severity:0, tags:['light'] }
+  ]
+});
+/* ============================== BLOCK 6e — END ============================== */
+/* ================================================================
+ * BLOCK 8e — MICRO-LOCATIONS (HALLWAY • ELEVATOR • GARAGE • STAIR)
+ * ID: BLOCK 8e • DATE: 2025-09-12 • severity 0
+ * PURPOSE: More backgrounds that look sexy & believable.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 8e',
+  language:'en',
+  category:'micro_locations',
+  emoji:['🚪','🛗','🅿️','🪜'],
+  entries:[
+    { pattern:/\bbg:\s*hotel\s*hall\b/gi,  replacement:'hotel hallway, sconce lights, patterned carpet', severity:0, tags:['interior'] },
+    { pattern:/\bbg:\s*elevator\b/gi,      replacement:'elevator interior, brushed metal, mirror panel', severity:0, tags:['interior','mirror'] },
+    { pattern:/\bbg:\s*stairwell\b/gi,     replacement:'concrete stairwell, slit windows, hard shadows', severity:0, tags:['interior'] },
+    { pattern:/\bbg:\s*garage\b/gi,        replacement:'underground garage, sodium lamps, glossy floor', severity:0, tags:['urban'] }
+  ]
+});
+/* ============================== BLOCK 8e — END ============================== */
+/* ================================================================
+ * BLOCK 5d — COMPOSITION: LEADING LINES • FOREGROUND OCCLUSION
+ * ID: BLOCK 5d • DATE: 2025-09-12 • severity 0
+ * PURPOSE: Direct the eye, add depth without clutter.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 5d',
+  language:'en',
+  category:'composition_depth',
+  emoji:['➡️','🌿'],
+  entries:[
+    { pattern:/\bcomp:\s*leading\b/gi,   replacement:'leading lines toward subject hips and face', severity:0, tags:['frame'] },
+    { pattern:/\bcomp:\s*odd\b/gi,       replacement:'rule of odds grouping, asymmetry with balance', severity:0, tags:['frame'] },
+    { pattern:/\bfg:\s*soft\b/gi,        replacement:'soft foreground occlusion, blurred plant edge', severity:0, tags:['depth'] },
+    { pattern:/\bfg:\s*frame\b/gi,       replacement:'doorframe foreground, peeked viewpoint', severity:0, tags:['depth','voyeur'] }
+  ]
+});
+/* ============================== BLOCK 5d — END ============================== */
+/* ================================================================
+ * BLOCK 7b — NEGATIVE ANATOMY II (ARMS • LEGS • NECK • TEETH)
+ * ID: BLOCK 7b • DATE: 2025-09-12 • severity 0
+ * PURPOSE: Kill common anatomy glitches fast.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 7b',
+  language:'en',
+  category:'negative_anatomy_plus',
+  emoji:['🦴','🧠'],
+  entries:[
+    { pattern:/\bNEG:\s*limbs\b/gi,   replacement:'no extra limbs, no fused arms, correct elbow bends', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*legs\b/gi,    replacement:'no leg twists, natural knees, correct ankles', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*neck\b/gi,    replacement:'no neck stretch, natural spine curve', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*teeth\b/gi,   replacement:'no extra teeth, no gum artifacts, natural smile', severity:0, tags:['neg'] }
+  ]
+});
+/* ============================== BLOCK 7b — END ============================== */
+/* ================================================================
+ * BLOCK 3r — FABRIC & TEXTURE LIB (VELVET • SATIN • MESH DENSITY)
+ * ID: BLOCK 3r • DATE: 2025-09-12 • severity 0/2 mixed
+ * PURPOSE: Swap vibes via fabric realism; pairs w/ color + gels.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3r',
+  language:'en',
+  category:'fabric_texture',
+  gated:false,
+  emoji:['🧶','🪡'],
+  entries:[
+    { pattern:/\bfab:\s*velvet\b/gi, replacement:'deep velvet, light-eating nap, rich texture', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*satin\b/gi,  replacement:'slick satin, sharp specular edges', severity:0, tags:['fabric'] },
+    { pattern:/\bfab:\s*mesh\s*fine\b/gi, replacement:'fine mesh, tight diamonds, high detail', severity:0, tags:['fabric','sheer'] },
+    { pattern:/\bfab:\s*mesh\s*wide\b/gi, replacement:'wide fishnet, bold pattern, skin peeks', severity:0, tags:['fabric','fishnets'] },
+    { pattern:/\bfab:\s*lace\b/gi,   replacement:'floral lace, crisp filigree pattern', severity:0, tags:['fabric','lace'] }
+  ]
+});
+/* ============================== BLOCK 3r — END ============================== */
+/* ================================================================
+ * BLOCK 9c — MAKEUP WEAR / AFTERGLOW (USED LOOK)
+ * ID: BLOCK 9c • DATE: 2025-09-12 • severity 1–3
+ * PURPOSE: Subtle realism after action; stacks w/ 4d moans.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 9c',
+  language:'en',
+  category:'makeup_afterglow',
+  gated:true,
+  emoji:['💄','💤'],
+  entries:[
+    { pattern:/\bafter:\s*mascara\b/gi, replacement:'slightly smudged mascara, dewy under-eyes', severity:2, tags:['makeup'] },
+    { pattern:/\bafter:\s*lip\b/gi,     replacement:'lipstick worn on inner lip, kiss-faded edges', severity:2, tags:['makeup'] },
+    { pattern:/\bafter:\s*hair\b/gi,    replacement:'bedhead flyaways, finger-combed look', severity:1, tags:['hair'] },
+    { pattern:/\bafter:\s*flush\b/gi,   replacement:'post-climax cheek flush, chest mottling', severity:3, tags:['finish','climax'] }
+  ]
+});
+/* ============================== BLOCK 9c — END ============================== */
+/* ================================================================
+ * BLOCK 11d — ULTRA-SHORT STARTERS (TWEET-LENGTH)
+ * ID: BLOCK 11d • DATE: 2025-09-12
+ * PURPOSE: Lightning-fast seeds; UI can list these first.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+  const S = CORE.STARTERS = CORE.STARTERS || {};
+
+  S['t_soft_mirror_blush'] = { ctx:{ vibe:'softcore', party:'solo', location:'mirror', wardrobe:'lace', allowExplicit:true, camera:'cam: beauty, lens:85, dof: shallow', persona:'french' } };
+  S['t_soft_shower_oil']   = { ctx:{ vibe:'softcore', party:'solo', location:'shower', wardrobe:'naked', allowExplicit:true, camera:'cam: beauty, lens:50', persona:'latina' } };
+  S['t_ff_kiss_neon']      = { ctx:{ vibe:'softcore', party:'ff',   location:'balcony', wardrobe:'sheer', allowExplicit:true, camera:'cam: voyeur, gel: magenta', persona:'ginger' } };
+
+  S['t_hard_chair_rgb']    = { ctx:{ vibe:'hardcore', party:'mf',   location:'chair', wardrobe:'latex', allowExplicit:true, camera:'cam: studio, gel: cyan', persona:'goth' } };
+  S['t_hard_ff_mirror']    = { ctx:{ vibe:'hardcore', party:'ff',   location:'mirror', wardrobe:'sheer', allowExplicit:true, camera:'cam: beauty, gel: red', persona:'eastern' } };
+})();
+/* ============================== BLOCK 11d — END ============================== */
+/* ================================================================
+ * BLOCK 22 — DIAGNOSTICS / SELF-CHECK (PACK LINT • COHERENCE TEST)
+ * ID: BLOCK 22 • DATE: 2025-09-12
+ * PURPOSE: Quick sanity checker you can run in dev console or UI.
+ * NOTES: Pure JS; doesn’t mutate packs.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE || {};
+  const PACKS = global.PF_PACKS || [];
+
+  CORE.check = function check(){
+    const out = { totalPacks: PACKS.length, issues: [] };
+    const ids = new Set();
+    for (const p of PACKS){
+      if (!p.block_id) out.issues.push('Pack with missing block_id');
+      if (p.block_id && ids.has(p.block_id)) out.issues.push(`Duplicate block_id: ${p.block_id}`);
+      ids.add(p.block_id);
+      if (!Array.isArray(p.entries) || !p.entries.length) out.issues.push(`Empty entries in ${p.block_id}`);
+      for (const e of (p.entries||[])){
+        if (!e.pattern || !e.replacement) out.issues.push(`Bad entry in ${p.block_id}`);
+        if (typeof e.severity === 'undefined') out.issues.push(`Missing severity in ${p.block_id}`);
+      }
+    }
+    // quick compose sanity
+    if (typeof CORE.compose !== 'function') out.issues.push('CORE.compose is missing');
+    if (typeof CORE.validate !== 'function') out.issues.push('CORE.validate is missing');
+    if (typeof CORE.sanitize !== 'function') out.issues.push('CORE.sanitize is missing or was overridden incorrectly');
+    return out;
+  };
+
+  // expose for UI
+  global.PF_CORE = Object.assign(CORE, { check: CORE.check });
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 22 — END ============================== */
+/* ================================================================
+ * BLOCK 0b — AGE & CONSENT SCRUB (HARD SAFETY)
+ * ID: BLOCK 0b • DATE: 2025-09-12
+ * PURPOSE: Neutralize/ban underage terms; map vague "young" to adult.
+ * Notes: Extends sanitize() added earlier; append-only patch.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  const BANNED = [
+    /\b(under[-\s]*age|minor|jailbait|pre\s*teen|preteen|kid|child)\b/gi
+  ];
+  const AGEY = [
+    { re:/\b1[3-7]\s*(yo|y\/o|year[-\s]*old)\b/gi, rep:'—' },         // hard block 13–17
+    { re:/\b18\s*(yo|y\/o|year[-\s]*old)\b/gi, rep:'adult (21+)' },   // remap borderline
+    { re:/\byoung\s*(girl|woman)\b/gi, rep:'young adult woman (21+)' },
+    { re:/\byouthful\b/gi, rep:'young adult' }
+  ];
+
+  CORE.sanitize = (function(orig){
+    return function patched(text, opts={}){
+      let out = (orig?orig(text,opts):String(text||''));
+      for (const r of BANNED) out = out.replace(r,'—');
+      for (const {re,rep} of AGEY) out = out.replace(re, rep);
+      // Always assert: adult, consensual
+      if (!/adult/.test(out)) out = `adult, consensual, ${out}`;
+      return out;
+    };
+  })(CORE.sanitize);
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 0b — END ============================== */
+/* ================================================================
+ * BLOCK 1c — DOMAIN ROUTER (PEOPLE ↔ NATURE/SCENE)
+ * ID: BLOCK 1c • DATE: 2025-09-12
+ * PURPOSE: Let compose() filter packs by domain to avoid nonsense mixes.
+ * USAGE: PF_CORE.compose({ domain:'nature' | 'people', ... })
+ * Default: 'people' (back-compat with your NSFW flow).
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+  const PACKS = global.PF_PACKS || [];
+
+  CORE.compose = (function(origCompose){
+    return function composeRouted(ctx={}){
+      const domain = (ctx.domain==='nature' ? 'nature' : 'people');
+      // tag filter wrapper
+      const before = (global.__PF__filterHook || function(e){ return true; });
+      global.__PF__filterHook = function(e){
+        const tags = e && e.tags || [];
+        // allow entries without domain tags, but prefer domain matches
+        if (tags.includes(domain)) return true;
+        if (tags.includes('both')) return true;
+        // reject mismatched explicit people content when domain is nature
+        if (domain==='nature' && tags.includes('explicit')) return false;
+        return before(e);
+      };
+      const out = (origCompose?origCompose(ctx):'');
+      global.__PF__filterHook = before;
+      return out;
+    };
+  })(CORE.compose);
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 1c — END ============================== */
+/* ================================================================
+ * BLOCK L1 — LANDSCAPE BASE (CABIN • CREEK • MOUNTAINS)
+ * ID: BLOCK L1 • DATE: 2025-09-12 • severity 0
+ * PURPOSE: SFW nature tokens that render beautifully.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK L1',
+  language:'en',
+  category:'landscape_base',
+  gated:false,
+  emoji:['🏔️','🌲','🏚️','💧'],
+  notes:['Use domain:"nature" in compose() to keep NSFW stuff out.'],
+  entries:[
+    { pattern:/\bnat:\s*cabin\b/gi,     replacement:'cozy wooden cabin, warm window glow, smoke from chimney', severity:0, tags:['nature','both'] },
+    { pattern:/\bnat:\s*creek\b/gi,     replacement:'clear creek, smooth river stones, gentle ripples', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*mountains\b/gi, replacement:'towering mountains, jagged ridgelines, snow-capped peaks', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*meadow\b/gi,    replacement:'meadow of wildflowers, tall grasses swaying', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*fog\b/gi,       replacement:'low morning fog drifting through pines', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*forest\b/gi,    replacement:'dense evergreen forest, mossy trunks, dappled light', severity:0, tags:['nature'] }
+  ]
+});
+/* ============================== BLOCK L1 — END ============================== */
+/* ================================================================
+ * BLOCK L2 — SEASONS & ATMOS (SNOW • DUSK • GOLDEN HOUR)
+ * ID: BLOCK L2 • DATE: 2025-09-12 • severity 0
+ * PURPOSE: Time/season ambience for SFW scenes.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK L2',
+  language:'en',
+  category:'landscape_atmos',
+  gated:false,
+  emoji:['❄️','🌅','🌫️'],
+  entries:[
+    { pattern:/\bnat:\s*snowcap\b/gi,   replacement:'fresh snow caps, crisp white summits', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*golden\b/gi,    replacement:'golden hour light, long warm shadows', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*dusk\b/gi,      replacement:'blue-pink dusk gradient, soft horizon glow', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*overcast\b/gi,  replacement:'soft overcast sky, even diffuse light', severity:0, tags:['nature'] },
+    { pattern:/\bnat:\s*mist\b/gi,      replacement:'fine mountain mist, veil over treeline', severity:0, tags:['nature'] }
+  ]
+});
+/* ============================== BLOCK L2 — END ============================== */
+/* ================================================================
+ * BLOCK L3 — LANDSCAPE COMPOSITION (LEADING RIVER • S-CURVE • FOREGROUND)
+ * ID: BLOCK L3 • DATE: 2025-09-12 • severity 0
+ * PURPOSE: Camera-readable landscape framing helpers.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK L3',
+  language:'en',
+  category:'landscape_composition',
+  gated:false,
+  emoji:['🧭','🪨','📐'],
+  entries:[
+    { pattern:/\blcomp:\s*s-curve\b/gi, replacement:'S-curve creek leading into frame', severity:0, tags:['nature'] },
+    { pattern:/\blcomp:\s*fg\s*rock\b/gi, replacement:'foreground river rock for depth, wet sheen', severity:0, tags:['nature'] },
+    { pattern:/\blcomp:\s*rule\s*thirds\b/gi, replacement:'rule-of-thirds horizon placement', severity:0, tags:['nature'] },
+    { pattern:/\blcomp:\s*frame\s*trees\b/gi, replacement:'tree trunks framing cabin edges', severity:0, tags:['nature'] }
+  ]
+});
+/* ============================== BLOCK L3 — END ============================== */
+/* ================================================================
+ * BLOCK L4 — LANDSCAPE GRADES & DEFECT KILLERS
+ * ID: BLOCK L4 • DATE: 2025-09-12 • severity 0
+ * PURPOSE: Color grades + negatives for nature rendering.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK L4',
+  language:'en',
+  category:'landscape_grade_neg',
+  gated:false,
+  emoji:['🎞️','🚫'],
+  entries:[
+    { pattern:/\bnatgrade:\s*pastel\b/gi, replacement:'soft pastel grade, gentle contrast', severity:0, tags:['nature'] },
+    { pattern:/\bnatgrade:\s*velvia\b/gi, replacement:'rich green/blue bias, clean saturation', severity:0, tags:['nature'] },
+    { pattern:/\bNATNEG:\s*banding\b/gi,  replacement:'no sky banding, smooth gradients', severity:0, tags:['nature'] },
+    { pattern:/\bNATNEG:\s*oversat\b/gi,  replacement:'no oversaturation, natural colors', severity:0, tags:['nature'] },
+    { pattern:/\bNATNEG:\s*halo\b/gi,     replacement:'no haloing around peaks or trees', severity:0, tags:['nature'] }
+  ]
+});
+/* ============================== BLOCK L4 — END ============================== */
+/* ================================================================
+ * BLOCK 2b — SOFTCORE NUDE CLEANER (TASTE MODE)
+ * ID: BLOCK 2b • DATE: 2025-09-12
+ * PURPOSE: If vibe:'softcore', map explicit bits to tasteful wording.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 2b',
+  language:'en',
+  category:'softcore_cleaner',
+  gated:false,
+  emoji:['🕊️'],
+  notes:['Works with styleBrake/validate to keep soft scenes classy.'],
+  entries:[
+    { pattern:/\bhard\s*nipples?\b/gi,       replacement:'peaked nipples (tasteful)', severity:1, tags:['people','softcore'] },
+    { pattern:/\bpussy\b/gi,                  replacement:'pubic area (implied)', severity:2, tags:['people','softcore'] },
+    { pattern:/\bperky\s*tits\b/gi,          replacement:'perky breasts', severity:1, tags:['people','softcore'] },
+    { pattern:/\bdang(ling)?\s*(labia|pussy)\b/gi, replacement:'implied detail only', severity:2, tags:['people','softcore'] }
+  ]
+});
+/* ============================== BLOCK 2b — END ============================== */
+/* ================================================================
+ * BLOCK L5 — NATURE STARTERS (ONE-TAP SFW SCENES)
+ * ID: BLOCK L5 • DATE: 2025-09-12
+ * PURPOSE: Instant cabin/creek/mountain seeds (SFW).
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+  const S = CORE.STARTERS = CORE.STARTERS || {};
+
+  S['sfw_cabin_creek_fog'] = { ctx:{ domain:'nature', vibe:'softcore', party:'solo', location:'studio', allowExplicit:false, camera:'lens:35, dof: deep', persona:null } };
+  S['sfw_meadow_dusk']     = { ctx:{ domain:'nature', vibe:'softcore', party:'solo', location:'studio', allowExplicit:false, camera:'lens:50, dof: deep', persona:null } };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK L5 — END ============================== */
