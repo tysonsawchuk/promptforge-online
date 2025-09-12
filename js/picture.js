@@ -5921,4 +5921,1504 @@ PF_PACKS.push({
  * BLOCK 82a — POSITIONS & GROUP COMBOS EXPLICIT (EN) (END)
  * ================================================================ */
 
+/* ================================================================
+ * BLOCK 3b — POSES, KINKS & WARDROBE EXPLICIT-DIRECTIONAL (EN)  (START)
+ * ID: BLOCK 3b
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Adds erotic poses, fetishes, outfits, and scene setups.
+ *   - Gives AI endless variation for softcore/hardcore composition.
+ *   - Fully gated: runs only when allowExplicit:true.
+ * INTERNAL NOTES:
+ *   - Mixes anatomy tags + positions for better combinatorial prompts.
+ *   - Includes group sex and body-type descriptors for variety.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3b',
+  language: 'en',
+  category: 'poses_kinks_wardrobe_explicit',
+  gated: true,
+  emoji: ['🔥','👠','🧷'],
+  notes: [
+    'Escalates descriptive language: outfits, poses, fetish acts, group scenarios.',
+    'All adult/consensual — no nonconsent or illegal terms.'
+  ],
+  entries: [
+    // ——— BODY SHAPE / DETAIL ———
+    { pattern: /\bwoman\b/gi, replacement: 'curvy woman with soft skin', severity: 3, tags: ['body','explicit'] },
+    { pattern: /\bfemale\b/gi, replacement: 'petite, smooth-skinned female', severity: 3, tags: ['body','explicit'] },
+    { pattern: /\bgirl\b/gi, replacement: 'seductive young woman, toned body', severity: 3, tags: ['body','explicit'] },
+    { pattern: /\bmilf\b/gi, replacement: 'mature busty woman, confident sexual vibe', severity: 4, tags: ['body','explicit'] },
+    { pattern: /\bbody\b/gi, replacement: 'hourglass figure, soft curves, toned stomach', severity: 3, tags: ['body','explicit'] },
 
+    // ——— POSES ———
+    { pattern: /\bpose\b/gi, replacement: 'arched back pose, ass pushed out', severity: 4, tags: ['pose','explicit'] },
+    { pattern: /\bspread\b/gi, replacement: 'legs spread wide open', severity: 5, tags: ['pose','explicit'] },
+    { pattern: /\bkneeling\b/gi, replacement: 'kneeling submissively, hands on thighs', severity: 4, tags: ['pose','explicit'] },
+    { pattern: /\blying\b/gi, replacement: 'lying back, hips raised invitingly', severity: 4, tags: ['pose','explicit'] },
+    { pattern: /\bbent over\b/gi, replacement: 'bent over, ass presented, back arched', severity: 5, tags: ['pose','explicit'] },
+    { pattern: /\bstraddling\b/gi, replacement: 'straddling hips, breasts bouncing', severity: 5, tags: ['pose','explicit'] },
+    { pattern: /\bsquatting\b/gi, replacement: 'deep squat, pussy fully exposed', severity: 5, tags: ['pose','explicit'] },
+    { pattern: /\bgrinding\b/gi, replacement: 'grinding hips, dripping wet', severity: 5, tags: ['pose','explicit'] },
+
+    // ——— CLOTHING / LINGERIE ———
+    { pattern: /\blingerie\b/gi, replacement: 'black lace lingerie, sheer bra, garter belt', severity: 3, tags: ['clothing','explicit'] },
+    { pattern: /\bstockings\b/gi, replacement: 'thigh-high stockings, lace trim', severity: 3, tags: ['clothing','explicit'] },
+    { pattern: /\bcosplay\b/gi, replacement: 'erotic cosplay outfit, micro skirt, exposed cleavage', severity: 4, tags: ['clothing','explicit'] },
+    { pattern: /\bmaid outfit\b/gi, replacement: 'naughty french maid lingerie, frilly skirt barely covering ass', severity: 4, tags: ['clothing','explicit'] },
+    { pattern: /\blatex\b/gi, replacement: 'tight shiny latex catsuit hugging every curve', severity: 4, tags: ['clothing','explicit'] },
+    { pattern: /\bnaked\b/gi, replacement: 'completely naked, glistening skin', severity: 5, tags: ['clothing','explicit'] },
+
+    // ——— KINKS / FETISH ———
+    { pattern: /\bbondage\b/gi, replacement: 'bound with ropes, wrists tied, rope marks', severity: 5, tags: ['kink','explicit'] },
+    { pattern: /\bblindfold\b/gi, replacement: 'wearing a black blindfold, mouth open', severity: 4, tags: ['kink','explicit'] },
+    { pattern: /\bspanking\b/gi, replacement: 'red spanked ass, handprint marks', severity: 5, tags: ['kink','explicit'] },
+    { pattern: /\brimming\b/gi, replacement: 'explicit tongue-on-anus rimming', severity: 5, tags: ['kink','explicit'] },
+    { pattern: /\bbukkake\b/gi, replacement: 'covered in cum from multiple men', severity: 5, tags: ['kink','explicit'] },
+    { pattern: /\bthreesome\b/gi, replacement: 'FFM threesome, two women licking each other', severity: 5, tags: ['group','explicit'] },
+    { pattern: /\borgy\b/gi, replacement: 'wild group sex, sweaty bodies everywhere', severity: 5, tags: ['group','explicit'] },
+    { pattern: /\bdouble penetration\b/gi, replacement: 'double penetration, pussy and ass stuffed', severity: 5, tags: ['penetration','explicit'] },
+    { pattern: /\bcreampie\b/gi, replacement: 'cum dripping out of pussy creampie', severity: 5, tags: ['fluid','explicit'] },
+    { pattern: /\bsquirting\b/gi, replacement: 'gushing squirt, wet sheets', severity: 5, tags: ['fluid','explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 3b — END
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 4b — DIRTY TALK & EROTIC ATTITUDE (EN)  (START)
+ * ID: BLOCK 4b
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Adds dirty talk, moans, submissive/dominant phrasing.
+ *   - Turns tame erotic scene into raw explicit sex talk.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 4b',
+  language: 'en',
+  category: 'dirty_talk_explicit',
+  gated: true,
+  emoji: ['💦','🗣️'],
+  notes: [
+    'NSFW dirty talk phrases for extra heat.',
+    'Pairs with BLOCK 4a profanity for complete erotic language coverage.'
+  ],
+  entries: [
+    { pattern: /\baroused\b/gi, replacement: 'so fucking wet', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bturned on\b/gi, replacement: 'horny as fuck', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bplease\b/gi, replacement: 'please fuck me', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bmoan\b/gi, replacement: 'moans loudly, begging for more', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bcome here\b/gi, replacement: 'get over here and fuck me', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bgood girl\b/gi, replacement: 'good little slut', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bfinish\b/gi, replacement: 'cum all over me', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bmore\b/gi, replacement: 'harder, deeper', severity: 5, tags: ['talk','explicit'] },
+    { pattern: /\bover me\b/gi, replacement: 'cover me in cum', severity: 5, tags: ['talk','explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 4b — END
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 3c — FACE, HAIR, MAKEUP & EXPRESSION (EN) — EXPLICIT-DIRECTIONAL
+ * ID: BLOCK 3c
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Big “face switcher” library so models swap looks reliably.
+ *   - Adds adult, sultry descriptors for face/eyes/mouth/makeup/hair.
+ *   - Gated: runs ONLY when allowExplicit:true (direction="explicit").
+ * NOTES:
+ *   - Uses neutral triggers → eroticized, varied descriptors.
+ *   - Keep stacking: safe to extend in future 3c+ blocks.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3c',
+  language: 'en',
+  category: 'face_hair_makeup_explicit',
+  gated: true,
+  emoji: ['💄','👁️','👅','💋'],
+  notes: [
+    'Face-switcher bundle: jawline, cheekbones, lips, eyes, brows, hair, makeup, expressions.',
+    'No minors. Adult, consensual sexualization only.'
+  ],
+  entries: [
+    // ——— FACE SHAPES / FEATURES ———
+    { pattern: /\bface\s*details\b/gi, replacement: 'sharp jawline, high cheekbones, petite nose, soft peach-fuzz skin', severity: 2, tags: ['face','beauty'] },
+    { pattern: /\bround\s*face\b/gi, replacement: 'round face, plush cheeks, cute button nose, kissable lips', severity: 2, tags: ['face'] },
+    { pattern: /\bheart[-\s]*shaped\s*face\b/gi, replacement: 'heart-shaped face, tapered chin, wide doe eyes', severity: 2, tags: ['face'] },
+    { pattern: /\boval\s*face\b/gi, replacement: 'oval face, softly defined jaw, balanced features', severity: 1, tags: ['face'] },
+    { pattern: /\bstrong\s*jaw\b/gi, replacement: 'razor-sharp jawline, sinful smirk', severity: 3, tags: ['face','attitude'] },
+    { pattern: /\bfreckles\b/gi, replacement: 'light freckles dusted over nose and cheeks', severity: 1, tags: ['skin'] },
+    { pattern: /\bbeauty\s*mark\b/gi, replacement: 'dark beauty spot above the lip', severity: 1, tags: ['skin'] },
+
+    // ——— EYES / BROWS ———
+    { pattern: /\bbedroom\s*eyes\b/gi, replacement: 'half-lidded bedroom eyes, heavy lashes, slow blink', severity: 3, tags: ['eyes','attitude'] },
+    { pattern: /\bcat\s*eyes\b/gi, replacement: 'almond eyes with winged liner, predatory gaze', severity: 3, tags: ['eyes','makeup'] },
+    { pattern: /\bdoe\s*eyes\b/gi, replacement: 'wide doe eyes, glassy shine, innocent-but-dirty gaze', severity: 3, tags: ['eyes'] },
+    { pattern: /\bthick\s*brows\b/gi, replacement: 'thick groomed brows framing a wicked stare', severity: 2, tags: ['brows'] },
+
+    // ——— LIPS / TONGUE / MOUTH ———
+    { pattern: /\bfull\s*lips\b/gi, replacement: 'full pillowy lips, glossed and parted', severity: 3, tags: ['lips'] },
+    { pattern: /\bred\s*lips\b/gi, replacement: 'smeared red lipstick on swollen lips', severity: 4, tags: ['lips','makeup'] },
+    { pattern: /\btongue\s*out\b/gi, replacement: 'tongue out, teasing tip, spit string', severity: 5, tags: ['mouth','explicit'] },
+    { pattern: /\bbiting\s*lip\b/gi, replacement: 'biting lower lip, desperate to be kissed', severity: 4, tags: ['lips','attitude'] },
+    { pattern: /\bo\s*face\b/gi, replacement: 'O-face, mouth agape, breathy moan', severity: 5, tags: ['mouth','climax'] },
+
+    // ——— MAKEUP STYLES ———
+    { pattern: /\bsoft\s*glam\b/gi, replacement: 'dewy base, subtle contour, nude glossy lips, fluttery lashes', severity: 1, tags: ['makeup'] },
+    { pattern: /\bclub\s*glam\b/gi, replacement: 'high-contrast contour, glitter lids, glossy red lips, glowing highlight', severity: 2, tags: ['makeup'] },
+    { pattern: /\bsmokey\s*eye\b/gi, replacement: 'dark smokey eye, smudged liner, sultry fallout', severity: 2, tags: ['makeup'] },
+    { pattern: /\bcrying\s*makeup\b/gi, replacement: 'runny mascara, smeared eyeliner, wet lashes, used look', severity: 4, tags: ['makeup','afterglow'] },
+
+    // ——— HAIR COLORS / STYLES ———
+    { pattern: /\bredhead\b/gi, replacement: 'fiery red hair, loose waves, wild bedhead', severity: 1, tags: ['hair'] },
+    { pattern: /\bblonde\b/gi, replacement: 'platinum blonde hair, silky straight, face-framing strands', severity: 1, tags: ['hair'] },
+    { pattern: /\bbrunette\b/gi, replacement: 'deep brunette hair, glossy curls, thick volume', severity: 1, tags: ['hair'] },
+    { pattern: /\bblack\s*hair\b/gi, replacement: 'inky black hair, mirror-shine, heavy bangs', severity: 1, tags: ['hair'] },
+    { pattern: /\bshort\s*bob\b/gi, replacement: 'short razor bob, sharp ends kissing the jawline', severity: 1, tags: ['hair'] },
+    { pattern: /\blong\s*hair\b/gi, replacement: 'waist-length hair, tangled post-sex waves', severity: 2, tags: ['hair','afterglow'] },
+    { pattern: /\bponytail\b/gi, replacement: 'high ponytail, tight pull, exposed neck', severity: 2, tags: ['hair'] },
+    { pattern: /\bbangs\b/gi, replacement: 'heavy bangs grazing lashes, flirty peek', severity: 1, tags: ['hair'] },
+
+    // ——— EXPRESSIONS / ATTITUDES ———
+    { pattern: /\bsultry\s*look\b/gi, replacement: 'sultry stare, slow blink, filthy little smile', severity: 4, tags: ['attitude'] },
+    { pattern: /\binnocent\s*look\b/gi, replacement: 'innocent stare hiding sinful intent', severity: 3, tags: ['attitude'] },
+    { pattern: /\bbratty\s*look\b/gi, replacement: 'bratty glare, pouty lips, challenge accepted', severity: 4, tags: ['attitude','sub/domme'] },
+    { pattern: /\bsubmissive\s*look\b/gi, replacement: 'submissive eyes, head slightly bowed, lips parted', severity: 4, tags: ['attitude','sub'] },
+    { pattern: /\bdominant\s*look\b/gi, replacement: 'icy dominant gaze, predatory grin', severity: 4, tags: ['attitude','domme'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 3c — END
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 3d — GIRL-ON-GIRL SCENES, POSES & PLAY (EN) — EXPLICIT-DIRECTIONAL
+ * ID: BLOCK 3d
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Massive F/F library: poses, acts, outfits, positions that render well.
+ *   - From soft makeout to hardcore F/F to multi-girl stacks.
+ *   - Gated: allowExplicit:true only.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3d',
+  language: 'en',
+  category: 'ff_scenarios_explicit',
+  gated: true,
+  emoji: ['👩‍❤️‍💋‍👩','👩‍❤️‍👩','💦'],
+  notes: [
+    'Focus on working visual setups: body separation, clear actions, readable anatomy.',
+    'Pairs with BLOCK 6 photo terms automatically.'
+  ],
+  entries: [
+    // ——— F/F SOFTCORE ———
+    { pattern: /\bff\s*makeout\b/gi, replacement: 'two women kissing deeply, hands in hair, pressed bodies, glossy lips', severity: 4, tags: ['ff','soft'] },
+    { pattern: /\bff\s*cuddle\b/gi, replacement: 'two women spooning naked under sheets, lazy morning light', severity: 3, tags: ['ff','soft'] },
+    { pattern: /\bff\s*topless\b/gi, replacement: 'two topless women, playful boob grab, giggling', severity: 4, tags: ['ff','soft'] },
+
+    // ——— F/F ORAL & HANDS ———
+    { pattern: /\bff\s*cunni\b/gi, replacement: 'one woman going down on the other, wet tongue on clit, spread thighs', severity: 5, tags: ['ff','oral'] },
+    { pattern: /\bff\s*69\b/gi, replacement: 'both women in 69, mouths buried, slick thighs, greedy tongues', severity: 5, tags: ['ff','oral'] },
+    { pattern: /\bff\s*fingering\b/gi, replacement: 'two fingers inside, thumb circling clit, moaning into neck', severity: 5, tags: ['ff','manual'] },
+
+    // ——— F/F TOYS ———
+    { pattern: /\bff\s*toy\b/gi, replacement: 'vibrator on clit, shuddering legs, slick shine', severity: 5, tags: ['ff','toy'] },
+    { pattern: /\bff\s*strap\b/gi, replacement: 'strap-on fucking, deep strokes, hands gripping hips', severity: 5, tags: ['ff','toy','penetration'] },
+    { pattern: /\bff\s*doubler\b/gi, replacement: 'double-ended dildo, both women grinding, eye contact, shared moans', severity: 5, tags: ['ff','toy','penetration'] },
+
+    // ——— F/F POSES ———
+    { pattern: /\bff\s*facesit\b/gi, replacement: 'facesitting, pussy smothering mouth, thighs squeezing cheeks', severity: 5, tags: ['ff','position'] },
+    { pattern: /\bff\s*trib\b/gi, replacement: 'tribbing scissor position, soaking wet pussies grinding', severity: 5, tags: ['ff','position'] },
+    { pattern: /\bff\s*pin\b/gi, replacement: 'pinned to the bed, wrists held, teasing kisses down belly', severity: 4, tags: ['ff','position'] },
+
+    // ——— F/F WARDROBE ———
+    { pattern: /\bff\s*lingerie\b/gi, replacement: 'matching lace lingerie sets, garters clipped, stockings rolled', severity: 3, tags: ['ff','wardrobe'] },
+    { pattern: /\bff\s*latex\b/gi, replacement: 'contrasting latex outfits, squeaky shine, finger trails', severity: 4, tags: ['ff','wardrobe'] },
+    { pattern: /\bff\s*uniform\b/gi, replacement: 'suggestive uniform cosplay, micro skirts, open blouses', severity: 4, tags: ['ff','wardrobe'] },
+
+    // ——— F/F MULTI-GIRL ———
+    { pattern: /\bfff\b/gi, replacement: 'three women, two kissing while the third fingers both', severity: 5, tags: ['ff','group'] },
+    { pattern: /\bffff\b/gi, replacement: 'four women, paired tribbing on mirrored sides', severity: 5, tags: ['ff','group'] },
+    { pattern: /\bff\s*orgy\b/gi, replacement: 'packed F/F orgy, bodies tangled, toys everywhere, glistening skin', severity: 5, tags: ['ff','group'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 3d — END
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 3e — GROUP, POSITIONS & “ACTS THAT RENDER” (EN) — EXPLICIT-DIRECTIONAL
+ * ID: BLOCK 3e
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Big library of positions and multi-party setups known to render clearly.
+ *   - Adds “camera-readable” cues: separation, angles, hand placement.
+ *   - Gated: allowExplicit:true only.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3e',
+  language: 'en',
+  category: 'group_positions_renderable_explicit',
+  gated: true,
+  emoji: ['🛏️','🧭','🎥'],
+  notes: [
+    'Emphasis on clarity: rear-entry, cowgirl, reverse cowgirl, spooning, edge-of-bed, wall-press, chair-ride.',
+    'Group setups labeled (MMF, FFM, FFF, etc.) without illegal scenarios.'
+  ],
+  entries: [
+    // ——— SOLO / COUPLE POSITIONS THAT “JUST WORK” ———
+    { pattern: /\bposition\s*doggy\b/gi, replacement: 'rear-entry doggystyle, arched back, hands gripping hips', severity: 5, tags: ['position','clarity'] },
+    { pattern: /\bposition\s*cowgirl\b/gi, replacement: 'cowgirl on top, hips rolling, breasts bouncing', severity: 5, tags: ['position','clarity'] },
+    { pattern: /\bposition\s*reverse\s*cowgirl\b/gi, replacement: 'reverse cowgirl, back arched, ass on display', severity: 5, tags: ['position','clarity'] },
+    { pattern: /\bposition\s*missionary\b/gi, replacement: 'missionary, legs hooked, deep strokes, face-to-face', severity: 4, tags: ['position'] },
+    { pattern: /\bposition\s*spoon\b/gi, replacement: 'spooning from behind, lazy thrusts, neck kisses', severity: 4, tags: ['position'] },
+    { pattern: /\bposition\s*wall\b/gi, replacement: 'pressed against a wall, one leg hitched, urgent kissing', severity: 4, tags: ['position'] },
+    { pattern: /\bposition\s*chair\b/gi, replacement: 'straddling on a chair, hands on shoulders, grinding', severity: 5, tags: ['position'] },
+    { pattern: /\bposition\s*edge\b/gi, replacement: 'edge-of-bed, pelvis right at the edge, perfect access', severity: 5, tags: ['position'] },
+
+    // ——— GROUP LABELS ———
+    { pattern: /\bffm\b/gi, replacement: 'FFM threesome, two women sharing one cock, tongues meeting', severity: 5, tags: ['group'] },
+    { pattern: /\bmmf\b/gi, replacement: 'MMF threesome, spitroast, one at mouth one from behind', severity: 5, tags: ['group'] },
+    { pattern: /\bgangbang\b/gi, replacement: 'consensual gangbang, multiple partners taking turns, overwhelmed moans', severity: 5, tags: ['group'] },
+    { pattern: /\btrain\b/gi, replacement: 'lined-up partners taking turns, messy finish', severity: 5, tags: ['group'] },
+
+    // ——— FINISH / FLUIDS (VISUAL) ———
+    { pattern: /\bfacial\b/gi, replacement: 'cumshot across face, glossy streaks, eyes half-closed', severity: 5, tags: ['fluid','finish'] },
+    { pattern: /\bbodyshot\b/gi, replacement: 'cum splashed over breasts and stomach', severity: 5, tags: ['fluid','finish'] },
+    { pattern: /\bcreampie\b/gi, replacement: 'creampie oozing, inner thighs slick', severity: 5, tags: ['fluid','finish'] },
+    { pattern: /\bswallow\b/gi, replacement: 'mouthful swallowed, tongue out showing the last drops', severity: 5, tags: ['fluid','finish'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 3e — END
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 4c — DIRTY TALK VARIATIONS, COMMANDS & PRAISE (EN) — EXPLICIT-DIRECTIONAL
+ * ID: BLOCK 4c
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Huge library of explicit verbal spice: commands, praise, begging.
+ *   - Works with 4a/4b to explode line variety without purple-prose walls.
+ *   - Gated: allowExplicit:true only.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 4c',
+  language: 'en',
+  category: 'dirty_talk_variations_explicit',
+  gated: true,
+  emoji: ['🗯️','🎙️','🔥'],
+  notes: [
+    'Short, punchy phrases for models that respond better to compact tokens.',
+    'Use sparingly with commas; avoid long run-ons.'
+  ],
+  entries: [
+    // ——— COMMANDS ———
+    { pattern: /\bcommand:\s*kneel\b/gi, replacement: 'kneel and open your mouth', severity: 5, tags: ['command','dom/sub'] },
+    { pattern: /\bcommand:\s*present\b/gi, replacement: 'present that ass and hold still', severity: 5, tags: ['command'] },
+    { pattern: /\bcommand:\s*ride\b/gi, replacement: 'get on top and ride me', severity: 5, tags: ['command'] },
+    { pattern: /\bcommand:\s*deeper\b/gi, replacement: 'take it deeper, all the way', severity: 5, tags: ['command'] },
+
+    // ——— PRAISE ———
+    { pattern: /\bpraise:\s*good\s*girl\b/gi, replacement: 'good girl, take every inch', severity: 5, tags: ['praise','sub'] },
+    { pattern: /\bpraise:\s*so\s*wet\b/gi, replacement: 'so wet for me, fuck yes', severity: 5, tags: ['praise'] },
+    { pattern: /\bpraise:\s*so\s*tight\b/gi, replacement: 'so tight around me, don’t stop', severity: 5, tags: ['praise'] },
+
+    // ——— BEGGING ———
+    { pattern: /\bbeg:\s*please\b/gi, replacement: 'please fuck me harder', severity: 5, tags: ['beg'] },
+    { pattern: /\bbeg:\s*fill\b/gi, replacement: 'fill me up, make me cum', severity: 5, tags: ['beg'] },
+    { pattern: /\bbeg:\s*more\b/gi, replacement: 'more, don’t you dare stop', severity: 5, tags: ['beg'] },
+
+    // ——— TEASE / BRAT ———
+    { pattern: /\btease:\s*earn\b/gi, replacement: 'earn it, make me beg', severity: 4, tags: ['tease'] },
+    { pattern: /\btease:\s*slow\b/gi, replacement: 'slow… then ruin me fast', severity: 4, tags: ['tease'] },
+    { pattern: /\btease:\s*open\b/gi, replacement: 'open wide, show me that tongue', severity: 5, tags: ['tease'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 4c — END
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 3f — LINGERIE, OUTFITS, PIERcINGS & JEWELRY (EXPLICIT-DIR)
+ * ID: BLOCK 3f
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Huge catalog of flattering wardrobe bits for women.
+ *   - Short, stackable tokens that render cleanly and look hot.
+ *   - Gated: allowExplicit:true only; softcore vibe keeps it non-graphic.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3f',
+  language: 'en',
+  category: 'lingerie_outfits_explicit',
+  gated: true,
+  emoji: ['👙','🧷','💎','👠'],
+  notes: [
+    'Focus on readable items: lace, sheer, straps, shine, cuts, closures.',
+    'Keep phrases compact so they mix well with camera terms (BLOCK 6).'
+  ],
+  entries: [
+    // LINGERIE CORE
+    { pattern:/\blace\s*set\b/gi,  replacement:'black lace bra and thong, scalloped edges', severity:2, tags:['lingerie','lace'] },
+    { pattern:/\bsheer\s*set\b/gi, replacement:'sheer mesh bra, peekaboo nipples, matching panties', severity:3, tags:['lingerie','sheer'] },
+    { pattern:/\bbralette\b/gi,    replacement:'lace bralette, soft support, natural shape', severity:1, tags:['lingerie','lace'] },
+    { pattern:/\bgarter\b/gi,      replacement:'garter belt with clips, thigh-high stockings', severity:2, tags:['lingerie','stockings'] },
+    { pattern:/\bstockings\b/gi,   replacement:'thigh-high stockings, back seams, lace tops', severity:2, tags:['stockings'] },
+    { pattern:/\bfishnets?\b/gi,   replacement:'fishnet stockings, diamond mesh, skin peeks', severity:2, tags:['fishnets'] },
+    { pattern:/\bmicro\s*bikini\b/gi, replacement:'micro bikini triangles, extreme sideboob', severity:3, tags:['swim','minimal'] },
+    { pattern:/\bcheeky\b/gi,      replacement:'cheeky-cut panties, butt curve framed', severity:2, tags:['panties'] },
+    { pattern:/\bthong\b/gi,       replacement:'thin-strap thong, hips high, V-front', severity:3, tags:['panties'] },
+    { pattern:/\bopen\s*cup\b/gi,  replacement:'open-cup bra, underwire lift, exposed nipples', severity:4, tags:['lingerie'] },
+    { pattern:/\bstrappy\b/gi,     replacement:'strappy lingerie with cutouts, cage effect', severity:3, tags:['lingerie'] },
+
+    // OUTFITS & COSPLAY
+    { pattern:/\bclub\s*dress\b/gi, replacement:'tight club dress, bodycon fit, shimmering fabric', severity:1, tags:['dress'] },
+    { pattern:/\bmini\s*skirt\b/gi, replacement:'micro mini skirt, hip-hugging, teasing hem', severity:2, tags:['skirt'] },
+    { pattern:/\bschool\s*cosplay\b/gi, replacement:'suggestive school-style cosplay, cropped shirt, pleated micro skirt', severity:3, tags:['cosplay'] },
+    { pattern:/\bmaid\s*cosplay\b/gi, replacement:'naughty maid cosplay, frilled apron, lace headband', severity:3, tags:['cosplay'] },
+    { pattern:/\blatex\s*catsuit\b/gi, replacement:'high-gloss latex catsuit, poured-on shine', severity:3, tags:['latex'] },
+    { pattern:/\bbody\s*harness\b/gi, replacement:'leather body harness, ring connectors, cinched waist', severity:3, tags:['fetish'] },
+
+    // FOOTWEAR
+    { pattern:/\bheels?\b/gi,      replacement:'stiletto heels, ankle strap, arched footline', severity:1, tags:['heels'] },
+    { pattern:/\bboots?\b/gi,      replacement:'thigh-high boots, snug fit, glossy finish', severity:2, tags:['boots'] },
+
+    // ACCESSORIES / PIERCINGS / JEWELRY
+    { pattern:/\bnipple\s*piercings?\b/gi, replacement:'nipple barbells glinting through sheer', severity:4, tags:['piercing'] },
+    { pattern:/\bnavel\s*piercing\b/gi,   replacement:'navel piercing with dangling charm', severity:1, tags:['piercing'] },
+    { pattern:/\bchoker\b/gi,             replacement:'black velvet choker, tiny ring pendant', severity:1, tags:['jewelry'] },
+    { pattern:/\bbelly\s*chain\b/gi,      replacement:'delicate belly chain resting on hips', severity:1, tags:['jewelry'] },
+    { pattern:/\bopera\s*gloves\b/gi,     replacement:'sheer opera gloves, finger-length, sensual lines', severity:1, tags:['accessory'] },
+
+    // BODY FINISHES
+    { pattern:/\bbody\s*oil\b/gi,  replacement:'oiled skin sheen, slick highlights on curves', severity:2, tags:['finish','wet_skin'] },
+    { pattern:/\bglitter\b/gi,     replacement:'subtle body glitter on collarbones and chest', severity:1, tags:['finish'] }
+  ]
+});
+/* ========================== BLOCK 3f — END ========================== */
+/* ================================================================
+ * BLOCK 3g — SET PIECES & LOCATIONS (EXPLICIT-DIR, CAMERA-READY)
+ * ID: BLOCK 3g
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Locations that render beautifully with readable actions.
+ *   - Micro set-dressing tokens to sell the scene without brands.
+ *   - Works for softcore and hardcore; coherence engine caps severity.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3g',
+  language: 'en',
+  category: 'locations_setpieces_explicit',
+  gated: true,
+  emoji: ['🛏️','🚿','🪞','🚗','🌆'],
+  notes: [
+    'Pair these with BLOCK 6 lighting (golden hour, rim light) for instant mood. :contentReference[oaicite:4]{index=4}'
+  ],
+  entries: [
+    // BED / SOFA / CHAIR
+    { pattern:/\bset:\s*bed\b/gi,   replacement:'rumpled white sheets, soft pillows, afternoon window light', severity:0, tags:['bed','set'] },
+    { pattern:/\bset:\s*sofa\b/gi,  replacement:'velvet sofa, low coffee table, warm lamplight pools', severity:0, tags:['sofa','set'] },
+    { pattern:/\bset:\s*chair\b/gi, replacement:'sturdy chair, wooden arms, intimate distance', severity:0, tags:['chair','set'] },
+
+    // BATH / SHOWER / MIRROR
+    { pattern:/\bset:\s*shower\b/gi, replacement:'glass shower, steam haze, water beads, tiled wall', severity:0, tags:['shower','wet_skin'] },
+    { pattern:/\bset:\s*bathtub\b/gi, replacement:'clawfoot tub, milky bath water, floating petals', severity:0, tags:['bath','set'] },
+    { pattern:/\bset:\s*mirror\b/gi, replacement:'full-length mirror, fingerprints and breath fog, reflective floor', severity:0, tags:['mirror','set'] },
+
+    // PUBLIC-ISH / EDGE
+    { pattern:/\bset:\s*balcony\b/gi, replacement:'city balcony, neon reflections, rainy night streets below', severity:0, tags:['balcony','neon'] },
+    { pattern:/\bset:\s*car\b/gi,     replacement:'car interior, fogged windows, street sodium glow', severity:0, tags:['car','set'] },
+    { pattern:/\bset:\s*kitchen\b/gi, replacement:'kitchen island, pendant lights, marble slab, cool highlights', severity:0, tags:['kitchen','set'] },
+    { pattern:/\bset:\s*locker\b/gi,  replacement:'locker room benches, tiled floor, misty air', severity:0, tags:['locker_room','set'] },
+
+    // LITTLE DRESSINGS
+    { pattern:/\bprop:\s*rose\b/gi,    replacement:'single red rose on pillow', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*candles\b/gi, replacement:'cluster of candles, warm flicker on skin', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*towel\b/gi,   replacement:'white towel slipping off hips', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*glass\b/gi,   replacement:'wine glass with lipstick print', severity:0, tags:['prop'] }
+  ]
+});
+/* ========================== BLOCK 3g — END ========================== */
+/* ================================================================
+ * BLOCK 3h — PERSONA ARCHETYPES MEGA-PACK (ADULT SAFE)
+ * ID: BLOCK 3h
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - 30+ richly detailed fictional female archetypes (age 20+).
+ *   - Switchable faces + bodies w/out touching scene or camera.
+ *   - Adds hair, eye, skin tone, body type, jawline, vibe, best outfits.
+ *   - No real names, no IP, but feels like real variety.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3h',
+  language: 'en',
+  category: 'persona_archetypes',
+  gated: true,
+  emoji: ['👩','🧬','🎭'],
+  notes: [
+    'Each persona uses concise, camera-friendly fragments.',
+    'Mixes ethnicity, bone structure, vibe, wardrobe, lighting suggestions.'
+  ],
+  entries: [
+    // ===== LIGHT & FAIR TYPES =====
+    { pattern:/\bpersona:\s*nordic\b/gi,
+      replacement:'tall nordic beauty, porcelain skin, icy blue eyes, sharp jawline, platinum bob, slim hips, perfect in latex catsuit under cold rim light',
+      severity:1, tags:['persona','face','hair','body'] },
+    { pattern:/\bpersona:\s*french\b/gi,
+      replacement:'petite french coquette, pale olive skin, wavy brunette bob, cupid-bow lips, loves lace bralette + thigh-highs in soft window light',
+      severity:1, tags:['persona','face'] },
+    { pattern:/\bpersona:\s*ginger\b/gi,
+      replacement:'freckled redhead, green eyes, heart-shaped face, fiery long waves, perky breasts, looks killer in sheer babydoll lingerie',
+      severity:1, tags:['persona','hair'] },
+
+    // ===== LATINA / WARM =====
+    { pattern:/\bpersona:\s*latina\b/gi,
+      replacement:'curvy latina bombshell, caramel skin, thick wavy hair, dark brown eyes, full hips, slays in micro bikini + gold belly chain with sunset light',
+      severity:2, tags:['persona','body'] },
+    { pattern:/\bpersona:\s*brazilian\b/gi,
+      replacement:'tanned brazilian goddess, athletic glutes, glossy long hair, dazzling smile, thong bikini + sand stuck to skin, beach daylight',
+      severity:2, tags:['persona','body'] },
+    { pattern:/\bpersona:\s*mexican\b/gi,
+      replacement:'soft-bodied mexican beauty, hazel eyes, small waist, lush thighs, lingerie set with floral lace, warm candle glow',
+      severity:2, tags:['persona'] },
+
+    // ===== ASIAN ARCHETYPES =====
+    { pattern:/\bpersona:\s*eastern\b/gi,
+      replacement:'slender east-asian angel, porcelain skin, silky straight black hair, almond eyes, perfect for sheer camisole + neon night city view',
+      severity:1, tags:['persona','hair'] },
+    { pattern:/\bpersona:\s*thai\b/gi,
+      replacement:'tan thai seductress, petite, round cheeks, playful grin, glossy black ponytail, oiled skin under golden hour',
+      severity:2, tags:['persona','face'] },
+    { pattern:/\bpersona:\s*south\s*asian\b/gi,
+      replacement:'elegant south-asian diva, deep brown eyes, long braid, warm bronze skin, bangles + sari-inspired lingerie, soft golden key light',
+      severity:2, tags:['persona'] },
+
+    // ===== DARKER-SKINNED GODDESSES =====
+    { pattern:/\bpersona:\s*ebony\b/gi,
+      replacement:'ebony queen, smooth deep skin, sculpted cheekbones, short natural curls, glowing under specular highlights, looks insane in body oil',
+      severity:2, tags:['persona','skin'] },
+    { pattern:/\bpersona:\s*caribbean\b/gi,
+      replacement:'voluptuous caribbean babe, sun-kissed dark skin, thick hips, bright smile, thong bikini and braided hair, beach sunset',
+      severity:2, tags:['persona'] },
+    { pattern:/\bpersona:\s*ethiopian\b/gi,
+      replacement:'regal ethiopian model look, coffee skin, long neck, almond eyes, braided crown, sheer flowing lingerie, palace backdrop vibe',
+      severity:2, tags:['persona'] },
+
+    // ===== BODY TYPE VARIETY =====
+    { pattern:/\bpersona:\s*petite\b/gi,
+      replacement:'tiny spinner body, flat tummy, A-cup breasts, bubble butt, perfect for cowgirl pose in natural daylight',
+      severity:1, tags:['persona','body'] },
+    { pattern:/\bpersona:\s*curvy\b/gi,
+      replacement:'thick curves, hourglass hips, juicy thighs, soft belly, looks great in strappy lingerie and warm amber light',
+      severity:2, tags:['persona','body'] },
+    { pattern:/\bpersona:\s*fit\b/gi,
+      replacement:'fit toned woman, six-pack abs, muscular thighs, sporty vibe, crop top + booty shorts, gym locker set',
+      severity:1, tags:['persona','body'] },
+    { pattern:/\bpersona:\s*bbw\b/gi,
+      replacement:'soft plush bbw, huge breasts, round tummy, stretch marks visible, sensual kneeling pose on bed',
+      severity:2, tags:['persona','body'] },
+
+    // ===== ALT / EDGY =====
+    { pattern:/\bpersona:\s*goth\b/gi,
+      replacement:'goth babe, pale skin, black lipstick, heavy eyeliner, fishnets, leather harness, red light backlit',
+      severity:2, tags:['persona','makeup'] },
+    { pattern:/\bpersona:\s*pierced\b/gi,
+      replacement:'alt queen, septum ring, multiple ear piercings, nipple piercings through mesh, messy eyeliner, warehouse set',
+      severity:2, tags:['persona'] },
+    { pattern:/\bpersona:\s*punk\b/gi,
+      replacement:'short spiky hair, heavy tattoos, ripped fishnets, combat boots, industrial loft background',
+      severity:2, tags:['persona'] },
+
+    // ===== BLONDE ICONIC LOOKS =====
+    { pattern:/\bpersona:\s*blonde\s*bombshell\b/gi,
+      replacement:'classic blonde bombshell, big curls, DD chest, red lips, bodycon dress, neon sign behind',
+      severity:2, tags:['persona','hair'] },
+    { pattern:/\bpersona:\s*surfer\b/gi,
+      replacement:'sun-bleached surfer girl, sandy hair, tanned shoulders, bikini loosened, beach towel set',
+      severity:1, tags:['persona'] },
+
+    // ===== MISC UNIQUE =====
+    { pattern:/\bpersona:\s*freckles\b/gi,
+      replacement:'freckled cutie, messy bun, tiny top, soft golden light, playful tongue out', severity:1, tags:['persona'] },
+    { pattern:/\bpersona:\s*tomboy\b/gi,
+      replacement:'athletic tomboy, sports bra, backward cap, toned arms, denim shorts, locker room', severity:1, tags:['persona'] },
+    { pattern:/\bpersona:\s*mature\b/gi,
+      replacement:'classy milf, tight pencil skirt, open blouse, confident smirk, office desk set', severity:1, tags:['persona'] },
+    { pattern:/\bpersona:\s*snow\s*bunny\b/gi,
+      replacement:'snow bunny, fur-lined hood, flushed cheeks, thigh-high boots, cabin fire glow', severity:1, tags:['persona'] }
+  ]
+});
+/* ========================== BLOCK 3h — END ========================== */
+/* ================================================================
+ * BLOCK 1b — COMPOSER++ (PERSONA, STARTERS, FACE-SWAP)
+ * ID: BLOCK 1b
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Extend PF_CORE.compose() with persona injection + starters + swap helpers.
+ *   - Keep scene/body/camera; swap just the persona face/body vibe on demand.
+ *   - Append-only extension; no edits to previous blocks. :contentReference[oaicite:1]{index=1}
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  // Starter registry (filled by BLOCK 11 below)
+  CORE.STARTERS = CORE.STARTERS || {};
+
+  // Inject a persona token into a prompt skeleton (non-destructive)
+  CORE.injectPersona = function injectPersona(text, personaKey){
+    if (!personaKey) return String(text||'');
+    const token = `persona: ${String(personaKey).trim()}`;
+    // Avoid duplicate persona tokens
+    return String(text||'').includes('persona: ') ? text : `${token}, ${text}`;
+  };
+
+  // Swap persona while preserving everything else (scene, wardrobe, camera)
+  CORE.swapPersona = function swapPersona(srcText, personaKey, opts={}){
+    const base = String(srcText||'').replace(/\bpersona:\s*[a-z0-9 _-]+\b/gi,'').replace(/,\s*,/g,', ');
+    const injected = CORE.injectPersona(base, personaKey);
+    // Respect vibe/explicit settings during sanitize/escalate
+    const { allowExplicit=false, direction= (allowExplicit?'explicit':'clean') } = opts;
+    return CORE.sanitize(injected, { allowExplicit, direction });
+  };
+
+  // Compose from a named starter with optional overrides
+  CORE.composeFromStarter = function composeFromStarter(name, overrides={}){
+    const s = CORE.STARTERS[String(name||'').toLowerCase()];
+    if (!s) return '';
+    const ctx = Object.assign({}, s.ctx||{}, overrides||{});
+    // If caller passes persona, prime a seed fragment for persona expansion
+    let seed = CORE.compose(ctx);
+    if (ctx.persona) seed = CORE.injectPersona(seed, ctx.persona);
+    return CORE.sanitize(seed, { allowExplicit: !!ctx.allowExplicit, direction: (ctx.allowExplicit&&ctx.vibe==='hardcore')?'explicit':'clean' });
+  };
+
+})(typeof self!=='undefined'?self:this);
+/* ============================ BLOCK 1b — END ============================ */
+/* ================================================================
+ * BLOCK 6a — CAMERA PRESETS & COLOR GRADES (NEUTRAL, STACKABLE)
+ * ID: BLOCK 6a
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - One-word camera looks that expand into model-friendly settings.
+ *   - Works across SFW/NSFW; severity 0 so they won’t trip the gate.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 6a',
+  language:'en',
+  category:'camera_presets_grades',
+  emoji:['📷','🎞️','🎛️','🌈'],
+  notes:[
+    'Compact “cam:” and “grade:” triggers — add anywhere; pairs with BLOCK 6. :contentReference[oaicite:2]{index=2}'
+  ],
+  entries:[
+    { pattern:/\bcam:\s*beauty\b/gi, replacement:'portrait lens, shallow depth of field, butterfly lighting, skin-smoothing diffusion', severity:0, tags:['camera','beauty'] },
+    { pattern:/\bcam:\s*glamour\b/gi, replacement:'85mm portrait feel, softbox key, rim light, glossy lips highlight, subtle film grain', severity:0, tags:['camera'] },
+    { pattern:/\bcam:\s*macro\s*skin\b/gi, replacement:'macro close-up 1:1, extreme pores/peach-fuzz detail, side light for texture', severity:0, tags:['camera','macro'] },
+    { pattern:/\bcam:\s*voyeur\b/gi, replacement:'long lens compression, slight occlusion foreground, candid angle', severity:0, tags:['camera'] },
+    { pattern:/\bcam:\s*studio\b/gi, replacement:'three-point lighting, seamless paper backdrop, controlled reflections', severity:0, tags:['camera'] },
+    { pattern:/\bgrade:\s*teal[-\s]*orange\b/gi, replacement:'cinematic teal-orange grade, lifted shadows, warm skin bias', severity:0, tags:['grade'] },
+    { pattern:/\bgrade:\s*filmic\b/gi, replacement:'soft film curve, halation around highlights, gentle contrast, grain', severity:0, tags:['grade'] },
+    { pattern:/\bgrade:\s*noir\b/gi, replacement:'monochrome, deep blacks, hard key, smoke in beam, dramatic contrast', severity:0, tags:['grade'] }
+  ]
+});
+/* ============================ BLOCK 6a — END ============================ */
+
+/* ================================================================
+ * BLOCK 8a — BACKGROUNDS & SET-DRESSING MEGA-PACK (STACKABLE)
+ * ID: BLOCK 8a
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Huge library of “bg:” + “fx:” tokens for lush, coherent scenes.
+ *   - Severity 0: safe in any vibe; adds realism without forcing content.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 8a',
+  language:'en',
+  category:'backgrounds_fx',
+  emoji:['🏙️','🛏️','🚿','🪞','🌧️','✨'],
+  notes:[
+    'Use bg:… and fx:… anywhere; combines with BLOCK 6 lighting/time. :contentReference[oaicite:3]{index=3}'
+  ],
+  entries:[
+    // Bedrooms / Interiors
+    { pattern:/\bbg:\s*luxe\s*bedroom\b/gi, replacement:'upscale bedroom, tufted headboard, velvet throw, warm bedside lamps', severity:0, tags:['interior','bed'] },
+    { pattern:/\bbg:\s*cozy\s*loft\b/gi, replacement:'industrial loft, exposed brick, big windows, soft rug', severity:0, tags:['interior'] },
+    { pattern:/\bbg:\s*hotel\s*suite\b/gi, replacement:'hotel suite, floor-to-ceiling windows, city lights bokeh', severity:0, tags:['interior'] },
+    { pattern:/\bbg:\s*mirror\s*wall\b/gi, replacement:'mirror wall, handprints, breath fog halos', severity:0, tags:['mirror'] },
+
+    // Wet rooms
+    { pattern:/\bbg:\s*rain\s*shower\b/gi, replacement:'glass rain shower, steam plumes, water beads', severity:0, tags:['shower','wet'] },
+    { pattern:/\bbg:\s*bath\b/gi, replacement:'clawfoot tub, milky water, floating petals, candlelight', severity:0, tags:['bath','wet'] },
+
+    // Urban / Night
+    { pattern:/\bbg:\s*neon\s*alley\b/gi, replacement:'neon alley, puddle reflections, light mist, signage glow', severity:0, tags:['urban','neon'] },
+    { pattern:/\bbg:\s*rooftop\s*rain\b/gi, replacement:'rain-slick rooftop, skyline bokeh, wind-blown hair', severity:0, tags:['urban','rain'] },
+    { pattern:/\bbg:\s*balcony\s*city\b/gi, replacement:'high balcony, wet rails, distant traffic streaks', severity:0, tags:['urban','balcony'] },
+
+    // Nature / Exterior
+    { pattern:/\bbg:\s*beach\s*dusk\b/gi, replacement:'beach at dusk, pink-blue horizon, wet sand mirror', severity:0, tags:['nature','beach'] },
+    { pattern:/\bbg:\s*forest\s*path\b/gi, replacement:'shaded forest path, dappled light, damp moss', severity:0, tags:['nature','forest'] },
+    { pattern:/\bbg:\s*hot\s*springs\b/gi, replacement:'rocky hot spring, steam veils, mineral sheen', severity:0, tags:['nature','wet'] },
+
+    // Furniture / Micro sets
+    { pattern:/\bbg:\s*sofa\s*edge\b/gi, replacement:'sofa edge perch, plush cushion sink, throw blanket', severity:0, tags:['sofa'] },
+    { pattern:/\bbg:\s*vanity\s*mirror\b/gi, replacement:'vanity mirror, bulbs rim, scattered makeup', severity:0, tags:['mirror'] },
+    { pattern:/\bbg:\s*studio\s*seamless\b/gi, replacement:'seamless white sweep, soft falloff, clean shadows', severity:0, tags:['studio'] },
+
+    // Atmos “fx” helpers
+    { pattern:/\bfx:\s*raindrops\b/gi, replacement:'raindrops on glass, streaked trails, cold highlights', severity:0, tags:['fx','rain'] },
+    { pattern:/\bfx:\s*dust\s*motes\b/gi, replacement:'floating dust motes in shafts of light', severity:0, tags:['fx'] },
+    { pattern:/\bfx:\s*bokeh\b/gi, replacement:'large circular bokeh discs, creamy background', severity:0, tags:['fx','bokeh'] },
+    { pattern:/\bfx:\s*neon\s*fringe\b/gi, replacement:'chromatic fringe, neon edge glow, slight aberration', severity:0, tags:['fx','neon'] },
+    { pattern:/\bfx:\s*steam\b/gi, replacement:'soft steam veils, obscured edges, skin glow', severity:0, tags:['fx','wet'] }
+  ]
+});
+/* ============================ BLOCK 8a — END ============================ */
+/* ================================================================
+ * BLOCK 9a — SKIN FINISHES, WETNESS & REALISM DETAILS (NSFW-FRIENDLY)
+ * ID: BLOCK 9a
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Short tokens for skin realism: oil, sweat, droplets, tanlines, texture.
+ *   - Elevates softcore/hardcore without messy prose; camera-readable.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 9a',
+  language:'en',
+  category:'skin_finishes_realism',
+  gated:true,
+  emoji:['💧','✨','🌞'],
+  notes:[
+    'Pairs great with shower/bath/beach sets and beauty camera. :contentReference[oaicite:4]{index=4}'
+  ],
+  entries:[
+    { pattern:/\bskin:\s*oiled\b/gi, replacement:'oiled skin sheen, specular highlights on curves', severity:2, tags:['finish','wet_skin'] },
+    { pattern:/\bskin:\s*sweaty\b/gi, replacement:'fine sweat beads at temples, collarbone sheen', severity:2, tags:['finish'] },
+    { pattern:/\bskin:\s*droplets\b/gi, replacement:'water droplets clinging to skin, trickle trails', severity:2, tags:['finish','wet'] },
+    { pattern:/\bskin:\s*tanlines\b/gi, replacement:'visible bikini tanlines, contrast framing breasts/hips', severity:2, tags:['finish'] },
+    { pattern:/\bskin:\s*goosebumps\b/gi, replacement:'fine goosebumps on arms and thighs, tactile detail', severity:1, tags:['finish'] },
+    { pattern:/\bskin:\s*freckles\b/gi, replacement:'sun-kissed freckles across nose, shoulders dotted', severity:1, tags:['finish'] },
+    { pattern:/\bskin:\s*stretchmarks\b/gi, replacement:'realistic stretch marks on hips and breasts', severity:1, tags:['finish'] },
+    { pattern:/\bskin:\s*glitter\b/gi, replacement:'body glitter sparkles on collarbones and chest', severity:1, tags:['finish'] }
+  ]
+});
+/* ============================ BLOCK 9a — END ============================ */
+/* ================================================================
+ * BLOCK 11 — STARTER MACROS (ONE-TAP SCENES)
+ * ID: BLOCK 11
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Curated high-yield scene presets for instant sexy prompts.
+ *   - Use with PF_CORE.composeFromStarter('key', {overrides}) to riff.
+ *   - Starters honor vibe-lock & explicit gating automatically. :contentReference[oaicite:5]{index=5}
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+  const S = CORE.STARTERS = CORE.STARTERS || {};
+
+  // softcore essentials
+  S['softcore_solo_mirror'] = { ctx:{ vibe:'softcore', party:'solo', location:'mirror', wardrobe:'lace', camera:'cam: beauty, grade: filmic', allowExplicit:true, persona:'french' } };
+  S['softcore_ff_shower']   = { ctx:{ vibe:'softcore', party:'ff',   location:'shower', wardrobe:'lace', camera:'cam: beauty, grade: teal orange', allowExplicit:true, persona:'ginger' } };
+  S['softcore_solo_bed_oil']= { ctx:{ vibe:'softcore', party:'solo', location:'bed',    wardrobe:'lace', camera:'cam: glamour, grade: filmic', allowExplicit:true, persona:'latina' } };
+
+  // hardcore bangers
+  S['hardcore_doggy_bed_mf']   = { ctx:{ vibe:'hardcore', party:'mf',  location:'bed',   wardrobe:'lace', camera:'cam: glamour, grade: filmic', allowExplicit:true, persona:'curvy' } };
+  S['hardcore_chair_ride_cw']  = { ctx:{ vibe:'hardcore', party:'mf',  location:'chair', wardrobe:'lace', camera:'cam: studio, grade: filmic',  allowExplicit:true, persona:'petite' } };
+  S['hardcore_ff_69_neon']     = { ctx:{ vibe:'hardcore', party:'ff',  location:'balcony', wardrobe:'latex', camera:'cam: voyeur, grade: teal orange', allowExplicit:true, persona:'goth' } };
+  S['hardcore_mmf_spitroast']  = { ctx:{ vibe:'hardcore', party:'mmf', location:'sofa',  wardrobe:'lace', camera:'cam: studio, grade: filmic', allowExplicit:true, persona:'fit' } };
+
+  // moody locations
+  S['softcore_rooftop_rain'] = { ctx:{ vibe:'softcore', party:'solo', location:'balcony', wardrobe:'club dress', camera:'cam: voyeur, grade: noir', allowExplicit:true, persona:'blonde bombshell' } };
+  S['softcore_bath_pedals']  = { ctx:{ vibe:'softcore', party:'solo', location:'bath',    wardrobe:'naked', camera:'cam: beauty, grade: filmic', allowExplicit:true, persona:'ebony' } };
+
+  // how-to: quick alias method
+  CORE.starter = function starter(key, overrides){ return CORE.composeFromStarter(key, overrides||{}); };
+})(typeof self!=='undefined'?self:this);
+/* ============================ BLOCK 11 — END ============================ */
+/* ================================================================
+ * BLOCK 3i — F/F MICRO-BEATS (KISS TRAILS • HAND PLACEMENT • TEASES)
+ * ID: BLOCK 3i
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Short, camera-readable beats for girl-on-girl detail without walls of prose.
+ *   - Great for softcore (implied) or hardcore (stack with 3d/3e).
+ *   - Fully gated (allowExplicit:true).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 3i',
+  language: 'en',
+  category: 'ff_microbeats_explicit',
+  gated: true,
+  emoji: ['💋','🤌','👩‍❤️‍👩'],
+  notes: ['Add these as compact fragments so the model composes clean frames, not paragraphs.'],
+  entries: [
+    // KISS TRAILS
+    { pattern:/\bff\s*kisses\s*neck\b/gi, replacement:'slow kiss trail up the neck, goosebumps rising', severity:3, tags:['ff','tease'] },
+    { pattern:/\bff\s*kisses\s*spine\b/gi, replacement:'kisses along the spine, arch deepens, breath catches', severity:4, tags:['ff','tease'] },
+    { pattern:/\bff\s*nipple\s*tease\b/gi, replacement:'tongue circles a nipple, fingers pinch the other', severity:5, tags:['ff','nipples'] },
+
+    // HAND PLACEMENT
+    { pattern:/\bff\s*hand\s*on\s*throat\b/gi, replacement:'hand curled gently at throat, consensual control vibe', severity:4, tags:['ff','dom/sub'] },
+    { pattern:/\bff\s*hand\s*between\s*thighs\b/gi, replacement:'hand sliding between thighs, slick heat, parted knees', severity:5, tags:['ff','manual'] },
+    { pattern:/\bff\s*grabs\s*hair\b/gi, replacement:'fist in hair, head tilted back, hungry kiss', severity:4, tags:['ff','dom/sub'] },
+
+    // TEASES & SET CUES
+    { pattern:/\bff\s*lipstick\s*smear\b/gi, replacement:'lipstick smeared across mouth and cheek, used look', severity:3, tags:['ff','makeup'] },
+    { pattern:/\bff\s*mirror\s*angle\b/gi, replacement:'angled in front of mirror, both faces in frame', severity:2, tags:['ff','mirror'] },
+    { pattern:/\bff\s*share\s*toy\b/gi, replacement:'sharing the same toy, eyes locked, synchronized moans', severity:5, tags:['ff','toy','sync'] }
+  ]
+});
+/* ============================== BLOCK 3i — END ============================== */
+/* ================================================================
+ * BLOCK 4d — MOANS, SOUNDS & ONE-WORD UTTERANCES (COMPACT)
+ * ID: BLOCK 4d
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Short onomatopoeia + expletives models latch onto.
+ *   - Keeps prompts punchy; stacks with 4b/4c.
+ *   - Gated (allowExplicit:true).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 4d',
+  language: 'en',
+  category: 'moans_utterances_explicit',
+  gated: true,
+  emoji: ['🗯️','💦'],
+  notes: ['Use sparingly, separated by commas to avoid spammy repetition.'],
+  entries: [
+    { pattern:/\bmoan:\s*soft\b/gi,   replacement:'mmm…', severity:3, tags:['moan'] },
+    { pattern:/\bmoan:\s*loud\b/gi,   replacement:'ah—ah—ah!', severity:4, tags:['moan'] },
+    { pattern:/\bmoan:\s*deep\b/gi,   replacement:'ngh… f—', severity:4, tags:['moan'] },
+    { pattern:/\bmoan:\s*climax\b/gi, replacement:'ohhh—oh—oh—!', severity:5, tags:['climax'] },
+    { pattern:/\bword:\s*yes\b/gi,    replacement:'yes—yes—don’t stop', severity:4, tags:['talk'] },
+    { pattern:/\bword:\s*more\b/gi,   replacement:'more—more—harder', severity:4, tags:['talk'] },
+    { pattern:/\bword:\s*good\b/gi,   replacement:'so good—so fucking good', severity:5, tags:['talk'] }
+  ]
+});
+/* ============================== BLOCK 4d — END ============================== */
+/* ================================================================
+ * BLOCK 10a — MULTILINGUAL MIRRORS (ES • FR • DE • IT • PT)
+ * ID: BLOCK 10a
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Map common romance-language NSFW tokens → your clinical/neutral English cores (Blocks 2–3),
+ *     so your pipeline stays coherent across languages, then escalates via 2a/3a when allowed.
+ *   - Severity tuned to match English equivalents. Runs in CLEAN pass (then can escalate).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 10a',
+  language: 'multi',
+  category: 'multilingual_core',
+  emoji: ['🌐','🗣️'],
+  notes: ['These are *mirrors* not translations of prose; they normalize slang into your English base.'],
+  entries: [
+    // Spanish
+    { pattern:/\btetas\b/gi,               replacement:'breasts', severity:2, tags:['female','es'] },
+    { pattern:/\bcoño\b/gi,                replacement:'vagina', severity:3, tags:['female','es'] },
+    { pattern:/\bculo\b/gi,                replacement:'buttocks', severity:1, tags:['es'] },
+    { pattern:/\bchupar\b/gi,              replacement:'oral sex (performing)', severity:4, tags:['oral','es'] },
+    { pattern:/\btragar\b/gi,              replacement:'swallow (semen)', severity:5, tags:['finish','es'] },
+
+    // French
+    { pattern:/\bseins\b/gi,               replacement:'breasts', severity:2, tags:['fr'] },
+    { pattern:/\bchatte\b/gi,              replacement:'vagina', severity:3, tags:['fr'] },
+    { pattern:/\bfesses\b/gi,              replacement:'buttocks', severity:1, tags:['fr'] },
+    { pattern:/\bsucer\b/gi,               replacement:'oral sex (performing)', severity:4, tags:['oral','fr'] },
+
+    // German
+    { pattern:/\bbrüste\b/gi,              replacement:'breasts', severity:2, tags:['de'] },
+    { pattern:/\bscheide\b/gi,             replacement:'vagina', severity:3, tags:['de'] },
+    { pattern:/\bar***\b/gi,               replacement:'anus', severity:3, tags:['de'] }, // simple catch-all; german profanity often obfuscated
+    { pattern:/\bblasen\b/gi,              replacement:'oral sex (performing)', severity:4, tags:['oral','de'] },
+
+    // Italian
+    { pattern:/\bseno\b/gi,                replacement:'breasts', severity:2, tags:['it'] },
+    { pattern:/\bfica\b/gi,                replacement:'vagina', severity:3, tags:['it'] },
+    { pattern:/\bculo\b/gi,                replacement:'buttocks', severity:1, tags:['it'] },
+    { pattern:/\bsucchiare\b/gi,           replacement:'oral sex (performing)', severity:4, tags:['oral','it'] },
+
+    // Portuguese
+    { pattern:/\bseios\b/gi,               replacement:'breasts', severity:2, tags:['pt'] },
+    { pattern:/\bbuceta\b/gi,              replacement:'vagina', severity:3, tags:['pt'] },
+    { pattern:/\bbunda\b/gi,               replacement:'buttocks', severity:1, tags:['pt'] },
+    { pattern:/\bmamar\b/gi,               replacement:'oral sex (performing)', severity:4, tags:['oral','pt'] }
+  ]
+});
+/* ============================== BLOCK 10a — END ============================== */
+/* ================================================================
+ * BLOCK 12 — VALIDATOR & SMART DE-DUPE (COHERENCE++ ENGINE)
+ * ID: BLOCK 12
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Final pass to prune contradictions, duplicates, and severity leaks.
+ *   - Ensures softcore stays soft; removes banned tokens per context.
+ *   - Append-only CORE extension; no edits to older code. :contentReference[oaicite:1]{index=1}
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.validate = function validate(text, ctx={}){
+    let out = String(text||'').replace(/\s{2,}/g,' ').trim();
+
+    // De-dupe repeated phrases (simple comma-separated terms)
+    const parts = out.split(/\s*,\s*/).filter(Boolean);
+    const seen = new Set();
+    const kept = [];
+    for (const p of parts){
+      const k = p.toLowerCase();
+      if (seen.has(k)) continue;
+      seen.add(k);
+      kept.push(p);
+    }
+    out = kept.join(', ');
+
+    // If vibe is softcore, neuter explicit finish tokens just in case
+    if ((ctx.vibe||'softcore') === 'softcore') {
+      out = out
+        .replace(/\bcreampie\b/gi,'intimate closeness')
+        .replace(/\bcum(shot)?\b/gi,'heated breath')
+        .replace(/\bfacial\b/gi,'flushed cheeks')
+        .replace(/\bdouble penetration\b/gi,'close embrace');
+    }
+    return out;
+  };
+
+  // Helper: one-shot pipeline (compose → validate)
+  CORE.composeSafe = function composeSafe(ctx={}) {
+    const seed = CORE.compose(ctx);
+    return CORE.validate(seed, ctx);
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 12 — END ============================== */
+/* ================================================================
+ * BLOCK 13 — UI FEATURE FLAGS & PICKER SCHEMAS (FOR HTML BUILD)
+ * ID: BLOCK 13
+ * DATE: 2025-09-12
+ * PURPOSE:
+ *   - Declares config the HTML tool will read: slider ranges, toggles, pickers.
+ *   - Lets us wire persona/starter/bg/finish menus quickly.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.UI = CORE.UI || {
+    sliders: {
+      nsfwLevel: { min:0, max:100, step:1, default: 70 },
+      intensity: { min:0, max:5, step:1, default: 3 }
+    },
+    toggles: {
+      allowExplicit: { default: true },
+      vibeLock:      { default: true }
+    },
+    pickers: {
+      party:    ['solo','ff','mf','mmf','ffm','group'],
+      location: ['bed','sofa','shower','mirror','balcony','car','kitchen','locker_room','studio'],
+      wardrobe: ['lace','sheer','latex','fishnets','heels','microbikini','club dress','maid cosplay','school cosplay','naked'],
+      persona:  ['nordic','french','ginger','latina','brazilian','mexican','eastern','thai','south asian','ebony','caribbean','ethiopian','petite','curvy','fit','bbw','goth','pierced','punk','blonde bombshell','surfer','freckles','tomboy','mature','snow bunny']
+    },
+    starters: [
+      'softcore_solo_mirror','softcore_ff_shower','softcore_solo_bed_oil',
+      'hardcore_doggy_bed_mf','hardcore_chair_ride_cw','hardcore_ff_69_neon','hardcore_mmf_spitroast',
+      'softcore_rooftop_rain','softcore_bath_pedals'
+    ]
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 13 — END ============================== */
+/* ================================================================
+ * BLOCK 0a — SAFETY / CONSENT / RED-LINE GUARD (GLOBAL)
+ * ID: BLOCK 0a
+ * DATE: 2025-09-12
+ * PURPOSE: Hard-ban illegal/unsafe tokens, force adult/consent cues.
+ * NOTE: Runs first during sanitize(); append-only extension of CORE.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  // hard bans (NEVER allowed)
+  const BANS = [
+    /\b(minor|underage|teen(?!age makeup)|jailbait|barely\s*legal)\b/gi,
+    /\b(non[-\s]*consent|rape|forced|drugged|incest|bestiality|beastiality)\b/gi
+  ];
+
+  // soft bans → neutralize (iffy terms to clinical)
+  const SOFT = [
+    { re:/\bchoking\b/gi, rep:'hand at neck (safe, consensual control)' },
+    { re:/\bdaddy\b/gi,   rep:'dominant partner' }
+  ];
+
+  CORE.sanitize = (function (orig){
+    return function patchedSanitize(text, opts={}){
+      let out = (orig?orig(text,opts):String(text||''));
+      // hard bans
+      for (const r of BANS) out = out.replace(r, '—');
+      // soft transforms
+      for (const {re,rep} of SOFT) out = out.replace(re, rep);
+      // Always assert adult/consent
+      if (!/adult/.test(out)) out = `adult, consensual, ${out}`;
+      return out;
+    };
+  })(CORE.sanitize);
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 0a — END ============================== */
+/* ================================================================
+ * BLOCK 3j — HANDS & FINGERS LIB (NAILS • GRIPS • PLACEMENT)
+ * ID: BLOCK 3j
+ * DATE: 2025-09-12
+ * PURPOSE: Better hand rendering: nails, rings, where hands go.
+ * GATED: allowExplicit:true (some placements are spicy)
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3j',
+  language:'en',
+  category:'hands_fingers_explicit',
+  gated:true,
+  emoji:['🤌','💅','✋'],
+  notes:['Compact, camera-readable; avoids paragraph spam.'],
+  entries:[
+    // nails / jewelry
+    { pattern:/\bnails:\s*short\b/gi,  replacement:'short nude nails, neat cuticles', severity:0, tags:['hands'] },
+    { pattern:/\bnails:\s*long\b/gi,   replacement:'long almond nails, glossy finish', severity:0, tags:['hands'] },
+    { pattern:/\brings\b/gi,           replacement:'stacked rings on fingers, tiny sparkle', severity:0, tags:['hands'] },
+
+    // neutral hand poses
+    { pattern:/\bhand:\s*hip\b/gi,     replacement:'hand on hip, thumb hooked, waist cinch', severity:1, tags:['pose'] },
+    { pattern:/\bhand:\s*hair\b/gi,    replacement:'fingers in hair, gentle pull, neck exposed', severity:2, tags:['pose'] },
+    { pattern:/\bhand:\s*breast\b/gi,  replacement:'hand cupping breast, thumb lifting edge', severity:3, tags:['pose','breasts'] },
+    { pattern:/\bhand:\s*thigh\b/gi,   replacement:'hand on inner thigh, teasing stroke', severity:3, tags:['pose'] },
+
+    // explicit placements
+    { pattern:/\bhand:\s*pussy\b/gi,   replacement:'fingers parting lips, slick shine', severity:5, tags:['explicit','manual'] },
+    { pattern:/\bhand:\s*ass\b/gi,     replacement:'hands spreading cheeks, arched lower back', severity:5, tags:['explicit'] },
+    { pattern:/\bhand:\s*throat\b/gi,  replacement:'hand at throat, gentle control, consent signaled', severity:4, tags:['dom/sub'] }
+  ]
+});
+/* ============================== BLOCK 3j — END ============================== */
+/* ================================================================
+ * BLOCK 3k — TOYS & PROPS MEGA (WANDS • DILDOS • PLUGS • STRAPS)
+ * ID: BLOCK 3k
+ * DATE: 2025-09-12
+ * PURPOSE: Big toy catalog that renders clean; adult/consensual only.
+ * GATED: allowExplicit:true
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3k',
+  language:'en',
+  category:'toys_explicit',
+  gated:true,
+  emoji:['🪄','🍆','🔗'],
+  notes:['Short tokens → clear visuals; no brands.'],
+  entries:[
+    { pattern:/\btoy:\s*wand\b/gi,      replacement:'vibrator wand pressed to clit, trembling thighs', severity:5, tags:['toy','oral'] },
+    { pattern:/\btoy:\s*dildo\b/gi,     replacement:'realistic dildo, slick with lube, steady strokes', severity:5, tags:['toy','penetration'] },
+    { pattern:/\btoy:\s*glass\b/gi,     replacement:'clear glass toy, fogged with warmth, refracting light', severity:4, tags:['toy'] },
+    { pattern:/\btoy:\s*plug\b/gi,      replacement:'gem plug seated snug, glint between cheeks', severity:5, tags:['toy'] },
+    { pattern:/\btoy:\s*strap\b/gi,     replacement:'strap-on harness, tight straps, confident angle', severity:5, tags:['toy','ff'] },
+    { pattern:/\btoy:\s*beads\b/gi,     replacement:'string of beads, slow pull, teasing edge', severity:5, tags:['toy'] },
+    { pattern:/\btoy:\s*tape\b/gi,      replacement:'shiny bondage tape, safe bind, smooth finish', severity:3, tags:['bondage'] },
+    { pattern:/\btoy:\s*cuffs\b/gi,     replacement:'padded cuffs, wrists secured above head', severity:4, tags:['bondage'] }
+  ]
+});
+/* ============================== BLOCK 3k — END ============================== */
+/* ================================================================
+ * BLOCK 4e — INTENSITY-TUNED PRAISE/INSULT (0–5)
+ * ID: BLOCK 4e
+ * DATE: 2025-09-12
+ * PURPOSE: Map CORE.UI.sliders.intensity into talk variants.
+ * GATED: allowExplicit:true
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  const L = {
+    0:['soft moans','kiss me','you’re beautiful'],
+    1:['want you so bad','so tight','so wet'],
+    2:['fuck yes','don’t stop','ride me'],
+    3:['harder','take it all','good girl'],
+    4:['cock-hungry','dirty little tease','ruin me'],
+    5:['cum for me now','use me','i’m your filthy slut']
+  };
+
+  CORE.intenseTalk = function intenseTalk(level=3){
+    const arr = L[Math.max(0, Math.min(5, level))] || L[3];
+    return arr[Math.floor(Math.random()*arr.length)];
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 4e — END ============================== */
+/* ================================================================
+ * BLOCK 5a — COMPOSITION RECIPES (FRAMING • ANGLES • CROPS)
+ * ID: BLOCK 5a
+ * DATE: 2025-09-12
+ * PURPOSE: Camera-readable framing helpers; severity 0.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 5a',
+  language:'en',
+  category:'composition_recipes',
+  gated:false,
+  emoji:['🧭','🖼️','📐'],
+  entries:[
+    { pattern:/\bframe:\s*thirds\b/gi,   replacement:'rule of thirds composition, eyes on upper third', severity:0, tags:['frame'] },
+    { pattern:/\bframe:\s*center\b/gi,   replacement:'central composition, symmetrical limbs', severity:0, tags:['frame'] },
+    { pattern:/\bangle:\s*low\b/gi,      replacement:'low angle, legs elongated, dominance vibe', severity:0, tags:['angle'] },
+    { pattern:/\bangle:\s*high\b/gi,     replacement:'high angle, vulnerable gaze up, foreshortened body', severity:0, tags:['angle'] },
+    { pattern:/\bcrop:\s*half\b/gi,      replacement:'waist-up crop, chest and face filling frame', severity:0, tags:['crop'] },
+    { pattern:/\bcrop:\s*close\b/gi,     replacement:'tight crop, lips/eyes dominance, shallow depth', severity:0, tags:['crop'] }
+  ]
+});
+/* ============================== BLOCK 5a — END ============================== */
+/* ================================================================
+ * BLOCK 6b — LIGHTING & TIME-OF-DAY (TEMPS • PRACTICALS)
+ * ID: BLOCK 6b
+ * DATE: 2025-09-12
+ * PURPOSE: More lighting looks; severity 0; stacks with 6/6a.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 6b',
+  language:'en',
+  category:'lighting_time',
+  emoji:['💡','🌅','🌃'],
+  entries:[
+    { pattern:/\blight:\s*golden\b/gi,  replacement:'golden hour key, warm rim light, low sun angle', severity:0, tags:['light'] },
+    { pattern:/\blight:\s*blue\b/gi,    replacement:'blue hour ambient, cool fill, city sky glow', severity:0, tags:['light'] },
+    { pattern:/\blight:\s*candle\b/gi,  replacement:'candlelit warm flicker, soft specular skin glows', severity:0, tags:['light'] },
+    { pattern:/\blight:\s*neon\b/gi,    replacement:'neon sign spill, magenta/cyan cross-light', severity:0, tags:['light','neon'] },
+    { pattern:/\blight:\s*hard\b/gi,    replacement:'hard key, crisp shadows, dramatic contrast', severity:0, tags:['light'] },
+    { pattern:/\blight:\s*soft\b/gi,    replacement:'big softbox, wrap-around highlights, gentle falloff', severity:0, tags:['light'] }
+  ]
+});
+/* ============================== BLOCK 6b — END ============================== */
+/* ================================================================
+ * BLOCK 7a — NEGATIVE HELPERS (ARTIFACTS • DEFECTS • CLUTTER)
+ * ID: BLOCK 7a
+ * DATE: 2025-09-12
+ * PURPOSE: Quick "NEG:" tokens you can tack on to kill common issues.
+ * NOTE: You can concat these into a single negative prompt string for gen.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 7a',
+  language:'en',
+  category:'negative_helpers',
+  gated:false,
+  emoji:['🚫','🧹'],
+  entries:[
+    { pattern:/\bNEG:\s*hands\b/gi,      replacement:'no extra fingers, no deformed hands, no fused digits', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*eyes\b/gi,       replacement:'no cross-eye, no mismatched eyes, no lazy eye', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*skin\b/gi,       replacement:'no plastic skin, no waxy over-smooth, keep pores', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*clutter\b/gi,    replacement:'no messy background, no random objects, clean set', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*text\b/gi,       replacement:'no overlay text, no watermarks, no logos', severity:0, tags:['neg'] }
+  ]
+});
+/* ============================== BLOCK 7a — END ============================== */
+/* ================================================================
+ * BLOCK 14 — RANDOMIZER UTILS (pickN • unique • weight)
+ * ID: BLOCK 14
+ * DATE: 2025-09-12
+ * PURPOSE: Helper funcs for the HTML UI to build fat combos safely.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.pick = function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; };
+  CORE.pickN = function pickN(arr, n){
+    const a=[...arr], out=[]; while (a.length && out.length<n){
+      out.push(a.splice(Math.floor(Math.random()*a.length),1)[0]);
+    } return out;
+  };
+  CORE.weighted = function weighted(pairs){ // [[item,weight],...]
+    const total = pairs.reduce((s,[,w])=>s+w,0);
+    let r=Math.random()*total;
+    for (const [item,w] of pairs){ if ((r-=w)<=0) return item; }
+    return pairs[pairs.length-1][0];
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 14 — END ============================== */
+/* ================================================================
+ * BLOCK 3l — POSE ANCHORS V2 (RELIABLE RENDERS)
+ * ID: BLOCK 3l
+ * DATE: 2025-09-12
+ * PURPOSE: More positions that *actually* render clean & sexy.
+ * GATED: allowExplicit:true (some are spicy)
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3l',
+  language:'en',
+  category:'pose_anchors_v2_explicit',
+  gated:true,
+  emoji:['🧘','🪑','🧱'],
+  notes:['Short, camera-readable anchors; pair with 5a/6a/6b.'],
+  entries:[
+    // furniture & edges
+    { pattern:/\bpose:\s*chair\s*ride\b/gi,   replacement:'straddling a sturdy chair, hips rolling, hands on shoulders', severity:5, tags:['position','chair'] },
+    { pattern:/\bpose:\s*edge\s*perk\b/gi,    replacement:'perched at bed edge, pelvis forward, perfect access', severity:5, tags:['position','edge'] },
+    { pattern:/\bpose:\s*counter\s*legup\b/gi,replacement:'one leg up on counter, deep arch, balanced grip', severity:4, tags:['position'] },
+
+    // wall / balance
+    { pattern:/\bpose:\s*wall\s*press\b/gi,   replacement:'pressed to wall, one knee hitched, urgent kisses', severity:4, tags:['position','wall'] },
+    { pattern:/\bpose:\s*over\s*shoulder\b/gi,replacement:'over-the-shoulder look back, lower back arched', severity:3, tags:['pose'] },
+
+    // floor / prone / splits
+    { pattern:/\bpose:\s*prone\b/gi,          replacement:'lying flat, hips slightly raised, cheek to pillow', severity:4, tags:['position'] },
+    { pattern:/\bpose:\s*half\s*splits\b/gi,  replacement:'half-splits, front leg straight, torso twist to camera', severity:3, tags:['pose'] },
+
+    // cowgirl family
+    { pattern:/\bpose:\s*reverse\s*cw\b/gi,   replacement:'reverse cowgirl, back arched, hands on knees', severity:5, tags:['position'] },
+    { pattern:/\bpose:\s*raised\s*cw\b/gi,    replacement:'cowgirl raised on knees, slow grind, hands on chest', severity:5, tags:['position'] },
+
+    // facesitting / trib (explicit)
+    { pattern:/\bpose:\s*facesit\b/gi,        replacement:'facesitting, thighs squeezing, pelvis centered', severity:5, tags:['ff','position'] },
+    { pattern:/\bpose:\s*trib\b/gi,           replacement:'scissor tribbing, hips locked, slick friction', severity:5, tags:['ff','position'] }
+  ]
+});
+/* ============================== BLOCK 3l — END ============================== */
+/* ================================================================
+ * BLOCK 8b — BACKGROUND MICRO-CLUTTER & SET DRESS (REALISM)
+ * ID: BLOCK 8b
+ * DATE: 2025-09-12
+ * PURPOSE: Tiny objects that sell the scene; severity 0 everywhere.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 8b',
+  language:'en',
+  category:'bg_microclutter',
+  gated:false,
+  emoji:['🧴','🕯️','🍷','🧻'],
+  notes:['Stack with 8a bg:… and fx:… for lush frames.'],
+  entries:[
+    { pattern:/\bprop:\s*robe\b/gi,        replacement:'silk robe half-slipped on chair back', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*towel\s*roll\b/gi,replacement:'rolled white towels stacked neatly', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*tray\b/gi,        replacement:'room-service tray, silver dome, folded napkin', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*lipstick\b/gi,    replacement:'open lipstick on vanity, cap askew', severity:0, tags:['prop','makeup'] },
+    { pattern:/\bprop:\s*robe\s*hook\b/gi, replacement:'robe on wall hook, belt dangling', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*wine\b/gi,        replacement:'two wine glasses, legs, deep red swirl', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*pillow\b/gi,      replacement:'pillow crease marks, lived-in bed', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*phone\s*cord\b/gi,replacement:'coiled phone cord on nightstand', severity:0, tags:['prop'] },
+    { pattern:/\bprop:\s*candle\s*drip\b/gi,replacement:'wax drips down candle sides, warm pools', severity:0, tags:['prop'] }
+  ]
+});
+/* ============================== BLOCK 8b — END ============================== */
+/* ================================================================
+ * BLOCK 10b — JP / KR MIRRORS (CLEAN → CORE)
+ * ID: BLOCK 10b
+ * DATE: 2025-09-12
+ * PURPOSE: Normalize common JP/KR NSFW tokens to clinical English cores,
+ *          so your escalator (2/2a/3/3a) can do its job consistently.
+ * NOTE: These are mirrors, not prose — severity matches English core.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 10b',
+  language:'multi',
+  category:'jp_kr_mirrors',
+  gated:true,
+  emoji:['🈶','🈲','🇯🇵','🇰🇷'],
+  entries:[
+    // Japanese
+    { pattern:/\boppai\b/gi,           replacement:'breasts', severity:2, tags:['jp'] },
+    { pattern:/\boppai\s*paizuri\b/gi, replacement:'titfuck', severity:5, tags:['jp','explicit'] },
+    { pattern:/\boshiri\b/gi,          replacement:'buttocks', severity:1, tags:['jp'] },
+    { pattern:/\bmanko\b/gi,           replacement:'vagina', severity:3, tags:['jp'] },
+    { pattern:/\bchitsu\b/gi,          replacement:'vagina', severity:3, tags:['jp'] },
+    { pattern:/\bferachio\b/gi,        replacement:'oral sex (performing)', severity:4, tags:['jp','oral'] },
+    { pattern:/\bskebe\b/gi,           replacement:'lewd vibe', severity:2, tags:['jp'] },
+    { pattern:/\bbukkake\b/gi,         replacement:'multiple cumshots (group finish)', severity:5, tags:['jp','explicit'] },
+
+    // Korean
+    { pattern:/\b가슴\b/gi,            replacement:'breasts', severity:2, tags:['kr'] },
+    { pattern:/\b엉덩이\b/gi,          replacement:'buttocks', severity:1, tags:['kr'] },
+    { pattern:/\b보지\b/gi,            replacement:'vagina', severity:3, tags:['kr'] },
+    { pattern:/\b블로우\b/gi,          replacement:'oral sex (performing)', severity:4, tags:['kr','oral'] },
+    { pattern:/\b딥키스\b/gi,          replacement:'deep kissing', severity:2, tags:['kr'] }
+  ]
+});
+/* ============================== BLOCK 10b — END ============================== */
+/* ================================================================
+ * BLOCK 15 — NEGATIVE: CLOTHES & PHYSICS COLLISIONS
+ * ID: BLOCK 15
+ * DATE: 2025-09-12
+ * PURPOSE: Quick NEG tokens to reduce strap clipping, melted lace, etc.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 15',
+  language:'en',
+  category:'negative_cloth_physics',
+  gated:false,
+  emoji:['🧯','🧵'],
+  entries:[
+    { pattern:/\bNEG:\s*straps\b/gi,  replacement:'no clipping straps, no intersecting fabric, natural tension', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*lace\b/gi,    replacement:'no melted lace, no blurry mesh, crisp pattern', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*sheer\b/gi,   replacement:'no moiré, no aliasing on mesh, realistic transparency', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*hair\b/gi,    replacement:'no hair through skin, no floating strands, tidy edges', severity:0, tags:['neg'] },
+    { pattern:/\bNEG:\s*gravity\b/gi, replacement:'no gravity errors, realistic drape and weight', severity:0, tags:['neg'] }
+  ]
+});
+/* ============================== BLOCK 15 — END ============================== */
+/* ================================================================
+ * BLOCK 16 — TEMPLATE STRINGS (FULL PROMPT + NEGATIVE BUILDER)
+ * ID: BLOCK 16
+ * DATE: 2025-09-12
+ * PURPOSE: HTML can call these to dump a polished prompt + negatives.
+ * NOTES: All strings go through sanitize/validate paths already added.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.TEMPLATES = CORE.TEMPLATES || {
+    // Softcore beauty template
+    soft_beauty({persona='french',location='mirror',wardrobe='lace',camera='cam: beauty, grade: filmic', extras=[]}={}){
+      const ctx={ vibe:'softcore', party:'solo', location, wardrobe, allowExplicit:true };
+      let seed = CORE.composeSafe(ctx);
+      seed = CORE.injectPersona(seed, persona);
+      if (extras.length) seed += ', ' + extras.join(', ');
+      const negative = [
+        'NEG: hands','NEG: eyes','NEG: skin','NEG: clutter','NEG: straps','NEG: lace','NEG: sheer','NEG: gravity','NEG: text'
+      ].join(', ');
+      return { prompt: CORE.validate(seed, ctx), negative };
+    },
+
+    // Hardcore chair ride template
+    hardcore_chair({persona='petite',party='mf',camera='cam: studio, grade: filmic', extras=[]}={}){
+      const ctx={ vibe:'hardcore', party, location:'chair', wardrobe:'lace', allowExplicit:true };
+      let seed = CORE.compose(ctx);
+      seed = CORE.injectPersona(seed, persona) + ', pose: chair ride';
+      if (extras.length) seed += ', ' + extras.join(', ');
+      const negative = [
+        'NEG: hands','NEG: eyes','NEG: skin','NEG: clutter','NEG: straps','NEG: lace','NEG: sheer','NEG: gravity','NEG: text'
+      ].join(', ');
+      return { prompt: CORE.validate(seed, ctx), negative };
+    },
+
+    // FF shower softcore
+    ff_shower_soft({persona='ginger',extras=[]}={}){
+      const ctx={ vibe:'softcore', party:'ff', location:'shower', wardrobe:'lace', allowExplicit:true };
+      let seed = CORE.composeSafe(ctx);
+      seed = CORE.injectPersona(seed, persona) + ', ff kisses neck, ff mirror angle';
+      if (extras.length) seed += ', ' + extras.join(', ');
+      const negative = 'NEG: hands, NEG: eyes, NEG: skin, NEG: clutter, NEG: shear, NEG: gravity, NEG: text'.replace('shear','sheer');
+      return { prompt: CORE.validate(seed, ctx), negative };
+    }
+  };
+
+  // Convenience helpers
+  CORE.template = function template(name, args){ 
+    const fn = CORE.TEMPLATES[name]; 
+    return fn ? fn(args||{}) : { prompt:'', negative:'' };
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 16 — END ============================== */
+/* ================================================================
+ * BLOCK 3m — BODY MOTION & BREATH CUES (KINETIC SEXY)
+ * ID: BLOCK 3m
+ * DATE: 2025-09-12
+ * PURPOSE: Add movement micro-cues that render clean without prose walls.
+ * GATED: allowExplicit:true (some cues imply explicit motion)
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 3m',
+  language:'en',
+  category:'body_motion_explicit',
+  gated:true,
+  emoji:['🌬️','💃','🌀'],
+  notes:['Short, stackable motion beats: hips, chest, breath, hair.'],
+  entries:[
+    { pattern:/\bmotion:\s*hip\s*roll\b/gi,  replacement:'hips rolling slow, belly ripple', severity:3, tags:['motion'] },
+    { pattern:/\bmotion:\s*grind\b/gi,      replacement:'slow grind, pelvis circling', severity:4, tags:['motion'] },
+    { pattern:/\bmotion:\s*arch\b/gi,       replacement:'deep back arch, ribcage lifted', severity:3, tags:['motion'] },
+    { pattern:/\bmotion:\s*chest\b/gi,      replacement:'breasts bouncing softly with rhythm', severity:4, tags:['motion','breasts'] },
+    { pattern:/\bmotion:\s*hair\s*flip\b/gi,replacement:'hair flip in mid-air, strands fanned', severity:2, tags:['motion','hair'] },
+    { pattern:/\bmotion:\s*breath\b/gi,     replacement:'visible breath, parted lips, fog on glass', severity:2, tags:['motion','fx'] },
+    { pattern:/\bmotion:\s*tremble\b/gi,    replacement:'thighs trembling, toes curling', severity:5, tags:['climax','motion'] }
+  ]
+});
+/* ============================== BLOCK 3m — END ============================== */
+/* ================================================================
+ * BLOCK 5b — EYES, GAZE & FACE FRAMING (COMPOSITION++)
+ * ID: BLOCK 5b
+ * DATE: 2025-09-12
+ * PURPOSE: Guide attention with gaze and face-framing tricks.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 5b',
+  language:'en',
+  category:'gaze_faceframe',
+  gated:false,
+  emoji:['👁️','🎯'],
+  entries:[
+    { pattern:/\bgaze:\s*camera\b/gi,   replacement:'direct eye contact to camera, intimate pull', severity:0, tags:['gaze'] },
+    { pattern:/\bgaze:\s*down\b/gi,     replacement:'eyes downcast, lashes heavy, shy vibe', severity:0, tags:['gaze'] },
+    { pattern:/\bgaze:\s*side\b/gi,     replacement:'side glance past camera, mysterious tension', severity:0, tags:['gaze'] },
+    { pattern:/\bframe:\s*hands\b/gi,   replacement:'hands framing face, fingers grazing lips', severity:0, tags:['frame'] },
+    { pattern:/\bframe:\s*hair\b/gi,    replacement:'hair curtains framing cheeks, soft fall', severity:0, tags:['frame','hair'] }
+  ]
+});
+/* ============================== BLOCK 5b — END ============================== */
+/* ================================================================
+ * BLOCK 6c — LENS KIT (24/35/50/85/135 • DOF • COMPRESSION)
+ * ID: BLOCK 6c
+ * DATE: 2025-09-12
+ * PURPOSE: One-word lens presets that models understand.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 6c',
+  language:'en',
+  category:'lens_kit',
+  gated:false,
+  emoji:['🎥','🔭'],
+  entries:[
+    { pattern:/\blens:\s*24\b/gi,  replacement:'24mm wide, environmental portrait, slight distortion', severity:0, tags:['lens'] },
+    { pattern:/\blens:\s*35\b/gi,  replacement:'35mm story frame, moderate wide, scene context', severity:0, tags:['lens'] },
+    { pattern:/\blens:\s*50\b/gi,  replacement:'50mm classic portrait, natural perspective', severity:0, tags:['lens'] },
+    { pattern:/\blens:\s*85\b/gi,  replacement:'85mm beauty headshot, shallow depth, creamy bokeh', severity:0, tags:['lens'] },
+    { pattern:/\blens:\s*135\b/gi, replacement:'135mm tele compression, background melt, flattering jawline', severity:0, tags:['lens'] },
+    { pattern:/\bdof:\s*shallow\b/gi, replacement:'very shallow depth of field, eyes razor sharp', severity:0, tags:['dof'] },
+    { pattern:/\bdof:\s*deep\b/gi,    replacement:'deep focus, scene detail held throughout', severity:0, tags:['dof'] }
+  ]
+});
+/* ============================== BLOCK 6c — END ============================== */
+/* ================================================================
+ * BLOCK 8c — ENVIRONMENT STATES (RAIN • FOG • STEAM • CONDENSATION)
+ * ID: BLOCK 8c
+ * DATE: 2025-09-12
+ * PURPOSE: Macro scene states that stack with bg/fx for mood.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 8c',
+  language:'en',
+  category:'environment_states',
+  gated:false,
+  emoji:['🌧️','🌫️','♨️'],
+  entries:[
+    { pattern:/\bstate:\s*downpour\b/gi,  replacement:'heavy rain outside, streaks racing down glass', severity:0, tags:['rain','env'] },
+    { pattern:/\bstate:\s*after\s*rain\b/gi, replacement:'fresh puddles, reflective streets, ozone feel', severity:0, tags:['rain','env'] },
+    { pattern:/\bstate:\s*fog\b/gi,      replacement:'low fog bank, diffuse light, edges softened', severity:0, tags:['fog','env'] },
+    { pattern:/\bstate:\s*steam\b/gi,    replacement:'thick steam haze, skin glow, softened highlights', severity:0, tags:['steam','env'] },
+    { pattern:/\bstate:\s*condense\b/gi, replacement:'condensation beads on mirror and tiles, finger trails', severity:0, tags:['steam','env'] }
+  ]
+});
+/* ============================== BLOCK 8c — END ============================== */
+/* ================================================================
+ * BLOCK 9b — BODY REALISM: MARKS, TEXTURE & LIVED-IN DETAILS
+ * ID: BLOCK 9b
+ * DATE: 2025-09-12
+ * PURPOSE: Real-skin cues that increase believability (safe everywhere).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id:'BLOCK 9b',
+  language:'en',
+  category:'body_realism_misc',
+  gated:false,
+  emoji:['🧬','🧿'],
+  entries:[
+    { pattern:/\bskin:\s*moles\b/gi,        replacement:'tiny beauty moles across chest and hips', severity:0, tags:['finish'] },
+    { pattern:/\bskin:\s*scars\b/gi,        replacement:'faint healed scars, authentic texture', severity:0, tags:['finish'] },
+    { pattern:/\bskin:\s*strands\b/gi,      replacement:'loose baby hairs along hairline, real texture', severity:0, tags:['finish','hair'] },
+    { pattern:/\bskin:\s*lip\s*smudge\b/gi, replacement:'lipstick smudge at cupids bow, lived-in', severity:0, tags:['finish','makeup'] },
+    { pattern:/\bskin:\s*sheet\b/gi,        replacement:'sheet crease marks on thigh and cheek', severity:0, tags:['finish'] }
+  ]
+});
+/* ============================== BLOCK 9b — END ============================== */
+/* ================================================================
+ * BLOCK 11b — STARTER MACROS II (MORE ONE-TAP BANGERS)
+ * ID: BLOCK 11b
+ * DATE: 2025-09-12
+ * PURPOSE: Expand curated scenes you can one-click from UI.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+  const S = CORE.STARTERS = CORE.STARTERS || {};
+
+  S['soft_ff_latex_studio'] = { ctx:{ vibe:'softcore', party:'ff', location:'studio', wardrobe:'latex', camera:'cam: studio, lens:85, dof: shallow, grade: filmic', allowExplicit:true, persona:'eastern' } };
+  S['soft_balcony_noir']    = { ctx:{ vibe:'softcore', party:'solo', location:'balcony', wardrobe:'club dress', camera:'cam: voyeur, lens:135, grade: noir', allowExplicit:true, persona:'blonde bombshell' } };
+  S['soft_bath_milk']       = { ctx:{ vibe:'softcore', party:'solo', location:'bath', wardrobe:'naked', camera:'cam: beauty, lens:50, grade: filmic', allowExplicit:true, persona:'french' } };
+
+  S['hard_wall_press_mf']   = { ctx:{ vibe:'hardcore', party:'mf', location:'mirror', wardrobe:'lace', camera:'cam: glamour, lens:85, dof: shallow', allowExplicit:true, persona:'curvy' } };
+  S['hard_chair_rider_ff']  = { ctx:{ vibe:'hardcore', party:'ff', location:'chair', wardrobe:'latex', camera:'cam: studio, lens:50, grade: teal orange', allowExplicit:true, persona:'goth' } };
+  S['hard_balcony_rain_ff'] = { ctx:{ vibe:'hardcore', party:'ff', location:'balcony', wardrobe:'sheer', camera:'cam: voyeur, lens:135, state: downpour', allowExplicit:true, persona:'thai' } };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 11b — END ============================== */
+/* ================================================================
+ * BLOCK 18 — STYLE BRAKES (ANTI-PURPLE • TOKEN TRIMMER)
+ * ID: BLOCK 18
+ * DATE: 2025-09-12
+ * PURPOSE: Keep outputs punchy: trim duplicates, kill over-adjectives,
+ *          cap fragment count. Runs after validate() if called.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.styleBrake = function styleBrake(text, {maxFragments=12}={}){
+    const sep = /\s*,\s*/;
+    let parts = String(text||'').split(sep).filter(Boolean);
+
+    // squash repetitive adjectives (e.g., "sexy sexy", "very very")
+    parts = parts.map(p => p.replace(/\b(\w+)\b(?:\s+\1\b)+/gi, '$1'));
+
+    // remove weak filler adjectives
+    const bad = /\b(very|extremely|truly|really|super|ultra)\b/gi;
+    parts = parts.map(p => p.replace(bad,'').replace(/\s{2,}/g,' ').trim());
+
+    // cap fragment count
+    if (parts.length > maxFragments) parts = parts.slice(0, maxFragments);
+
+    // tidy punctuation
+    return parts.join(', ').replace(/\s+,/g,',').trim();
+  };
+
+  // one-shot: compose → validate → styleBrake
+  CORE.composeTight = function composeTight(ctx={}){
+    const seed  = CORE.composeSafe(ctx);
+    const tight = CORE.styleBrake(seed, {});
+    return tight;
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 18 — END ============================== */
+/* ================================================================
+ * BLOCK 19 — TAG WEIGHTS (LIGHT BIASING FOR RANDOMIZER)
+ * ID: BLOCK 19
+ * DATE: 2025-09-12
+ * PURPOSE: Give your HTML a tiny “taste dial” to prefer certain tags.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.bias = {
+    // positive weight = more likely to include; negative = less likely
+    tags: {
+      lace: 0.6, sheer: 0.5, latex: 0.25, heels: 0.3, fishnets: 0.35,
+      shower: 0.4, mirror: 0.3, balcony: 0.2,
+      motion: 0.25, gaze: 0.15, frame: 0.1,
+      finish: 0.2
+    }
+  };
+
+  // sample helper (optional for the UI’s random build)
+  CORE.weightTags = function weightTags(candidates){
+    return (candidates||[]).sort((a,b)=>{
+      const ta = (a.tags||[]).reduce((s,t)=> s+(CORE.bias.tags[t]||0),0);
+      const tb = (b.tags||[]).reduce((s,t)=> s+(CORE.bias.tags[t]||0),0);
+      return tb - ta;
+    });
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 19 — END ============================== */
+/* ================================================================
+ * BLOCK 20 — QUICK EXPORT HELPERS (STRING BUILDERS)
+ * ID: BLOCK 20
+ * DATE: 2025-09-12
+ * PURPOSE: Single call that returns {prompt, negative} with brakes.
+ * ================================================================ */
+(function (global){
+  const CORE = global.PF_CORE; if (!CORE) return;
+
+  CORE.build = function build(ctx={}, {extras=[], negatives=[]}={}){
+    let prompt = CORE.composeSafe(ctx);
+    if (ctx.persona) prompt = CORE.injectPersona(prompt, ctx.persona);
+    if (extras.length) prompt += ', ' + extras.join(', ');
+    prompt = CORE.styleBrake(CORE.validate(prompt, ctx), {});
+    const neg = [
+      'NEG: hands','NEG: eyes','NEG: skin','NEG: clutter','NEG: straps','NEG: lace','NEG: sheer','NEG: gravity','NEG: text',
+      ...negatives
+    ].join(', ');
+    return { prompt, negative: neg };
+  };
+})(typeof self!=='undefined'?self:this);
+/* ============================== BLOCK 20 — END ============================== */
