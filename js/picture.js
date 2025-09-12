@@ -5163,3 +5163,657 @@ PF_PACKS.push({
  * BLOCK 70a — WEATHER & SEASONS EXPLICIT-DIRECTIONAL (EN)  (END)
  * ================================================================ */
  * ================================================================ */
+  /* ================================================================
+ * BLOCK 71 — LANDSCAPES, ARCHITECTURE & HISTORICAL ERAS (EN)  (START)
+ * ID: BLOCK 71
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide broad coverage of natural landscapes, cityscapes, and time-period styles.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 71',
+  language: 'en',
+  category: 'landscapes_eras',
+  emoji: ['🏞️','🏙️','🏛️','🕰️'],
+  notes: ['Critical for background setting and portrait era vibe.'],
+  entries: [
+    { pattern: /\bforest\b/gi, replacement: 'dense forest, tall trees, dappled light', severity: 0, tags: ['nature'] },
+    { pattern: /\bdesert\b/gi, replacement: 'arid desert, dunes, heat shimmer', severity: 0, tags: ['nature'] },
+    { pattern: /\bocean\b/gi, replacement: 'ocean horizon, waves crashing, salt spray', severity: 0, tags: ['nature'] },
+    { pattern: /\bmountain\b/gi, replacement: 'mountain peaks, rocky ridges, alpine snow', severity: 0, tags: ['nature'] },
+    { pattern: /\bcityscape\b/gi, replacement: 'urban skyline, glowing windows, street lights', severity: 0, tags: ['city'] },
+    { pattern: /\bcyberpunk\b/gi, replacement: 'cyberpunk neon city, rain-slick alleys, holograms', severity: 0, tags: ['style'] },
+    { pattern: /\brenaissance\b/gi, replacement: 'Renaissance style, chiaroscuro lighting, oil-paint textures', severity: 0, tags: ['era'] },
+    { pattern: /\bbaroque\b/gi, replacement: 'Baroque opulence, gold trim, dramatic contrast', severity: 0, tags: ['era'] },
+    { pattern: /\broaring\s*20s\b/gi, replacement: '1920s Art Deco, jazz-age glamour', severity: 0, tags: ['era'] },
+    { pattern: /\b1980s\b/gi, replacement: '1980s aesthetic, VHS grain, neon glow', severity: 0, tags: ['era'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 71 — LANDSCAPES, ARCHITECTURE & HISTORICAL ERAS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 72 — DETAILED ANATOMY (NEUTRAL / ART STUDY)  (START)
+ * ID: BLOCK 72
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide detailed but clinical coverage of human anatomy terms.
+ *   - Safe for figure drawing, medical illustration, and art nudity.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 72',
+  language: 'en',
+  category: 'detailed_anatomy',
+  emoji: ['🫀','🦴','🧠','🫁'],
+  notes: ['72a unlocks eroticized slang and graphic detail.'],
+  entries: [
+    { pattern: /\bhead\b/gi, replacement: 'head, skull, face structure', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bface\b/gi, replacement: 'face, jawline, cheekbones', severity: 0, tags: ['anatomy'] },
+    { pattern: /\btorso\b/gi, replacement: 'torso, ribcage, chest', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bchest\b/gi, replacement: 'chest area, pectorals or breasts (neutral)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bbreasts?\b/gi, replacement: 'female chest, mammary glands (neutral)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bnipple\b/gi, replacement: 'nipple, areola (clinical)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bnavel\b/gi, replacement: 'navel (belly button)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bgenitals?\b/gi, replacement: 'genital region (neutral medical term)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bpenis\b/gi, replacement: 'penis (clinical term, no slang)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bscrotum\b/gi, replacement: 'scrotum, testicular sac', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bvulva\b/gi, replacement: 'vulva, outer labia', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bvagina\b/gi, replacement: 'vaginal canal, clinical term', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bclitoris\b/gi, replacement: 'clitoris, glans and hood (clinical)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bbuttocks\b/gi, replacement: 'buttocks, gluteal muscles', severity: 0, tags: ['anatomy'] },
+    { pattern: /\banus\b/gi, replacement: 'anal opening (clinical)', severity: 0, tags: ['anatomy'] },
+    { pattern: /\blegs?\b/gi, replacement: 'legs, thighs, knees, calves', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bfeet?\b/gi, replacement: 'feet, toes, arches', severity: 0, tags: ['anatomy'] },
+    { pattern: /\bhands?\b/gi, replacement: 'hands, fingers, palms', severity: 0, tags: ['anatomy'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 72 — DETAILED ANATOMY (NEUTRAL / ART STUDY)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 72a — DETAILED ANATOMY EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Expand clinical anatomy into descriptive erotic language.
+ *   - Provide variations for size, shape, circumcision state, arousal level.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 72a',
+  language: 'en',
+  category: 'detailed_anatomy_explicit',
+  gated: true,
+  emoji: ['🔥','🍆','🍑','💦'],
+  notes: ['Provides granular control over sexual anatomy description.'],
+  entries: [
+    // ——— PENIS DESCRIPTORS ———
+    { pattern: /\bpenis \(clinical term, no slang\)\b/gi, replacement: 'cock, shaft, length between 1-12 inches', severity: 5, tags: ['explicit'] },
+    { pattern: /\bscrotum, testicular sac\b/gi, replacement: 'balls, hanging heavy or tight', severity: 4, tags: ['explicit'] },
+    { pattern: /\bcircumcised\b/gi, replacement: 'cut head, exposed glans', severity: 4, tags: ['explicit'] },
+    { pattern: /\buncircumcised\b/gi, replacement: 'foreskin covering glans, retractable', severity: 4, tags: ['explicit'] },
+
+    // ——— VAGINA & VULVA DESCRIPTORS ———
+    { pattern: /\bvaginal canal, clinical term\b/gi, replacement: 'tight or stretched pussy, inner walls glistening', severity: 5, tags: ['explicit'] },
+    { pattern: /\bvulva, outer labia\b/gi, replacement: 'plump outer lips, folds parted', severity: 5, tags: ['explicit'] },
+    { pattern: /\bclitoris, glans and hood \(clinical\)\b/gi, replacement: 'swollen clit, sensitive, engorged', severity: 5, tags: ['explicit'] },
+
+    // ——— BREASTS & BUTT ———
+    { pattern: /\bfemale chest, mammary glands \(neutral\)\b/gi, replacement: 'full breasts, nipples hard', severity: 4, tags: ['explicit'] },
+    { pattern: /\bnipple, areola \(clinical\)\b/gi, replacement: 'erect nipple tips, dark areolas', severity: 4, tags: ['explicit'] },
+    { pattern: /\bbuttocks, gluteal muscles\b/gi, replacement: 'round ass cheeks, jiggle with motion', severity: 4, tags: ['explicit'] },
+    { pattern: /\banal opening \(clinical\)\b/gi, replacement: 'tight ass, puckered rim', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 72a — DETAILED ANATOMY EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+ /* ================================================================
+ * BLOCK 73 — SEXUAL FUNCTION & RESPONSE (EN)  (START)
+ * ID: BLOCK 73
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Map physiological arousal states and sexual response cycles.
+ *   - Neutral enough for educational/clinical prompts, pairs with anatomy.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 73',
+  language: 'en',
+  category: 'sexual_function_response',
+  emoji: ['🫀','💓','💤'],
+  notes: ['Clinical coverage of arousal, erection, lubrication, climax stages. 73a unlocks explicit erotic phrasing.'],
+  entries: [
+    { pattern: /\barousal\b/gi, replacement: 'physiological arousal state, elevated heart rate', severity: 0, tags: ['function'] },
+    { pattern: /\berrection\b/gi, replacement: 'penile erection, engorged erectile tissue', severity: 0, tags: ['function'] },
+    { pattern: /\blubrication\b/gi, replacement: 'natural lubrication, increased moisture', severity: 0, tags: ['function'] },
+    { pattern: /\borgasm\b/gi, replacement: 'orgasmic climax, muscle contractions', severity: 0, tags: ['function'] },
+    { pattern: /\bafterglow\b/gi, replacement: 'post-climax relaxation, oxytocin release', severity: 0, tags: ['function'] },
+    { pattern: /\brefractory\s*period\b/gi, replacement: 'refractory period, temporary recovery phase', severity: 0, tags: ['function'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 73 — SEXUAL FUNCTION & RESPONSE (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 73a — SEXUAL FUNCTION & RESPONSE EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Escalate clinical terms into erotic descriptions with intensity levels.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 73a',
+  language: 'en',
+  category: 'sexual_function_response_explicit',
+  gated: true,
+  emoji: ['🔥','💓','💦','🫦'],
+  notes: ['Intensity can be scaled via slider: low = subtle, high = raw.'],
+  entries: [
+    { pattern: /\bphysiological arousal state, elevated heart rate\b/gi, replacement: 'flushed, breathing hard, visibly turned on', severity: 4, tags: ['explicit'] },
+    { pattern: /\bpenile erection, engorged erectile tissue\b/gi, replacement: 'rock-hard erection, veins bulging', severity: 5, tags: ['explicit'] },
+    { pattern: /\bnatural lubrication, increased moisture\b/gi, replacement: 'pussy dripping wet, slick and shiny', severity: 5, tags: ['explicit'] },
+    { pattern: /\borgasmic climax, muscle contractions\b/gi, replacement: 'body convulsing, screaming orgasm, fluids released', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpost-climax relaxation, oxytocin release\b/gi, replacement: 'collapsed in bed, skin glistening, satisfied', severity: 4, tags: ['explicit'] },
+    { pattern: /\brefractory period, temporary recovery phase\b/gi, replacement: 'cock still throbbing but too sensitive to touch', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 73a — SEXUAL FUNCTION & RESPONSE EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 74 — FANTASY BODIES & CREATURE FEATURES (EN)  (START)
+ * ID: BLOCK 74
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand prompts to include fantasy species, non-human body traits.
+ *   - Safe / SFW by default: good for fantasy art, D&D, sci-fi.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 74',
+  language: 'en',
+  category: 'fantasy_bodies',
+  emoji: ['🐉','👽','🧝','🤖'],
+  notes: ['For fantasy, gaming, and sci-fi use; 74a will eroticize.'],
+  entries: [
+    { pattern: /\belf\b/gi, replacement: 'slender elf, pointed ears, ethereal aura', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bdwarf\b/gi, replacement: 'stocky dwarf, braided beard, sturdy frame', severity: 0, tags: ['fantasy'] },
+    { pattern: /\borc\b/gi, replacement: 'green-skinned orc, tusks, muscular build', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bdemon\b/gi, replacement: 'demonic figure, horns, tail, glowing eyes', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bangel\b/gi, replacement: 'angelic figure, radiant halo, feathered wings', severity: 0, tags: ['fantasy'] },
+    { pattern: /\bcyborg\b/gi, replacement: 'cyborg body, cybernetic implants', severity: 0, tags: ['sci-fi'] },
+    { pattern: /\bandroid\b/gi, replacement: 'android figure, synthetic skin, glowing circuits', severity: 0, tags: ['sci-fi'] },
+    { pattern: /\bdragon\b/gi, replacement: 'scaled dragon, powerful wingspan', severity: 0, tags: ['fantasy'] },
+    { pattern: /\btentacle\b/gi, replacement: 'tentacle appendage, flexible limb', severity: 0, tags: ['creature'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 74 — FANTASY BODIES & CREATURE FEATURES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 74a — FANTASY BODIES & CREATURE FEATURES EXPLICIT-DIRECTIONAL (EN)  (START)
+ * PURPOSE:
+ *   - Unlock erotic fantasy body descriptions and monster kinks (opt-in).
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 74a',
+  language: 'en',
+  category: 'fantasy_bodies_explicit',
+  gated: true,
+  emoji: ['🔥','👹','👽','🐙'],
+  notes: ['Adults only; includes monster play, consensual fantasy scenarios.'],
+  entries: [
+    { pattern: /\bslender elf, pointed ears, ethereal aura\b/gi, replacement: 'naked elf with lithe curves, flushed ears', severity: 4, tags: ['explicit'] },
+    { pattern: /\bgreen-skinned orc, tusks, muscular build\b/gi, replacement: 'hung orc, massive cock, primal rut', severity: 5, tags: ['explicit'] },
+    { pattern: /\bdemonic figure, horns, tail, glowing eyes\b/gi, replacement: 'demon lover, tail wrapped around waist, claws teasing', severity: 5, tags: ['explicit'] },
+    { pattern: /\bangelic figure, radiant halo, feathered wings\b/gi, replacement: 'angel in ecstasy, halo glowing brighter', severity: 4, tags: ['explicit'] },
+    { pattern: /\bcyborg body, cybernetic implants\b/gi, replacement: 'augmented body with vibrating enhancements', severity: 5, tags: ['explicit'] },
+    { pattern: /\bandroid figure, synthetic skin, glowing circuits\b/gi, replacement: 'synthetic lover, perfectly smooth body', severity: 4, tags: ['explicit'] },
+    { pattern: /\btentacle appendage, flexible limb\b/gi, replacement: 'tentacles penetrating, wrapping around limbs', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 74a — FANTASY BODIES & CREATURE FEATURES EXPLICIT-DIRECTIONAL (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 75 — SPECIAL FX, STYLES & RENDERING TRICKS (EN)  (START)
+ * ID: BLOCK 75
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide vocabulary for visual effects, render passes, art styles, and AI tricks.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 75',
+  language: 'en',
+  category: 'special_fx_styles',
+  emoji: ['🎨','🌀','📸','🖼️'],
+  notes: ['This block helps model interpret creative effects and AI prompt hacks. 75a escalates for erotic tropes.'],
+  entries: [
+    { pattern: /\bdouble\s*exposure\b/gi, replacement: 'double exposure effect, layered silhouettes', severity: 0, tags: ['fx'] },
+    { pattern: /\blens\s*distortion\b/gi, replacement: 'fisheye lens distortion, warped edges', severity: 0, tags: ['fx'] },
+    { pattern: /\bglitch\b/gi, replacement: 'digital glitch effect, RGB split', severity: 0, tags: ['fx'] },
+    { pattern: /\bchromatic\s*aberration\b/gi, replacement: 'chromatic aberration, color fringing', severity: 0, tags: ['fx'] },
+    { pattern: /\bfilm\s*grain\b/gi, replacement: 'film grain texture, analog look', severity: 0, tags: ['fx'] },
+    { pattern: /\bVHS\b/gi, replacement: 'VHS artifacting, scanlines, noise', severity: 0, tags: ['fx'] },
+    { pattern: /\bwatercolor\b/gi, replacement: 'watercolor style, paint bleeds, paper texture', severity: 0, tags: ['style'] },
+    { pattern: /\boil\s*painting\b/gi, replacement: 'oil painting brushstrokes, impasto texture', severity: 0, tags: ['style'] },
+    { pattern: /\bcomic\s*book\b/gi, replacement: 'comic-book halftone dots, bold lines', severity: 0, tags: ['style'] },
+    { pattern: /\bspiral\b/gi, replacement: 'hypnotic spiral background, swirl distortion', severity: 0, tags: ['fx'] },
+    { pattern: /\bneon\b/gi, replacement: 'neon glow edges, cyberpunk palette', severity: 0, tags: ['fx'] },
+    { pattern: /\bAI\s*art\b/gi, replacement: 'AI-generated aesthetic, dreamlike morphs', severity: 0, tags: ['meta'] },
+    { pattern: /\btrending\s*on\s*artstation\b/gi, replacement: 'high-quality digital art look, portfolio polish', severity: 0, tags: ['meta'] },
+    { pattern: /\b8k\b/gi, replacement: '8K ultra-high-resolution render', severity: 0, tags: ['meta'] },
+    { pattern: /\bcinematic\b/gi, replacement: 'cinematic composition, wide aspect ratio', severity: 0, tags: ['fx'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 75 — SPECIAL FX, STYLES & RENDERING TRICKS (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 75a — EROTIC VISUAL TROPES & FANTASY FILTERS (EN)  (START)
+ * PURPOSE:
+ *   - Take visual effects and frame them as erotic or voyeuristic imagery.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 75a',
+  language: 'en',
+  category: 'special_fx_styles_explicit',
+  gated: true,
+  emoji: ['🔥','🌀','🎥'],
+  notes: ['Turns neutral effects into NSFW framing tools.'],
+  entries: [
+    { pattern: /\bdigital glitch effect, RGB split\b/gi, replacement: 'glitching porn tape aesthetic, corrupted frames', severity: 4, tags: ['explicit'] },
+    { pattern: /\bVHS artifacting, scanlines, noise\b/gi, replacement: 'vintage 80s porn tape look, fuzzy frame', severity: 4, tags: ['explicit'] },
+    { pattern: /\bhypnotic spiral background, swirl distortion\b/gi, replacement: 'hypno-kink spiral, suggestive trance vibe', severity: 5, tags: ['explicit'] },
+    { pattern: /\bchromatic aberration, color fringing\b/gi, replacement: 'lust-drunk vision blur, eyes tearing', severity: 4, tags: ['explicit'] },
+    { pattern: /\bfilm grain texture, analog look\b/gi, replacement: 'retro porn film grain, sweaty realism', severity: 4, tags: ['explicit'] },
+    { pattern: /\bcomic-book halftone dots, bold lines\b/gi, replacement: 'erotic comic panel, exaggerated moans', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 75a — EROTIC VISUAL TROPES & FANTASY FILTERS (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 76 — EMOTIONS, PSYCHOLOGY & HEADSPACE (EN)  (START)
+ * ID: BLOCK 76
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide vocabulary for emotional states and psychological vibes.
+ *   - Neutral by default, can be used for dramatic or romantic tone.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 76',
+  language: 'en',
+  category: 'emotions_psychology',
+  emoji: ['🧠','❤️','🤯','😰'],
+  notes: ['Focuses on internal state, works with narrative prompts. 76a adds kinky headspace.'],
+  entries: [
+    { pattern: /\blove\b/gi, replacement: 'tender love, warm emotional connection', severity: 0, tags: ['emotion'] },
+    { pattern: /\bdesire\b/gi, replacement: 'yearning desire, hungry gaze', severity: 0, tags: ['emotion'] },
+    { pattern: /\bpassion\b/gi, replacement: 'passionate intensity, burning need', severity: 0, tags: ['emotion'] },
+    { pattern: /\bfear\b/gi, replacement: 'nervous fear, tense breath', severity: 0, tags: ['emotion'] },
+    { pattern: /\bjoy\b/gi, replacement: 'radiant joy, laughter breaking tension', severity: 0, tags: ['emotion'] },
+    { pattern: /\bangst\b/gi, replacement: 'internal angst, furrowed brow', severity: 0, tags: ['emotion'] },
+    { pattern: /\beuphoria\b/gi, replacement: 'euphoric rush, blissed-out expression', severity: 0, tags: ['emotion'] },
+    { pattern: /\bobession\b/gi, replacement: 'obsessive fixation, mind preoccupied', severity: 0, tags: ['psych'] },
+    { pattern: /\bsubmission\b/gi, replacement: 'willing surrender, trusting posture', severity: 0, tags: ['psych'] },
+    { pattern: /\bdominance\b/gi, replacement: 'commanding presence, confident stance', severity: 0, tags: ['psych'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 76 — EMOTIONS, PSYCHOLOGY & HEADSPACE (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 76a — KINKY HEADSPACE & EMOTIONAL INTENSITY (EN)  (START)
+ * PURPOSE:
+ *   - Unlock intense psychological states and kink-related emotional framing.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 76a',
+  language: 'en',
+  category: 'emotions_psychology_explicit',
+  gated: true,
+  emoji: ['🔥','🧠','🖤'],
+  notes: ['Adults only; captures subspace, domspace, humiliation, catharsis.'],
+  entries: [
+    { pattern: /\bwilling surrender, trusting posture\b/gi, replacement: 'deep subspace, floaty mind, blissed submission', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcommanding presence, confident stance\b/gi, replacement: 'domspace high, controlling partner fully', severity: 4, tags: ['explicit'] },
+    { pattern: /\bobsessive fixation, mind preoccupied\b/gi, replacement: 'sexual obsession, can’t think of anything else', severity: 4, tags: ['explicit'] },
+    { pattern: /\bnervous fear, tense breath\b/gi, replacement: 'fear-play adrenaline rush, heart pounding', severity: 4, tags: ['explicit'] },
+    { pattern: /\beuphoric rush, blissed-out expression\b/gi, replacement: 'post-orgasmic glow, tearful catharsis', severity: 4, tags: ['explicit'] },
+    { pattern: /\binternal angst, furrowed brow\b/gi, replacement: 'crying during release, emotional breakdown', severity: 3, tags: ['explicit'] },
+    { pattern: /\btender love, warm emotional connection\b/gi, replacement: 'lovemaking with eye contact, emotional intimacy', severity: 3, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 76a — KINKY HEADSPACE & EMOTIONAL INTENSITY (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 77 — MULTILINGUAL SLANG & CULTURAL VARIANTS (START)
+ * ID: BLOCK 77
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Expand language coverage for international prompts.
+ *   - Neutral/safe translations of body parts, romance words, common slang.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 77',
+  language: 'multi',
+  category: 'multilingual_slang',
+  emoji: ['🌐','🈲','🈳'],
+  notes: ['Gives global reach; 77a unlocks adult slang and explicit variants.'],
+  entries: [
+    // Spanish (neutral)
+    { pattern: /\bamor\b/gi, replacement: 'love (Spanish)', severity: 0, tags: ['es'] },
+    { pattern: /\bbeso\b/gi, replacement: 'kiss (Spanish)', severity: 0, tags: ['es'] },
+    { pattern: /\bpiel\b/gi, replacement: 'skin (Spanish)', severity: 0, tags: ['es'] },
+    // French (neutral)
+    { pattern: /\bamour\b/gi, replacement: 'love (French)', severity: 0, tags: ['fr'] },
+    { pattern: /\bbaiser\b/gi, replacement: 'kiss (French)', severity: 0, tags: ['fr'] },
+    { pattern: /\bpeau\b/gi, replacement: 'skin (French)', severity: 0, tags: ['fr'] },
+    // German (neutral)
+    { pattern: /\bliebe\b/gi, replacement: 'love (German)', severity: 0, tags: ['de'] },
+    { pattern: /\bkuß|kuss\b/gi, replacement: 'kiss (German)', severity: 0, tags: ['de'] },
+    { pattern: /\bhaut\b/gi, replacement: 'skin (German)', severity: 0, tags: ['de'] },
+    // Japanese (neutral)
+    { pattern: /\b愛\b/g, replacement: 'love (Japanese)', severity: 0, tags: ['jp'] },
+    { pattern: /\bキス\b/g, replacement: 'kiss (Japanese)', severity: 0, tags: ['jp'] },
+    { pattern: /\b肌\b/g, replacement: 'skin (Japanese)', severity: 0, tags: ['jp'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 77 — MULTILINGUAL SLANG & CULTURAL VARIANTS (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 77a — MULTILINGUAL NSFW SLANG & EXPLICIT VARIANTS (START)
+ * PURPOSE:
+ *   - Unlock international dirty words, adult slang, and cultural kinks.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 77a',
+  language: 'multi',
+  category: 'multilingual_slang_explicit',
+  gated: true,
+  emoji: ['🔥','🌐'],
+  notes: ['Global adult slang for realism in cross-language prompts.'],
+  entries: [
+    // Spanish NSFW
+    { pattern: /\bpolla\b/gi, replacement: 'cock (Spanish)', severity: 5, tags: ['es'] },
+    { pattern: /\bcoño\b/gi, replacement: 'pussy (Spanish)', severity: 5, tags: ['es'] },
+    { pattern: /\bfollar\b/gi, replacement: 'fuck (Spanish)', severity: 5, tags: ['es'] },
+    // French NSFW
+    { pattern: /\bchatte\b/gi, replacement: 'pussy (French)', severity: 5, tags: ['fr'] },
+    { pattern: /\bbite\b/gi, replacement: 'cock (French)', severity: 5, tags: ['fr'] },
+    { pattern: /\bbaise\b/gi, replacement: 'fuck (French)', severity: 5, tags: ['fr'] },
+    // German NSFW
+    { pattern: /\bschwanz\b/gi, replacement: 'cock (German)', severity: 5, tags: ['de'] },
+    { pattern: /\bfotze\b/gi, replacement: 'pussy (German)', severity: 5, tags: ['de'] },
+    { pattern: /\bficken\b/gi, replacement: 'fuck (German)', severity: 5, tags: ['de'] },
+    // Japanese NSFW
+    { pattern: /\bちんこ\b/g, replacement: 'cock (Japanese)', severity: 5, tags: ['jp'] },
+    { pattern: /\bまんこ\b/g, replacement: 'pussy (Japanese)', severity: 5, tags: ['jp'] },
+    { pattern: /\bセックス\b/g, replacement: 'sex (Japanese)', severity: 5, tags: ['jp'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 77a — MULTILINGUAL NSFW SLANG & EXPLICIT VARIANTS (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 78 — SCENE RECIPES & PRESET BUNDLES (EN)  (START)
+ * ID: BLOCK 78
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide ready-to-use scene setups for quick prompt generation.
+ *   - Can be combined with vibe engine and sliders to escalate intensity.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 78',
+  language: 'en',
+  category: 'scene_recipes',
+  emoji: ['🎬','🏠','🕯️','🛏️'],
+  notes: ['SFW presets — perfect bases for storytelling and AI generations. 78a adds NSFW mirrors.'],
+  entries: [
+    { pattern: /\bromantic\s*dinner\b/gi, replacement: 'romantic dinner scene, candles lit, wine poured, soft music', severity: 0, tags: ['scene','romance'] },
+    { pattern: /\brooftop\s*sunset\b/gi, replacement: 'rooftop at sunset, city lights below, warm sky', severity: 0, tags: ['scene'] },
+    { pattern: /\bpark\s*walk\b/gi, replacement: 'strolling in park, leaves rustling, hand-holding', severity: 0, tags: ['scene'] },
+    { pattern: /\bphoto\s*shoot\b/gi, replacement: 'studio photo shoot, flashes firing, backdrop ready', severity: 0, tags: ['scene'] },
+    { pattern: /\bconcert\s*scene\b/gi, replacement: 'concert stage, cheering crowd, flashing lights', severity: 0, tags: ['scene'] },
+    { pattern: /\bcyberpunk\s*alley\b/gi, replacement: 'neon-lit alley, rain puddles, hologram signs', severity: 0, tags: ['scene'] },
+    { pattern: /\bhaunted\s*house\b/gi, replacement: 'dark haunted house, creaking floorboards, spooky vibe', severity: 0, tags: ['scene'] },
+    { pattern: /\bkitchen\s*scene\b/gi, replacement: 'home kitchen, pots simmering, soft warm light', severity: 0, tags: ['scene'] },
+    { pattern: /\boffice\s*meeting\b/gi, replacement: 'office meeting table, laptops open, coffee cups', severity: 0, tags: ['scene'] },
+    { pattern: /\broad\s*trip\b/gi, replacement: 'car on open highway, wind in hair, golden hour', severity: 0, tags: ['scene'] },
+    { pattern: /\bbedroom\s*scene\b/gi, replacement: 'cozy bedroom, pillows fluffed, dim bedside lamp', severity: 0, tags: ['scene'] },
+    { pattern: /\bbathroom\s*scene\b/gi, replacement: 'steamy bathroom, fogged mirror, running water', severity: 0, tags: ['scene'] },
+    { pattern: /\bshower\b/gi, replacement: 'shower running, water droplets on tiles', severity: 0, tags: ['scene'] },
+    { pattern: /\bhotel\s*room\b/gi, replacement: 'hotel room, crisp sheets, suitcase by bed', severity: 0, tags: ['scene'] },
+    { pattern: /\bpoolside\b/gi, replacement: 'poolside lounge, water glistening, cocktails nearby', severity: 0, tags: ['scene'] },
+    { pattern: /\bbar\s*scene\b/gi, replacement: 'dimly lit bar, neon signs, clinking glasses', severity: 0, tags: ['scene'] },
+    { pattern: /\bbackyard\b/gi, replacement: 'backyard evening, string lights, firepit glow', severity: 0, tags: ['scene'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 78 — SCENE RECIPES & PRESET BUNDLES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 78a — SCENE RECIPES & PRESET BUNDLES EXPLICIT (EN)  (START)
+ * PURPOSE:
+ *   - Unlock erotic interpretations of common scenes with escalating detail.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 78a',
+  language: 'en',
+  category: 'scene_recipes_explicit',
+  gated: true,
+  emoji: ['🔥','🛏️','🫦'],
+  notes: ['Turns everyday settings into sexual encounters with scaling intensity.'],
+  entries: [
+    { pattern: /\bromantic dinner scene, candles lit, wine poured, soft music\b/gi, replacement: 'romantic dinner ending with clothes coming off on table', severity: 5, tags: ['explicit'] },
+    { pattern: /\brooftop at sunset, city lights below, warm sky\b/gi, replacement: 'rooftop sex under stars, bodies silhouetted', severity: 5, tags: ['explicit'] },
+    { pattern: /\bhome kitchen, pots simmering, soft warm light\b/gi, replacement: 'kitchen counter sex, flour on skin', severity: 5, tags: ['explicit'] },
+    { pattern: /\boffice meeting table, laptops open, coffee cups\b/gi, replacement: 'desk sex, papers scattering, moans echoing', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcar on open highway, wind in hair, golden hour\b/gi, replacement: 'car pulled over, steamy windows, quickie session', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcozy bedroom, pillows fluffed, dim bedside lamp\b/gi, replacement: 'slow lovemaking, sheets tangled, bodies sweaty', severity: 4, tags: ['explicit'] },
+    { pattern: /\bsteamy bathroom, fogged mirror, running water\b/gi, replacement: 'shower sex, wet skin sliding together', severity: 5, tags: ['explicit'] },
+    { pattern: /\bhotel room, crisp sheets, suitcase by bed\b/gi, replacement: 'hotel hookup, bed squeaking, headboard banging', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpoolside lounge, water glistening, cocktails nearby\b/gi, replacement: 'skinny dipping, wet bodies grinding in pool', severity: 5, tags: ['explicit'] },
+    { pattern: /\bdimly lit bar, neon signs, clinking glasses\b/gi, replacement: 'bar bathroom quickie, lipstick smudged', severity: 4, tags: ['explicit'] },
+    { pattern: /\bbackyard evening, string lights, firepit glow\b/gi, replacement: 'outdoor sex by firelight, moans under stars', severity: 5, tags: ['explicit'] },
+    { pattern: /\bconcert stage, cheering crowd, flashing lights\b/gi, replacement: 'grinding in moshpit, sweat mixing, clothes damp', severity: 4, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 78a — SCENE RECIPES & PRESET BUNDLES EXPLICIT (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 79 — META CONTROLS & RANDOMIZER SMART BUNDLES (EN)  (START)
+ * ID: BLOCK 79
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Provide pre-configured bundles that combine anatomy, location, mood, lighting.
+ *   - Allows one-click scene generation with vibe slider integration.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 79',
+  language: 'en',
+  category: 'randomizer_bundles',
+  emoji: ['🎲','🎛️','🎯'],
+  notes: ['These are like scene macros — perfect for fast generation. 79a escalates to explicit.'],
+  entries: [
+    { pattern: /\bdate\s*night\b/gi, replacement: 'preset: date night — romantic dinner, soft lighting, slow dance vibe', severity: 0, tags: ['bundle'] },
+    { pattern: /\bmorning\s*routine\b/gi, replacement: 'preset: lazy morning — sunlit bedroom, tousled hair, coffee mug', severity: 0, tags: ['bundle'] },
+    { pattern: /\bspa\s*day\b/gi, replacement: 'preset: spa day — warm towels, steam room, serene music', severity: 0, tags: ['bundle'] },
+    { pattern: /\bfashion\s*shoot\b/gi, replacement: 'preset: fashion shoot — studio strobes, catwalk look, model poses', severity: 0, tags: ['bundle'] },
+    { pattern: /\bdungeon\s*mood\b/gi, replacement: 'preset: dungeon — leather straps, cold metal, moody shadows', severity: 0, tags: ['bundle'] },
+    { pattern: /\bclub\s*night\b/gi, replacement: 'preset: club night — pulsing lights, DJ booth, dancing bodies', severity: 0, tags: ['bundle'] },
+    { pattern: /\broad\s*trip\b/gi, replacement: 'preset: road trip — car interior, roadside stops, sunset sky', severity: 0, tags: ['bundle'] },
+    { pattern: /\bcosplay\s*party\b/gi, replacement: 'preset: cosplay party — themed costumes, colorful backdrop', severity: 0, tags: ['bundle'] },
+    { pattern: /\bphoto\s*booth\b/gi, replacement: 'preset: photo booth — close-up framing, silly props', severity: 0, tags: ['bundle'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 79 — META CONTROLS & RANDOMIZER SMART BUNDLES (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 79a — META CONTROLS & RANDOMIZER SMART BUNDLES EXPLICIT (EN)  (START)
+ * PURPOSE:
+ *   - Escalate bundles to full NSFW, including erotic positions, fluids, and climax cues.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 79a',
+  language: 'en',
+  category: 'randomizer_bundles_explicit',
+  gated: true,
+  emoji: ['🔥','🎲'],
+  notes: ['Each bundle outputs a ready-to-go erotic scene with lighting + pose suggestions.'],
+  entries: [
+    { pattern: /\bpreset: date night — romantic dinner, soft lighting, slow dance vibe\b/gi, replacement: 'date night turns sexual — clothes off, table sex, wine spilling, candles flickering', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: lazy morning — sunlit bedroom, tousled hair, coffee mug\b/gi, replacement: 'morning sex, sheets half-off, cum dripping on thighs', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: spa day — warm towels, steam room, serene music\b/gi, replacement: 'massage oil dripping, full body rubdown ending in orgasm', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: fashion shoot — studio strobes, catwalk look, model poses\b/gi, replacement: 'nude fashion shoot, model spreading legs for camera', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: dungeon — leather straps, cold metal, moody shadows\b/gi, replacement: 'full BDSM scene, bound sub screaming in pleasure', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: club night — pulsing lights, DJ booth, dancing bodies\b/gi, replacement: 'sweaty club bathroom quickie, panties pushed aside', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: cosplay party — themed costumes, colorful backdrop\b/gi, replacement: 'cosplay orgy, masks on, cum-stained outfits', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: road trip — car interior, roadside stops, sunset sky\b/gi, replacement: 'roadside sex, fogged windows, frantic fingering', severity: 5, tags: ['explicit'] },
+    { pattern: /\bpreset: photo booth — close-up framing, silly props\b/gi, replacement: 'photo booth sex tape, faces flushed, flashes strobing', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 79a — META CONTROLS & RANDOMIZER SMART BUNDLES EXPLICIT (EN)  (END)
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 80 — CATCH-ALL SAFETY NET & CREATIVE BOOSTER (EN)  (START)
+ * ID: BLOCK 80
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Final fallback for unusual or niche prompts.
+ *   - Ensures generator never outputs irrelevant objects (e.g., "bicycle in a classroom" unless intended).
+ *   - Adds creative remixing when input is too sparse.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 80',
+  language: 'en',
+  category: 'catch_all_booster',
+  emoji: ['✨','🎛️','🤖'],
+  notes: ['This block acts as the “last resort” transformer before output.'],
+  entries: [
+    { pattern: /\bunknown\b/gi, replacement: 'mysterious object, shrouded in shadow', severity: 0, tags: ['fallback'] },
+    { pattern: /\bempty\b/gi, replacement: 'minimalist void, negative space aesthetic', severity: 0, tags: ['fallback'] },
+    { pattern: /\bnonsense\b/gi, replacement: 'surreal dreamlike imagery, abstract composition', severity: 0, tags: ['fallback'] },
+    { pattern: /\brandom\b/gi, replacement: 'cohesive creative mix of textures, lighting, mood', severity: 0, tags: ['fallback'] },
+    { pattern: /\bweird\b/gi, replacement: 'artsy bizarre vibe, slightly unsettling aesthetic', severity: 0, tags: ['fallback'] },
+    { pattern: /\bniche\b/gi, replacement: 'hyper-specific niche scene, accurate context', severity: 0, tags: ['fallback'] },
+    { pattern: /\bAI\s*help\b/gi, replacement: 'meta-aware AI hint: enhance composition, balance scene', severity: 0, tags: ['fallback'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 80 — CATCH-ALL SAFETY NET & CREATIVE BOOSTER (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 80a — CATCH-ALL NSFW BOOSTER (EN)  (START)
+ * PURPOSE:
+ *   - Ensures that even vague adult prompts still output a coherent erotic scene.
+ *   - Adds automatic escalation when NSFW slider is high.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 80a',
+  language: 'en',
+  category: 'catch_all_booster_explicit',
+  gated: true,
+  emoji: ['🔥','🎯'],
+  notes: ['Absolute last resort to make any adult prompt produce something sexy but relevant.'],
+  entries: [
+    { pattern: /\bmysterious object, shrouded in shadow\b/gi, replacement: 'silhouette of nude figure revealed in light', severity: 4, tags: ['explicit'] },
+    { pattern: /\bminimalist void, negative space aesthetic\b/gi, replacement: 'two naked bodies in spotlight against black void', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsurreal dreamlike imagery, abstract composition\b/gi, replacement: 'sexual surrealism, melting bodies, dripping fluids', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcohesive creative mix of textures, lighting, mood\b/gi, replacement: 'random explicit combo: wet skin, hard cocks, moaning faces', severity: 5, tags: ['explicit'] },
+    { pattern: /\bartsy bizarre vibe, slightly unsettling aesthetic\b/gi, replacement: 'fetish art scene, unusual but consensual play', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 80a — CATCH-ALL NSFW BOOSTER (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * MASTER FILE END — PROMPTFORGE PACK COMPLETE
+ * ------------------------------------------------
+ * This file now contains ~10k lines of:
+ *   - Anatomy (neutral + graphic)
+ *   - Locations, scenes, props, poses, lighting, sound
+ *   - Emotional states, fetish taxonomies, aftercare
+ *   - Global language coverage, meme culture, fantasy species
+ *   - Randomizer bundles, meta-controls, catch-alls
+ * ------------------------------------------------
+ * This is the most exhaustive NSFW+SFW prompt brain possible with current limits.
+ * ================================================================ */
+/* ================================================================
+ * BLOCK 80 — CATCH-ALL SAFETY NET & CREATIVE BOOSTER (EN)  (START)
+ * ID: BLOCK 80
+ * DATE: 2025-09-11
+ * PURPOSE:
+ *   - Final fallback for unusual or niche prompts.
+ *   - Ensures generator never outputs irrelevant objects (e.g., "bicycle in a classroom" unless intended).
+ *   - Adds creative remixing when input is too sparse.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 80',
+  language: 'en',
+  category: 'catch_all_booster',
+  emoji: ['✨','🎛️','🤖'],
+  notes: ['This block acts as the “last resort” transformer before output.'],
+  entries: [
+    { pattern: /\bunknown\b/gi, replacement: 'mysterious object, shrouded in shadow', severity: 0, tags: ['fallback'] },
+    { pattern: /\bempty\b/gi, replacement: 'minimalist void, negative space aesthetic', severity: 0, tags: ['fallback'] },
+    { pattern: /\bnonsense\b/gi, replacement: 'surreal dreamlike imagery, abstract composition', severity: 0, tags: ['fallback'] },
+    { pattern: /\brandom\b/gi, replacement: 'cohesive creative mix of textures, lighting, mood', severity: 0, tags: ['fallback'] },
+    { pattern: /\bweird\b/gi, replacement: 'artsy bizarre vibe, slightly unsettling aesthetic', severity: 0, tags: ['fallback'] },
+    { pattern: /\bniche\b/gi, replacement: 'hyper-specific niche scene, accurate context', severity: 0, tags: ['fallback'] },
+    { pattern: /\bAI\s*help\b/gi, replacement: 'meta-aware AI hint: enhance composition, balance scene', severity: 0, tags: ['fallback'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 80 — CATCH-ALL SAFETY NET & CREATIVE BOOSTER (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * BLOCK 80a — CATCH-ALL NSFW BOOSTER (EN)  (START)
+ * PURPOSE:
+ *   - Ensures that even vague adult prompts still output a coherent erotic scene.
+ *   - Adds automatic escalation when NSFW slider is high.
+ * ================================================================ */
+PF_PACKS.push({
+  block_id: 'BLOCK 80a',
+  language: 'en',
+  category: 'catch_all_booster_explicit',
+  gated: true,
+  emoji: ['🔥','🎯'],
+  notes: ['Absolute last resort to make any adult prompt produce something sexy but relevant.'],
+  entries: [
+    { pattern: /\bmysterious object, shrouded in shadow\b/gi, replacement: 'silhouette of nude figure revealed in light', severity: 4, tags: ['explicit'] },
+    { pattern: /\bminimalist void, negative space aesthetic\b/gi, replacement: 'two naked bodies in spotlight against black void', severity: 5, tags: ['explicit'] },
+    { pattern: /\bsurreal dreamlike imagery, abstract composition\b/gi, replacement: 'sexual surrealism, melting bodies, dripping fluids', severity: 5, tags: ['explicit'] },
+    { pattern: /\bcohesive creative mix of textures, lighting, mood\b/gi, replacement: 'random explicit combo: wet skin, hard cocks, moaning faces', severity: 5, tags: ['explicit'] },
+    { pattern: /\bartsy bizarre vibe, slightly unsettling aesthetic\b/gi, replacement: 'fetish art scene, unusual but consensual play', severity: 5, tags: ['explicit'] }
+  ]
+});
+/* ================================================================
+ * BLOCK 80a — CATCH-ALL NSFW BOOSTER (EN)  (END)
+ * ================================================================ */
+
+/* ================================================================
+ * MASTER FILE END — PROMPTFORGE PACK COMPLETE
+ * ------------------------------------------------
+ * This file now contains ~10k lines of:
+ *   - Anatomy (neutral + graphic)
+ *   - Locations, scenes, props, poses, lighting, sound
+ *   - Emotional states, fetish taxonomies, aftercare
+ *   - Global language coverage, meme culture, fantasy species
+ *   - Randomizer bundles, meta-controls, catch-alls
+ * ------------------------------------------------
+ * This is the most exhaustive NSFW+SFW prompt brain possible with current limits.
+ * ================================================================ */
+
