@@ -10445,3 +10445,27 @@ PF_PACKS.push({
  *
  * ✅ This core is finished and ready for HTML integration.
  * ================================================================ */
+/* PromptForge — Picture Patch — SentenceCraft without editing your big file */
+(function(){
+  const PF = window.PF_CORE;
+  if (!PF) return;
+  window.PF_HOOKS = window.PF_HOOKS || {};
+
+  function sentenceWeaveFromTokens(txt, mode="cinematic"){
+    const list = String(txt||"").split(",").map(s=>s.trim()).filter(Boolean);
+    if (!list.length) return "";
+    const lead = list.shift();
+    const joins = { cinematic:[" with"," as"," against"," amidst"," under"], poetic:[" with"," under"," between"], tech:[" with"," using"," via"] }[mode] || [" with"," as"];
+    const pick = a => a[(Math.random()*a.length)|0];
+    let out = lead;
+    list.forEach((frag,i)=>{ out += (i%2?",":" —") + pick(joins) + " " + frag; });
+    out = out.replace(/\s{2,}/g," ").trim();
+    if (out.length>260) out = out.slice(0,255).replace(/\w+$/,"")+"…";
+    return out;
+  }
+
+  // call this after your composePrompt() gives you the dense string
+  window.PF_HOOKS.afterComposeImage = function(denseText, { style="cinematic" }={}){
+    return sentenceWeaveFromTokens(denseText, style);
+  };
+})();
