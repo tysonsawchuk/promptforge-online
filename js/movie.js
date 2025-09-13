@@ -1923,3 +1923,1560 @@
     return fmt(t);
   };
 })();
+/* PromptForge — Movie Pack (Block N) — Ref Manager + Continuity Locks + Auto-Neg Dedupe + Export */
+(function(){
+  const CORE = window.MovieCORE;
+  const PACK = CORE?.data;
+  if (!CORE || !PACK) return;
+
+  // ===== Internal state =====
+  PACK.engine = PACK.engine || "runway";
+  PACK.continuityLock = PACK.continuityLock || {
+    enabled: true,
+    carry: ["wardrobe","lighting","vfx","grade","ratio","fps","props"]
+  };
+  // minimal engine negatives (merged with artifactKillers from Block G)
+  PACK.engineNeg = PACK.engineNeg || {
+    runway:   ["strobing","rolling shutter","frame popping","ghosting","warping","low detail","text artifacts"],
+    luma:     ["banding","posterization","compression blocks","over-sharpen","text artifacts"],
+    pika:     ["smear","trailing artifacts","ghosting","text artifacts"],
+    kling:    ["AI watermark","over-sharpen","flicker","banding","text artifacts"]
+  };
+
+  // ===== Utils =====
+  function norm(t){ return String(t||"").trim(); }
+  function keyOf(tok){ return String(tok).split(":")[0].trim().toLowerCase(); }
+  function dedupe(arr){ 
+    const seen = new Set();
+    const out = [];
+    for(const a of (arr||[])){
+      const k = norm(a).toLowerCase();
+      if(!k) continue;
+      if(!seen.has(k)){ seen.add(k); out.push(norm(a)); }
+    }
+    return out;
+  }
+  function mergeNeg(...lists){
+    return dedupe(lists.flat().filter(Boolean));
+  }
+
+  // ===== Ref Manager (UI helpers) =====
+  // Global refs (for generic shots) and per-character slots (img1..img4)
+  PACK.refs = PACK.refs || {}; // {key:url}
+  // PACK.cast created in Block K; ensure exists:
+  PACK.cast = PACK.cast || {};
+
+  CORE.refSlots = ["img1","img2","img3","img4"];
+
+  CORE.setGlobalRef = function(key, url){
+    if (!key || !url) return false;
+    PACK.refs[norm(key)] = norm(url);
+    return true;
+  };
+  CORE.clearGlobalRef = function(key){
+    delete PACK.refs[norm(key)];
+    return true;
+  };
+  CORE.listGlobalRefs = function(){ return {...PACK.refs}; }
+
+  CORE.assignRefSlot = function(charId, slot, url){
+    const c = PACK.cast[charId]; if(!c) return false;
+    slot = norm(slot).toLowerCase();
+    if (!CORE.refSlots.includes(slot)) return false;
+    c.refs = c.refs || {};
+    c.refs[slot] = norm(url);
+    return true;
+  };
+  CORE.clearRefSlot = function(charId, slot){
+    const c = PACK.cast[charId]; if(!c) return false;
+    slot = norm(slot).toLowerCase();
+    if (c.refs) delete c.refs[slot];
+    return true;
+  };
+  CORE.listCharacterRefs = function(charId){
+    const c = PACK.cast[charId] || {};
+    return {...(c.refs||{})};
+  };
+
+  // inject 'ref: imgX' tokens when character has a ref slot
+  CORE.attachRefTokens = function(board, charIds=[]){
+    if(!board?.cards?.length || !charIds?.length) return board;
+    const refTokens = [];
+    for (const id of charIds){
+      const c = PACK.cast[id]; if (!c?.refs) continue;
+      for (const s of CORE.refSlots){
+        if (c.refs[s]) refTokens.push(`ref: ${s}`);
+      }
+    }
+    if (!refTokens.length) return board;
+    board.cards.forEach(card=>{
+      const T = new Set(card.tokens||[]);
+      refTokens.forEach(t => T.add(t));
+      card.tokens = Array.from(T);
+    });
+    return board;
+  };
+
+  // ===== Continuity Locks =====
+  CORE.setContinuityLock = function({enabled, carry}={}){
+    if (typeof enabled === "boolean") PACK.continuityLock.enabled = enabled;
+    if (Array.isArray(carry) && carry.length) PACK.continuityLock.carry = carry.map(x=>String(x).toLowerCase());
+    return {...PACK.continuityLock};
+  };
+  CORE.getContinuityLock = function(){ return {...PACK.continuityLock}; }
+
+  // carry chosen categories from first card across board
+  CORE.applyContinuity = (function(old){
+    return function(board, opts){
+      const cfg = {...PACK.continuityLock, ...(opts||{})};
+      if (!cfg.enabled) return old ? old.call(CORE, board, opts) : board;
+      if (!board?.cards?.length) return board;
+
+      const first = (board.cards[0].tokens||[]).slice();
+      const keep = new Set((cfg.carry||[]).map(s=>String(s).toLowerCase()));
+      const sticky = first.filter(tok => keep.has(keyOf(tok)));
+
+      for (let i=1;i<board.cards.length;i++){
+        const T = new Set(board.cards[i].tokens||[]);
+        sticky.forEach(t=>T.add(t));
+        board.cards[i].tokens = Array.from(T);
+      }
+      return board;
+    };
+  })(CORE.applyContinuity || function(b){ return b; });
+
+  // per-character continuity locks (wardrobe/traits persist)
+  CORE.lockCharacterContinuity = function(charId, {wardrobe=true, traits=true}={}){
+    const c = PACK.cast[charId]; if(!c) return false;
+    c.lock = c.lock || {};
+    c.lock.wardrobe = !!wardrobe;
+    c.lock.traits   = !!traits;
+    return true;
+  };
+  CORE.applyCharacterContinuity = function(board, charIds=[]){
+    if(!board?.cards?.length || !charIds?.length) return board;
+    const bundles = [];
+    for(const id of charIds){
+      const c = PACK.cast[id]; if(!c) continue;
+      const add = [];
+      if (c.lock?.wardrobe) add.push(...(c.wardrobe||[]));
+      if (c.lock?.traits)   add.push(...(c.traits||[]));
+      if (add.length) bundles.push(...add);
+    }
+    if (!bundles.length) return board;
+    board.cards.forEach(card=>{
+      const T = new Set(card.tokens||[]);
+      bundles.forEach(t=>T.add(t));
+      card.tokens = Array.from(T);
+    });
+    return board;
+  };
+
+  // ===== Auto-negative dedupe on engine switch =====
+  CORE.onEngineChange = function(engine, extraNegs=[]){
+    const e = String(engine||PACK.engine||"runway").toLowerCase();
+    PACK.engine = e;
+
+    const base = PACK.engineNeg[e] || [];
+    const art  = (PACK.artifactKillers && PACK.artifactKillers[e]) ? PACK.artifactKillers[e] : [];
+    const curr = (CORE.lastNegative||"").split(",").map(s=>s.trim()).filter(Boolean);
+
+    const merged = mergeNeg(curr, base, art, extraNegs);
+    CORE.lastNegative = merged.join(", ");
+
+    return CORE.lastNegative;
+  };
+
+  // call after enhance() if you want engine-specific cleanup automatically
+  CORE.finalizeNegatives = function({engine, extra=[]}={}){
+    return CORE.onEngineChange(engine || PACK.engine, extra);
+  };
+
+  // ===== Export Helpers =====
+  // Return a bundle obj with text + negatives + ref map so UI can zip assets if needed
+  CORE.exportBundle = function({ text="", negative="", includeRefs=true, includeCast=true }={}){
+    const bundle = {
+      engine: PACK.engine,
+      text: norm(text),
+      negative: norm(negative || CORE.lastNegative || ""),
+      refs: {},
+      cast: []
+    };
+    if (includeRefs){
+      // global refs
+      bundle.refs = {...PACK.refs};
+      // collect any per-character slots
+      if (includeCast){
+        for(const c of Object.values(PACK.cast)){
+          if (c.refs && Object.keys(c.refs).length){
+            bundle.refs = {...bundle.refs, ...c.refs};
+          }
+        }
+      }
+    }
+    if (includeCast){
+      bundle.cast = Object.values(PACK.cast).map(c=>({
+        id:c.id, name:c.name, archetype:c.archetype,
+        wardrobe:(c.wardrobe||[]).slice(0,12),
+        traits:(c.traits||[]).slice(0,12),
+        refs:{...(c.refs||{})}
+      }));
+    }
+    return bundle;
+  };
+
+  // convenience: replace "ref: imgX" tokens with "(ref:imgX)" comments for user readability (optional)
+  CORE.humanizeRefsInPrompt = function(text){
+    return String(text||"").replace(/\bref:\s*(img[1-4])\b/gi,"(ref:$1)");
+  };
+
+})();
+/* PromptForge — Movie Pack (Block O) — Director's Brain + Emotion Curve + Smart Export */
+(function(){
+  const CORE = window.MovieCORE;
+  const PACK = CORE?.data;
+  if (!CORE || !PACK) return;
+
+  // ===== 1) Vibe → defaults (slug, extras, arc, platform) =====
+  const VIBE_PRESETS = {
+    noir: {
+      slug: "SLUG: EXT. alley - night",
+      extras: ["lighting: neon night","gel: magenta-cyan","grade: cinematic","grain: 35mm fine"],
+      arc: "3-beat tension",
+      platform: "platform: instagram reel"
+    },
+    romance: {
+      slug: "SLUG: INT. cabin - night",
+      extras: ["warm practicals","soft bloom","dof: shallow","mood: intimate"],
+      arc: "hook-cta",
+      platform: "platform: facebook reel"
+    },
+    mythic: {
+      slug: "SLUG: EXT. forest - dusk",
+      extras: ["vfx: fog low","light rays","backlight rim"],
+      arc: "5-beat mini",
+      platform: "platform: youtube short"
+    },
+    action: {
+      slug: "SLUG: EXT. street - night",
+      extras: ["move: track","cut: whip","zoom: snap","grade: cinematic"],
+      arc: "3-beat tension",
+      platform: "platform: tiktok"
+    }
+  };
+
+  // ===== 2) Emotion tokens per level (0..3) — non-graphic, cinematic =====
+  const EMO_TOKENS = {
+    0: ["mood: calm","light: high key","pace: gentle"],
+    1: ["mood: playful","dof: shallow","cut: straight"],
+    2: ["mood: tense","backlight rim","move: push","cut: match"],
+    3: ["mood: charged","silhouette emphasis","gel: magenta-cyan","cut: whip"]
+  };
+
+  function clampInt(n){ n=Number(n)||0; return n<0?0:n>3?3:n; }
+  function dedupe(a){ const s=new Set(); const out=[]; (a||[]).forEach(t=>{t=String(t||"").trim(); if(t && !s.has(t.toLowerCase())){ s.add(t.toLowerCase()); out.push(t);}}); return out; }
+
+  // Generate array of intensity values length N following a shape
+  // shapes: rise, fall, wave, pulse
+  CORE.emotionCurve = function(n=3, shape="rise"){
+    n = Math.max(1, Math.floor(n));
+    const out = [];
+    if (shape==="rise"){
+      for (let i=0;i<n;i++) out.push(Math.round(i*(3/(n-1||1))));
+    } else if (shape==="fall"){
+      for (let i=0;i<n;i++) out.push(Math.round(3 - i*(3/(n-1||1))));
+    } else if (shape==="wave"){
+      for (let i=0;i<n;i++){
+        const p = Math.sin((i/(n-1||1))*Math.PI); out.push(Math.round(p*3));
+      }
+    } else { // pulse
+      for (let i=0;i<n;i++) out.push(i===Math.floor(n/2)?3:(i%2?2:1));
+    }
+    return out.map(clampInt);
+  };
+
+  CORE.applyEmotionCurve = function(board, curve=[], { merge=true }={}){
+    if (!board?.cards?.length) return board;
+    const N = board.cards.length;
+    if (!curve || !curve.length) curve = CORE.emotionCurve(N, "wave");
+    for (let i=0;i<N;i++){
+      const level = clampInt(curve[i] ?? 1);
+      const adds = EMO_TOKENS[level] || [];
+      const T = new Set(board.cards[i].tokens||[]);
+      adds.forEach(t=>T.add(t));
+      board.cards[i].tokens = dedupe(Array.from(T));
+    }
+    return board;
+  };
+
+  // ===== 3) Director’s Brain — 1 call from logline → board ready to render =====
+  // opts: { logline, vibe, platform?, engine?, genre?, lengthSec?, arc?, chars?, creature?, ratio?, fps?, langCode? }
+  CORE.directorCompose = function(opts={}){
+    const vibe = String(opts.vibe||"noir").toLowerCase();
+    const base = VIBE_PRESETS[vibe] || VIBE_PRESETS.noir;
+
+    const platform = opts.platform || base.platform;
+    const slug     = opts.slug     || base.slug;
+    const arc      = opts.arc      || base.arc;
+    const ratio    = opts.ratio    || "ratio: 9:16";
+    const fps      = opts.fps      || "fps: 30";
+    const extras   = dedupe([ ...base.extras, ratio, fps ]);
+
+    // Seed board from arc
+    let board = CORE.arcBoard({
+      arc, title: (opts.title||"Director’s Compose"),
+      logline: (opts.logline||""),
+      slug, platform, ratio, fps, extras
+    });
+
+    // Language normalize & NSFW soften (if present) for the logline only (used by your UI prose)
+    if (opts.langCode) {
+      try { board.logline = CORE.normalizeIdea(board.logline, opts.langCode); } catch(_){}
+      try { if (window.NSFW_CORE?.preMap) board.logline = NSFW_CORE.preMap(board.logline, opts.langCode); } catch(_){}
+    }
+
+    // Characters
+    if (opts.chars && opts.chars.length) {
+      board = CORE.withCharacters(board, opts.chars);
+      board = CORE.applyCharacterContinuity(board, opts.chars);
+    }
+    // Creature
+    if (opts.creature) {
+      const add = String(opts.creature); // token like "creature: sasquatch"
+      board.cards.forEach(c=>{
+        const T = new Set(c.tokens||[]); T.add(add); c.tokens = Array.from(T);
+      });
+    }
+
+    // Emotion curve
+    const curve = CORE.emotionCurve(board.cards.length, opts.curveShape || (vibe==="romance" ? "rise" : "wave"));
+    board = CORE.applyEmotionCurve(board, curve);
+
+    // Timing
+    const total = Math.max(8, Number(opts.lengthSec||15));
+    board.timing = CORE.composeBeats(total, board.cards.length, PACK.arcs[arc]?.weights || []);
+
+    // Continuity
+    board = CORE.applyContinuity(board, { enabled:true });
+
+    // Ref tokens if given
+    if (opts.refChars && opts.refChars.length){
+      board = CORE.attachRefTokens(board, opts.refChars);
+    }
+
+    return board;
+  };
+
+  // ===== 4) Smart Export — everything you need for a share/download =====
+  // args: { board, ctx:{engine,genre,ratio,fps}, musicToken, voiceToken, lines, finalizeNegExtra:[], bundleRefs:true, bundleCast:true }
+  CORE.smartExport = function(args={}){
+    const board = args.board;
+    if (!board?.cards?.length) return null;
+
+    // Render timed prompts
+    const ctx = args.ctx || { engine:"runway", genre:"editorial" };
+    const shots = CORE.renderBoardTimed(board, ctx);
+
+    // Deduped negatives (engine base + artifact killers + extras)
+    const negatives = CORE.finalizeNegatives({ engine: ctx.engine, extra: args.finalizeNegExtra || [] });
+
+    // Music → BPM cut suggestions
+    let music = null;
+    if (args.musicToken) {
+      try { music = CORE.musicBed(args.musicToken); } catch(_){}
+    }
+
+    // Captions + SSML if lines provided
+    let srt = "", vtt = "", ssml = "";
+    if (Array.isArray(args.lines) && args.lines.length){
+      const caps = CORE.dialogToCaptions(args.lines, { secondsPerLine: Math.max(2, Math.round((board.timing||[])[1]||3)) });
+      srt = CORE.toSRT(caps);
+      vtt = CORE.toVTT(caps);
+      try { ssml = CORE.linesToSSML(args.lines, args.voiceToken || "voice: warm alto", { pace:"steady" }); } catch(_){}
+    }
+
+    // Export bundle (text + negs + refs + cast)
+    const bundle = CORE.exportBundle({
+      text: shots.map(s=>s.prompt).join(" | "),
+      negative: negatives,
+      includeRefs: !!args.bundleRefs,
+      includeCast: !!args.bundleCast
+    });
+
+    return {
+      shots, // [{beat,seconds,prompt,negative}]
+      negatives,
+      music, // { token, bpm, suggestCuts:[{time,cut}] }
+      captions: { srt, vtt },
+      ssml,
+      bundle
+    };
+  };
+
+})();
+/* PromptForge — Movie Pack (Block P) — Meta-Director (Score + Rewrite) */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // Heuristic weights (tweak in UI later)
+  PACK.meta = PACK.meta || {
+    w: { flow:0.35, novelty:0.25, density:0.20, clarity:0.20 },
+    lexStop: ["the","a","an","and","of","to","in","with","on","by","for"]
+  };
+
+  function uniqWords(s){
+    const words = String(s||"").toLowerCase().match(/[a-z0-9:.-]+/g)||[];
+    const stop = new Set(PACK.meta.lexStop);
+    const bag = new Set(words.filter(w=>!stop.has(w) && w.length>2));
+    return bag;
+  }
+
+  CORE.metaScore = function(promptStr){
+    const text = String(promptStr||"");
+    const tokens = text.split(",").map(s=>s.trim()).filter(Boolean);
+    if(!tokens.length) return { score:0, parts:{} };
+
+    // Flow: penalize back-to-back category repeats (e.g., "light:" twice)
+    let clashes=0;
+    for(let i=1;i<tokens.length;i++){
+      const a=tokens[i-1].split(":")[0].trim().toLowerCase();
+      const b=tokens[i].split(":")[0].trim().toLowerCase();
+      if(a===b) clashes++;
+    }
+    const flow = Math.max(0, 1 - clashes / Math.max(1,tokens.length-1));
+
+    // Novelty: unique content ratio
+    const uw = uniqWords(text);
+    const novelty = Math.min(1, uw.size / Math.max(6, tokens.length*1.5));
+
+    // Density: signal vs filler (tokens with ":" or 2+ words)
+    const dense = tokens.filter(t=>t.includes(":") || t.split(" ").length>1).length / tokens.length;
+
+    // Clarity: punctuation hygiene + length budget
+    const clean = !/,,|;;|--| {2,}/.test(text);
+    const lenOk = text.length<=320;
+    const clarity = (clean?0.6:0.3) + (lenOk?0.4:0.1);
+
+    const w = PACK.meta.w;
+    const score = +(w.flow*flow + w.novelty*novelty + w.density*dense + w.clarity*clarity).toFixed(3);
+    return { score, parts:{flow,novelty,density,clarity}, clashes };
+  };
+
+  // Rewrite: reorders, collapses duplicates, and weaves a short cinematic sentence for UX
+  CORE.metaRewrite = function(promptStr,{mode="cinematic"}={}){
+    const text = String(promptStr||"");
+    let toks = text.split(",").map(s=>s.trim()).filter(Boolean);
+
+    // Dedup by key:value and collapse repeats by category, keep strongest
+    const byKey = new Map();
+    for(const t of toks){
+      const k = t.split(":")[0].toLowerCase().trim();
+      if(!byKey.has(k)) byKey.set(k,t); // keep first occurrence
+    }
+    toks = Array.from(byKey.values());
+
+    // Prefer ordering: SLUG -> shot/move/ratio/fps -> lighting -> lens -> mood -> grade/vfx -> style -> wardrobe -> misc
+    const rank = (t)=>{
+      const k = t.split(":")[0].toLowerCase().trim();
+      if(/^slug$/i.test(k)) return 0;
+      if(/^(shot|move|ratio|fps|cam|rig|frame|compose)$/i.test(k)) return 1;
+      if(/^(light|lighting|backlight|rim|gel|flare|shadow)$/i.test(k)) return 2;
+      if(/^(lens|aperture|bokeh|dof|focus)$/i.test(k)) return 3;
+      if(/^(mood|emotion|tone)$/i.test(k)) return 4;
+      if(/^(grade|grain|vfx|effect|transition|cut|dissolve)$/i.test(k)) return 5;
+      if(/^(style|palette)$/i.test(k)) return 6;
+      if(/^(wardrobe|fabric|jewelry)$/i.test(k)) return 7;
+      return 8;
+    };
+    toks.sort((a,b)=>rank(a)-rank(b));
+
+    // Produce dense and prose
+    const dense = toks.join(", ");
+    const prose = CORE.sentenceWeave(toks, { mode });
+
+    return { dense, prose, tokens:toks };
+  };
+
+  // One-call critique + improve
+  CORE.metaDirect = function(promptStr){
+    const s1 = CORE.metaScore(promptStr);
+    const r  = CORE.metaRewrite(promptStr);
+    const s2 = CORE.metaScore(r.dense);
+    return { before:s1, after:s2, rewrite:r };
+  };
+})();
+/* PromptForge — Movie Pack (Block Q) — Parallel Worlds (A/B branching) */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // Build two boards from different vibes/loglines, then interleave or export separately.
+  CORE.parallelCompose = function({
+    A={ logline:"Host chases a signal in neon rain.", vibe:"noir",  lengthSec:15 },
+    B={ logline:"Something ancient wakes in the pines.", vibe:"mythic", lengthSec:15 },
+    strategy="interleave" // interleave | split | mirror
+  }={}){
+    const a = CORE.directorCompose(A);
+    const b = CORE.directorCompose(B);
+
+    if (strategy==="split") return { A:a, B:b };
+
+    // mirror = same beats, diff tokens
+    if (strategy==="mirror"){
+      const n = Math.min(a.cards.length, b.cards.length);
+      const out = { title:"Parallel (mirror)", logline:`${A.logline} || ${B.logline}`, cards:[], timing:[] };
+      for(let i=0;i<n;i++){
+        // A then B of same beat label
+        out.cards.push({ beat:`A:${a.cards[i].beat}`, slug:a.cards[i].slug, tokens:a.cards[i].tokens });
+        out.cards.push({ beat:`B:${b.cards[i].beat}`, slug:b.cards[i].slug, tokens:b.cards[i].tokens });
+        out.timing.push((a.timing?.[i]||4)); out.timing.push((b.timing?.[i]||4));
+      }
+      return out;
+    }
+
+    // default interleave beat-by-beat
+    const max = Math.max(a.cards.length, b.cards.length);
+    const out = { title:"Parallel (interleave)", logline:`${A.logline} || ${B.logline}`, cards:[], timing:[] };
+    for(let i=0;i<max;i++){
+      if (a.cards[i]) { out.cards.push({ beat:`A:${a.cards[i].beat}`, slug:a.cards[i].slug, tokens:a.cards[i].tokens }); out.timing.push(a.timing?.[i]||4); }
+      if (b.cards[i]) { out.cards.push({ beat:`B:${b.cards[i].beat}`, slug:b.cards[i].slug, tokens:b.cards[i].tokens }); out.timing.push(b.timing?.[i]||4); }
+    }
+    return out;
+  };
+
+  // Export both paths at once
+  CORE.parallelExport = function(boardOrPair, ctx={ engine:"runway", genre:"editorial" }){
+    if (boardOrPair.A && boardOrPair.B){
+      return {
+        A: CORE.smartExport({ board:boardOrPair.A, ctx }),
+        B: CORE.smartExport({ board:boardOrPair.B, ctx })
+      };
+    }
+    return CORE.smartExport({ board:boardOrPair, ctx });
+  };
+})();
+/* PromptForge — Movie Pack (Block S) — Spatial Stage (2.5D blocking) */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // Minimal scene graph (no rendering, just tokens)
+  PACK.stage = PACK.stage || {
+    size: { w:10, h:6, d:10 },              // meters (virtual)
+    chars: {},                               // id -> { x,y,z, face:"N|S|E|W" }
+    cam:   { x:0, y:1.6, z: -4, yaw:0 }      // position + yaw
+  };
+
+  CORE.stagePlaceChar = function(id,{x=0,y=0,z=0,face="N"}={}){
+    PACK.stage.chars[id] = { x,y,z,face };
+    return {...PACK.stage.chars[id]};
+  };
+
+  CORE.stageMoveCam = function({x,y,z,yaw}={}){
+    if (typeof x==="number") PACK.stage.cam.x=x;
+    if (typeof y==="number") PACK.stage.cam.y=y;
+    if (typeof z==="number") PACK.stage.cam.z=z;
+    if (typeof yaw==="number") PACK.stage.cam.yaw=yaw;
+    return {...PACK.stage.cam};
+  };
+
+  // Generate camera/shot tokens from stage positions
+  CORE.stageShot = function({targetId, shot="shot: ms", move="move: track"}={}){
+    const cam = PACK.stage.cam, tgt = PACK.stage.chars[targetId];
+    const tokens = [shot, move];
+    if (tgt){
+      const dx = tgt.x - cam.x, dz = tgt.z - cam.z;
+      const dist = Math.sqrt(dx*dx + dz*dz);
+      // map distance → lens hint
+      if (dist < 1.2) tokens.push("lens: portrait 85mm");
+      else if (dist < 3) tokens.push("lens: 50mm");
+      else tokens.push("lens: 28mm");
+      // screen direction: left/right based on yaw and delta
+      const angle = Math.atan2(dz, dx)*180/Math.PI - (cam.yaw||0);
+      const side = (angle>0) ? "screen-right" : "screen-left";
+      tokens.push(`block: ${side}`);
+    }
+    return tokens;
+  };
+
+  // Apply stage-derived tokens to a board (keeps direction consistent)
+  CORE.stageApply = function(board, plan=[/* { beatIndex:0, targetId:"Ava", shot:"shot: cu", move:"move: push"} */]){
+    if (!board?.cards?.length || !Array.isArray(plan)) return board;
+    for (const p of plan){
+      const i = Number(p.beatIndex)||0;
+      if (!board.cards[i]) continue;
+      const T = new Set(board.cards[i].tokens||[]);
+      CORE.stageShot(p).forEach(t=>T.add(t));
+      board.cards[i].tokens = Array.from(T);
+    }
+    return board;
+  };
+
+})();
+/* PromptForge — NSFW Core (Block G) — Romance Tone Packs by City (tasteful) */
+(function(){
+  const NSFW = window.NSFW_CORE; if(!NSFW) return;
+
+  const CITY = {
+    paris: {
+      token:"tone: parisian chic",
+      adds:["palette: cream noir","fabric: silk","jewelry: gold minimal","soft bloom","mood: intimate","music: orchestral 100bpm"]
+    },
+    rio: {
+      token:"tone: rio heat",
+      adds:["palette: sun gold","skin: sun-kissed","natural window light","backlight rim","mood: playful","music: trap 140bpm"]
+    },
+    tokyo: {
+      token:"tone: tokyo neon",
+      adds:["lighting: neon night","gel: magenta-cyan","chromatic aberration","silhouette emphasis","mood: charged","music: synthwave 90bpm"]
+    },
+    seoul: {
+      token:"tone: seoul minimal",
+      adds:["palette: cool neutral","light: high key","clean lines","mood: tender","grain: 35mm fine"]
+    },
+    berlin: {
+      token:"tone: berlin underground",
+      adds:["palette: steel blue","grade: cinematic","rim light","mood: tense","transition: glitch"]
+    }
+  };
+
+  NSFW.cityTone = function(name){
+    const row = CITY[String(name||"").toLowerCase()];
+    return row ? { token:row.token, adds:row.adds.slice() } : null;
+  };
+
+  // Mix up to 3 tones (simple union + dedupe)
+  NSFW.mixTones = function(list=[]){
+    const add = [];
+    (list||[]).forEach(n => {
+      const r = NSFW.cityTone(n);
+      if (r) add.push(...r.adds);
+    });
+    const uniq = Array.from(new Set(add.filter(Boolean)));
+    return uniq.slice(0, 24);
+  };
+
+  // expose tokens to UI
+  NSFW.uiHints = (function(old){
+    return function(){
+      const h = (old && old.call ? old.call(NSFW) : { vibes:["sfw","softcore","hardcore"], softcorePresets:[] });
+      h.romanceTones = [CITY.paris.token, CITY.rio.token, CITY.tokyo.token, CITY.seoul.token, CITY.berlin.token];
+      return h;
+    };
+  })(NSFW.uiHints);
+})();
+/* PromptForge — Movie Pack (Block T) — Prompt Shaders (style transforms) */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // Shaders declare adds/removes and negative boosts. Keep tasteful & engine-friendly.
+  PACK.shaders = {
+    "shader: realism+": {
+      adds:["photometric consistency","skin texture detail","microtexture","subtle grain","grade: neutral"],
+      negs:["over-saturated","cartoonish","posterization"]
+    },
+    "shader: anamorphic flare": {
+      adds:["lens: 50mm anamorphic","flare: horizontal","bokeh: oval","grade: cinematic"],
+      negs:["flat lighting","banding"]
+    },
+    "shader: analogue vhs": {
+      adds:["vhs wobble mild","scanlines subtle","chromatic aberration","grain: coarse","grade: warm"],
+      negs:["over-sharpen","digital smear"]
+    },
+    "shader: anime cel": {
+      adds:["toon shader","line art clean","flat shadows crisp","palette: bold"],
+      negs:["photo-real skin pores"]
+    },
+    "shader: painterly oil": {
+      adds:["brushstroke texture","impasto hint","palette: muted classic","edge: soft blend"],
+      negs:["hyperreal pores","clinical sharpness"]
+    },
+    "shader: dreamy ethereal": {
+      adds:["soft bloom","haze gentle","backlight rim","dof: shallow","palette: pastel"],
+      negs:["crushed blacks","harsh contrast"]
+    },
+    "shader: cctv grit": {
+      adds:["security camera timestamp","rolling noise","monochrome cool","frame: high angle"],
+      negs:["cinematic color grade","warm glow"]
+    },
+    "shader: surreal glitch": {
+      adds:["transition: glitch","datamosh hint","ghost trail mild","palette: neon"],
+      negs:["temporal smoothing"]
+    }
+  };
+
+  function dedupe(arr){ const s=new Set(), out=[]; (arr||[]).forEach(t=>{t=String(t||"").trim(); if(t && !s.has(t.toLowerCase())){ s.add(t.toLowerCase()); out.push(t);} }); return out; }
+
+  CORE.applyShader = function(shaderToken, denseText){
+    const row = PACK.shaders[String(shaderToken||"").toLowerCase()] || PACK.shaders["shader: realism+"];
+    const chunks = String(denseText||"").split(",").map(s=>s.trim()).filter(Boolean);
+    // Remove any negated conflicts (basic pass)
+    const cleaned = chunks.filter(t => !(row.negs||[]).some(n => t.toLowerCase().includes(n.toLowerCase())));
+    const merged = dedupe(cleaned.concat(row.adds||[]));
+    // attach negatives to CORE.lastNegative
+    const curNeg = (CORE.lastNegative||"").split(",").map(s=>s.trim()).filter(Boolean);
+    CORE.lastNegative = dedupe(curNeg.concat(row.negs||[])).join(", ");
+    return merged.join(", ");
+  };
+
+  // UI hint
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.shaders = Object.keys(PACK.shaders);
+    return h;
+  };})(CORE.uiHints);
+})();
+/* PromptForge — Movie Pack (Block U) — Social Hooks + CTAs */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  PACK.hooks = {
+    instagram: [
+      { token:"hook: 1s cold open", overlay:"Wait for it…", adds:["cut: whip","zoom: snap"] },
+      { token:"hook: bold claim",   overlay:"You won’t believe this", adds:["frame: center lock","hold: hero 1s"] },
+      { token:"hook: reveal tease", overlay:"Watch the lights", adds:["move: push","light rays"] }
+    ],
+    tiktok: [
+      { token:"hook: immediate face", overlay:"Real talk:", adds:["shot: cu","dialog: J-cut"] },
+      { token:"hook: countdown", overlay:"3…2…", adds:["cut: straight","beat: micro cutaways"] }
+    ],
+    youtube: [
+      { token:"hook: title card", overlay:"Tonight:", adds:["dissolve: cross","grade: cinematic"] },
+      { token:"hook: question", overlay:"What’s in the fog?", adds:["move: track"] }
+    ],
+    facebook: [
+      { token:"hook: curiosity", overlay:"Keep watching →", adds:["move: push"] }
+    ]
+  };
+
+  PACK.cta = {
+    instagram: [
+      { token:"cta: follow for part 2", overlay:"Follow for Part 2", adds:["dip2black"] },
+      { token:"cta: comment prompt", overlay:"Comment what I should try", adds:["cut: straight"] }
+    ],
+    tiktok: [
+      { token:"cta: duet challenge", overlay:"Duet this with your line", adds:["transition: speed blur"] }
+    ],
+    youtube: [
+      { token:"cta: subscribe", overlay:"Subscribe for the full story", adds:["dissolve: cross"] }
+    ],
+    facebook: [
+      { token:"cta: share", overlay:"Share if you felt it", adds:["cut: match"] }
+    ]
+  };
+
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.socialPlatforms = Object.keys(PACK.hooks);
+    return h;
+  };})(CORE.uiHints);
+
+  CORE.socialHook = function(platform="instagram", pick=0){
+    const list = PACK.hooks[platform]||[];
+    const row = list[Math.max(0,Math.min(pick, list.length-1))] || list[0];
+    return row ? { overlay:row.overlay, adds:row.adds.slice(), token:row.token } : null;
+  };
+
+  CORE.socialCTA = function(platform="instagram", pick=0){
+    const list = PACK.cta[platform]||[];
+    const row = list[Math.max(0,Math.min(pick, list.length-1))] || list[0];
+    return row ? { overlay:row.overlay, adds:row.adds.slice(), token:row.token } : null;
+  };
+
+  // Inject a hook at beat 0 and a CTA at the last beat
+  CORE.injectSocial = function(board, { platform="instagram", hookIndex=0, ctaIndex=0 }={}){
+    if (!board?.cards?.length) return board;
+    const h = CORE.socialHook(platform, hookIndex);
+    const c = CORE.socialCTA(platform, ctaIndex);
+    if (h){ 
+      const T = new Set(board.cards[0].tokens||[]);
+      h.adds.forEach(t=>T.add(t));
+      T.add("overlay: "+h.overlay);
+      board.cards[0].tokens = Array.from(T);
+    }
+    if (c){
+      const last = board.cards.length-1;
+      const T = new Set(board.cards[last].tokens||[]);
+      c.adds.forEach(t=>T.add(t));
+      T.add("overlay: "+c.overlay);
+      board.cards[last].tokens = Array.from(T);
+    }
+    return board;
+  };
+})();
+/* PromptForge — Movie Pack (Block V) — Montage Composer (B-roll + BPM) */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  const M_THEME = {
+    "urban rain": {
+      location:["neon signage","wet street","puddle reflections","alley steam"],
+      action:["footsteps","umbrella tilt","car passes","glance over shoulder"],
+      detail:["raindrops macro","neon bokeh","hand on railing","drip on jacket"]
+    },
+    "forest myth": {
+      location:["mist trail","old pines","moss stones","river bend"],
+      action:["slow breath","turn to sound","hand through fern","lantern lift"],
+      detail:["dew macro","light rays","footprint in mud","charcoal totem"]
+    },
+    "studio glamour": {
+      location:["seamless paper","flagged softbox","practical lamp","mirror edge"],
+      action:["hair toss","step to mark","shoulder turn","wardrobe adjust"],
+      detail:["lace macro","rim light flare","lip gloss sparkle","ring glint"]
+    }
+  };
+
+  const SHOT_VARIETY = ["shot: ecu","shot: cu","shot: ms","shot: ls"];
+  const MOVES = ["move: push","move: track","move: orbit","move: lockoff"];
+
+  function pick(a){ return a[(Math.random()*a.length)|0]; }
+  function dedupe(arr){ const s=new Set(), out=[]; (arr||[]).forEach(t=>{t=String(t||"").trim(); if(t && !s.has(t.toLowerCase())){ s.add(t.toLowerCase()); out.push(t);} }); return out; }
+
+  // Compose a quick montage board
+  // opts: { theme, beats=6, totalSec=15, ratio, fps, platform }
+  CORE.montageCompose = function(opts={}){
+    const theme = M_THEME[String(opts.theme||"urban rain").toLowerCase()] || M_THEME["urban rain"];
+    const beats = Math.max(3, Number(opts.beats||6));
+    const total = Math.max(8, Number(opts.totalSec||15));
+    const ratio = opts.ratio || "ratio: 9:16";
+    const fps   = opts.fps   || "fps: 30";
+    const platform = opts.platform || "platform: instagram reel";
+
+    const cards = [];
+    for(let i=0;i<beats;i++){
+      const shot = pick(SHOT_VARIETY), move = pick(MOVES);
+      const loc  = pick(theme.location), act  = pick(theme.action), det = pick(theme.detail);
+      const tokens = dedupe([platform, ratio, fps, shot, move, loc, act, det, "grade: cinematic"]);
+      cards.push({ beat:`montage ${i+1}`, slug:`SLUG: ${loc.includes('studio')?'INT. studio':'EXT. city'} - night`, tokens });
+    }
+    const timing = CORE.composeBeats(total, beats, Array(beats).fill(1));
+    return { title:"Montage", logline:`${Object.keys(M_THEME).find(k=>M_THEME[k]===theme)} montage`, cards, timing };
+  };
+
+  // High-level helper: montage + shader + bpm cuts
+  CORE.montagePack = function({ theme="urban rain", totalSec=15, bpm=90, shader="shader: realism+" }={}){
+    const board = CORE.montageCompose({ theme, totalSec });
+    const shots = CORE.renderBoardTimed(board, { engine:"runway", genre:"editorial" });
+    // Shader pass
+    shots.forEach(s => s.prompt = CORE.applyShader(shader, s.prompt));
+    // BPM cuts
+    const cutTips = CORE.bpmCuts({ totalSec, bpm, prefer:"cut: match" });
+    return { board, shots, cutTips };
+  };
+
+  // UI hint
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.montageThemes = Object.keys(M_THEME);
+    h.shaders = h.shaders || []; // ensure exists
+    return h;
+  };})(CORE.uiHints);
+})();
+/* PromptForge — NSFW Core (Block H) — Flirt Templates + Body Language (PG-13) */
+(function(){
+  const NSFW = window.NSFW_CORE; if(!NSFW) return;
+
+  // non-graphic, consensual flirt lines; you can map user text into these
+  const TPL = {
+    whisper:  t => `leans in, breath warm: “${t}”`,
+    tease:    t => `half-smile, playful: “${t}”`,
+    promise:  t => `voice low, certain: “${t}”`,
+    invite:   t => `soft and honest: “${t}”`
+  };
+
+  // body language chips (implied intimacy; no graphic anatomy)
+  const BODY = {
+    "001": { token:"body: close embrace", adds:["pose: close embrace","shadow: contact","dof: shallow"] },
+    "002": { token:"body: forehead touch", adds:["pose: forehead touch","mood: tender"] },
+    "003": { token:"body: hand lace", adds:["gesture: fingers interlace","compose: thirds"] },
+    "004": { token:"body: whisper ear", adds:["shot: cu","frame: tight","beat: pause 1s"] }
+  };
+
+  // UI hint merge
+  NSFW.uiHints = (function(old){ return function(){
+    const h = (old && old.call ? old.call(NSFW) : { vibes:["sfw","softcore","hardcore"] });
+    h.flirtStyles = Object.keys(TPL).map(k=>"flirt: "+k);
+    h.bodyCues = Object.values(BODY).map(x=>x.token);
+    return h;
+  };})(NSFW.uiHints);
+
+  // map a raw user line into PG-13 sultry flirt with a chosen style
+  NSFW.flirt = function(line, style="whisper"){
+    const fmt = TPL[String(style||"whisper")] || TPL.whisper;
+    let t = String(line||"").trim();
+    if (typeof NSFW.preMap === "function") t = NSFW.preMap(t, "en");
+    // tiny softening
+    t = t.replace(/\b(sex|f\W{0,2}ck|pussy|dick|cum)\b/gi, "let’s keep this between us");
+    return fmt(t);
+  };
+
+  // return tokens for a body cue chip
+  NSFW.bodyCueTokens = function(token){
+    const row = Object.values(BODY).find(x=>x.token.toLowerCase()===String(token||"").toLowerCase());
+    return row ? row.adds.slice() : [];
+  };
+})();
+/* PromptForge — Movie Pack (Block W) — Auto-ADR + Lip-Sync Curve + Retiming */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // crude syllable estimator (en) for timing guesses
+  function syllables(s){
+    s = String(s||"").toLowerCase().replace(/[^a-z ]/g," ").replace(/\s+/g," ").trim();
+    if(!s) return 0;
+    const words = s.split(" ");
+    let n = 0;
+    for (const w of words){
+      let count = (w.match(/[aeiouy]+/g)||[]).length;
+      if (w.endsWith("e")) count = Math.max(1, count-1);
+      n += Math.max(1, count);
+    }
+    return n;
+  }
+
+  // pace to seconds (approx): pace "quick|steady|slow" → words per minute
+  function paceWPM(p="steady"){ return ({quick:170, steady:140, slow:110})[p]||140; }
+
+  CORE.estimateLineSeconds = function(text, { pace="steady" }={}){
+    const syl = syllables(text);
+    const wpm = paceWPM(pace);
+    const words = Math.max(1, Math.round(syl/1.4));
+    return +(words / (wpm/60)).toFixed(2); // seconds
+  };
+
+  // Lip-sync strength curve across N beats (0..1)
+  CORE.lipSyncCurve = function(n=4, shape="rise"){
+    const out=[]; n=Math.max(1, n);
+    for(let i=0;i<n;i++){
+      let v=0.6;
+      if(shape==="rise") v = i/(n-1||1);
+      else if(shape==="fall") v = 1 - i/(n-1||1);
+      else if(shape==="wave") v = 0.5 + 0.5*Math.sin((i/(n-1||1))*Math.PI);
+      else if(shape==="pulse") v = (i===Math.floor(n/2))?1:0.5;
+      out.push(+v.toFixed(2));
+    }
+    return out;
+  };
+
+  // Build ADR notes against a target per-line duration
+  // returns: [{line, wantSec, estSec, noteTokens:[...]}]
+  CORE.adrNotes = function(lines=[], { pace="steady", tolerance=0.25 }={}){
+    const notes=[];
+    for(const ln of lines){
+      const want = CORE.estimateLineSeconds(ln.text||ln, { pace });
+      const est  = want; // if you feed actual audio later, compare here
+      const delta = est - want;
+      const tks=[];
+      if (delta >  tolerance) tks.push(`lip: tighten ${Math.round(delta*1000)}ms`);
+      if (delta < -tolerance) tks.push(`lip: loosen ${Math.round(Math.abs(delta)*1000)}ms`);
+      // sprinkle breaths for realism
+      if (want >= 3.2) tks.push("breath: short");
+      notes.push({ line: ln.text||ln, wantSec:+want.toFixed(2), estSec:+est.toFixed(2), noteTokens:tks });
+    }
+    return notes;
+  };
+
+  // Retimes captions to fit target total, preserving order
+  CORE.retimeCaptions = function(captions=[], targetTotal=15){
+    const dur = captions.reduce((a,c)=>a+(c.end-c.start),0) || 0.001;
+    const k = targetTotal / dur;
+    let t=0, out=[];
+    for (const c of captions){
+      const len = (c.end-c.start)*k;
+      const start = t, end = t + len - 0.05;
+      out.push({ start:+start.toFixed(2), end:+end.toFixed(2), text:c.text });
+      t = end + 0.05;
+    }
+    return out;
+  };
+
+  // Insert breath SSML markers heuristically between sentences
+  CORE.insertBreathsSSML = function(ssml, kind="short"){
+    const br = (kind==="long")? '<break time="500ms"/>' : '<break time="250ms"/>';
+    return String(ssml||"").replace(/<\/prosody><\/speak>/g, `${br}</prosody></speak>`);
+  };
+
+  // Align dialog to BPM: each line spans perLineBeats beats
+  CORE.alignDialogToBPM = function(lines=[], { bpm=90, perLineBeats=2, startAt=0 }={}){
+    const beatSec = 60/Math.max(40,Math.min(200,Number(bpm)||90));
+    const seg = Math.max(2, perLineBeats*beatSec);
+    let t = Number(startAt)||0;
+    return lines.map(l => {
+      const start=t, end=t+seg-0.05; t=end+0.05;
+      return { start:+start.toFixed(2), end:+end.toFixed(2), text:l.text||l };
+    });
+  };
+})();
+/* PromptForge — Movie Pack (Block X) — Safety Auditor + Contradiction Fixer */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  const CONTRA = [
+    { a:/\bratio:\s*21:9\b/i, b:/\bratio:\s*9:16\b/i, fix:"ratio: 9:16" },
+    { a:/\bfps:\s*60\b/i, b:/\bfps:\s*24\b/i, fix:"fps: 30" },
+    { a:/\blight:\s*high key\b/i, b:/\blow key\b/i, fix:"light: high key" },
+    { a:/\bmood:\s*calm\b/i, b:/\bmood:\s*charged\b/i, fix:"mood: tense" }
+  ];
+
+  const PLATFORM_RULES = {
+    instagram: { forbid:[/ratio:\s*21:9/i], suggest:["ratio: 9:16","fps: 30"] },
+    tiktok:    { forbid:[/ratio:\s*(?:16:9|21:9)/i], suggest:["ratio: 9:16","fps: 30"] },
+    youtube:   { forbid:[], suggest:["ratio: 16:9","fps: 30"] },
+    facebook:  { forbid:[], suggest:["fps: 30"] }
+  };
+
+  function tokenize(str){ return String(str||"").split(",").map(s=>s.trim()).filter(Boolean); }
+  function join(toks){ return toks.filter(Boolean).join(", "); }
+  function dedupe(arr){ const s=new Set(), out=[]; for(const t of arr){ const k=t.toLowerCase(); if(!s.has(k)){ s.add(k); out.push(t);} } return out; }
+
+  CORE.auditPrompt = function(denseText, { platform="instagram" }={}){
+    const toks = tokenize(denseText);
+    let notes = [], fixes = [];
+
+    // contradictions
+    for (const rule of CONTRA){
+      const hasA = toks.find(t=>rule.a.test(t));
+      const hasB = toks.find(t=>rule.b.test(t));
+      if (hasA && hasB){
+        notes.push(`contradiction: ${hasA} vs ${hasB}`);
+        // drop B, keep fix
+        let out = toks.filter(t=>!rule.b.test(t));
+        if (rule.fix && !out.find(t=>t.toLowerCase()===rule.fix.toLowerCase())) out.push(rule.fix);
+        fixes = out;
+      }
+    }
+
+    // platform rules
+    const pr = PLATFORM_RULES[platform] || PLATFORM_RULES.instagram;
+    const afterContra = fixes.length? fixes : toks.slice();
+    let afterPlat = afterContra.filter(t => !(pr.forbid||[]).some(re=>re.test(t)));
+    for (const s of (pr.suggest||[])){
+      if (!afterPlat.find(t=>t.toLowerCase().startsWith(s.split(":")[0].toLowerCase()))) afterPlat.push(s);
+    }
+
+    // dedupe categories
+    const byKey = new Map();
+    for (const t of afterPlat){
+      const k = t.split(":")[0].toLowerCase().trim();
+      if (!byKey.has(k)) byKey.set(k, t);
+    }
+    const clean = Array.from(byKey.values());
+
+    const patched = join(dedupe(clean));
+    const severity = notes.length ? "warn" : "ok";
+    return { severity, notes, patched };
+  };
+
+  // Convenience: fix each shot in-place before export
+  CORE.auditBoard = function(board, { platform="instagram" }={}){
+    if (!board?.cards?.length) return board;
+    board.cards.forEach(c=>{
+      const dense = (c.tokens||[]).join(", ");
+      const fix = CORE.auditPrompt(dense, { platform });
+      c.tokens = tokenize(fix.patched);
+    });
+    return board;
+  };
+})();
+/* PromptForge — Movie Pack (Block Y) — History + Variations + Seed Lock */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  PACK.history = PACK.history || []; // stack of { ts, board, ctx, note }
+  PACK.cursor  = PACK.cursor  || -1;
+  PACK.seed    = PACK.seed    || 1337;
+
+  // simple PRNG for determinism across a session
+  function srand(){ PACK.seed = (PACK.seed*1664525 + 1013904223) % 4294967296; return PACK.seed/4294967296; }
+  function pick(a){ return a[Math.floor(srand()*a.length)]; }
+
+  CORE.seedLock = function(n){ if(typeof n==="number") PACK.seed = n>>>0; return PACK.seed; };
+
+  CORE.pushHistory = function(board, ctx={}, note=""){
+    const snap = { ts: Date.now(), board: JSON.parse(JSON.stringify(board||{})), ctx: {...ctx}, note };
+    PACK.history = PACK.history.slice(0, PACK.cursor+1);
+    PACK.history.push(snap); PACK.cursor = PACK.history.length-1;
+    return PACK.cursor;
+  };
+  CORE.undo = function(){ if(PACK.cursor>0) PACK.cursor--; return PACK.history[PACK.cursor]||null; };
+  CORE.redo = function(){ if(PACK.cursor<PACK.history.length-1) PACK.cursor++; return PACK.history[PACK.cursor]||null; };
+  CORE.last = function(){ return PACK.history[PACK.cursor]||null; };
+
+  // create quick prompt variations (shuffle/drop/add small noise tokens)
+  const NOISE = ["micro jitter","subtle grain","camera shake mild","soft bloom","rim light","grade: neutral"];
+
+  CORE.varyPrompt = function(dense, { shuffle=0.3, drop=0.15, add=0.2 }={}){
+    let toks = String(dense||"").split(",").map(s=>s.trim()).filter(Boolean);
+    // drop some
+    toks = toks.filter(()=> srand()>drop);
+    // shuffle some
+    if (srand()<shuffle) toks.sort(()=>srand()-0.5);
+    // add
+    if (srand()<add) toks.push(pick(NOISE));
+    // dedupe
+    const set = new Set(), out=[];
+    toks.forEach(t=>{ const k=t.toLowerCase(); if(!set.has(k)){ set.add(k); out.push(t);} });
+    return out.join(", ");
+  };
+})();
+/* PromptForge — Movie Pack (Block Z) — Quality Predictor + AutoPatch */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  function scoreDense(text){
+    const toks = String(text||"").split(",").map(s=>s.trim()).filter(Boolean);
+    const len = toks.length;
+    const hasLighting = toks.some(t=>/^light|lighting|rim|backlight|softbox|gel|bloom|flare/i.test(t));
+    const hasLens = toks.some(t=>/^lens|aperture|bokeh|dof|focus/i.test(t));
+    const hasMotion = toks.some(t=>/^move|rig|cam|orbit|track|push/i.test(t));
+    const hasGrade = toks.some(t=>/^grade|grain|palette|film|cinema/i.test(t));
+    const hasNoiseFix = toks.some(t=>/photometric|consistency|microtexture|detail/i.test(t));
+    const repeats = (()=>{
+      let r=0;
+      for(let i=1;i<len;i++){
+        const a=toks[i-1].split(":")[0].toLowerCase().trim();
+        const b=toks[i].split(":")[0].toLowerCase().trim();
+        if(a===b) r++;
+      }
+      return r;
+    })();
+    const flow = Math.max(0, 1 - repeats/Math.max(1,len-1));
+    const coverage = (hasLighting?0.25:0) + (hasLens?0.25:0) + (hasMotion?0.2:0) + (hasGrade?0.2:0) + (hasNoiseFix?0.1:0);
+    const brevity = len>28 ? 0.7 : 1.0;
+    const score = +(Math.min(1, flow*0.5 + coverage*0.5) * brevity).toFixed(3);
+    return { score, parts:{flow,coverage,brevity}, len };
+  }
+
+  // suggest minimal patches
+  function suggestFixes(text){
+    const fixes=[];
+    if (!/light|lighting|rim|softbox|gel|bloom|flare/i.test(text)) fixes.push("light: key + rim");
+    if (!/lens|aperture|bokeh|dof|focus/i.test(text)) fixes.push("lens: 50mm, dof: shallow");
+    if (!/grade|grain|palette/i.test(text)) fixes.push("grade: cinematic, subtle grain");
+    if (!/photometric|consistency|microtexture/i.test(text)) fixes.push("photometric consistency");
+    return fixes;
+  }
+
+  CORE.predictQuality = function(denseText){
+    const s = scoreDense(denseText);
+    return { score:s.score, detail:s };
+  };
+
+  CORE.autoPatch = function(denseText){
+    const s = scoreDense(denseText);
+    let out = denseText;
+    if (s.score < 0.78){
+      const adds = suggestFixes(denseText);
+      out = denseText + (adds.length? ", "+adds.join(", "):"");
+    }
+    // pass through Meta-Director rewrite if available
+    if (typeof CORE.metaRewrite === "function"){
+      out = CORE.metaRewrite(out).dense;
+    }
+    return out;
+  };
+})();
+/* PromptForge — NSFW Core (Block I) — Adult-Only Guard + Consent Auto-Inject */
+(function(){
+  const NSFW = window.NSFW_CORE; if(!NSFW) return;
+
+  // always ensure adult context + consent tokens exist (non-graphic)
+  const ALWAYS = ["age: adults only","consent: enthusiastic","boundaries: agreed"];
+
+  NSFW.ensureAdultContext = function(dense){
+    let toks = String(dense||"").split(",").map(s=>s.trim()).filter(Boolean);
+    for (const t of ALWAYS){ if (!toks.find(x=>x.toLowerCase()===t.toLowerCase())) toks.push(t); }
+    // remove any minor-coded language if present (belt + suspenders)
+    toks = toks.filter(t => !/\bteen\b|\bminor\b|\bunder\s*age\b/i.test(t));
+    return toks.join(", ");
+  };
+
+  // hook point you can call before enhance()
+  NSFW.guardHook = function(text){
+    text = NSFW.ensureAdultContext(text);
+    // tastefully soften if vibe says softcore
+    if (typeof NSFW.preMap === "function") text = NSFW.preMap(text, "en");
+    return text;
+  };
+})();
+/* PromptForge — Movie Pack (Block AA) — Shot Grammar Engine */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // grammar rules + helpers
+  const SIZE = ["shot: ecu","shot: cu","shot: ms","shot: ls","shot: ews"];
+  const INSERT_HINTS = ["insert: prop", "insert: hands", "insert: reaction"];
+  const CUTAWAY_HINTS = ["cutaway: environment", "cutaway: sky", "cutaway: crowd"];
+  const ESTAB_TOKENS = ["scene: establish","shot: ews","compose: wide master"];
+
+  function tset(tokens){ return new Set((tokens||[]).map(x=>String(x).trim()).filter(Boolean)); }
+  function addAll(set, arr){ (arr||[]).forEach(x=>set.add(x)); }
+  function hasAny(tokens, arr){ const s = tset(tokens); return (arr||[]).some(x=>s.has(x)); }
+  function ensureOne(tokens, arr){ const s = tset(tokens); if (!hasAny(tokens, arr)) s.add(arr[0]); return Array.from(s); }
+  function cycleSize(prev){
+    const i = Math.max(0, SIZE.indexOf(prev)); const next = (i+2) % SIZE.length; // jump size for variety
+    return SIZE[next];
+  }
+
+  // enforce grammar across a board
+  // opts: { ensureEstablish=true, ensureInsert=true, ensureCutaway=true, enforce180=true, sizeVariety=true }
+  CORE.shotGrammar = function(board, opts={}){
+    if (!board?.cards?.length) return board;
+    const cfg = { ensureEstablish:true, ensureInsert:true, ensureCutaway:true, enforce180:true, sizeVariety:true, ...opts };
+
+    // 1) establish on first card
+    if (cfg.ensureEstablish){
+      const T = tset(board.cards[0].tokens||[]);
+      addAll(T, ESTAB_TOKENS);
+      board.cards[0].tokens = Array.from(T);
+    }
+
+    // 2) size variety + strategic inserts/cutaways
+    let lastSize = "shot: ms", angle = 1; // angle sign for simple 180° rule
+    for (let i=0;i<board.cards.length;i++){
+      const c = board.cards[i];
+      const T = tset(c.tokens||[]);
+
+      // size variety
+      if (cfg.sizeVariety){
+        const thisSize = Array.from(T).find(t=>/^shot:\s*/i.test(t)) || cycleSize(lastSize);
+        T.delete(lastSize); T.add(thisSize);
+        lastSize = thisSize;
+      }
+
+      // 180° rule: alternate screen-left/right blocks (cheap but effective)
+      if (cfg.enforce180){
+        T.forEach(t=>{
+          if (/^block:\s*/i.test(t)) T.delete(t);
+        });
+        T.add(`block: ${angle>0?"screen-left":"screen-right"}`);
+        angle *= -1;
+      }
+
+      // insert every ~3rd beat (if not already an insert)
+      if (cfg.ensureInsert && i>0 && i%3===0 && !hasAny(T, INSERT_HINTS)){
+        T.add(INSERT_HINTS[(i/3)%INSERT_HINTS.length]);
+      }
+      // cutaway around ~2/3 mark
+      if (cfg.ensureCutaway && i===Math.floor(board.cards.length*0.66)){
+        T.add(CUTAWAY_HINTS[i % CUTAWAY_HINTS.length]);
+      }
+
+      c.tokens = Array.from(T);
+    }
+    return board;
+  };
+
+  // ensure shot-size coverage exists at least once
+  CORE.ensureShotCoverage = function(board){
+    if (!board?.cards?.length) return board;
+    const seen = new Set();
+    board.cards.forEach(c=>{
+      const s = (c.tokens||[]).find(t=>/^shot:\s*/i.test(t));
+      if (s) seen.add(s.toLowerCase());
+    });
+    // if missing extremes, patch last two beats
+    const want = ["shot: ews","shot: ecu"];
+    want.forEach((w, idx)=>{
+      if (!seen.has(w)) {
+        const i = Math.max(0, board.cards.length - (idx+1));
+        const T = new Set(board.cards[i].tokens||[]);
+        T.add(w); board.cards[i].tokens = Array.from(T);
+      }
+    });
+    return board;
+  };
+
+  // UI hint
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.grammarTools = ["shotGrammar","ensureShotCoverage"];
+    return h;
+  };})(CORE.uiHints);
+
+})();
+/* PromptForge — Movie Pack (Block AB) — Continuity Report + Diff + Fix */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  function cat(tok){ return String(tok||"").split(":")[0].trim().toLowerCase(); }
+  function collect(board){
+    const map = {}; if (!board?.cards) return map;
+    board.cards.forEach((c,i)=>{
+      (c.tokens||[]).forEach(t=>{
+        const k = cat(t); map[k]=map[k]||{}; map[k][i]=t;
+      });
+    });
+    return map;
+  }
+
+  // report continuity breaks across categories you care about
+  CORE.continuityReport = function(board, cats=["wardrobe","lighting","grade","ratio","fps","props"]){
+    const data = collect(board);
+    const out = {};
+    cats.forEach(k=>{
+      const hits = data[k]||{};
+      const beats = Object.keys(hits).map(n=>Number(n)).sort((a,b)=>a-b);
+      // break if value changes too frequently
+      let changes = 0, last=null;
+      beats.forEach(b=>{
+        const v = hits[b];
+        if (last && v!==last) changes++;
+        last = v;
+      });
+      out[k] = { occurrences: beats.length, changes, beats, values: beats.map(b=>hits[b]) };
+    });
+    return out;
+  };
+
+  // diff two boards (token-level)
+  CORE.diffBoards = function(a,b){
+    const A = (a?.cards||[]).map(c=>new Set(c.tokens||[]));
+    const B = (b?.cards||[]).map(c=>new Set(c.tokens||[]));
+    const n = Math.max(A.length, B.length);
+    const diff=[];
+    for(let i=0;i<n;i++){
+      const add=[], del=[];
+      (B[i]||new Set()).forEach(t=>{ if(!(A[i]||new Set()).has(t)) add.push(t); });
+      (A[i]||new Set()).forEach(t=>{ if(!(B[i]||new Set()).has(t)) del.push(t); });
+      diff.push({ beat:i, add, del });
+    }
+    return diff;
+  };
+
+  // auto-fix plan: lock chosen categories to first-beat value
+  CORE.continuityFix = function(board, cats=["wardrobe","lighting","grade"]){
+    if (!board?.cards?.length) return board;
+    const first = new Map();
+    (board.cards[0].tokens||[]).forEach(t=>{ const k=cat(t); first.set(k,t); });
+    for (let i=1;i<board.cards.length;i++){
+      const T = new Set(board.cards[i].tokens||[]);
+      cats.forEach(k=>{
+        const base = first.get(k);
+        if (base){
+          // drop other tokens of same cat
+          Array.from(T).forEach(t=>{ if (cat(t)===k && t!==base) T.delete(t); });
+          T.add(base);
+        }
+      });
+      board.cards[i].tokens = Array.from(T);
+    }
+    return board;
+  };
+
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.reports = ["continuityReport","diffBoards"];
+    return h;
+  };})(CORE.uiHints);
+})();
+/* PromptForge — Movie Pack (Block AC) — Localization (overlays + captions) */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // light dicts for overlays/CTA words; captions can be passed through a mapper hook
+  PACK.lang = PACK.lang || {
+    overlays: {
+      "en": { "Wait for it…":"Wait for it…", "You won’t believe this":"You won’t believe this", "Keep watching →":"Keep watching →", "Subscribe for the full story":"Subscribe for the full story" },
+      "es": { "Wait for it…":"Espera…", "You won’t believe this":"No lo vas a creer", "Keep watching →":"Sigue mirando →", "Subscribe for the full story":"Suscríbete para ver más" },
+      "pt": { "Wait for it…":"Espera…", "You won’t believe this":"Você não vai acreditar", "Keep watching →":"Continue assistindo →", "Subscribe for the full story":"Inscreva-se para ver mais" },
+      "fr": { "Wait for it…":"Attends…", "You won’t believe this":"Tu ne vas pas y croire", "Keep watching →":"Continue à regarder →", "Subscribe for the full story":"Abonne-toi pour la suite" },
+      "de": { "Wait for it…":"Warte ab…", "You won’t believe this":"Du wirst es nicht glauben", "Keep watching →":"Weiter schauen →", "Subscribe for the full story":"Abonnieren für die ganze Story" },
+      "it": { "Wait for it…":"Aspetta…", "You won’t believe this":"Non ci crederai", "Keep watching →":"Continua a guardare →", "Subscribe for the full story":"Iscriviti per la storia completa" },
+      "ja": { "Wait for it…":"待って…", "You won’t believe this":"信じられないよ", "Keep watching →":"続きを見て →", "Subscribe for the full story":"続きはチャンネル登録で" }
+    }
+  };
+
+  function translateOverlayStr(str, lang){
+    const dict = PACK.lang.overlays[lang]; if (!dict) return str;
+    return dict[str] || str;
+  }
+
+  // find overlay: text tokens and translate
+  CORE.translateOverlays = function(board, lang="en"){
+    if (!board?.cards?.length || lang==="en") return board;
+    board.cards.forEach(c=>{
+      const T = (c.tokens||[]).map(tok=>{
+        const m = /^overlay:\s*(.+)$/i.exec(tok);
+        if (m) return "overlay: " + translateOverlayStr(m[1], lang);
+        return tok;
+      });
+      c.tokens = T;
+    });
+    return board;
+  };
+
+  // captions translation hook (tiny stubs; you can plug a map or service later)
+  CORE.translateCaptions = function(captions=[], lang="en"){
+    if (lang==="en") return captions.slice();
+    const map = PACK.lang.overlays[lang] || {}; // reuse overlay dict as demo
+    return captions.map(c => ({...c, text: map[c.text] || c.text }));
+  };
+
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.locales = Object.keys(PACK.lang.overlays);
+    return h;
+  };})(CORE.uiHints);
+})();
+/* PromptForge — Movie Pack (Block AD) — Motion Curves + Path Shapes */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  // easing profiles (0..1 → multiplier)
+  const EASE = {
+    linear: t=>t,
+    easeIn: t=>t*t,
+    easeOut: t=>t*(2-t),
+    easeInOut: t=>(t<0.5? 2*t*t : -1+(4-2*t)*t),
+    punch: t=>Math.min(1, Math.pow(t,0.6)) // quick start, smooth settle
+  };
+
+  // curve of N frames/steps
+  CORE.motionCurve = function(steps=10, ease="easeInOut"){
+    const fn = EASE[ease]||EASE.easeInOut, out=[];
+    for(let i=0;i<steps;i++){ out.push(+fn(i/(steps-1||1)).toFixed(3)); }
+    return out;
+  };
+
+  // simple 2D path shapes; return control points
+  CORE.cameraPath = function(shape="arc", radius=2){
+    if (shape==="arc"){
+      return [{x:-radius,z:-2},{x:0,z:-3},{x:radius,z:-2}];
+    }
+    if (shape==="push"){
+      return [{x:0,z:-4},{x:0,z:-2},{x:0,z:-1}];
+    }
+    if (shape==="orbit"){
+      return [{x:-radius,z:-2},{x:0,z:-4},{x:radius,z:-2},{x:0,z:0}];
+    }
+    return [{x:0,z:-3},{x:0,z:-2}];
+  };
+
+  // apply motion hint tokens to selected beats (metadata-only; engines won’t read keyframes but editors can)
+  // plan: [{beatIndex, ease, steps, shape}]
+  CORE.applyMotionPlan = function(board, plan=[]){
+    if (!board?.cards?.length) return board;
+    for (const p of plan){
+      const i = Number(p.beatIndex)||0; if (!board.cards[i]) continue;
+      const curve = CORE.motionCurve(p.steps||10, p.ease||"easeInOut");
+      const path  = CORE.cameraPath(p.shape||"push");
+      const token = `motion: ${p.shape||"push"}; ease=${p.ease||"easeInOut"}; steps=${curve.length}`;
+      const T = new Set(board.cards[i].tokens||[]); T.add(token); board.cards[i].tokens = Array.from(T);
+      // stash as metadata the points (so your UI timeline can display)
+      board.cards[i].motionMeta = { curve, path };
+    }
+    return board;
+  };
+
+  CORE.uiHints = (function(old){ return function(){
+    const h = old.call(CORE);
+    h.motionEases = Object.keys(EASE);
+    h.motionShapes = ["push","arc","orbit","linear"];
+    return h;
+  };})(CORE.uiHints);
+})();
+/* PromptForge — Movie Pack (Block AE) — Project Manifest + Filenames */
+(function(){
+  const CORE = window.MovieCORE, PACK = CORE?.data; if(!CORE||!PACK) return;
+
+  function slug(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,60)||"clip"; }
+  function ts(){ const d=new Date(); return d.toISOString().replace(/[:.]/g,"").replace("T","_").slice(0,15); }
+
+  CORE.suggestFilenames = function({ title="project", platform="reel", ext="txt", shotsCount=0 }={}){
+    const base = `${slug(title)}_${platform}_${ts()}`;
+    return {
+      prompts: `${base}_prompts.${ext}`,
+      negatives: `${base}_negatives.${ext}`,
+      captionsSRT: `${base}.srt`,
+      captionsVTT: `${base}.vtt`,
+      ssml: `${base}.ssml`,
+      bundle: `${base}_bundle.json`,
+      shotsDir: `${base}_shots_${shotsCount}`
+    };
+  };
+
+  // manifest with everything the UI needs to zip & download
+  CORE.projectManifest = function(exportPack={}, meta={ title:"project", platform:"reel" }){
+    const f = CORE.suggestFilenames({ title: meta.title, platform: meta.platform, shotsCount:(exportPack.shots||[]).length });
+    return {
+      meta: { title: meta.title, platform: meta.platform, createdAt: new Date().toISOString() },
+      files: f,
+      engine: exportPack?.bundle?.engine || "runway",
+      shots: (exportPack.shots||[]).map((s, i)=>({
+        index:i, seconds:s.seconds, beat:s.beat, prompt:s.prompt, negative:s.negative||""
+      })),
+      negatives: exportPack.negatives || "",
+      captions: { srt: exportPack.captions?.srt || "", vtt: exportPack.captions?.vtt || "" },
+      ssml: exportPack.ssml || "",
+      refs: exportPack.bundle?.refs || {},
+      cast: exportPack.bundle?.cast || []
+    };
+  };
+})();
+/* PromptForge — NSFW Core (Block J) — Romance Beat Escalator (tasteful) */
+(function(){
+  const NSFW = window.NSFW_CORE; if(!NSFW) return;
+
+  // non-graphic progressive adds per level
+  const LVL = {
+    0: ["mood: calm","distance: comfortable"],
+    1: ["mood: playful","gesture: close whisper","pose: close embrace"],
+    2: ["mood: charged","silhouette emphasis","light: low key"],
+    3: ["mood: intense","hold: hero 2s","beat: breathless pause"]
+  };
+
+  // n beats → array of add tokens per beat
+  NSFW.romanceCurve = function(n=3, shape="rise"){
+    const out=[]; n=Math.max(1,n);
+    for(let i=0;i<n;i++){
+      let l = 1;
+      if (shape==="rise") l = Math.round(i*(3/(n-1||1)));
+      else if (shape==="wave") l = Math.round(Math.sin((i/(n-1||1))*Math.PI)*3);
+      else if (shape==="pulse") l = (i===Math.floor(n/2))?3:1;
+      out.push(LVL[l] || LVL[1]);
+    }
+    return out;
+  };
+
+  // apply onto a board (non-graphic, consent-first)
+  NSFW.applyRomanceCurve = function(board, shape="rise"){
+    if (!board?.cards?.length) return board;
+    const adds = NSFW.romanceCurve(board.cards.length, shape);
+    board.cards.forEach((c, i)=>{
+      const T = new Set(c.tokens||[]);
+      // consent guard (safe)
+      T.add("age: adults only"); T.add("consent: enthusiastic"); T.add("boundaries: agreed");
+      (adds[i]||[]).forEach(t=>T.add(t));
+      c.tokens = Array.from(T);
+    });
+    return board;
+  };
+})();
+// 0) compose
+let board = MovieCORE.directorCompose({ logline, vibe, lengthSec, curveShape:'wave' });
+
+// 1) grammar + continuity + romance (if NSFW softcore)
+board = MovieCORE.shotGrammar(board);
+board = MovieCORE.ensureShotCoverage(board);
+board = MovieCORE.applyContinuity(board);
+if (NSFW_CORE && vibe==='romance') board = NSFW_CORE.applyRomanceCurve(board, 'rise');
+
+// 2) platform audit + overlays lang
+board = MovieCORE.injectSocial(board, { platform });
+board = MovieCORE.auditBoard(board, { platform });
+board = MovieCORE.translateOverlays(board, lang);
+
+// 3) motion (optional) + stage (optional)
+board = MovieCORE.applyMotionPlan(board, [{ beatIndex:1, ease:'punch', steps:12, shape:'push' }]);
+
+// 4) render → shader → autopatch → guard
+let shots = MovieCORE.renderBoardTimed(board, { engine, genre });
+shots = shots.map(s=>{
+  let dense = MovieCORE.autoPatch(s.prompt);
+  dense = MovieCORE.applyShader(shader, dense);
+  if (NSFW_CORE?.guardHook) dense = NSFW_CORE.guardHook(dense);
+  s.prompt = dense; return s;
+});
+
+// 5) smart export + manifest
+const pack = MovieCORE.smartExport({ board, ctx:{ engine, genre }, musicToken, lines, voiceToken });
+const manifest = MovieCORE.projectManifest(pack, { title: board.title || 'project', platform });
