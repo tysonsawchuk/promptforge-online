@@ -1,435 +1,751 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge.online | AI Movie & Video Prompt Builder</title>
-  <meta name="description" content="PromptForge: The world’s best free AI video/movie prompt builder. Live AI news, creative tools, all models, ultra-modern UI.">
-  <meta name="keywords" content="AI video prompt builder, AI movie, Sora, Stable Video, Pika, Genmo, Runway, text to video, creative, AI news, templates, filmmaker, director">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta property="og:title" content="PromptForge.online | AI Movie Prompt Generator">
-  <meta property="og:description" content="Build pro-level video/movie prompts for every AI model. Get live AI news, all creative tools, and more.">
-  <meta property="og:image" content="/assets/promptforge-og-pic.png">
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>PromptForge • Movie Builder (Pro)</title>
+  <meta name="description" content="PromptForge Movie Builder: desktop-grade, engine-aware authoring for AI video prompts. Director Compose, Shaders, Social Hooks/CTAs, ADR/SSML, Continuity, and consent-first NSFW softcore."/>
+  <meta name="keywords" content="PromptForge, movie prompts, video prompts, storyboard, ADR, SSML, montage, shaders, director compose, NSFW softcore, Runway, Luma, Pika, Kling, SDXL, Flux"/>
+  <meta name="theme-color" content="#0b0f14"/>
+  <link rel="icon" href="/favicon.ico"/>
+  <link rel="canonical" href="https://promptforge.online/movie.html"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="PromptForge — Pro Movie Prompt Builder"/>
+  <meta property="og:description" content="Desktop-grade authoring for AI video prompts with continuity locks, hooks/CTAs, shaders & ADR."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://promptforge.online/movie.html"/>
+  <meta property="og:image" content="/og/promptforge_og.jpg"/>
+
+  <!-- X/Twitter -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="PromptForge — Pro Movie Prompt Builder"/>
+  <meta name="twitter:description" content="A premium prompt workstation for AI video."/>
+  <meta name="twitter:image" content="/og/promptforge_og.jpg"/>
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"PromptForge Online","url":"https://promptforge.online/","logo":"/og/logo.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social"]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"PromptForge Movie Builder","url":"https://promptforge.online/","potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={q}","query-input":"required name=q"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"Why PromptForge instead of stock builders?","acceptedAnswer":{"@type":"Answer","text":"We author shots with grammar, continuity, platform hooks/CTAs, shaders, ADR/SSML, quality auto-patching, and a consent-first NSFW softcore mode. Outputs feel authored—not pasted."}},
+    {"@type":"Question","name":"Do I need a huge JSON pack?","acceptedAnswer":{"@type":"Answer","text":"No. Logic ships in JS; catalogs are optional and hot-swappable. The page includes an inline fallback pack so it runs even without external JSON."}},
+    {"@type":"Question","name":"What engines are supported?","acceptedAnswer":{"@type":"Answer","text":"Runway, Luma, Pika, Kling for video (plus SDXL for images on other pages). Negatives auto-dedupe per engine, and platform audits apply per export target."}},
+    {"@type":"Question","name":"Can I export captions or voice?","acceptedAnswer":{"@type":"Answer","text":"Yes. SRT, VTT, and SSML export are one-click from the interface. Voice presets are provided and extendable."}}
+  ]}
+  </script>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Fira+Mono:wght@400;700&display=swap');
-    :root {
-      --brand: #64f2e3;
-      --brand2: #be9cff;
-      --accent: #ffe266;
-      --bg: #161c19;
-      --panel: #242e26;
-      --card: #20231f;
-      --shadow: 0 4px 40px #1a1a1a80;
-      --offwhite: #f4f6ef;
-      --link: #6ee6ff;
-      --danger: #fa527a;
-      --footer-bg: #191b19;
-      --menu-bg: #252628;
-      --menu-border: #363843;
-      --menu-hover: #1e293a;
+    :root{
+      /* High-contrast, pro palette with better section separation */
+      --bg:#081017;
+      --chrome:#0b141c;
+      --surface:#0e1822;
+      --surface-2:#0c1520;
+      --panel:#101c26;
+      --panel-2:#0f1a24;
+      --edge:#203040;
+      --edge-strong:#2b4256;
+      --ink:#e9f6ff;
+      --dim:#9fb6c6;
+
+      --aqua:#64f2e3; --aqua2:#23d7ba; --vio:#be9cff; --hot:#fa528e; --gold:#ffd166;
+      --ok:#50fa7b; --warn:#ffb86b; --err:#ff637d;
+      --shadow:0 10px 28px rgba(0,0,0,.36);
+
+      --radius:14px;
     }
-    html,body{margin:0;padding:0;width:100vw;min-height:100vh;background:var(--bg);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.13em;}
-    .newsbar {
-      width:100vw; min-height:46px;
-      display:flex; align-items:center; justify-content:center;
-      background:linear-gradient(90deg,var(--bg),var(--footer-bg),var(--bg));
-      color:var(--brand2);font-weight:700;font-size:1.01em;
-      border-bottom:1.5px solid var(--brand2);
-      box-shadow:0 2px 10px #0004;
-      letter-spacing:.01em;
-      position:relative;z-index:20;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+    a{color:var(--aqua);text-decoration:none} a:hover{text-decoration:underline}
+    .u-help{border-bottom:1px dashed #3b5871;cursor:help}
+    .kbd{font:600 12px/1 Inter;background:#0b1620;border:1px solid #274a63;border-radius:6px;padding:2px 6px;color:#cfeaff}
+
+    /* App chrome */
+    .app{display:grid;grid-template-rows:auto auto auto 1fr auto;min-height:100vh}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,var(--chrome),#0a1219);border-bottom:1px solid var(--edge-strong);position:sticky;top:0;z-index:60}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--aqua),var(--vio));box-shadow:0 0 0 2px #18222b}
+    .brand h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:clamp(18px,2.2vw,24px)}
+    .tag{color:var(--dim);font-weight:600}
+    .socials{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .pill{padding:7px 10px;border:1px solid var(--edge-strong);border-radius:9px;background:#0f1b25;color:#cfeaff}
+    .coffee{background:linear-gradient(135deg,#2a1621,#1a0e15);border:1px solid #7d1e45;border-radius:10px;padding:8px 12px;font-weight:800;color:#ffd8e8}
+
+    .ribbon{display:flex;gap:8px;padding:10px 14px;background:linear-gradient(180deg,#0c141b,#090f15);border-bottom:1px solid var(--edge);position:sticky;top:61px;z-index:59}
+    .rbtn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid var(--edge);background:#0f1822;color:#cbefff;font-weight:800;cursor:pointer}
+    .rbtn.primary{background:linear-gradient(135deg,#1a2a36,#101922);border-color:#3a5569;color:#fff}
+    .rbtn.hot{background:linear-gradient(135deg,#2a1621,#1a0e15);border-color:#7d1e45;color:#ffd8e8}
+    .rbtn:active{transform:translateY(1px)}
+
+    .hero{display:flex;gap:12px;align-items:stretch;padding:10px 14px;background:linear-gradient(180deg,#0c141b,#081017);border-bottom:1px solid var(--edge)}
+    .hero .card{flex:1;background:var(--surface-2);border:1px solid var(--edge);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+    .hero h2{margin:.1em 0}
+    .chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+    .chip{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:999px;padding:6px 10px;font-size:12px}
+
+    /* Workspace */
+    .workspace{display:grid;grid-template-columns:300px 1fr 360px;gap:12px;padding:12px}
+    .dock{background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);padding:10px;box-shadow:var(--shadow)}
+    .dock h3{margin:6px 6px 10px;font-size:13px;color:#b0cbe0;text-transform:uppercase;letter-spacing:.12em}
+    .dock .group{margin:8px 0 12px}
+    .g-title{display:flex;align-items:center;gap:8px;font-weight:800;margin:0 0 6px 0;font-size:13px}
+    .help{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid #39576b;color:#9fd;cursor:help;font-size:11px}
+    select,input[type="text"],textarea{width:100%;background:#0f1620;border:1px solid #2a3b4b;color:#e8f7ff;border-radius:10px;padding:10px 12px;font:inherit}
+    textarea{min-height:96px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .slider{appearance:none;width:100%} .slider::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--aqua)} .slider::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:#1a2631}
+
+    .main{display:grid;grid-template-rows:auto 1fr;gap:10px}
+    .tabs{display:flex;gap:8px}
+    .tab{background:#121a22;border:1px solid var(--edge);color:#bfefff;border-radius:9px;padding:7px 11px;font-weight:700;cursor:pointer}
+    .tab.active{background:linear-gradient(180deg,#15202a,#0f171f);border-color:#3a5569;color:#fff}
+
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .card{background:var(--surface);border:1px solid var(--edge);border-radius:12px;padding:12px;box-shadow:var(--shadow)}
+    .card h4{margin:0 0 8px 0}
+    .out{min-height:170px;white-space:pre-wrap;word-break:break-word;font-family:Fira Mono,ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;font-size:12.5px;line-height:1.4;margin:0}
+
+    /* Right inspector */
+    .inspector{background:var(--panel-2)}
+    .j1nx-reserved{margin-top:8px;padding:10px;border:1px dashed #2b3c48;border-radius:10px;color:#bfefff;background:#0d141a}
+    .summary{font-size:12.5px;color:#cfe3f2}
+
+    /* Accordion */
+    details{background:#0d141a;border:1px solid var(--edge);border-radius:10px;padding:8px}
+    details + details{margin-top:8px}
+    details>summary{cursor:pointer;font-weight:800;color:#dff7ff}
+
+    /* Timeline & Status */
+    .timeline{margin:12px;padding:10px;background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .status{margin:12px;padding:10px;background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between}
+    .pill.badge{display:inline-block}
+
+    /* ===== YOUR J1NX + ANSI FOOTER THEME (from your snippet) ===== */
+    /* J1NX float (true) */
+    .j1nx-float-true {
+      position: fixed;
+      z-index: 4000;
+      right: 2vw;
+      bottom: calc(2.8vh + 125px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: all;
+      user-select: none;
+      min-width: 0;
+      max-width: 360px;
     }
-    .newsbar .version {
-      margin-right:1.3em;padding:.16em .7em;background:var(--brand2);color:#24231f;
-      border-radius:8px;font-size:.97em;font-weight:700;vertical-align:middle;
+    .j1nx-true-cutout-img {
+      width: 320px; height: 320px; object-fit: contain; border-radius: 32px;
+      background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9;
+      pointer-events: auto; transition: box-shadow .2s; box-shadow: none !important;
     }
-    .newsbar .ai-news {
-      margin:0 1.1em;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    .j1nx-bubble-true-main {
+      background: rgba(22,23,31,0.97);
+      border-radius: 17px;
+      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
+      border: 2px solid var(--aqua);
+      padding: 1.1em 1.3em 1em 1.3em;
+      margin-top: 0; margin-bottom: 0.3em;
+      display: flex; flex-direction: column; align-items: center;
+      min-width: 290px; max-width: 330px; position: relative; z-index: 1;
+      font-family: "Share Tech Mono", monospace;
     }
-    .newsbar a {color:var(--accent);text-decoration:none;}
-    .newsbar a:hover {color:var(--brand);}
-    .nav {background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:.85em 0 1.1em 0;}
-    .nav-l {display:flex;align-items:center;}
-    .nav .logo {font-family:'Fira Mono',monospace;font-size:2.08em;font-weight:900;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 .5em;}
-    .nav .breadcrumb {display:flex;gap:.95em;}
-    .nav .breadcrumb a {color:var(--brand);text-decoration:none;font-weight:600;letter-spacing:.04em;transition:.15s;}
-    .nav .breadcrumb a.active,.nav .breadcrumb a:focus {color:var(--accent);border-bottom:2.5px solid var(--accent);}
-    .nav .breadcrumb a:hover {color:var(--accent);}
-    .nav .socials {display:flex;gap:.85em;}
-    .nav .socials a {display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#2223;border-radius:7px;transition:.14s;}
-    .nav .socials a:hover {background:var(--brand2);}
-    .desc {max-width:820px;margin:0 auto 1.5em auto;text-align:center;color:var(--brand2);font-size:1.13em;}
-    .adsense-block {background:var(--panel);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
-    .mainbox {max-width:1420px;margin:2.3em auto 2em auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:2.5em 2.8em 2.2em 2.8em;}
-    .scene-card {
-      background:var(--menu-bg);border-radius:16px;box-shadow:0 2px 14px #0003;margin-bottom:2em;padding:2em 2em 1.2em 2em;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
+    .j1nx-bubble-text-true { font-size: 1.05em; color:#fff; margin:.42em 0 .2em; text-align:center; font-weight:600; text-shadow:0 1px 11px #1e1111cc; line-height:1.22; z-index:1; }
+    .j1nx-bubble-row-true { width:100%; display:flex; justify-content:center; gap:7px; margin:.13em 0 .10em; }
+    .j1nx-input-true { flex:1; font-size:1em; border-radius:8px; padding:7px 12px; border:1px solid var(--aqua); background:#171b22; color:var(--aqua); min-width:0; }
+    .j1nx-btn-true { font-size:.98em; padding:6.5px 14px; border-radius:8px; background:#22252b; border:1.3px solid var(--aqua); color:var(--aqua); font-family:inherit; font-weight:600; cursor:pointer; transition:background .13s,color .13s,border .13s; box-shadow:0 1.5px 9px #be9cff33; }
+    .j1nx-btn-true:hover { background:var(--aqua); color:#171b22; border-color:#fff; }
+    .j1nx-easteregg-true { font-size:.91em; color:#be9cff; background:#171b22e6; border-radius:7px 13px 12px 17px; margin-top:7px; padding:7px 17px 6px 13px; opacity:.85; pointer-events:none; text-align:center; width:94%; user-select:none; box-shadow:0 3px 13px #be9cff28; font-weight:600; }
+    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
+
+    /* ANSI Footer */
+    footer {
+      margin: 0 auto 0 auto; padding: 0; text-align: center; max-width: 820px; width: 100%;
+      display:flex; flex-direction:column; align-items:center; background:none; position:relative; z-index:100;
+      font-family: "Share Tech Mono",monospace; font-size:1rem; color:var(--ink);
     }
-    .scene-card label {font-weight:800;color:var(--brand2);font-size:1.13em;margin-bottom:.5em;}
-    .scene-input {
-      min-width:340px;max-width:860px;width:90vw;
-      min-height:110px;max-height:350px;height:120px;
-      background:var(--card);color:var(--offwhite);border:2.2px solid var(--brand2);border-radius:11px;
-      font-size:1.19em;font-family:'Fira Mono',monospace;padding:1.1em 1.2em;margin-bottom:1em;
-      box-shadow:0 2px 18px #0002;resize:vertical;
-      transition:.16s;
-    }
-    .scene-input:focus {outline:none;border-color:var(--brand);}
-    .microhelp {margin-left:.7em;color:var(--accent);font-size:1.12em;cursor:pointer;user-select:none;position:relative;}
-    .custom-menu {
-      background:var(--menu-bg);border-radius:14px;box-shadow:0 4px 20px #0003;padding:1.1em 0;min-width:320px;max-width:520px;margin:2em auto 2.2em auto;
-      display:block;
-    }
-    .custom-menu .menu-section {padding:.4em 2em;}
-    .custom-menu .menu-title {font-weight:900;color:var(--brand2);margin-bottom:.7em;font-size:1.09em;}
-    .custom-menu .menu-item {
-      display:flex;align-items:center;gap:.9em;
-      padding:.56em 0;font-size:1.11em;border-radius:9px;transition:.11s;
-      cursor:pointer;color:var(--offwhite);
-      border-bottom:1.1px solid var(--menu-border);
-    }
-    .custom-menu .menu-item.active, .custom-menu .menu-item:hover {background:var(--brand2);color:#23231f;}
-    .custom-menu .menu-icon {width:1.23em;height:1.23em;display:inline-block;}
-    .custom-menu .menu-right {margin-left:auto;font-size:.99em;color:var(--brand2);}
-    .custom-menu .chips {margin-left:1.3em;}
-    .custom-menu .menu-item:last-child {border-bottom:none;}
-    @media (max-width:900px){
-      .mainbox{padding:1em;}
-      .custom-menu {min-width:94vw;}
-      .scene-input {min-width:90vw;}
+    .footer-art{ margin:0 0 12px 0; font-family:"Fira Mono",monospace; font-size:.96em; color:#a1ffe3; line-height:1.1; letter-spacing:.2px; text-align:center; white-space:pre; user-select:text; }
+    .footer-camo{ font-family:inherit; font-size:15px; line-height:1.11; letter-spacing:1.7px; margin:5px 0 12px 0; text-align:center; opacity:.93; white-space:pre;}
+    .footer-bar{ color:#88fffd; margin:12px auto 8px auto; font-size:1.04em; text-align:center; display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;}
+    .footer-bar a{ color:var(--aqua); text-decoration:none;} .footer-bar a:hover{ text-decoration:underline; color:#fff;}
+    /* ===== /YOUR J1NX + FOOTER ===== */
+
+    /* Responsive tweaks for workspace/cards */
+    @media (max-width:1100px){
+      .workspace{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-  <div class="newsbar">
-    <span class="version">v1.0.0</span>
-    <span class="ai-news" id="ai-news-headline">Loading latest AI news...</span>
+<a href="#main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Skip to content</a>
+
+<div class="app" id="app">
+  <!-- TOP BAR -->
+  <div class="topbar" role="banner">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>PromptForge <span class="tag">/ Movie Builder</span></h1>
+        <div class="tag">Desktop-grade prompts • Hooks/CTAs • Shaders • ADR • Continuity</div>
+      </div>
+    </div>
+    <nav class="socials" aria-label="social links">
+      <a class="pill" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener">Bluesky</a>
+      <a class="pill" href="https://x.com/GoreandGiggles" target="_blank" rel="noopener">Twitter/X</a>
+      <a class="coffee" href="https://buymeacoffee.com/goreandgiggles" target="_blank" rel="noopener">☕ Buy Me a Coffee</a>
+    </nav>
   </div>
-  <nav class="nav">
-    <div class="nav-l">
-      <span class="logo">PromptForge</span>
-      <span class="breadcrumb">
-        <a href="main.html">Main</a>
-        <a href="picture.html">Image</a>
-        <a href="movie.html" class="active">Movie</a>
-        <a href="watermark.html">Watermark</a>
-        <a href="j1nx.html">J1nx</a>
-        <a href="aihacks.html">AI Hacks</a>
-        <a href="ansiart.html">AnsiArt</a>
-        <a href="compare.html">Compare</a>
-      </span>
-    </div>
-    <div class="socials">
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
-      <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
-    </div>
-  </nav>
-  <div class="desc">
-    <b>Build the world’s most advanced AI video/movie prompts.</b>
-    <span style="color:var(--accent);">Every model, pro tool, live AI news, and creative workflow—no paywall, ever.</span>
+
+  <!-- RIBBON -->
+  <div class="ribbon" role="toolbar" aria-label="primary actions">
+    <button class="rbtn primary" id="btnCompose" title="Compose a board from your logline (⌘/Ctrl+Enter)"><span>Compose</span></button>
+    <button class="rbtn" id="btnMontage" title="Auto-montage to BPM">Montage</button>
+    <button class="rbtn" id="btnAudit" title="Re-patch prompts with shader + hygiene">Audit & Fix</button>
+    <button class="rbtn hot" id="btnExport" title="See Output panel for bundle/manifest">Export</button>
+    <span class="tag">Tip: <span class="kbd">Ctrl</span> + <span class="kbd">K</span> opens Command Palette</span>
   </div>
-  <div class="adsense-block">
-    <ins class="adsbygoogle"
-      style="display:block;min-width:320px;min-height:60px;"
-      data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="5732117276"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-  <div class="mainbox">
 
-    <!-- Movie Idea / Story / Scene Input -->
-    <div class="scene-card">
-      <label for="scene-desc">Movie Concept / Scene / Plot  
-        <span class="microhelp" onclick="showHelp('scene')">?</span>
-      </label>
-      <textarea id="scene-desc" class="scene-input" placeholder="Describe your movie, plot, scene, action, genre, style, mood, characters, dialogue, music, camera, and more..."></textarea>
-    </div>
-
-    <!-- Model Selection -->
-    <div class="custom-menu" id="model-menu">
-      <div class="menu-section">
-        <div class="menu-title">AI Video Model <span class="microhelp" onclick="showHelp('model')">?</span></div>
-        <div class="menu-item active"><span class="menu-icon">🎬</span>Sora (OpenAI)</div>
-        <div class="menu-item"><span class="menu-icon">🌌</span>Stable Video Diffusion</div>
-        <div class="menu-item"><span class="menu-icon">🔮</span>Pika Labs</div>
-        <div class="menu-item"><span class="menu-icon">🎥</span>Runway Gen-3</div>
-        <div class="menu-item"><span class="menu-icon">🦄</span>Moonvalley</div>
-        <div class="menu-item"><span class="menu-icon">🌈</span>Genmo</div>
-        <div class="menu-item"><span class="menu-icon">🪄</span>LTX Studio</div>
-        <div class="menu-item"><span class="menu-icon">🧬</span>PixVerse</div>
-        <div class="menu-item"><span class="menu-icon">🔗</span>Other/Custom</div>
+  <!-- HERO -->
+  <section class="hero" aria-label="intro">
+    <div class="card">
+      <h2>Pro Authoring for AI Video</h2>
+      <p class="summary">
+        Most builders paste keywords. We write shots with grammar, continuity, platform hooks, shaders, and ADR pacing.
+        NSFW softcore is consent-first and tasteful — language is auto-cleaned while keeping the vibe.
+      </p>
+      <div class="chipbar">
+        <span class="chip">engine-aware</span>
+        <span class="chip">shot grammar</span>
+        <span class="chip">social hooks</span>
+        <span class="chip">ADR/SSML</span>
+        <span class="chip">continuity locks</span>
+        <span class="chip">softcore NSFW</span>
       </div>
     </div>
-
-    <!-- Genre & Mood Selection -->
-    <div class="custom-menu" id="genre-menu">
-      <div class="menu-section">
-        <div class="menu-title">Genre & Mood <span class="microhelp" onclick="showHelp('genre')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">🤠</span>Adventure</div>
-        <div class="menu-item"><span class="menu-icon">😂</span>Comedy</div>
-        <div class="menu-item"><span class="menu-icon">🦸</span>Action/Superhero</div>
-        <div class="menu-item"><span class="menu-icon">😱</span>Horror</div>
-        <div class="menu-item"><span class="menu-icon">🕵️</span>Mystery</div>
-        <div class="menu-item"><span class="menu-icon">🚀</span>Sci-Fi</div>
-        <div class="menu-item"><span class="menu-icon">🌈</span>Fantasy</div>
-        <div class="menu-item"><span class="menu-icon">👩‍❤️‍👨</span>Romance</div>
-        <div class="menu-item"><span class="menu-icon">🎭</span>Drama</div>
-        <div class="menu-item"><span class="menu-icon">🎵</span>Musical</div>
-        <div class="menu-item"><span class="menu-icon">👽</span>Alien/Weirdcore</div>
-        <div class="menu-item"><span class="menu-icon">🦧</span>Creature Feature (Bigfoot, etc)</div>
-        <div class="menu-item"><span class="menu-icon">🧟</span>Zombie/Apocalypse</div>
-        <div class="chips" id="genre-chips"></div>
-      </div>
+    <div class="card">
+      <strong>Quick tips:</strong>
+      <ul class="summary" style="margin:6px 0 0 18px">
+        <li><span class="u-help" title="One sentence is enough; we expand it safely.">Write a simple logline</span>, then hit <b>Compose</b>.</li>
+        <li>Pick a <span class="u-help" title="Applies platform-aware hooks and CTAs.">platform</span> and <span class="u-help" title="Change the aesthetic after composing.">shader</span>.</li>
+        <li>Want reels? Try <b>Montage</b> — it auto-cuts to BPM and suggested beats.</li>
+      </ul>
     </div>
-    <!-- BLOCK 2 goes below -->
-    <!-- Video Length, Resolution, Output -->
-    <div class="custom-menu" id="video-settings-menu">
-      <div class="menu-section">
-        <div class="menu-title">Video Length, Output & Resolution <span class="microhelp" onclick="showHelp('video')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">⏱️</span>Duration: 
-          <input id="duration" type="number" min="1" max="600" value="10" style="width:60px;margin-left:.8em;border-radius:6px;"> sec</div>
-        <div class="menu-item"><span class="menu-icon">🎬</span>Output Type:
-          <select id="output-type" style="margin-left:.9em;border-radius:8px;background:var(--card);color:var(--offwhite);">
-            <option>YouTube Short</option>
-            <option>TikTok</option>
-            <option>Instagram Reel</option>
-            <option>4K Trailer</option>
-            <option>HD 1080p</option>
-            <option>SD 480p</option>
-            <option>GIF</option>
-            <option>Story Sequence</option>
-            <option>Custom</option>
-          </select>
-        </div>
-        <div class="menu-item"><span class="menu-icon">🖥️</span>Resolution:
-          <select id="resolution" style="margin-left:.9em;border-radius:8px;background:var(--card);color:var(--offwhite);">
-            <option>1920x1080 (HD)</option>
-            <option>3840x2160 (4K)</option>
-            <option>1080x1920 (Vertical)</option>
-            <option>1280x720</option>
-            <option>1024x576</option>
-            <option>512x512</option>
-            <option>Custom</option>
-          </select>
-        </div>
-        <div class="menu-item"><span class="menu-icon">🎞️</span>Frame Rate:
-          <select id="framerate" style="margin-left:.9em;border-radius:8px;background:var(--card);color:var(--offwhite);">
-            <option>24 fps (Cinematic)</option>
-            <option>30 fps (Standard)</option>
-            <option>60 fps (Smooth)</option>
-            <option>Custom</option>
-          </select>
-        </div>
-        <div class="menu-item"><span class="menu-icon">🔈</span>Soundtrack:
-          <select id="soundtrack" style="margin-left:.9em;border-radius:8px;background:var(--card);color:var(--offwhite);">
-            <option>None</option>
-            <option>Auto-generated music</option>
-            <option>Custom upload</option>
-            <option>Ambient</option>
-            <option>Horror/Suspense</option>
-            <option>Cinematic</option>
-            <option>Epic</option>
-            <option>Chill</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="menu-item"><span class="menu-icon">🎙️</span>Narration/Voiceover:
-          <select id="narration" style="margin-left:.9em;border-radius:8px;background:var(--card);color:var(--offwhite);">
-            <option>None</option>
-            <option>AI Narration (auto)</option>
-            <option>Upload custom voice</option>
-            <option>Text-to-speech</option>
-            <option>Character voices</option>
-            <option>Other</option>
-          </select>
+  </section>
+
+  <!-- WORKSPACE -->
+  <main id="main" class="workspace" aria-label="workspace">
+    <!-- LEFT DOCK -->
+    <aside class="dock" aria-label="project">
+      <h3>Project</h3>
+      <div class="group">
+        <div class="g-title">Engine / Genre</div>
+        <div class="row">
+          <select id="engineSel" title="Choose your video engine"><option>runway</option><option>luma</option><option>pika</option><option>kling</option></select>
+          <select id="genreSel" title="Defaults that set lighting & lens"><option>editorial</option><option>beauty</option><option>street</option><option>romance</option><option>mythic</option></select>
         </div>
       </div>
-    </div>
-
-    <!-- Storyboard / Shot List -->
-    <div class="custom-menu" id="storyboard-menu">
-      <div class="menu-section">
-        <div class="menu-title">Storyboard & Shot List <span class="microhelp" onclick="showHelp('storyboard')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">📽️</span>Opening Shot</div>
-        <div class="menu-item"><span class="menu-icon">🎬</span>Scene/Sequence 1</div>
-        <div class="menu-item"><span class="menu-icon">🎬</span>Scene/Sequence 2</div>
-        <div class="menu-item"><span class="menu-icon">🎬</span>Scene/Sequence 3</div>
-        <div class="menu-item"><span class="menu-icon">🏁</span>Closing Shot</div>
-        <textarea id="shotlist" class="scene-input" style="margin-top:.9em;" rows="2" placeholder="Describe key shots, transitions, or paste a full list (one per line)..."></textarea>
-        <div class="chips" id="storyboard-chips"></div>
+      <div class="group">
+        <div class="g-title">Platform <span class="help" title="Inject platform hooks and CTA overlays">?</span></div>
+        <select id="platformSel"><option>instagram</option><option>tiktok</option><option>youtube</option><option>facebook</option></select>
       </div>
-    </div>
-
-    <!-- Camera Moves & Transitions -->
-    <div class="custom-menu" id="camera-move-menu">
-      <div class="menu-section">
-        <div class="menu-title">Camera Moves & Transitions <span class="microhelp" onclick="showHelp('camera-moves')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">🎚️</span>Static</div>
-        <div class="menu-item"><span class="menu-icon">🎡</span>Pan</div>
-        <div class="menu-item"><span class="menu-icon">🔃</span>Tilt</div>
-        <div class="menu-item"><span class="menu-icon">🔭</span>Zoom</div>
-        <div class="menu-item"><span class="menu-icon">🚁</span>Dolly/Tracking</div>
-        <div class="menu-item"><span class="menu-icon">🎢</span>Crane/Jib</div>
-        <div class="menu-item"><span class="menu-icon">📸</span>Handheld/Shaky</div>
-        <div class="menu-item"><span class="menu-icon">🔄</span>360° Spin</div>
-        <div class="menu-item"><span class="menu-icon">🌫️</span>Fade In/Out</div>
-        <div class="menu-item"><span class="menu-icon">💨</span>Wipe/Slide</div>
-        <div class="menu-item"><span class="menu-icon">✨</span>Special FX</div>
-        <div class="chips" id="camera-moves-chips"></div>
+      <div class="group">
+        <div class="g-title">Shader <span class="help" title="Transform the aesthetic after composing">?</span></div>
+        <select id="shaderSel"></select>
       </div>
-    </div>
-
-    <!-- VFX, Animation, Visual Style -->
-    <div class="custom-menu" id="vfx-menu">
-      <div class="menu-section">
-        <div class="menu-title">VFX & Animation Style <span class="microhelp" onclick="showHelp('vfx')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">✨</span>CGI/3D</div>
-        <div class="menu-item"><span class="menu-icon">🔥</span>Explosion/Fire</div>
-        <div class="menu-item"><span class="menu-icon">🌊</span>Water Effects</div>
-        <div class="menu-item"><span class="menu-icon">⛈️</span>Weather/Storms</div>
-        <div class="menu-item"><span class="menu-icon">👻</span>Ghost/Surreal</div>
-        <div class="menu-item"><span class="menu-icon">🦾</span>Robotic/Tech</div>
-        <div class="menu-item"><span class="menu-icon">🦄</span>Fantasy/Magic</div>
-        <div class="menu-item"><span class="menu-icon">🎨</span>Animation/Cartoon</div>
-        <div class="menu-item"><span class="menu-icon">👹</span>Creature/Monster</div>
-        <div class="menu-item"><span class="menu-icon">💀</span>Horror/Gore</div>
-        <div class="menu-item"><span class="menu-icon">🔳</span>Stylized/Art</div>
-        <div class="menu-item"><span class="menu-icon">❓</span>Other/Custom</div>
-        <div class="chips" id="vfx-chips"></div>
-      </div>
-    </div>
-
-    <!-- Characters, Dialogue, Sound FX -->
-    <div class="custom-menu" id="character-menu">
-      <div class="menu-section">
-        <div class="menu-title">Characters, Dialogue & SFX <span class="microhelp" onclick="showHelp('characters')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">🧑‍🎤</span>Lead Character</div>
-        <div class="menu-item"><span class="menu-icon">🧑‍🤝‍🧑</span>Supporting Cast</div>
-        <div class="menu-item"><span class="menu-icon">🦸‍♂️</span>Hero</div>
-        <div class="menu-item"><span class="menu-icon">👾</span>Villain/Monster</div>
-        <div class="menu-item"><span class="menu-icon">👩‍🔬</span>Scientist/Expert</div>
-        <div class="menu-item"><span class="menu-icon">🦹‍♀️</span>Anti-Hero</div>
-        <div class="menu-item"><span class="menu-icon">👮‍♂️</span>Cops/Agents</div>
-        <div class="menu-item"><span class="menu-icon">🦧</span>Bigfoot/Creature</div>
-        <textarea id="dialogue" class="scene-input" style="margin-top:.9em;" rows="2" placeholder="Key dialogue lines, SFX, or narration for the scene..."></textarea>
-        <div class="chips" id="character-chips"></div>
-      </div>
-    </div>
-
-    <!-- Mood, Emotion, Story Arc, Templates -->
-    <div class="custom-menu" id="emotion-menu">
-      <div class="menu-section">
-        <div class="menu-title">Mood, Emotion & Story Arc <span class="microhelp" onclick="showHelp('emotion')">?</span></div>
-        <div class="menu-item"><span class="menu-icon">😄</span>Happy/Upbeat</div>
-        <div class="menu-item"><span class="menu-icon">😭</span>Sad/Tragic</div>
-        <div class="menu-item"><span class="menu-icon">😱</span>Suspense/Tension</div>
-        <div class="menu-item"><span class="menu-icon">🤯</span>Mind-Blowing/Surreal</div>
-        <div class="menu-item"><span class="menu-icon">😡</span>Angry/Intense</div>
-        <div class="menu-item"><span class="menu-icon">🥰</span>Romantic</div>
-        <div class="menu-item"><span class="menu-icon">🥶</span>Cold/Detached</div>
-        <div class="menu-item"><span class="menu-icon">🤡</span>Weird/Funny</div>
-        <div class="menu-item"><span class="menu-icon">🧠</span>Complex/Philosophical</div>
-        <div class="menu-item"><span class="menu-icon">⏳</span>Story Arc/Theme</div>
-        <textarea id="emotion-details" class="scene-input" style="margin-top:.9em;" rows="2" placeholder="Describe the overall mood, emotional arc, or plot beats..."></textarea>
-        <div class="chips" id="emotion-chips"></div>
-      </div>
-    </div>
-    <!-- Next: Output, actions, stats, J1nx, footer/logic -->
-    <!-- OUTPUT, ACTIONS, HISTORY, STATS -->
-    <div class="custom-menu" id="output-menu" style="max-width:1020px;margin:2.8em auto 1.6em auto;">
-      <div class="menu-section" style="display:flex;flex-direction:column;align-items:stretch;">
-        <div class="menu-title" style="margin-bottom:.7em;">Movie Prompt Output & Actions <span class="microhelp" onclick="showHelp('output')">?</span></div>
-        <div class="outputbox" id="prompt-output" contenteditable="true" spellcheck="false"
-          style="background:#181d17;border-radius:10px;border:2px solid var(--brand);min-height:100px;padding:1.18em;font-size:1.14em;word-break:break-all;margin-bottom:1.2em;"></div>
-        <div style="margin-bottom:1.4em;display:flex;flex-wrap:wrap;gap:1.2em 1.1em;align-items:center;">
-          <button type="button" class="randombtn" onclick="randomizePrompt()">🎲 Randomize</button>
-          <button type="button" class="clearbtn" onclick="clearForm()">Clear</button>
-          <button type="button" class="favbtn" onclick="favoritePrompt()">★ Favorite</button>
-          <button type="button" class="copybtn" onclick="copyPrompt()">Copy</button>
-          <button type="button" class="savebtn" onclick="savePrompt()">Save</button>
-          <button type="button" class="sharebtn" onclick="sharePrompt()">Share</button>
-          <button type="button" style="background:var(--accent);color:#23231f;font-weight:bold;padding:.75em 2.1em;border-radius:11px;font-size:1.09em;" onclick="generatePrompt()">🎬 Generate</button>
-        </div>
-        <div id="prompt-status" style="margin-bottom:1.1em;color:var(--brand2);font-weight:900;"></div>
-      </div>
-      <div class="menu-section" style="display:flex;flex-wrap:wrap;gap:2.1em;">
-        <div style="flex:1;min-width:210px;max-width:370px;">
-          <div style="font-weight:700;color:var(--accent);margin-bottom:.44em;">Quick Stats</div>
-          <div id="stat-prompts">Prompts Built: <b>0</b></div>
-          <div id="stat-saved">Templates Saved: <b>0</b></div>
-          <div id="stat-fav">Favorites: <b>0</b></div>
-          <div id="stat-share">Shared: <b>0</b></div>
-        </div>
-        <div style="flex:1.3;min-width:210px;max-width:410px;">
-          <div style="font-weight:700;color:var(--brand2);margin-bottom:.44em;">Prompt History</div>
-          <div class="history" id="prompt-history" style="max-height:90px;overflow-y:auto;"></div>
-        </div>
-        <div style="flex:1.2;min-width:210px;max-width:410px;">
-          <div style="font-weight:700;color:var(--brand2);margin-bottom:.44em;">Favorites & Templates</div>
-          <div class="template-list" id="template-list" style="max-height:90px;overflow-y:auto;"></div>
+      <div class="group">
+        <div class="g-title">Language / Voice</div>
+        <div class="row">
+          <select id="langSel" title="Translate overlays and captions"><option value="en" selected>English</option><option value="es">Español</option><option value="pt">Português</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="ja">日本語</option></select>
+          <select id="voiceSel" title="SSML voice preset"></select>
         </div>
       </div>
-    </div>
+      <div class="group">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="nsfwChk" checked/>
+          <span>NSFW softcore (consent-first)</span>
+        </label>
+      </div>
+      <div class="j1nx-reserved">J1nx assistant lives bottom-right. She won’t overlap content on desktop or mobile.</div>
+    </aside>
 
-    <!-- J1NX: Director Dock, Cutout, Mood, Minimize, Secret Unlock -->
-    <div id="j1nx-ui" style="position:fixed;bottom:32px;right:36px;z-index:99;max-width:370px;transition:opacity .18s,transform .22s;">
-      <div class="j1nx-shell" style="position:relative;display:flex;align-items:flex-end;">
-        <img class="j1nx-cutout" src="/assets/j1nx-cutout.png" alt="J1nx" style="width:126px;position:relative;z-index:3;">
-        <div class="j1nx-bubble" id="j1nx-bubble"
-          style="background:#201733;border:2.5px solid var(--brand2);border-radius:18px 18px 24px 18px/18px 18px 42px 18px;box-shadow:0 4px 22px #be9cff45;padding:1.15em 1.1em .8em 1.19em;min-height:108px;min-width:220px;max-width:265px;position:relative;z-index:4;margin-bottom:14px;color:var(--offwhite);font-size:1.09em;">
-          <span class="j1nx-name" style="font-weight:900;color:var(--brand2);font-size:1.07em;">J1nx</span>
-          <span class="j1nx-mood" id="j1nx-mood">🎬</span>
-          <span class="j1nx-min" title="Minimize J1nx" onclick="toggleJ1nxMin()" style="position:absolute;top:6px;right:10px;background:#4442;padding:.13em .55em;border-radius:8px;color:var(--brand2);font-weight:900;cursor:pointer;">–</span>
-          <div id="j1nx-speech" style="margin:.65em 0 .6em 0;">Hey director! J1nx here—ask me about scenes, pacing, or film tricks!</div>
-          <input id="j1nx-input" type="text" placeholder="Ask J1nx (eg: 'How to do a chase scene?')" style="width:81%;margin-right:.5em;padding:.54em .8em;border-radius:7px;border:1.7px solid var(--brand2);background:#211e32;color:var(--offwhite);font-size:1.07em;">
-          <div style="margin-top:.5em;">
-            <button class="j1nx-btn" onclick="sendJ1nx()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;margin-right:.7em;">Send</button>
-            <button class="j1nx-btn" onclick="j1nxRandomTip()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">Film Tip</button>
-            <button class="j1nx-btn" title="Secret Mode" id="j1nx-easter" style="background:#b5ffb7;color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">★</button>
+    <!-- CENTER MAIN -->
+    <section class="main" aria-label="main">
+      <div class="tabs">
+        <button class="tab active" data-tab="compose">Director Compose</button>
+        <button class="tab" data-tab="script">Script / Dialog</button>
+        <button class="tab" data-tab="output">Output</button>
+        <button class="tab" data-tab="help">Help</button>
+      </div>
+
+      <!-- Compose Panel -->
+      <div id="panel-compose">
+        <div class="cards">
+          <div class="card">
+            <h4>Logline <span class="u-help" title="One sentence prompt. We expand to beats, continuity, and negatives.">help</span></h4>
+            <textarea id="loglineInput" placeholder="A late-night host meets something in the fog."></textarea>
+            <div class="row" style="margin-top:8px">
+              <select id="vibeSel" title="Applies kit defaults"><option value="noir">noir</option><option value="romance">romance</option><option value="mythic">mythic</option><option value="action">action</option></select>
+              <label>Length (s) <input class="slider" id="lengthRange" type="range" min="8" max="60" step="1" value="15"></label>
+            </div>
+            <div class="row" style="margin-top:6px">
+              <select id="musicSel" title="For BPM cut math"><option>music: synthwave 90bpm</option><option>music: trap 140bpm</option><option>music: ambient 70bpm</option><option>music: orchestral 100bpm</option></select>
+              <select id="curveSel" title="Emotion curve"><option>rise</option><option>wave</option><option>pulse</option></select>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Preview (Prompts)</h4>
+            <pre class="out" id="promptOut"></pre>
+          </div>
+
+          <div class="card">
+            <h4>Negatives (auto)</h4>
+            <pre class="out" id="negativeOut"></pre>
+          </div>
+
+          <div class="card">
+            <h4>Captions / SSML</h4>
+            <textarea id="dialogInput" placeholder="Optional dialog: one line per row"></textarea>
+            <div class="row" style="margin-top:8px">
+              <button class="rbtn" id="btnSRT">Export SRT</button>
+              <button class="rbtn" id="btnVTT">Export VTT</button>
+              <button class="rbtn" id="btnSSML">Export SSML</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- FOOTER (same as picture, but can say 'Movie' as active) -->
-    <footer style="background:var(--footer-bg);padding:2.5em 0 1.6em 0;margin-top:4em;position:relative;">
-      <div class="footer-center">
-        <pre class="footer-art" style="text-align:center;font-family:'Fira Mono',monospace;font-size:1.02em;color:var(--brand2);">
+      <!-- Script Panel -->
+      <div id="panel-script" style="display:none">
+        <div class="cards">
+          <div class="card">
+            <h4>Script Notes</h4>
+            <textarea id="scriptNotes" placeholder="Shot ideas, props, wardrobe, beats…"></textarea>
+          </div>
+          <div class="card">
+            <h4>Continuity Report</h4>
+            <pre class="out" id="reportOut"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Panel -->
+      <div id="panel-output" style="display:none">
+        <div class="cards">
+          <div class="card">
+            <h4>Export Bundle</h4>
+            <pre class="out" id="bundleOut"></pre>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="rbtn" id="btnDownloadBundle">Download bundle.json</button>
+              <button class="rbtn" id="btnDownloadPrompts">Download prompts.txt</button>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Manifest</h4>
+            <pre class="out" id="manifestOut"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Help Panel -->
+      <div id="panel-help" style="display:none">
+        <div class="cards" style="grid-template-columns:1fr">
+          <div class="card">
+            <details open>
+              <summary>Why PromptForge instead of stock builders?</summary>
+              <p>We don’t just pile keywords. The brain applies shot grammar, continuity locks, platform hooks/CTAs, shaders, ADR/SSML, quality autopatching, and a consent-first NSFW softcore mode. You get outputs that feel authored — not pasted.</p>
+            </details>
+            <details>
+              <summary>Common questions</summary>
+              <ul style="margin:6px 0 0 18px">
+                <li><b>Do I need a huge JSON?</b> No. Logic ships in JS; catalogs are optional.</li>
+                <li><b>Can I export captions?</b> Yes: SRT/VTT/SSML are one-click.</li>
+                <li><b>Which engines?</b> Runway, Luma, Pika, Kling. Negatives auto-dedupe per engine.</li>
+                <li><b>What about languages?</b> Overlays & captions support EN/ES/PT/FR/DE/IT/JA out of the box; extendable.</li>
+              </ul>
+            </details>
+            <details>
+              <summary>Micro-help</summary>
+              <p><span class="u-help" title="Single sentence, conversational is fine.">Logline</span> → pick <span class="u-help" title="Toggles smart defaults (lighting/lens/palette).">vibe</span> & <span class="u-help" title="Applies platform overlays and end CTAs.">platform</span> → choose a <span class="u-help" title="Aesthetic transform that also adjusts negatives.">shader</span> → <b>Compose</b>.</p>
+              <p>Use the <span class="kbd">Ctrl</span>+<span class="kbd">K</span> palette for commands; <span class="kbd">Ctrl</span>+<span class="kbd">Enter</span> composes quickly.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT INSPECTOR -->
+    <aside class="dock inspector" aria-label="inspector">
+      <h3>Inspector</h3>
+      <div class="group">
+        <div class="g-title">Shot Grammar <span class="help" title="Establishing, inserts, cutaways, size variety, 180° rule">?</span></div>
+        <label><input type="checkbox" id="chkGrammar" checked/> Enable</label>
+      </div>
+      <div class="group">
+        <div class="g-title">Continuity <span class="help" title="Carry wardrobe/lighting/grade across beats">?</span></div>
+        <label><input type="checkbox" id="chkContinuity" checked/> Global continuity</label>
+      </div>
+      <div class="group">
+        <div class="g-title">Motion Plan</div>
+        <div class="row">
+          <select id="easeSel"><option>easeInOut</option><option>easeIn</option><option>easeOut</option><option>linear</option><option>punch</option></select>
+          <select id="shapeSel"><option>push</option><option>arc</option><option>orbit</option><option>linear</option></select>
+        </div>
+      </div>
+      <div class="group">
+        <div class="g-title">Montage Theme</div>
+        <select id="montageThemeSel"></select>
+      </div>
+      <div class="group">
+        <div class="g-title">Quality</div>
+        <div class="pill badge" id="qualityBadge">score: —</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- TIMELINE -->
+  <section class="timeline" aria-label="timeline">
+    <div style="height:6px;background:linear-gradient(90deg,var(--aqua),var(--vio));border-radius:6px;margin-bottom:8px"></div>
+    <div id="beatsRow" style="display:flex;gap:6px;align-items:flex-end"></div>
+  </section>
+
+  <!-- STATUS -->
+  <div class="status" aria-label="status">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div class="pill badge">engine: <span id="sEngine">runway</span></div>
+      <div class="pill badge">shader: <span id="sShader">—</span></div>
+      <div class="pill badge" id="warnBadge">warnings: 0</div>
+    </div>
+    <div>
+      <button class="rbtn" id="btnCopyPrompt">Copy Prompts</button>
+    </div>
+  </div>
+</div> <!-- /.app -->
+
+<!-- ===== YOUR J1NX FLOAT (fixed, above footer) ===== -->
+<div class="j1nx-float-true" id="j1nxFloatTrue">
+  <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+  <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+    <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+      <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG today?<br>(Don’t worry, I do both.)
+    </div>
+    <div class="j1nx-bubble-row-true">
+      <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+      <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+    </div>
+    <div class="j1nx-bubble-row-true">
+      <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+      <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+    </div>
+    <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+      Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+    </div>
+  </div>
+</div>
+<!-- ===== /YOUR J1NX FLOAT ===== -->
+
+<!-- ===== ANSI ART FOOTER (with dancing camo) ===== -->
+<footer>
+  <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\\ uU |  _"\\ u  \\/"_ \\/U|\' \\/ \'|uU|  _"\\ u|_ " _|  |" ___|   \\/"_ \\/U |  _"\\ uU /"___|u\\| ___"|/   
-\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    
-        </pre>
-      </div>
-      <pre class="footer-camo" id="footerCamo" style="text-align:center;font-size:1.5em;"></pre>
-      <div class="footer-row" style="max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:1.1em;border-top:2px solid var(--brand2);font-size:1.04em;">
-        <div class="footer-nav" style="display:flex;gap:1.15em;">
-          <a href="main.html">Main</a>
-          <a href="picture.html">Image</a>
-          <a href="movie.html" class="active">Movie</a>
-          <a href="watermark.html">Watermark</a>
-          <a href="j1nx.html">J1nx</a>
-          <a href="aihacks.html">AI Hacks</a>
-          <a href="ansiart.html">AnsiArt</a>
-          <a href="compare.html">Compare</a>
-        </div>
-        <div class="footer-socials" style="display:flex;gap:1em;">
-          <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
-          <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
-          <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
-        </div>
-      </div>
-    </footer>
-    <!-- LOGIC: (Same pro JS as picture.html, but for movie prompts) -->
-    <script>
-      // All live builder logic, menu chips, microhelp, prompt output, stats, J1nx moods, and news bar auto-update
-      // ... (identical to the big JS block in picture.html, adapted for video fields/menus, with Film/Director tips for J1nx)
-      // Copy that last block, rename fields as needed, add more J1nx tips for filmmaking!
-    </script>
-  </body>
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+  </pre>
+  <pre class="footer-camo" id="footerCamo"></pre>
+  <div class="footer-bar">
+    Made underground in BC, Canada &bull; #PromptForge &bull;
+    <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> &bull;
+    <a href="https://x.com/GoreandGiggles">Twitter/X</a> &bull;
+    <a href="terms.html">Legal</a>
+  </div>
+</footer>
+<!-- ===== /FOOTER ===== -->
+
+<!-- (Optional) AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+
+<!-- Brains / Core -->
+<script src="js/movie.js"></script>
+<script src="js/nsfw_core.js"></script>
+
+<script>
+/* ---------- Inline fallback pack (runs even with no JSON) ---------- */
+(function(){
+  window.MovieCORE = window.MovieCORE || {};
+  MovieCORE.data = MovieCORE.data || {
+    shaders:{
+      "shader: realism+":{adds:["photometric consistency","microtexture","subtle grain","grade: neutral"],negs:["over-saturated","posterization"]},
+      "shader: anamorphic flare":{adds:["lens: 50mm anamorphic","flare: horizontal","bokeh: oval","grade: cinematic"],negs:["flat lighting","banding"]},
+      "shader: dreamy ethereal":{adds:["soft bloom","haze gentle","backlight rim","palette: pastel"],negs:["crushed blacks"]}
+    },
+    montageThemes:{
+      "urban rain":{location:["neon signage","wet street","puddle reflections"],action:["footsteps","umbrella tilt"],detail:["neon bokeh","hand on railing"]},
+      "forest myth":{location:["mist trail","old pines"],action:["lantern lift","turn to sound"],detail:["dew macro","light rays"]}
+    },
+    voices:["voice: warm alto","voice: clear tenor"],
+    platformRules:{
+      instagram:{forbid:["ratio: 21:9"],suggest:["ratio: 9:16","fps: 30"]},
+      tiktok:{forbid:["ratio: 16:9","ratio: 21:9"],suggest:["ratio: 9:16","fps: 30"]},
+      youtube:{forbid:[],suggest:["ratio: 16:9","fps: 30"]},
+      facebook:{forbid:[],suggest:["fps: 30"]}
+    }
+  };
+})();
+</script>
+
+<script>
+/* ---------- UI hydrate ---------- */
+function hydrateUI(){
+  try{
+    const h = MovieCORE.uiHints ? MovieCORE.uiHints() : {};
+    const shaderSel = document.getElementById('shaderSel');
+    (h.shaders || Object.keys(MovieCORE.data.shaders)).forEach(t=>{
+      const o=document.createElement('option'); o.textContent=t; shaderSel.appendChild(o);
+    });
+    document.getElementById('sShader').textContent = shaderSel.value || (h.shaders||[])[0] || "shader: realism+";
+
+    const voiceSel = document.getElementById('voiceSel');
+    (h.voice || MovieCORE.data.voices || ["voice: warm alto"]).forEach(t=>{
+      const o=document.createElement('option'); o.textContent=t; voiceSel.appendChild(o);
+    });
+
+    const montSel = document.getElementById('montageThemeSel');
+    (h.montageThemes || Object.keys(MovieCORE.data.montageThemes)).forEach(t=>{
+      const o=document.createElement('option'); o.textContent=t; montSel.appendChild(o);
+    });
+  }catch(e){ console.warn('hydrateUI error', e); }
+}
+hydrateUI();
+
+/* ---------- Tabs ---------- */
+document.querySelectorAll('.tab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    ['compose','script','output','help'].forEach(id=>{
+      document.getElementById('panel-'+id).style.display = (b.dataset.tab===id)?'block':'none';
+    });
+  };
+});
+
+/* ---------- Helpers ---------- */
+function beatsRow(shots){
+  const row = document.getElementById('beatsRow'); row.innerHTML='';
+  (shots||[]).forEach(s=>{
+    const el=document.createElement('div');
+    el.style.cssText='flex:1;min-height:38px;background:linear-gradient(180deg,#111922,#0a1219);border:1px solid var(--edge);border-radius:8px;position:relative';
+    el.innerHTML = `<span style="position:absolute;bottom:4px;left:6px;font-size:11px;color:#a6c9d8">${s.beat} • ${s.seconds}s</span>`;
+    row.appendChild(el);
+  });
+}
+function setQuality(score){ document.getElementById('qualityBadge').textContent = 'score: '+(score??'—'); }
+function download(name, text){ const blob=new Blob([text],{type:'text/plain'}), url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 400); }
+function copyPrompts(){ const txt=document.getElementById('promptOut').textContent||''; navigator.clipboard?.writeText(txt); }
+
+/* ---------- Compose pipeline ---------- */
+function doCompose(){
+  const logline = document.getElementById('loglineInput').value || 'A late-night host meets something in the fog.';
+  const vibe = document.getElementById('vibeSel').value || 'noir';
+  const engine = document.getElementById('engineSel').value || 'runway';
+  const genre = document.getElementById('genreSel').value || 'editorial';
+  const platform = document.getElementById('platformSel').value || 'instagram';
+  const shader = document.getElementById('shaderSel').value || 'shader: realism+';
+  const lang = document.getElementById('langSel').value || 'en';
+  const lengthSec = Number(document.getElementById('lengthRange').value || 15);
+  const curveShape = document.getElementById('curveSel').value || 'rise';
+  const nsfw = document.getElementById('nsfwChk').checked;
+
+  if (!window.MovieCORE){ document.getElementById('negativeOut').textContent='movie.js not loaded'; return; }
+
+  let board = MovieCORE.directorCompose ? MovieCORE.directorCompose({ logline, vibe, lengthSec, curveShape, langCode:lang }) : { title:'Board', cards:[], timing:[] };
+
+  if (document.getElementById('chkGrammar').checked && MovieCORE.shotGrammar){
+    board = MovieCORE.shotGrammar(board);
+    board = MovieCORE.ensureShotCoverage ? MovieCORE.ensureShotCoverage(board) : board;
+  }
+  if (document.getElementById('chkContinuity').checked && MovieCORE.applyContinuity){
+    board = MovieCORE.applyContinuity(board);
+  }
+
+  board = MovieCORE.injectSocial ? MovieCORE.injectSocial(board, { platform }) : board;
+  board = MovieCORE.auditBoard ? MovieCORE.auditBoard(board, { platform }) : board;
+  board = MovieCORE.translateOverlays ? MovieCORE.translateOverlays(board, lang) : board;
+  board = MovieCORE.applyMotionPlan ? MovieCORE.applyMotionPlan(board, [{ beatIndex:1, ease:'punch', steps:12, shape:'push' }]) : board;
+
+  if (nsfw && window.NSFW_CORE?.applyRomanceCurve) board = NSFW_CORE.applyRomanceCurve(board,'rise');
+
+  let shots = MovieCORE.renderBoardTimed ? MovieCORE.renderBoardTimed(board, { engine, genre }) : [];
+  shots = shots.map(s=>{
+    let dense = MovieCORE.autoPatch ? MovieCORE.autoPatch(s.prompt) : s.prompt;
+    dense = MovieCORE.applyShader ? MovieCORE.applyShader(shader, dense) : dense;
+    if (window.NSFW_CORE?.guardHook) dense = NSFW_CORE.guardHook(dense);
+    s.prompt = dense; return s;
+  });
+
+  document.getElementById('sEngine').textContent = engine;
+  document.getElementById('sShader').textContent = shader;
+  document.getElementById('promptOut').textContent = shots.map(s=>`# ${s.beat} (${s.seconds}s)\n${s.prompt}`).join('\n\n');
+  document.getElementById('negativeOut').textContent = MovieCORE.finalizeNegatives ? (MovieCORE.finalizeNegatives({ engine })||'') : '';
+  beatsRow(shots);
+
+  try{ const q = MovieCORE.predictQuality ? MovieCORE.predictQuality(shots[0]?.prompt||'').score : '—'; setQuality(q);}catch(_){ setQuality('—'); }
+
+  try{
+    const rep = MovieCORE.continuityReport ? MovieCORE.continuityReport(board) : {};
+    document.getElementById('reportOut').textContent = JSON.stringify(rep,null,2);
+  }catch(_){}
+
+  const pack = MovieCORE.smartExport ? MovieCORE.smartExport({ board, ctx:{ engine, genre }, musicToken: document.getElementById('musicSel').value }) : {};
+  const manifest = MovieCORE.projectManifest ? MovieCORE.projectManifest(pack, { title: board.title || 'project', platform }) : {};
+  window.__pf_last_export = pack;
+  document.getElementById('bundleOut').textContent = JSON.stringify(pack.bundle||{}, null, 2);
+  document.getElementById('manifestOut').textContent = JSON.stringify(manifest, null, 2);
+
+  document.getElementById('warnBadge').textContent = 'warnings: '+( (pack?.music?.suggestCuts?.length||0) > 12 ? 1 : 0 );
+}
+
+/* ---------- Montage + Audit ---------- */
+function doMontage(){
+  const shader = document.getElementById('shaderSel').value || 'shader: realism+';
+  const theme = document.getElementById('montageThemeSel').value || 'urban rain';
+  if (!MovieCORE.montagePack){ document.getElementById('promptOut').textContent = 'montage not available'; return; }
+  const m = MovieCORE.montagePack({ theme, totalSec: 15, bpm: 90, shader });
+  document.getElementById('promptOut').textContent = m.shots.map(x=>`# ${x.beat} (${x.seconds}s)\n${x.prompt}`).join('\n\n');
+  document.getElementById('negativeOut').textContent = MovieCORE.finalizeNegatives ? MovieCORE.finalizeNegatives({}) : '';
+  beatsRow(m.shots);
+}
+function doAuditFix(){
+  const shader = document.getElementById('shaderSel').value || 'shader: realism+';
+  const lines = (document.getElementById('promptOut').textContent||'').split('\n').filter(Boolean);
+  if (!lines.length) return;
+  let buffer=[];
+  lines.forEach(L=>{
+    if (L.startsWith('# ')) { buffer.push(L); return; }
+    let dense = L;
+    dense = MovieCORE.autoPatch ? MovieCORE.autoPatch(dense) : dense;
+    dense = MovieCORE.applyShader ? MovieCORE.applyShader(shader, dense) : dense;
+    buffer.push(dense);
+  });
+  document.getElementById('promptOut').textContent = buffer.join('\n');
+}
+
+/* ---------- Exports ---------- */
+function doSRT(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); download('captions.srt', pack.captions?.srt||''); }
+function doVTT(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); download('captions.vtt', pack.captions?.vtt||''); }
+function doSSML(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); download('dialog.ssml', pack.ssml||''); }
+function dlBundle(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); const data=JSON.stringify(pack.bundle||{},null,2); download('bundle.json', data); }
+function dlPrompts(){ const txt=document.getElementById('promptOut').textContent||''; if(!txt) return alert('Compose first'); download('prompts.txt', txt); }
+
+/* ---------- Wire buttons ---------- */
+document.getElementById('btnCompose').onclick = doCompose;
+document.getElementById('btnMontage').onclick = doMontage;
+document.getElementById('btnAudit').onclick = doAuditFix;
+document.getElementById('btnExport').onclick = ()=>alert('Use the Output panel to grab the bundle/manifest; SRT/VTT/SSML are in the Compose card.');
+document.getElementById('btnSRT').onclick = doSRT;
+document.getElementById('btnVTT').onclick = doVTT;
+document.getElementById('btnSSML').onclick = doSSML;
+document.getElementById('btnCopyPrompt').onclick = copyPrompts;
+document.getElementById('btnDownloadBundle').onclick = dlBundle;
+document.getElementById('btnDownloadPrompts').onclick = dlPrompts;
+
+/* ---------- Keyboard shortcuts ---------- */
+document.addEventListener('keydown', (e)=>{
+  const mod = e.ctrlKey || e.metaKey;
+  if (mod && e.key === 'Enter'){ e.preventDefault(); doCompose(); }
+  if (mod && e.key.toLowerCase() === 'k'){ e.preventDefault(); openCmdK(); }
+});
+
+/* ---------- Command Palette ---------- */
+const cmdk = (function(){
+  const el = document.createElement('div'); el.className='cmdk'; el.innerHTML = `
+    <div class="cmdk-card" role="dialog" aria-modal="true">
+      <input id="cmdkInput" placeholder="Type a command… (compose, montage, audit, copy, srt, vtt, ssml)" autocomplete="off"/>
+      <div class="cmdk-list" id="cmdkList"></div>
+    </div>`;
+  document.body.appendChild(el);
+  const input = el.querySelector('#cmdkInput'), list = el.querySelector('#cmdkList');
+  const items = [
+    {name:'Compose', fn:doCompose},
+    {name:'Montage', fn:doMontage},
+    {name:'Audit & Fix', fn:doAuditFix},
+    {name:'Copy Prompts', fn:copyPrompts},
+    {name:'Export SRT', fn:doSRT},
+    {name:'Export VTT', fn:doVTT},
+    {name:'Export SSML', fn:doSSML}
+  ];
+  function render(q=''){
+    list.innerHTML='';
+    const L = items.filter(x=>x.name.toLowerCase().includes(q.toLowerCase()));
+    L.forEach(x=>{ const it=document.createElement('div'); it.className='cmdk-item'; it.textContent=x.name; it.onclick=()=>{ x.fn(); close(); }; list.appendChild(it); });
+  }
+  function open(){ el.style.display='flex'; input.value=''; render(''); setTimeout(()=>input.focus(), 10); }
+  function close(){ el.style.display='none'; }
+  input.addEventListener('input', ()=>render(input.value));
+  el.addEventListener('click', (e)=>{ if(e.target===el) close(); });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && el.style.display!=='none') close(); });
+  return { open, close };
+})();
+function openCmdK(){ cmdk.open(); }
+</script>
+
+<!-- Footer camo animation + J1NX logic (from your snippet) -->
+<script>
+(function(){ const camoEl=document.getElementById("footerCamo"); if(!camoEl) return;
+  const colors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"]; const chars="░▒▓▚▞▐▉█▛";
+  function camoTick(t){ let out=""; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } camoEl.innerHTML=out; }
+  let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+})();
+(function(){
+  const j1nxFloat=document.getElementById('j1nxFloatTrue');
+  const cutout=document.getElementById('j1nxCutoutTrue');
+  const bubble=document.getElementById('j1nxBubbleTrueMain');
+  function isMobile(){ return window.innerWidth < 700; }
+  function shrinkJ1nx(){
+    if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display="none"; }
+    else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display="flex"; }
+  }
+  cutout.onclick=function(){ if(isMobile()){ if(j1nxFloat.classList.contains('j1nx-open')){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display="none"; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display="flex"; } } };
+  window.addEventListener('resize', shrinkJ1nx); shrinkJ1nx();
+})();
+(function(){
+  let chatHistory=[]; let nsfwUnlocked=false;
+  function renderChat(){ const out=chatHistory.map(line=>`<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)"; }
+  function addMsg(msg,isUser){ if(!msg) return; const name=isUser?"<b>You:</b> ":"<b>J1nx:</b> "; chatHistory.push(name+msg); if(chatHistory.length>8) chatHistory=chatHistory.slice(-8); renderChat(); }
+  document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function(){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML="<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false); });
+  document.getElementById('j1nxSendTrue').onclick=function(){
+    const input=document.getElementById('j1nxInputTrue'); const val=(input.value||'').trim(); if(!val) return; addMsg(val,true);
+    if(/^unlock$/i.test(val)){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML="<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false); input.value=""; return; }
+    try{
+      let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
+      let replyText = (reply && typeof reply === 'object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply;
+      addMsg(replyText, false);
+    }catch(e){ addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false); }
+    input.value="";
+  };
+  document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); });
+  document.getElementById('j1nxSaveTrue').onclick=function(){ const text=chatHistory.map(line=>line.replace(/<[^>]+>/g,'')).join('\n'); const blob=new Blob([text],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='j1nx_chat.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},300); };
+  document.getElementById('j1nxClearTrue').onclick=function(){ chatHistory=[]; renderChat(); };
+  renderChat();
+})();
+</script>
+
+<!-- External J1NX brain last -->
+<script src="assets/j1nx_brain.js"></script>
+
+<!-- Keep this at the very end -->
+</body>
 </html>
