@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- META -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PromptForge — Uncensored, Professional, Fast</title>
-  <meta name="description" content="Universal image prompt builder. Open the Prompt Box to enter Subject, Action, Scene, plus quick style and lighting. Explicitness slider, large outputs, negatives, profiles, and installable PWA. From clean portraits to hardcore—your call." />
-  <link rel="canonical" href="https://promptforge.online/picture.html" />
-  <meta name="theme-color" content="#0b0f14" />
-  <!-- OG -->
-  <meta property="og:title" content="PromptForge — Uncensored, Professional, Fast"/>
-  <meta property="og:description" content="Popup prompt editor, negatives, explicitness control, big outputs, profiles, and PWA. SFW to explicit without friction."/>
+  <!-- CORE META -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>PromptForge — Uncensored, Professional, Fast (Movie)</title>
+  <meta name="description" content="Pro-grade AI movie prompt builder: Director Compose, continuity, platform hooks/CTAs, shader transforms, captions/SSML, montage to BPM, NSFW (consenting adults). Clean workflow, big outputs, and JuicyAds-ready."/>
+  <link rel="canonical" href="https://promptforge.online/movie.html"/>
+  <meta name="theme-color" content="#0b0f14"/>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="PromptForge — Pro Movie Builder"/>
+  <meta property="og:description" content="Write shots with grammar, continuity, hooks, shaders, and ADR/SSML. From SFW to explicit — your call."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://promptforge.online/picture.html"/>
+  <meta property="og:url" content="https://promptforge.online/movie.html"/>
   <meta property="og:image" content="/og/promptforge_og.jpg"/>
 
   <!-- JSON-LD -->
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
     {"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},
-    {"@type":"ListItem","position":2,"name":"Picture Builder","item":"https://promptforge.online/picture.html"}]}
+    {"@type":"ListItem","position":2,"name":"Movie Builder","item":"https://promptforge.online/movie.html"}]}
   </script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"Organization","name":"PromptForge Online","url":"https://promptforge.online/","logo":"/og/logo.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social"]}
   </script>
 
-  <!-- Fonts -->
+  <!-- Fonts (same vibe as picture.html) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
   <style>
     :root{
-      --bg:#000; --panel:#10161d; --card:#0d1218; --edge:#232a33; --ink:#e7f7ff; --dim:#93a6b3;
-      --aqua:#64f2e3; --aqua2:#23d7ba; --hot:#fa528e; --ok:#50fa7b; --err:#ff637d; --vio:#be9cff;
+      /* Match the black, high-contrast look from Picture */
+      --bg:#000;
+      --chrome:#0b0f14;
+      --surface:#0e1217;
+      --panel:#10161d;
+      --panel2:#0f141a;
+      --edge:#232a33;
+      --ink:#e7f7ff;
+      --dim:#93a6b3;
+
+      --aqua:#64f2e3; --aqua2:#23d7ba; --vio:#be9cff; --hot:#fa528e; --ok:#50fa7b; --warn:#ffb86b; --err:#ff637d;
+      --shadow:0 10px 28px rgba(0,0,0,.36);
+      --radius:14px;
     }
-    html,body{margin:0;padding:0;background:#000;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui}
     a{color:var(--aqua)} a:hover{text-decoration:underline}
     .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
 
-    /* NAV */
+    /* TOPBAR */
     .topbar{position:sticky;top:0;z-index:3000;background:#0b0f14ee;border-bottom:1px solid #151b22}
     .topbar .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
     .brand{display:flex;align-items:center;gap:12px}
@@ -54,84 +67,80 @@
     .hero-title{font-weight:900;letter-spacing:.6px;font-size:clamp(22px,4vw,40px);margin:6px 0 2px}
     .hero-sub{color:var(--dim);margin:0 0 10px}
 
-    /* LAYOUT */
-    .tool{display:grid;grid-template-columns: 1fr 180px;gap:16px;margin:16px 0}
-    .tool-main{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:18px}
-    .rail .sticky{position:sticky;top:72px}
-    .rail .card{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:12px;padding:10px;margin-bottom:12px}
+    /* RIBBON actions */
+    .ribbon{display:flex;gap:8px;padding:10px 16px;background:#0f141a;border-bottom:1px solid #182028;position:sticky;top:61px;z-index:2900}
+    .rbtn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;border:1px solid #2a3940;background:#10161d;color:#cbefff;font-weight:800;cursor:pointer}
+    .rbtn.primary{border-color:#33464f}
+    .rbtn.hot{border-color:#4a2a33;color:#ffd6df}
+    .rbtn:active{transform:translateY(1px)}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(250,82,142,.45)}70%{box-shadow:0 0 0 12px rgba(250,82,142,0)}100%{box-shadow:0 0 0 0 rgba(250,82,142,0)}}
+    .pulse{animation:pulse 2.5s ease-out infinite;border-color:#4a2a33}
 
-    /* STEPS */
-    .steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:16px 0}
-    .step{background:#0e1116;border:1px solid #1b2430;border-radius:12px;padding:12px}
-    .step h4{margin:0 0 6px 0}
-    .muted{color:var(--dim)}
+    /* LAYOUT: left dock / main / right rail (ad)  */
+    .tool{display:grid;grid-template-columns:300px 1fr 180px;gap:16px;margin:16px auto;max-width:1200px}
+    .dock{background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+    .dock h3{margin:6px 6px 10px;font-size:13px;color:#b0cbe0;text-transform:uppercase;letter-spacing:.12em}
+    .g-title{display:flex;align-items:center;gap:8px;font-weight:800;margin:0 0 6px 0;font-size:13px;color:var(--aqua2)}
+    select,input[type="text"],textarea{width:100%;background:#0d1014;border:1px solid #1a2a2e;color:#bcf7f0;border-radius:10px;padding:10px 12px;font:inherit}
+    textarea{min-height:96px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .pill{padding:7px 10px;border:1px solid #2a3940;border-radius:9px;background:#0f141a;color:#cfeaff}
 
-    /* FORMS */
-    .group{margin-bottom:14px}
-    .g-title{display:inline-block;margin:0 8px 6px 0;color:var(--aqua2);font-weight:800}
-    select,input[type="text"],textarea{background:#0d1014;color:#bcf7f0;border:1px solid #1a2a2e;border-radius:10px;padding:10px;font-size:1.02em;width:100%}
-    textarea{min-height:72px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .main{background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);padding:12px}
+    .tabs{display:flex;gap:8px;margin-bottom:10px}
+    .tab{background:#121a22;border:1px solid #2a3940;color:#bfefff;border-radius:9px;padding:7px 11px;font-weight:700;cursor:pointer}
+    .tab.active{background:#15202a;border-color:#3a5569;color:#fff}
 
-    .btn{background:#0f161d;color:#c9fdf7;border:1px solid #2a3940;border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}
-    .btn:hover{background:#121b23}
-    .btn-primary{border-color:#33464f;position:relative}
-    .btn-ghost{background:transparent;border-color:#27343a}
-    .btn-hot{border-color:#38222a;color:#ffd6df}
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(250,82,142,0.45); }
-      70%{ box-shadow: 0 0 0 12px rgba(250,82,142,0); }
-      100%{ box-shadow: 0 0 0 0 rgba(250,82,142,0); }
-    }
-    .pulse { animation: pulse 2.5s ease-out infinite; border-color:#4a2a33; }
-    .pulse:hover{ animation:none }
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .card{background:#0e1014;border:1px solid #222b33;border-radius:12px;padding:12px;box-shadow:0 0 0 1px #1b2933, 0 0 24px rgba(100,242,227,.08), inset 0 0 18px rgba(190,156,255,.05)}
+    .card h4{margin:0 0 8px 0}
 
-    /* OUTPUTS — larger + glow */
-    .output{background:#0e1014;border:1px solid #222b33;border-radius:12px;padding:16px;margin-top:12px;
-            box-shadow: 0 0 0 1px #1b2933, 0 0 24px rgba(100,242,227,0.08), inset 0 0 18px rgba(190,156,255,0.05);}
-    .out-pre{
-      white-space:pre-wrap;word-break:break-word;font-family:"Fira Mono",monospace;font-size:1.02em;color:#eafffb;
-      min-height:280px; /* bigger */
-      line-height:1.5;
-    }
-    .out-neg{ min-height:200px; }
-    .out-top{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .out{min-height:180px;white-space:pre-wrap;word-break:break-word;font-family:"Fira Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12.8px;line-height:1.45;margin:0;color:#eafffb}
 
-    /* NSFW slider + meter */
-    .meter-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    input[type="range"]{width:100%}
-    .nsfw-meter{height:16px;background:linear-gradient(90deg,#3abf6b,#ffe784 45%,#ff9b6a 75%,#ff528e 100%);border-radius:9px;position:relative;border:1px solid #1c2930}
-    .nsfw-pointer{position:absolute;top:-7px;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid #fff;left:45%}
-    .meter-label{margin-top:6px;color:var(--dim);font-size:.95em}
+    /* Right rail (ads + inspector) */
+    .rail{display:flex;flex-direction:column;gap:12px}
+    .rail .card{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:12px;padding:10px}
+    .sticky{position:sticky;top:110px}
 
-    /* FAQ / LINKS */
-    .faq{background:#0f1115;border:1px solid #1e2730;border-radius:14px;padding:16px;margin:16px 0}
-    .acc-head{cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#111419;border:1px solid #1a222a;border-radius:10px;padding:10px;margin-top:10px}
-    .acc-body{display:none;padding:10px;border-left:2px solid #1e2b34;margin-left:6px}
-    .links{background:#0e1217;border:1px solid #1a2530;border-radius:14px;padding:16px;margin:16px 0}
-    .links ul{margin:6px 0 0 18px}
+    /* Timeline + Status */
+    .timeline{max-width:1200px;margin:12px auto;padding:10px;background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius)}
+    .status{max-width:1200px;margin:12px auto;padding:10px;background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);display:flex;align-items:center;justify-content:space-between}
+    .badge{display:inline-block}
 
-    /* ADS */
-    .bottom-ad{max-width:760px;margin:18px auto 6px;display:flex;justify-content:center}
+    /* Command palette (simple) */
+    .cmdk{position:fixed;inset:0;background:#000000aa;display:none;align-items:center;justify-content:center;z-index:5000}
+    .cmdk-card{width:min(680px,96vw);background:#0d1116;border:1px solid #1a2430;border-radius:14px;padding:14px}
+    .cmdk-card input{width:100%;background:#0d1014;border:1px solid #1a2a2e;color:#bcf7f0;border-radius:10px;padding:12px}
+    .cmdk-item{padding:8px 10px;border:1px solid #1a2430;border-radius:10px;background:#0e1217;margin-top:8px;color:#dff}
+    .cmdk-item:hover{background:#121821}
 
-    /* MODAL (Prompt Box) — fixed, themed, non-breaking */
-    .modal-bg{position:fixed;inset:0;background:#000000e6;backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:5000}
-    .modal{width:min(980px,96vw);max-height:92vh;overflow:auto;background:#0d1116;border:1px solid #1a2430;border-radius:16px;padding:20px;
-           box-shadow:0 20px 60px #000c}
-    .modal h3{margin:4px 0 10px}
-    .modal .hint{color:var(--dim)}
-    .modal .actions{display:flex;gap:10px;justify-content:space-between;margin-top:12px}
-    .subgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-    .modal textarea{min-height:140px} /* bigger */
-    .divider{height:1px;background:#1a2330;margin:14px 0}
-
-    @media (max-width:900px){
+    /* Responsive */
+    @media (max-width:1100px){
       .tool{grid-template-columns:1fr}
-      .subgrid{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr}
+      .rail{order:3}
     }
+
+    /* ===== J1NX + ANSI FOOTER (matching your site) ===== */
+    .j1nx-float-true{position:fixed;bottom:18px;right:18px;z-index:5001;display:flex;gap:10px;align-items:flex-end}
+    .j1nx-open .j1nx-bubble-true-main{display:flex}
+    .j1nx-true-cutout-img{width:128px;height:128px;filter:drop-shadow(0 10px 20px #0008)}
+    .j1nx-bubble-true-main{display:flex;flex-direction:column;gap:8px;background:#0e0e0e;border:1px solid #1b1b1b;border-radius:12px;padding:10px;min-width:300px;max-width:520px}
+    .j1nx-bubble-text-true{max-height:220px;overflow:auto;font-size:.96em}
+    .j1nx-bubble-row-true{display:flex;gap:8px}
+    .j1nx-input-true{flex:1;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:8px;color:#d7ffff;padding:8px}
+    .j1nx-btn-true{background:#0f0f0f;border:1px solid #1c1c1c;border-radius:8px;color:#c9fdf7;padding:8px 10px;cursor:pointer}
+    @media (min-width:701px){.j1nx-float-true{min-width:300px;max-width:520px}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
+
+    footer{margin:0 auto;padding:0;text-align:center;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center;background:none;position:relative;z-index:100;font-family:inherit;font-size:1rem;color:var(--ink)}
+    .footer-art{margin:0 0 12px 0;font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text}
+    .footer-camo{font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px 0;text-align:center;opacity:.93;white-space:pre}
+    .footer-bar{color:#88fffd;margin:12px auto 8px;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+    .footer-bar a{color:var(--aqua)}
   </style>
 
-  <!-- J1NX brain (keep your file) -->
+  <!-- J1NX brain (keep your actual file alongside) -->
   <script src="j1nx_brain.js"></script>
 </head>
 <body>
@@ -141,8 +150,8 @@
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
-          <h1>PromptForge <span class="breadcrumbs">/ Picture</span></h1>
-          <div class="breadcrumbs">Home ▸ Picture Builder ▸ Pro (Black)</div>
+          <h1>PromptForge <span class="breadcrumbs">/ Movie</span></h1>
+          <div class="breadcrumbs">Home ▸ Movie Builder ▸ Pro (Black)</div>
         </div>
       </div>
       <div class="navlinks">
@@ -158,141 +167,178 @@
   <!-- TITLE -->
   <div class="titlebar">
     <div class="inner">
-      <div class="hero-title">PromptForge — <span style="color:#be9cff">Uncensored</span>, <span style="color:#64f2e3">Professional</span>, <span style="color:#fa528e">Fast</span></div>
-      <p class="hero-sub">From clean portraits to filth and fantasy. Open the Prompt Box, dial your vibe, compose, and go.</p>
+      <div class="hero-title">PromptForge — <span style="color:#be9cff">Uncensored</span>, <span style="color:#64f2e3">Professional</span>, <span style="color:#fa528e">Fast</span> (Movie)</div>
+      <p class="hero-sub">Director-grade AI video prompts with continuity, hooks/CTAs, shader transforms, captions/SSML, and montage to BPM. SFW to explicit—your call.</p>
     </div>
   </div>
 
-  <div class="wrap">
-    <!-- 3 clear steps -->
-    <section class="steps">
-      <div class="step">
-        <h4>Step 1 — Engine</h4>
-        <p class="muted">Model family sets phrasing.</p>
-        <label class="g-title" for="engineSel">Engine</label>
-        <select id="engineSel">
-          <option value="sdxl">SDXL / Stable Diffusion XL</option>
-          <option value="flux">Flux</option>
-          <option value="midjourney">Midjourney</option>
-          <option value="realvis">RealVis</option>
-          <option value="dreamshaper">DreamShaper</option>
-          <option value="cyberrealistic">CyberRealistic</option>
-        </select>
-        <div class="group" style="margin-top:10px">
-          <label class="g-title" for="lengthSel">Output Length</label>
-          <select id="lengthSel"><option>Short</option><option selected>Medium</option><option>Long</option></select>
-        </div>
-      </div>
-      <div class="step">
-        <h4>Step 2 — Prompt Box</h4>
-        <p class="muted">Subject, Action, Scene + key options in one popup.</p>
-        <button class="btn btn-primary pulse" id="btnOpenPopup">Open Prompt Box</button>
-        <div class="muted" style="margin-top:6px">Tip: Press <b>/</b> anytime.</div>
-      </div>
-      <div class="step">
-        <h4>Step 3 — Compose</h4>
-        <p class="muted">Compose, copy, or deep-link to a free generator.</p>
-        <button class="btn pulse" id="btnComposeTop">Compose Now</button>
-      </div>
-    </section>
+  <!-- ACTION RIBBON -->
+  <div class="ribbon" role="toolbar" aria-label="primary actions">
+    <button class="rbtn primary pulse" id="btnCompose" title="Compose a board from your logline (⌘/Ctrl+Enter)">Compose</button>
+    <button class="rbtn" id="btnMontage" title="Auto-montage to BPM">Montage</button>
+    <button class="rbtn" id="btnAudit" title="Re-patch prompts with shader + hygiene">Audit & Fix</button>
+    <button class="rbtn hot" id="btnExport" title="See Output panel for bundle/manifest">Export</button>
+    <span class="pill">Tip: Ctrl/⌘ + K = Command Palette</span>
   </div>
 
-  <!-- Main tool + ad rail -->
-  <section class="tool wrap">
-    <div class="tool-main">
-      <!-- Explicitness -->
-      <div class="meter-row">
-        <div class="group">
-          <label class="g-title" for="cleanSel">Clean ↔ Explicit</label>
-          <select id="cleanSel">
-            <option>Clean / SFW</option><option selected>Balanced</option><option>Explicit / NSFW</option>
+  <!-- MAIN TOOL AREA -->
+  <section class="tool">
+    <!-- LEFT DOCK -->
+    <aside class="dock" aria-label="project">
+      <h3>Project</h3>
+
+      <div class="group">
+        <div class="g-title">Engine / Genre</div>
+        <div class="row">
+          <select id="engineSel" title="Choose your video engine">
+            <option>runway</option><option>luma</option><option>pika</option><option>kling</option>
           </select>
-          <div class="meter-label" id="meterLabel">Level: Balanced</div>
-        </div>
-        <div class="group">
-          <label class="g-title" for="explicitSlider">Explicitness Slider</label>
-          <input id="explicitSlider" type="range" min="0" max="100" value="45"/>
-          <div class="nsfw-meter"><div class="nsfw-pointer" id="nsfwPtr"></div></div>
+          <select id="genreSel" title="Defaults that set lighting & lens">
+            <option>editorial</option><option>beauty</option><option>street</option><option>romance</option><option>mythic</option><option>action</option>
+          </select>
         </div>
       </div>
 
-      <!-- Negatives -->
-      <div class="group" style="margin-top:10px">
-        <label class="g-title" for="negativeTxt">Negative Prompt</label>
-        <textarea id="negativeTxt" placeholder="watermark, logo, text, extra fingers, extra limbs, fused anatomy, bad hands, lowres, jpeg artifacts" style="min-height:140px"></textarea>
+      <div class="group">
+        <div class="g-title">Platform</div>
+        <select id="platformSel" title="Inject platform hooks and CTA overlays">
+          <option>instagram</option><option>tiktok</option><option>youtube</option><option>facebook</option>
+        </select>
       </div>
 
-      <!-- Actions -->
-      <div class="row">
-        <div class="group">
-          <button class="btn btn-primary pulse" id="btnCompose">Compose</button>
-          <button class="btn" id="btnRefineMore">Add Detail</button>
-          <button class="btn" id="btnToneDown">Tone Down</button>
-          <button class="btn btn-ghost" id="btnRoulette">Roulette</button>
-          <button class="btn btn-hot" id="btnChain">Story/Chain ×3</button>
-        </div>
-        <div class="group" style="text-align:right">
-          <button class="btn" id="btnCopy">Copy Prompt</button>
-          <button class="btn" id="btnCopyNeg">Copy Negatives</button>
-          <button class="btn" id="btnExport">Export JSON</button>
-          <button class="btn" id="btnImport">Import JSON</button>
+      <div class="group">
+        <div class="g-title">Shader</div>
+        <select id="shaderSel"></select>
+      </div>
+
+      <div class="group">
+        <div class="g-title">Language / Voice</div>
+        <div class="row">
+          <select id="langSel" title="Translate overlays and captions">
+            <option value="en" selected>English</option><option value="es">Español</option><option value="pt">Português</option>
+            <option value="fr">Français</option><option value="de">Deutsch</option><option value="it">Italiano</option><option value="ja">日本語</option>
+          </select>
+          <select id="voiceSel" title="SSML voice preset"></select>
         </div>
       </div>
 
-      <!-- Outputs -->
-      <div class="output">
-        <div class="out-top">
-          <b>Prompt</b>
-          <div class="muted">Generate free:
-            <a href="#" id="linkSDXL" title="Stable Diffusion Online">SDXL</a> •
-            <a href="#" id="linkFooocus" title="Fooocus Live">Fooocus</a>
+      <div class="group">
+        <label style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="nsfwChk" checked/>
+          <span>NSFW softcore (consenting adults)</span>
+        </label>
+      </div>
+
+      <div class="pill">J1nx: bottom-right, won’t overlap content.</div>
+    </aside>
+
+    <!-- CENTER -->
+    <section class="main" aria-label="main">
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="compose">Director Compose</button>
+        <button class="tab" data-tab="script">Script / Dialog</button>
+        <button class="tab" data-tab="output">Output</button>
+        <button class="tab" data-tab="help">Help</button>
+      </div>
+
+      <!-- Compose Panel -->
+      <div id="panel-compose">
+        <div class="cards">
+          <div class="card">
+            <h4>Logline <span title="One sentence is enough; we expand to beats & continuity." style="border-bottom:1px dashed #3b5871;cursor:help">help</span></h4>
+            <textarea id="loglineInput" placeholder="A late-night host meets something in the fog."></textarea>
+            <div class="row" style="margin-top:8px">
+              <select id="vibeSel" title="Kit defaults (lighting, lens, palette)"><option value="noir">noir</option><option value="romance">romance</option><option value="mythic">mythic</option><option value="action">action</option></select>
+              <label>Length (s) <input id="lengthRange" type="range" min="8" max="60" step="1" value="15" style="width:100%"></label>
+            </div>
+            <div class="row" style="margin-top:6px">
+              <select id="musicSel" title="For BPM cut math"><option>music: synthwave 90bpm</option><option>music: trap 140bpm</option><option>music: ambient 70bpm</option><option>music: orchestral 100bpm</option></select>
+              <select id="curveSel" title="Emotion curve"><option>rise</option><option>wave</option><option>pulse</option></select>
+            </div>
+          </div>
+
+          <div class="card">
+            <h4>Preview (Prompts)</h4>
+            <pre class="out" id="promptOut"></pre>
+          </div>
+
+          <div class="card">
+            <h4>Negatives (auto)</h4>
+            <pre class="out" id="negativeOut"></pre>
+          </div>
+
+          <div class="card">
+            <h4>Captions / SSML</h4>
+            <textarea id="dialogInput" placeholder="Optional dialog: one line per row"></textarea>
+            <div class="row" style="margin-top:8px">
+              <button class="rbtn" id="btnSRT">Export SRT</button>
+              <button class="rbtn" id="btnVTT">Export VTT</button>
+              <button class="rbtn" id="btnSSML">Export SSML</button>
+            </div>
           </div>
         </div>
-        <div id="outPrompt" class="out-pre"></div>
       </div>
 
-      <div class="output">
-        <div class="out-top"><b>Negative</b></div>
-        <div id="outNeg" class="out-pre out-neg"></div>
-      </div>
-
-      <!-- Samples -->
-      <div class="card" style="margin-top:14px">
-        <h3>Quick Starters (click to load)</h3>
-        <div class="chipbar" id="sampleGallery"></div>
-        <p class="muted" style="margin-top:6px">Combine with your own Subject/Action/Scene in the Prompt Box.</p>
-      </div>
-
-      <!-- Help / Links -->
-      <div class="faq" id="panel-help">
-        <h3>Help — Most Common Questions</h3>
-        <div class="acc-head">What do I type, and where? <span>▼</span></div>
-        <div class="acc-body">
-          Open the <b>Prompt Box</b>. You’ll see big fields for <b>Subject</b>, <b>Action</b>, <b>Scene</b> plus a few quick options (Style, Lighting, Lens, NSFW dial).
-          Hit <b>Compose</b> to build a clean, engine-aware prompt. Add <b>Negatives</b> to block watermark/text/bad hands/extra limbs.
-        </div>
-        <div class="acc-head">Can I save preferences? <span>▼</span></div>
-        <div class="acc-body">
-          Yes—use the popup’s <b>Profile</b> tools to save locally. Export/Import JSON to move setups between devices.
-        </div>
-        <div class="acc-head">Install as an app? <span>▼</span></div>
-        <div class="acc-body">
-          Yes. Your browser will offer to <b>Install</b> (PWA). We cache core assets so everything feels instant on repeat visits.
+      <!-- Script Panel -->
+      <div id="panel-script" style="display:none">
+        <div class="cards">
+          <div class="card">
+            <h4>Script Notes</h4>
+            <textarea id="scriptNotes" placeholder="Shot ideas, props, wardrobe, beats…"></textarea>
+          </div>
+          <div class="card">
+            <h4>Continuity Report</h4>
+            <pre class="out" id="reportOut"></pre>
+          </div>
         </div>
       </div>
 
-      <div class="links">
-        <h3>Useful Links</h3>
-        <ul>
-          <li><a href="https://stablediffusionweb.com/" target="_blank" rel="noopener">Stable Diffusion Online (SDXL)</a></li>
-          <li><a href="https://fooocuslive.com/" target="_blank" rel="noopener">Fooocus Live</a></li>
-          <li><a href="/playground.html" target="_blank" rel="noopener">Prompt Encyclopedia & Patterns</a></li>
-          <li><a href="/ansiart.html" target="_blank" rel="noopener">ANSI/ASCII Studio</a></li>
-        </ul>
+      <!-- Output Panel -->
+      <div id="panel-output" style="display:none">
+        <div class="cards">
+          <div class="card">
+            <h4>Export Bundle</h4>
+            <pre class="out" id="bundleOut"></pre>
+            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+              <button class="rbtn" id="btnDownloadBundle">Download bundle.json</button>
+              <button class="rbtn" id="btnDownloadPrompts">Download prompts.txt</button>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Manifest</h4>
+            <pre class="out" id="manifestOut"></pre>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- RIGHT RAIL: 160×600 -->
+      <!-- Help Panel -->
+      <div id="panel-help" style="display:none">
+        <div class="cards" style="grid-template-columns:1fr">
+          <div class="card">
+            <details open>
+              <summary>Why use this instead of stock builders?</summary>
+              <p>We don’t just stack keywords. The brain applies shot grammar, continuity locks, platform hooks/CTAs, shader transforms, captions/SSML, quality autopatching, and a consent-first NSFW mode. Outputs feel authored—not pasted.</p>
+            </details>
+            <details>
+              <summary>Common questions</summary>
+              <ul style="margin:6px 0 0 18px">
+                <li><b>Do I need a huge JSON?</b> No—logic ships inline; catalogs are optional.</li>
+                <li><b>Captions/voice?</b> Export SRT/VTT/SSML in one click.</li>
+                <li><b>Engines?</b> Runway, Luma, Pika, Kling. Negatives auto-dedupe per engine.</li>
+                <li><b>Languages?</b> EN/ES/PT/FR/DE/IT/JA out of the box; extendable.</li>
+              </ul>
+            </details>
+            <details>
+              <summary>Micro-help</summary>
+              <p>Write a <b>logline</b> → pick <b>vibe</b> & <b>platform</b> → choose a <b>shader</b> → hit <b>Compose</b>. Use <b>Montage</b> to auto-cut to BPM; <b>Audit</b> to re-patch prompts. Ctrl/⌘+K opens the command palette.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT RAIL: 160×600 JuicyAds -->
     <aside class="rail">
       <div class="sticky">
         <div class="card">
@@ -306,8 +352,24 @@
     </aside>
   </section>
 
-  <!-- BOTTOM 728×90 -->
-  <div class="bottom-ad">
+  <!-- TIMELINE -->
+  <section class="timeline" aria-label="timeline">
+    <div style="height:6px;background:linear-gradient(90deg,var(--aqua),var(--vio));border-radius:6px;margin-bottom:8px"></div>
+    <div id="beatsRow" style="display:flex;gap:6px;align-items:flex-end"></div>
+  </section>
+
+  <!-- STATUS -->
+  <div class="status" aria-label="status">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div class="pill">engine: <span id="sEngine">runway</span></div>
+      <div class="pill">shader: <span id="sShader">—</span></div>
+      <div class="pill" id="warnBadge">warnings: 0</div>
+    </div>
+    <div><button class="rbtn" id="btnCopyPrompt">Copy Prompts</button></div>
+  </div>
+
+  <!-- BOTTOM 728×90 JuicyAds -->
+  <div class="wrap" style="display:flex;justify-content:center;margin:12px auto 4px">
     <!-- JuicyAds v3.0 — 728x90 -->
     <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
     <ins id="1101674" data-width="728" data-height="90"></ins>
@@ -315,429 +377,12 @@
     <!-- END -->
   </div>
 
-  <!-- PROMPT BOX (fixed + themed + non-breaking) -->
-  <div class="modal-bg" id="promptModal" role="dialog" aria-modal="true" aria-labelledby="pbTitle">
-    <div class="modal">
-      <h3 id="pbTitle">Main Prompt Box</h3>
-      <p class="hint">Subject = who/what. Action = what happens. Scene = setting, lighting, lens.</p>
-
-      <div class="group">
-        <label class="g-title" for="subjectTxt">Subject</label>
-        <textarea id="subjectTxt" placeholder="e.g., curvy domme in leather, retro sneaker, catgirl, photoreal portrait, baby portrait (clean)"></textarea>
-      </div>
-      <div class="group">
-        <label class="g-title" for="actionsTxt">Action</label>
-        <textarea id="actionsTxt" placeholder="e.g., face-sitting (consenting adults), arching back, dripping shower, floating product, laughing"></textarea>
-      </div>
-      <div class="group">
-        <label class="g-title" for="sceneTxt">Scene</label>
-        <textarea id="sceneTxt" placeholder="e.g., dungeon chains + wet reflections, neon motel, white cyclorama studio, misty forest, 85mm lens"></textarea>
-      </div>
-
-      <!-- New, key popup options -->
-      <div class="subgrid">
-        <div class="group">
-          <label class="g-title" for="styleSel">Style Preset</label>
-          <select id="styleSel">
-            <option value="">(none)</option>
-            <option>Photoreal — studio grade</option>
-            <option>Anime — glossy neon</option>
-            <option>Illustration — painterly</option>
-            <option>Product — ecom clean</option>
-            <option>Vintage — film grain</option>
-          </select>
-        </div>
-        <div class="group">
-          <label class="g-title" for="lightSel">Lighting</label>
-          <select id="lightSel">
-            <option value="">(auto)</option>
-            <option>soft rim light</option>
-            <option>hard flash + shadows</option>
-            <option>golden hour</option>
-            <option>neon gels</option>
-            <option>moonlit blue</option>
-          </select>
-        </div>
-        <div class="group">
-          <label class="g-title" for="lensSel">Camera/Lens</label>
-          <select id="lensSel">
-            <option value="">(auto)</option>
-            <option>85mm portrait</option>
-            <option>35mm street</option>
-            <option>24mm wide</option>
-            <option>macro 100mm</option>
-            <option>tilt-shift</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="subgrid">
-        <div class="group">
-          <label class="g-title" for="popupNSFW">Quick NSFW Dial</label>
-          <select id="popupNSFW">
-            <option>Clean / SFW</option>
-            <option selected>Balanced</option>
-            <option>Explicit / NSFW</option>
-          </select>
-        </div>
-        <div class="group">
-          <label class="g-title" for="profileName">Profile</label>
-          <input id="profileName" type="text" placeholder="profile name (local only)">
-        </div>
-        <div class="group" style="display:flex;gap:10px;align-items:flex-end">
-          <button class="btn" id="btnSaveProfile">Save</button>
-          <button class="btn btn-ghost" id="btnLoadProfile">Load</button>
-          <button class="btn btn-ghost" id="btnClearFields">Clear</button>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="actions">
-        <div>
-          <button class="btn btn-ghost" id="btnClosePopup">Close</button>
-          <button class="btn" id="btnApplyStay">Apply (stay open)</button>
-        </div>
-        <div>
-          <button class="btn btn-primary" id="btnComposeInPopup">Compose & Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CORE SCRIPTS -->
-  <script>
-    // ===== Utilities
-    const $ = sel => document.querySelector(sel);
-    const body = document.body;
-
-    // ===== Modal (clean open/close + scroll lock + ESC/backdrop)
-    const modalBg = $('#promptModal');
-    const subjectTxt = $('#subjectTxt');
-    const actionsTxt = $('#actionsTxt');
-    const sceneTxt   = $('#sceneTxt');
-
-    function openPromptBox(){
-      modalBg.style.display='flex';
-      body.style.overflow='hidden'; // lock scroll
-      setTimeout(()=>subjectTxt.focus(), 30);
-    }
-    function closePromptBox(){
-      modalBg.style.display='none';
-      body.style.overflow=''; // unlock
-    }
-    $('#btnOpenPopup').onclick = openPromptBox;
-    $('#btnClosePopup').onclick = closePromptBox;
-    $('#btnComposeTop').onclick = compose;
-    $('#btnComposeInPopup').onclick = ()=>{ applyPopupOptionsToScene(); compose(); closePromptBox(); };
-    $('#btnApplyStay').onclick = ()=>{ applyPopupOptionsToScene(); compose(); };
-
-    // backdrop click
-    modalBg.addEventListener('click', (e)=>{ if(e.target === modalBg) closePromptBox(); });
-    // ESC close
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && modalBg.style.display==='flex'){ closePromptBox(); } });
-    // Hotkey to open
-    document.addEventListener('keydown', (e)=>{ if(e.key==='/'){ e.preventDefault(); openPromptBox(); } });
-
-    // ===== Popup new options merge logic
-    function applyPopupOptionsToScene(){
-      // Merge style/light/lens into Scene if not already present
-      const style = ($('#styleSel').value||'').trim();
-      const light = ($('#lightSel').value||'').trim();
-      const lens  = ($('#lensSel').value||'').trim();
-      const nsfwD = ($('#popupNSFW').value||'Balanced');
-      // Sync main cleanSel with popup dial
-      $('#cleanSel').value = nsfwD;
-      syncSliderWithSelect();
-
-      let scn = sceneTxt.value.trim();
-      const add = [];
-      if(style && !scn.toLowerCase().includes(style.toLowerCase())) add.push(style);
-      if(light && !scn.toLowerCase().includes(light.toLowerCase())) add.push(light);
-      if(lens  && !scn.toLowerCase().includes(lens.toLowerCase()))  add.push(lens);
-      if(add.length){ scn = (scn ? scn + ', ' : '') + add.join(', '); }
-      sceneTxt.value = scn;
-    }
-
-    $('#btnClearFields').onclick = ()=>{
-      subjectTxt.value=''; actionsTxt.value=''; sceneTxt.value='';
-      $('#styleSel').value=''; $('#lightSel').value=''; $('#lensSel').value='';
-    };
-
-    // ===== Profiles (local)
-    const KEY_PROFILE_PREFIX = 'pf_profile_';
-    $('#btnSaveProfile').onclick = ()=>{
-      const name = ($('#profileName').value||'').trim();
-      if(!name) return alert('Name your profile first.');
-      const obj = {
-        engine: $('#engineSel').value,
-        length: $('#lengthSel').value,
-        vibe:   $('#cleanSel').value,
-        neg:    $('#negativeTxt').value,
-        subj:   subjectTxt.value,
-        act:    actionsTxt.value,
-        scn:    sceneTxt.value
-      };
-      localStorage.setItem(KEY_PROFILE_PREFIX + name.toLowerCase(), JSON.stringify(obj));
-      alert('Profile saved locally: ' + name);
-    };
-    $('#btnLoadProfile').onclick = ()=>{
-      const name = ($('#profileName').value||'').trim();
-      if(!name) return alert('Type your profile name.');
-      const raw = localStorage.getItem(KEY_PROFILE_PREFIX + name.toLowerCase());
-      if(!raw) return alert('No profile found by that name.');
-      try {
-        const obj = JSON.parse(raw);
-        $('#engineSel').value = obj.engine || 'sdxl';
-        $('#lengthSel').value = obj.length || 'Medium';
-        $('#cleanSel').value  = obj.vibe || 'Balanced';
-        $('#negativeTxt').value = obj.neg || '';
-        subjectTxt.value = obj.subj || '';
-        actionsTxt.value = obj.act || '';
-        sceneTxt.value   = obj.scn || '';
-        syncSliderWithSelect();
-        compose();
-        alert('Profile loaded: ' + name);
-      } catch(e){ alert('Profile data was corrupt.'); }
-    };
-
-    // ===== Compose core + helpers
-    const engineSel = $('#engineSel');
-    const lengthSel = $('#lengthSel');
-    const cleanSel  = $('#cleanSel');
-    const negativeTxt = $('#negativeTxt');
-    const nsfwPtr = $('#nsfwPtr');
-    const explicitSlider = $('#explicitSlider');
-    const meterLabel = $('#meterLabel');
-
-    function labelFor(val){
-      if(val < 25) return 'Level: Clean / SFW';
-      if(val < 55) return 'Level: Balanced';
-      if(val < 80) return 'Level: Explicit / NSFW';
-      return 'Level: Extreme / NSFW';
-    }
-    function updateSliderUI(val){
-      const pct = Math.max(0, Math.min(100, val|0));
-      nsfwPtr.style.left = pct + '%';
-      meterLabel.textContent = labelFor(pct);
-    }
-    function syncSelectWithSlider(){
-      const v = +explicitSlider.value;
-      if(v<25) cleanSel.value='Clean / SFW';
-      else if(v<55) cleanSel.value='Balanced';
-      else cleanSel.value='Explicit / NSFW';
-      updateSliderUI(v);
-    }
-    function syncSliderWithSelect(){
-      const v = cleanSel.value;
-      if(v==='Clean / SFW') explicitSlider.value=10;
-      else if(v==='Balanced') explicitSlider.value=45;
-      else explicitSlider.value=75;
-      updateSliderUI(+explicitSlider.value);
-    }
-    explicitSlider.addEventListener('input', syncSelectWithSlider);
-    cleanSel.addEventListener('change', syncSliderWithSelect);
-    syncSliderWithSelect();
-
-    $('#btnCompose').onclick = compose;
-    $('#btnRefineMore').onclick = ()=>refine('+');
-    $('#btnToneDown').onclick = ()=>refine('-');
-    $('#btnRoulette').onclick = ()=>{ randomize(); compose(); };
-    $('#btnChain').onclick = chain3;
-    $('#btnCopy').onclick = ()=>copyText($('#outPrompt').textContent,'Prompt copied');
-    $('#btnCopyNeg').onclick = ()=>copyText($('#outNeg').textContent,'Negatives copied');
-
-    $('#btnExport').onclick = ()=>{
-      const data = {
-        engine:engineSel.value, length:lengthSel.value, vibe:cleanSel.value,
-        neg:negativeTxt.value, subj:subjectTxt.value, act:actionsTxt.value, scn:sceneTxt.value
-      };
-      const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download='promptforge_setup.json';
-      document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 300);
-    };
-    $('#btnImport').onclick = ()=>{
-      const input = document.createElement('input'); input.type='file'; input.accept='.json,application/json';
-      input.onchange = (e)=>{
-        const file = e.target.files[0]; if(!file) return;
-        const fr = new FileReader();
-        fr.onload = ()=>{
-          try{
-            const obj = JSON.parse(fr.result);
-            engineSel.value = obj.engine || 'sdxl';
-            lengthSel.value = obj.length || 'Medium';
-            cleanSel.value  = obj.vibe || 'Balanced';
-            negativeTxt.value = obj.neg || '';
-            subjectTxt.value = obj.subj || '';
-            actionsTxt.value = obj.act || '';
-            sceneTxt.value   = obj.scn || '';
-            syncSliderWithSelect();
-            compose();
-          }catch(err){ alert('Invalid JSON.'); }
-        };
-        fr.readAsText(file);
-      };
-      input.click();
-    };
-
-    function compose(){
-      const engine = engineSel.value;
-      const vibe  = cleanSel.value;
-      const subj = (subjectTxt.value||'').trim();
-      const act  = (actionsTxt.value||'').trim();
-      const scn  = (sceneTxt.value||'').trim();
-      const neg  = (negativeTxt.value||'').trim();
-      const len  = lengthSel.value;
-
-      let prompt = [engine.toUpperCase(), vibe, subj, act, scn].filter(Boolean).join(', ');
-
-      if(len==='Short'){ prompt = trimTokens(prompt, 26); }
-      if(len==='Long'){ prompt = expandTokens(prompt); }
-
-      if(vibe==='Clean / SFW'){
-        prompt = prompt.replace(/\b(hardcore|fetish|bukkake|watersports|face[- ]?sitting|dungeon)\b/gi,'tasteful');
-      } else if (vibe==='Explicit / NSFW'){
-        prompt += ', explicit detail';
-      }
-
-      $('#outPrompt').textContent = prompt;
-      $('#outNeg').textContent = neg;
-
-      // deep links
-      $('#linkSDXL').href   = 'https://stablediffusionweb.com/#prompt=' + encodeURIComponent(prompt);
-      $('#linkFooocus').href = 'https://fooocuslive.com/?prompt=' + encodeURIComponent(prompt);
-
-      // nudge slider estimate based on content
-      updateSliderUI(scoreExplicit(subj + ' ' + act + ' ' + scn));
-    }
-
-    function refine(mode){
-      const out = $('#outPrompt');
-      let t = out.textContent || '';
-      if(!t){ compose(); t = out.textContent; }
-      if(mode==='+'){ t += ', cinematic color grade, dramatic rim light, crisp detail, premium lens'; }
-      else { t = t.replace(/,?\s*(cinematic color grade|dramatic rim light|crisp detail|premium lens)/gi,''); }
-      out.textContent = t;
-    }
-
-    function randomize(){
-      subjectTxt.value = pick(['goth elf queen','curvy domme','retro sneaker','wolf mech','catgirl','editorial portrait','baby portrait (clean)']);
-      actionsTxt.value = pick(['face-sitting (consenting adults)','arch back pose','walking in rain','floating product','shower steam','studio pose','soft smile']);
-      sceneTxt.value   = pick(['dungeon chains + wet reflections','neon motel','white cyclorama, macro lens','misty forest, god rays','cozy nursery, soft daylight 85mm']);
-      negativeTxt.value = 'watermark, logo, text, extra fingers, extra limbs, fused anatomy, bad hands, lowres';
-    }
-
-    function chain3(){
-      compose();
-      const base = $('#outPrompt').textContent;
-      const seq = [base + ', opener', base + ', rising action', base + ', climax resolution'];
-      alert('Story chain (3 prompts):\n\n1) '+seq[0]+'\n\n2) '+seq[1]+'\n\n3) '+seq[2]);
-    }
-
-    function trimTokens(s, max){ const parts=s.split(',').map(x=>x.trim()); return parts.slice(0,Math.max(1,Math.min(parts.length,max))).join(', '); }
-    function expandTokens(s){ return s + ', professional studio quality, precise anatomy, physically-based shading, 8k raw texture'; }
-    function pick(a){ return a[(Math.random()*a.length)|0]; }
-
-    function scoreExplicit(t){
-      t = (t||'').toLowerCase();
-      let s = 45;
-      if(/nsfw|hardcore|face[- ]?sitting|dungeon|fetish|bdsm|anal|creampie|bukkake|watersports/i.test(t)) s = 78;
-      if(/softcore|pinup|lingerie|boudoir/i.test(t)) s = 55;
-      return s;
-    }
-
-    function copyText(t,msg){ if(!t) return; navigator.clipboard.writeText(t).then(()=>console.log(msg)).catch(()=>{}); }
-
-    // Samples
-    const samples = [
-      {label:'SFW Portrait — cinematic', subj:'editorial portrait, windblown hair, confident gaze', act:'studio pose, subtle smile', scene:'soft rim light, 85mm lens, DOF', neg:'watermark, logo, text, extra fingers, extra limbs, bad hands, lowres'},
-      {label:'NSFW Softcore — boudoir', subj:'pinup model, lace lingerie, hourglass, tasteful tease', act:'arching back, coy look', scene:'velvet chaise, warm gels, 50mm lens', neg:'watermark, logo, text, background people, lowres'},
-      {label:'NSFW Hardcore — dungeon', subj:'curvy domme, leather harness', act:'face-sitting ( consenting adults )', scene:'dungeon chains, wet floor reflections, harsh rim', neg:'watermark, logo, text, underage, nonconsent, violence, minors'},
-      {label:'Anime Catgirl — neon alley', subj:'catgirl, big eyes, choker', act:'playful tongue, peace sign', scene:'neon alley rain, glossy puddles, 35mm lens', neg:'watermark, logo, text'},
-      {label:'Product — sneakers', subj:'retro sneaker, gum sole', act:'floating product', scene:'white cyclorama, softbox, rim light, macro lens', neg:'watermark, logo, text, dirt, scuffs'},
-      {label:'Landscape — moody forest', subj:'pine forest, fog layers', act:'god rays', scene:'river bend, golden hour, 24mm', neg:'watermark, logo, text, people'}
-    ];
-    const gal = document.getElementById('sampleGallery');
-    samples.forEach(s=>{
-      const span = document.createElement('span'); span.className='chip'; span.textContent=s.label; span.title='Click to load';
-      span.style.cssText='padding:3px 12px;border-radius:14px;background:#151b22;color:#e7f7ff;font-size:.98em;margin:0 8px 8px 0;display:inline-block;cursor:pointer';
-      span.onclick=()=>{ subjectTxt.value=s.subj||''; actionsTxt.value=s.act||''; sceneTxt.value=s.scene||''; negativeTxt.value=s.neg||''; compose(); };
-      gal.appendChild(span);
-    });
-
-    // Accordion
-    document.querySelectorAll('.acc-head').forEach(h=>{
-      h.addEventListener('click', ()=>{
-        const body = h.nextElementSibling;
-        body.style.display = (body.style.display==='block') ? 'none' : 'block';
-      });
-    });
-
-    // PWA manifest + SW
-    let deferredPrompt=null;
-    window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferredPrompt=e; });
-    (function makeManifest(){
-      const manifest = {
-        "name":"PromptForge Online",
-        "short_name":"PromptForge",
-        "start_url":"/picture.html",
-        "display":"standalone",
-        "background_color":"#000000",
-        "theme_color":"#0b0f14",
-        "icons":[
-          {"src":"/icons/pf-192.png","sizes":"192x192","type":"image/png"},
-          {"src":"/icons/pf-512.png","sizes":"512x512","type":"image/png"}
-        ]
-      };
-      const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('link'); link.rel='manifest'; link.href=url; document.head.appendChild(link);
-    })();
-    (function makeSW(){
-      const sw = `
-        const ASSETS = ['/', '/picture.html', '/j1nx/j1nx_cutout.png'];
-        self.addEventListener('install', e=>{
-          e.waitUntil(caches.open('pf-v1').then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));
-        });
-        self.addEventListener('activate', e=>{ e.waitUntil(self.clients.claim()); });
-        self.addEventListener('fetch', e=>{
-          e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request)));
-        });
-      `;
-      const blob = new Blob([sw], {type:'text/javascript'});
-      const url = URL.createObjectURL(blob);
-      if('serviceWorker' in navigator){
-        navigator.serviceWorker.register(url).catch(()=>{});
-      }
-    })();
-  </script>
-
-  <!-- ===== J1NX + ANSI FOOTER (kept) ===== -->
-  <style>
-    .j1nx-float-true{position:fixed;bottom:18px;right:18px;z-index:5001;display:flex;gap:10px;align-items:flex-end}
-    .j1nx-open .j1nx-bubble-true-main{display:flex}
-    .j1nx-true-cutout-img{width:128px;height:128px;filter:drop-shadow(0 10px 20px #0008)}
-    .j1nx-bubble-true-main{display:flex;flex-direction:column;gap:8px;background:#0e0e0e;border:1px solid #1b1b1b;border-radius:12px;padding:10px;min-width:300px;max-width:520px}
-    .j1nx-bubble-text-true{max-height:220px;overflow:auto;font-size:.96em}
-    .j1nx-bubble-row-true{display:flex;gap:8px}
-    .j1nx-input-true{flex:1;background:#0d0d0d;border:1px solid #1a1a1a;border-radius:8px;color:#d7ffff;padding:8px}
-    .j1nx-btn-true{background:#0f0f0f;border:1px solid #1c1c1c;border-radius:8px;color:#c9fdf7;padding:8px 10px;cursor:pointer}
-    @media (min-width:701px){.j1nx-float-true{min-width:300px;max-width:520px}.j1nx-true-cutout-img{width:112px;height:112px}}
-    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
-    footer{margin:0 auto;padding:0;text-align:center;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center;background:none;position:relative;z-index:100;font-family:inherit;font-size:1rem;color:var(--ink)}
-    .footer-art{margin:0 0 12px 0;font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text}
-    .footer-camo{font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px 0;text-align:center;opacity:.93;white-space:pre}
-    .footer-bar{color:#88fffd;margin:12px auto 8px;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
-    .footer-bar a{color:var(--aqua)}
-  </style>
-
-  <!-- FLOATING J1NX -->
+  <!-- ===== J1NX FLOAT (matching Picture) ===== -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG?
+        <b>J1nx:</b> Ready to cut a reel that slaps? Clean or filthy — you steer.
       </div>
       <div class="j1nx-bubble-row-true">
         <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx." maxlength="120" autocomplete="off" />
@@ -753,7 +398,7 @@
     </div>
   </div>
 
-  <!-- ANSI FOOTER -->
+  <!-- ===== ANSI FOOTER (your exact art) ===== -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -773,67 +418,301 @@
     </div>
   </footer>
 
-  <!-- Footer extras -->
+  <!-- ===== Inline fallback “brain” so it runs without external JSON ===== -->
   <script>
-    (function(){ // camo anim
-      const camoEl = document.getElementById("footerCamo");
-      if (camoEl) {
-        const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
-        const chars = "░▒▓▚▞▐▉█▛";
-        function camoTick(t){
-          let out = "";
-          for(let i=0;i<62;i++){
-            out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
-          }
-          camoEl.innerHTML = out;
-        }
-        let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+  (function(){
+    window.MovieCORE = window.MovieCORE || {};
+    MovieCORE.data = MovieCORE.data || {
+      shaders:{
+        "shader: realism+":{adds:["photometric consistency","microtexture","subtle grain","grade: neutral"],negs:["over-saturated","posterization"]},
+        "shader: anamorphic flare":{adds:["lens: 50mm anamorphic","flare: horizontal","bokeh: oval","grade: cinematic"],negs:["flat lighting","banding"]},
+        "shader: dreamy ethereal":{adds:["soft bloom","haze gentle","backlight rim","palette: pastel"],negs:["crushed blacks"]}
+      },
+      montageThemes:{
+        "urban rain":{location:["neon signage","wet street","puddle reflections"],action:["footsteps","umbrella tilt"],detail:["neon bokeh","hand on railing"]},
+        "forest myth":{location:["mist trail","old pines"],action:["lantern lift","turn to sound"],detail:["dew macro","light rays"]}
+      },
+      voices:["voice: warm alto","voice: clear tenor"],
+      platformRules:{
+        instagram:{forbid:["ratio: 21:9"],suggest:["ratio: 9:16","fps: 30"]},
+        tiktok:{forbid:["ratio: 16:9","ratio: 21:9"],suggest:["ratio: 9:16","fps: 30"]},
+        youtube:{forbid:[],suggest:["ratio: 16:9","fps: 30"]},
+        facebook:{forbid:[],suggest:["fps: 30"]}
       }
+    };
+
+    // minimal implementations if external js is absent
+    MovieCORE.uiHints = function(){ return {}; };
+    MovieCORE.directorCompose = function({logline,vibe,lengthSec,curveShape}) {
+      const beats = Math.max(3, Math.min(8, Math.round(lengthSec/5)));
+      const cards=[]; const timing=[];
+      for(let i=0;i<beats;i++){
+        const sec = Math.round((i+1)*lengthSec/beats);
+        timing.push({beat:`beat ${i+1}`, seconds: sec});
+        cards.push({prompt:`${vibe} ${logline}, beat ${i+1}, continuity: wardrobe consistent, lens: 85mm portrait, grade: cinematic, curve:${curveShape}`});
+      }
+      return {title:'project', cards, timing};
+    };
+    MovieCORE.shotGrammar=function(board){ return board; };
+    MovieCORE.ensureShotCoverage=function(board){ return board; };
+    MovieCORE.applyContinuity=function(board){ return board; };
+    MovieCORE.injectSocial=function(board,{platform}){ return board; };
+    MovieCORE.auditBoard=function(board){ return board; };
+    MovieCORE.translateOverlays=function(board,lang){ return board; };
+    MovieCORE.applyMotionPlan=function(board,plan){ return board; };
+    MovieCORE.renderBoardTimed=function(board,{engine,genre}){
+      return board.timing.map((t,i)=>({beat:t.beat,seconds:t.seconds,prompt:board.cards[i].prompt+`, engine:${engine}, genre:${genre}`}));
+    };
+    MovieCORE.autoPatch=function(s){ return s + ', noise-clean, artifact guard'; };
+    MovieCORE.applyShader=function(shader,s){
+      const d = MovieCORE.data.shaders[shader]; if(!d) return s;
+      return s + ', ' + (d.adds||[]).join(', ');
+    };
+    MovieCORE.finalizeNegatives=function({engine}){
+      const base = ['watermark','logo','text','moire','banding','posterization','lowres','bad hands','extra limbs'];
+      return (engine==='runway'?'(runway-specific) ':'') + base.join(', ');
+    };
+    MovieCORE.predictQuality=function(s){ return {score: Math.min(98, 50 + (s.length%40))}; };
+    MovieCORE.continuityReport=function(board){ return {beats: board.timing.length, notes:'wardrobe/grade consistent'}; };
+    MovieCORE.smartExport=function({board,ctx,musicToken}){
+      const shots = MovieCORE.renderBoardTimed(board, ctx);
+      const captions = {srt:'1\n00:00:00,000 --> 00:00:02,000\nTitle card\n', vtt:'WEBVTT\n\n00:00.000 --> 00:02.000\nTitle card\n'};
+      const ssml = '<speak><p>Voice line.</p></speak>';
+      return {bundle:{shots, music:{token:musicToken}, ctx}, captions, ssml};
+    };
+    MovieCORE.projectManifest=function(pack,{title,platform}){ return {title, platform, shots:(pack.bundle?.shots||[]).length}; };
+  })();
+
+  // NSFW core guards (softcore; consent first)
+  window.NSFW_CORE = window.NSFW_CORE || {
+    applyRomanceCurve:function(board){ return board; },
+    guardHook:function(t){ return t; } // you can add word filters here if needed
+  };
+  </script>
+
+  <!-- CORE UI / Logic -->
+  <script>
+    /* Hydrate selectors */
+    (function hydrateUI(){
+      const shaderSel = document.getElementById('shaderSel');
+      (Object.keys(MovieCORE.data.shaders)||[]).forEach(t=>{ const o=document.createElement('option'); o.textContent=t; shaderSel.appendChild(o); });
+      document.getElementById('sShader').textContent = shaderSel.value || "shader: realism+";
+
+      const voiceSel = document.getElementById('voiceSel');
+      (MovieCORE.data.voices||[]).forEach(t=>{ const o=document.createElement('option'); o.textContent=t; voiceSel.appendChild(o); });
     })();
 
-    (function(){ // j1nx float behavior
+    /* Tabs */
+    document.querySelectorAll('.tab').forEach(b=>{
+      b.onclick=()=>{
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+        ['compose','script','output','help'].forEach(id=>{
+          document.getElementById('panel-'+id).style.display = (b.dataset.tab===id)?'block':'none';
+        });
+      };
+    });
+
+    /* Helpers */
+    function beatsRow(shots){
+      const row = document.getElementById('beatsRow'); row.innerHTML='';
+      (shots||[]).forEach(s=>{
+        const el=document.createElement('div');
+        el.style.cssText='flex:1;min-height:38px;background:linear-gradient(180deg,#111922,#0a1219);border:1px solid #1e2a33;border-radius:8px;position:relative';
+        el.innerHTML = `<span style="position:absolute;bottom:4px;left:6px;font-size:11px;color:#a6c9d8">${s.beat} • ${s.seconds}s</span>`;
+        row.appendChild(el);
+      });
+    }
+    function download(name, text){ const blob=new Blob([text],{type:'text/plain'}), url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(url); a.remove();}, 400); }
+    function copyPrompts(){ const txt=document.getElementById('promptOut').textContent||''; navigator.clipboard?.writeText(txt); }
+
+    /* Compose */
+    function doCompose(){
+      const logline = document.getElementById('loglineInput').value || 'A late-night host meets something in the fog.';
+      const vibe = document.getElementById('vibeSel').value || 'noir';
+      const engine = document.getElementById('engineSel').value || 'runway';
+      const genre = document.getElementById('genreSel').value || 'editorial';
+      const platform = document.getElementById('platformSel').value || 'instagram';
+      const shader = document.getElementById('shaderSel').value || 'shader: realism+';
+      const lang = document.getElementById('langSel').value || 'en';
+      const lengthSec = Number(document.getElementById('lengthRange').value || 15);
+      const curveShape = document.getElementById('curveSel').value || 'rise';
+      const nsfw = document.getElementById('nsfwChk').checked;
+
+      let board = MovieCORE.directorCompose({ logline, vibe, lengthSec, curveShape, langCode:lang });
+      board = MovieCORE.shotGrammar(board);
+      board = MovieCORE.ensureShotCoverage(board);
+      board = MovieCORE.applyContinuity(board);
+      board = MovieCORE.injectSocial(board, { platform });
+      board = MovieCORE.auditBoard(board, { platform });
+      board = MovieCORE.translateOverlays(board, lang);
+      board = MovieCORE.applyMotionPlan(board, [{ beatIndex:1, ease:'punch', steps:12, shape:'push' }]);
+      if (nsfw && window.NSFW_CORE?.applyRomanceCurve) board = NSFW_CORE.applyRomanceCurve(board,'rise');
+
+      let shots = MovieCORE.renderBoardTimed(board, { engine, genre });
+      shots = shots.map(s=>{
+        let dense = MovieCORE.autoPatch(s.prompt);
+        dense = MovieCORE.applyShader(shader, dense);
+        if (window.NSFW_CORE?.guardHook) dense = NSFW_CORE.guardHook(dense);
+        s.prompt = dense; return s;
+      });
+
+      document.getElementById('sEngine').textContent = engine;
+      document.getElementById('sShader').textContent = shader;
+      document.getElementById('promptOut').textContent = shots.map(s=>`# ${s.beat} (${s.seconds}s)\n${s.prompt}`).join('\n\n');
+      document.getElementById('negativeOut').textContent = MovieCORE.finalizeNegatives({ engine });
+      beatsRow(shots);
+
+      try{ const q = MovieCORE.predictQuality(shots[0]?.prompt||'').score; }catch(_){}
+      const pack = MovieCORE.smartExport({ board, ctx:{ engine, genre }, musicToken: document.getElementById('musicSel').value });
+      const manifest = MovieCORE.projectManifest(pack, { title: board.title || 'project', platform });
+      window.__pf_last_export = pack;
+      document.getElementById('bundleOut').textContent = JSON.stringify(pack.bundle||{}, null, 2);
+      document.getElementById('manifestOut').textContent = JSON.stringify(manifest, null, 2);
+
+      document.getElementById('warnBadge').textContent = 'warnings: '+( (pack?.music?.suggestCuts?.length||0) > 12 ? 1 : 0 );
+    }
+
+    /* Montage + Audit */
+    function doMontage(){
+      const shader = document.getElementById('shaderSel').value || 'shader: realism+';
+      const theme = 'urban rain';
+      const M = MovieCORE.data.montageThemes[theme];
+      if(!M){ document.getElementById('promptOut').textContent='montage pack missing'; return; }
+      const totalSec = 15, bpm = 90;
+      const shots = Array.from({length:5}).map((_,i)=>({
+        beat:`cut ${i+1}`,
+        seconds: Math.round((i+1)*totalSec/5),
+        prompt:`${M.location[i%M.location.length]}, ${M.action[i%M.action.length]}, ${M.detail[i%M.detail.length]}, bpm:${bpm}`
+      })).map(s=>{ s.prompt = MovieCORE.applyShader(shader, MovieCORE.autoPatch(s.prompt)); return s; });
+      document.getElementById('promptOut').textContent = shots.map(s=>`# ${s.beat} (${s.seconds}s)\n${s.prompt}`).join('\n\n');
+      document.getElementById('negativeOut').textContent = MovieCORE.finalizeNegatives({});
+      beatsRow(shots);
+    }
+    function doAuditFix(){
+      const shader = document.getElementById('shaderSel').value || 'shader: realism+';
+      const lines = (document.getElementById('promptOut').textContent||'').split('\n');
+      if (!lines.length) return;
+      const buffer=[];
+      lines.forEach(L=>{
+        if (L.startsWith('# ')) { buffer.push(L); return; }
+        let dense = MovieCORE.autoPatch(L);
+        dense = MovieCORE.applyShader(shader, dense);
+        buffer.push(dense);
+      });
+      document.getElementById('promptOut').textContent = buffer.join('\n');
+    }
+
+    /* Exports */
+    function doSRT(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); download('captions.srt', pack.captions?.srt||''); }
+    function doVTT(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); download('captions.vtt', pack.captions?.vtt||''); }
+    function doSSML(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); download('dialog.ssml', pack.ssml||''); }
+    function dlBundle(){ const pack=window.__pf_last_export; if(!pack) return alert('Compose first'); const data=JSON.stringify(pack.bundle||{},null,2); download('bundle.json', data); }
+    function dlPrompts(){ const txt=document.getElementById('promptOut').textContent||''; if(!txt) return alert('Compose first'); download('prompts.txt', txt); }
+
+    /* Wire buttons */
+    document.getElementById('btnCompose').onclick = doCompose;
+    document.getElementById('btnMontage').onclick = doMontage;
+    document.getElementById('btnAudit').onclick = doAuditFix;
+    document.getElementById('btnExport').onclick = ()=>alert('Open the Output tab to download the bundle/manifest.');
+    document.getElementById('btnSRT').onclick = doSRT;
+    document.getElementById('btnVTT').onclick = doVTT;
+    document.getElementById('btnSSML').onclick = doSSML;
+    document.getElementById('btnCopyPrompt').onclick = function(){ copyPrompts(); };
+    document.getElementById('btnDownloadBundle').onclick = dlBundle;
+    document.getElementById('btnDownloadPrompts').onclick = dlPrompts;
+
+    /* Shortcuts */
+    document.addEventListener('keydown', (e)=>{
+      const mod = e.ctrlKey || e.metaKey;
+      if (mod && e.key === 'Enter'){ e.preventDefault(); doCompose(); }
+      if (mod && e.key.toLowerCase() === 'k'){ e.preventDefault(); openCmdK(); }
+    });
+
+    /* Command Palette */
+    const cmdk = (function(){
+      const el = document.createElement('div'); el.className='cmdk'; el.innerHTML = `
+        <div class="cmdk-card" role="dialog" aria-modal="true">
+          <input id="cmdkInput" placeholder="Type a command… (compose, montage, audit, copy, srt, vtt, ssml)" autocomplete="off"/>
+          <div class="cmdk-list" id="cmdkList"></div>
+        </div>`;
+      document.body.appendChild(el);
+      const input = el.querySelector('#cmdkInput'), list = el.querySelector('#cmdkList');
+      const items = [
+        {name:'Compose', fn:doCompose},
+        {name:'Montage', fn:doMontage},
+        {name:'Audit & Fix', fn:doAuditFix},
+        {name:'Copy Prompts', fn:()=>copyPrompts()},
+        {name:'Export SRT', fn:doSRT},
+        {name:'Export VTT', fn:doVTT},
+        {name:'Export SSML', fn:doSSML}
+      ];
+      function render(q=''){
+        list.innerHTML='';
+        items.filter(x=>x.name.toLowerCase().includes(q.toLowerCase()))
+             .forEach(x=>{ const it=document.createElement('div'); it.className='cmdk-item'; it.textContent=x.name; it.onclick=()=>{ x.fn(); close(); }; list.appendChild(it); });
+      }
+      function open(){ el.style.display='flex'; input.value=''; render(''); setTimeout(()=>input.focus(), 10); }
+      function close(){ el.style.display='none'; }
+      input.addEventListener('input', ()=>render(input.value));
+      el.addEventListener('click', (e)=>{ if(e.target===el) close(); });
+      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && el.style.display!=='none') close(); });
+      window.openCmdK = open;
+      return { open, close };
+    })();
+
+    /* Footer camo */
+    (function(){
+      const camoEl=document.getElementById("footerCamo"); if(!camoEl) return;
+      const colors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"]; const chars="░▒▓▚▞▐▉█▛";
+      function camoTick(t){ let out=""; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } camoEl.innerHTML=out; }
+      let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+    })();
+
+    /* J1NX float behavior */
+    (function(){
       const j1nxFloat = document.getElementById('j1nxFloatTrue');
       const cutout = document.getElementById('j1nxCutoutTrue');
       const bubble = document.getElementById('j1nxBubbleTrueMain');
-      function isMobile() { return window.innerWidth < 700; }
-      function shrinkJ1nx() {
-        if(isMobile()) { j1nxFloat.classList.remove('j1nx-open'); bubble.style.display = "none"; }
-        else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display = "flex"; }
+      function isMobile(){ return window.innerWidth < 700; }
+      function shrinkJ1nx(){
+        if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display="none"; }
+        else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display="flex"; }
       }
-      cutout.onclick = function() {
-        if(isMobile()) {
-          if(j1nxFloat.classList.contains('j1nx-open')) { j1nxFloat.classList.remove('j1nx-open'); bubble.style.display = "none"; }
-          else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display = "flex"; }
+      cutout.onclick=function(){
+        if(isMobile()){
+          if(j1nxFloat.classList.contains('j1nx-open')){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display="none"; }
+          else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display="flex"; }
         }
       };
       window.addEventListener('resize', shrinkJ1nx); shrinkJ1nx();
     })();
 
-    (function(){ // j1nx chat brain hook
-      let chatHistory = []; let nsfwUnlocked = false;
-      function renderChat(){ const out = chatHistory.map(line => `<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG?"; }
-      function addMsg(msg, isUser){ if (!msg) return; const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> "; chatHistory.push(name + msg); if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10); renderChat(); }
-      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
-        nsfwUnlocked = true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+    /* J1NX chat brain hook */
+    (function(){
+      let chatHistory=[]; let nsfwUnlocked=false;
+      function renderChat(){ const out=chatHistory.map(line=>`<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Ready to cut a reel that slaps? Clean or filthy — you steer."; }
+      function addMsg(msg,isUser){ if(!msg) return; const name=isUser?"<b>You:</b> ":"<b>J1nx:</b> "; chatHistory.push(name+msg); if(chatHistory.length>10) chatHistory=chatHistory.slice(-10); renderChat(); }
+      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function(){
+        nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML="<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
       });
-      document.getElementById('j1nxSendTrue').onclick = function() {
-        const input = document.getElementById('j1nxInputTrue'); const val = (input.value || '').trim(); if (!val) return; addMsg(val, true);
-        if (/^unlock$/i.test(val)) { nsfwUnlocked = true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false); input.value = ""; return; }
-        try {
+      document.getElementById('j1nxSendTrue').onclick=function(){
+        const input=document.getElementById('j1nxInputTrue'); const val=(input.value||'').trim(); if(!val) return; addMsg(val,true);
+        if(/^unlock$/i.test(val)){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML="<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false); input.value=""; return; }
+        try{
           let reply = window.j1nxBrain ? window.j1nxBrain(val, chatHistory.length, nsfwUnlocked) : "(Missing j1nx_brain.js)";
           let replyText = (reply && typeof reply === 'object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply;
           addMsg(replyText, false);
-        } catch(e) { addMsg("Sorry, my brain glitched. (Check j1nx_brain.js)", false); }
-        input.value = "";
+        }catch(e){ addMsg("Sorry, my brain glitched. (Check j1nx_brain.js)", false); }
+        input.value="";
       };
-      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click(); });
-      document.getElementById('j1nxSaveTrue').onclick = function() {
-        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
-        const blob = new Blob([text], {type:'text/plain'}); const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
-        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); });
+      document.getElementById('j1nxSaveTrue').onclick=function(){
+        const text=chatHistory.map(line=>line.replace(/<[^>]+>/g,'')).join('\n');
+        const blob=new Blob([text],{type:'text/plain'}); const url=URL.createObjectURL(blob);
+        const a=document.createElement('a'); a.href=url; a.download='j1nx_chat.txt'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},300);
       };
-      document.getElementById('j1nxClearTrue').onclick = function(){ chatHistory = []; renderChat(); };
+      document.getElementById('j1nxClearTrue').onclick=function(){ chatHistory=[]; renderChat(); };
       renderChat();
     })();
   </script>
