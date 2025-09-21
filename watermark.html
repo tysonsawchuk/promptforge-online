@@ -1,253 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PromptForge.online | Watermark Studio</title>
-  <meta name="description" content="Add custom watermarks to your images—text, logos, shapes, batch mode. Protect your art with pro-level design.">
-  <meta name="keywords" content="watermark, image protection, AI art, copyright, batch watermark, design, logo, PromptForge">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <meta property="og:title" content="PromptForge | Pro Watermark Studio">
-  <meta property="og:description" content="Create and apply stunning watermarks—text, logos, and more—on all your images. Free, advanced, and easy.">
-  <meta property="og:image" content="/assets/promptforge-og-pic.png">
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4963053724895140" crossorigin="anonymous"></script>
+  <!-- ===================== META / SEO ===================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptForge — Watermark Studio (Underground Edition) | Text/Logo/Shapes, Tiling, Batch, EXIF Strip</title>
+  <meta name="description" content="Underground Watermark Studio by PromptForge: pro-grade text/logo/shape watermarks, tiling, batch apply, draggable layers, EXIF strip, and fast exports — 100% local." />
+  <link rel="canonical" href="https://promptforge.online/watermark.html" />
+  <meta name="theme-color" content="#0b0f14" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="PromptForge — Watermark Studio (Underground)" />
+  <meta property="og:description" content="Paid-quality watermarking for free. Text, logos, shapes, tiling, batch. Private & local." />
+  <meta property="og:image" content="/assets/og/watermark.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PromptForge — Watermark Studio (Underground)" />
+  <meta name="twitter:description" content="Protect your art in seconds. Client‑side watermarking with batch & export." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- JuicyAds (site‑wide) -->
+  <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+
+  <!-- Styles (PF vibe) -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Fira+Mono:wght@400;700&display=swap');
-    :root {
-      --brand: #64f2e3;
-      --brand2: #be9cff;
-      --accent: #ffe266;
-      --bg: #161c19;
-      --panel: #242e26;
-      --card: #20231f;
-      --shadow: 0 4px 40px #1a1a1a80;
-      --offwhite: #f4f6ef;
-      --link: #6ee6ff;
-      --danger: #fa527a;
-      --footer-bg: #191b19;
-      --menu-bg: #252628;
+    :root{
+      --brand:#64f2e3; --brand2:#be9cff; --accent:#ffe266; --bg:#0e1217; --panel:#171c22; --card:#131821;
+      --ink:#f4f6ef; --muted:#b9c2c9; --danger:#fa527a; --ok:#4df6a0; --link:#6ee6ff; --footer:#121519;
+      --shadow:0 6px 40px rgba(0,0,0,.35);
     }
-    html,body{margin:0;padding:0;width:100vw;min-height:100vh;background:var(--bg);color:var(--offwhite);font-family:'Inter',sans-serif;font-size:1.13em;}
-    .newsbar {
-      width:100vw; min-height:46px;
-      display:flex; align-items:center; justify-content:center;
-      background:linear-gradient(90deg,var(--bg),var(--footer-bg),var(--bg));
-      color:var(--brand2);font-weight:700;font-size:1.01em;
-      border-bottom:1.5px solid var(--brand2);
-      box-shadow:0 2px 10px #0004;
-      letter-spacing:.01em;
-      position:relative;z-index:20;
-    }
-    .newsbar .version {
-      margin-right:1.3em;padding:.16em .7em;background:var(--brand2);color:#24231f;
-      border-radius:8px;font-size:.97em;font-weight:700;vertical-align:middle;
-    }
-    .newsbar .ai-news {
-      margin:0 1.1em;max-width:60vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .nav {background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:.85em 0 1.1em 0;}
-    .nav-l {display:flex;align-items:center;}
-    .nav .logo {font-family:'Fira Mono',monospace;font-size:2.08em;font-weight:900;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0 .5em;}
-    .nav .breadcrumb {display:flex;gap:.95em;}
-    .nav .breadcrumb a {color:var(--brand);text-decoration:none;font-weight:600;letter-spacing:.04em;transition:.15s;}
-    .nav .breadcrumb a.active,.nav .breadcrumb a:focus {color:var(--accent);border-bottom:2.5px solid var(--accent);}
-    .nav .breadcrumb a:hover {color:var(--accent);}
-    .nav .socials {display:flex;gap:.85em;}
-    .nav .socials a {display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:#2223;border-radius:7px;transition:.14s;}
-    .nav .socials a:hover {background:var(--brand2);}
-    .desc {max-width:820px;margin:0 auto 1.5em auto;text-align:center;color:var(--brand2);font-size:1.13em;}
-    .adsense-block {background:var(--panel);border-radius:14px;box-shadow:0 2px 12px #1a1a1a20;margin:2.2em auto 1em auto;padding:1.5em 0 1em 0;max-width:700px;display:flex;align-items:center;justify-content:center;}
-    .mainbox {max-width:1450px;margin:2.3em auto 2em auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:2.7em 2.5em 2.6em 2.5em;}
-    .watermark-frame {display:flex;flex-wrap:wrap;gap:3em;justify-content:center;}
-    .wm-preview-area {flex:2;min-width:330px;max-width:740px;display:flex;flex-direction:column;align-items:center;}
-    .wm-upload-label {font-weight:900;font-size:1.1em;color:var(--brand2);}
-    #wm-upload {display:none;}
-    .wm-upload-box {
-      background:var(--card);border:2.5px dashed var(--brand2);border-radius:17px;box-shadow:0 3px 16px #0005;
-      min-height:220px;min-width:310px;max-width:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      padding:2em 1.7em;margin-bottom:1.7em;cursor:pointer;transition:.18s;
-    }
-    .wm-upload-box:hover {background:var(--menu-bg);border-color:var(--brand);}
-    .wm-preview-canvas {background:#232323;border-radius:12px;box-shadow:0 3px 18px #0004;margin-bottom:.9em;}
-    .wm-filename {font-size:.97em;color:var(--brand2);margin-bottom:.3em;}
-    .wm-designer-area {flex:1;min-width:320px;max-width:420px;}
-    .wm-section-title {font-weight:900;color:var(--brand2);font-size:1.09em;margin:.7em 0 .7em .4em;}
-    .microhelp {margin-left:.7em;color:var(--accent);font-size:1.12em;cursor:pointer;user-select:none;}
-    .chips {margin:.2em 0 0 .7em;}
-    @media (max-width:1000px){.watermark-frame{flex-direction:column;align-items:center;gap:2.5em;}}
-    @media (max-width:600px){.mainbox{padding:.6em;}}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+    a{color:var(--brand)} a:hover{color:var(--accent)}
+
+    /* Matrix rain (loose, behind content) */
+    #matrix{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+    /* CLS‑safe ad wrappers */
+    .ad-wrap{display:flex;align-items:center;justify-content:center;margin:12px auto}
+    .ad-728x90{width:728px;min-height:90px}
+    .ad-300x250{width:300px;min-height:250px}
+    .ad-160x600{width:160px;min-height:600px}
+
+    /* News bar */
+    .newsbar{position:sticky;top:0;z-index:4;display:flex;gap:.8rem;align-items:center;justify-content:center;min-height:46px;background:linear-gradient(90deg,transparent,rgba(190,156,255,.08),transparent);border-bottom:1px solid rgba(190,156,255,.35)}
+    .newsbar .version{background:var(--brand2);color:#1e1b2b;font-weight:900;border-radius:8px;padding:.15em .6em;font-size:.95rem}
+    .newsbar #ai-news{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:70vw}
+
+    /* Nav */
+    .nav{position:relative;z-index:3;background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;border-bottom:1px solid rgba(100,242,227,.2);box-shadow:0 3px 18px rgba(0,0,0,.35)}
+    .nav-l{display:flex;align-items:center;gap:1rem}
+    .logo{font-family:'Fira Mono',monospace;font-weight:900;font-size:2rem;background:linear-gradient(90deg,var(--brand),var(--brand2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .crumbs{display:flex;gap:.9rem;flex-wrap:wrap}
+    .crumbs a{font-weight:700;text-decoration:none}
+    .crumbs a.active{color:var(--accent);border-bottom:2px solid var(--accent)}
+    .socials{display:flex;gap:.6rem}
+    .socials a{width:28px;height:28px;display:grid;place-items:center;background:#2223;border-radius:7px}
+
+    /* Hero/desc */
+    .desc{position:relative;z-index:2;max-width:980px;margin:1.1rem auto .8rem auto;text-align:center;color:var(--muted);font-size:1.08rem}
+
+    /* Main tool */
+    .main{position:relative;z-index:2;max-width:1500px;margin:1.0rem auto 2.4rem auto;background:var(--panel);border-radius:18px;box-shadow:var(--shadow);padding:1.6rem}
+    .flex{display:flex;flex-wrap:wrap;gap:2.0rem;justify-content:center}
+    .left{flex:2;min-width:340px;max-width:860px}
+    .right{flex:1;min-width:320px;max-width:420px}
+    .section-title{font-weight:900;color:var(--brand2);font-size:1.06rem;margin:.5rem 0 .6rem .2rem}
+    .microhelp{margin-left:.5rem;color:var(--accent);cursor:pointer;font-weight:900}
+    .upload-box{background:var(--card);border:2px dashed var(--brand2);border-radius:14px;min-height:200px;display:grid;place-items:center;padding:1.2rem;cursor:pointer}
+    #wm-canvas{max-width:100%;background:#161922;border:2px solid rgba(190,156,255,.65);border-radius:12px;box-shadow:0 3px 18px rgba(0,0,0,.35)}
+
+    /* FAQ */
+    details{background:var(--panel);border:1px solid rgba(100,242,227,.18);border-radius:10px;padding:.8rem 1rem}
+    details+details{margin-top:.7rem}
+    summary{font-weight:800;color:var(--brand)}
+
+    /* Footer base spacing */
+    footer{position:relative;padding-top:16px}
+
+    @media (max-width:760px){.ad-728x90{transform:scale(.85);transform-origin:top center}}
   </style>
+
+  <!-- JSON‑LD -->
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"Organization","name":"PromptForge","url":"https://promptforge.online/","logo":"https://promptforge.online/assets/logo.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]}
+  </script>
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"WebSite","url":"https://promptforge.online/","potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/search?q={q}","query-input":"required name=q"}}
+  </script>
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Image","item":"https://promptforge.online/picture.html"},{"@type":"ListItem","position":2,"name":"Watermark","item":"https://promptforge.online/watermark.html"}]}
+  </script>
+  <!-- FAQPage -->
+  <script type="application/ld+json">{
+    "@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+      {"@type":"Question","name":"Is watermarking done locally?","acceptedAnswer":{"@type":"Answer","text":"Yes. All processing happens in your browser. Images never leave your device."}},
+      {"@type":"Question","name":"Can I batch watermark multiple images?","acceptedAnswer":{"@type":"Answer","text":"Yes. Enable Batch and select multiple files; the same settings apply to each image."}},
+      {"@type":"Question","name":"How do I keep layout stable with ads?","acceptedAnswer":{"@type":"Answer","text":"We wrap each ad in fixed‑size containers, so CLS stays near zero on load."}},
+      {"@type":"Question","name":"Can I strip metadata?","acceptedAnswer":{"@type":"Answer","text":"Exporting via canvas drops most EXIF; use the strip toggle for extra removal."}}
+    ]}
+  </script>
 </head>
 <body>
+  <!-- Background matrix rain -->
+  <canvas id="matrix" aria-hidden="true"></canvas>
+
+  <!-- AI News bar (multi‑source) -->
   <div class="newsbar">
-    <span class="version">v1.0.0</span>
-    <span class="ai-news" id="ai-news-headline">Loading latest AI news...</span>
+    <span class="version">underground v1.2.0</span>
+    <span id="ai-news">Loading AI headlines…</span>
   </div>
+
+  <!-- Top nav / crumbs / socials -->
   <nav class="nav">
     <div class="nav-l">
       <span class="logo">PromptForge</span>
-      <span class="breadcrumb">
-        <a href="main.html">Main</a>
-        <a href="picture.html">Image</a>
-        <a href="movie.html">Movie</a>
-        <a href="watermark.html" class="active">Watermark</a>
-        <a href="j1nx.html">J1nx</a>
-        <a href="aihacks.html">AI Hacks</a>
-        <a href="ansiart.html">AnsiArt</a>
-        <a href="compare.html">Compare</a>
-      </span>
+      <div class="crumbs">
+        <a href="/main.html">Main</a>
+        <a href="/picture.html">Image</a>
+        <a href="/movie.html">Movie</a>
+        <a class="active" href="/watermark.html">Watermark</a>
+        <a href="/ansiart.html">AnsiArt</a>
+        <a href="/compare.html">Compare</a>
+        <a href="/support.html">Support</a>
+      </div>
     </div>
     <div class="socials">
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
-      <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
-      <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" width="18" height="18"></a>
+      <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" width="18" height="18"></a>
     </div>
   </nav>
+
+  <!-- HEADER AD (728x90) -->
+  <div class="ad-wrap ad-728x90">
+    <ins id="1101674" data-width="728" data-height="90"></ins>
+  </div>
+  <script>(adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674});</script>
+
+  <!-- Page intro -->
   <div class="desc">
-    <b>Design & apply next-level watermarks—text, logos, shapes, and more!</b>
-    <span style="color:var(--accent);">Drag, style, batch, and protect all your images. True pro studio, no limits.</span>
+    <b>Paid‑quality watermarking, free & private.</b><br>
+    <span style="color:var(--accent)">Text, logos, shapes, tiling, batch — all client‑side. Nothing uploads, ever.</span>
   </div>
-  <div class="adsense-block">
-    <ins class="adsbygoogle"
-      style="display:block;min-width:320px;min-height:60px;"
-      data-ad-client="ca-pub-4963053724895140"
-      data-ad-slot="5732117276"
-      data-ad-format="auto"
-      data-full-width-responsive="true"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-  <div class="mainbox" id="watermark-studio">
-    <div class="watermark-frame" id="watermark-frame">
+
+  <!-- Main tool card -->
+  <main class="main" id="watermark-studio">
+    <div class="flex">
       <!-- Left: Upload + Preview -->
-      <div class="wm-preview-area">
-        <label class="wm-upload-label" for="wm-upload">
-          Upload or drop your image here
-          <span class="microhelp" onclick="showHelp('upload')">?</span>
-        </label>
-        <div class="wm-upload-box" id="wm-upload-box" onclick="document.getElementById('wm-upload').click()" ondrop="handleDrop(event)" ondragover="event.preventDefault()">
-          <input type="file" id="wm-upload" accept="image/*" style="display:none" onchange="handleImage(event)">
-          <span id="wm-upload-desc" style="color:var(--offwhite);font-size:1.08em;">Click or drag an image</span>
+      <section class="left">
+        <label for="wm-upload" class="section-title">Upload or drop image(s)<span class="microhelp" onclick="showHelp('upload')">?</span></label>
+        <div class="upload-box" id="wm-upload-box" onclick="document.getElementById('wm-upload').click()" ondrop="handleDrop(event)" ondragover="event.preventDefault()">
+          <input type="file" id="wm-upload" accept="image/*" multiple onchange="handleImage(event)" hidden>
+          <div id="wm-upload-desc">Click or drag one or more images</div>
         </div>
-        <span class="wm-filename" id="wm-filename"></span>
-        <canvas id="wm-canvas" class="wm-preview-canvas" width="512" height="512" style="max-width:100%;border:2px solid var(--brand2);"></canvas>
-      </div>
-      <!-- Right: Watermark Designer -->
-      <div class="wm-designer-area">
-        <div class="wm-section-title">Watermark Designer <span class="microhelp" onclick="showHelp('designer')">?</span></div>
-        <!-- Block 2 (designer tools, text/logo, layers, styles, controls) goes here -->
-      </div>
-    </div>
-    <!-- J1nx Dock (correct cutout, pro tips) -->
-    <div id="j1nx-ui" style="position:fixed;bottom:32px;right:36px;z-index:99;max-width:370px;transition:opacity .18s,transform .22s;">
-      <div class="j1nx-shell" style="position:relative;display:flex;align-items:flex-end;">
-        <img class="j1nx-cutout" src="/assets/j1nx-cutout.png" alt="J1nx" style="width:126px;position:relative;z-index:3;">
-        <div class="j1nx-bubble" id="j1nx-bubble"
-          style="background:#201733;border:2.5px solid var(--brand2);border-radius:18px 18px 24px 18px/18px 18px 42px 18px;box-shadow:0 4px 22px #be9cff45;padding:1.15em 1.1em .8em 1.19em;min-height:108px;min-width:220px;max-width:265px;position:relative;z-index:4;margin-bottom:14px;color:var(--offwhite);font-size:1.09em;">
-          <span class="j1nx-name" style="font-weight:900;color:var(--brand2);font-size:1.07em;">J1nx</span>
-          <span class="j1nx-mood" id="j1nx-mood">🛡️</span>
-          <span class="j1nx-min" title="Minimize J1nx" onclick="toggleJ1nxMin()" style="position:absolute;top:6px;right:10px;background:#4442;padding:.13em .55em;border-radius:8px;color:var(--brand2);font-weight:900;cursor:pointer;">–</span>
-          <div id="j1nx-speech" style="margin:.65em 0 .6em 0;">Ready to protect your art? I can help with watermark design tips.</div>
-          <input id="j1nx-input" type="text" placeholder="Ask J1nx anything..." style="width:81%;margin-right:.5em;padding:.54em .8em;border-radius:7px;border:1.7px solid var(--brand2);background:#211e32;color:var(--offwhite);font-size:1.07em;">
-          <div style="margin-top:.5em;">
-            <button class="j1nx-btn" onclick="sendJ1nx()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;margin-right:.7em;">Send</button>
-            <button class="j1nx-btn" onclick="j1nxRandomTip()" style="background:var(--brand2);color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">WM Tip</button>
-            <button class="j1nx-btn" title="Secret Mode" id="j1nx-easter" style="background:#b5ffb7;color:#23231f;border:none;border-radius:7px;padding:.35em 1.18em;font-weight:bold;cursor:pointer;">★</button>
-          </div>
+        <div id="wm-files" style="color:var(--muted);font-size:.95rem;margin:.3rem 0 .6rem 0"></div>
+        <canvas id="wm-canvas" width="640" height="640"></canvas>
+      </section>
+
+      <!-- Right: Designer -->
+      <aside class="right">
+        <div class="section-title">Watermark Designer<span class="microhelp" onclick="showHelp('designer')">?</span></div>
+        <!-- Text watermark -->
+        <div class="section-title">Text Watermark<span class="microhelp" onclick="showHelp('wmtext')">?</span></div>
+        <input id="wm-text" type="text" maxlength="72" placeholder="e.g., @PromptForge or © 2025 PromptForge" style="width:100%;padding:.8rem 1rem;border-radius:9px;border:1px solid rgba(190,156,255,.6);background:var(--card);color:var(--ink);">
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;margin:.7rem 0 1rem 0">
+          <label>Font
+            <select id="wm-font" style="margin-left:.5rem;border-radius:8px;background:var(--card);color:var(--ink)">
+              <option value="Inter">Inter</option>
+              <option value="Montserrat">Montserrat</option>
+              <option value="Oswald">Oswald</option>
+              <option value="Lato">Lato</option>
+              <option value="Georgia">Georgia</option>
+              <option value="Courier New">Courier New</option>
+              <option value="Impact">Impact</option>
+            </select>
+          </label>
+          <label>Size <input id="wm-fontsize" type="range" min="12" max="160" value="36" oninput="bindVals()"><span id="wm-fontsize-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">36</span></label>
+          <label>Color <input id="wm-color" type="color" value="#ffffff" oninput="drawAll()"></label>
+          <label>Opacity <input id="wm-opacity" type="range" min="5" max="100" value="42" oninput="bindVals()"><span id="wm-opacity-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">42</span></label>
         </div>
-      </div>
-    </div>
-    <!-- Block 2: full watermark designer controls, styling, shapes, batch, export, all logic -->
-        <!-- TEXT WATERMARK DESIGN -->
-        <div class="wm-section-title">Text Watermark <span class="microhelp" onclick="showHelp('wmtext')">?</span></div>
-        <input id="wm-text" type="text" maxlength="64" placeholder="Enter watermark text (e.g. @PromptForge, Copyright, etc)" style="width:95%;margin:.6em 0 1.2em 0;padding:.8em 1.1em;font-size:1.13em;border-radius:9px;border:1.8px solid var(--brand2);background:var(--card);color:var(--offwhite);">
-        <div style="display:flex;flex-wrap:wrap;gap:1.4em;margin-bottom:.9em;">
-          <div>
-            <label style="font-weight:700;">Font
-              <select id="wm-font" style="margin-left:.5em;border-radius:8px;background:var(--card);color:var(--offwhite);">
-                <option value="Montserrat">Montserrat</option>
-                <option value="Roboto Slab">Roboto Slab</option>
-                <option value="Lato">Lato</option>
-                <option value="Oswald">Oswald</option>
-                <option value="Inter">Inter</option>
-                <option value="Arial">Arial</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Comic Sans MS">Comic Sans</option>
-                <option value="Impact">Impact</option>
-              </select>
-            </label>
-          </div>
-          <div>
-            <label style="font-weight:700;">Size
-              <input id="wm-fontsize" type="range" min="16" max="128" value="32" style="margin-left:.7em;vertical-align:middle;">
-              <span id="wm-fontsize-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">32</span>
-            </label>
-          </div>
-          <div>
-            <label style="font-weight:700;">Color
-              <input id="wm-color" type="color" value="#ffffff" style="margin-left:.5em;border-radius:6px;">
-            </label>
-          </div>
-          <div>
-            <label style="font-weight:700;">Opacity
-              <input id="wm-opacity" type="range" min="10" max="100" value="42" style="margin-left:.5em;vertical-align:middle;">
-              <span id="wm-opacity-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">42</span>
-            </label>
-          </div>
-        </div>
-        <div style="display:flex;gap:1.3em;margin-bottom:1em;">
-          <label><input type="checkbox" id="wm-bold"> Bold</label>
-          <label><input type="checkbox" id="wm-italic"> Italic</label>
-          <label><input type="checkbox" id="wm-shadow"> Shadow</label>
-          <label><input type="checkbox" id="wm-outline"> Outline</label>
+        <div style="display:flex;gap:1rem;margin:.4rem 0 1rem 0">
+          <label><input type="checkbox" id="wm-bold" onclick="drawAll()"> Bold</label>
+          <label><input type="checkbox" id="wm-italic" onclick="drawAll()"> Italic</label>
+          <label><input type="checkbox" id="wm-shadow" onclick="drawAll()"> Shadow</label>
+          <label><input type="checkbox" id="wm-outline" onclick="drawAll()"> Outline</label>
         </div>
 
-        <!-- LOGO / IMAGE WATERMARK -->
-        <div class="wm-section-title">Logo/Image Watermark <span class="microhelp" onclick="showHelp('wmlogo')">?</span></div>
-        <div style="display:flex;align-items:center;gap:1.2em;">
+        <!-- Logo watermark -->
+        <div class="section-title">Logo/Image Watermark<span class="microhelp" onclick="showHelp('wmlogo')">?</span></div>
+        <div style="display:flex;align-items:center;gap:.9rem">
           <input type="file" id="wm-logo-upload" accept="image/*,image/svg+xml" onchange="handleLogo(event)">
-          <button type="button" onclick="removeLogo()" style="border-radius:6px;background:var(--danger);color:#fff;padding:.3em 1em;margin-left:.7em;">Remove</button>
+          <button type="button" onclick="removeLogo()" style="border-radius:7px;background:var(--danger);color:#fff;padding:.35rem .8rem;border:none">Remove</button>
         </div>
-        <div id="wm-logo-preview" style="margin:1em 0 1.4em 0;"></div>
-        <div style="display:flex;flex-wrap:wrap;gap:1.4em;margin-bottom:.9em;">
-          <div>
-            <label style="font-weight:700;">Logo Size
-              <input id="wm-logosize" type="range" min="32" max="350" value="96" style="margin-left:.7em;vertical-align:middle;">
-              <span id="wm-logosize-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">96</span>
-            </label>
-          </div>
-          <div>
-            <label style="font-weight:700;">Logo Opacity
-              <input id="wm-logo-opacity" type="range" min="10" max="100" value="35" style="margin-left:.5em;vertical-align:middle;">
-              <span id="wm-logo-opacity-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">35</span>
-            </label>
-          </div>
-          <div>
-            <label style="font-weight:700;">Rotate
-              <input id="wm-logo-rotate" type="range" min="0" max="360" value="0" style="margin-left:.5em;vertical-align:middle;">
-              <span id="wm-logo-rotate-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">0°</span>
-            </label>
-          </div>
+        <div id="wm-logo-preview" style="margin:.7rem 0 1rem 0"></div>
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:.8rem">
+          <label>Size <input id="wm-logosize" type="range" min="24" max="420" value="96" oninput="bindVals()"><span id="wm-logosize-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">96</span></label>
+          <label>Opacity <input id="wm-logo-opacity" type="range" min="5" max="100" value="35" oninput="bindVals()"><span id="wm-logo-opacity-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">35</span></label>
+          <label>Rotate <input id="wm-logo-rotate" type="range" min="0" max="360" value="0" oninput="bindVals()"><span id="wm-logo-rotate-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">0°</span></label>
         </div>
 
-        <!-- SHAPES / BANNERS -->
-        <div class="wm-section-title">Shape / Banner Overlay <span class="microhelp" onclick="showHelp('wmshape')">?</span></div>
-        <div style="display:flex;gap:1.3em;margin-bottom:.8em;">
-          <button type="button" onclick="addShape('rect')" style="border-radius:7px;background:#4df6a0;color:#23231f;padding:.43em 1.2em;">Rectangle</button>
-          <button type="button" onclick="addShape('ellipse')" style="border-radius:7px;background:#64f2e3;color:#23231f;padding:.43em 1.2em;">Ellipse</button>
-          <button type="button" onclick="addShape('banner')" style="border-radius:7px;background:#be9cff;color:#23231f;padding:.43em 1.2em;">Banner</button>
-          <button type="button" onclick="addShape('line')" style="border-radius:7px;background:#ffe266;color:#23231f;padding:.43em 1.2em;">Line</button>
+        <!-- Shapes / banners (draggable) -->
+        <div class="section-title">Shape / Banner Overlay<span class="microhelp" onclick="showHelp('wmshape')">?</span></div>
+        <div style="display:flex;gap:.8rem;margin:.3rem 0 .6rem 0;flex-wrap:wrap">
+          <button type="button" onclick="addShape('rect')">Rectangle</button>
+          <button type="button" onclick="addShape('ellipse')">Ellipse</button>
+          <button type="button" onclick="addShape('banner')">Banner</button>
+          <button type="button" onclick="addShape('line')">Line</button>
         </div>
-        <div style="margin-bottom:1.3em;">
-          <label style="font-weight:700;">Shape Color <input type="color" id="wm-shape-color" value="#ff2266" style="margin-left:.8em;border-radius:6px;"></label>
-        </div>
-        <div class="chips" id="wm-shapes-chips"></div>
+        <label>Shape color <input type="color" id="wm-shape-color" value="#ff2266" oninput="drawAll()"></label>
+        <div id="wm-shapes-chips" style="margin-top:.6rem"></div>
 
-        <!-- POSITION, TILE, BATCH, EXPORT -->
-        <div class="wm-section-title">Watermark Placement & Export <span class="microhelp" onclick="showHelp('wmpos')">?</span></div>
-        <div style="display:flex;flex-wrap:wrap;gap:1.3em;margin-bottom:.8em;">
+        <!-- Placement / export -->
+        <div class="section-title">Placement & Export<span class="microhelp" onclick="showHelp('wmpos')">?</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:.7rem">
           <label>Position
-            <select id="wm-pos" style="margin-left:.7em;border-radius:7px;background:var(--card);color:var(--offwhite);">
+            <select id="wm-pos" onchange="drawAll()" style="margin-left:.4rem;border-radius:8px;background:var(--card);color:var(--ink)">
               <option>Bottom Right</option>
               <option>Bottom Left</option>
               <option>Top Right</option>
@@ -257,328 +227,247 @@
               <option>Tile/Repeat</option>
             </select>
           </label>
-          <label>Margin <input id="wm-margin" type="range" min="0" max="120" value="24" style="margin-left:.6em;vertical-align:middle;"><span id="wm-margin-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">24</span></label>
-          <label>Angle <input id="wm-angle" type="range" min="0" max="360" value="0" style="margin-left:.6em;vertical-align:middle;"><span id="wm-angle-val" style="margin-left:.3em;font-weight:700;color:var(--brand2);">0°</span></label>
+          <label>Margin <input id="wm-margin" type="range" min="0" max="160" value="24" oninput="bindVals()"><span id="wm-margin-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">24</span></label>
+          <label>Angle <input id="wm-angle" type="range" min="0" max="360" value="0" oninput="bindVals()"><span id="wm-angle-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">0°</span></label>
+          <label>Tile Gap <input id="wm-gap" type="range" min="40" max="360" value="120" oninput="bindVals()"><span id="wm-gap-val" style="margin-left:.35rem;color:var(--brand2);font-weight:900">120</span></label>
         </div>
-        <div style="display:flex;gap:1.2em;margin-bottom:1.2em;">
-          <label><input type="checkbox" id="wm-tile"> Tile watermark</label>
-          <label><input type="checkbox" id="wm-show"> Show watermark</label>
+        <div style="display:flex;gap:1rem;margin:.3rem 0 .9rem 0">
+          <label><input type="checkbox" id="wm-tile" onchange="drawAll()"> Tile watermark</label>
+          <label><input type="checkbox" id="wm-show" checked onchange="drawAll()"> Show watermark</label>
+          <label><input type="checkbox" id="wm-exif" checked> Strip EXIF on export</label>
         </div>
-        <div style="margin-bottom:1.7em;">
-          <button type="button" onclick="resetDesigner()" style="background:var(--danger);color:#fff;font-weight:bold;padding:.53em 2em;border-radius:9px;margin-right:.7em;">Reset</button>
-          <button type="button" onclick="previewWatermark()" style="background:var(--brand2);color:#23231f;font-weight:bold;padding:.53em 2em;border-radius:9px;">Preview</button>
+        <div style="margin:.6rem 0 1rem 0">
+          <button type="button" onclick="resetDesigner()">Reset</button>
+          <button type="button" onclick="previewWatermark()">Preview</button>
         </div>
-        <div class="wm-section-title">Batch & Export <span class="microhelp" onclick="showHelp('wmbatch')">?</span></div>
-        <div style="margin-bottom:1.2em;">
-          <label><input type="checkbox" id="wm-batch"> Batch mode (apply to all images)</label>
+        <div class="section-title">Batch & Export<span class="microhelp" onclick="showHelp('wmbatch')">?</span></div>
+        <label style="display:block;margin-bottom:.6rem"><input type="checkbox" id="wm-batch"> Batch mode (apply to all selected images)</label>
+        <div style="display:flex;flex-wrap:wrap;gap:.7rem">
+          <button type="button" onclick="exportImage('png')">Download PNG</button>
+          <button type="button" onclick="exportImage('jpg')">Download JPG</button>
+          <button type="button" onclick="exportImage('webp')">Download WebP</button>
+          <button type="button" onclick="copyToClipboard()">Copy to Clipboard</button>
+          <button type="button" onclick="exportAll()">Batch Download All</button>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:1.2em;">
-          <button type="button" onclick="exportImage('png')" style="background:var(--accent);color:#23231f;font-weight:bold;padding:.53em 2em;border-radius:9px;">Download PNG</button>
-          <button type="button" onclick="exportImage('jpg')" style="background:var(--brand);color:#23231f;font-weight:bold;padding:.53em 2em;border-radius:9px;">Download JPG</button>
-          <button type="button" onclick="exportImage('webp')" style="background:var(--brand2);color:#23231f;font-weight:bold;padding:.53em 2em;border-radius:9px;">Download WebP</button>
-          <button type="button" onclick="copyToClipboard()" style="background:#2223;color:var(--brand2);font-weight:bold;padding:.53em 2em;border-radius:9px;">Copy to Clipboard</button>
-        </div>
-    </div><!-- END wm-designer-area -->
-  </div><!-- END mainbox -->
+      </aside>
 
-  <!-- FOOTER, CAMO, NAV, SOCIALS -->
-  <footer style="background:var(--footer-bg);padding:2.5em 0 1.6em 0;margin-top:4em;position:relative;">
-    <div class="footer-center">
-      <pre class="footer-art" style="text-align:center;font-family:'Fira Mono',monospace;font-size:1.02em;color:var(--brand2);">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\\ uU |  _"\\ u  \\/"_ \\/U|\' \\/ \'|uU|  _"\\ u|_ " _|  |" ___|   \\/"_ \\/U |  _"\\ uU /"___|u\\| ___"|/   
-\\| |_) |/ \\| |_) |/  | | | |\\| |\\/| |/\\| |_) |/  | |   U| |_  u   | | | | \\| |_) |/\\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\\  \\|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \\_\\\\_)-\\___/  |_|  |_|  |_|     u |_|U   |_|    \\_)-\\___/   |_| \\_\\   \\____|  |_____|    
-      </pre>
+      <!-- SIDEBAR AD (160x600) -->
+      <div class="ad-wrap ad-160x600">
+        <ins id="1101675" data-width="160" data-height="600"></ins>
+      </div>
+      <script>(adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101675});</script>
     </div>
-    <pre class="footer-camo" id="footerCamo" style="text-align:center;font-size:1.5em;"></pre>
-    <div class="footer-row" style="max-width:1160px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;padding-top:1.1em;border-top:2px solid var(--brand2);font-size:1.04em;">
-      <div class="footer-nav" style="display:flex;gap:1.15em;">
-        <a href="main.html">Main</a>
-        <a href="picture.html">Image</a>
-        <a href="movie.html">Movie</a>
-        <a href="watermark.html" class="active">Watermark</a>
-        <a href="j1nx.html">J1nx</a>
-        <a href="aihacks.html">AI Hacks</a>
-        <a href="ansiart.html">AnsiArt</a>
-        <a href="compare.html">Compare</a>
+
+    <!-- MID AD (300x250) -->
+    <div class="ad-wrap ad-300x250">
+      <ins id="1101622" data-width="300" data-height="250"></ins>
+    </div>
+    <script>(adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101622});</script>
+  </main>
+
+  <!-- FAQ (visible copy) -->
+  <section style="max-width:900px;margin:0 auto 2.2rem auto;padding:0 1rem">
+    <h2 style="margin:.2rem 0 1rem 0">Watermark Studio — FAQ</h2>
+    <details><summary>Is everything local/private?</summary><p>Yes. All processing runs in your browser; your images never leave your device.</p></details>
+    <details><summary>What’s the best placement?</summary><p>Bottom‑right or tiled at low opacity (<span style="color:var(--brand2)">25–45%</span>) balances protection and aesthetics.</p></details>
+    <details><summary>How do I avoid ruining the subject?</summary><p>Use <b>Outline</b> + slight <b>Shadow</b>, then move the mark away from faces or key details. Try <b>Tile</b> for share‑safe previews.</p></details>
+    <details><summary>Can I export transparent backgrounds?</summary><p>Yes — choose <b>PNG</b>. JPG/WebP will flatten colors as usual.</p></details>
+  </section>
+
+  <!-- ===== J1NX FLOAT + ANSI FOOTER (from your provided file) ===== -->
+  <!-- BEGIN J1NX + FOOTER BLOCK -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
       </div>
-      <div class="footer-socials" style="display:flex;gap:1em;">
-        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" title="Bluesky"><img src="/assets/bluesky.svg" alt="Bluesky" class="menu-icon"></a>
-        <a href="https://x.com/GoreandGiggles" target="_blank" title="X"><img src="/assets/x-twitter.svg" alt="X" class="menu-icon"></a>
-        <a href="https://www.buymeacoffee.com/goreandgiggles" target="_blank" title="Buy Me a Coffee"><img src="/assets/coffee.svg" alt="Coffee" class="menu-icon"></a>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…</div>
+    </div>
+  </div>
+
+  <footer>
+    <div style="text-align:center">
+<pre class="footer-art" style="font-family:'Fira Mono',monospace;color:#a1ffe3;font-size:.96em;line-height:1.1;white-space:pre;display:inline-block">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+ \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"      
+  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___      
+  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|     
+</pre>
+    </div>
+    <pre class="footer-camo" id="footerCamo" style="font-family:inherit;font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px 0;text-align:center;opacity:.93;white-space:pre"></pre>
+    <div class="footer-bar" style="color:#88fffd;margin:12px auto 8px auto;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap">
+      Made underground in BC, Canada • #PromptForge •
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> •
+      <a href="https://x.com/GoreandGiggles">Twitter/X</a> •
+      <a href="/legal.html">Legal</a>
     </div>
   </footer>
+  <!-- END J1NX + FOOTER BLOCK -->
+
+  <!-- BOTTOM AD (728x90) -->
+  <div class="ad-wrap ad-728x90">
+    <ins id="1101674" data-width="728" data-height="90"></ins>
+  </div>
+  <script>(adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674});</script>
+
+  <!-- ===================== SCRIPTS ===================== -->
   <script>
-    // ========== GOOGLE AI NEWS BAR ==========
-    async function fetchGoogleAINews() {
-      try {
-        const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://ai.googleblog.com/feeds/posts/default');
-        const json = await res.json();
-        const items = json.items || [];
-        let i = 0;
-        function updateHeadline() {
-          if (items.length === 0) return;
-          const item = items[i % items.length];
-          document.getElementById('ai-news-headline').innerHTML = `<a href="${item.link}" target="_blank">${item.title}</a>`;
-          i++;
-        }
-        updateHeadline();
-        setInterval(updateHeadline, 9000);
-      } catch(e) {
-        document.getElementById('ai-news-headline').textContent = "Latest: Google AI Blog – auto-update failed (offline)";
-      }
-    }
-    fetchGoogleAINews();
-    // ========== FOOTER CAMO ==========
-    const camoColors = ["#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"];
-    function randomCamoChar(){ const chars = "░▒▓▚▞▐▉█▛"; return chars[Math.floor(Math.random()*chars.length)]; }
-    function renderCamo(tick=0){ let out=""; for(let row=0;row<1;++row){ for(let col=0;col<62;++col){ let color=camoColors[(row+col+tick)%camoColors.length]; out+=`<span style="color:${color}">${randomCamoChar()}</span>`;} out+="<br>";} document.getElementById("footerCamo").innerHTML=out; }
-    let camoTick = 0; setInterval(()=>{ renderCamo(camoTick++); },950); renderCamo();
+    // ===== Loose Matrix Rain
+    (function(){
+      const c = document.getElementById('matrix'); const ctx = c.getContext('2d');
+      let w, h, cols, drops; const glyphs = 'アカサタナハマヤラワ0123456789';
+      function size(){ w = c.width = innerWidth; h = c.height = innerHeight; cols = Math.floor(w/18); drops = Array(cols).fill(0); }
+      size(); addEventListener('resize', size);
+      function tick(){ ctx.fillStyle = 'rgba(0,0,0,.08)'; ctx.fillRect(0,0,w,h); ctx.fillStyle = '#64f2e3'; ctx.font = '16px monospace';
+        for(let i=0;i<drops.length;i++){ const text = glyphs.charAt(Math.floor(Math.random()*glyphs.length)); ctx.fillText(text, i*18, drops[i]*18);
+          if(drops[i]*18 > h && Math.random()>.975) drops[i]=0; drops[i]++; }
+        requestAnimationFrame(tick); }
+      tick();
+    })();
 
-    // ========== WATERMARK DESIGNER LOGIC ==========
-    // (Handles text/logo/shapes, placement, preview, export, batch, and UI updates)
-    // This is a basic functional JS block; expand further as needed!
-
-    // Image upload and preview
-    let baseImg = null, wmLogo = null, shapes = [];
-    const canvas = document.getElementById('wm-canvas');
-    const ctx = canvas.getContext('2d');
-    function handleImage(event){
-      const file = event.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e){
-        const img = new Image();
-        img.onload = function(){
-          baseImg = img;
-          canvas.width = img.width;
-          canvas.height = img.height;
-          drawAll();
-          document.getElementById('wm-filename').innerText = file.name;
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-    function handleDrop(e){
-      e.preventDefault();
-      document.getElementById('wm-upload').files = e.dataTransfer.files;
-      handleImage({target:{files:e.dataTransfer.files}});
-    }
-
-    // Logo watermark upload/preview
-    function handleLogo(event){
-      const file = event.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e){
-        const img = new Image();
-        img.onload = function(){
-          wmLogo = img;
-          document.getElementById('wm-logo-preview').innerHTML = `<img src="${e.target.result}" alt="Logo Preview" style="max-width:64px;max-height:64px;">`;
-          drawAll();
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-    function removeLogo(){
-      wmLogo = null;
-      document.getElementById('wm-logo-preview').innerHTML = "";
-      drawAll();
-    }
-
-    // Shape add/remove (rect, ellipse, banner, line)
-    function addShape(type){
-      const color = document.getElementById('wm-shape-color').value;
-      shapes.push({type, color, x:60, y:60, w:120, h:40});
-      updateShapesChips();
-      drawAll();
-    }
-    function updateShapesChips(){
-      document.getElementById('wm-shapes-chips').innerHTML = shapes.map((s,i)=>
-        `<span style="background:${s.color};color:#222;padding:.2em .8em;border-radius:7px;margin-right:.4em;">${s.type}<span onclick="removeShape(${i})" style="color:#f44;font-weight:900;cursor:pointer;margin-left:.5em;">×</span></span>`
-      ).join('');
-    }
-    function removeShape(idx){
-      shapes.splice(idx,1); updateShapesChips(); drawAll();
-    }
-
-    // Designer value bindings
-    function updateDesignerVals(){
-      document.getElementById('wm-fontsize-val').innerText = document.getElementById('wm-fontsize').value;
-      document.getElementById('wm-opacity-val').innerText = document.getElementById('wm-opacity').value;
-      document.getElementById('wm-logosize-val').innerText = document.getElementById('wm-logosize').value;
-      document.getElementById('wm-logo-opacity-val').innerText = document.getElementById('wm-logo-opacity').value;
-      document.getElementById('wm-logo-rotate-val').innerText = document.getElementById('wm-logo-rotate').value+'°';
-      document.getElementById('wm-margin-val').innerText = document.getElementById('wm-margin').value;
-      document.getElementById('wm-angle-val').innerText = document.getElementById('wm-angle').value+'°';
-    }
-    ['wm-fontsize','wm-opacity','wm-logosize','wm-logo-opacity','wm-logo-rotate','wm-margin','wm-angle']
-      .forEach(id=>document.getElementById(id).oninput=updateDesignerVals);
-
-    // Draw watermark preview (basic version—expand as needed!)
-    function drawAll(){
-      if(!baseImg) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(baseImg,0,0,canvas.width,canvas.height);
-      // Draw shapes (rect, ellipse, etc)
-      shapes.forEach(s=>{
-        ctx.save();
-        ctx.fillStyle=s.color;
-        if(s.type==='rect') ctx.fillRect(s.x,s.y,s.w,s.h);
-        if(s.type==='ellipse'){
-          ctx.beginPath();ctx.ellipse(s.x+s.w/2,s.y+s.h/2,s.w/2,s.h/2,0,0,2*Math.PI);
-          ctx.fill();
-        }
-        if(s.type==='banner'){
-          ctx.fillRect(s.x,s.y,s.w,s.h);
-        }
-        if(s.type==='line'){
-          ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x+s.w,s.y+s.h);ctx.strokeStyle=s.color;ctx.lineWidth=4;ctx.stroke();
-        }
-        ctx.restore();
-      });
-      // Draw logo
-      if(wmLogo){
-        let lsize = +document.getElementById('wm-logosize').value;
-        let logoOpacity = +document.getElementById('wm-logo-opacity').value/100;
-        let rotate = +document.getElementById('wm-logo-rotate').value;
-        ctx.save();
-        ctx.globalAlpha = logoOpacity;
-        ctx.translate(canvas.width/2,canvas.height/2);
-        ctx.rotate(rotate*Math.PI/180);
-        ctx.drawImage(wmLogo,-lsize/2,-lsize/2,lsize,lsize);
-        ctx.restore();
-      }
-      // Draw text
-      const txt = document.getElementById('wm-text').value;
-      if(txt){
-        let size = +document.getElementById('wm-fontsize').value;
-        let color = document.getElementById('wm-color').value;
-        let font = document.getElementById('wm-font').value;
-        let opacity = +document.getElementById('wm-opacity').value/100;
-        ctx.save();
-        ctx.globalAlpha = opacity;
-        ctx.font = `${document.getElementById('wm-bold').checked?'bold ':''}${document.getElementById('wm-italic').checked?'italic ':''}${size}px '${font}',sans-serif`;
-        ctx.fillStyle = color;
-        // Position logic (basic: center, todo: support other pos/tile)
-        ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillText(txt,canvas.width/2,canvas.height/2);
-        if(document.getElementById('wm-shadow').checked){
-          ctx.shadowColor = "#0008"; ctx.shadowBlur = 7;
-          ctx.fillText(txt,canvas.width/2,canvas.height/2);
-        }
-        if(document.getElementById('wm-outline').checked){
-          ctx.lineWidth = 2.7; ctx.strokeStyle = "#222";
-          ctx.strokeText(txt,canvas.width/2,canvas.height/2);
-        }
-        ctx.restore();
-      }
-    }
-    // Live update on designer controls
-    ['wm-text','wm-font','wm-fontsize','wm-color','wm-opacity','wm-bold','wm-italic','wm-shadow','wm-outline',
-     'wm-logosize','wm-logo-opacity','wm-logo-rotate'].forEach(id=>{
-      document.getElementById(id).oninput=drawAll; if(document.getElementById(id).type==='checkbox') document.getElementById(id).onclick=drawAll;
-    });
-    document.getElementById('wm-pos').onchange=drawAll;
-    document.getElementById('wm-margin').oninput=drawAll;
-    document.getElementById('wm-angle').oninput=drawAll;
-    document.getElementById('wm-tile').onchange=drawAll;
-    document.getElementById('wm-show').onchange=drawAll;
-
-    // Preview/Reset
-    function previewWatermark(){ drawAll(); }
-    function resetDesigner(){
-      document.getElementById('wm-text').value="";
-      document.getElementById('wm-fontsize').value=32;
-      document.getElementById('wm-color').value="#ffffff";
-      document.getElementById('wm-font').value="Montserrat";
-      document.getElementById('wm-opacity').value=42;
-      document.getElementById('wm-bold').checked=false;
-      document.getElementById('wm-italic').checked=false;
-      document.getElementById('wm-shadow').checked=false;
-      document.getElementById('wm-outline').checked=false;
-      removeLogo();
-      shapes=[]; updateShapesChips();
-      drawAll();
-    }
-
-    // Export/Download/Clipboard
-    function exportImage(type){
-      if(!baseImg) return;
-      let mime = "image/png";
-      if(type==="jpg") mime = "image/jpeg";
-      if(type==="webp") mime = "image/webp";
-      const url = canvas.toDataURL(mime);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "watermarked."+type;
-      a.click();
-    }
-    function copyToClipboard(){
-      canvas.toBlob(function(blob){
-        const item = new ClipboardItem({'image/png': blob});
-        navigator.clipboard.write([item]);
-      });
-    }
-
-    // ========== MICROHELP POPOVERS ==========
-    function showHelp(topic) {
-      const helpText = {
-        upload: "Upload your original image (PNG, JPG, WebP, GIF). High-res is best for watermarking.",
-        designer: "Use these tools to add, style, and position text, logo, or shapes. All changes show live on your preview.",
-        wmtext: "Enter your watermark text. Choose font, size, color, opacity. Use bold, italic, shadow, outline for style.",
-        wmlogo: "Upload a logo or image (SVG, PNG, etc) as your watermark. Adjust size, opacity, and rotation.",
-        wmshape: "Add rectangle, ellipse, line, or banner overlays. Choose color and size, drag to reposition.",
-        wmpos: "Choose preset positions (corners, center) or drag your watermark. Tile/repeat for extra security.",
-        wmbatch: "Batch mode: watermark multiple images at once. All settings will apply to every image.",
-      };
-      let box = document.createElement("div");
-      box.className = "microhelp-popover";
-      box.style = "position:fixed;z-index:999;background:var(--card);color:var(--offwhite);border-radius:8px;box-shadow:0 2px 12px #000a;padding:1.1em 1.6em;max-width:340px;top:18%;left:50%;transform:translateX(-50%);font-size:1.08em;font-weight:600;text-align:left;";
-      box.innerHTML = `<span style="color:var(--brand2);font-size:1.12em;font-weight:900;">Help</span><br>${helpText[topic]||'Ask J1nx for extra help!'}<br><br><button onclick="this.parentElement.remove()" style="margin-top:.7em;background:var(--brand2);color:#23231f;font-weight:bold;padding:.5em 1.25em;border-radius:8px;border:none;cursor:pointer;">Close</button>`;
-      document.body.appendChild(box);
-    }
-
-    // ========== J1NX WATERMARK DOCK ==========
-    // (Use same pro J1nx logic as picture/movie—custom tips for watermarking)
-    let j1nxState = { mood: "🛡️", clickCount: 0, minimized: false };
-    const j1nxTips = [
-      "Use a semi-transparent watermark for best balance of protection and style.",
-      "Combine text and logo for maximum branding.",
-      "Tile or repeat watermark for images you want shared but not stolen.",
-      "Add a rectangle or banner for high-visibility watermarking.",
-      "Export as PNG for best quality and transparency.",
-      "Batch watermark multiple images to save time.",
-      "Hide watermark when previewing original, then toggle it back on.",
-      "Be sure your watermark doesn't cover faces or main subjects.",
-      "Ask me how to legally protect your art!"
+    // ===== AI News: rotate across multiple sources (OpenAI, Google AI Blog, Hugging Face, Stability)
+    const FEEDS = [
+      'https://openai.com/news/rss.xml',
+      'https://ai.googleblog.com/atom.xml',
+      'https://huggingface.co/blog/feed.xml',
+      'https://stability.ai/news?format=rss'
     ];
-    function setJ1nxMood(idx,msgOverride){
-      document.getElementById("j1nx-mood").innerText = j1nxTips[idx%j1nxTips.length].charAt(0) || "🛡️";
-      document.getElementById("j1nx-speech").innerText = msgOverride||j1nxTips[idx%j1nxTips.length];
+    const headlines = [];
+    async function fetchFeed(url){
+      try{ const res = await fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(url));
+        const json = await res.json(); (json.items||[]).slice(0,5).forEach(it=>headlines.push({title:it.title, link:it.link||it.guid||json.link||url}));
+      }catch(e){ /* ignore */ }
     }
-    function sendJ1nx() {
-      const input = document.getElementById("j1nx-input").value.trim().toLowerCase();
-      let out = "Need tips on placement, batch, or logo use?";
-      if(!input) { setJ1nxMood(0); return; }
-      if(input.includes("random")||input.includes("tip")) out = j1nxTips[Math.floor(Math.random()*j1nxTips.length)];
-      if(input.includes("protect")||input.includes("secure")||input.includes("legal")){
-        out = "Legally, watermarking helps, but always register your best work for full protection!";
-      }
-      setJ1nxMood(Math.floor(Math.random()*j1nxTips.length), out);
-      document.getElementById("j1nx-input").value = "";
+    async function initNews(){ await Promise.all(FEEDS.map(fetchFeed)); const el=document.getElementById('ai-news'); if(!headlines.length){ el.textContent='Latest AI: feeds offline'; return; } let i=0; function show(){ const h=headlines[i%headlines.length]; el.innerHTML='<a href="'+h.link+'" target="_blank">'+h.title+'</a>'; i++; } show(); setInterval(show, 9000); }
+    initNews();
+
+    // ===== Footer camo animation
+    (function(){ const el = document.getElementById('footerCamo'); const colors=['#64f2e3','#23d7ba','#4df6a0','#bdf6c3','#abffe6','#abb8b8']; const chars='░▒▓▚▞▐▉█▛'; function render(t=0){ let out=''; for(let c=0;c<62;c++){ out += '<span style="color:'+colors[(c+t)%colors.length]+'">'+chars[Math.floor(Math.random()*chars.length)]+'</span>'; } el.innerHTML = out; } let t=0; setInterval(()=>render(t++), 950); render(); })();
+
+    // ===== Watermark logic (improved): draggable shapes + draggable custom position; batch export
+    let baseImg=null, wmLogo=null, shapes=[]; let files=[];
+    const canvas=document.getElementById('wm-canvas'); const ctx=canvas.getContext('2d');
+
+    function handleImage(e){ files = Array.from(e.target.files||e.dataTransfer.files||[]); if(!files.length) return; document.getElementById('wm-files').textContent = files.map(f=>f.name).join(', '); loadBase(files[0]); }
+    function handleDrop(e){ e.preventDefault(); handleImage(e); }
+    function loadBase(file){ const reader=new FileReader(); reader.onload=ev=>{ const img=new Image(); img.onload=()=>{ baseImg=img; fitCanvas(img); drawAll(); }; img.src=ev.target.result; }; reader.readAsDataURL(file); }
+    function fitCanvas(img){ const maxW=1400, maxH=980; let w=img.width, h=img.height; const ar=w/h; if(w>maxW){w=maxW;h=Math.round(w/ar);} if(h>maxH){h=maxH;w=Math.round(h*ar);} canvas.width=w; canvas.height=h; }
+
+    // Logo upload
+    function handleLogo(e){ const file=e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=ev=>{ const img=new Image(); img.onload=()=>{ wmLogo=img; document.getElementById('wm-logo-preview').innerHTML='<img src="'+ev.target.result+'" style="max-width:64px;max-height:64px">'; drawAll(); }; img.src=ev.target.result; }; r.readAsDataURL(file); }
+    function removeLogo(){ wmLogo=null; document.getElementById('wm-logo-preview').innerHTML=''; drawAll(); }
+
+    // Shapes (draggable)
+    function addShape(type){ const color=document.getElementById('wm-shape-color').value; shapes.push({type,color,x:40,y:40,w:180,h:54}); renderShapeChips(); drawAll(); }
+    function removeShape(i){ shapes.splice(i,1); renderShapeChips(); drawAll(); }
+    function renderShapeChips(){ document.getElementById('wm-shapes-chips').innerHTML = shapes.map((s,i)=>`<span style="background:${s.color};color:#111;padding:.2rem .6rem;border-radius:7px;margin-right:.4rem">${s.type}<b style="color:#f44;cursor:pointer;margin-left:.4rem" onclick="removeShape(${i})">×</b></span>`).join(''); }
+
+    // Drag to position (custom) + shape dragging
+    let dragging=false; let dragTarget=''; let dragOffset={x:0,y:0}; let markPos={x:0.5,y:0.5};
+    function hitShape(mx,my){ for(let i=shapes.length-1;i>=0;i--){ const s=shapes[i]; if(mx>=s.x && mx<=s.x+s.w && my>=s.y && my<=s.y+s.h) return i; } return -1; }
+    canvas.addEventListener('mousedown',e=>{
+      const mx=e.offsetX, my=e.offsetY; const i=hitShape(mx,my); if(i>-1){ dragging=true; dragTarget=i; dragOffset={x:mx-shapes[i].x,y:my-shapes[i].y}; return; }
+      if(document.getElementById('wm-pos').value.startsWith('Custom')){ dragging=true; dragTarget='mark'; dragOffset={x:mx - markPos.x*canvas.width, y:my - markPos.y*canvas.height}; }
+    });
+    addEventListener('mouseup',()=>dragging=false);
+    canvas.addEventListener('mousemove',e=>{ if(!dragging) return; const mx=e.offsetX, my=e.offsetY; if(dragTarget==='mark'){ markPos.x=Math.max(0,Math.min(1,(mx-dragOffset.x)/canvas.width)); markPos.y=Math.max(0,Math.min(1,(my-dragOffset.y)/canvas.height)); } else if(typeof dragTarget==='number'){ shapes[dragTarget].x=mx-dragOffset.x; shapes[dragTarget].y=my-dragOffset.y; } drawAll(); });
+
+    // Bind numeric labels
+    function bindVals(){
+      const ids=[['wm-fontsize','wm-fontsize-val'],['wm-opacity','wm-opacity-val'],['wm-logosize','wm-logosize-val'],['wm-logo-opacity','wm-logo-opacity-val'],['wm-logo-rotate','wm-logo-rotate-val','°'],['wm-margin','wm-margin-val'],['wm-angle','wm-angle-val','°'],['wm-gap','wm-gap-val']];
+      ids.forEach(([i,l,suf=''])=>{ document.getElementById(l).textContent=document.getElementById(i).value + suf; }); drawAll();
     }
-    function j1nxRandomTip(){ setJ1nxMood(Math.floor(Math.random()*j1nxTips.length)); }
-    function toggleJ1nxMin(){
-      j1nxState.minimized = !j1nxState.minimized;
-      document.getElementById("j1nx-ui").classList.toggle("minimized",j1nxState.minimized);
-      if(!j1nxState.minimized) setJ1nxMood(0);
+
+    // Draw all
+    function drawAll(){ if(!baseImg){ ctx.clearRect(0,0,canvas.width,canvas.height); return; }
+      ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(baseImg,0,0,canvas.width,canvas.height);
+      // Shapes
+      shapes.forEach(s=>{ ctx.save(); ctx.fillStyle=s.color; if(s.type==='rect'||s.type==='banner') ctx.fillRect(s.x,s.y,s.w,s.h); else if(s.type==='ellipse'){ ctx.beginPath(); ctx.ellipse(s.x+s.w/2,s.y+s.h/2,s.w/2,s.h/2,0,0,2*Math.PI); ctx.fill(); } else if(s.type==='line'){ ctx.beginPath(); ctx.moveTo(s.x,s.y); ctx.lineTo(s.x+s.w,s.y+s.h); ctx.strokeStyle=s.color; ctx.lineWidth=4; ctx.stroke(); } ctx.restore(); });
+      // Logo
+      if(wmLogo){ const L=+document.getElementById('wm-logosize').value; const A=+document.getElementById('wm-logo-opacity').value/100; const R=+document.getElementById('wm-logo-rotate').value*Math.PI/180; ctx.save(); ctx.globalAlpha=A; const {x,y}=targetXY(); ctx.translate(x,y); ctx.rotate(R); ctx.drawImage(wmLogo,-L/2,-L/2,L,L); ctx.restore(); }
+      // Text
+      const txt=document.getElementById('wm-text').value; if(txt && document.getElementById('wm-show').checked){ const size=+document.getElementById('wm-fontsize').value; const col=document.getElementById('wm-color').value; const font=document.getElementById('wm-font').value; const op=+document.getElementById('wm-opacity').value/100; ctx.save(); ctx.globalAlpha=op; ctx.font=`${document.getElementById('wm-bold').checked?'bold ':''}${document.getElementById('wm-italic').checked?'italic ':''}${size}px '${font}',sans-serif`; ctx.fillStyle=col; const {x,y}=targetXY(); ctx.textAlign='center'; ctx.textBaseline='middle'; if(document.getElementById('wm-outline').checked){ ctx.lineWidth=2.6; ctx.strokeStyle='#111a'; ctx.strokeText(txt,x,y); } if(document.getElementById('wm-shadow').checked){ ctx.shadowColor='#000a'; ctx.shadowBlur=8; } if(document.getElementById('wm-tile').checked||document.getElementById('wm-pos').value.includes('Tile')){ tileText(txt); } else { ctx.fillText(txt,x,y); } ctx.restore(); }
     }
+
+    function targetXY(){ const pos=document.getElementById('wm-pos').value; const m=+document.getElementById('wm-margin').value; const c={x:canvas.width/2,y:canvas.height/2}; let x=c.x,y=c.y; if(pos==='Top Left'){x=m;y=m;} if(pos==='Top Right'){x=canvas.width-m;y=m;} if(pos==='Bottom Left'){x=m;y=canvas.height-m;} if(pos==='Bottom Right'){x=canvas.width-m;y=canvas.height-m;} if(pos.startsWith('Custom')){x=markPos.x*canvas.width; y=markPos.y*canvas.height;} return {x,y}; }
+
+    function tileText(txt){ const size=+document.getElementById('wm-fontsize').value; const gap=+document.getElementById('wm-gap').value; const ang=+document.getElementById('wm-angle').value*Math.PI/180; ctx.save(); ctx.translate(canvas.width/2, canvas.height/2); ctx.rotate(ang); for(let y=-canvas.height; y<canvas.height; y+=gap){ for(let x=-canvas.width; x<canvas.width; x+=gap*2){ ctx.fillText(txt, x, y); } } ctx.restore(); }
+
+    function previewWatermark(){ drawAll(); }
+    function resetDesigner(){ document.getElementById('wm-text').value=''; ['wm-fontsize','wm-opacity','wm-logosize','wm-logo-opacity','wm-logo-rotate','wm-margin','wm-angle','wm-gap'].forEach(id=>document.getElementById(id).value = (id==='wm-fontsize'?36: id==='wm-opacity'?42: id==='wm-logosize'?96: id==='wm-logo-opacity'?35: id==='wm-gap'?120: 0)); bindVals(); document.getElementById('wm-font').value='Inter'; document.getElementById('wm-color').value='#ffffff'; ['wm-bold','wm-italic','wm-shadow','wm-outline','wm-tile'].forEach(id=>document.getElementById(id).checked=false); document.getElementById('wm-show').checked=true; removeLogo(); shapes=[]; renderShapeChips(); drawAll(); }
+
+    // Export helpers
+    function downloadBlob(blob, name){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0); }
+    function exportImage(type){ if(!baseImg) return; const mime = type==='jpg'?'image/jpeg': type==='webp'?'image/webp':'image/png'; canvas.toBlob(function(blob){ downloadBlob(blob, 'watermarked.'+type); }, mime, type==='jpg'?0.92:0.95); }
+    async function exportAll(){ if(!files.length) return; const batch=document.getElementById('wm-batch').checked; if(!batch){ exportImage('png'); return; } let idx=1; for(const f of files){ await new Promise(res=>{ const reader=new FileReader(); reader.onload=ev=>{ const img=new Image(); img.onload=()=>{ baseImg=img; fitCanvas(img); drawAll(); canvas.toBlob(b=>{ downloadBlob(b, (f.name.replace(/\.[^.]+$/,''))+'__wm.png'); res(); }, 'image/png', 0.95); }; img.src=ev.target.result; }; reader.readAsDataURL(f); }); idx++; }
+    }
+    function copyToClipboard(){ canvas.toBlob(function(blob){ const item = new ClipboardItem({'image/png': blob}); navigator.clipboard.write([item]); }); }
+
+    // Live bindings
+    ['wm-text','wm-font'].forEach(id=>document.getElementById(id).addEventListener('input', drawAll));
+    ['wm-fontsize','wm-opacity','wm-logosize','wm-logo-opacity','wm-logo-rotate','wm-margin','wm-angle','wm-gap'].forEach(id=>document.getElementById(id).addEventListener('input', bindVals));
+
+    // ===== Microhelp popovers
+    function showHelp(topic){ const help={
+      upload:'Upload one or more PNG/JPG/WebP. High‑res recommended for crisp marks.',
+      designer:'Adjust text/logo/shape styles. Changes update live in the preview.',
+      wmtext:'Pick a readable font at 25–45% opacity. Outline + light shadow improves legibility.',
+      wmlogo:'Upload an SVG or transparent PNG for best results. Use rotation sparingly.',
+      wmshape:'Use banners or rectangles to ensure visibility on busy backgrounds. Drag shapes directly on the canvas.',
+      wmpos:'Corners for subtle, Tile/Repeat for maximum protection. Custom lets you drag anywhere. Angle controls tiling slant.',
+      wmbatch:'Enable Batch, select multiple files, then use Batch Download to process all with current settings.'
+    }[topic]||'Ask J1NX for extra help!'; const box=document.createElement('div'); box.style.cssText='position:fixed;z-index:999;background:var(--card);color:var(--ink);border:1px solid rgba(190,156,255,.6);border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.5);padding:1rem 1.2rem;max-width:360px;top:18%;left:50%;transform:translateX(-50%)'; box.innerHTML='<b style="color:var(--brand2)">Help</b><br>'+help+'<br><br><button onclick="this.parentElement.remove()" style="background:var(--brand2);color:#221;border:none;border-radius:8px;padding:.45rem 1rem;font-weight:900">Close</button>'; document.body.appendChild(box); }
+    window.showHelp = showHelp;
+
+    // ===== J1NX logic (from your footer file)
+    (function(){
+      const j1nxFloat = document.getElementById('j1nxFloatTrue');
+      const cutout = document.getElementById('j1nxCutoutTrue');
+      const bubble = document.getElementById('j1nxBubbleTrueMain');
+      function isMobile(){ return innerWidth<700; }
+      function shrink(){ if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } }
+      cutout.onclick = ()=>{ if(isMobile()){ const open=j1nxFloat.classList.contains('j1nx-open'); j1nxFloat.classList.toggle('j1nx-open', !open); bubble.style.display = open?'none':'flex'; } };
+      addEventListener('resize', shrink); shrink();
+    })();
+    (function(){
+      let chatHistory=[]; let nsfwUnlocked=false; function render(){ const out=chatHistory.map(l=>`<div>${l}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)"; }
+      function addMsg(m,u){ if(!m) return; const name=u?'<b>You:</b> ':'<b>J1nx:</b> '; chatHistory.push(name+m); if(chatHistory.length>8) chatHistory=chatHistory.slice(-8); render(); }
+      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick',()=>{ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML='<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...'; addMsg('NSFW mode unlocked! You’re now in uncensored mode.', false); });
+      document.getElementById('j1nxSendTrue').onclick=()=>{ const input=document.getElementById('j1nxInputTrue'); const val=(input.value||'').trim(); if(!val) return; addMsg(val,true); if(/^unlock$/i.test(val)){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML='<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...'; addMsg('NSFW mode unlocked! You’re now in uncensored mode.', false); input.value=''; return; } try{ let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked); let replyText = (reply && typeof reply==='object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply; addMsg(replyText, false); }catch(e){ addMsg('Sorry, my brain glitched... (Check assets/j1nx_brain.js)', false); } input.value=''; };
+      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); });
+      document.getElementById('j1nxSaveTrue').onclick=()=>{ const text=chatHistory.map(l=>l.replace(/<[^>]+>/g,'')) .join('
+'); const blob=new Blob([text],{type:'text/plain'}); downloadBlob(blob,'j1nx_chat.txt'); };
+      document.getElementById('j1nxClearTrue').onclick=()=>{ chatHistory=[]; render(); };
+      render();
+    })();
   </script>
+
+  <!-- External J1NX BRAIN (same path as your site) -->
+  <script src="assets/j1nx_brain.js"></script>
+
+  <!-- Minimal CSS for J1NX/FOOTER from your file -->
+  <style>
+    .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
+    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none!important}
+    .j1nx-bubble-true-main{background:rgba(22,23,31,.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--brand);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative;z-index:1}
+    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1}
+    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em 0}
+    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--brand);background:#171b22;color:var(--brand);min-width:0}
+    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--brand);color:var(--brand);font-family:inherit;font-weight:600;cursor:pointer;transition:background .13s,color .13s,border .13s;box-shadow:0 1.5px 9px #be9cff33}
+    .j1nx-btn-true:hover{background:var(--brand);color:#171b22;border-color:#fff}
+    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
+    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
+  </style>
 </body>
 </html>
