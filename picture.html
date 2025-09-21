@@ -1,82 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- =============================================================
-       AIHacks Encyclopedia — ACCORDION BEHAVIOR (SHOW ON CLICK ONLY)
-       • Keeps your layout/vibe & the same prank "boxes" (cards)
-       • Pranks DO NOT render until a category button is clicked
-       • When a new category is clicked, previous section closes
-       • JuicyAds zones placed cleanly; single async include + pushes
-       • JSON wiring unchanged: assets/aihacks-data.json
-       • Removed version label / coffee / personal name mentions
-       ============================================================= -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AIHacks Encyclopedia — Viral AI Pranks, Games, Dares & Uncensored Fun</title>
-  <meta name="description" content="AIHacks: viral encyclopedia of AI pranks, party dares, family games, Alexa/Google/Siri/Bixby tricks, TikTok/YouTube challenges, Roast battles, Office & Classroom gags, plus Adults/NSFW (age‑gated). 100% client‑side, underground, and free."/>
-  <meta name="keywords" content="AI pranks, Alexa, Google Assistant, Siri, Bixby, ChatGPT, party games, family dares, roast, office pranks, classroom games, TikTok challenges, YouTube dares, Adults, NSFW, viral hacks, prompt engineering, PromptForge, J1NX"/>
-  <link rel="canonical" href="https://promptforge.online/aihacks.html"/>
-  <meta name="theme-color" content="#0b141c"/>
+  <!-- ===== META / SEO ===== -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PromptForge Online — NSFW/SFW Image & Video Prompt Builder</title>
+  <meta name="description" content="PromptForge: pro-grade SFW/NSFW prompt builder with engine profiles, token chips, sliders, export presets, and a futuristic mixer. Build cinematic, photoreal prompts for SDXL, Flux, Midjourney, Runway, and more." />
+  <meta name="keywords" content="PromptForge, prompt builder, SDXL, Flux, Midjourney, Runway, AI image prompts, NSFW prompts, SFW prompts, cinematic lighting, gel lighting, editorial, boudoir, video prompts, motion prompts, framing tokens" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <link rel="canonical" href="https://promptforge.online/builder" />
+  <link rel="icon" href="/favicon.ico" />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:site_name" content="PromptForge Online" />
+  <meta property="og:locale" content="en_CA" />
+  <meta property="og:title" content="PromptForge — Pro AI Prompt Builder" />
+  <meta property="og:description" content="Build elite SFW/NSFW prompts with engine-aware tokens, chip mixers, and one-click exporters." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://promptforge.online/" />
+  <meta property="og:image" content="/og/promptforge_og.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PromptForge — Pro AI Prompt Builder" />
+  <meta name="twitter:description" content="Engine-aware prompt studio for SDXL, Flux, Midjourney, Runway, and more." />
+  <meta name="twitter:image" content="/og/promptforge_og.jpg" />
+  <meta name="theme-color" content="#0b0f14" />
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"PromptForge Online","url":"https://promptforge.online/","logo":"/og/logo.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social"]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Prompt Builder","item":"https://promptforge.online/builder"}]}
+  </script>
 
-  <!-- Open Graph / Twitter (brand‑safe) -->
-  <meta property="og:site_name" content="PromptForge"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:title" content="AIHacks — Viral AI Pranks & Games"/>
-  <meta property="og:description" content="Viral pranks, party games, dare prompts, and more for Alexa, Google, Siri, Bixby & ChatGPT. Adults/NSFW gated."/>
-  <meta property="og:url" content="https://promptforge.online/aihacks.html"/>
-  <meta property="og:image" content="https://promptforge.online/og/promptforge_og.jpg"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="AIHacks — Viral AI Pranks & Games"/>
-  <meta name="twitter:description" content="Viral pranks, dares, and games for assistants & chatbots. Adults/NSFW gated."/>
-  <meta name="twitter:image" content="https://promptforge.online/og/promptforge_og.jpg"/>
+  <!-- ===== Ads: JuicyAds (single async include; zones pushed later) ===== -->
+  <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 
-  <!-- JuicyAds (single async include; zones pushed later) -->
-  <script async data-cfasync="false" src="https://poweredby.jads.co/js/jads.js"></script>
-
-  <!-- J1NX brain (responses) -->
-  <script defer src="assets/j1nx_brain.js"></script>
-
+  <!-- ===== STYLES ===== -->
   <style>
-    :root{ --aqua:#64f2e3; --ink:#e9efe7; --bg:#181b15; --deep:#23231f; --gold:#ffe266; --danger:#fa3c70; }
-    html,body{margin:0;padding:0;box-sizing:border-box;width:100vw;max-width:100vw;overflow-x:hidden;background:var(--bg);color:var(--ink);font-family:'Fira Mono',monospace;-webkit-font-smoothing:antialiased}
+    :root{
+      --bg:#0b0f14; --panel:#10161d; --card:#121922; --edge:#232a33; --ink:#e7f7ff; --dim:#95a8b6;
+      --aqua:#64f2e3; --aqua2:#23d7ba; --vio:#be9cff; --hot:#fa528e; --gold:#ffd166; --ok:#50fa7b; --err:#ff637d;
+    }
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui;overflow-x:hidden}
+    a{color:var(--aqua);text-decoration:none} a:hover{text-decoration:underline}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
 
-    /* ===== Header / Top ===== */
-    header{border-bottom:2px solid var(--aqua);background:var(--deep);padding:0 0 .1em 0;width:100vw}
-    .breadcrumbs{font-size:1em;color:#80dfff;letter-spacing:.01em;font-weight:500;opacity:.92;padding:.2em .6em}
-    .breadcrumbs a{color:#37e4fc}
-    .site-nav-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:.2rem .6rem .5rem}
-    .brand{font-size:1.28rem;font-weight:900;background:linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 1px 10px #18c6fa44}
-    nav{display:flex;gap:13px;flex-wrap:wrap}
-    nav a{color:#7eeaff;padding:3px 9px;border-radius:8px;font-weight:700;text-decoration:none}
-    nav a:hover{background:#122a38;color:#fff}
+    /* Topbar */
+    .topbar{position:sticky;top:0;z-index:3000;background:linear-gradient(180deg,rgba(13,18,25,.96),rgba(13,18,25,.82));backdrop-filter:blur(8px);border-bottom:1px solid #15212d}
+    .topbar .inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--aqua),var(--vio));box-shadow:0 0 0 2px #1b242e}
+    .brand h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:clamp(18px,2.2vw,26px)}
+    .breadcrumbs{color:var(--dim);font-weight:600;font-size:.9em}
+    .navlinks,.socials{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .navlinks a{padding:6px 10px;border:1px solid #22303c;border-radius:8px;background:#0f151d;color:#cfefff}
 
-    /* SEO ribbon + headline */
-    .seo-banner{width:100vw;overflow:hidden;background:#111417;border-bottom:2px solid var(--aqua);box-shadow:0 3px 16px #43f6e122;padding:6px 0;font-size:.99em;letter-spacing:.07em;color:var(--aqua);white-space:nowrap;position:relative;z-index:10;margin-bottom:5px}
-    .seo-banner-inner{display:inline-block;padding-left:100vw;animation:scroll 32s linear infinite;font-weight:700}
-    @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
-    h1.main-title{margin:16px auto 10px;text-align:center;font-size:3.8em;letter-spacing:.11em;font-weight:900;background:linear-gradient(90deg,var(--aqua) 14%,#fffac8 54%,#be9cff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 4px 32px #5af4ea44,0 2px 12px #be9cff55;line-height:1.08;filter:drop-shadow(0 0 15px #6ee4c3bb);text-transform:uppercase}
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch;margin:18px auto 10px;max-width:1200px}
+    .hero-card{background:linear-gradient(180deg,#0f141b,#0b1118);border:1px solid var(--edge);border-radius:18px;padding:20px}
+    .chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .chip{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:999px;padding:7px 11px;font-size:13px;cursor:pointer}
 
-    /* Quick strip above hero */
-    .quick-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 12px;align-items:center;margin:8px auto 10px;max-width:1080px;padding:8px 10px}
-    .search{display:flex;align-items:center;gap:6px}
-    .search input{width:340px;max-width:72vw;padding:9px 11px;border-radius:10px;border:1.4px solid #2fe9ff;background:#0f151a;color:#bfefff}
-    .btn{background:#232922;color:var(--aqua);border:1.6px solid #49fffb;border-radius:9px;padding:7px 14px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px #19e4ff33}
-    .btn:hover{background:#191d19;color:#fff;border-color:var(--gold)}
-    select.lang{padding:7px 11px;border-radius:8px;background:#23292b;color:var(--aqua);border:1.5px solid var(--aqua)}
+    /* Tool grid */
+    .tool{display:grid;grid-template-columns:300px 1fr;gap:18px;max-width:1200px;margin:14px auto 24px}
+    .sidebar{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:14px;position:sticky;top:84px;max-height:calc(100vh - 100px);overflow:auto}
+    .group{margin:10px 0 14px}
+    .g-title{display:flex;align-items:center;gap:8px;font-weight:800;margin:0 0 6px 0}
+    .help{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid #39576b;color:#9fd;cursor:help;font-size:11px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    select,input[type="text"],textarea{width:100%;background:#0e151d;border:1px solid #243240;color:#d9f6ff;border-radius:10px;padding:10px 12px;font:inherit}
+    textarea{min-height:104px;resize:vertical}
+    .slider{appearance:none;width:100%} .slider::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--aqua)} .slider::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:#1a2631}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+    .btn{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+    .btn.primary{background:linear-gradient(135deg,#1a2a36,#111a22);border-color:#3a5569;color:#fff}
+    .btn.aqua{background:linear-gradient(135deg,#1c3138,#0e2a27);border-color:#1b7a74;color:#bff9f1}
+    .btn.hot{background:linear-gradient(135deg,#2a1621,#1a0e15);border-color:#7d1e45;color:#ffd8e8}
 
-    .desc-seo{margin:3px auto 10px;max-width:960px;font-size:.98em;color:#c4f8ff;text-align:center;font-weight:500;letter-spacing:.01em;line-height:1.22;opacity:.86;padding:0 8px}
+    /* Main */
+    .main{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:16px}
+    .tabbar{display:flex;gap:8px;margin-bottom:10px}
+    .tab{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:9px;padding:7px 11px;font-weight:700;cursor:pointer}
+    .tab.active{background:linear-gradient(180deg,#15202a,#0f171f);border-color:#3a5569;color:#fff}
+    .beta{font-size:.72em;color:#ffd166;margin-left:6px}
+    .io{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    .io .card{background:#0e151d;border:1px solid #22303c;border-radius:12px;min-height:160px;padding:10px}
+    .io pre{white-space:pre-wrap;word-break:break-word;font-family:"Fira Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New";font-size:12.5px;line-height:1.4;margin:0}
+    .tokens{display:flex;flex-wrap:wrap;gap:8px;max-height:180px;overflow:auto;border:1px dashed #213041;border-radius:12px;padding:8px;background:#0b1219}
+    .token{padding:6px 9px;border-radius:999px;background:#0f1720;border:1px solid #203040;font-size:12px;cursor:pointer}
+    .token:hover{border-color:#3b6177}
 
-    .hero-art-wrap{width:100vw;display:flex;justify-content:center;align-items:center;overflow:hidden;min-height:360px;background:#000;border-bottom:3px solid #242b32}
-    .hero-art-img{width:100vw;max-width:1440px;height:auto;object-fit:contain;background:#000;user-select:none;pointer-events:none;display:block;margin:0 auto}
+    /* Accordion (Help/FAQ) */
+    .accordion{border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--card)}
+    .acc-item+.acc-item{border-top:1px solid var(--edge)}
+    .acc-head{width:100%;text-align:left;padding:12px 14px;background:#101821;color:#dff;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .acc-head span{opacity:.8}
+    .acc-body{display:none;padding:12px 14px;background:#0f151d;color:#cfe}
 
-    .howto-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:13px auto 14px;max-width:980px}
-    .howto-link{background:#232922;color:var(--aqua);border:1.6px solid #49fffb;border-radius:9px;padding:7px 19px;font-weight:800;box-shadow:0 2px 8px #19e4ff33}
-    .howto-link:hover{background:#191d19;color:#fff;border-color:var(--gold)}
+    /* J1NX + Footer */
+    .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
+    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent !important;margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none !important}
+    .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66, 0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative;z-index:1}
+    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .20em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1}
+    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
+    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
+    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:#aef7ee;font-weight:600;cursor:pointer}
+    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
+    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
+    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
 
-    /* Ads — CLS‑safe wrappers */
+    footer{margin:24px auto 8px;padding:0;text-align:center;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center;background:none;position:relative;z-index:100}
+    .footer-art{margin:0 0 12px 0;font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text}
+    .footer-camo{font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px;text-align:center;opacity:.93;white-space:pre}
+    .footer-bar{color:#88fffd;margin:12px auto 8px;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
+    .footer-bar a{color:var(--aqua)} .footer-bar a:hover{text-decoration:underline;color:#fff}
+
+    /* ===== Ad wrappers: CLS‑safe ===== */
     .ad-wrap{display:flex;align-items:center;justify-content:center;margin:10px auto}
     .ad-728x90{width:728px;min-height:90px}
     .ad-300x250{width:300px;min-height:250px}
@@ -84,180 +126,213 @@
     @media(max-width:760px){.ad-728x90{transform:scale(.92);transform-origin:center}}
     .rail{position:fixed;right:10px;bottom:100px;z-index:1200;display:none}
     @media(min-width:1320px){.rail{display:block}}
-
-    /* Category buttons */
-    .category-row{display:flex;flex-wrap:wrap;justify-content:center;gap:13px 17px;margin:17px auto 18px;max-width:1200px}
-    .category-btn{font-size:1.05em;font-weight:900;letter-spacing:.01em;padding:14px 22px;border-radius:14px;color:var(--ink);background:#181d21;border:2px solid var(--aqua);cursor:pointer;box-shadow:0 2px 18px #64f2e365,0 1px 10px #191d1970 inset;min-width:128px;user-select:none;position:relative}
-    .category-btn:hover{background:#232c38;color:#fff;border-color:#fff;box-shadow:0 6px 19px #00fff080}
-    .category-btn.active{background:#10151b;border-color:#fff}
-    .badge{position:absolute;top:-9px;right:-9px;background:#ff57ae;color:#111;font-weight:900;border-radius:999px;padding:2px 7px;font-size:.78em;border:2px solid #111}
-    .category-btn.nsfw{background:#340020;color:var(--danger);border-color:var(--danger);box-shadow:0 2px 16px #fa3c70b3,0 1px 7px #641e2e77 inset}
-    .category-btn.adults{background:#32240b;color:var(--gold);border-color:var(--gold);box-shadow:0 2px 18px #ffe266bb,0 1px 7px #22200644 inset}
-
-    /* Content blocks (accordion) */
-    .accordion-block{margin:17px 0 22px;display:none}
-    .accordion-block.active{display:block}
-    .accordion-title{font-size:1.35em;color:var(--aqua);margin-bottom:8px;font-weight:700;letter-spacing:.05em}
-    .prank-grid{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:16px 20px;margin-bottom:16px}
-    @media(max-width:750px){.prank-grid{grid-template-columns:1fr}}
-
-    /* Prank cards (boxes) — unchanged look, just tidied */
-    .prank-card{background:linear-gradient(110deg,#202e3a 78%,#2ef9e81c 100%);border-radius:1.15em;box-shadow:0 2px 16px #3af5f449,0 1px 16px #3cfbe638,0 4px 28px #1e405766;padding:13px 11px 11px 15px;min-height:110px;transition:transform .13s,box-shadow .14s;display:flex;flex-direction:column;justify-content:space-between;border:1.7px solid #39ffe876;opacity:.99;position:relative;filter:drop-shadow(0 4px 13px #64f2e32b)}
-    .prank-card:hover{transform:scale(1.033);box-shadow:0 0 29px #52e7ffbb,0 2px 13px #1ffedba1;border:1.7px solid #64f2e3;z-index:10}
-    .prank-title{font-size:1.11em;font-weight:800;margin-bottom:2px;color:#43e7fe;text-shadow:0 1px 5px #17d9ff27}
-    .prank-tip{font-size:.98em;color:#b8fdff;opacity:.87;margin-bottom:5px}
-    .prank-actions{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap}
-    .act{background:#222e36;color:#9ff6ff;border:1px solid #2fe9ff;border-radius:9px;padding:6px 10px;font-weight:800;cursor:pointer}
-    .act:hover{background:#2fe9ff;color:#131a1f;border-color:#fff}
-    .star-rating{display:flex;align-items:center;margin-left:4px;font-size:1.19em;user-select:none;cursor:pointer}
-    .star{color:#ffd700b7;margin-right:0;transition:color .13s}
-    .star.filled{color:#fff530;text-shadow:0 0 7px #fffc6b99}
-    .fav-btn{font-size:1.22em;color:#ff57ae;background:#222e36;border:none;min-width:33px;cursor:pointer}
-    .fav-btn.active{color:#fff;background:#ff57ae}
-
-    /* Footer */
-    .footer-art{font-family:monospace;font-size:.91em;line-height:1.01;letter-spacing:1.1px;background:#131413;margin:0 auto .7em;padding:0;width:100vw;text-align:center;color:var(--aqua);overflow-x:auto;user-select:none;display:flex;justify-content:center;align-items:center}
-    .footer-camo{background:#131413;margin:0 auto .1em;font-family:monospace;font-size:1em;text-align:center;width:100vw;user-select:none;letter-spacing:.09em}
-    .footer-bar{text-align:center;font-size:.94em;color:var(--aqua);margin-bottom:.3em;width:100vw}
-
-    /* J1NX float (unchanged logic; brief glow added) */
-    .j1nx-float-true{position:fixed;right:2vw;bottom:54px;z-index:1400;display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;max-width:360px}
-    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9}
-    .j1nx-bubble-true-main{background:rgba(22,23,31,.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative}
-    .j1nx-bubble-true-main.glow{box-shadow:0 4px 22px #64f2e3bb,0 0 0 3px #23231f}
-    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .2em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22}
-    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
-    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
-    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:var(--aqua);font-weight:800;cursor:pointer;box-shadow:0 1.5px 9px #be9cff33}
-    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
-    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
-    @media(max-width:700px){.j1nx-float-true{right:9px;bottom:9px;max-width:74px;width:74px}.j1nx-true-cutout-img{width:64px!important;height:64px!important;margin-bottom:0;border-radius:50%;box-shadow:0 2px 10px #be9cff44}.j1nx-bubble-true-main{display:none!important;opacity:0}.j1nx-float-true.j1nx-open .j1nx-bubble-true-main{display:flex!important;opacity:1;position:absolute;left:75px;top:0;min-width:230px;background:rgba(20,22,28,.99);box-shadow:0 4px 22px #be9cff88,0 0 0 3px #23231f}.j1nx-float-true.j1nx-open{max-width:320px;width:320px}}
+    .main-with-bottom-pad{padding-bottom:120px}
   </style>
 </head>
 <body>
-  <!-- ===== Header ===== -->
-  <header>
-    <div class="breadcrumbs"><a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a></div>
-    <div class="site-nav-row">
-      <span class="brand">AIHacks</span>
-      <nav>
-        <a href="aihacks.html">AIHacks</a>
-        <a href="ansiart.html">ANSI Art</a>
-        <a href="compare.html">Compare</a>
-        <a href="j1nx.html">J1NX</a>
-        <a href="movie.html">Movie</a>
-        <a href="picture.html">Picture</a>
-        <a href="watermark.html">Watermark</a>
-        <a href="support.html">Support</a>
-      </nav>
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar" role="navigation" aria-label="Primary">
+    <div class="inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>PromptForge <span class="breadcrumbs">/ Builder</span></h1>
+          <div class="breadcrumbs">Home ▸ Builder ▸ Image/Video</div>
+        </div>
+      </div>
+      <div class="navlinks">
+        <a href="/" title="Home">Home</a>
+        <a href="/builder" title="Prompt Builder">Builder</a>
+        <a href="/ansi" title="ANSIart Playground">ANSIart</a>
+        <a href="/monster" title="PromptForge Monster">Monster</a>
+        <a href="#panel-help" class="js-scroll-help" title="Help & FAQ">Help</a>
+      </div>
+      <div class="socials">
+        <a href="https://bsky.app/profile/goreandgiggles.bsky.social" aria-label="Bluesky">Bsky</a>
+        <a href="https://x.com/GoreandGiggles" aria-label="Twitter/X">X</a>
+        <a href="/support" class="bmc-btn" aria-label="Support PromptForge">💖 Support</a>
+      </div>
     </div>
-    <!-- Header Ad 728x90 -->
+    <!-- Header Ad 728x90 (JuicyAds 1101674) -->
     <div class="ad-wrap"><ins id="1101674" class="ad-728x90" data-width="728" data-height="90"></ins></div>
-  </header>
-
-  <!-- SEO ribbon -->
-  <div class="seo-banner"><div class="seo-banner-inner" id="seoBannerInner">AI pranks • viral games • Alexa hacks • Google tricks • Siri secrets • Bixby jokes • ChatGPT roasts • TikTok challenges • YouTube dares • Adults & NSFW (age‑gate) • classroom games • office gags • family fun • underground • user submissions</div></div>
-
-  <!-- Headline, quick strip, hero -->
-  <h1 class="main-title">AIHacks Encyclopedia</h1>
-  <div class="quick-strip">
-    <div class="search"><input id="q" placeholder="Search pranks, tags, platforms…"/><button class="btn" onclick="doSearch()">Search</button><button class="btn" onclick="randomHack()">Random</button></div>
-    <select id="langSelect" class="lang" onchange="switchLang(this.value)">
-      <option value="en">🌐 English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="zh">中文</option><option value="ar">العربية</option><option value="hi">हिन्दी</option><option value="pt">Português</option><option value="it">Italiano</option><option value="tr">Türkçe</option><option value="ko">한국어</option><option value="nl">Nederlands</option><option value="sv">Svenska</option>
-    </select>
-    <div id="google_translate_element" style="display:none"></div>
   </div>
 
-  <div class="desc-seo"><b>AIHacks</b>: pranks & games for Alexa, Google, Siri, Bixby, and ChatGPT. Party, family, classroom, office, roast battles, plus Adults/NSFW with an age‑gate. Submit your own chaos; we feature the best.</div>
+  <!-- ===== HERO ===== -->
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-card">
+        <h2>Build elite prompts for SDXL, Flux, Midjourney & Runway</h2>
+        <p>Toggle engines, genres, vibes and boosters. Drop tokens as chips. Export short/med/long. The text never looks default — it’s stitched, styled and contradiction-safe.</p>
+        <div class="chipbar" id="quickChips"></div>
+      </div>
+      <div class="hero-card">
+        <strong>SEO blurb:</strong>
+        <p>PromptForge Online is a professional prompt authoring studio for SFW/NSFW image and video generation. With engine profiles, negatives, lighting recipes, lens effects and token-dense packs, it crafts prompts that models actually obey — faster than Perchance-style mixers.</p>
+        <div class="chipbar">
+          <span class="chip" title="Engine-specific phrasing">engine-aware</span>
+          <span class="chip" title="Film-grade lighting patterns">cinematic lighting</span>
+          <span class="chip" title="Tasteful or explicit, your call">NSFW/SFW switch</span>
+          <span class="chip" title="Terse/Medium/Long">export presets</span>
+        </div>
+      </div>
+    </section>
+  </div>
 
-  <div class="hero-art-wrap"><img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false"/></div>
-
-  <section class="howto-links">
-    <a class="howto-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener">Bluesky</a>
-    <a class="howto-link" href="https://x.com/GoreandGiggles" target="_blank" rel="noopener">X / Twitter</a>
-    <a class="howto-link" href="https://www.facebook.com/groups/393971833395749" target="_blank" rel="noopener">Facebook Group</a>
-    <a class="howto-link" href="legal.html">Legal / Terms</a>
-    <a class="howto-link" href="support.html">Support</a>
-  </section>
-
-  <!-- Right rail (widescreen) -->
-  <aside class="rail" aria-label="sponsored sidebar"><ins id="1101675" class="ad-160x600" data-width="160" data-height="600"></ins></aside>
-
-  <!-- Mid ad (300x250) -->
+  <!-- ===== Mid Ad (300x250 JuicyAds 1101622) ===== -->
   <section class="ad-wrap"><ins id="1101622" class="ad-300x250" data-width="300" data-height="250"></ins></section>
 
-  <!-- Category buttons (no section open by default) -->
-  <div class="category-row" id="category-row">
-    <button class="category-btn" data-cat="alexa" onclick="expandCat('alexa', this)">Alexa<span class="badge" id="c-alexa"></span></button>
-    <button class="category-btn" data-cat="google" onclick="expandCat('google', this)">Google<span class="badge" id="c-google"></span></button>
-    <button class="category-btn" data-cat="siri" onclick="expandCat('siri', this)">Siri<span class="badge" id="c-siri"></span></button>
-    <button class="category-btn" data-cat="bixby" onclick="expandCat('bixby', this)">Bixby<span class="badge" id="c-bixby"></span></button>
-    <button class="category-btn" data-cat="chatgpt" onclick="expandCat('chatgpt', this)">ChatGPT<span class="badge" id="c-chatgpt"></span></button>
-    <button class="category-btn" data-cat="drinking" onclick="expandCat('drinking', this)">Drinking<span class="badge" id="c-drinking"></span></button>
-    <button class="category-btn" data-cat="dares" onclick="expandCat('dares', this)">Dares<span class="badge" id="c-dares"></span></button>
-    <button class="category-btn" data-cat="viral" onclick="expandCat('viral', this)">Viral<span class="badge" id="c-viral"></span></button>
-    <button class="category-btn" data-cat="party" onclick="expandCat('party', this)">Party<span class="badge" id="c-party"></span></button>
-    <button class="category-btn" data-cat="roast" onclick="expandCat('roast', this)">Roast<span class="badge" id="c-roast"></span></button>
-    <button class="category-btn" data-cat="office" onclick="expandCat('office', this)">Office<span class="badge" id="c-office"></span></button>
-    <button class="category-btn" data-cat="family" onclick="expandCat('family', this)">Family<span class="badge" id="c-family"></span></button>
-    <button class="category-btn" data-cat="classroom" onclick="expandCat('classroom', this)">Classroom<span class="badge" id="c-classroom"></span></button>
-    <button class="category-btn" data-cat="kids" onclick="expandCat('kids', this)">Kids<span class="badge" id="c-kids"></span></button>
-    <button class="category-btn adults" data-cat="ad" onclick="expandCat('ad', this)">Adults<span class="badge" id="c-ad"></span></button>
-    <button class="category-btn nsfw" data-cat="nsfw" onclick="expandCat('nsfw', this)">NSFW<span class="badge" id="c-nsfw"></span></button>
-    <button class="category-btn" data-cat="tv-movies" onclick="expandCat('tv-movies', this)">Movies/TV<span class="badge" id="c-tv-movies"></span></button>
-    <button class="category-btn" data-cat="songs" onclick="expandCat('songs', this)">Songs<span class="badge" id="c-songs"></span></button>
-    <button class="category-btn" data-cat="weird" onclick="expandCat('weird', this)">Weird<span class="badge" id="c-weird"></span></button>
-    <button class="category-btn" data-cat="easteregg" onclick="expandCat('easteregg', this)">Easter Eggs<span class="badge" id="c-easteregg"></span></button>
-    <button class="category-btn" onclick="openSubmitModal()">Submit</button>
-  </div>
+  <!-- ===== TOOL ===== -->
+  <section class="tool" id="tool">
+    <aside class="sidebar">
+      <div class="group">
+        <label class="g-title" for="engineSel">Engine <span class="help" title="Adds engine-specific tokens and auto-negatives.">?</span></label>
+        <select id="engineSel" aria-label="Engine"></select>
+      </div>
+      <div class="group row">
+        <div>
+          <label class="g-title" for="genreSel">Genre <span class="help" title="Sets sensible defaults (lighting, lens, palette)">?</span></label>
+          <select id="genreSel" aria-label="Genre"></select>
+        </div>
+        <div>
+          <label class="g-title" for="vibeSel">Vibe <span class="help" title="Softcore maps explicit slang → tasteful. Hardcore keeps explicit tokens.">?</span></label>
+          <select id="vibeSel" aria-label="Vibe">
+            <option value="softcore" selected>softcore</option>
+            <option value="hardcore">hardcore</option>
+            <option value="sfw">sfw</option>
+          </select>
+        </div>
+      </div>
+      <div class="group row">
+        <div>
+          <label class="g-title" for="styleSel">Style <span class="help" title="Sentence cadence: cinematic / poetic / tech">?</span></label>
+          <select id="styleSel" aria-label="Style">
+            <option>cinematic</option>
+            <option>poetic</option>
+            <option>tech</option>
+          </select>
+        </div>
+        <div>
+          <label class="g-title" for="partySel">Party <span class="help" title="Solo or group shorthand (mf, ff, mmf, fff)">?</span></label>
+          <select id="partySel" aria-label="Party">
+            <option value="solo">solo</option>
+            <option value="ff">ff</option>
+            <option value="mf">mf</option>
+            <option value="mmf">mmf</option>
+            <option value="fff">fff</option>
+          </select>
+        </div>
+      </div>
+      <div class="group">
+        <label class="g-title" for="boostRange">Boost Level <span class="help" title="Adds quality tokens: 0=off, 3=max">?</span></label>
+        <input type="range" id="boostRange" class="slider" min="0" max="3" step="1" value="2" />
+      </div>
+      <div class="group row">
+        <div>
+          <label class="g-title" for="lengthSel">Length <span class="help" title="Short/Medium/Long prompt export">?</span></label>
+          <select id="lengthSel" aria-label="Length">
+            <option>short</option>
+            <option>medium</option>
+            <option>long</option>
+          </select>
+        </div>
+        <div>
+          <label class="g-title" for="formatSel">Format <span class="help" title="Plain, JSON, or Markdown">?</span></label>
+          <select id="formatSel" aria-label="Format">
+            <option>plain</option>
+            <option>json</option>
+            <option>markdown</option>
+          </select>
+        </div>
+      </div>
+      <div class="group">
+        <label class="g-title" for="negInput">Negatives <span class="help" title="Add model-specific negatives">?</span></label>
+        <textarea id="negInput" placeholder="blurry, watermark, extra fingers..."></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="btnBuild">Build</button>
+        <button class="btn" id="btnReset">Reset</button>
+        <button class="btn aqua" id="btnCopy">Copy</button>
+        <button class="btn hot" id="btnSpeak">Speak</button>
+      </div>
+    </aside>
 
-  <!-- Main content mounts (all hidden until user clicks a category) -->
-  <main class="panel" id="main-panel" style="max-width:1200px;margin:0 auto;padding:0 10px 120px">
-    <section id="alexa-block" class="accordion-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></section>
-    <section id="google-block" class="accordion-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></section>
-    <section id="siri-block" class="accordion-block"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></section>
-    <section id="bixby-block" class="accordion-block"><div class="accordion-title">Bixby Pranks & Dares</div><div class="prank-grid"></div></section>
-    <section id="chatgpt-block" class="accordion-block"><div class="accordion-title">ChatGPT Pranks & Dares</div><div class="prank-grid"></div></section>
-    <section id="drinking-block" class="accordion-block"><div class="accordion-title">Drinking Games</div><div class="prank-grid"></div></section>
-    <section id="dares-block" class="accordion-block"><div class="accordion-title">Dares</div><div class="prank-grid"></div></section>
-    <section id="viral-block" class="accordion-block"><div class="accordion-title">Viral Challenges</div><div class="prank-grid"></div></section>
-    <section id="party-block" class="accordion-block"><div class="accordion-title">Party Pranks</div><div class="prank-grid"></div></section>
-    <section id="roast-block" class="accordion-block"><div class="accordion-title">Roast Battles</div><div class="prank-grid"></div></section>
-    <section id="office-block" class="accordion-block"><div class="accordion-title">Office Pranks</div><div class="prank-grid"></div></section>
-    <section id="family-block" class="accordion-block"><div class="accordion-title">Family Games</div><div class="prank-grid"></div></section>
-    <section id="classroom-block" class="accordion-block"><div class="accordion-title">Classroom Games</div><div class="prank-grid"></div></section>
-    <section id="kids-block" class="accordion-block"><div class="accordion-title">Kids Pranks & Dares</div><div class="prank-grid"></div></section>
-    <section id="ad-block" class="accordion-block"><div class="accordion-title">Adults 18+ Only</div><div class="prank-grid"></div></section>
-    <section id="nsfw-block" class="accordion-block"><div class="accordion-title">NSFW / Uncensored</div><div class="prank-grid"></div></section>
-    <section id="tv-movies-block" class="accordion-block"><div class="accordion-title">Movie/TV Pranks</div><div class="prank-grid"></div></section>
-    <section id="songs-block" class="accordion-block"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></section>
-    <section id="weird-block" class="accordion-block"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></section>
-    <section id="easteregg-block" class="accordion-block"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></section>
-    <!-- Empty state helper -->
-    <section id="empty-msg" class="accordion-block active"><div class="accordion-title">Pick a category to load pranks</div><div class="prank-grid"></div></section>
-  </main>
+    <div class="main main-with-bottom-pad">
+      <div class="tabbar">
+        <button class="tab active" data-tab="image">Image</button>
+        <button class="tab" data-tab="video">Video <span class="beta">beta</span></button>
+        <button class="tab" data-tab="advanced">Advanced</button>
+      </div>
 
-  <!-- Bottom Ad 728x90 (reuse zone) -->
+      <div id="panel-image" class="panel">
+        <div class="io">
+          <div class="card">
+            <h3>Input</h3>
+            <textarea id="inText" placeholder="Describe the scene, subject, and vibe..."></textarea>
+            <div class="tokens" id="tokenBin"></div>
+          </div>
+          <div class="card">
+            <h3>Output</h3>
+            <pre id="outText"></pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-video" class="panel" style="display:none">
+        <div class="io">
+          <div class="card">
+            <h3>Shot List</h3>
+            <textarea id="inVideo" placeholder="Shot by shot…"></textarea>
+          </div>
+          <div class="card">
+            <h3>Output</h3>
+            <pre id="outVideo"></pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-advanced" class="panel" style="display:none">
+        <div class="accordion" id="panel-help">
+          <div class="acc-item">
+            <button class="acc-head"><b>Tips</b> <span>+</span></button>
+            <div class="acc-body"><p>Use engine presets, then layer vibe + style. Keep negatives lean. Export long only when you truly need it.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head"><b>Lighting</b> <span>+</span></button>
+            <div class="acc-body"><p>Mix hard key with soft fill; add hairlight; try gel stacks for color.</p></div>
+          </div>
+          <div class="acc-item">
+            <button class="acc-head"><b>FAQ</b> <span>+</span></button>
+            <div class="acc-body"><p>Everything runs client‑side. No data leaves the page.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right rail (widescreen only) - JuicyAds 160x600 (1101675) -->
+  <aside class="rail" aria-label="sponsored sidebar"><ins id="1101675" class="ad-160x600" data-width="160" data-height="600"></ins></aside>
+
+  <!-- Bottom Ad 728x90 (reuse header zone 1101674) -->
   <div class="ad-wrap"><ins id="1101674_bottom" class="ad-728x90" data-width="728" data-height="90"></ins></div>
 
-  <!-- J1NX FLOAT (as-is; only glow added) -->
-  <div class="j1nx-float-true" id="j1nxFloatTrue" aria-label="J1nx chat">
+  <!-- ===== J1NX (kept) ===== -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
-      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue"><b>J1nx:</b> Hey you 👀—Ready to stir up a little trouble, or keep it PG today?</div>
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue"><b>J1nx:</b> Say it your way. I’ll keep the grammar tight. 💡</div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off"/>
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Ask J1nx for a tip…" maxlength="120" autocomplete="off"/>
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
-        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
-        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save</button>
       </div>
-      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Double‑tap the bubble or type <b>unlock</b> to reveal NSFW mode…</div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Type <b>unlock</b> to enable spicier mode.</div>
     </div>
   </div>
 
-  <!-- Footer (ASCII unchanged) -->
+  <!-- ===== FOOTER ===== -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -269,78 +344,35 @@
  (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/      (__)   (__)  (__)(__)__) (__) (__)  
     </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">BC, Canada • #PromptForge • <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • <a href="https://x.com/GoreandGiggles">Twitter/X</a> • <a href="legal.html">Legal</a></div>
+    <div class="footer-bar">Made underground in BC, Canada • #PromptForge • <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • <a href="https://x.com/GoreandGiggles">Twitter/X</a> • <a href="/legal">Legal</a></div>
   </footer>
 
-  <!-- =================== APP / DATA =================== -->
+  <!-- ===== Brains / Scripts ===== -->
+  <script src="assets/j1nx_brain.js" defer></script>
   <script>
-    // CAMO footer
+    // Footer camo
     (function(){ const el=document.getElementById("footerCamo"); if(!el) return; const colors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"], chars="░▒▓▚▞▐▉█▛"; function tick(t){ let out=""; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;} el.innerHTML=out;} let t=0; tick(0); setInterval(()=>tick(++t),950); })();
 
-    // SEO ribbon loop refresh
-    document.getElementById('seoBannerInner').addEventListener('animationiteration',function(){ this.style.animation='none'; void this.offsetWidth; this.style.animation=''; });
+    // Tabs
+    document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const tab=btn.getAttribute('data-tab'); document.querySelectorAll('.panel').forEach(p=>p.style.display='none'); document.getElementById('panel-'+tab).style.display='block'; window.scrollTo({top:document.getElementById('tool').offsetTop-20,behavior:'smooth'}); }));
 
-    // Global state & JSON wiring (unchanged path)
-    const state = { data:{}, open:null, ageOK: JSON.parse(localStorage.getItem('aih_age_ok')||'false') };
+    // Accords
+    document.querySelectorAll('.acc-head').forEach(h=>h.addEventListener('click',()=>{ const body=h.nextElementSibling; const open=body.style.display==='block'; document.querySelectorAll('.acc-body').forEach(b=>b.style.display='none'); body.style.display=open?'none':'block'; }));
 
-    // Age‑gate helper
-    function ensureAge(cat){ if((cat==='nsfw'||cat==='ad') && !state.ageOK){ const g=document.getElementById('ageGate'); if(g){ g.style.display='flex'; document.getElementById('ageYes').onclick=()=>{state.ageOK=true;localStorage.setItem('aih_age_ok','true'); g.style.display='none'; expandCat(cat);}; document.getElementById('ageNo').onclick=()=>{g.style.display='none'}; } return false;} return true; }
+    // Builder logic (placeholder hooks) — keep your existing JS wiring here
+    const quickChips=['studio lighting','gel lighting','softbox','portrait','macro','bokeh','anamorphic flare','volumetric fog'];
+    const quickBin=document.getElementById('quickChips'); quickChips.forEach(t=>{ const s=document.createElement('span'); s.className='chip'; s.textContent=t; s.onclick=()=>{ const input=document.getElementById('inText'); input.value = (input.value? input.value+", ":"") + t; }; quickBin.appendChild(s); });
 
-    // Accordion: only one open; none open by default until clicked
-    function expandCat(cat, btn){ if(!ensureAge(cat)) return; const id = cat+'-block'; if(state.open===cat){ // toggle close on same click
-        document.getElementById(id)?.classList.remove('active');
-        state.open=null; if(btn) btn.classList.remove('active'); document.getElementById('empty-msg').classList.add('active');
-        return; }
-      // close previous
-      if(state.open){ document.getElementById(state.open+'-block')?.classList.remove('active'); const prevBtn=document.querySelector(`.category-btn[data-cat="${state.open}"]`); prevBtn?.classList.remove('active'); }
-      document.getElementById('empty-msg').classList.remove('active');
-      // open new
-      state.open=cat; if(btn) btn.classList.add('active');
-      const el=document.getElementById(id); if(el){ el.classList.add('active'); renderGrid(cat); el.scrollIntoView({behavior:'smooth',block:'center'}); }
-    }
+    // J1NX minimal integration (consistent with site-wide brain)
+    (function(){ const chat=["Let’s make this copy sharp and yours. What are you building?"]; function render(){ document.getElementById("j1nxBubbleTextTrue").innerHTML="<b>J1nx:</b> "+chat[chat.length-1]; } const input=document.getElementById("j1nxInputTrue"); document.getElementById("j1nxSendTrue").onclick=function(){ const val=(input.value||"").trim(); if(!val) return; let reply="(Brain not loaded)"; try{ if(window.j1nxBrain){ const r=window.j1nxBrain(val, chat.length); reply=typeof r==="object"?(r.reply||r.text||JSON.stringify(r)):r; } }catch(_){ } chat.push(val); chat.push(reply||"Try rephrasing—I’ll keep it punchy."); render(); input.value=""; }; input.addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("j1nxSendTrue").click(); }); document.getElementById("j1nxClearTrue").onclick=function(){ chat.splice(1); render(); }; document.getElementById("j1nxSaveTrue").onclick=function(){ try{ const blob=new Blob([chat.join("\n")],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="j1nx_chat.txt"; a.click(); }catch(_){ alert("Couldn’t save right now."); } }; render(); })();
 
-    function doSearch(){ const q=document.getElementById('q').value.trim().toLowerCase(); if(!q){ // clear search -> show empty or reopen current
-        if(state.open){ renderGrid(state.open); } else { document.getElementById('empty-msg').classList.add('active'); }
-        return; }
-      const all=Object.values(state.data).flat(); const hit=all.filter(p=> JSON.stringify(p).toLowerCase().includes(q)); showResults(hit, 'Search results'); }
-
-    function randomHack(){ const all=Object.values(state.data).flat(); if(!all.length) return; const p=all[Math.floor(Math.random()*all.length)]; openInJ1nx(p.command||p.script||p.text||p.title); toast('Random loaded into J1NX'); }
-
-    function showResults(list, title){ document.querySelectorAll('.accordion-block').forEach(b=>b.classList.remove('active')); let tmp=document.getElementById('search-block'); if(!tmp){ tmp=document.createElement('section'); tmp.id='search-block'; tmp.className='accordion-block active'; tmp.innerHTML=`<div class="accordion-title"></div><div class="prank-grid"></div>`; document.getElementById('main-panel').prepend(tmp); } tmp.querySelector('.accordion-title').textContent = `${title} — ${list.length}`; tmp.classList.add('active'); tmp.querySelector('.prank-grid').innerHTML = list.map(cardHTML).join(''); state.open=null; document.querySelectorAll('.category-btn.active').forEach(b=>b.classList.remove('active')); }
-
-    // CARD (prank box) — identical style preserved
-    function cardHTML(p){ const title=p.title||p.name||'Untitled'; const cmd=p.command||p.script||p.prompt||''; const tip=p.tip||p.note||''; const tags=(p.tags||[]).slice(0,6).map(t=>`<span style="display:inline-block;font-size:.78em;font-weight:800;border:1px solid #2fe9ff;color:#9ff6ff;background:#0f151a;border-radius:999px;padding:2px 7px;margin:3px 4px 0 0">${t}</span>`).join(''); return `<article class=\"prank-card\"><h3 class=\"prank-title\">${title}</h3><p class=\"prank-tip\">${escapeHTML(cmd)}</p><div class=\"meta\" style=\"font-size:.8em;opacity:.82;color:#c0f7ff\">${escapeHTML(tip)}</div><div class=\"pills\">${tags}</div><div class=\"prank-actions\"><button class=\"act\" onclick=\"copyTxt(this.closest('article').querySelector('.prank-tip').textContent)\">Copy</button><button class=\"act\" onclick=\"speakTxt(this.closest('article').querySelector('.prank-tip').textContent)\">Speak</button><button class=\"act\" onclick=\"shareTxt(this.closest('article').querySelector('.prank-tip').textContent)\">Share</button><button class=\"act\" onclick=\"openInJ1nx(this.closest('article').querySelector('.prank-tip').textContent)\">J1NX</button><span class=\"star-rating\" onclick=\"rate(this,event)\"><span class=\"star\">★</span><span class=\"star\">★</span><span class=\"star\">★</span><span class=\"star\">★</span><span class=\"star\">★</span></span><button class=\"fav-btn\" onclick=\"fav(this)\">❤</button></div></article>`; }
-
-    function renderGrid(cat){ const mount=document.getElementById(cat+'-block'); if(!mount) return; const items=(state.data[cat]||[]); const grid=mount.querySelector('.prank-grid'); if(!items.length){ grid.innerHTML='<div class="meta" style="color:#ffe266;font-weight:800">No pranks found for this category.</div>'; return; } grid.innerHTML=items.map(cardHTML).join(''); }
-
-    function escapeHTML(s){ return String(s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-    function copyTxt(s){ navigator.clipboard?.writeText(s); toast('Copied.'); }
-    function speakTxt(s){ try{ const u=new SpeechSynthesisUtterance(s); u.rate=1.05; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){ toast('Speech not supported here.'); } }
-    function shareTxt(s){ if(navigator.share){ navigator.share({text:s}).catch(()=>copyTxt(s)); } else copyTxt(s); }
-    function toast(msg){ const t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0f151a;color:#bfefff;border:1px solid #2fe9ff;padding:6px 10px;border-radius:8px;z-index:3000;box-shadow:0 6px 22px #0008'; document.body.appendChild(t); setTimeout(()=>t.remove(),1200); }
-    function openInJ1nx(text){ try{ const input=document.getElementById('j1nxInputTrue'); input.value=text; glowBubble(); }catch(e){} }
-
-    // Tiny ratings/favs (localStorage)
-    function keyFor(title){ return 'aih_fav_'+title; }
-    function fav(el){ const card=el.closest('article'); const title=card.querySelector('.prank-title').textContent.trim(); const k=keyFor(title); const cur=localStorage.getItem(k)==='1'; localStorage.setItem(k, cur?'0':'1'); el.classList.toggle('active', !cur); toast(!cur?'Faved':'Unfaved'); }
-    function rate(starsEl,ev){ const card=starsEl.closest('article'); const title=card.querySelector('.prank-title').textContent.trim(); const k='aih_rate_'+title; const idx=[...starsEl.children].indexOf(ev.target); const score=Math.max(0,idx)+1; localStorage.setItem(k,score); [...starsEl.children].forEach((s,i)=>s.classList.toggle('filled',i<score)); toast('Rated '+score+'/5'); }
-
-    function switchLang(code){ if(code==='en'){ location.reload(); return; } let scriptId='google-translate-script'; document.getElementById(scriptId)?.remove(); let s=document.createElement('script'); s.id=scriptId; s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(s); window.googleTranslateElementInit=function(){ new window.google.translate.TranslateElement({pageLanguage:'en',includedLanguages:code,layout:window.google.translate.TranslateElement.InlineLayout.SIMPLE}, 'main-panel'); } }
-
-    function glowBubble(){ const b=document.getElementById('j1nxBubbleTrueMain'); b.classList.add('glow'); setTimeout(()=>b.classList.remove('glow'),380); }
-    (function j1nxSetup(){ const chat=["Let’s make mischief—your way. What are we building?"]; const bubble=document.getElementById('j1nxBubbleTextTrue'); const input=document.getElementById('j1nxInputTrue'); function render(){ bubble.innerHTML='<b>J1nx:</b> '+chat[chat.length-1]; } document.getElementById('j1nxSendTrue').onclick=function(){ const val=(input.value||'').trim(); if(!val) return; let reply='(Brain not loaded)'; try{ if(window.j1nxBrain){ const r=window.j1nxBrain(val, chat.length); reply=typeof r==='object'?(r.reply||r.text||JSON.stringify(r)):r; } }catch(_){} chat.push(val); chat.push(reply||'Try rephrasing—I’ll keep it punchy.'); render(); glowBubble(); input.value=''; }; input.addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); }); document.getElementById('j1nxClearTrue').onclick=function(){ chat.splice(1); render(); }; document.getElementById('j1nxSaveTrue').onclick=function(){ try{ const blob=new Blob([chat.join('\n')],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); }catch(_){ toast("Couldn’t save right now."); }}; document.getElementById('j1nxCutoutTrue').onclick=function(){ document.getElementById('j1nxFloatTrue').classList.toggle('j1nx-open'); }; render(); })();
-
-    // Load pranks JSON as‑is; DO NOT render by default
-    fetch('assets/aihacks-data.json?v=1')
-      .then(r=>{ if(!r.ok) throw new Error(r.statusText); return r.json(); })
-      .then(all=>{ const buckets={}; (all||[]).forEach(p=>{ const cat=(p.category||'misc').toLowerCase(); (buckets[cat]||(buckets[cat]=[])).push(p); }); state.data=buckets; for(const [cat,arr] of Object.entries(state.data)){ const b=document.getElementById('c-'+cat); if(b) b.textContent=arr.length; } /* no auto-open */ })
-      .catch(()=>{ toast('Could not load pranks data (assets/aihacks-data.json). Check path.'); });
-
-    // Ads: zone pushes (header, mid, rail, bottom)
-    try{ (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101622}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101675}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674}); }catch(e){}
+    // ===== JuicyAds pushes (render zones) =====
+    try{
+      (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101674}); // header 728x90
+      (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101622}); // mid 300x250
+      (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101675}); // right rail 160x600
+      (adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101674}); // bottom reuse 728x90
+    }catch(e){}
   </script>
-
-  <!-- Age Gate (for NSFW/Adults) -->
-  <div id="ageGate" style="display:none;position:fixed;z-index:2001;left:0;top:0;width:100vw;height:100vh;background:rgba(14,19,18,.96);justify-content:center;align-items:center"><div id="ageGateInner" style="background:#1b1622;border:3px solid var(--danger);border-radius:20px;color:var(--gold);text-align:center;padding:40px 32px;box-shadow:0 3px 28px #fa3c7082;max-width:420px"><h2 style="color:var(--danger);font-size:2em;font-weight:900;margin:0 0 14px">18+ ONLY — Adults / NSFW</h2><p>Some sections contain explicit or uncensored prompts. Are you 18 or older?</p><button class="age-btn" id="ageYes" style="background:var(--danger);color:#fff;border:none;border-radius:12px;font-size:1.2em;font-weight:800;padding:15px 32px;margin-top:20px;cursor:pointer">Yes, show me</button> <button class="age-btn" id="ageNo" style="background:#23231f;color:#fff;border:1px solid var(--danger);border-radius:12px;font-size:1.2em;font-weight:800;padding:15px 32px;margin-top:20px;cursor:pointer">Nope</button></div></div>
 </body>
 </html>
