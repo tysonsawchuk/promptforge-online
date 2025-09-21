@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
   <!-- =============================================================
-       AIHacks Encyclopedia — TOP AREA POLISH + JUICYADS + SEO (FINAL)
-       Notes:
-       • Keeps your existing layout/vibe. No deletions to features.
-       • Removes version label + Buy Me a Coffee + personal name mentions.
-       • JuicyAds zones: header 728x90 (1101674), mid 300x250 (1101622), rail 160x600 (1101675), bottom 728x90 reuse (1101674)
-       • JSON wiring untouched: assets/aihacks-data.json
-       • J1NX uses assets/j1nx_brain.js as before (no logic changes, just send/receive glow)
+       AIHacks Encyclopedia — ACCORDION BEHAVIOR (SHOW ON CLICK ONLY)
+       • Keeps your layout/vibe & the same prank "boxes" (cards)
+       • Pranks DO NOT render until a category button is clicked
+       • When a new category is clicked, previous section closes
+       • JuicyAds zones placed cleanly; single async include + pushes
+       • JSON wiring unchanged: assets/aihacks-data.json
+       • Removed version label / coffee / personal name mentions
        ============================================================= -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AIHacks Encyclopedia — Viral AI Pranks, Games, Dares & Uncensored Fun</title>
-  <meta name="description" content="AIHacks: viral encyclopedia of AI pranks, party dares, family games, Alexa/Google hacks, Siri & Bixby tricks, TikTok/YouTube challenges, Roast battles, Office & Classroom gags, plus Adults/NSFW (age‑gated). 100% client‑side, underground, and free."/>
+  <meta name="description" content="AIHacks: viral encyclopedia of AI pranks, party dares, family games, Alexa/Google/Siri/Bixby tricks, TikTok/YouTube challenges, Roast battles, Office & Classroom gags, plus Adults/NSFW (age‑gated). 100% client‑side, underground, and free."/>
   <meta name="keywords" content="AI pranks, Alexa, Google Assistant, Siri, Bixby, ChatGPT, party games, family dares, roast, office pranks, classroom games, TikTok challenges, YouTube dares, Adults, NSFW, viral hacks, prompt engineering, PromptForge, J1NX"/>
   <link rel="canonical" href="https://promptforge.online/aihacks.html"/>
   <meta name="theme-color" content="#0b141c"/>
@@ -85,20 +85,42 @@
     .rail{position:fixed;right:10px;bottom:100px;z-index:1200;display:none}
     @media(min-width:1320px){.rail{display:block}}
 
-    /* Category buttons remain below — unchanged */
+    /* Category buttons */
     .category-row{display:flex;flex-wrap:wrap;justify-content:center;gap:13px 17px;margin:17px auto 18px;max-width:1200px}
     .category-btn{font-size:1.05em;font-weight:900;letter-spacing:.01em;padding:14px 22px;border-radius:14px;color:var(--ink);background:#181d21;border:2px solid var(--aqua);cursor:pointer;box-shadow:0 2px 18px #64f2e365,0 1px 10px #191d1970 inset;min-width:128px;user-select:none;position:relative}
     .category-btn:hover{background:#232c38;color:#fff;border-color:#fff;box-shadow:0 6px 19px #00fff080}
+    .category-btn.active{background:#10151b;border-color:#fff}
     .badge{position:absolute;top:-9px;right:-9px;background:#ff57ae;color:#111;font-weight:900;border-radius:999px;padding:2px 7px;font-size:.78em;border:2px solid #111}
     .category-btn.nsfw{background:#340020;color:var(--danger);border-color:var(--danger);box-shadow:0 2px 16px #fa3c70b3,0 1px 7px #641e2e77 inset}
     .category-btn.adults{background:#32240b;color:var(--gold);border-color:var(--gold);box-shadow:0 2px 18px #ffe266bb,0 1px 7px #22200644 inset}
 
+    /* Content blocks (accordion) */
+    .accordion-block{margin:17px 0 22px;display:none}
+    .accordion-block.active{display:block}
+    .accordion-title{font-size:1.35em;color:var(--aqua);margin-bottom:8px;font-weight:700;letter-spacing:.05em}
+    .prank-grid{display:grid;grid-template-columns:repeat(2,minmax(320px,1fr));gap:16px 20px;margin-bottom:16px}
+    @media(max-width:750px){.prank-grid{grid-template-columns:1fr}}
+
+    /* Prank cards (boxes) — unchanged look, just tidied */
+    .prank-card{background:linear-gradient(110deg,#202e3a 78%,#2ef9e81c 100%);border-radius:1.15em;box-shadow:0 2px 16px #3af5f449,0 1px 16px #3cfbe638,0 4px 28px #1e405766;padding:13px 11px 11px 15px;min-height:110px;transition:transform .13s,box-shadow .14s;display:flex;flex-direction:column;justify-content:space-between;border:1.7px solid #39ffe876;opacity:.99;position:relative;filter:drop-shadow(0 4px 13px #64f2e32b)}
+    .prank-card:hover{transform:scale(1.033);box-shadow:0 0 29px #52e7ffbb,0 2px 13px #1ffedba1;border:1.7px solid #64f2e3;z-index:10}
+    .prank-title{font-size:1.11em;font-weight:800;margin-bottom:2px;color:#43e7fe;text-shadow:0 1px 5px #17d9ff27}
+    .prank-tip{font-size:.98em;color:#b8fdff;opacity:.87;margin-bottom:5px}
+    .prank-actions{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap}
+    .act{background:#222e36;color:#9ff6ff;border:1px solid #2fe9ff;border-radius:9px;padding:6px 10px;font-weight:800;cursor:pointer}
+    .act:hover{background:#2fe9ff;color:#131a1f;border-color:#fff}
+    .star-rating{display:flex;align-items:center;margin-left:4px;font-size:1.19em;user-select:none;cursor:pointer}
+    .star{color:#ffd700b7;margin-right:0;transition:color .13s}
+    .star.filled{color:#fff530;text-shadow:0 0 7px #fffc6b99}
+    .fav-btn{font-size:1.22em;color:#ff57ae;background:#222e36;border:none;min-width:33px;cursor:pointer}
+    .fav-btn.active{color:#fff;background:#ff57ae}
+
     /* Footer */
-    .footer-art{font-family:monospace;font-size:.91em;line-height:1.01;letter-spacing:1.1px;background:#131413;margin:0 auto .7em;padding:0;width:100vw;text-align:center;color:var(--aqua);overflow-x:auto;user-select:none}
+    .footer-art{font-family:monospace;font-size:.91em;line-height:1.01;letter-spacing:1.1px;background:#131413;margin:0 auto .7em;padding:0;width:100vw;text-align:center;color:var(--aqua);overflow-x:auto;user-select:none;display:flex;justify-content:center;align-items:center}
     .footer-camo{background:#131413;margin:0 auto .1em;font-family:monospace;font-size:1em;text-align:center;width:100vw;user-select:none;letter-spacing:.09em}
     .footer-bar{text-align:center;font-size:.94em;color:var(--aqua);margin-bottom:.3em;width:100vw}
 
-    /* Optional: J1NX float (no logic changes; glow only) */
+    /* J1NX float (unchanged logic; brief glow added) */
     .j1nx-float-true{position:fixed;right:2vw;bottom:54px;z-index:1400;display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;max-width:360px}
     .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9}
     .j1nx-bubble-true-main{background:rgba(22,23,31,.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative}
@@ -134,7 +156,7 @@
   </header>
 
   <!-- SEO ribbon -->
-  <div class="seo-banner"><div class="seo-banner-inner" id="seoBannerInner">AI pranks • viral games • Alexa hacks • Google tricks • Siri secrets • Bixby jokes • ChatGPT roasts • TikTok challenges • YouTube dares • Adults & NSFW (age‑gate) • classroom games • office gags • family fun • hidden Easter eggs • PromptForge underground • user submissions</div></div>
+  <div class="seo-banner"><div class="seo-banner-inner" id="seoBannerInner">AI pranks • viral games • Alexa hacks • Google tricks • Siri secrets • Bixby jokes • ChatGPT roasts • TikTok challenges • YouTube dares • Adults & NSFW (age‑gate) • classroom games • office gags • family fun • underground • user submissions</div></div>
 
   <!-- Headline, quick strip, hero -->
   <h1 class="main-title">AIHacks Encyclopedia</h1>
@@ -151,9 +173,9 @@
   <div class="hero-art-wrap"><img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false"/></div>
 
   <section class="howto-links">
-    <a class="howto-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
-    <a class="howto-link" href="https://x.com/GoreandGiggles" target="_blank">X / Twitter</a>
-    <a class="howto-link" href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a>
+    <a class="howto-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener">Bluesky</a>
+    <a class="howto-link" href="https://x.com/GoreandGiggles" target="_blank" rel="noopener">X / Twitter</a>
+    <a class="howto-link" href="https://www.facebook.com/groups/393971833395749" target="_blank" rel="noopener">Facebook Group</a>
     <a class="howto-link" href="legal.html">Legal / Terms</a>
     <a class="howto-link" href="support.html">Support</a>
   </section>
@@ -164,32 +186,32 @@
   <!-- Mid ad (300x250) -->
   <section class="ad-wrap"><ins id="1101622" class="ad-300x250" data-width="300" data-height="250"></ins></section>
 
-  <!-- Categories (existing order, unchanged). Badges auto‑fill after JSON loads. -->
+  <!-- Category buttons (no section open by default) -->
   <div class="category-row" id="category-row">
-    <button class="category-btn" data-cat="alexa" onclick="expandCat('alexa')">Alexa<span class="badge" id="c-alexa"></span></button>
-    <button class="category-btn" data-cat="google" onclick="expandCat('google')">Google<span class="badge" id="c-google"></span></button>
-    <button class="category-btn" data-cat="siri" onclick="expandCat('siri')">Siri<span class="badge" id="c-siri"></span></button>
-    <button class="category-btn" data-cat="bixby" onclick="expandCat('bixby')">Bixby<span class="badge" id="c-bixby"></span></button>
-    <button class="category-btn" data-cat="chatgpt" onclick="expandCat('chatgpt')">ChatGPT<span class="badge" id="c-chatgpt"></span></button>
-    <button class="category-btn" data-cat="drinking" onclick="expandCat('drinking')">Drinking<span class="badge" id="c-drinking"></span></button>
-    <button class="category-btn" data-cat="dares" onclick="expandCat('dares')">Dares<span class="badge" id="c-dares"></span></button>
-    <button class="category-btn" data-cat="viral" onclick="expandCat('viral')">Viral<span class="badge" id="c-viral"></span></button>
-    <button class="category-btn" data-cat="party" onclick="expandCat('party')">Party<span class="badge" id="c-party"></span></button>
-    <button class="category-btn" data-cat="roast" onclick="expandCat('roast')">Roast<span class="badge" id="c-roast"></span></button>
-    <button class="category-btn" data-cat="office" onclick="expandCat('office')">Office<span class="badge" id="c-office"></span></button>
-    <button class="category-btn" data-cat="family" onclick="expandCat('family')">Family<span class="badge" id="c-family"></span></button>
-    <button class="category-btn" data-cat="classroom" onclick="expandCat('classroom')">Classroom<span class="badge" id="c-classroom"></span></button>
-    <button class="category-btn" data-cat="kids" onclick="expandCat('kids')">Kids<span class="badge" id="c-kids"></span></button>
-    <button class="category-btn adults" data-cat="ad" onclick="expandCat('ad')">Adults<span class="badge" id="c-ad"></span></button>
-    <button class="category-btn nsfw" data-cat="nsfw" onclick="expandCat('nsfw')">NSFW<span class="badge" id="c-nsfw"></span></button>
-    <button class="category-btn" data-cat="tv-movies" onclick="expandCat('tv-movies')">Movies/TV<span class="badge" id="c-tv-movies"></span></button>
-    <button class="category-btn" data-cat="songs" onclick="expandCat('songs')">Songs<span class="badge" id="c-songs"></span></button>
-    <button class="category-btn" data-cat="weird" onclick="expandCat('weird')">Weird<span class="badge" id="c-weird"></span></button>
-    <button class="category-btn" data-cat="easteregg" onclick="expandCat('easteregg')">Easter Eggs<span class="badge" id="c-easteregg"></span></button>
+    <button class="category-btn" data-cat="alexa" onclick="expandCat('alexa', this)">Alexa<span class="badge" id="c-alexa"></span></button>
+    <button class="category-btn" data-cat="google" onclick="expandCat('google', this)">Google<span class="badge" id="c-google"></span></button>
+    <button class="category-btn" data-cat="siri" onclick="expandCat('siri', this)">Siri<span class="badge" id="c-siri"></span></button>
+    <button class="category-btn" data-cat="bixby" onclick="expandCat('bixby', this)">Bixby<span class="badge" id="c-bixby"></span></button>
+    <button class="category-btn" data-cat="chatgpt" onclick="expandCat('chatgpt', this)">ChatGPT<span class="badge" id="c-chatgpt"></span></button>
+    <button class="category-btn" data-cat="drinking" onclick="expandCat('drinking', this)">Drinking<span class="badge" id="c-drinking"></span></button>
+    <button class="category-btn" data-cat="dares" onclick="expandCat('dares', this)">Dares<span class="badge" id="c-dares"></span></button>
+    <button class="category-btn" data-cat="viral" onclick="expandCat('viral', this)">Viral<span class="badge" id="c-viral"></span></button>
+    <button class="category-btn" data-cat="party" onclick="expandCat('party', this)">Party<span class="badge" id="c-party"></span></button>
+    <button class="category-btn" data-cat="roast" onclick="expandCat('roast', this)">Roast<span class="badge" id="c-roast"></span></button>
+    <button class="category-btn" data-cat="office" onclick="expandCat('office', this)">Office<span class="badge" id="c-office"></span></button>
+    <button class="category-btn" data-cat="family" onclick="expandCat('family', this)">Family<span class="badge" id="c-family"></span></button>
+    <button class="category-btn" data-cat="classroom" onclick="expandCat('classroom', this)">Classroom<span class="badge" id="c-classroom"></span></button>
+    <button class="category-btn" data-cat="kids" onclick="expandCat('kids', this)">Kids<span class="badge" id="c-kids"></span></button>
+    <button class="category-btn adults" data-cat="ad" onclick="expandCat('ad', this)">Adults<span class="badge" id="c-ad"></span></button>
+    <button class="category-btn nsfw" data-cat="nsfw" onclick="expandCat('nsfw', this)">NSFW<span class="badge" id="c-nsfw"></span></button>
+    <button class="category-btn" data-cat="tv-movies" onclick="expandCat('tv-movies', this)">Movies/TV<span class="badge" id="c-tv-movies"></span></button>
+    <button class="category-btn" data-cat="songs" onclick="expandCat('songs', this)">Songs<span class="badge" id="c-songs"></span></button>
+    <button class="category-btn" data-cat="weird" onclick="expandCat('weird', this)">Weird<span class="badge" id="c-weird"></span></button>
+    <button class="category-btn" data-cat="easteregg" onclick="expandCat('easteregg', this)">Easter Eggs<span class="badge" id="c-easteregg"></span></button>
     <button class="category-btn" onclick="openSubmitModal()">Submit</button>
   </div>
 
-  <!-- Main content mounts (unchanged structure; grids fill from JSON) -->
+  <!-- Main content mounts (all hidden until user clicks a category) -->
   <main class="panel" id="main-panel" style="max-width:1200px;margin:0 auto;padding:0 10px 120px">
     <section id="alexa-block" class="accordion-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></section>
     <section id="google-block" class="accordion-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></section>
@@ -211,6 +233,8 @@
     <section id="songs-block" class="accordion-block"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></section>
     <section id="weird-block" class="accordion-block"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></section>
     <section id="easteregg-block" class="accordion-block"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></section>
+    <!-- Empty state helper -->
+    <section id="empty-msg" class="accordion-block active"><div class="accordion-title">Pick a category to load pranks</div><div class="prank-grid"></div></section>
   </main>
 
   <!-- Bottom Ad 728x90 (reuse zone) -->
@@ -233,7 +257,7 @@
     </div>
   </div>
 
-  <!-- Footer (unchanged ASCII) -->
+  <!-- Footer (ASCII unchanged) -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -245,7 +269,7 @@
  (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/      (__)   (__)  (__)(__)__) (__) (__)  
     </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">Made underground in BC, Canada • #PromptForge • <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • <a href="https://x.com/GoreandGiggles">Twitter/X</a> • <a href="legal.html">Legal</a></div>
+    <div class="footer-bar">BC, Canada • #PromptForge • <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • <a href="https://x.com/GoreandGiggles">Twitter/X</a> • <a href="legal.html">Legal</a></div>
   </footer>
 
   <!-- =================== APP / DATA =================== -->
@@ -253,20 +277,39 @@
     // CAMO footer
     (function(){ const el=document.getElementById("footerCamo"); if(!el) return; const colors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"], chars="░▒▓▚▞▐▉█▛"; function tick(t){ let out=""; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;} el.innerHTML=out;} let t=0; tick(0); setInterval(()=>tick(++t),950); })();
 
-    // SEO ribbon: restart anim on loop (keeps it lively)
+    // SEO ribbon loop refresh
     document.getElementById('seoBannerInner').addEventListener('animationiteration',function(){ this.style.animation='none'; void this.offsetWidth; this.style.animation=''; });
 
     // Global state & JSON wiring (unchanged path)
-    const state = { data:{}, cat:null, ageOK: JSON.parse(localStorage.getItem('aih_age_ok')||'false') };
+    const state = { data:{}, open:null, ageOK: JSON.parse(localStorage.getItem('aih_age_ok')||'false') };
 
+    // Age‑gate helper
     function ensureAge(cat){ if((cat==='nsfw'||cat==='ad') && !state.ageOK){ const g=document.getElementById('ageGate'); if(g){ g.style.display='flex'; document.getElementById('ageYes').onclick=()=>{state.ageOK=true;localStorage.setItem('aih_age_ok','true'); g.style.display='none'; expandCat(cat);}; document.getElementById('ageNo').onclick=()=>{g.style.display='none'}; } return false;} return true; }
-    function expandCat(cat){ if(!ensureAge(cat)) return; state.cat=cat; document.querySelectorAll('.accordion-block').forEach(b=>b.classList.remove('active')); const el=document.getElementById(cat+'-block'); if(el){ el.classList.add('active'); renderGrid(cat); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
 
-    function doSearch(){ const q=document.getElementById('q').value.trim().toLowerCase(); if(!q){ if(state.cat) renderGrid(state.cat); return; } const all=Object.values(state.data).flat(); const hit=all.filter(p=> JSON.stringify(p).toLowerCase().includes(q)); showResults(hit, 'Search results'); }
+    // Accordion: only one open; none open by default until clicked
+    function expandCat(cat, btn){ if(!ensureAge(cat)) return; const id = cat+'-block'; if(state.open===cat){ // toggle close on same click
+        document.getElementById(id)?.classList.remove('active');
+        state.open=null; if(btn) btn.classList.remove('active'); document.getElementById('empty-msg').classList.add('active');
+        return; }
+      // close previous
+      if(state.open){ document.getElementById(state.open+'-block')?.classList.remove('active'); const prevBtn=document.querySelector(`.category-btn[data-cat="${state.open}"]`); prevBtn?.classList.remove('active'); }
+      document.getElementById('empty-msg').classList.remove('active');
+      // open new
+      state.open=cat; if(btn) btn.classList.add('active');
+      const el=document.getElementById(id); if(el){ el.classList.add('active'); renderGrid(cat); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+    }
+
+    function doSearch(){ const q=document.getElementById('q').value.trim().toLowerCase(); if(!q){ // clear search -> show empty or reopen current
+        if(state.open){ renderGrid(state.open); } else { document.getElementById('empty-msg').classList.add('active'); }
+        return; }
+      const all=Object.values(state.data).flat(); const hit=all.filter(p=> JSON.stringify(p).toLowerCase().includes(q)); showResults(hit, 'Search results'); }
+
     function randomHack(){ const all=Object.values(state.data).flat(); if(!all.length) return; const p=all[Math.floor(Math.random()*all.length)]; openInJ1nx(p.command||p.script||p.text||p.title); toast('Random loaded into J1NX'); }
-    function showResults(list, title){ document.querySelectorAll('.accordion-block').forEach(b=>b.classList.remove('active')); let tmp=document.getElementById('search-block'); if(!tmp){ tmp=document.createElement('section'); tmp.id='search-block'; tmp.className='accordion-block active'; tmp.innerHTML=`<div class="accordion-title"></div><div class="prank-grid"></div>`; document.getElementById('main-panel').prepend(tmp); } tmp.querySelector('.accordion-title').textContent = `${title} — ${list.length}`; tmp.classList.add('active'); tmp.querySelector('.prank-grid').innerHTML = list.map(cardHTML).join(''); }
 
-    function cardHTML(p){ const title=p.title||p.name||'Untitled'; const cmd=p.command||p.script||p.prompt||''; const tip=p.tip||p.note||''; const tags=(p.tags||[]).slice(0,6).map(t=>`<span style="display:inline-block;font-size:.78em;font-weight:800;border:1px solid #2fe9ff;color:#9ff6ff;background:#0f151a;border-radius:999px;padding:2px 7px;margin:3px 4px 0 0">${t}</span>`).join(''); return `<article class=\"prank-card\"><h3 class=\"prank-title\">${title}</h3><p class=\"prank-tip\">${escapeHTML(cmd)}</p><div class=\"meta\" style=\"font-size:.8em;opacity:.82;color:#c0f7ff\">${escapeHTML(tip)}</div><div class=\"pills\">${tags}</div><div class=\"actions\"><button class=\"act\" onclick=\"copyTxt(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">Copy</button><button class=\"act\" onclick=\"speakTxt(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">Speak</button><button class=\"act\" onclick=\"shareTxt(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">Share</button><button class=\"act\" onclick=\"openInJ1nx(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">J1NX</button></div></article>`; }
+    function showResults(list, title){ document.querySelectorAll('.accordion-block').forEach(b=>b.classList.remove('active')); let tmp=document.getElementById('search-block'); if(!tmp){ tmp=document.createElement('section'); tmp.id='search-block'; tmp.className='accordion-block active'; tmp.innerHTML=`<div class="accordion-title"></div><div class="prank-grid"></div>`; document.getElementById('main-panel').prepend(tmp); } tmp.querySelector('.accordion-title').textContent = `${title} — ${list.length}`; tmp.classList.add('active'); tmp.querySelector('.prank-grid').innerHTML = list.map(cardHTML).join(''); state.open=null; document.querySelectorAll('.category-btn.active').forEach(b=>b.classList.remove('active')); }
+
+    // CARD (prank box) — identical style preserved
+    function cardHTML(p){ const title=p.title||p.name||'Untitled'; const cmd=p.command||p.script||p.prompt||''; const tip=p.tip||p.note||''; const tags=(p.tags||[]).slice(0,6).map(t=>`<span style="display:inline-block;font-size:.78em;font-weight:800;border:1px solid #2fe9ff;color:#9ff6ff;background:#0f151a;border-radius:999px;padding:2px 7px;margin:3px 4px 0 0">${t}</span>`).join(''); return `<article class=\"prank-card\"><h3 class=\"prank-title\">${title}</h3><p class=\"prank-tip\">${escapeHTML(cmd)}</p><div class=\"meta\" style=\"font-size:.8em;opacity:.82;color:#c0f7ff\">${escapeHTML(tip)}</div><div class=\"pills\">${tags}</div><div class=\"prank-actions\"><button class=\"act\" onclick=\"copyTxt(this.closest('article').querySelector('.prank-tip').textContent)\">Copy</button><button class=\"act\" onclick=\"speakTxt(this.closest('article').querySelector('.prank-tip').textContent)\">Speak</button><button class=\"act\" onclick=\"shareTxt(this.closest('article').querySelector('.prank-tip').textContent)\">Share</button><button class=\"act\" onclick=\"openInJ1nx(this.closest('article').querySelector('.prank-tip').textContent)\">J1NX</button><span class=\"star-rating\" onclick=\"rate(this,event)\"><span class=\"star\">★</span><span class=\"star\">★</span><span class=\"star\">★</span><span class=\"star\">★</span><span class=\"star\">★</span></span><button class=\"fav-btn\" onclick=\"fav(this)\">❤</button></div></article>`; }
 
     function renderGrid(cat){ const mount=document.getElementById(cat+'-block'); if(!mount) return; const items=(state.data[cat]||[]); const grid=mount.querySelector('.prank-grid'); if(!items.length){ grid.innerHTML='<div class="meta" style="color:#ffe266;font-weight:800">No pranks found for this category.</div>'; return; } grid.innerHTML=items.map(cardHTML).join(''); }
 
@@ -277,22 +320,27 @@
     function toast(msg){ const t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0f151a;color:#bfefff;border:1px solid #2fe9ff;padding:6px 10px;border-radius:8px;z-index:3000;box-shadow:0 6px 22px #0008'; document.body.appendChild(t); setTimeout(()=>t.remove(),1200); }
     function openInJ1nx(text){ try{ const input=document.getElementById('j1nxInputTrue'); input.value=text; glowBubble(); }catch(e){} }
 
+    // Tiny ratings/favs (localStorage)
+    function keyFor(title){ return 'aih_fav_'+title; }
+    function fav(el){ const card=el.closest('article'); const title=card.querySelector('.prank-title').textContent.trim(); const k=keyFor(title); const cur=localStorage.getItem(k)==='1'; localStorage.setItem(k, cur?'0':'1'); el.classList.toggle('active', !cur); toast(!cur?'Faved':'Unfaved'); }
+    function rate(starsEl,ev){ const card=starsEl.closest('article'); const title=card.querySelector('.prank-title').textContent.trim(); const k='aih_rate_'+title; const idx=[...starsEl.children].indexOf(ev.target); const score=Math.max(0,idx)+1; localStorage.setItem(k,score); [...starsEl.children].forEach((s,i)=>s.classList.toggle('filled',i<score)); toast('Rated '+score+'/5'); }
+
     function switchLang(code){ if(code==='en'){ location.reload(); return; } let scriptId='google-translate-script'; document.getElementById(scriptId)?.remove(); let s=document.createElement('script'); s.id=scriptId; s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(s); window.googleTranslateElementInit=function(){ new window.google.translate.TranslateElement({pageLanguage:'en',includedLanguages:code,layout:window.google.translate.TranslateElement.InlineLayout.SIMPLE}, 'main-panel'); } }
 
     function glowBubble(){ const b=document.getElementById('j1nxBubbleTrueMain'); b.classList.add('glow'); setTimeout(()=>b.classList.remove('glow'),380); }
     (function j1nxSetup(){ const chat=["Let’s make mischief—your way. What are we building?"]; const bubble=document.getElementById('j1nxBubbleTextTrue'); const input=document.getElementById('j1nxInputTrue'); function render(){ bubble.innerHTML='<b>J1nx:</b> '+chat[chat.length-1]; } document.getElementById('j1nxSendTrue').onclick=function(){ const val=(input.value||'').trim(); if(!val) return; let reply='(Brain not loaded)'; try{ if(window.j1nxBrain){ const r=window.j1nxBrain(val, chat.length); reply=typeof r==='object'?(r.reply||r.text||JSON.stringify(r)):r; } }catch(_){} chat.push(val); chat.push(reply||'Try rephrasing—I’ll keep it punchy.'); render(); glowBubble(); input.value=''; }; input.addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); }); document.getElementById('j1nxClearTrue').onclick=function(){ chat.splice(1); render(); }; document.getElementById('j1nxSaveTrue').onclick=function(){ try{ const blob=new Blob([chat.join('\n')],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); }catch(_){ toast("Couldn’t save right now."); }}; document.getElementById('j1nxCutoutTrue').onclick=function(){ document.getElementById('j1nxFloatTrue').classList.toggle('j1nx-open'); }; render(); })();
 
-    // Load pranks JSON as‑is
+    // Load pranks JSON as‑is; DO NOT render by default
     fetch('assets/aihacks-data.json?v=1')
       .then(r=>{ if(!r.ok) throw new Error(r.statusText); return r.json(); })
-      .then(all=>{ const buckets={}; (all||[]).forEach(p=>{ const cat=(p.category||'misc').toLowerCase(); (buckets[cat]||(buckets[cat]=[])).push(p); }); state.data=buckets; for(const [cat,arr] of Object.entries(state.data)){ const b=document.getElementById('c-'+cat); if(b) b.textContent=arr.length; } expandCat(state.cat||'alexa'); })
-      .catch(()=>{ toast('Could not load pranks data (assets/aihacks-data.json). Check path.'); expandCat('alexa'); });
+      .then(all=>{ const buckets={}; (all||[]).forEach(p=>{ const cat=(p.category||'misc').toLowerCase(); (buckets[cat]||(buckets[cat]=[])).push(p); }); state.data=buckets; for(const [cat,arr] of Object.entries(state.data)){ const b=document.getElementById('c-'+cat); if(b) b.textContent=arr.length; } /* no auto-open */ })
+      .catch(()=>{ toast('Could not load pranks data (assets/aihacks-data.json). Check path.'); });
 
     // Ads: zone pushes (header, mid, rail, bottom)
     try{ (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101622}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101675}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674}); }catch(e){}
   </script>
 
-  <!-- Age Gate (reused, if you mount NSFW/Adults) -->
+  <!-- Age Gate (for NSFW/Adults) -->
   <div id="ageGate" style="display:none;position:fixed;z-index:2001;left:0;top:0;width:100vw;height:100vh;background:rgba(14,19,18,.96);justify-content:center;align-items:center"><div id="ageGateInner" style="background:#1b1622;border:3px solid var(--danger);border-radius:20px;color:var(--gold);text-align:center;padding:40px 32px;box-shadow:0 3px 28px #fa3c7082;max-width:420px"><h2 style="color:var(--danger);font-size:2em;font-weight:900;margin:0 0 14px">18+ ONLY — Adults / NSFW</h2><p>Some sections contain explicit or uncensored prompts. Are you 18 or older?</p><button class="age-btn" id="ageYes" style="background:var(--danger);color:#fff;border:none;border-radius:12px;font-size:1.2em;font-weight:800;padding:15px 32px;margin-top:20px;cursor:pointer">Yes, show me</button> <button class="age-btn" id="ageNo" style="background:#23231f;color:#fff;border:1px solid var(--danger);border-radius:12px;font-size:1.2em;font-weight:800;padding:15px 32px;margin-top:20px;cursor:pointer">Nope</button></div></div>
 </body>
 </html>
