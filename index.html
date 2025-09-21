@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ====== META / SEO (brand tone, no AdSense) ====== -->
+  <!-- ===== META / SEO ===== -->
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>PromptForge • AI Prompt Studio (Images, Video, ANSI/ASCII) — Underground & Unfiltered</title>
-  <meta name="description" content="PromptForge: pro prompt tools for AI images, video, and ANSI/ASCII art. Tutorials, patterns, and utilities. Matrix rain, ASCII art header with tracking eyes, J1NX assistant. Ads by alternative networks only."/>
+  <title>PromptForge • Free AI Prompt Studio — Images, Video & ASCII Tools</title>
+  <meta name="description" content="PromptForge: free, creator‑first AI prompt studio. Image prompt builder, video prompts, ASCII/ANSI art generator, watermark & privacy tools, and model compare—plus J1NX assistant. 100% client‑side."/>
   <link rel="canonical" href="https://promptforge.online/"/>
   <meta name="theme-color" content="#0b141c"/>
 
-  <!-- Social -->
+  <!-- Open Graph / Twitter -->
   <meta property="og:site_name" content="PromptForge"/>
   <meta property="og:type" content="website"/>
-  <meta property="og:title" content="PromptForge • AI Prompt Studio (Images, Video, ANSI/ASCII)"/>
-  <meta property="og:description" content="Underground, creator-first: tools, patterns, ANSI/ASCII playground. No AdSense."/>
+  <meta property="og:title" content="PromptForge • Free AI Prompt Studio — Images, Video & ASCII Tools"/>
+  <meta property="og:description" content="Creator‑first: image/video prompt builders, ASCII playground, watermark tools, model compare. J1NX on tap."/>
   <meta property="og:url" content="https://promptforge.online/"/>
   <meta property="og:image" content="https://promptforge.online/og/promptforge_og.jpg"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="PromptForge • AI Prompt Studio"/>
-  <meta name="twitter:description" content="Creator-first tools for images, video & ANSI/ASCII. Matrix rain. J1NX."/>
+  <meta name="twitter:title" content="PromptForge • Free AI Prompt Studio"/>
+  <meta name="twitter:description" content="Image & video prompt builders, ASCII art, watermark tools, model compare. J1NX assistant included."/>
   <meta name="twitter:image" content="https://promptforge.online/og/promptforge_og.jpg"/>
 
-  <!-- JSON-LD (Org + WebSite + FAQ — left intact) -->
+  <!-- JSON-LD (Org + WebSite + FAQ) -->
   <script type="application/ld+json">{
     "@context":"https://schema.org",
     "@type":"Organization",
@@ -44,13 +44,13 @@
     "@context":"https://schema.org",
     "@type":"FAQPage",
     "mainEntity":[
-      {"@type":"Question","name":"Is the homepage clean?","acceptedAnswer":{"@type":"Answer","text":"Yes, this page stays brand-safe. Any experimental content lives on segregated routes."}},
-      {"@type":"Question","name":"Do you collect personal data?","acceptedAnswer":{"@type":"Answer","text":"Minimal analytics and error logs only. See Privacy for details."}},
-      {"@type":"Question","name":"How to support PromptForge?","acceptedAnswer":{"@type":"Answer","text":"Use /support.html for tips/memberships. No AdSense here."}}
+      {"@type":"Question","name":"Is the homepage brand-safe?","acceptedAnswer":{"@type":"Answer","text":"Yes. Experimental or adult tools live on segregated routes with interstitials."}},
+      {"@type":"Question","name":"What data do you collect?","acceptedAnswer":{"@type":"Answer","text":"Minimal analytics and error logs. See Legal for details."}},
+      {"@type":"Question","name":"How can I support PromptForge?","acceptedAnswer":{"@type":"Answer","text":"See /support.html for tips or subscriptions."}}
     ]
   }</script>
 
-  <!-- Perf: fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -61,11 +61,18 @@
       --panel:#101c26; --panel-2:#0f1a24; --edge:#203040; --edge-strong:#2b4256;
       --ink:#e9f6ff; --dim:#9fb6c6; --aqua:#64f2e3; --vio:#be9cff; --gold:#ffd166;
       --radius:14px; --shadow:0 10px 28px rgba(0,0,0,.36);
+      --glow: 0 0 0 2px #1a3a34 inset, 0 0 12px #2af0c877;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
     a{color:var(--aqua);text-decoration:none} a:hover{text-decoration:underline}
     .kbd{font:600 12px/1 Inter;background:#0b1620;border:1px solid #274a63;border-radius:6px;padding:2px 6px;color:#cfeaff}
+
+    /* Layout */
+    .wrap{display:grid;grid-template-columns:1fr minmax(0,1100px) 1fr}
+    .center{grid-column:2}
+    .sidebar{grid-column:3; position:sticky; top:86px; align-self:start; display:none}
+    @media(min-width:1240px){ .sidebar{display:block} }
 
     /* Header */
     header{border-bottom:1px solid var(--edge-strong);background:linear-gradient(180deg,var(--chrome),#0a1219);position:sticky;top:0;z-index:80}
@@ -77,26 +84,15 @@
     .socials{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .pill{padding:7px 10px;border:1px solid var(--edge-strong);border-radius:9px;background:#0f1b25;color:#cfeaff}
 
-    /* ANSI banner + EYES (your “actual eyes”, scaled to 1ch cell) */
+    /* ANSI banner + EYES */
     .eyes-wrap{padding:10px 12px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#0c141b,#081017)}
     .ansi-art{font-family:monospace,'Fira Mono',Consolas,Menlo,'Courier New';white-space:pre;line-height:1.07;letter-spacing:.02em;text-align:center;color:var(--aqua);text-shadow:0 0 12px var(--aqua),0 0 2px #fff5;margin:0;overflow:auto}
-    /* Mini eye fits in exactly 1 monospace cell to preserve spacing */
     .eye-mini{display:inline-block;position:relative;width:1ch;height:1em;vertical-align:baseline}
-    .eye-mini .eye-ball{
-      position:absolute; left:50%; top:50%; width:0.9em; height:0.9em;
-      transform:translate(-50%,-50%); border-radius:50%;
-      background:#ffffff; border:2px solid var(--aqua);
-      box-shadow:0 0 8px #64f2e390,0 0 .2em #64f2e333;
-    }
-    .eye-mini .pupil{
-      position:absolute; left:50%; top:50%; width:.32em; height:.32em; border-radius:50%;
-      background:#41bbff; border:2px solid #1c3566; box-shadow:0 0 9px 3px #2a24c9,0 0 2px 1px #fff2;
-      transform:translate(-50%,-50%); transition:transform .08s linear;
-      animation:blink 4.6s infinite steps(1,end);
-    }
+    .eye-mini .eye-ball{position:absolute;left:50%;top:50%;width:0.86em;height:0.86em;transform:translate(-50%,-50%);border-radius:50%;background:#fff;border:2px solid var(--aqua);box-shadow:0 0 8px #64f2e390,0 0 .2em #64f2e333;pointer-events:none}
+    .eye-mini .pupil{position:absolute;left:50%;top:50%;width:.3em;height:.3em;border-radius:50%;background:#41bbff;border:2px solid #1c3566;box-shadow:0 0 9px 3px #2a24c9,0 0 2px 1px #fff2;transform:translate(-50%,-50%);transition:transform .08s linear;animation:blink 4.6s infinite steps(1,end);pointer-events:none}
     @keyframes blink{0%,92%,100%{opacity:1}93%,99%{opacity:0}}
 
-    /* Hero / Cards / Grid (unchanged) */
+    /* Hero / Cards / Grid */
     .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:12px;align-items:stretch;padding:14px 16px;border-top:1px solid #0c151e;border-bottom:1px solid var(--edge)}
     .card{background:var(--surface-2);border:1px solid var(--edge);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
     .summary{font-size:15px;color:#cfe3f2}
@@ -104,24 +100,29 @@
     .chip{background:#121a22;border:1px solid #22303c;color:#bfefff;border-radius:999px;padding:6px 10px;font-size:12px}
     main{padding:16px}
     .grid{display:grid;grid-template-columns:repeat(3,minmax(260px,1fr));gap:12px}
-    .tile{background:var(--surface);border:1px solid var(--edge);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+    .tile{background:var(--surface);border:1px solid var(--edge);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,border-color .15s,transform .15s}
     .tile h3{margin:0 0 2px 0}
     .tile p{margin:0;color:#def2ffb3}
-    .tile:hover{border-color:#3a5569;box-shadow:0 6px 26px rgba(0,0,0,.36)}
-    .cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+    .tile:hover{border-color:#3a5569;box-shadow:0 6px 26px rgba(0,0,0,.36);transform:translateY(-1px)}
+    .tile .cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+    /* Highlight AIHacks */
+    .tile.highlight{position:relative;border-color:#2ef9e8;background:linear-gradient(110deg,#10242a 70%,#2ef9e81c);box-shadow:0 0 0 1px #2ef9e845 inset, 0 6px 30px #2ef9e833}
+    .tile.highlight::after{content:"FEATURED";position:absolute;top:10px;right:10px;font-size:11px;font-weight:800;letter-spacing:.06em;color:#10242a;background:#2ef9e8;border-radius:999px;padding:3px 7px}
 
-    /* J1NX (kept) */
-    .j1nx-float-true{position:fixed;right:2vw;bottom:calc(2.8vh + 125px);z-index:1400;display:flex;flex-direction:column;align-items:center;max-width:360px}
-    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9;box-shadow:none!important}
-    .j1nx-bubble-true-main{background:rgba(22,23,31,.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px}
-    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .2em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22}
-    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
-    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua)}
-    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:var(--aqua);font-weight:600;cursor:pointer}
-    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
-    .j1nx-easteregg-true{display:none}
+    /* J1NX (from your canonical demo/footer) */
+    .j1nx-float-true { position: fixed; z-index: 4000; right: 2vw; bottom: calc(2.8vh + 125px); display: flex; flex-direction: column; align-items: center; pointer-events: all; user-select: none; min-width: 0; max-width: 360px; }
+    .j1nx-true-cutout-img { width: 320px; height: 320px; object-fit: contain; border-radius: 32px; background: transparent !important; margin-bottom: -30px; position: relative; z-index: 9; pointer-events: auto; transition: box-shadow .2s; box-shadow: none !important; }
+    .j1nx-bubble-true-main { background: rgba(22,23,31,0.97); border-radius: 17px; box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f; border: 2px solid var(--aqua); padding: 1.1em 1.3em 1em 1.3em; margin-top: 0; margin-bottom: 0.3em; display: flex; flex-direction: column; align-items: center; min-width: 290px; max-width: 330px; position: relative; z-index: 1; }
+    .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1; }
+    .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0; }
+    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7.5px 12px; border: 1px solid var(--aqua); background: #171b22; color: var(--aqua); min-width: 0; }
+    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid var(--aqua); color: var(--aqua); font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33; }
+    .j1nx-btn-true:hover { background: var(--aqua); color:#171b22; border-color:#fff; }
+    .j1nx-easteregg-true { font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px; margin-top: 7px; padding: 7px 17px 6px 13px; opacity: .85; pointer-events: none; text-align: center; width: 94%; user-select: none; box-shadow: 0 3px 13px #be9cff28; font-weight: 600; }
+    @media (max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
+    @media (max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
 
-    /* Footer (kept) */
+    /* Footer */
     footer{margin:12px;padding:14px;background:var(--surface-2);border:1px solid var(--edge);border-radius:var(--radius);text-align:center;color:#eaf7ff;box-shadow:var(--shadow)}
     .footgrid{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin:8px 0}
     .footcol{min-width:220px;max-width:360px;text-align:left}
@@ -130,19 +131,19 @@
     .footer-art{font-family:Fira Mono,monospace;font-size:.91em;line-height:1.01;letter-spacing:1.1px;color:#64f2e3;white-space:pre;user-select:none;margin:0 0 8px 0}
     .footer-camo{font-family:Fira Mono,monospace;font-size:.85em;letter-spacing:2px;color:#64f2e3;min-height:.8em}
 
-    /* Matrix Rain canvas */
-    #matrix-canvas{position:fixed;inset:0;z-index:-1;pointer-events:none}
+    /* Ad wrappers: CLS-safe */
+    .ad-wrap{display:flex;align-items:center;justify-content:center;margin:10px auto}
+    .ad-728x90{width:728px;min-height:90px}
+    .ad-300x250{width:300px;min-height:250px}
+    .ad-160x600{width:160px;min-height:600px}
 
     /* Responsive */
-    @media (max-width:1100px){ .grid{grid-template-columns:repeat(2,minmax(260px,1fr))} .j1nx-true-cutout-img{width:112px;height:112px} }
-    @media (max-width:700px){ .grid{grid-template-columns:1fr} .j1nx-bubble-true-main{min-width:98vw;max-width:99vw} .j1nx-true-cutout-img{width:66px;height:66px} }
+    @media (max-width:1100px){ .grid{grid-template-columns:repeat(2,minmax(260px,1fr))} }
+    @media (max-width:700px){ .grid{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
   <noscript>PromptForge works best with JavaScript enabled.</noscript>
-
-  <!-- MATRIX RAIN (kept) -->
-  <canvas id="matrix-canvas" aria-hidden="true"></canvas>
 
   <!-- HEADER -->
   <header role="banner" aria-label="site header">
@@ -160,11 +161,15 @@
         <a class="pill" href="/support.html">Support</a>
       </nav>
     </div>
-    <!-- Header AD: JuicyAds-ready (CLS-safe) -->
-    <div id="ad-header" style="margin:6px auto;text-align:center;max-width:728px;min-height:90px"></div>
+    <!-- Header AD (728x90) — canonical per-zone snippet for reliability -->
+    <div class="ad-wrap ad-728x90">
+      <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+      <ins id="1101674" data-width="728" data-height="90" style="display:inline-block;width:728px;height:90px"></ins>
+      <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101674});</script>
+    </div>
   </header>
 
-  <!-- ANSI EYES (exact art preserved; every o/O/0 becomes a mini “actual eye”) -->
+  <!-- ASCII banner with “eyes” (no matrix rain on this page) -->
   <section class="eyes-wrap" aria-label="ansi eyes banner">
     <pre class="ansi-art" id="ansiArt">
   ))    ))       .-.   \    /// ))   (o)__(o)         .-.     ))       \/         
@@ -177,85 +182,178 @@
     </pre>
   </section>
 
-  <!-- HERO -->
-  <section class="hero" aria-label="intro">
-    <div class="card">
-      <h2>Pro Prompt Authoring (Your Way)</h2>
-      <p class="summary">
-        Shot grammar, continuity locks, platform hooks, shader stacks, captions—paired with real examples.
-        Clean where it needs to be, experimental where it counts.
-      </p>
-      <div class="chipbar">
-        <span class="chip">engine-aware</span><span class="chip">shot grammar</span><span class="chip">platform hooks</span>
-        <span class="chip">ADR/SSML</span><span class="chip">continuity locks</span><span class="chip">tutorials</span>
+  <div class="wrap">
+    <!-- center column -->
+    <div class="center">
+
+      <!-- HERO -->
+      <section class="hero" aria-label="intro">
+        <div class="card">
+          <h2>Pro Prompt Authoring (Your Way)</h2>
+          <p class="summary">Shot grammar, continuity locks, platform hooks, shader stacks, captions—paired with real examples. Build reliable prompts that survive remixing, with negative lists and engine tokens handled for you. Everything runs client‑side for speed and privacy.</p>
+          <div class="chipbar">
+            <span class="chip">engine‑aware</span><span class="chip">shot grammar</span><span class="chip">platform hooks</span>
+            <span class="chip">ADR/SSML</span><span class="chip">continuity locks</span><span class="chip">tutorials</span>
+          </div>
+        </div>
+        <div class="card">
+          <strong>Start here:</strong>
+          <ul class="summary" style="margin:6px 0 0 18px">
+            <li><a href="picture.html">Image Prompt Builder</a> • <a href="movie.html">Video Prompt Builder</a></li>
+            <li><a href="ansiart.html">ANSI/ASCII Studio</a> • <a href="watermark.html">Watermark & Privacy</a></li>
+            <li><a href="compare.html">Compare Models</a> • <a href="playground.html">Prompt Patterns</a></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- GRID of tools -->
+      <main aria-label="main content">
+        <section class="grid" aria-label="tools and guides">
+          <a class="tile highlight" href="aihacks.html">
+            <h3>🔥 AIHacks Encyclopedia</h3>
+            <p>Viral AI pranks & party games across Alexa, Google, Siri, Bixby, and ChatGPT. Curated prompts, safety notes, and classroom‑friendly variants, with an optional 18+ section isolated off the main route. Skim, remix, and deploy fast.</p>
+            <div class="cta"><span class="kbd">Explore</span></div>
+          </a>
+
+          <a class="tile" href="picture.html">
+            <h3>Image Prompt Builder</h3>
+            <p>Create engine‑aware image prompts with pose/face continuity, lighting kits, lenses, and stylistic blueprints. Mix negatives, aspect hints, and seed logic without breaking your vibe. Built to feed SDXL, Flux, Midjourney, and more.</p>
+            <div class="cta"><span class="kbd">Open</span></div>
+          </a>
+
+          <a class="tile" href="movie.html">
+            <h3>Video Prompt Builder</h3>
+            <p>Compose shot‑by‑shot prompts for Runway, Luma, and Pika with continuity locks and motion cues. Add transitions, timing marks, and ADR/SSML to keep narration and edits in sync. Export shotlists that teams can actually follow.</p>
+            <div class="cta"><span class="kbd">Open</span></div>
+          </a>
+
+          <a class="tile" href="playground.html">
+            <h3>Prompt Patterns & Encyclopedia</h3>
+            <p>Battle‑tested prompt patterns for structure, style transfer, camera grammar, and narrative beats. Includes guardrails, debug prompts, and platform‑specific gotchas. Learn fast; steal responsibly.</p>
+            <div class="cta"><span class="kbd">Read</span></div>
+          </a>
+
+          <a class="tile" href="ansiart.html">
+            <h3>ANSI & ASCII Art Generator</h3>
+            <p>Convert text or images to classic ANSI/ASCII with palettes, dithers, and FIGlet fonts. Live preview, webcam mode, and export to TXT/PNG/SVG/GIF for instant sharing. Nostalgia with modern controls.</p>
+            <div class="cta"><span class="kbd">Try</span></div>
+          </a>
+
+          <a class="tile" href="watermark.html">
+            <h3>Watermark & Privacy Tools</h3>
+            <p>Add visible overlays or invisible marks to protect and attribute your creations. Strip EXIF when needed, and generate audit notes for collabs. Practical privacy with zero drama.</p>
+            <div class="cta"><span class="kbd">Try</span></div>
+          </a>
+
+          <a class="tile" href="compare.html">
+            <h3>Compare AI Models</h3>
+            <p>Quick notes on strengths, weaknesses, and best‑fit use cases across major image/video models. Keep expectations realistic with example prompts and pitfalls. Updated as engines shift.</p>
+            <div class="cta"><span class="kbd">Explore</span></div>
+          </a>
+
+          <a class="tile" href="j1nx.html">
+            <h3>J1NX Assistant</h3>
+            <p>Lightweight page for demos, prompt polish, and micro‑workflows. J1NX keeps grammar tight without killing your voice, and suggests fixes that fit your style. Copy faster; sound like you.</p>
+            <div class="cta"><span class="kbd">Open</span></div>
+          </a>
+
+          <!-- Coming Soon: Image → Prompt (delegatable block) -->
+          <a class="tile" id="img2promptSoon" href="#" aria-disabled="true">
+            <h3>Image → Prompt (Coming Soon)</h3>
+            <p>Upload an image and get a clean, engine‑aware base prompt—fully client‑side. We’ll combine on‑device labels (TF.js / CLIP‑in‑browser) with the PromptForge brain for style expansion. Swap this tile to /imagetoprompt.html when ready.</p>
+            <div class="cta"><span class="kbd">Preview</span></div>
+          </a>
+
+          <a class="tile" href="support.html">
+            <h3>Support</h3>
+            <p>Keep the tools running: tips and memberships fund bandwidth, testing, and docs. Zero junk mail; pure impact. Thank you for letting this stay free.</p>
+            <div class="cta"><span class="kbd">Visit</span></div>
+          </a>
+
+          <a class="tile" href="legal.html">
+            <h3>Legal / Privacy</h3>
+            <p>Terms, privacy, and brand‑safe routes. Ads appear only on general‑audience pages; labs/NSFW live off main routes with no mixed ad inventory. Read how we keep the split clean.</p>
+            <div class="cta"><span class="kbd">Read</span></div>
+          </a>
+        </section>
+
+        <!-- MID AD (300x250) — canonical snippet -->
+        <section class="ad-wrap ad-300x250">
+          <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+          <ins id="1101622" data-width="300" data-height="250" style="display:inline-block;width:300px;height:250px"></ins>
+          <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101622});</script>
+        </section>
+
+        <!-- “Why ads?” — hidden to users (collapsed), visible to bots (content exists in DOM) -->
+        <section class="card" style="margin-top:14px;max-width:1100px">
+          <details>
+            <summary style="cursor:pointer;font-weight:800">About the ads (tap to expand)</summary>
+            <div style="margin-top:8px">
+              <p><strong>Why ads?</strong> PromptForge is a free, creator‑first project. Ads help cover hosting, bandwidth, and time spent maintaining the tools. We keep ad slots light and out of your way, and we do not sell personal data.</p>
+              <p><strong>Brand‑safe split:</strong> any experimental or 18+ labs live on isolated routes with an interstitial and no mixed ad inventory. The homepage and core tools remain general‑audience.</p>
+              <p><strong>Privacy:</strong> we log minimal analytics for reliability and abuse prevention. See <a href="legal.html">Legal</a> for details.</p>
+            </div>
+          </details>
+          <noscript>
+            <p><strong>About the ads:</strong> Ads fund hosting and feature work so the studio stays free. We keep things brand‑safe here and isolate any adult labs separately. Minimal analytics; see Legal.</p>
+          </noscript>
+        </section>
+
+        <!-- About / Privacy / Terms (kept, concise) -->
+        <section id="about" class="card" style="margin-top:14px;max-width:1100px">
+          <h2>About</h2>
+          <p>PromptForge publishes tools and patterns to get consistent, pro results from AI image/video engines. We love ANSI/ASCII and keep J1NX on every page for quick help.</p>
+          <h3>Contact</h3>
+          <p>Email: <a href="mailto:hello@promptforge.online">hello@promptforge.online</a> • Region: British Columbia, Canada</p>
+        </section>
+
+        <section id="privacy" class="card" style="margin-top:14px;max-width:1100px">
+          <h2>Privacy Policy</h2>
+          <p><strong>Last updated:</strong> <span id="ppDate"></span></p>
+          <p>Minimal analytics and error logs to improve pages. Third‑party ad partners may set their own cookies; see their policies for details.</p>
+        </section>
+
+        <section id="terms" class="card" style="margin-top:14px;max-width:1100px">
+          <h2>Terms of Use</h2>
+          <p><strong>Effective date:</strong> <span id="tosDate"></span></p>
+          <p>Use tools responsibly and in compliance with platform rules. Adult/experimental content appears on segregated routes with interstitials.</p>
+        </section>
+      </main>
+    </div>
+
+    <!-- right sidebar (160x600) -->
+    <aside class="sidebar" aria-label="sponsored sidebar">
+      <div class="ad-wrap ad-160x600">
+        <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+        <ins id="1101675" data-width="160" data-height="600" style="display:inline-block;width:160px;height:600px"></ins>
+        <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101675});</script>
       </div>
-    </div>
-    <div class="card">
-      <strong>Start here:</strong>
-      <ul class="summary" style="margin:6px 0 0 18px">
-        <li><a href="picture.html">Image Prompt Builder</a> • <a href="movie.html">Video Prompt Builder</a></li>
-        <li><a href="ansiart.html">ANSI/ASCII Studio</a> • <a href="watermark.html">Watermark & Privacy</a></li>
-        <li><a href="compare.html">Compare Models</a> • <a href="playground.html">Prompt Patterns</a></li>
-      </ul>
-    </div>
-  </section>
+    </aside>
+  </div>
 
-  <!-- GRID -->
-  <main aria-label="main content">
-    <section class="grid" aria-label="tools and guides">
-      <a class="tile" href="picture.html"><h3>Image Prompt Builder</h3><p>Create engine-aware prompts with pose/face continuity, lighting kits, and negatives.</p><div class="cta"><span class="kbd">Open</span></div></a>
-      <a class="tile" href="movie.html"><h3>Video Prompt Builder</h3><p>Compose shot-by-shot prompts for Runway, Luma, Pika & more—with continuity locks.</p><div class="cta"><span class="kbd">Open</span></div></a>
-      <a class="tile" href="playground.html"><h3>Prompt Patterns & Encyclopedia</h3><p>Advanced prompt patterns and platform tips—field-tested.</p><div class="cta"><span class="kbd">Read</span></div></a>
-      <a class="tile" href="ansiart.html"><h3>ANSI & ASCII Art Generator</h3><p>Convert text/images to classic ANSI/ASCII art. Interactive playground.</p><div class="cta"><span class="kbd">Try</span></div></a>
-      <a class="tile" href="watermark.html"><h3>Watermark & Privacy Tools</h3><p>Add overlays or invisible marks to protect and attribute your creations.</p><div class="cta"><span class="kbd">Try</span></div></a>
-      <a class="tile" href="compare.html"><h3>Compare AI Models</h3><p>Benchmarks and notes across major image/video models.</p><div class="cta"><span class="kbd">Explore</span></div></a>
-      <!-- About / Privacy / Terms as tiles -->
-      <a class="tile" href="#about"><h3>About PromptForge</h3><p>What “underground” means here, and how we test.</p><div class="cta"><span class="kbd">Read</span></div></a>
-      <a class="tile" href="#privacy"><h3>Privacy Policy</h3><p>Minimal analytics, your control.</p><div class="cta"><span class="kbd">Read</span></div></a>
-      <a class="tile" href="#terms"><h3>Terms / Legal</h3><p>House rules for tools and tutorials.</p><div class="cta"><span class="kbd">Read</span></div></a>
-    </section>
+  <!-- BOTTOM AD (728x90 reuse header zone) -->
+  <div class="ad-wrap ad-728x90">
+    <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
+    <ins id="1101674" data-width="728" data-height="90" style="display:inline-block;width:728px;height:90px"></ins>
+    <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':1101674});</script>
+  </div>
 
-    <!-- MID AD (JuicyAds-ready) -->
-    <section id="ad-mid" aria-label="sponsored" style="margin:20px auto;text-align:center;max-width:728px;min-height:90px"></section>
-
-    <!-- About / Privacy / Terms -->
-    <section id="about" class="card" style="margin-top:14px;max-width:1100px">
-      <h2>About</h2>
-      <p>PromptForge is a creator-first studio for AI prompts. We publish tools and patterns to get consistent, pro results from AI image/video engines. Matrix rain, ANSI/ASCII love, and a helpful J1NX bot on every page.</p>
-      <h3>Contact</h3>
-      <p>Email: <a href="mailto:hello@promptforge.online">hello@promptforge.online</a> • Region: British Columbia, Canada</p>
-    </section>
-
-    <section id="privacy" class="card" style="margin-top:14px;max-width:1100px">
-      <h2>Privacy Policy</h2>
-      <p><strong>Last updated:</strong> <span id="ppDate"></span></p>
-      <p>Minimal analytics and error logs to improve pages. No AdSense. Third-party ad partners may set their own cookies; see their policies for details.</p>
-    </section>
-
-    <section id="terms" class="card" style="margin-top:14px;max-width:1100px">
-      <h2>Terms of Use</h2>
-      <p><strong>Effective date:</strong> <span id="tosDate"></span></p>
-      <p>Use tools responsibly and in compliance with applicable laws/platform rules. Experimental/18+ work may appear on segregated routes with interstitials.</p>
-    </section>
-  </main>
-
-  <!-- BOTTOM AD (JuicyAds-ready) -->
-  <div id="ad-bottom" style="margin:20px auto;text-align:center;max-width:728px;min-height:90px"></div>
-
-  <!-- J1NX -->
+  <!-- J1NX (from your canonical demo/footer) -->
   <div class="j1nx-float-true" id="j1nxFloatTrue" aria-label="J1nx chat">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue" fetchpriority="low"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
-      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue"><b>J1nx:</b> Say it your way. I’ll keep the grammar tight. 💡</div>
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Ask J1nx for a tip…" maxlength="120" autocomplete="off"/>
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
-        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear</button>
-        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save</button>
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
       </div>
-      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue"></div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…</div>
     </div>
   </div>
 
@@ -263,17 +361,17 @@
   <footer role="contentinfo" aria-label="footer">
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+ \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"    
+  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___    
+  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|   
+  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>   
+ (__)__)   (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)  
     </pre>
     <div class="footgrid">
       <div class="footcol">
         <h5>About PromptForge</h5>
-        <p>Creator-first studio for AI prompts. Tools, patterns, examples.</p>
+        <p>Creator‑first studio for AI prompts. Tools, patterns, examples.</p>
       </div>
       <div class="footcol">
         <h5>Useful</h5>
@@ -288,106 +386,62 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
       </div>
       <div class="footcol">
         <h5>Respect & Safety</h5>
-        <p>This page is general-audience. Any 18+ labs will be clearly marked and isolated.</p>
+        <p>This page is general‑audience. Any 18+ labs will be clearly marked and isolated.</p>
       </div>
     </div>
     <div class="footnote">BC, Canada • #PromptForge • © <span id="yearNow"></span></div>
     <pre class="footer-camo" id="footerCamo"></pre>
   </footer>
 
-  <!-- Brains / Scripts -->
+  <!-- External Brain first (as on picture page) -->
   <script src="assets/j1nx_brain.js" defer></script>
   <script>
-    /* ====== ANSI footer camo (kept) ====== */
-    (function(){ const el=document.getElementById("footerCamo"); if(!el) return;
-      const colors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"], chars="░▒▓▚▞▐▉█▛";
-      function tick(t){ let out=""; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } el.innerHTML=out; }
-      let t=0; tick(0); setInterval(()=>tick(++t),950);
-    })();
+    // ANSI footer camo
+    (function(){ const el=document.getElementById('footerCamo'); if(!el) return; const colors=['#64f2e3','#23d7ba','#4df6a0','#bdf6c3','#abffe6','#abb8b8'], chars='░▒▓▚▞▐▉█▛'; function tick(t){ let out=''; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } el.innerHTML=out; } let t=0; tick(0); setInterval(()=>tick(++t),950); })();
 
-    /* ====== J1NX (kept) ====== */
+    // J1NX: mobile toggle / NSFW unlock / brain integration (mirrors /picture)
     (function(){
-      let chat=["Let’s make this copy sharp and yours. What are you building?"];
-      function render(){ document.getElementById("j1nxBubbleTextTrue").innerHTML="<b>J1nx:</b> "+chat[chat.length-1]; }
-      function glow(){ document.getElementById("j1nxBubbleTrueMain").style.boxShadow="0 4px 22px #64f2e3bb,0 0 0 3px #23231f"; }
-      const input=document.getElementById("j1nxInputTrue");
-      document.getElementById("j1nxSendTrue").onclick=function(){
-        const val=(input.value||"").trim(); if(!val) return;
-        let reply="(Brain not loaded)"; try{ if(window.j1nxBrain){ const r=window.j1nxBrain(val, chat.length); reply=typeof r==="object"?(r.reply||r.text||JSON.stringify(r)):r; } }catch(_){}
-        chat.push(val); chat.push(reply||"Try rephrasing—I’ll keep it punchy.");
-        render(); glow(); input.value="";
-      };
-      input.addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("j1nxSendTrue").click(); });
-      document.getElementById("j1nxClearTrue").onclick=function(){ chat=[chat[0]]; render(); };
-      document.getElementById("j1nxSaveTrue").onclick=function(){ const text=chat.join("\n"); const b=new Blob([text],{type:"text/plain"}); const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download="j1nx_chat.txt"; document.body.appendChild(a); a.click(); setTimeout(()=>{a.remove(); URL.revokeObjectURL(u);}, 400); };
+      const j1nxFloat = document.getElementById('j1nxFloatTrue');
+      const cutout = document.getElementById('j1nxCutoutTrue');
+      const bubble = document.getElementById('j1nxBubbleTrueMain');
+      function isMobile(){ return window.innerWidth < 700; }
+      function setState(){ if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } }
+      cutout.onclick = function(){ if(isMobile()){ if(j1nxFloat.classList.contains('j1nx-open')){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } } };
+      window.addEventListener('resize', setState); setState();
+    })();
+    (function(){
+      let chatHistory = [];
+      let nsfwUnlocked = false;
+      function render(){ const out = chatHistory.map(line=>`<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG? (I can do both.)"; }
+      function add(msg, me){ if(!msg) return; const name = me? '<b>You:</b> ' : '<b>J1nx:</b> '; chatHistory.push(name+msg); if(chatHistory.length>8) chatHistory = chatHistory.slice(-8); render(); }
+      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function(){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; add("NSFW mode unlocked! You’re now in uncensored mode.", false); });
+      document.getElementById('j1nxSendTrue').onclick = function(){ const input = document.getElementById('j1nxInputTrue'); const val = (input.value||'').trim(); if(!val) return; add(val,true); if(/^unlock$/i.test(val)){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; add("NSFW mode unlocked! You’re now in uncensored mode.", false); input.value=''; return; } try{ let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked); let replyText = (reply && typeof reply==='object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply; add(replyText, false); }catch(e){ add("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false); } input.value=''; };
+      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); });
+      document.getElementById('j1nxSaveTrue').onclick = function(){ const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n'); const blob = new Blob([text], {type:'text/plain'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='j1nx_chat.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300); };
+      document.getElementById('j1nxClearTrue').onclick = function(){ chatHistory=[]; render(); };
       render();
     })();
 
-    /* ====== YOUR “ACTUAL EYES” — applied to every o/O/0, mouse-track + blink ====== */
+    // ANSI Eyes — robust init (run on load + fallback retry)
     (function(){
-      const pre=document.getElementById('ansiArt'); if(!pre) return;
-      const raw=pre.textContent;
-      // Replace every o/O/0 with a 1ch mini eye that looks like your original circular eye:
-      pre.innerHTML = raw.replace(/[oO0]/g, function(ch){
-        return '<span class="eye-mini"><span class="eye-ball"></span><span class="pupil"></span></span>';
-      });
-      const pupils = [...pre.querySelectorAll('.eye-mini .pupil')];
-      pupils.forEach(p=>p.style.animationDelay=(Math.random()*4).toFixed(2)+'s');
-      function move(x,y){
-        for(const p of pupils){
-          const r=p.parentElement.getBoundingClientRect();
-          const cx=r.left+r.width/2, cy=r.top+r.height/2;
-          const ang=Math.atan2(y-cy,x-cx);
-          const dx=Math.cos(ang)*4, dy=Math.sin(ang)*3; // tight clamp to preserve layout
-          p.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-        }
+      const PRE_ID = 'ansiArt';
+      function injectEyes(){
+        const pre = document.getElementById(PRE_ID); if(!pre) return false;
+        if(pre.dataset.eyed==='1') return true; // idempotent
+        const raw = pre.textContent; if(!raw || raw.indexOf('o')===-1 && raw.indexOf('O')===-1 && raw.indexOf('0')===-1) return false;
+        const html = raw.replace(/[oO0●•]/g, ()=>'<span class="eye-mini"><span class="eye-ball"></span><span class="pupil"></span></span>');
+        pre.innerHTML = html; pre.dataset.eyed='1';
+        const pupils = pre.querySelectorAll('.pupil'); if(!pupils.length) return false;
+        function onMove(e){ const rect=pre.getBoundingClientRect(); const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2; const dx=(e.clientX-cx)/rect.width, dy=(e.clientY-cy)/rect.height; pupils.forEach(p=>p.style.transform=`translate(calc(-50% + ${dx*4}px), calc(-50% + ${dy*3}px))`); }
+        window.addEventListener('mousemove', onMove);
+        return true;
       }
-      addEventListener('mousemove',e=>move(e.clientX,e.clientY),{passive:true});
-      addEventListener('touchmove',e=>{const t=e.touches[0]; if(t) move(t.clientX,t.clientY);},{passive:true});
+      window.addEventListener('load', function(){ if(!injectEyes()){ setTimeout(injectEyes, 600); } }); // ensure after images/fonts loaded
+      if(document.readyState==='complete'){ setTimeout(injectEyes, 0); }
     })();
 
-    /* ====== Matrix Rain (loose) ====== */
-    (function(){
-      const c=document.getElementById('matrix-canvas'); if(!c) return; const ctx=c.getContext('2d');
-      function size(){ c.width=innerWidth; c.height=innerHeight; } size(); addEventListener('resize',size,{passive:true});
-      const glyphs='ｱｲｳｴｵｶｷｸｹｺ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'; let colW=18, speed=3, drops;
-      function reset(){ drops=new Array(Math.floor(c.width/colW)).fill(0).map(()=>Math.random()*-c.height); } reset();
-      addEventListener('resize',reset,{passive:true});
-      (function draw(){
-        ctx.fillStyle='rgba(0,0,0,0.08)'; ctx.fillRect(0,0,c.width,c.height);
-        ctx.font='16px monospace'; ctx.shadowColor='#49d9fc'; ctx.shadowBlur=6; ctx.fillStyle='#64f2e3';
-        for(let i=0;i<drops.length;i++){ const x=i*colW, y=drops[i];
-          ctx.fillText(glyphs[(Math.random()*glyphs.length)|0],x,y);
-          drops[i]=y>c.height ? Math.random()*-200 : y + speed + Math.random()*2;
-        }
-        requestAnimationFrame(draw);
-      })();
-    })();
-
-    /* ====== JuicyAds INTEGRATION SWITCH ======
-       Paste your JuicyAds zone code strings below (from their dashboard).
-       We insert them into CLS-safe wrappers so you can swap networks easily.
-       Learn: site verification & zone setup (JuicyAds Help). */
-    const JA_ZONES = {
-      header: "", // <-- paste raw zone code string for HEADER slot
-      mid:    "", // <-- paste raw zone code string for MID slot
-      bottom: ""  // <-- paste raw zone code string for BOTTOM slot
-    };
-    (function mountJuicyAds(){
-      function inject(id, code){
-        const host=document.getElementById(id);
-        if(host && code && typeof code==="string"){ host.innerHTML = code; }
-      }
-      inject('ad-header', JA_ZONES.header);
-      inject('ad-mid',    JA_ZONES.mid);
-      inject('ad-bottom', JA_ZONES.bottom);
-    })();
-
-    // Dates
-    document.getElementById('yearNow').textContent = new Date().getFullYear();
-    const nowISO = new Date().toISOString().slice(0,10);
-    document.getElementById('ppDate') && (document.getElementById('ppDate').textContent = nowISO);
-    document.getElementById('tosDate') && (document.getElementById('tosDate').textContent = nowISO);
+    // Tiny dates
+    (function(){ const y=document.getElementById('yearNow'); if(y) y.textContent=new Date().getFullYear(); const d=new Date().toISOString().slice(0,10); const pp=document.getElementById('ppDate'); if(pp) pp.textContent=d; const tos=document.getElementById('tosDate'); if(tos) tos.textContent=d; })();
   </script>
 </body>
-</html>
+  </html>
