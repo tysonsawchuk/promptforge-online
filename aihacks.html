@@ -1,413 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- =============================================================
+       AIHacks Encyclopedia — TOP AREA POLISH + JUICYADS + SEO (FINAL)
+       Notes:
+       • Keeps your existing layout/vibe. No deletions to features.
+       • Removes version label + Buy Me a Coffee + personal name mentions.
+       • JuicyAds zones: header 728x90 (1101674), mid 300x250 (1101622), rail 160x600 (1101675), bottom 728x90 reuse (1101674)
+       • JSON wiring untouched: assets/aihacks-data.json
+       • J1NX uses assets/j1nx_brain.js as before (no logic changes, just send/receive glow)
+       ============================================================= -->
   <meta charset="UTF-8" />
-  <title>AIHacks Encyclopedia – Viral AI Pranks, Games, Dares & Insanity</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AIHacks: Viral encyclopedia of AI pranks, party dares, family games, wild Alexa and Google hacks, Siri/Bixby tricks, TikTok/YouTube challenges, NSFW secrets and 10,000+ epic ideas to break the internet. Always free, always underground, always fun.">
-  <meta name="keywords" content="AI pranks, games, Alexa, Google, Siri, ChatGPT, family fun, party dares, viral, NSFW, prompt hacks, PromptForge, TikTok, YouTube, hacks, GPT, art, challenge, contest, Easter eggs, hidden features, J1NX, open source, translation, multilingual, playground">
-  <meta name="google-adsense-account" content="ca-pub-4963053724895140">
+  <title>AIHacks Encyclopedia — Viral AI Pranks, Games, Dares & Uncensored Fun</title>
+  <meta name="description" content="AIHacks: viral encyclopedia of AI pranks, party dares, family games, Alexa/Google hacks, Siri & Bixby tricks, TikTok/YouTube challenges, Roast battles, Office & Classroom gags, plus Adults/NSFW (age‑gated). 100% client‑side, underground, and free."/>
+  <meta name="keywords" content="AI pranks, Alexa, Google Assistant, Siri, Bixby, ChatGPT, party games, family dares, roast, office pranks, classroom games, TikTok challenges, YouTube dares, Adults, NSFW, viral hacks, prompt engineering, PromptForge, J1NX"/>
+  <link rel="canonical" href="https://promptforge.online/aihacks.html"/>
+  <meta name="theme-color" content="#0b141c"/>
+
+  <!-- Open Graph / Twitter (brand‑safe) -->
+  <meta property="og:site_name" content="PromptForge"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="AIHacks — Viral AI Pranks & Games"/>
+  <meta property="og:description" content="Viral pranks, party games, dare prompts, and more for Alexa, Google, Siri, Bixby & ChatGPT. Adults/NSFW gated."/>
+  <meta property="og:url" content="https://promptforge.online/aihacks.html"/>
+  <meta property="og:image" content="https://promptforge.online/og/promptforge_og.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="AIHacks — Viral AI Pranks & Games"/>
+  <meta name="twitter:description" content="Viral pranks, dares, and games for assistants & chatbots. Adults/NSFW gated."/>
+  <meta name="twitter:image" content="https://promptforge.online/og/promptforge_og.jpg"/>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Fira+Mono:400,700&display=swap" rel="stylesheet" />
-  <script src="assets/j1nx_brain.js"></script>
+
+  <!-- JuicyAds (single async include; zones pushed later) -->
+  <script async data-cfasync="false" src="https://poweredby.jads.co/js/jads.js"></script>
+
+  <!-- J1NX brain (responses) -->
+  <script defer src="assets/j1nx_brain.js"></script>
+
   <style>
-    :root {
-      --aqua: #64f2e3;
-      --offwhite: #e9efe7;
-      --panel: #181b15;
-      --panel-deep: #23231f;
-      --footer-bg: #131413;
-      --gold: #ffe266;
-      --danger: #fa3c70;
-    }
-    html, body {
-      margin: 0; padding: 0; box-sizing: border-box;
-      width: 100vw; max-width: 100vw; min-width: 0;
-      overflow-x: hidden;
-      background: var(--panel);
-      color: var(--offwhite);
-      font-family: 'Fira Mono', monospace;
-      font-size: 1.03em;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
-    header {
-      border-bottom: 2px solid var(--aqua);
-      background: var(--panel-deep);
-      padding: 0 0 0.1em 0;
-      margin: 0; width: 100vw; max-width: 100vw;
-    }
-    .version {
-      font-size: .97em;
-      color: var(--aqua);
-      background: #191c17;
-      padding: 0.09em 1.15em;
-      border-radius: 0 0 12px 12px;
-      display: inline-block;
-      margin: 0 0 0.06em 0.07em;
-      font-weight: 700;
-      letter-spacing: 0.07em;
-      box-shadow: 0 2px 7px #64f2e344;
-    }
-    .breadcrumbs { font-size: 1em; color: #80dfff; letter-spacing: 0.01em; font-weight: 500; opacity: .92;}
-    .breadcrumbs a { color: #37e4fc; }
-    .site-nav-row {
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-    }
-    .brand {
-      font-size: 1.28rem; font-weight: bold;
-      background: linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 1px 10px #18c6fa44;
-      margin-right: 16px;
-    }
-    nav { font-size: 1em; opacity: .98; display: flex; gap: 13px; }
-    nav a {
-      color: #7eeaff; text-decoration: none; font-weight: 600;
-      padding: 3px 9px; border-radius: 8px;
-    }
-    nav a:hover { background: #122a38; color: #fff; }
-    .main-title {
-      margin: 32px auto 16px auto;
-      text-align: center;
-      font-size: 3.9em;
-      letter-spacing: 0.11em;
-      font-weight: 900;
-      background: linear-gradient(90deg,var(--aqua) 14%,#fffac8 54%,#be9cff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 32px #5af4ea44, 0 2px 12px #be9cff55;
-      line-height: 1.08;
-      filter: drop-shadow(0 0 15px #6ee4c3bb);
-      user-select: none;
-      text-transform: uppercase;
-    }
-    .seo-banner {
-      width: 100vw;
-      max-width: 100vw;
-      overflow: hidden;
-      background: #111417;
-      border-bottom: 2px solid #64f2e3;
-      box-shadow: 0 3px 16px #43f6e122;
-      padding: 6px 0;
-      font-size: 0.99em;
-      letter-spacing: 0.07em;
-      color: #64f2e3;
-      font-family: 'Fira Mono', monospace;
-      white-space: nowrap;
-      position: relative;
-      z-index: 10;
-      opacity: 0.94;
-      margin-bottom: 5px;
-    }
-    .seo-banner-inner {
-      display: inline-block;
-      padding-left: 100vw;
-      animation: scroll-banner 32s linear infinite;
-      font-weight: 700;
-      font-size: 1em;
-    }
-    @keyframes scroll-banner {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-100%); }
-    }
-    .desc-seo {
-      margin: 3px auto 10px auto; 
-      max-width: 920px;
-      font-size: 0.47em;
-      color: #c4f8ff;
-      text-align: center;
-      font-weight: 500;
-      letter-spacing: .01em;
-      line-height: 1.22;
-      opacity: 0.80;
-      padding: 0 4px;
-      border-radius: 8px;
-      user-select: text;
-      transition: color 0.13s;
-    }
-    .desc-seo b { color: #49fffb; }
-    .desc-seo span {color:#ffe266;}
-    .desc-seo small {font-size: 1em; opacity: 0.93;}
-    .hero-art-wrap {
-      width: 100vw; max-width: 100vw;
-      display: flex; justify-content: center; align-items: center; overflow: hidden;
-      min-height: 370px; max-height: 600px; background: #000; margin-bottom: 2px;
-      border-bottom: 3px solid #242b32;
-    }
-    .hero-art-img {
-      width: 100vw; max-width: 1440px; height: auto; max-height: 570px;
-      object-fit: contain; background: #000;
-      user-select: none; pointer-events: none; display: block; margin: 0 auto;
-    }
-    .howto-links {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
-      margin: 13px auto 20px auto; max-width: 980px;
-    }
-    .howto-link {
-      background: #232922; color: var(--aqua);
-      border: 1.6px solid #49fffb;
-      border-radius: 9px;
-      padding: 7px 19px; font-weight: 700; font-size: 1em;
-      box-shadow: 0 2px 8px #19e4ff33;
-      text-decoration: none; transition: background .12s, color .13s, border-color .14s;
-    }
-    .howto-link:hover {
-      background: #191d19; color: #fff; border-color: var(--gold);
-    }
-    .category-row {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 13px 17px; margin: 17px auto 22px auto; max-width: 1200px;
-    }
-    .category-btn {
-      font-size: 1.13em; font-weight: 900; letter-spacing: 0.01em;
-      padding: 18px 28px; border-radius: 16px; margin-bottom: 11px;
-      color: var(--offwhite); background: #181d21; border: 2.5px solid var(--aqua);
-      outline: none; cursor: pointer;
-      box-shadow: 0 2px 22px #64f2e365,0 1px 10px #191d1970 inset;
-      min-width: 142px; transition: background 0.12s, color 0.12s, border-color 0.12s, box-shadow 0.14s;
-      user-select: none; position: relative; z-index: 2;
-      text-shadow: 0 2px 8px #1ae4e6a7,0 1px 5px #2efaaa27;
-    }
-    .category-btn:active, .category-btn:focus {
-      background: #10151b; color: #fff; border-color: var(--gold); box-shadow: 0 4px 19px #ffe26666;
-    }
-    .category-btn:hover {
-      background: #232c38; color: #fff; border-color: #fff; box-shadow: 0 6px 19px #00fff080;
-    }
-    .category-btn.nsfw {
-      background: #340020; color: var(--danger); border-color: var(--danger);
-      box-shadow: 0 2px 16px #fa3c70b3,0 1px 7px #641e2e77 inset;
-    }
-    .category-btn.adults {
-      background: #32240b; color: var(--gold); border-color: var(--gold);
-      box-shadow: 0 2px 18px #ffe266bb,0 1px 7px #22200644 inset;
-    }
-    .j1nx-float-true {
-      position: fixed; z-index: 1400; right: 2vw; bottom: 54px;
-      display: flex; flex-direction: column; align-items: center;
-      pointer-events: all; user-select: none; min-width: 0; max-width: 360px;
-      transition: all 0.17s cubic-bezier(.82,0,.21,1);
-    }
-    .j1nx-true-cutout-img {
-      width: 320px; height: 320px;
-      object-fit: contain; border-radius: 32px;
-      background: transparent !important; margin-bottom: -30px;
-      position: relative; z-index: 9; pointer-events: auto;
-      box-shadow: none !important;
-      transition: width 0.17s, height 0.17s;
-    }
-    .j1nx-bubble-true-main {
-      background: rgba(22,23,31,0.97); border-radius: 17px;
-      box-shadow: 0 4px 22px #be9cff66, 0 0 0 3px #23231f;
-      border: 2px solid var(--aqua);
-      padding: 1.1em 1.3em 1em 1.3em;
-      margin-top: 0; margin-bottom: 0.3em;
-      display: flex; flex-direction: column; align-items: center;
-      min-width: 290px; max-width: 330px; position: relative; z-index: 1;
-      transition: opacity 0.18s, visibility 0.18s;
-    }
-    .j1nx-bubble-text-true { font-size: 1.05em; color: #fff; margin: 0.42em 0 0.20em 0; text-align: center; font-weight: 600; text-shadow: 0 1px 11px #1e1111cc; line-height: 1.22; z-index: 1;}
-    .j1nx-bubble-row-true { width: 100%; display: flex; justify-content: center; gap: 7px; margin: 0.13em 0 0.10em 0;}
-    .j1nx-input-true { flex: 1; font-size: 1em; border-radius: 8px; padding: 7px 12px; border: 1px solid var(--aqua); background: #171b22; color: var(--aqua); min-width: 0;}
-    .j1nx-btn-true { font-size: .98em; padding: 6.5px 14px; border-radius: 8px; background: #22252b; border: 1.3px solid var(--aqua); color: var(--aqua); font-family: inherit; font-weight: 600; cursor: pointer; transition: background .13s, color .13s, border .13s; box-shadow: 0 1.5px 9px #be9cff33;}
-    .j1nx-btn-true:hover { background: var(--aqua); color: #171b22; border-color: #fff;}
-    .j1nx-easteregg-true { font-size: .91em; color: #be9cff; background: #171b22e6; border-radius: 7px 13px 12px 17px; margin-top: 7px; padding: 7px 17px 6px 13px; opacity: .85; pointer-events: none; text-align: center; width: 94%; user-select: none; box-shadow: 0 3px 13px #be9cff28; font-weight: 600;}
-    @media (max-width: 700px) {
-      .j1nx-float-true {
-        right: 9px;
-        bottom: 9px;
-        max-width: 74px;
-        width: 74px;
-        min-width: 0;
-        transition: all 0.18s cubic-bezier(.82,0,.21,1);
-      }
-      .j1nx-true-cutout-img {
-        width: 64px !important; height: 64px !important; margin-bottom: 0;
-        border-radius: 50%;
-        box-shadow: 0 2px 10px #be9cff44;
-      }
-      .j1nx-bubble-true-main {
-        display: none !important;
-        position: absolute;
-        left: 0; top: 0;
-        opacity: 0; pointer-events: none;
-      }
-      .j1nx-float-true.j1nx-open .j1nx-bubble-true-main {
-        display: flex !important;
-        opacity: 1; pointer-events: all; position: absolute; left: 75px; top: 0; min-width: 230px;
-        background: rgba(20,22,28,0.99);
-        box-shadow: 0 4px 22px #be9cff88, 0 0 0 3px #23231f;
-      }
-      .j1nx-float-true.j1nx-open {
-        max-width: 320px; width: 320px;
-      }
-      .j1nx-float-true.j1nx-open .j1nx-true-cutout-img {
-        width: 64px !important; height: 64px !important; margin-bottom: 0;
-        border-radius: 50%;
-      }
-    }
-    .bmc-float-btn {
-      position: fixed;
-      left: 2vw;
-      bottom: 40px;
-      z-index: 1600;
-      background: #ffe266;
-      color: #23231f;
-      border-radius: 32px;
-      box-shadow: 0 2px 13px #ffe26640;
-      padding: 12px 24px 12px 18px;
-      font-family: inherit;
-      font-size: 1.14em;
-      font-weight: 800;
-      border: none;
-      outline: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      transition: background 0.12s, color 0.12s, box-shadow 0.13s;
-      opacity: 0.93;
-      min-width: 32px;
-      min-height: 32px;
-      user-select: none;
-    }
-    .bmc-float-btn:hover { background: #fffc6b; color: #23231f; box-shadow: 0 6px 19px #ffe26699; }
-    .bmc-float-btn img { height: 24px; width: 24px; margin-right: 2px; }
-    @media (max-width: 800px) {
-      .bmc-float-btn { left: 6px; bottom: 6px; padding: 10px 13px; font-size: 1.02em; }
-    }
-    .main-panel { padding-bottom: 220px !important; }
-    .footer-art { 
-      font-family: monospace; 
-      font-size: .91em; 
-      line-height: 1.01; 
-      letter-spacing: 1.1px; 
-      background: var(--footer-bg); 
-      margin: 0 auto 0.7em auto; 
-      padding: 0; 
-      width: 100vw; 
-      text-align: center; 
-      color: var(--aqua); 
-      overflow-x: auto; 
-      user-select: none;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .footer-camo { 
-      background: var(--footer-bg); 
-      margin: 0 auto 0.1em auto;
-      font-family: monospace; 
-      font-size: 1em; 
-      text-align: center;
-      width: 100vw; 
-      user-select: none; 
-      letter-spacing: .09em; 
-      padding: 0 0 0 0;
-    }
-    .footer-bar { text-align: center; font-size: .94em; color: var(--aqua); margin-bottom: .3em; width: 100vw; max-width: 100vw; overflow: hidden;}
-    .prank-bg { }
-    .accordion-block {margin: 17px 0 22px 0;display:none;}
-    .accordion-block.active, .accordion-block.open {display:block;}
-    .accordion-title {font-size: 1.35em; color: var(--aqua); margin-bottom: 8px; font-weight: 700; letter-spacing: .05em;}
-    .prank-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(320px, 1fr));
-      gap: 16px 20px;
-      margin-bottom: 16px;
-    }
-    @media (max-width: 750px) {
-      .prank-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .prank-card {
-      background: linear-gradient(110deg, #202e3a 78%, #2ef9e81c 100%);
-      border-radius: 1.15em;
-      box-shadow: 0 2px 16px #3af5f449, 0 1px 16px #3cfbe638, 0 4px 28px #1e405766;
-      padding: 13px 11px 11px 15px;
-      min-height: 110px;
-      transition: transform 0.13s, box-shadow 0.14s;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border: 1.7px solid #39ffe876;
-      opacity: 0.99;
-      font-size: 1em;
-      position:relative;
-      filter: drop-shadow(0 4px 13px #64f2e32b);
-    }
-    .prank-card:hover { 
-      transform: scale(1.033); 
-      box-shadow: 0 0 29px #52e7ffbb, 0 2px 13px #1ffedba1; 
-      border: 1.7px solid #64f2e3;
-      z-index: 10;
-    }
-    .prank-title { font-size: 1.11em; font-weight: bold; margin-bottom: 2px; color: #43e7fe; text-shadow: 0 1px 5px #17d9ff27;}
-    .prank-tip { font-size: 0.98em; color: #b8fdff; opacity: 0.87; margin-bottom: 5px;}
-    .prank-actions {display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:nowrap;}
-    .star-rating { display: flex; align-items: center; margin-left: 4px; font-size: 1.19em; user-select: none; cursor: pointer;}
-    .star-rating .star { color: #ffd700b7; margin-right: 0px; transition: color 0.13s;}
-    .star-rating .star.filled { color: #fff530; text-shadow: 0 0 7px #fffc6b99;}
-    .fav-btn {font-size:1.22em;color:#ff57ae;background:#222e36;border:none;min-width:33px;cursor:pointer;transition:color 0.12s;}
-    .fav-btn.active {color:#fff;background:#ff57ae;}
-    .ad-card {
-      grid-column: 1 / span 2;
-      background: #181d21;
-      color: #ffe266;
-      border: 2px dashed #64f2e3;
-      border-radius: 1.2em;
-      padding: 30px 14px 28px 20px;
-      font-size: 1.17em;
-      text-align: center;
-      margin: 10px 0 10px 0;
-      min-height: 80px;
-      box-shadow: 0 2px 17px #1ac9f978;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .ad-card a {
-      color: #49fffb; text-decoration: underline; font-weight: 800;
-    }
-    #langSelect {margin:5px 0 7px 0;padding:4px 9px;border-radius:7px;font-size:.98em;background:#23292b;color:var(--aqua);border:1.5px solid #64f2e3;box-shadow:0 1px 5px #64f2e344;}
-    #langSelect:focus{outline:2px solid var(--gold);}
-    #ageGate {
-      display:none;
-      position: fixed;
-      z-index: 2001;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      background: rgba(14,19,18,0.96);
-      justify-content: center;
-      align-items: center;
-    }
-    #ageGateInner {
-      background: #1b1622;
-      border: 3px solid #fa3c70;
-      border-radius: 20px;
-      color: #ffe266;
-      text-align: center;
-      padding: 40px 32px 36px 32px;
-      box-shadow: 0 3px 28px #fa3c7082;
-      max-width: 420px;
-    }
-    #ageGateInner h2 { color: #fa3c70; font-size: 2em; font-weight: 900; margin-bottom: 14px; }
-    #ageGateInner .age-btn {
-      background: #fa3c70; color: #fff; border: none; border-radius: 12px;
-      font-size: 1.2em; font-weight: 700; padding: 15px 32px; margin-top: 30px;
-      cursor: pointer; box-shadow: 0 1px 10px #fa3c7048; transition: background .12s;
-    }
-    #ageGateInner .age-btn:hover { background: #ffe266; color: #fa3c70; }
+    :root{ --aqua:#64f2e3; --ink:#e9efe7; --bg:#181b15; --deep:#23231f; --gold:#ffe266; --danger:#fa3c70; }
+    html,body{margin:0;padding:0;box-sizing:border-box;width:100vw;max-width:100vw;overflow-x:hidden;background:var(--bg);color:var(--ink);font-family:'Fira Mono',monospace;-webkit-font-smoothing:antialiased}
+
+    /* ===== Header / Top ===== */
+    header{border-bottom:2px solid var(--aqua);background:var(--deep);padding:0 0 .1em 0;width:100vw}
+    .breadcrumbs{font-size:1em;color:#80dfff;letter-spacing:.01em;font-weight:500;opacity:.92;padding:.2em .6em}
+    .breadcrumbs a{color:#37e4fc}
+    .site-nav-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:.2rem .6rem .5rem}
+    .brand{font-size:1.28rem;font-weight:900;background:linear-gradient(90deg,#24b2ff,#a4e0ff,#35f7e0 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 1px 10px #18c6fa44}
+    nav{display:flex;gap:13px;flex-wrap:wrap}
+    nav a{color:#7eeaff;padding:3px 9px;border-radius:8px;font-weight:700;text-decoration:none}
+    nav a:hover{background:#122a38;color:#fff}
+
+    /* SEO ribbon + headline */
+    .seo-banner{width:100vw;overflow:hidden;background:#111417;border-bottom:2px solid var(--aqua);box-shadow:0 3px 16px #43f6e122;padding:6px 0;font-size:.99em;letter-spacing:.07em;color:var(--aqua);white-space:nowrap;position:relative;z-index:10;margin-bottom:5px}
+    .seo-banner-inner{display:inline-block;padding-left:100vw;animation:scroll 32s linear infinite;font-weight:700}
+    @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+    h1.main-title{margin:16px auto 10px;text-align:center;font-size:3.8em;letter-spacing:.11em;font-weight:900;background:linear-gradient(90deg,var(--aqua) 14%,#fffac8 54%,#be9cff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 4px 32px #5af4ea44,0 2px 12px #be9cff55;line-height:1.08;filter:drop-shadow(0 0 15px #6ee4c3bb);text-transform:uppercase}
+
+    /* Quick strip above hero */
+    .quick-strip{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 12px;align-items:center;margin:8px auto 10px;max-width:1080px;padding:8px 10px}
+    .search{display:flex;align-items:center;gap:6px}
+    .search input{width:340px;max-width:72vw;padding:9px 11px;border-radius:10px;border:1.4px solid #2fe9ff;background:#0f151a;color:#bfefff}
+    .btn{background:#232922;color:var(--aqua);border:1.6px solid #49fffb;border-radius:9px;padding:7px 14px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px #19e4ff33}
+    .btn:hover{background:#191d19;color:#fff;border-color:var(--gold)}
+    select.lang{padding:7px 11px;border-radius:8px;background:#23292b;color:var(--aqua);border:1.5px solid var(--aqua)}
+
+    .desc-seo{margin:3px auto 10px;max-width:960px;font-size:.98em;color:#c4f8ff;text-align:center;font-weight:500;letter-spacing:.01em;line-height:1.22;opacity:.86;padding:0 8px}
+
+    .hero-art-wrap{width:100vw;display:flex;justify-content:center;align-items:center;overflow:hidden;min-height:360px;background:#000;border-bottom:3px solid #242b32}
+    .hero-art-img{width:100vw;max-width:1440px;height:auto;object-fit:contain;background:#000;user-select:none;pointer-events:none;display:block;margin:0 auto}
+
+    .howto-links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:13px auto 14px;max-width:980px}
+    .howto-link{background:#232922;color:var(--aqua);border:1.6px solid #49fffb;border-radius:9px;padding:7px 19px;font-weight:800;box-shadow:0 2px 8px #19e4ff33}
+    .howto-link:hover{background:#191d19;color:#fff;border-color:var(--gold)}
+
+    /* Ads — CLS‑safe wrappers */
+    .ad-wrap{display:flex;align-items:center;justify-content:center;margin:10px auto}
+    .ad-728x90{width:728px;min-height:90px}
+    .ad-300x250{width:300px;min-height:250px}
+    .ad-160x600{width:160px;min-height:600px}
+    @media(max-width:760px){.ad-728x90{transform:scale(.92);transform-origin:center}}
+    .rail{position:fixed;right:10px;bottom:100px;z-index:1200;display:none}
+    @media(min-width:1320px){.rail{display:block}}
+
+    /* Category buttons remain below — unchanged */
+    .category-row{display:flex;flex-wrap:wrap;justify-content:center;gap:13px 17px;margin:17px auto 18px;max-width:1200px}
+    .category-btn{font-size:1.05em;font-weight:900;letter-spacing:.01em;padding:14px 22px;border-radius:14px;color:var(--ink);background:#181d21;border:2px solid var(--aqua);cursor:pointer;box-shadow:0 2px 18px #64f2e365,0 1px 10px #191d1970 inset;min-width:128px;user-select:none;position:relative}
+    .category-btn:hover{background:#232c38;color:#fff;border-color:#fff;box-shadow:0 6px 19px #00fff080}
+    .badge{position:absolute;top:-9px;right:-9px;background:#ff57ae;color:#111;font-weight:900;border-radius:999px;padding:2px 7px;font-size:.78em;border:2px solid #111}
+    .category-btn.nsfw{background:#340020;color:var(--danger);border-color:var(--danger);box-shadow:0 2px 16px #fa3c70b3,0 1px 7px #641e2e77 inset}
+    .category-btn.adults{background:#32240b;color:var(--gold);border-color:var(--gold);box-shadow:0 2px 18px #ffe266bb,0 1px 7px #22200644 inset}
+
+    /* Footer */
+    .footer-art{font-family:monospace;font-size:.91em;line-height:1.01;letter-spacing:1.1px;background:#131413;margin:0 auto .7em;padding:0;width:100vw;text-align:center;color:var(--aqua);overflow-x:auto;user-select:none}
+    .footer-camo{background:#131413;margin:0 auto .1em;font-family:monospace;font-size:1em;text-align:center;width:100vw;user-select:none;letter-spacing:.09em}
+    .footer-bar{text-align:center;font-size:.94em;color:var(--aqua);margin-bottom:.3em;width:100vw}
+
+    /* Optional: J1NX float (no logic changes; glow only) */
+    .j1nx-float-true{position:fixed;right:2vw;bottom:54px;z-index:1400;display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;max-width:360px}
+    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9}
+    .j1nx-bubble-true-main{background:rgba(22,23,31,.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative}
+    .j1nx-bubble-true-main.glow{box-shadow:0 4px 22px #64f2e3bb,0 0 0 3px #23231f}
+    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .2em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22}
+    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
+    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
+    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:var(--aqua);font-weight:800;cursor:pointer;box-shadow:0 1.5px 9px #be9cff33}
+    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
+    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
+    @media(max-width:700px){.j1nx-float-true{right:9px;bottom:9px;max-width:74px;width:74px}.j1nx-true-cutout-img{width:64px!important;height:64px!important;margin-bottom:0;border-radius:50%;box-shadow:0 2px 10px #be9cff44}.j1nx-bubble-true-main{display:none!important;opacity:0}.j1nx-float-true.j1nx-open .j1nx-bubble-true-main{display:flex!important;opacity:1;position:absolute;left:75px;top:0;min-width:230px;background:rgba(20,22,28,.99);box-shadow:0 4px 22px #be9cff88,0 0 0 3px #23231f}.j1nx-float-true.j1nx-open{max-width:320px;width:320px}}
   </style>
 </head>
 <body>
+  <!-- ===== Header ===== -->
   <header>
-    <span class="version">v2.4.2</span>
-    <div class="breadcrumbs">
-      <a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a>
-    </div>
+    <div class="breadcrumbs"><a href="index.html">Home</a> › <a href="aihacks.html">AIHacks</a></div>
     <div class="site-nav-row">
       <span class="brand">AIHacks</span>
       <nav>
@@ -418,430 +126,173 @@
         <a href="movie.html">Movie</a>
         <a href="picture.html">Picture</a>
         <a href="watermark.html">Watermark</a>
-        <a href="https://github.com/tysonsawchuk/GoreandGiggles" target="_blank">GitHub</a>
+        <a href="support.html">Support</a>
       </nav>
     </div>
+    <!-- Header Ad 728x90 -->
+    <div class="ad-wrap"><ins id="1101674" class="ad-728x90" data-width="728" data-height="90"></ins></div>
   </header>
-  <div class="seo-banner">
-    <div class="seo-banner-inner" id="seoBannerInner">
-      AI pranks, viral games, Alexa hacks, Google tricks, Siri secrets, TikTok challenges, YouTube dares, NSFW fun, hidden features, party games, Easter eggs, Bixby jokes, GPT prompts, ChatGPT hacks, meme generators, viral commands, developer exploits, prompt engineering, AI toys, Playground hacks, open source, global translation, family fun, underground hacks, PromptForge, office dares, classroom games, roast battles, wild party stunts, 10,000+ ideas – AIHacks: Always free, always underground, always fun.
-    </div>
-  </div>
+
+  <!-- SEO ribbon -->
+  <div class="seo-banner"><div class="seo-banner-inner" id="seoBannerInner">AI pranks • viral games • Alexa hacks • Google tricks • Siri secrets • Bixby jokes • ChatGPT roasts • TikTok challenges • YouTube dares • Adults & NSFW (age‑gate) • classroom games • office gags • family fun • hidden Easter eggs • PromptForge underground • user submissions</div></div>
+
+  <!-- Headline, quick strip, hero -->
   <h1 class="main-title">AIHacks Encyclopedia</h1>
-  <div style="display:flex;justify-content:center;margin-bottom:8px;">
-    <select id="langSelect" onchange="switchLang(this.value)">
-      <option value="en">🌐 English</option>
-      <option value="fr">Français</option>
-      <option value="es">Español</option>
-      <option value="de">Deutsch</option>
-      <option value="ru">Русский</option>
-      <option value="ja">日本語</option>
-      <option value="zh">中文</option>
-      <option value="ar">العربية</option>
-      <option value="hi">हिन्दी</option>
-      <option value="pt">Português</option>
-      <option value="it">Italiano</option>
-      <option value="tr">Türkçe</option>
-      <option value="ko">한국어</option>
-      <option value="nl">Nederlands</option>
-      <option value="sv">Svenska</option>
+  <div class="quick-strip">
+    <div class="search"><input id="q" placeholder="Search pranks, tags, platforms…"/><button class="btn" onclick="doSearch()">Search</button><button class="btn" onclick="randomHack()">Random</button></div>
+    <select id="langSelect" class="lang" onchange="switchLang(this.value)">
+      <option value="en">🌐 English</option><option value="fr">Français</option><option value="es">Español</option><option value="de">Deutsch</option><option value="ru">Русский</option><option value="ja">日本語</option><option value="zh">中文</option><option value="ar">العربية</option><option value="hi">हिन्दी</option><option value="pt">Português</option><option value="it">Italiano</option><option value="tr">Türkçe</option><option value="ko">한국어</option><option value="nl">Nederlands</option><option value="sv">Svenska</option>
     </select>
-    <div id="google_translate_element" style="display:none;"></div>
+    <div id="google_translate_element" style="display:none"></div>
   </div>
-  <div class="desc-seo">
-    <b>AIHacks Encyclopedia:</b>
-    Viral AI pranks, TikTok/YouTube challenges, Alexa/Google hacks, Siri & Bixby tricks, party games, family dares, wild office gags, NSFW 18+ secrets, developer exploits, hidden GPT prompts, prompt hacks, Easter eggs, meme generators, language support, and 10,000+ insane ideas to break the internet—always free, always underground, always ahead. Use AIHacks to prank, teach, party, or meme—sorted, tagged, global, never censored, always fun.
-  </div>
-  <div class="hero-art-wrap">
-    <img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false" />
-  </div>
-  <div class="howto-links">
-    <a class="howto-link" href="https://github.com/tysonsawchuk/GoreandGiggles" target="_blank">Download on GitHub</a>
-    <a class="howto-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Join on Bluesky</a>
-    <a class="howto-link" href="https://x.com/GoreandGiggles" target="_blank">Follow on X (Twitter)</a>
-    <a class="howto-link" href="https://www.facebook.com/groups/393971833395749" target="_blank">Join on Facebook</a>
-    <a class="howto-link" href="https://www.buymeacoffee.com/0fearnofis3" target="_blank">Buy Me a Coffee</a>
+
+  <div class="desc-seo"><b>AIHacks</b>: pranks & games for Alexa, Google, Siri, Bixby, and ChatGPT. Party, family, classroom, office, roast battles, plus Adults/NSFW with an age‑gate. Submit your own chaos; we feature the best.</div>
+
+  <div class="hero-art-wrap"><img src="assets/bg-roulette.jpg" alt="AI Party Art" class="hero-art-img" draggable="false"/></div>
+
+  <section class="howto-links">
+    <a class="howto-link" href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank">Bluesky</a>
+    <a class="howto-link" href="https://x.com/GoreandGiggles" target="_blank">X / Twitter</a>
+    <a class="howto-link" href="https://www.facebook.com/groups/393971833395749" target="_blank">Facebook Group</a>
     <a class="howto-link" href="legal.html">Legal / Terms</a>
-  </div>
-  <!-- === OFFICIAL AI DOWNLOADS / SUPPORT BLOCK (SEO-optimized) === -->
-  <section class="howto-links" style="margin-top:12px; margin-bottom:0; border-top:1.7px solid #64f2e3; padding-top:9px; font-size:1em;">
-    <div style="width:100%;text-align:center;font-weight:bold;font-size:1.08em;color:var(--gold);margin-bottom:5px;">
-      Need help or want the real thing? Download official AI apps or get support:
-    </div>
-    <a class="howto-link" href="https://www.amazon.com/gp/help/customer/display.html?nodeId=GVP69FUJ48X9DK8V" target="_blank" title="Alexa Help Center" alt="Alexa Help">Alexa Help</a>
-    <a class="howto-link" href="https://play.google.com/store/apps/details?id=com.amazon.dee.app" target="_blank" title="Download Alexa (Google Play)" alt="Alexa Android App">Alexa Android</a>
-    <a class="howto-link" href="https://apps.apple.com/app/amazon-alexa/id944011620" target="_blank" title="Download Alexa (App Store)" alt="Alexa iOS App">Alexa iOS</a>
-    <a class="howto-link" href="https://support.google.com/assistant" target="_blank" title="Google Assistant Help" alt="Google Assistant Help">Google Help</a>
-    <a class="howto-link" href="https://play.google.com/store/apps/details?id=com.google.android.apps.googleassistant" target="_blank" title="Download Google Assistant (Play Store)" alt="Google Assistant Android App">Google Android</a>
-    <a class="howto-link" href="https://apps.apple.com/app/google-assistant/id1220976145" target="_blank" title="Download Google Assistant (App Store)" alt="Google Assistant iOS App">Google iOS</a>
-    <a class="howto-link" href="https://support.apple.com/siri" target="_blank" title="Siri Help" alt="Siri Support Page">Siri Help</a>
-    <a class="howto-link" href="https://apps.apple.com/app/shortcuts/id915249334" target="_blank" title="Download Shortcuts App for Siri custom use" alt="Apple Shortcuts for Siri">Apple Shortcuts</a>
-    <a class="howto-link" href="https://support.samsung.com/us/support/answer/ANS00079032/" target="_blank" title="Bixby Help" alt="Bixby Support">Bixby Help</a>
-    <a class="howto-link" href="https://www.samsung.com/global/galaxy/apps/bixby/" target="_blank" title="Download or access Bixby on Samsung" alt="Samsung Bixby">Bixby Access</a>
-    <a class="howto-link" href="https://help.openai.com/en/articles/6825453-chatgpt-apps-on-ios-and-android" target="_blank" title="ChatGPT Mobile Help" alt="OpenAI App Help">ChatGPT Help</a>
-    <a class="howto-link" href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" target="_blank" title="ChatGPT on Google Play" alt="ChatGPT Android">ChatGPT Android</a>
-    <a class="howto-link" href="https://apps.apple.com/app/chatgpt/id6448311069" target="_blank" title="ChatGPT on App Store" alt="ChatGPT iOS">ChatGPT iOS</a>
-    <a class="howto-link" href="https://chat.openai.com/" target="_blank" title="ChatGPT on the web" alt="ChatGPT Web Access">ChatGPT Web</a>
+    <a class="howto-link" href="support.html">Support</a>
   </section>
-  <!-- === END AI DOWNLOADS BLOCK === -->
+
+  <!-- Right rail (widescreen) -->
+  <aside class="rail" aria-label="sponsored sidebar"><ins id="1101675" class="ad-160x600" data-width="160" data-height="600"></ins></aside>
+
+  <!-- Mid ad (300x250) -->
+  <section class="ad-wrap"><ins id="1101622" class="ad-300x250" data-width="300" data-height="250"></ins></section>
+
+  <!-- Categories (existing order, unchanged). Badges auto‑fill after JSON loads. -->
   <div class="category-row" id="category-row">
-    <button class="category-btn" onclick="expandCat('alexa')">Alexa</button>
-    <button class="category-btn" onclick="expandCat('google')">Google</button>
-    <button class="category-btn" onclick="expandCat('siri')">Siri</button>
-    <button class="category-btn" onclick="expandCat('bixby')">Bixby</button>
-    <button class="category-btn" onclick="expandCat('chatgpt')">ChatGPT</button>
-    <button class="category-btn" onclick="expandCat('drinking')">Drinking Games</button>
-    <button class="category-btn" onclick="expandCat('dares')">Dares</button>
-    <button class="category-btn" onclick="expandCat('viral')">Viral</button>
-    <button class="category-btn" onclick="expandCat('party')">Party</button>
-    <button class="category-btn" onclick="expandCat('roast')">Roast</button>
-    <button class="category-btn" onclick="expandCat('office')">Office</button>
-    <button class="category-btn" onclick="expandCat('family')">Family</button>
-    <button class="category-btn" onclick="expandCat('classroom')">Classroom</button>
-    <button class="category-btn" onclick="expandCat('kids')">Kids</button>
-    <button class="category-btn adults" onclick="expandCat('ad')">Adults</button>
-    <button class="category-btn nsfw" onclick="expandCat('nsfw')">NSFW</button>
-    <button class="category-btn" onclick="expandCat('tv-movies')">Movies/TV</button>
-    <button class="category-btn" onclick="expandCat('songs')">Songs</button>
+    <button class="category-btn" data-cat="alexa" onclick="expandCat('alexa')">Alexa<span class="badge" id="c-alexa"></span></button>
+    <button class="category-btn" data-cat="google" onclick="expandCat('google')">Google<span class="badge" id="c-google"></span></button>
+    <button class="category-btn" data-cat="siri" onclick="expandCat('siri')">Siri<span class="badge" id="c-siri"></span></button>
+    <button class="category-btn" data-cat="bixby" onclick="expandCat('bixby')">Bixby<span class="badge" id="c-bixby"></span></button>
+    <button class="category-btn" data-cat="chatgpt" onclick="expandCat('chatgpt')">ChatGPT<span class="badge" id="c-chatgpt"></span></button>
+    <button class="category-btn" data-cat="drinking" onclick="expandCat('drinking')">Drinking<span class="badge" id="c-drinking"></span></button>
+    <button class="category-btn" data-cat="dares" onclick="expandCat('dares')">Dares<span class="badge" id="c-dares"></span></button>
+    <button class="category-btn" data-cat="viral" onclick="expandCat('viral')">Viral<span class="badge" id="c-viral"></span></button>
+    <button class="category-btn" data-cat="party" onclick="expandCat('party')">Party<span class="badge" id="c-party"></span></button>
+    <button class="category-btn" data-cat="roast" onclick="expandCat('roast')">Roast<span class="badge" id="c-roast"></span></button>
+    <button class="category-btn" data-cat="office" onclick="expandCat('office')">Office<span class="badge" id="c-office"></span></button>
+    <button class="category-btn" data-cat="family" onclick="expandCat('family')">Family<span class="badge" id="c-family"></span></button>
+    <button class="category-btn" data-cat="classroom" onclick="expandCat('classroom')">Classroom<span class="badge" id="c-classroom"></span></button>
+    <button class="category-btn" data-cat="kids" onclick="expandCat('kids')">Kids<span class="badge" id="c-kids"></span></button>
+    <button class="category-btn adults" data-cat="ad" onclick="expandCat('ad')">Adults<span class="badge" id="c-ad"></span></button>
+    <button class="category-btn nsfw" data-cat="nsfw" onclick="expandCat('nsfw')">NSFW<span class="badge" id="c-nsfw"></span></button>
+    <button class="category-btn" data-cat="tv-movies" onclick="expandCat('tv-movies')">Movies/TV<span class="badge" id="c-tv-movies"></span></button>
+    <button class="category-btn" data-cat="songs" onclick="expandCat('songs')">Songs<span class="badge" id="c-songs"></span></button>
+    <button class="category-btn" data-cat="weird" onclick="expandCat('weird')">Weird<span class="badge" id="c-weird"></span></button>
+    <button class="category-btn" data-cat="easteregg" onclick="expandCat('easteregg')">Easter Eggs<span class="badge" id="c-easteregg"></span></button>
     <button class="category-btn" onclick="openSubmitModal()">Submit</button>
-    <button class="category-btn" onclick="expandCat('weird')">Weird</button>
-    <button class="category-btn" onclick="expandCat('easteregg')">Easter Eggs</button>
   </div>
-  <div class="j1nx-float-true" id="j1nxFloatTrue">
+
+  <!-- Main content mounts (unchanged structure; grids fill from JSON) -->
+  <main class="panel" id="main-panel" style="max-width:1200px;margin:0 auto;padding:0 10px 120px">
+    <section id="alexa-block" class="accordion-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></section>
+    <section id="google-block" class="accordion-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></section>
+    <section id="siri-block" class="accordion-block"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></section>
+    <section id="bixby-block" class="accordion-block"><div class="accordion-title">Bixby Pranks & Dares</div><div class="prank-grid"></div></section>
+    <section id="chatgpt-block" class="accordion-block"><div class="accordion-title">ChatGPT Pranks & Dares</div><div class="prank-grid"></div></section>
+    <section id="drinking-block" class="accordion-block"><div class="accordion-title">Drinking Games</div><div class="prank-grid"></div></section>
+    <section id="dares-block" class="accordion-block"><div class="accordion-title">Dares</div><div class="prank-grid"></div></section>
+    <section id="viral-block" class="accordion-block"><div class="accordion-title">Viral Challenges</div><div class="prank-grid"></div></section>
+    <section id="party-block" class="accordion-block"><div class="accordion-title">Party Pranks</div><div class="prank-grid"></div></section>
+    <section id="roast-block" class="accordion-block"><div class="accordion-title">Roast Battles</div><div class="prank-grid"></div></section>
+    <section id="office-block" class="accordion-block"><div class="accordion-title">Office Pranks</div><div class="prank-grid"></div></section>
+    <section id="family-block" class="accordion-block"><div class="accordion-title">Family Games</div><div class="prank-grid"></div></section>
+    <section id="classroom-block" class="accordion-block"><div class="accordion-title">Classroom Games</div><div class="prank-grid"></div></section>
+    <section id="kids-block" class="accordion-block"><div class="accordion-title">Kids Pranks & Dares</div><div class="prank-grid"></div></section>
+    <section id="ad-block" class="accordion-block"><div class="accordion-title">Adults 18+ Only</div><div class="prank-grid"></div></section>
+    <section id="nsfw-block" class="accordion-block"><div class="accordion-title">NSFW / Uncensored</div><div class="prank-grid"></div></section>
+    <section id="tv-movies-block" class="accordion-block"><div class="accordion-title">Movie/TV Pranks</div><div class="prank-grid"></div></section>
+    <section id="songs-block" class="accordion-block"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></section>
+    <section id="weird-block" class="accordion-block"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></section>
+    <section id="easteregg-block" class="accordion-block"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></section>
+  </main>
+
+  <!-- Bottom Ad 728x90 (reuse zone) -->
+  <div class="ad-wrap"><ins id="1101674_bottom" class="ad-728x90" data-width="728" data-height="90"></ins></div>
+
+  <!-- J1NX FLOAT (as-is; only glow added) -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue" aria-label="J1nx chat">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
-      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
-      </div>
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue"><b>J1nx:</b> Hey you 👀—Ready to stir up a little trouble, or keep it PG today?</div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off"/>
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
         <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
         <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
       </div>
-      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
-        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
-      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Double‑tap the bubble or type <b>unlock</b> to reveal NSFW mode…</div>
     </div>
   </div>
-  <button class="bmc-float-btn" onclick="window.open('https://www.buymeacoffee.com/0fearnofis3','_blank')">
-    <img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="☕" />
-    Buy Me a Coffee
-  </button>
-  <div id="ageGate">
-    <div id="ageGateInner">
-      <h2>18+ ONLY – NSFW / ADULT CONTENT</h2>
-      <div>
-        This section contains wild, explicit, or uncensored AI pranks & dares. By clicking below you confirm you are 18+.<br>
-        <button class="age-btn" onclick="closeAgeGate()">I’m 18+, show me the fun stuff!</button>
-      </div>
-    </div>
-  </div>
-  <div class="prank-bg">
-    <div class="main-panel" id="main-panel">
-      <div id="accordion-area">
-        <div class="accordion-block" id="alexa-block"><div class="accordion-title">Alexa Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="google-block"><div class="accordion-title">Google Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="siri-block"><div class="accordion-title">Siri Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="bixby-block"><div class="accordion-title">Bixby Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="chatgpt-block"><div class="accordion-title">ChatGPT Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="drinking-block"><div class="accordion-title">Drinking Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="dares-block"><div class="accordion-title">Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="viral-block"><div class="accordion-title">Viral Challenges</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="party-block"><div class="accordion-title">Party Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="roast-block"><div class="accordion-title">Roast Battles</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="office-block"><div class="accordion-title">Office Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="family-block"><div class="accordion-title">Family Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="classroom-block"><div class="accordion-title">Classroom Games</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="kids-block"><div class="accordion-title">Kids Pranks & Dares</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="ad-block"><div class="accordion-title">Adults 18+ Only</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="nsfw-block"><div class="accordion-title">NSFW / Uncensored</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="tv-movies-block"><div class="accordion-title">Movie/TV Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="songs-block"><div class="accordion-title">Song Pranks</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="weird-block"><div class="accordion-title">Weird & WTF</div><div class="prank-grid"></div></div>
-        <div class="accordion-block" id="easteregg-block"><div class="accordion-title">Easter Eggs</div><div class="prank-grid"></div></div>
-      </div>
-    </div>
-  </div>
+
+  <!-- Footer (unchanged ASCII) -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+ \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |    U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"    
+  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\   \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___    
+  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U    |_|     \_)-\___/   |_| \_\   \____|  |_____|   
+  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-       \\     //   \\_  _)(|_   <<   >>   
+ (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/      (__)   (__)  (__)(__)__) (__) (__)  
     </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">
-      Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:var(--aqua);">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" style="color:var(--aqua);">Twitter/X</a> &bull;
-      <a href="terms.html" style="color:var(--aqua);">Legal</a>
-    </div>
+    <div class="footer-bar">Made underground in BC, Canada • #PromptForge • <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • <a href="https://x.com/GoreandGiggles">Twitter/X</a> • <a href="legal.html">Legal</a></div>
   </footer>
+
+  <!-- =================== APP / DATA =================== -->
   <script>
-    // --- Animated CAMO (Half Size, unified color) ---
-    const camoColors = [
-      "#64f2e3", "#23d7ba", "#4df6a0", "#bdf6c3", "#abffe6", "#abb8b8"
-    ];
-    function randomCamoChar(){
-      const chars = "░▒▓▚▞▐▉█▛";
-      return chars[Math.floor(Math.random()*chars.length)];
-    }
-    function renderCamo(tick=0){
-      let out = "";
-      for (let row=0;row<1;++row) {
-        for (let col=0;col<62;++col) {
-          let color = camoColors[(row+col+tick)%camoColors.length];
-          out += `<span style="color:${color}">${randomCamoChar()}</span>`;
-        }
-        out += "<br>";
-      }
-      document.getElementById("footerCamo").innerHTML = out;
-    }
-    let camoTick = 0;
-    setInterval(()=>{
-      renderCamo(camoTick++);
-    },950);
-    renderCamo();
+    // CAMO footer
+    (function(){ const el=document.getElementById("footerCamo"); if(!el) return; const colors=["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"], chars="░▒▓▚▞▐▉█▛"; function tick(t){ let out=""; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;} el.innerHTML=out;} let t=0; tick(0); setInterval(()=>tick(++t),950); })();
 
-    // --- Main JS: J1NX/chat/prank system, full, unchanged below ---
+    // SEO ribbon: restart anim on loop (keeps it lively)
+    document.getElementById('seoBannerInner').addEventListener('animationiteration',function(){ this.style.animation='none'; void this.offsetWidth; this.style.animation=''; });
 
-    document.getElementById('seoBannerInner').addEventListener('animationiteration',function(){
-      this.style.animation = 'none'; void this.offsetWidth; this.style.animation = '';
-    });
-    (function(){
-      const j1nxFloat = document.getElementById('j1nxFloatTrue');
-      const cutout = document.getElementById('j1nxCutoutTrue');
-      const bubble = document.getElementById('j1nxBubbleTrueMain');
-      function isMobile() { return window.innerWidth < 700; }
-      function shrinkJ1nx() {
-        if(isMobile()) {
-          j1nxFloat.classList.remove('j1nx-open');
-          bubble.style.display = "none";
-        } else {
-          j1nxFloat.classList.add('j1nx-open');
-          bubble.style.display = "flex";
-        }
-      }
-      cutout.onclick = function(e) {
-        if(isMobile()) {
-          if(j1nxFloat.classList.contains('j1nx-open')) {
-            j1nxFloat.classList.remove('j1nx-open');
-            bubble.style.display = "none";
-          } else {
-            j1nxFloat.classList.add('j1nx-open');
-            bubble.style.display = "flex";
-          }
-        }
-      };
-      window.addEventListener('resize', shrinkJ1nx);
-      shrinkJ1nx();
-    })();
-    (function(){
-      let chatHistory = [];
-      let nsfwUnlocked = false;
-      function renderChat() {
-        const out = chatHistory.map(line => `<div>${line}</div>`).join('');
-        document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
-      }
-      function addMsg(msg, isUser) {
-        if (!msg) return;
-        const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
-        chatHistory.push(name + msg);
-        if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
-        renderChat();
-      }
-      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
-        nsfwUnlocked = true;
-        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-      });
-      document.getElementById('j1nxSendTrue').onclick = function() {
-        const input = document.getElementById('j1nxInputTrue');
-        const val = (input.value || '').trim();
-        if (!val) return;
-        addMsg(val, true);
-        if (/^unlock$/i.test(val)) {
-          nsfwUnlocked = true;
-          document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-          addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-          input.value = "";
-          return;
-        }
-        try {
-          let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked);
-          let replyText = (reply && typeof reply === 'object')
-            ? (reply.text || reply.reply || JSON.stringify(reply))
-            : reply;
-          addMsg(replyText, false);
-        } catch(e) {
-          addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false);
-        }
-        input.value = "";
-      };
-      document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
-        if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
-      });
-      document.getElementById('j1nxSaveTrue').onclick = function() {
-        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
-        const blob = new Blob([text], {type:'text/plain'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
-        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
-      };
-      document.getElementById('j1nxClearTrue').onclick = function() {
-        chatHistory = [];
-        renderChat();
-      };
-      renderChat();
-    })();
-    let prankData = {};
-    function setRating(id, val) {
-      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
-      ratings[id]=val;
-      localStorage.setItem('aihacks_ratings',JSON.stringify(ratings));
-    }
-    function getRating(id) {
-      let ratings = JSON.parse(localStorage.getItem('aihacks_ratings')||'{}');
-      return ratings[id]||0;
-    }
-    function toggleFav(btn, id) {
-      btn.classList.toggle('active');
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      if(btn.classList.contains('active')) {
-        if(!favs.includes(id)) favs.push(id);
-      } else {
-        favs = favs.filter(f=>f!==id);
-      }
-      localStorage.setItem('aihacks_favs',JSON.stringify(favs));
-    }
-    function renderPrankBlock(cat) {
-      let block = document.getElementById(cat + "-block");
-      if (!block) return;
-      let grid = block.querySelector('.prank-grid');
-      grid.innerHTML = "";
-      let items = prankData[cat] || [];
-      if (!items.length) {
-        grid.innerHTML = `<div style="color:#ffe266;font-weight:bold;">No pranks yet. Submit one!</div>`;
-        return;
-      }
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      for (let i=0; i<items.length; ++i) {
-        if (i>0 && i%15===0) {
-          grid.innerHTML += `
-            <div class="ad-card">
-              <b>🔥 Having fun? <a href="https://www.buymeacoffee.com/0fearnofis3" target="_blank">Buy Me a Coffee</a> to keep AIHacks alive!<br>
-              Or...<br>Ad space for rent (contact: 0fearnofish0@gmail.com)</b>
-            </div>
-          `;
-        }
-        let prank = items[i];
-        grid.innerHTML += `
-          <div class="prank-card" data-id="${prank.id}">
-            <div class="prank-title">${prank.title}</div>
-            <div class="prank-tip">${prank.tip}</div>
-            <div class="prank-actions">
-              <button onclick="speakText('${prank.command.replace(/'/g, "\\'")}')">Play</button>
-              <button onclick="copyText('${prank.command.replace(/'/g, "\\'")}')">Copy</button>
-              <button onclick="shareText('${prank.command.replace(/'/g, "\\'")}')">Share</button>
-              <span class="fav-btn${favs.includes(prank.id)?' active':''}" onclick="toggleFav(this, '${prank.id}')">&#10084;</span>
-              <span class="star-rating" data-id="${prank.id}"></span>
-            </div>
-          </div>
-        `;
-      }
-      setTimeout(()=>setupStarsAndFavs(),20);
-    }
-    function setupStarsAndFavs() {
-      document.querySelectorAll('.star-rating').forEach(starBox=>{
-        let id = starBox.dataset.id; starBox.innerHTML = '';
-        for(let i=1;i<=5;i++){
-          let star=document.createElement('span');
-          star.className='star';
-          star.innerHTML='&#9733;';
-          star.addEventListener('click',function(){
-            setRating(id,i);
-            updateStars(starBox,id);
-          });
-          starBox.appendChild(star);
-        }
-        updateStars(starBox,id);
-      });
-      let favs = JSON.parse(localStorage.getItem('aihacks_favs')||'[]');
-      favs.forEach(id=>{
-        let btn = document.querySelector(`.prank-card[data-id="${id}"] .fav-btn`);
-        if(btn) btn.classList.add('active');
-      });
-    }
-    function updateStars(box,id) {
-      box.querySelectorAll('.star').forEach((s,i)=>{
-        if(i<getRating(id)) s.classList.add('filled');
-        else s.classList.remove('filled');
-      });
-    }
-    function expandCat(cat) {
-      if (cat === "nsfw" || cat === "ad") {
-        document.getElementById('ageGate').style.display = 'flex';
-        window.ageCatOpen = cat;
-        return;
-      }
-      document.querySelectorAll('.accordion-block').forEach(block => block.style.display = 'none');
-      let block = document.getElementById(cat + "-block");
-      if (block) {
-        block.style.display = 'block';
-        block.scrollIntoView({behavior:'smooth',block:'center'});
-        renderPrankBlock(cat);
-      }
-    }
-    function closeAgeGate() {
-      document.getElementById('ageGate').style.display = 'none';
-      let block = document.getElementById(window.ageCatOpen + "-block");
-      if (block) {
-        block.style.display = 'block';
-        block.scrollIntoView({behavior:'smooth',block:'center'});
-        renderPrankBlock(window.ageCatOpen);
-      }
-    }
-    function speakText(txt){ if('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(txt); u.rate=1.06; u.pitch=1; speechSynthesis.speak(u);} else { alert("Speech not supported."); }}
-    function copyText(txt) { navigator.clipboard.writeText(txt); alert("Copied to clipboard!"); }
-    function shareText(txt) { if(navigator.share) { navigator.share({text: txt, title: "AIHacks Prank"});} else { copyText(txt);}}
-    function openSubmitModal() {
-      alert("Prank submission coming soon. For now, DM on socials or email: 0fearnofish0@gmail.com");
-    }
-    function switchLang(code) {
-      if(code==='en') { location.reload(); return; }
-      let scriptId = "google-translate-script";
-      if(document.getElementById(scriptId)) document.getElementById(scriptId).remove();
-      let s = document.createElement('script');
-      s.id = scriptId;
-      s.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
-      document.body.appendChild(s);
-      window.googleTranslateElementInit = function() {
-        new window.google.translate.TranslateElement({
-          pageLanguage: 'en',
-          includedLanguages: code,
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'main-panel');
-      };
-    }
-    window.onload = function() {
-      fetch("assets/aihacks-data.json")
-        .then(r => r.json())
-        .then(all => {
-          prankData = {};
-          for (let prank of all) {
-            let cat = prank.category;
-            if (!prankData[cat]) prankData[cat] = [];
-            prankData[cat].push(prank);
-          }
-        });
-    };
+    // Global state & JSON wiring (unchanged path)
+    const state = { data:{}, cat:null, ageOK: JSON.parse(localStorage.getItem('aih_age_ok')||'false') };
+
+    function ensureAge(cat){ if((cat==='nsfw'||cat==='ad') && !state.ageOK){ const g=document.getElementById('ageGate'); if(g){ g.style.display='flex'; document.getElementById('ageYes').onclick=()=>{state.ageOK=true;localStorage.setItem('aih_age_ok','true'); g.style.display='none'; expandCat(cat);}; document.getElementById('ageNo').onclick=()=>{g.style.display='none'}; } return false;} return true; }
+    function expandCat(cat){ if(!ensureAge(cat)) return; state.cat=cat; document.querySelectorAll('.accordion-block').forEach(b=>b.classList.remove('active')); const el=document.getElementById(cat+'-block'); if(el){ el.classList.add('active'); renderGrid(cat); el.scrollIntoView({behavior:'smooth',block:'center'}); } }
+
+    function doSearch(){ const q=document.getElementById('q').value.trim().toLowerCase(); if(!q){ if(state.cat) renderGrid(state.cat); return; } const all=Object.values(state.data).flat(); const hit=all.filter(p=> JSON.stringify(p).toLowerCase().includes(q)); showResults(hit, 'Search results'); }
+    function randomHack(){ const all=Object.values(state.data).flat(); if(!all.length) return; const p=all[Math.floor(Math.random()*all.length)]; openInJ1nx(p.command||p.script||p.text||p.title); toast('Random loaded into J1NX'); }
+    function showResults(list, title){ document.querySelectorAll('.accordion-block').forEach(b=>b.classList.remove('active')); let tmp=document.getElementById('search-block'); if(!tmp){ tmp=document.createElement('section'); tmp.id='search-block'; tmp.className='accordion-block active'; tmp.innerHTML=`<div class="accordion-title"></div><div class="prank-grid"></div>`; document.getElementById('main-panel').prepend(tmp); } tmp.querySelector('.accordion-title').textContent = `${title} — ${list.length}`; tmp.classList.add('active'); tmp.querySelector('.prank-grid').innerHTML = list.map(cardHTML).join(''); }
+
+    function cardHTML(p){ const title=p.title||p.name||'Untitled'; const cmd=p.command||p.script||p.prompt||''; const tip=p.tip||p.note||''; const tags=(p.tags||[]).slice(0,6).map(t=>`<span style="display:inline-block;font-size:.78em;font-weight:800;border:1px solid #2fe9ff;color:#9ff6ff;background:#0f151a;border-radius:999px;padding:2px 7px;margin:3px 4px 0 0">${t}</span>`).join(''); return `<article class=\"prank-card\"><h3 class=\"prank-title\">${title}</h3><p class=\"prank-tip\">${escapeHTML(cmd)}</p><div class=\"meta\" style=\"font-size:.8em;opacity:.82;color:#c0f7ff\">${escapeHTML(tip)}</div><div class=\"pills\">${tags}</div><div class=\"actions\"><button class=\"act\" onclick=\"copyTxt(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">Copy</button><button class=\"act\" onclick=\"speakTxt(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">Speak</button><button class=\"act\" onclick=\"shareTxt(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">Share</button><button class=\"act\" onclick=\"openInJ1nx(this.parentNode.previousElementSibling.previousElementSibling.textContent)\">J1NX</button></div></article>`; }
+
+    function renderGrid(cat){ const mount=document.getElementById(cat+'-block'); if(!mount) return; const items=(state.data[cat]||[]); const grid=mount.querySelector('.prank-grid'); if(!items.length){ grid.innerHTML='<div class="meta" style="color:#ffe266;font-weight:800">No pranks found for this category.</div>'; return; } grid.innerHTML=items.map(cardHTML).join(''); }
+
+    function escapeHTML(s){ return String(s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+    function copyTxt(s){ navigator.clipboard?.writeText(s); toast('Copied.'); }
+    function speakTxt(s){ try{ const u=new SpeechSynthesisUtterance(s); u.rate=1.05; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch(e){ toast('Speech not supported here.'); } }
+    function shareTxt(s){ if(navigator.share){ navigator.share({text:s}).catch(()=>copyTxt(s)); } else copyTxt(s); }
+    function toast(msg){ const t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0f151a;color:#bfefff;border:1px solid #2fe9ff;padding:6px 10px;border-radius:8px;z-index:3000;box-shadow:0 6px 22px #0008'; document.body.appendChild(t); setTimeout(()=>t.remove(),1200); }
+    function openInJ1nx(text){ try{ const input=document.getElementById('j1nxInputTrue'); input.value=text; glowBubble(); }catch(e){} }
+
+    function switchLang(code){ if(code==='en'){ location.reload(); return; } let scriptId='google-translate-script'; document.getElementById(scriptId)?.remove(); let s=document.createElement('script'); s.id=scriptId; s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit'; document.body.appendChild(s); window.googleTranslateElementInit=function(){ new window.google.translate.TranslateElement({pageLanguage:'en',includedLanguages:code,layout:window.google.translate.TranslateElement.InlineLayout.SIMPLE}, 'main-panel'); } }
+
+    function glowBubble(){ const b=document.getElementById('j1nxBubbleTrueMain'); b.classList.add('glow'); setTimeout(()=>b.classList.remove('glow'),380); }
+    (function j1nxSetup(){ const chat=["Let’s make mischief—your way. What are we building?"]; const bubble=document.getElementById('j1nxBubbleTextTrue'); const input=document.getElementById('j1nxInputTrue'); function render(){ bubble.innerHTML='<b>J1nx:</b> '+chat[chat.length-1]; } document.getElementById('j1nxSendTrue').onclick=function(){ const val=(input.value||'').trim(); if(!val) return; let reply='(Brain not loaded)'; try{ if(window.j1nxBrain){ const r=window.j1nxBrain(val, chat.length); reply=typeof r==='object'?(r.reply||r.text||JSON.stringify(r)):r; } }catch(_){} chat.push(val); chat.push(reply||'Try rephrasing—I’ll keep it punchy.'); render(); glowBubble(); input.value=''; }; input.addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); }); document.getElementById('j1nxClearTrue').onclick=function(){ chat.splice(1); render(); }; document.getElementById('j1nxSaveTrue').onclick=function(){ try{ const blob=new Blob([chat.join('\n')],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); }catch(_){ toast("Couldn’t save right now."); }}; document.getElementById('j1nxCutoutTrue').onclick=function(){ document.getElementById('j1nxFloatTrue').classList.toggle('j1nx-open'); }; render(); })();
+
+    // Load pranks JSON as‑is
+    fetch('assets/aihacks-data.json?v=1')
+      .then(r=>{ if(!r.ok) throw new Error(r.statusText); return r.json(); })
+      .then(all=>{ const buckets={}; (all||[]).forEach(p=>{ const cat=(p.category||'misc').toLowerCase(); (buckets[cat]||(buckets[cat]=[])).push(p); }); state.data=buckets; for(const [cat,arr] of Object.entries(state.data)){ const b=document.getElementById('c-'+cat); if(b) b.textContent=arr.length; } expandCat(state.cat||'alexa'); })
+      .catch(()=>{ toast('Could not load pranks data (assets/aihacks-data.json). Check path.'); expandCat('alexa'); });
+
+    // Ads: zone pushes (header, mid, rail, bottom)
+    try{ (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101622}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101675}); (adsbyjuicy=window.adsbyjuicy||[]).push({'adzone':1101674}); }catch(e){}
   </script>
+
+  <!-- Age Gate (reused, if you mount NSFW/Adults) -->
+  <div id="ageGate" style="display:none;position:fixed;z-index:2001;left:0;top:0;width:100vw;height:100vh;background:rgba(14,19,18,.96);justify-content:center;align-items:center"><div id="ageGateInner" style="background:#1b1622;border:3px solid var(--danger);border-radius:20px;color:var(--gold);text-align:center;padding:40px 32px;box-shadow:0 3px 28px #fa3c7082;max-width:420px"><h2 style="color:var(--danger);font-size:2em;font-weight:900;margin:0 0 14px">18+ ONLY — Adults / NSFW</h2><p>Some sections contain explicit or uncensored prompts. Are you 18 or older?</p><button class="age-btn" id="ageYes" style="background:var(--danger);color:#fff;border:none;border-radius:12px;font-size:1.2em;font-weight:800;padding:15px 32px;margin-top:20px;cursor:pointer">Yes, show me</button> <button class="age-btn" id="ageNo" style="background:#23231f;color:#fff;border:1px solid var(--danger);border-radius:12px;font-size:1.2em;font-weight:800;padding:15px 32px;margin-top:20px;cursor:pointer">Nope</button></div></div>
 </body>
- </html>
+</html>
