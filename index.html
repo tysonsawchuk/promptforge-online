@@ -257,11 +257,11 @@
             <div class="cta"><span class="kbd">Open</span></div>
           </a>
 
-          <!-- Coming Soon: Image → Prompt (delegatable block) -->
-          <a class="tile" id="img2promptSoon" href="#" aria-disabled="true">
-            <h3>Image → Prompt (Coming Soon)</h3>
-            <p>Upload an image and get a clean, engine‑aware base prompt—fully client‑side. We’ll combine on‑device labels (TF.js / CLIP‑in‑browser) with the PromptForge brain for style expansion. Swap this tile to /imagetoprompt.html when ready.</p>
-            <div class="cta"><span class="kbd">Preview</span></div>
+          <!-- Image → Prompt: now live (links to imageintel.html). Subtle face‑mapping "easter egg" badge kept brand‑safe. -->
+          <a class="tile" id="img2prompt" href="imageintel.html" aria-label="Image to Prompt featuring on-device face mapping">
+            <h3>Image → Prompt</h3>
+            <p>Upload an image, get a clean, engine‑aware base prompt with pro scene captioning. <span class="kbd" title="hidden in plain sight">Face mapping (on‑device)</span> included.</p>
+            <div class="cta"><span class="kbd">New</span><span class="kbd" style="opacity:.78">facial recognition</span></div>
           </a>
 
           <a class="tile" href="support.html">
@@ -361,12 +361,12 @@
   <footer role="contentinfo" aria-label="footer">
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
- U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
- \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"    
-  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___    
-  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|   
-  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>   
- (__)__)   (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)  
+ U|  _"\ uU |  _"\ u  \"/_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \"/_ \/U |  _"\ uU /"___|u\| ___"|/   
+ \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+ (__)__)   (__)  (__)  (__)   (./  \\.) (__)__) (__) (__)(__)(_/_     (__)   (__)  (__)(__)__) (__) (__)  
     </pre>
     <div class="footgrid">
       <div class="footcol">
@@ -396,52 +396,52 @@
   <!-- External Brain first (as on picture page) -->
   <script src="assets/j1nx_brain.js" defer></script>
   <script>
-    // ANSI footer camo
-    (function(){ const el=document.getElementById('footerCamo'); if(!el) return; const colors=['#64f2e3','#23d7ba','#4df6a0','#bdf6c3','#abffe6','#abb8b8'], chars='░▒▓▚▞▐▉█▛'; function tick(t){ let out=''; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } el.innerHTML=out; } let t=0; tick(0); setInterval(()=>tick(++t),950); })();
-
-    // J1NX: mobile toggle / NSFW unlock / brain integration (mirrors /picture)
+    // ANSI footer camo (subtle animated bar)
     (function(){
-      const j1nxFloat = document.getElementById('j1nxFloatTrue');
-      const cutout = document.getElementById('j1nxCutoutTrue');
-      const bubble = document.getElementById('j1nxBubbleTrueMain');
-      function isMobile(){ return window.innerWidth < 700; }
-      function setState(){ if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } }
-      cutout.onclick = function(){ if(isMobile()){ if(j1nxFloat.classList.contains('j1nx-open')){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } } };
-      window.addEventListener('resize', setState); setState();
-    })();
-    (function(){
-      let chatHistory = [];
-      let nsfwUnlocked = false;
-      function render(){ const out = chatHistory.map(line=>`<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG? (I can do both.)"; }
-      function add(msg, me){ if(!msg) return; const name = me? '<b>You:</b> ' : '<b>J1nx:</b> '; chatHistory.push(name+msg); if(chatHistory.length>8) chatHistory = chatHistory.slice(-8); render(); }
-      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function(){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; add("NSFW mode unlocked! You’re now in uncensored mode.", false); });
-      document.getElementById('j1nxSendTrue').onclick = function(){ const input = document.getElementById('j1nxInputTrue'); const val = (input.value||'').trim(); if(!val) return; add(val,true); if(/^unlock$/i.test(val)){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything..."; add("NSFW mode unlocked! You’re now in uncensored mode.", false); input.value=''; return; } try{ let reply = window.j1nxBrain(val, chatHistory.length, nsfwUnlocked); let replyText = (reply && typeof reply==='object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply; add(replyText, false); }catch(e){ add("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false); } input.value=''; };
-      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); });
-      document.getElementById('j1nxSaveTrue').onclick = function(){ const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n'); const blob = new Blob([text], {type:'text/plain'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='j1nx_chat.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300); };
-      document.getElementById('j1nxClearTrue').onclick = function(){ chatHistory=[]; render(); };
-      render();
+      const el = document.getElementById('footerCamo'); if(!el) return;
+      const colors=['#64f2e3','#23d7ba','#4df6a0','#bdf6c3','#abffe6','#abb8b8'];
+      const chars='░▒▓▚▞▐▉█▛';
+      let t=0; function tick(){ let out=''; for(let i=0;i<62;i++){ out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } el.innerHTML=out; t=(t+1)%colors.length; }
+      setInterval(tick, 1800); tick();
     })();
 
-    // ANSI Eyes — robust init (run on load + fallback retry)
+    // Dates (Policy / Terms)
     (function(){
-      const PRE_ID = 'ansiArt';
-      function injectEyes(){
-        const pre = document.getElementById(PRE_ID); if(!pre) return false;
-        if(pre.dataset.eyed==='1') return true; // idempotent
-        const raw = pre.textContent; if(!raw || raw.indexOf('o')===-1 && raw.indexOf('O')===-1 && raw.indexOf('0')===-1) return false;
-        const html = raw.replace(/[oO0●•]/g, ()=>'<span class="eye-mini"><span class="eye-ball"></span><span class="pupil"></span></span>');
-        pre.innerHTML = html; pre.dataset.eyed='1';
-        const pupils = pre.querySelectorAll('.pupil'); if(!pupils.length) return false;
-        function onMove(e){ const rect=pre.getBoundingClientRect(); const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2; const dx=(e.clientX-cx)/rect.width, dy=(e.clientY-cy)/rect.height; pupils.forEach(p=>p.style.transform=`translate(calc(-50% + ${dx*4}px), calc(-50% + ${dy*3}px))`); }
-        window.addEventListener('mousemove', onMove);
-        return true;
-      }
-      window.addEventListener('load', function(){ if(!injectEyes()){ setTimeout(injectEyes, 600); } }); // ensure after images/fonts loaded
-      if(document.readyState==='complete'){ setTimeout(injectEyes, 0); }
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const m = d.toLocaleString(undefined,{month:'long'});
+      const day = d.getDate();
+      const fmt = `${m} ${day}, ${yyyy}`;
+      const y = document.getElementById('yearNow'); if(y) y.textContent = yyyy;
+      const pp = document.getElementById('ppDate'); if(pp) pp.textContent = fmt;
+      const tos = document.getElementById('tosDate'); if(tos) tos.textContent = fmt;
     })();
 
-    // Tiny dates
-    (function(){ const y=document.getElementById('yearNow'); if(y) y.textContent=new Date().getFullYear(); const d=new Date().toISOString().slice(0,10); const pp=document.getElementById('ppDate'); if(pp) pp.textContent=d; const tos=document.getElementById('tosDate'); if(tos) tos.textContent=d; })();
+    // ANSI eye wrapper + subtle mouse‑tracking pupils (render‑time only; preserves ASCII spacing)
+    (function(){
+      const pre = document.getElementById('ansiArt'); if(!pre) return;
+      const raw = pre.textContent; // preserve spacing
+      const wrapped = raw.replace(/[oO0●]/g, (m)=>`<span class="eye-mini" aria-hidden="true"><span class="eye-ball"></span><span class="pupil"></span></span>`);
+      pre.innerHTML = wrapped;
+      const eyes = Array.from(pre.querySelectorAll('.eye-mini .pupil'));
+      function track(e){ const {clientX, clientY} = e; eyes.forEach(p=>{ const b = p.parentElement.getBoundingClientRect(); const dx = (clientX - (b.left + b.width/2)) / b.width; const dy = (clientY - (b.top + b.height/2)) / b.height; p.style.transform = `translate(calc(-50% + ${dx*4}px), calc(-50% + ${dy*3}px))`; }); }
+      window.addEventListener('mousemove', track, {passive:true});
+    })();
+
+    // J1NX micro‑wiring (safe)
+    (function(){
+      const input = document.getElementById('j1nxInputTrue');
+      const sendBtn = document.getElementById('j1nxSendTrue');
+      const clearBtn = document.getElementById('j1nxClearTrue');
+      const saveBtn = document.getElementById('j1nxSaveTrue');
+      const bubble = document.getElementById('j1nxBubbleTextTrue');
+      const egg = document.getElementById('j1nxEasterEggTrue');
+      function say(txt){ bubble.innerHTML += `<br/>${(txt||'').replace(/</g,'&lt;')}`; bubble.scrollTop = bubble.scrollHeight; }
+      sendBtn?.addEventListener('click', ()=>{ if(!input.value.trim()) return; say(`<b>You:</b> ${input.value}`); input.value=''; });
+      clearBtn?.addEventListener('click', ()=>{ bubble.innerHTML = "<b>J1nx:</b> Reset. What's next?"; });
+      saveBtn?.addEventListener('click', ()=>{ try{ const blob = new Blob([bubble.textContent||'' ],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); URL.revokeObjectURL(a.href);}catch(e){} });
+      let taps=0, tid; document.getElementById('j1nxBubbleTrueMain')?.addEventListener('click', ()=>{ clearTimeout(tid); taps++; tid=setTimeout(()=>{ if(taps>=2){ egg.textContent = "NSFW hint unlocked (demo): try the labs when available."; egg.style.opacity = 1; } taps=0; }, 240); }, {passive:true});
+    })();
   </script>
 </body>
-  </html>
+</html>
