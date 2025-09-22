@@ -3,54 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PromptForge — Image Intelligence Portal (Face Mapping • Scene Captioning • JSON/Embedding Export)</title>
-  <meta name="description" content="PromptForge Image Intelligence: client-side face mapping with landmark mesh and ratios, full-image captioning, object tags (COCO-SSD), OCR (Tesseract), animated scan overlay, and pro exports for SDXL/Flux/MJ or LoRA/DreamBooth. 100% local-first." />
-  <link rel="canonical" href="https://promptforge.online/image-intel.html" />
+  <title>PromptForge — Image Intelligence (Image→Prompt • Face Mapping • Objects • OCR)</title>
+  <meta name="description" content="Analyze a photo entirely on‑device: face landmarks + ratios, object tags, OCR, palette & EXIF, scan overlay, caption + prompt builder, JSON export. Includes J1NX and canonical footer." />
+  <link rel="canonical" href="https://promptforge.online/imageintel.html" />
   <meta name="theme-color" content="#08131b" />
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="PromptForge — Image Intelligence Portal" />
-  <meta property="og:description" content="Analyze → Measure → Explain. Live landmark mesh, creative ratios, animated scan, and JSON/embedding exports. J1NX assistant built in." />
+  <meta property="og:title" content="PromptForge — Image Intelligence" />
+  <meta property="og:description" content="Face mapping + ratios, objects, OCR, palette, EXIF — client‑side. Build prompts and export JSON." />
   <meta property="og:image" content="/assets/og/imagetoprompt.png" />
-  <meta property="og:url" content="https://promptforge.online/image-intel.html" />
+  <meta property="og:url" content="https://promptforge.online/imageintel.html" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- JSON-LD: Organization + WebSite + Breadcrumbs + FAQ -->
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"PromptForge",
-    "url":"https://promptforge.online/",
-    "logo":"https://promptforge.online/assets/og/home.png",
-    "sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]
-  }</script>
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"PromptForge",
-    "url":"https://promptforge.online/",
-    "potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}
-  }</script>
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"BreadcrumbList",
-    "itemListElement":[
-      {"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},
-      {"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},
-      {"@type":"ListItem","position":3,"name":"Image Intelligence"}
-    ]
-  }</script>
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"FAQPage",
-    "mainEntity":[
-      {"@type":"Question","name":"What is the PromptForge Image Intelligence Portal?","acceptedAnswer":{"@type":"Answer","text":"A client-side lab that converts an image into a professional caption, structured prompt, landmark JSON, numeric facial ratios, and optional embeddings for image models (SDXL, Flux, Midjourney) or local LoRA/DreamBooth."}},
-      {"@type":"Question","name":"Does it upload my images?","acceptedAnswer":{"@type":"Answer","text":"No. Analysis runs in your browser by default. You can explicitly export JSON to your device."}},
-      {"@type":"Question","name":"How do I get a stylized copy (e.g., 'me as …')?","acceptedAnswer":{"@type":"Answer","text":"Use Face Mode to build a likeness chunk + ratios and paste into SDXL/Flux/MJ. For highest fidelity likeness, fine‑tune locally with your photos and include the exported landmarks/ratios as metadata."}},
-      {"@type":"Question","name":"What's in the JSON?","acceptedAnswer":{"@type":"Answer","text":"Prompt chunk, 68+ pt normalized landmarks, measurement ratios (jaw/face, eye‑sep/eye‑width, nose/face), palette, alt text, and an optional embedding field."}}
-    ]
-  }</script>
+  <!-- JSON‑LD (Org + WebSite + Breadcrumbs) -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PromptForge","url":"https://promptforge.online/","logo":"https://promptforge.online/assets/og/home.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PromptForge","url":"https://promptforge.online/","potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},{"@type":"ListItem","position":3,"name":"Image Intelligence"}]}</script>
+
+  <!-- Fonts (optional; keep visual language) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root{ --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba; --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; }
@@ -103,7 +77,7 @@
     .ad-wrap{display:block;min-height:90px;border:1px dashed var(--edge);border-radius:12px;margin:8px 0;padding:8px;text-align:center;color:var(--muted)}
     .ad-right{display:flex;gap:8px;align-items:center}
 
-    /* J1NX float (minimal, same visual language) */
+    /* J1NX float — visual parity with your canonical */
     .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
     .j1nx-true-cutout-img{width:220px;height:220px;object-fit:contain;border-radius:24px;background:transparent!important;margin-bottom:-20px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none!important}
     .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:280px;max-width:330px;position:relative;z-index:1}
@@ -114,21 +88,28 @@
     .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
     .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
     @media(max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:96px;height:96px}}
+
+    /* Footer styles (ANSI + nav) — lifted to match your demo) */
+    footer{margin:18px auto;padding:0 12px 16px;text-align:center;max-width:860px;color:#eaf7ff}
+    .footer-art{font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text;margin:0 0 10px}
+    .footer-camo{font-family:"Fira Mono",monospace;font-size:.85em;letter-spacing:2px;color:#64f2e3;min-height:.8em;white-space:pre}
+    .footer-bar{color:#88fffd;margin:10px auto 6px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .footer-bar a{color:var(--aqua);text-decoration:none}
+    .footer-bar a:hover{text-decoration:underline;color:#fff}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div>
-        <div class="brand">PromptForge — Image Intelligence Portal</div>
-        <div class="crumbs">Home › Tools › Image Intelligence (Client‑Side)</div>
+        <div class="brand">PromptForge — Image Intelligence</div>
+        <div class="crumbs">Home › Tools › Image → Prompt (with Face Mapping)</div>
       </div>
       <div class="tool-links">
         <a class="pill" href="/">Home</a>
         <a class="pill" href="/picture.html">Picture Builder</a>
         <a class="pill" href="/movie.html">Movie Builder</a>
         <a class="pill" href="/ansiart.html">ANSI/ASCII Studio</a>
-        <a class="pill" href="/compare.html">Model Compare</a>
         <a class="pill" href="/watermark.html">Watermark</a>
         <a class="pill" href="/playground.html">Prompt Patterns</a>
         <a class="pill" href="/support.html">Support</a>
@@ -139,7 +120,7 @@
     <section class="hero">
       <div class="card">
         <h1>Analyze → Measure → Explain → Export</h1>
-        <p class="sub">Upload a photo. We run a live face mesh with creative measurements, animate a scan overlay, then generate a professional, human‑sounding description of the <em>entire image</em> (caption + objects + OCR cues). Export JSON with normalized landmarks, numeric ratios, palette, and an optional embedding stub for SDXL/Flux/MJ or LoRA/DreamBooth.</p>
+        <p class="sub">Drop a photo. We run a live face landmarker with creative measurements, animate a scan overlay, then build a professional caption and a structured prompt chunk. Export JSON with normalized landmarks, numeric ratios, palette, EXIF, objects & OCR. Everything is client‑side by default.</p>
       </div>
       <div class="card ad-right">
         <div style="flex:1">
@@ -150,10 +131,9 @@
             <a class="pill" href="/movie.html">Video Prompt Builder</a>
             <a class="pill" href="/ansiart.html">ANSI/ASCII Studio</a>
             <a class="pill" href="/watermark.html">Watermark & Privacy</a>
-            <a class="pill" href="/playground.html">Prompt Techniques</a>
+            <a class="pill" href="/compare.html">Model Compare</a>
           </div>
         </div>
-        <!-- 108x140 Juicy unit -->
         <div style="width:108px;min-width:108px;text-align:center">
           <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
           <ins id="1101940" data-width="108" data-height="140"></ins>
@@ -177,7 +157,7 @@
         </div>
         <div class="card step">
           <div><span class="num">2</span><strong>Analyze</strong></div>
-          <div class="sub">Enable Full‑AI to caption objects & OCR. Face Mode for landmarks + ratios.</div>
+          <div class="sub">Face Mode = landmarks + ratios • Full‑AI = objects + OCR.</div>
           <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
             <button id="analyze" class="btn primary" disabled>Run (Fast)</button>
             <button id="enable-face" class="btn">Face Mode</button>
@@ -187,7 +167,7 @@
         </div>
         <div class="card step">
           <div><span class="num">3</span><strong>Build & Export</strong></div>
-          <div class="sub">Assemble prompt and export JSON/embedding for advanced workflows.</div>
+          <div class="sub">Assemble prompt and export JSON for advanced workflows.</div>
           <div style="display:flex;gap:8px;margin-top:8px">
             <button id="build" class="btn">Build Prompt</button>
             <button id="exportJSON" class="btn">Export JSON</button>
@@ -195,7 +175,7 @@
         </div>
         <div class="card step">
           <div><span class="num">?</span><strong>Help & FAQ</strong></div>
-          <div class="sub">Use prompt directly or fine‑tune locally. Privacy details inside.</div>
+          <div class="sub">Use prompt directly or fine‑tune locally. Privacy inside.</div>
           <a href="#faq" class="btn">Open FAQ</a>
           <button id="toggleJ1NX" class="btn">Open J1NX</button>
         </div>
@@ -206,7 +186,7 @@
         <div id="previewWrap">
           <canvas id="preview" width="900" height="560"></canvas>
           <canvas id="overlay" width="900" height="560"></canvas>
-          <div class="legend" id="legend">Ratios: jaw/face, eye‑sep/eye‑width, nose/face • Units: px & norm</div>
+          <div class="legend" id="legend">Ratios: jaw/face, eye‑sep/eye‑width, nose/face • Units: norm</div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
@@ -240,26 +220,14 @@
         </div>
 
         <div class="card" id="faq" style="margin-top:12px">
-          <h3>Help & FAQ — hidden in plain sight (read this)</h3>
+          <h3>Help & FAQ — hidden in plain sight</h3>
           <details open>
-            <summary><strong>How do I get a likeness or "me as <em>anything</em>"?</strong></summary>
-            <p class="sub">Use Face Mode to generate a prompt chunk + ratios. Paste into SDXL/Flux/MJ. For highest fidelity, fine‑tune a local LoRA/DreamBooth using your photos; include exported landmarks/ratios as training metadata. You can then layer styles (e.g., cinematic ogre skin, swamp lighting) without losing identity.</p>
+            <summary><strong>What happens to my image?</strong></summary>
+            <p class="sub">Analysis is on‑device by default. Export JSON only if you choose. Don’t analyze images without permission; don’t process minors. This tool does <em>not</em> identify people; it provides descriptors for creative generation only.</p>
           </details>
           <details>
-            <summary><strong>What's in the JSON export?</strong></summary>
-            <p class="sub">Version, filename, image size; <code>prompt_chunk</code>; <code>palette</code>; <code>landmarks</code> (normalized); <code>measurements</code> ratios (jaw/face, eye‑sep/eye‑width, nose/face) plus px; and an <code>embedding</code> object. These are raw conditioning features for custom pipelines or training metadata.</p>
-          </details>
-          <details>
-            <summary><strong>Privacy & security?</strong></summary>
-            <p class="sub">Everything runs in your browser unless you export. Do not analyze images without permission or of minors. This portal does not identify people; it provides descriptors for creative generation only. See Legal for policy.</p>
-          </details>
-          <details>
-            <summary><strong>Best‑results tips</strong></summary>
-            <ul class="sub">
-              <li>Use a sharp portrait (frontal or 3/4 view) with even light.</li>
-              <li>Keep eyes visible; glasses may reduce landmark accuracy.</li>
-              <li>When training a LoRA, include 10–20 varied shots and captions; add our JSON to your trainer as metadata.</li>
-            </ul>
+            <summary><strong>What’s in the JSON export?</strong></summary>
+            <p class="sub">Version, filename, image size; <code>prompt_chunk</code>; <code>palette</code>; <code>landmarks</code> (normalized); <code>measurements</code> ratios (jaw/face, eye‑sep/eye‑width, nose/face); objects & OCR; trimmed EXIF; and an <code>embedding</code> stub.</p>
           </details>
         </div>
 
@@ -275,21 +243,21 @@
   <div id="consent" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="sheet">
       <h3>Face Mapping — Consent</h3>
-      <p class="sub">Analysis runs on‑device. Only export if you choose. Use with consent; do not process minors. This is <em>not</em> an identity matcher.</p>
+      <p class="sub">Use with consent only. Analysis runs on‑device. This is not an ID matcher.</p>
       <label style="display:flex;align-items:center;gap:8px"><input id="agree" type="checkbox"> <span>I own/have permission to analyze this image.</span></label>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:10px"><button id="deny" class="btn">Cancel</button><button id="accept" class="btn primary" disabled>Accept</button></div>
     </div>
   </div>
 
-  <!-- ===== J1NX FLOAT (lightweight helper) ===== -->
-  <div class="j1nx-float-true" id="j1nxFloatTrue" aria-label="J1nx chat" style="display:none">
-    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+  <!-- ===== J1NX FLOAT (canonical look) ===== -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue" style="display:none">
+    <img src="/j1nx/j1nx_cutout.png" alt="J1NX" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Drop a photo, then hit <b>Face Mode</b> or <b>Full‑AI</b>. I’ll narrate what I see and help build your prompt.
+        <b>J1NX:</b> Drop a photo, then hit <b>Face Mode</b> or <b>Full‑AI</b>. I’ll narrate and help build your prompt.
       </div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Ask J1nx…" maxlength="140" autocomplete="off"/>
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Ask J1NX…" maxlength="140" autocomplete="off"/>
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
@@ -300,270 +268,155 @@
     </div>
   </div>
 
-  <!-- ===== Dependencies (loaded on demand) & App Code ===== -->
+  <!-- ===== ANSI FOOTER (exact vibe) ===== -->
+  <footer>
+    <pre class="footer-art">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+ U|  _"\ uU |  _"\ u  \"/_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \"/_ \/U |  _"\ uU /"___|u\| ___"|/   
+ \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+  |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+ (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+    </pre>
+    <pre class="footer-camo" id="footerCamo"></pre>
+    <div class="footer-bar">
+      Made underground in BC, Canada • #PromptForge •
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" target="_blank" rel="noopener">Bluesky</a> •
+      <a href="https://x.com/GoreandGiggles" target="_blank" rel="noopener">Twitter/X</a> •
+      <a href="/legal.html">Legal</a>
+    </div>
+  </footer>
+
+  <!-- ===== Dependencies loaded on demand + App Code ===== -->
   <script>
-  // --- Utility: script/style lazy loader
-  const Loader = {
-    loaded: new Set(),
-    js(src){ return new Promise((res,rej)=>{ if(Loader.loaded.has(src)) return res(); const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>{Loader.loaded.add(src); res();}; s.onerror=()=>rej(new Error('Failed '+src)); document.head.appendChild(s); }); },
-  };
+  // ------------ Lazy loader for JS files
+  const Loader = { loaded:new Set(), js(src){return new Promise((res,rej)=>{ if(Loader.loaded.has(src)) return res(); const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>{Loader.loaded.add(src);res();}; s.onerror=()=>rej(new Error('Failed '+src)); document.head.appendChild(s); });} };
 
-  // --- DOM refs
+  // ------------ DOM refs
   const els = {
-    file: document.getElementById('file'), chooseBtn: document.getElementById('chooseBtn'),
-    preview: document.getElementById('preview'), overlay: document.getElementById('overlay'), legend: document.getElementById('legend'),
-    analyze: document.getElementById('analyze'), enableFace: document.getElementById('enable-face'), enableAI: document.getElementById('enable-ai'),
-    progress: document.getElementById('progress'),
-    caption: document.getElementById('caption'), promptOut: document.getElementById('promptOut'),
-    objects: document.getElementById('objects'), ocr: document.getElementById('ocr'),
-    palette: document.getElementById('palette'), exif: document.getElementById('exif'),
-    build: document.getElementById('build'), exportJSON: document.getElementById('exportJSON'),
-    copyPrompt: document.getElementById('copyPrompt'), copyAlt: document.getElementById('copyAlt'),
-    consent: document.getElementById('consent'), agree: document.getElementById('agree'), accept: document.getElementById('accept'), deny: document.getElementById('deny'),
-    jOpen: document.getElementById('toggleJ1NX'), jWrap: document.getElementById('j1nxFloatTrue'), jBubble: document.getElementById('j1nxBubbleTextTrue'), jInput: document.getElementById('j1nxInputTrue'), jSend: document.getElementById('j1nxSendTrue'), jClear: document.getElementById('j1nxClearTrue'), jSave: document.getElementById('j1nxSaveTrue'), jEgg: document.getElementById('j1nxEasterEggTrue')
+    file:document.getElementById('file'), chooseBtn:document.getElementById('chooseBtn'),
+    preview:document.getElementById('preview'), overlay:document.getElementById('overlay'), legend:document.getElementById('legend'),
+    analyze:document.getElementById('analyze'), enableFace:document.getElementById('enable-face'), enableAI:document.getElementById('enable-ai'),
+    progress:document.getElementById('progress'),
+    caption:document.getElementById('caption'), promptOut:document.getElementById('promptOut'),
+    objects:document.getElementById('objects'), ocr:document.getElementById('ocr'),
+    palette:document.getElementById('palette'), exif:document.getElementById('exif'),
+    build:document.getElementById('build'), exportJSON:document.getElementById('exportJSON'),
+    copyPrompt:document.getElementById('copyPrompt'), copyAlt:document.getElementById('copyAlt'),
+    consent:document.getElementById('consent'), agree:document.getElementById('agree'), accept:document.getElementById('accept'), deny:document.getElementById('deny'),
+    jOpen:document.getElementById('toggleJ1NX'), jWrap:document.getElementById('j1nxFloatTrue'), jBubble:document.getElementById('j1nxBubbleTextTrue'), jInput:document.getElementById('j1nxInputTrue'), jSend:document.getElementById('j1nxSendTrue'), jClear:document.getElementById('j1nxClearTrue'), jSave:document.getElementById('j1nxSaveTrue'), jEgg:document.getElementById('j1nxEasterEggTrue')
   };
 
-  // --- State
-  const state = {
-    imgEl: null, imgName: '', imgW: 0, imgH: 0,
-    faceEnabled: false, fullAIEnabled: false, consentOK: false,
-    face: { landmarks: [], ratios: {}, boxes: [] },
-    det: { objects: [], ocr: '', exif: {}, palette: [] },
-    timers: { scan: null },
-  };
+  // ------------ State
+  const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, faceEnabled:false, fullAIEnabled:false, consentOK:false, face:{landmarks:[], ratios:{}}, det:{objects:[], ocr:'', exif:{}, palette:[]}, timers:{scan:null} };
 
   const ctx = els.preview.getContext('2d');
   const octx = els.overlay.getContext('2d');
 
+  function note(m){ els.progress.textContent = m; }
+
+  // ------------ Draw image fitted with letterboxing, store draw rect
   function fitDrawImage(img){
-    const cw = els.preview.width, ch = els.preview.height;
-    octx.clearRect(0,0,els.overlay.width, els.overlay.height);
-    ctx.clearRect(0,0,cw,ch);
-    const ar = img.width / img.height; const car = cw / ch;
-    let dw, dh, dx, dy; if(ar > car){ dw = cw; dh = cw / ar; dx = 0; dy = (ch - dh)/2; } else { dh = ch; dw = ch * ar; dy = 0; dx = (cw - dw)/2; }
-    ctx.drawImage(img, dx, dy, dw, dh);
-    state.imgW = img.width; state.imgH = img.height;
+    const cw=els.preview.width, ch=els.preview.height; ctx.clearRect(0,0,cw,ch); octx.clearRect(0,0,cw,ch);
+    const ar=img.width/img.height, car=cw/ch; let dw,dh,dx,dy; if(ar>car){ dw=cw; dh=cw/ar; dx=0; dy=(ch-dh)/2; } else { dh=ch; dw=ch*ar; dy=0; dx=(cw-dw)/2; }
+    ctx.drawImage(img,dx,dy,dw,dh); state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height;
   }
 
-  function note(msg){ els.progress.textContent = msg; }
+  // ------------ Scan overlay animation
+  function startScan(){ stopScan(); let y=0; state.timers.scan=setInterval(()=>{ octx.clearRect(0,0,els.overlay.width,els.overlay.height); octx.fillStyle='rgba(35,215,186,0.14)'; octx.fillRect(0,y,els.overlay.width,8); y=(y+3)%els.overlay.height; },16); }
+  function stopScan(){ if(state.timers.scan){ clearInterval(state.timers.scan); state.timers.scan=null; octx.clearRect(0,0,els.overlay.width,els.overlay.height);} }
 
-  // --- Scan overlay animation
-  function startScan(){ stopScan(); let y=0; state.timers.scan = setInterval(()=>{ octx.clearRect(0,0,els.overlay.width, els.overlay.height); octx.fillStyle = 'rgba(35,215,186,0.12)'; octx.fillRect(0,y,els.overlay.width, 8); y = (y + 3) % els.overlay.height; }, 16); }
-  function stopScan(){ if(state.timers.scan){ clearInterval(state.timers.scan); state.timers.scan = null; octx.clearRect(0,0,els.overlay.width, els.overlay.height);} }
+  // ------------ Utils
+  const toHex=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+  const ratio=(a,b)=> b? +(a/b).toFixed(4):0;
 
-  // --- Color utils
-  const toHex = (r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-
-  // --- File load
-  els.chooseBtn.addEventListener('click', ()=> els.file.click());
+  // ------------ File load
+  els.chooseBtn.addEventListener('click',()=>els.file.click());
   els.file.addEventListener('change', async (e)=>{
-    const f = e.target.files && e.target.files[0]; if(!f) return;
-    state.imgName = f.name || 'image';
-    const url = URL.createObjectURL(f);
-    const img = new Image(); img.onload = ()=>{ state.imgEl = img; fitDrawImage(img); els.analyze.disabled = false; note('Ready. Choose a mode then Run.'); URL.revokeObjectURL(url);}; img.src = url;
-    // parse EXIF lazily
-    try {
-      await Loader.js('https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js');
-      const ab = await f.arrayBuffer();
-      const tags = window['ExifReader'] ? ExifReader.load(ab) : {};
-      state.det.exif = tags || {};
-      const out = [];
-      ['Make','Model','LensModel','FNumber','ExposureTime','ISOSpeedRatings','DateTimeOriginal'].forEach(k=>{ if(tags[k]) out.push(`${k}: ${tags[k].description || tags[k].value}`); });
-      els.exif.textContent = out.join('\n') || '—';
-    } catch(err){ els.exif.textContent = '—'; }
+    const f=e.target.files && e.target.files[0]; if(!f) return; state.imgName=f.name||'image';
+    const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ state.imgEl=img; fitDrawImage(img); els.analyze.disabled=false; note('Ready. Choose modes then Run.'); URL.revokeObjectURL(url); }; img.src=url;
+    // EXIF (lazy)
+    try{ await Loader.js('https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js'); const ab=await f.arrayBuffer(); const tags=window.ExifReader?ExifReader.load(ab):{}; state.det.exif=tags||{}; const out=[]; ['Make','Model','LensModel','FNumber','ExposureTime','ISOSpeedRatings','DateTimeOriginal'].forEach(k=>{ if(tags[k]) out.push(`${k}: ${tags[k].description||tags[k].value}`); }); els.exif.textContent=out.join('\n')||'—'; }catch(err){ els.exif.textContent='—'; }
   });
 
-  // --- Face Mode (MediaPipe FaceMesh)
+  // ------------ Face Mode (MediaPipe Tasks Vision)
   async function ensureFace(){
     if(!state.consentOK){ els.consent.classList.add('open'); return false; }
-    if(!window.FaceMesh){
-      note('Loading face mesh…');
-      await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js');
-      await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js');
-    }
-    if(!window._pfFace){
-      const fm = new FaceMesh({locateFile: (file)=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/${file}`});
-      fm.setOptions({maxNumFaces:1, refineLandmarks:true, minDetectionConfidence:0.5, minTrackingConfidence:0.5});
-      fm.onResults(onFaceResults);
-      window._pfFace = fm;
-    }
+    if(window._pfFace) return true;
+    note('Loading face landmarker…');
+    await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
+    const vision = await window.tasksVision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+    window._pfFace = await window.tasksVision.FaceLandmarker.createFromOptions(vision, {
+      baseOptions:{modelAssetPath:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/face_landmarker.task'},
+      numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
+    });
     return true;
   }
 
-  function normPoint(pt){ return [ +(pt.x).toFixed(5), +(pt.y).toFixed(5), +(pt.z||0).toFixed(5) ]; }
-  function ratio(a,b){ return b? +(a/b).toFixed(4) : 0; }
+  function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
 
   async function runFace(){
-    if(!state.imgEl) return; if(!(await ensureFace())) return;
-    startScan();
-    const tmp = document.createElement('canvas'); tmp.width = state.imgEl.width; tmp.height = state.imgEl.height; tmp.getContext('2d').drawImage(state.imgEl,0,0);
-    await window._pfFace.send({image: tmp});
-    stopScan();
-  }
-
-  function onFaceResults(res){
-    octx.clearRect(0,0,els.overlay.width, els.overlay.height);
-    if(!res.multiFaceLandmarks || !res.multiFaceLandmarks.length){ note('No face found.'); state.face.landmarks=[]; state.face.ratios={}; return; }
-    const lm = res.multiFaceLandmarks[0];
-    // draw mesh (project to overlay canvas size)
-    const w = els.overlay.width, h = els.overlay.height;
-    octx.strokeStyle = 'rgba(100,242,227,.85)'; octx.lineWidth = 1.2; octx.beginPath();
-    lm.forEach(p=>{ const x = p.x * w, y = p.y * h; octx.lineTo(x,y); }); octx.stroke();
-    // compute simple measurements using common landmark indices
-    const L = lm; // Mediapipe indices: approximate
-    const idx = {
-      chin: 152, top: 10, leftJaw: 234, rightJaw: 454,
-      leftEyeIn: 133, rightEyeIn: 362, leftEyeOut: 33, rightEyeOut: 263,
-      noseTip: 1
-    };
-    function dist(a,b){ const dx=L[a].x-L[b].x, dy=L[a].y-L[b].y; return Math.hypot(dx,dy); }
-    const faceH = dist(idx.top, idx.chin);
-    const jawW = dist(idx.leftJaw, idx.rightJaw);
-    const eyeSep = dist(idx.leftEyeIn, idx.rightEyeIn);
-    const eyeW = (dist(idx.leftEyeIn, idx.leftEyeOut)+dist(idx.rightEyeIn, idx.rightEyeOut))/2;
-    const noseH = dist(idx.top, idx.noseTip);
-    state.face.landmarks = lm.map(normPoint);
-    state.face.ratios = {
-      jaw_to_face: ratio(jawW, faceH),
-      eyeSep_to_eyeW: ratio(eyeSep, eyeW),
-      nose_to_face: ratio(noseH, faceH)
-    };
-    els.legend.textContent = `Ratios • jaw/face ${state.face.ratios.jaw_to_face}  • eye‑sep/eye‑width ${state.face.ratios.eyeSep_to_eyeW}  • nose/face ${state.face.ratios.nose_to_face}`;
+    if(!state.imgEl) return; if(!(await ensureFace())) return; startScan();
+    const res = await window._pfFace.detect(state.imgEl);
+    stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height);
+    if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); state.face.landmarks=[]; state.face.ratios={}; return; }
+    const lm = res.faceLandmarks[0];
+    // draw points mapped into letterboxed draw rect
+    const {dx,dy,dw,dh} = state.draw; octx.strokeStyle='rgba(100,242,227,.85)'; octx.lineWidth=1.2; octx.beginPath();
+    lm.forEach(p=>{ const x=dx + p.x*dw, y=dy + p.y*dh; octx.moveTo(x,y); octx.arc(x,y,0.9,0,Math.PI*2); }); octx.stroke();
+    // compute ratios using standard indices (468‑pt mesh)
+    const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, leftEyeOut:33, rightEyeOut:263, noseTip:1 };
+    const faceH = mpDist(lm[IDX.top], lm[IDX.chin]);
+    const jawW  = mpDist(lm[IDX.leftJaw], lm[IDX.rightJaw]);
+    const eyeSep = mpDist(lm[IDX.leftEyeIn], lm[IDX.rightEyeIn]);
+    const eyeW   = (mpDist(lm[IDX.leftEyeIn], lm[IDX.leftEyeOut]) + mpDist(lm[IDX.rightEyeIn], lm[IDX.rightEyeOut]))/2;
+    const noseH  = mpDist(lm[IDX.top], lm[IDX.noseTip]);
+    state.face.landmarks = lm.map(p=>[+p.x.toFixed(5), +p.y.toFixed(5), +(p.z||0).toFixed(5)]);
+    state.face.ratios = { jaw_to_face:ratio(jawW,faceH), eyeSep_to_eyeW:ratio(eyeSep,eyeW), nose_to_face:ratio(noseH,faceH) };
+    els.legend.textContent = `Ratios • jaw/face ${state.face.ratios.jaw_to_face} • eye‑sep/eye‑width ${state.face.ratios.eyeSep_to_eyeW} • nose/face ${state.face.ratios.nose_to_face}`;
     note('Face mesh complete.');
   }
 
-  // --- Full‑AI (COCO‑SSD + Tesseract)
-  async function ensureFullAI(){
-    if(window._pfDetLoaded) return true;
-    note('Loading detectors…');
-    await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.12.0/dist/tf.min.js');
-    await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2');
-    await Loader.js('https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js');
-    window._pfDetLoaded = true;
-    return true;
-  }
+  // ------------ Full‑AI (COCO‑SSD + Tesseract.js)
+  async function ensureFullAI(){ if(window._pfDetLoaded) return true; note('Loading detectors…'); await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js'); await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2'); await Loader.js('https://cdn.jsdelivr.net/npm/tesseract.js@5.0.3/dist/tesseract.min.js'); window._pfDetLoaded=true; return true; }
 
-  async function runObjects(){
-    if(!state.imgEl) return [];
-    await ensureFullAI();
-    const model = await cocoSsd.load({base:'lite_mobilenet_v2'});
-    const preds = await model.detect(els.preview);
-    return preds.map(p=>({label:p.class, score:+p.score.toFixed(3), box:p.bbox}));
-  }
+  async function runObjects(){ if(!state.imgEl) return []; await ensureFullAI(); const model = await cocoSsd.load({base:'lite_mobilenet_v2'}); const preds = await model.detect(els.preview); return preds.map(p=>({label:p.class, score:+p.score.toFixed(3), box:p.bbox})); }
+  async function runOCR(){ if(!state.imgEl) return ''; await ensureFullAI(); const r = await Tesseract.recognize(els.preview,'eng',{logger:()=>{}}); return (r && r.data && r.data.text ? r.data.text.trim() : '') || ''; }
 
-  async function runOCR(){
-    if(!state.imgEl) return '';
-    await ensureFullAI();
-    const r = await Tesseract.recognize(els.preview, 'eng', { logger: m=>{ /* console.log(m); */ } });
-    return (r && r.data && r.data.text ? r.data.text.trim() : '') || '';
-  }
+  // ------------ Palette (ColorThief via dataURL clone to avoid CORS)
+  async function buildPalette(){ if(!window.ColorThief) await Loader.js('https://cdn.jsdelivr.net/npm/color-thief-browser@2.0.2/dist/color-thief.umd.js'); try{ const tmp=document.createElement('canvas'); tmp.width=state.imgEl.width; tmp.height=state.imgEl.height; tmp.getContext('2d').drawImage(state.imgEl,0,0); const img2=new Image(); img2.src=tmp.toDataURL('image/jpeg'); await img2.decode(); const thief=new ColorThief(); const pal=thief.getPalette(img2,6); state.det.palette=pal.map(([r,g,b])=>toHex(r,g,b)); els.palette.innerHTML=state.det.palette.map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');}catch(e){ els.palette.textContent='—'; } }
 
-  // --- Palette (ColorThief)
-  async function buildPalette(){
-    if(!window.ColorThief) await Loader.js('https://cdn.jsdelivr.net/npm/color-thief-browser@2.0.2/dist/color-thief.umd.js');
-    try{
-      const thief = new ColorThief();
-      const tmp = document.createElement('canvas'); tmp.width = state.imgEl.width; tmp.height = state.imgEl.height; tmp.getContext('2d').drawImage(state.imgEl,0,0);
-      const img2 = new Image(); img2.src = tmp.toDataURL('image/jpeg'); await img2.decode();
-      const palette = thief.getPalette(img2, 6);
-      state.det.palette = palette.map(([r,g,b])=>toHex(r,g,b));
-      els.palette.innerHTML = state.det.palette.map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style="width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block"></i><code>${hex}</code></span>`).join(' ');
-    }catch(e){ els.palette.textContent = '—'; }
-  }
+  // ------------ Heuristic caption & prompt build
+  function heuristicCaption(){ const colors=(state.det.palette||[]).slice(0,3).join(', '); const objects=(state.det.objects||[]).slice(0,4).map(o=>o.label).join(', '); const bits=[]; if(objects) bits.push(objects); if(colors) bits.push(`tones of ${colors}`); const cap=bits.length?`A well‑lit photo featuring ${bits.join(' with ')}.`:'A well‑lit photo.'; els.caption.value=cap; return cap; }
+  function buildPrompt(){ const tags=(state.det.objects||[]).filter(o=>o.score>0.4).map(o=>o.label); const r=state.face.ratios||{}; const palette=(state.det.palette||[]).slice(0,3).join(', '); const cap=els.caption.value.trim()||heuristicCaption(); const chunk=[]; if(r.jaw_to_face) chunk.push(`jaw/face ${r.jaw_to_face}`); if(r.eyeSep_to_eyeW) chunk.push(`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`); if(r.nose_to_face) chunk.push(`nose/face ${r.nose_to_face}`); const prompt=[cap, tags.length?`objects: ${tags.join(', ')}`:'', palette?`palette: ${palette}`:'', chunk.length?`face‑ratios: ${chunk.join(' • ')}`:''].filter(Boolean).join(' \n '); els.promptOut.value=prompt; return prompt; }
 
-  // --- Heuristic caption (when Full‑AI off or as base)
-  function heuristicCaption(){
-    const colors = state.det.palette && state.det.palette.slice(0,3).join(', ');
-    const objects = (state.det.objects||[]).slice(0,4).map(o=>o.label).join(', ');
-    const bits = [];
-    if(objects) bits.push(objects);
-    if(colors) bits.push(`tones of ${colors}`);
-    const cap = `A well‑lit photo featuring ${bits.join(' with ')}.`;
-    els.caption.value = cap;
-    return cap;
-  }
+  function exportJSON(){ const data={ version:'pf_imageintel_1', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, prompt_chunk:els.promptOut.value, caption:els.caption.value, palette:state.det.palette, landmarks:state.face.landmarks, measurements:state.face.ratios, objects:state.det.objects, ocr:state.det.ocr, exif: state.det.exif? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {}, embedding:{type:'stub',dims:0} }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href); }
 
-  // --- Build prompt text
-  function buildPrompt(){
-    const tags = (state.det.objects||[]).filter(o=>o.score>0.4).map(o=>o.label);
-    const ratios = state.face.ratios || {};
-    const palette = (state.det.palette||[]).slice(0,3).join(', ');
-    const cap = els.caption.value.trim() || heuristicCaption();
-    const chunk = [];
-    if(ratios.jaw_to_face) chunk.push(`jaw/face ${ratios.jaw_to_face}`);
-    if(ratios.eyeSep_to_eyeW) chunk.push(`eye‑sep/eye‑width ${ratios.eyeSep_to_eyeW}`);
-    if(ratios.nose_to_face) chunk.push(`nose/face ${ratios.nose_to_face}`);
-    const prompt = [
-      cap,
-      tags.length?`objects: ${tags.join(', ')}`: '',
-      palette?`palette: ${palette}`:'',
-      chunk.length?`face‑ratios: ${chunk.join(' • ')}`:''
-    ].filter(Boolean).join(' \n ');
-    els.promptOut.value = prompt;
-    return prompt;
-  }
+  // ------------ Wire buttons
+  els.enableFace.addEventListener('click',async()=>{ state.faceEnabled=!state.faceEnabled; els.enableFace.classList.toggle('primary',state.faceEnabled); if(state.faceEnabled && state.imgEl){ if(!state.consentOK){ els.consent.classList.add('open'); } else { runFace(); } } note(state.faceEnabled?'Face Mode enabled.':'Face Mode disabled.'); });
+  els.enableAI.addEventListener('click',async()=>{ state.fullAIEnabled=!state.fullAIEnabled; els.enableAI.classList.toggle('primary',state.fullAIEnabled); if(state.fullAIEnabled){ await ensureFullAI(); note('Full‑AI ready. Click Run.'); } else { note('Full‑AI disabled.'); } });
+  els.analyze.addEventListener('click', async()=>{ if(!state.imgEl){ note('Choose an image first.'); return; } startScan(); try{ await buildPalette(); }catch(e){} if(state.faceEnabled){ await runFace(); } if(state.fullAIEnabled){ try{ state.det.objects=await runObjects(); }catch(e){ state.det.objects=[]; } try{ state.det.ocr=await runOCR(); }catch(e){ state.det.ocr=''; } els.objects.textContent=(state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ')||'—'; els.ocr.textContent=state.det.ocr||'—'; } if(!els.caption.value) heuristicCaption(); buildPrompt(); stopScan(); note('Done. Build or Export next.'); });
+  els.build.addEventListener('click',()=>{ buildPrompt(); note('Prompt refreshed.'); });
+  els.exportJSON.addEventListener('click',()=>exportJSON());
+  els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.value||''); note('Prompt copied.'); });
+  els.copyAlt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.caption.value||''); note('Alt‑text copied.'); });
 
-  // --- Export JSON
-  function exportJSON(){
-    const data = {
-      version: 'pf_imageintel_1',
-      filename: state.imgName,
-      image: { width: state.imgW, height: state.imgH },
-      prompt_chunk: els.promptOut.value,
-      caption: els.caption.value,
-      palette: state.det.palette,
-      landmarks: state.face.landmarks, // normalized [x,y,z]
-      measurements: state.face.ratios,
-      objects: state.det.objects,
-      ocr: state.det.ocr,
-      exif: state.det.exif ? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {},
-      embedding: { type:'stub', dims:0 }
-    };
-    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = (state.imgName||'image')+ '.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href);
-  }
+  // ------------ Consent
+  els.agree.addEventListener('change',()=>{ els.accept.disabled=!els.agree.checked; });
+  els.accept.addEventListener('click',()=>{ state.consentOK=true; els.consent.classList.remove('open'); if(state.faceEnabled) runFace(); });
+  els.deny.addEventListener('click',()=>{ els.consent.classList.remove('open'); state.faceEnabled=false; els.enableFace.classList.remove('primary'); });
 
-  // --- Wire buttons
-  els.enableFace.addEventListener('click', async()=>{ state.faceEnabled = !state.faceEnabled; els.enableFace.classList.toggle('primary', state.faceEnabled); if(state.faceEnabled && state.imgEl) runFace(); note(state.faceEnabled? 'Face Mode enabled.' : 'Face Mode disabled.'); });
-  els.enableAI.addEventListener('click', async()=>{ state.fullAIEnabled = !state.fullAIEnabled; els.enableAI.classList.toggle('primary', state.fullAIEnabled); if(state.fullAIEnabled){ await ensureFullAI(); note('Full‑AI ready. Click Run.'); } else { note('Full‑AI disabled.'); } });
+  // ------------ J1NX helper
+  els.jOpen.addEventListener('click',()=>{ els.jWrap.style.display = (els.jWrap.style.display==='none'?'flex':'none'); });
+  const say=(t)=>{ els.jBubble.innerHTML += '<br/>'+(t||'').replace(/</g,'&lt;'); els.jBubble.scrollTop=els.jBubble.scrollHeight; };
+  els.jSend?.addEventListener('click',()=>{ const v=els.jInput.value.trim(); if(!v) return; say('<b>You:</b> '+v); els.jInput.value=''; });
+  els.jClear?.addEventListener('click',()=>{ els.jBubble.innerHTML='<b>J1NX:</b> Reset. What\'s next?'; });
+  els.jSave?.addEventListener('click',()=>{ const blob=new Blob([els.jBubble.textContent||''],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); URL.revokeObjectURL(a.href); });
+  (function(){ let taps=0,tid; els.jWrap?.addEventListener('click',()=>{ clearTimeout(tid); taps++; tid=setTimeout(()=>{ if(taps>=2){ els.jEgg.textContent='NSFW hint unlocked (demo): try the labs when available.'; els.jEgg.style.opacity=1; } taps=0; },240); },{passive:true}); })();
 
-  els.analyze.addEventListener('click', async()=>{
-    if(!state.imgEl){ note('Choose an image first.'); return; }
-    startScan();
-    // Palette first (fast)
-    try{ await buildPalette(); }catch(e){}
-    // Face if toggled
-    if(state.faceEnabled){ await runFace(); }
-    // Detectors if toggled
-    if(state.fullAIEnabled){
-      try{ state.det.objects = await runObjects(); }catch(e){ state.det.objects = []; }
-      try{ state.det.ocr = await runOCR(); }catch(e){ state.det.ocr = ''; }
-      els.objects.textContent = (state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ') || '—';
-      els.ocr.textContent = state.det.ocr || '—';
-    }
-    // caption / prompt
-    if(!els.caption.value) heuristicCaption();
-    buildPrompt();
-    stopScan(); note('Done. Build or Export next.');
-  });
-
-  els.build.addEventListener('click', ()=>{ buildPrompt(); note('Prompt refreshed.'); });
-  els.exportJSON.addEventListener('click', ()=>{ exportJSON(); });
-  els.copyPrompt.addEventListener('click', ()=>{ navigator.clipboard.writeText(els.promptOut.value||''); note('Prompt copied.'); });
-  els.copyAlt.addEventListener('click', ()=>{ navigator.clipboard.writeText(els.caption.value||''); note('Alt‑text copied.'); });
-
-  // Consent modal
-  els.agree.addEventListener('change', ()=>{ els.accept.disabled = !els.agree.checked; });
-  els.accept.addEventListener('click', ()=>{ state.consentOK = true; els.consent.classList.remove('open'); if(state.faceEnabled) runFace(); });
-  els.deny.addEventListener('click', ()=>{ els.consent.classList.remove('open'); state.faceEnabled=false; els.enableFace.classList.remove('primary'); });
-
-  // J1NX micro‑wiring
-  els.jOpen.addEventListener('click', ()=>{ els.jWrap.style.display = els.jWrap.style.display==='none' ? 'flex' : 'none'; });
-  const say = (t)=>{ els.jBubble.innerHTML += '<br/>' + (t||'').replace(/</g,'&lt;'); els.jBubble.scrollTop = els.jBubble.scrollHeight; };
-  els.jSend?.addEventListener('click', ()=>{ const v = els.jInput.value.trim(); if(!v) return; say('<b>You:</b> '+v); els.jInput.value=''; });
-  els.jClear?.addEventListener('click', ()=>{ els.jBubble.innerHTML = '<b>J1nx:</b> Reset. What\'s next?'; });
-  els.jSave?.addEventListener('click', ()=>{ const blob = new Blob([els.jBubble.textContent||''],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); URL.revokeObjectURL(a.href); });
-  (function(){ let taps=0, tid; els.jWrap?.addEventListener('click', ()=>{ clearTimeout(tid); taps++; tid=setTimeout(()=>{ if(taps>=2){ els.jEgg.textContent='NSFW hint unlocked (demo): try the labs when available.'; els.jEgg.style.opacity=1; } taps=0; }, 240); }, {passive:true}); })();
+  // ------------ Footer camo animation
+  (function(){ const camoEl=document.getElementById('footerCamo'); if(!camoEl) return; const colors=["#64f2e3","#23d7ba","#be9cff","#ffd166"]; let i=0; setInterval(()=>{ camoEl.textContent = ['█▄▀','▞▚','▓▒░','◢◣◥◤'][i%4].repeat(28); camoEl.style.color=colors[i%colors.length]; i++; }, 380); })();
   </script>
 </body>
-</html>
+  </html>
