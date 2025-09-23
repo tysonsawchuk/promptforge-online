@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PromptForge — Image Intelligence (Image→Prompt • Face Mapping • Objects • OCR)</title>
-  <meta name="description" content="Analyze a photo entirely on‑device: face landmarks + ratios, object tags, OCR, palette & EXIF, scan overlay, caption + prompt builder, JSON export. Includes J1NX and canonical footer." />
+  <meta name="description" content="Analyze a photo entirely on‑device: animated scan + face grid, face landmarks + ratios, objects, OCR, palette & EXIF, poetic caption + prompt builder, JSON export. Includes J1NX and canonical footer." />
   <link rel="canonical" href="https://promptforge.online/imageintel.html" />
   <meta name="theme-color" content="#08131b" />
 
@@ -21,13 +21,13 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PromptForge","url":"https://promptforge.online/","potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},{"@type":"ListItem","position":3,"name":"Image Intelligence"}]}</script>
 
-  <!-- Fonts (optional; keep visual language) -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    :root{ --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba; --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; }
+    :root{ --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba; --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; --warn:#ffd166; --bad:#ff6b6b; }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;background:radial-gradient(1200px 700px at 10% -10%,rgba(100,242,227,.07),transparent 55%),radial-gradient(1000px 600px at 120% -10%,rgba(35,215,186,.06),transparent 55%),var(--bg);color:var(--ink);font:14px/1.6 Inter,system-ui,Segoe UI,Roboto,Arial}
@@ -47,7 +47,7 @@
     .sub{color:var(--muted);font-size:12px}
 
     .grid{display:grid;gap:16px}
-    @media(min-width:1024px){.grid{grid-template-columns:320px 1fr}}
+    @media(min-width:1024px){.grid{grid-template-columns:330px 1fr}}
     h3{margin:.2rem 0 .8rem;color:var(--muted);font-size:15px}
 
     .steps{position:sticky;top:14px;display:flex;flex-direction:column;gap:10px}
@@ -61,6 +61,7 @@
 
     .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer}
     .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
+    .btn.warn{border-color:var(--warn);color:var(--warn)}
 
     textarea,.outbox{width:100%;min-height:120px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;box-shadow:0 0 22px rgba(100,242,227,.08)}
     .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
@@ -70,6 +71,9 @@
     #overlay{position:absolute;left:0;top:0;width:100%;border-radius:10px;pointer-events:none}
     .legend{position:absolute;right:10px;top:10px;background:#08141caa;border:1px solid #10313b;border-radius:10px;padding:8px 10px;font:12px/1.3 ui-monospace,monospace}
 
+    .switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+    .switch input{accent-color:var(--aqua)}
+
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:60}
     .modal.open{display:flex}
     .sheet{background:var(--card);border:1px solid var(--edge);border-radius:14px;max-width:740px;width:92%;padding:16px}
@@ -77,11 +81,11 @@
     .ad-wrap{display:block;min-height:90px;border:1px dashed var(--edge);border-radius:12px;margin:8px 0;padding:8px;text-align:center;color:var(--muted)}
     .ad-right{display:flex;gap:8px;align-items:center}
 
-    /* J1NX float — visual parity with your canonical */
+    /* J1NX float — visual parity */
     .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
     .j1nx-true-cutout-img{width:220px;height:220px;object-fit:contain;border-radius:24px;background:transparent!important;margin-bottom:-20px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none!important}
     .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:280px;max-width:330px;position:relative;z-index:1}
-    .j1nx-bubble-text-true{font-size:1.02em;color:#fff;margin:.42em 0 .20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1}
+    .j1nx-bubble-text-true{font-size:1.02em;color:#fff;margin:.42em 0 .20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1;max-height:180px;overflow:auto}
     .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em 0}
     .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
     .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:var(--aqua);font-family:inherit;font-weight:600;cursor:pointer;transition:background .13s,color .13s,border .13s;box-shadow:0 1.5px 9px #be9cff33}
@@ -89,7 +93,7 @@
     .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
     @media(max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:96px;height:96px}}
 
-    /* Footer styles (ANSI + nav) — lifted to match your demo) */
+    /* Footer styles (ANSI + nav) */
     footer{margin:18px auto;padding:0 12px 16px;text-align:center;max-width:860px;color:#eaf7ff}
     .footer-art{font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text;margin:0 0 10px}
     .footer-camo{font-family:"Fira Mono",monospace;font-size:.85em;letter-spacing:2px;color:#64f2e3;min-height:.8em;white-space:pre}
@@ -120,7 +124,7 @@
     <section class="hero">
       <div class="card">
         <h1>Analyze → Measure → Explain → Export</h1>
-        <p class="sub">Drop a photo. We run a live face landmarker with creative measurements, animate a scan overlay, then build a professional caption and a structured prompt chunk. Export JSON with normalized landmarks, numeric ratios, palette, EXIF, objects & OCR. Everything is client‑side by default.</p>
+        <p class="sub">Drop a photo. We animate a scan/grid overlay, run a face landmarker with creative measurements, then build a professional caption and a structured prompt chunk. Optional object tags + OCR. Export JSON with normalized landmarks, numeric ratios, palette, EXIF, objects & OCR. Everything is client‑side by default.</p>
       </div>
       <div class="card ad-right">
         <div style="flex:1">
@@ -147,7 +151,7 @@
         <div class="card step active">
           <div><span class="num">1</span><strong>Choose Image</strong></div>
           <div class="sub">Portrait or scene. Private: runs in your browser.</div>
-          <label for="file" class="choose" id="chooseBtn">➕ Choose Image</label>
+          <label for="file" class="choose" id="chooseBtn" title="Select a local photo (nothing is uploaded by default)">➕ Choose Image</label>
           <input id="file" type="file" accept="image/*" />
           <div class="ad-wrap">
             <script async src="https://poweredby.jads.co/js/jads.js"></script>
@@ -156,7 +160,10 @@
           </div>
         </div>
         <div class="card step">
-          <div><span class="num">2</span><strong>Analyze</strong></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <div><span class="num">2</span><strong>Analyze</strong></div>
+            <label class="switch" title="Show overlay grid while scanning"><input id="gridToggle" type="checkbox" checked> Face Grid</label>
+          </div>
           <div class="sub">Face Mode = landmarks + ratios • Full‑AI = objects + OCR.</div>
           <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
             <button id="analyze" class="btn primary" disabled>Run (Fast)</button>
@@ -192,11 +199,11 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
           <div>
             <h3>Professional Description</h3>
-            <textarea id="caption" class="mono" placeholder="—"></textarea>
+            <textarea id="caption" class="mono" placeholder="—" title="Short poetic caption derived from colors, objects, and composition."></textarea>
           </div>
           <div>
             <h3>Prompt</h3>
-            <textarea id="promptOut" class="mono" placeholder="—"></textarea>
+            <textarea id="promptOut" class="mono" placeholder="—" title="Copy into SDXL/Flux/MJ/etc. Includes face ratios + palette if available."></textarea>
             <div style="display:flex;gap:8px;margin-top:8px"><button id="copyPrompt" class="btn">Copy Prompt</button><button id="copyAlt" class="btn">Copy Alt‑text</button></div>
           </div>
         </div>
@@ -226,8 +233,20 @@
             <p class="sub">Analysis is on‑device by default. Export JSON only if you choose. Don’t analyze images without permission; don’t process minors. This tool does <em>not</em> identify people; it provides descriptors for creative generation only.</p>
           </details>
           <details>
+            <summary><strong>How accurate are face measurements?</strong></summary>
+            <p class="sub">We estimate 468+ landmarks from MediaPipe Face Landmarker and compute stable ratios (jaw width vs. face height, eye separation vs. eye width, nose height vs. face height). Use them as consistent descriptors rather than biometrics.</p>
+          </details>
+          <details>
             <summary><strong>What’s in the JSON export?</strong></summary>
-            <p class="sub">Version, filename, image size; <code>prompt_chunk</code>; <code>palette</code>; <code>landmarks</code> (normalized); <code>measurements</code> ratios (jaw/face, eye‑sep/eye‑width, nose/face); objects & OCR; trimmed EXIF; and an <code>embedding</code> stub.</p>
+            <p class="sub"><code>version</code>, filename, image size; <code>prompt_chunk</code>; <code>caption</code>; <code>palette</code>; <code>landmarks</code> (normalized); <code>measurements</code> ratios; objects & OCR; trimmed EXIF; and an <code>embedding</code> stub.</p>
+          </details>
+          <details>
+            <summary><strong>Tips for better prompts</strong></summary>
+            <ul class="sub">
+              <li>Faces: enable <b>Face Mode</b> and include the ratios line in your prompt for reproducible geometry.</li>
+              <li>Scenes: enable <b>Full‑AI</b> to capture key objects and signage (OCR) that add context.</li>
+              <li>Add your model‑specific style tokens (e.g., SDXL/Flux/MJ) after the generated chunk.</li>
+            </ul>
           </details>
         </div>
 
@@ -297,7 +316,7 @@
   const els = {
     file:document.getElementById('file'), chooseBtn:document.getElementById('chooseBtn'),
     preview:document.getElementById('preview'), overlay:document.getElementById('overlay'), legend:document.getElementById('legend'),
-    analyze:document.getElementById('analyze'), enableFace:document.getElementById('enable-face'), enableAI:document.getElementById('enable-ai'),
+    analyze:document.getElementById('analyze'), enableFace:document.getElementById('enable-face'), enableAI:document.getElementById('enable-ai'), gridToggle:document.getElementById('gridToggle'),
     progress:document.getElementById('progress'),
     caption:document.getElementById('caption'), promptOut:document.getElementById('promptOut'),
     objects:document.getElementById('objects'), ocr:document.getElementById('ocr'),
@@ -309,7 +328,7 @@
   };
 
   // ------------ State
-  const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, faceEnabled:false, fullAIEnabled:false, consentOK:false, face:{landmarks:[], ratios:{}}, det:{objects:[], ocr:'', exif:{}, palette:[]}, timers:{scan:null} };
+  const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, faceEnabled:false, fullAIEnabled:false, consentOK:false, face:{landmarks:[], ratios:{}}, det:{objects:[], ocr:'', exif:{}, palette:[]}, timers:{scan:null,grid:null}, gridOn:true };
 
   const ctx = els.preview.getContext('2d');
   const octx = els.overlay.getContext('2d');
@@ -323,8 +342,9 @@
     ctx.drawImage(img,dx,dy,dw,dh); state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height;
   }
 
-  // ------------ Scan overlay animation
-  function startScan(){ stopScan(); let y=0; state.timers.scan=setInterval(()=>{ octx.clearRect(0,0,els.overlay.width,els.overlay.height); octx.fillStyle='rgba(35,215,186,0.14)'; octx.fillRect(0,y,els.overlay.width,8); y=(y+3)%els.overlay.height; },16); }
+  // ------------ Scan overlay animation + face grid
+  function drawGrid(){ if(!state.gridOn) return; const {dx,dy,dw,dh}=state.draw; const step=dw/18; octx.save(); octx.strokeStyle='rgba(100,242,227,0.18)'; octx.lineWidth=1; for(let x=dx; x<=dx+dw; x+=step){ octx.beginPath(); octx.moveTo(x,dy); octx.lineTo(x,dy+dh); octx.stroke(); } for(let y=dy; y<=dy+dh; y+=step){ octx.beginPath(); octx.moveTo(dx,y); octx.lineTo(dx+dw,y); octx.stroke(); } octx.restore(); }
+  function startScan(){ stopScan(); let y=0; state.timers.scan=setInterval(()=>{ octx.clearRect(0,0,els.overlay.width,els.overlay.height); drawGrid(); octx.fillStyle='rgba(35,215,186,0.14)'; octx.fillRect(0,y,els.overlay.width,8); y=(y+3)%els.overlay.height; },16); }
   function stopScan(){ if(state.timers.scan){ clearInterval(state.timers.scan); state.timers.scan=null; octx.clearRect(0,0,els.overlay.width,els.overlay.height);} }
 
   // ------------ Utils
@@ -359,7 +379,7 @@
   async function runFace(){
     if(!state.imgEl) return; if(!(await ensureFace())) return; startScan();
     const res = await window._pfFace.detect(state.imgEl);
-    stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height);
+    stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); drawGrid();
     if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); state.face.landmarks=[]; state.face.ratios={}; return; }
     const lm = res.faceLandmarks[0];
     // draw points mapped into letterboxed draw rect
@@ -387,16 +407,24 @@
   // ------------ Palette (ColorThief via dataURL clone to avoid CORS)
   async function buildPalette(){ if(!window.ColorThief) await Loader.js('https://cdn.jsdelivr.net/npm/color-thief-browser@2.0.2/dist/color-thief.umd.js'); try{ const tmp=document.createElement('canvas'); tmp.width=state.imgEl.width; tmp.height=state.imgEl.height; tmp.getContext('2d').drawImage(state.imgEl,0,0); const img2=new Image(); img2.src=tmp.toDataURL('image/jpeg'); await img2.decode(); const thief=new ColorThief(); const pal=thief.getPalette(img2,6); state.det.palette=pal.map(([r,g,b])=>toHex(r,g,b)); els.palette.innerHTML=state.det.palette.map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');}catch(e){ els.palette.textContent='—'; } }
 
-  // ------------ Heuristic caption & prompt build
-  function heuristicCaption(){ const colors=(state.det.palette||[]).slice(0,3).join(', '); const objects=(state.det.objects||[]).slice(0,4).map(o=>o.label).join(', '); const bits=[]; if(objects) bits.push(objects); if(colors) bits.push(`tones of ${colors}`); const cap=bits.length?`A well‑lit photo featuring ${bits.join(' with ')}.`:'A well‑lit photo.'; els.caption.value=cap; return cap; }
-  function buildPrompt(){ const tags=(state.det.objects||[]).filter(o=>o.score>0.4).map(o=>o.label); const r=state.face.ratios||{}; const palette=(state.det.palette||[]).slice(0,3).join(', '); const cap=els.caption.value.trim()||heuristicCaption(); const chunk=[]; if(r.jaw_to_face) chunk.push(`jaw/face ${r.jaw_to_face}`); if(r.eyeSep_to_eyeW) chunk.push(`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`); if(r.nose_to_face) chunk.push(`nose/face ${r.nose_to_face}`); const prompt=[cap, tags.length?`objects: ${tags.join(', ')}`:'', palette?`palette: ${palette}`:'', chunk.length?`face‑ratios: ${chunk.join(' • ')}`:''].filter(Boolean).join(' \n '); els.promptOut.value=prompt; return prompt; }
+  // ------------ Heuristic caption & prompt build (more poetic)
+  function poeticCaption(){
+    const pal=(state.det.palette||[]).slice(0,3); const colors=pal.length?`in tones of ${pal.join(', ')}`:'';
+    const tags=(state.det.objects||[]).filter(o=>o.score>0.4).map(o=>o.label);
+    const subject=tags.length?`featuring ${tags.slice(0,3).join(', ')}`:'a quiet moment';
+    const mood=['soft light','clean focus','natural texture','subtle contrast'];
+    return `A well‑composed photograph ${subject} ${colors} — ${mood[Math.floor(Math.random()*mood.length)]}.`.replace(/\s+/g,' ').trim();
+  }
+  function buildPrompt(){ const tags=(state.det.objects||[]).filter(o=>o.score>0.4).map(o=>o.label); const r=state.face.ratios||{}; const palette=(state.det.palette||[]).slice(0,3).join(', '); const cap=(els.caption.value.trim()||poeticCaption()); els.caption.value=cap; const chunk=[]; if(r.jaw_to_face) chunk.push(`jaw/face ${r.jaw_to_face}`); if(r.eyeSep_to_eyeW) chunk.push(`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`); if(r.nose_to_face) chunk.push(`nose/face ${r.nose_to_face}`); const prompt=[cap, tags.length?`objects: ${tags.join(', ')}`:'', palette?`palette: ${palette}`:'', chunk.length?`face‑ratios: ${chunk.join(' • ')}`:''].filter(Boolean).join(' \n '); els.promptOut.value=prompt; return prompt; }
 
-  function exportJSON(){ const data={ version:'pf_imageintel_1', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, prompt_chunk:els.promptOut.value, caption:els.caption.value, palette:state.det.palette, landmarks:state.face.landmarks, measurements:state.face.ratios, objects:state.det.objects, ocr:state.det.ocr, exif: state.det.exif? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {}, embedding:{type:'stub',dims:0} }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href); }
+  function exportJSON(){ const data={ version:'pf_imageintel_2', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, prompt_chunk:els.promptOut.value, caption:els.caption.value, palette:state.det.palette, landmarks:state.face.landmarks, measurements:state.face.ratios, objects:state.det.objects, ocr:state.det.ocr, exif: state.det.exif? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {}, embedding:{type:'stub',dims:0} }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href); }
 
   // ------------ Wire buttons
+  els.gridToggle.addEventListener('change',()=>{ state.gridOn = !!els.gridToggle.checked; if(!state.timers.scan){ octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); }
+  });
   els.enableFace.addEventListener('click',async()=>{ state.faceEnabled=!state.faceEnabled; els.enableFace.classList.toggle('primary',state.faceEnabled); if(state.faceEnabled && state.imgEl){ if(!state.consentOK){ els.consent.classList.add('open'); } else { runFace(); } } note(state.faceEnabled?'Face Mode enabled.':'Face Mode disabled.'); });
   els.enableAI.addEventListener('click',async()=>{ state.fullAIEnabled=!state.fullAIEnabled; els.enableAI.classList.toggle('primary',state.fullAIEnabled); if(state.fullAIEnabled){ await ensureFullAI(); note('Full‑AI ready. Click Run.'); } else { note('Full‑AI disabled.'); } });
-  els.analyze.addEventListener('click', async()=>{ if(!state.imgEl){ note('Choose an image first.'); return; } startScan(); try{ await buildPalette(); }catch(e){} if(state.faceEnabled){ await runFace(); } if(state.fullAIEnabled){ try{ state.det.objects=await runObjects(); }catch(e){ state.det.objects=[]; } try{ state.det.ocr=await runOCR(); }catch(e){ state.det.ocr=''; } els.objects.textContent=(state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ')||'—'; els.ocr.textContent=state.det.ocr||'—'; } if(!els.caption.value) heuristicCaption(); buildPrompt(); stopScan(); note('Done. Build or Export next.'); });
+  els.analyze.addEventListener('click', async()=>{ if(!state.imgEl){ note('Choose an image first.'); return; } startScan(); try{ await buildPalette(); }catch(e){} if(state.faceEnabled){ await runFace(); } if(state.fullAIEnabled){ try{ state.det.objects=await runObjects(); }catch(e){ state.det.objects=[]; } try{ state.det.ocr=await runOCR(); }catch(e){ state.det.ocr=''; } els.objects.textContent=(state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ')||'—'; els.ocr.textContent=state.det.ocr||'—'; } if(!els.caption.value) els.caption.value=poeticCaption(); buildPrompt(); stopScan(); note('Done. Build or Export next.'); });
   els.build.addEventListener('click',()=>{ buildPrompt(); note('Prompt refreshed.'); });
   els.exportJSON.addEventListener('click',()=>exportJSON());
   els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.value||''); note('Prompt copied.'); });
@@ -419,4 +447,4 @@
   (function(){ const camoEl=document.getElementById('footerCamo'); if(!camoEl) return; const colors=["#64f2e3","#23d7ba","#be9cff","#ffd166"]; let i=0; setInterval(()=>{ camoEl.textContent = ['█▄▀','▞▚','▓▒░','◢◣◥◤'][i%4].repeat(28); camoEl.style.color=colors[i%colors.length]; i++; }, 380); })();
   </script>
 </body>
-  </html>
+</html>
