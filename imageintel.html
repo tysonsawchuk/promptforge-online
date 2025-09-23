@@ -57,8 +57,10 @@
     .choose:hover{box-shadow:0 0 0 4px rgba(100,242,227,.15),0 0 24px rgba(100,242,227,.25)}
     #file{display:none}
 
-    .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer}
+    .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer;position:relative}
     .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
+    .btn.pulse::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid rgba(100,242,227,.55);opacity:.0;animation:pulse 1.8s infinite}
+    @keyframes pulse{0%{opacity:.0;transform:scale(.96)}50%{opacity:.55;transform:scale(1.04)}100%{opacity:.0;transform:scale(1.1)}}
 
     /* Big preview + overlay */
     #stage{position:relative}
@@ -115,7 +117,7 @@
     <section class="hero">
       <div class="card">
         <h1>Map a Face → Get Clean Descriptors</h1>
-        <p class="sub">Drop a portrait. Watch a **large live overlay** trace the mesh and measurements: facial ratios, angles, hair/skin palette. Then export a <b>Face Descriptor Pack</b> (prompt‑ready text + JSON). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors.</p>
+        <p class="sub">Drop a portrait. Watch a <b>large live overlay</b> trace the mesh and measurements: facial ratios, angles, hair/skin palette. Then export a <b>Face Descriptor Pack</b> (prompt‑ready text + JSON). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors.</p>
       </div>
       <div class="card" style="display:flex;gap:12px;align-items:center;justify-content:space-between">
         <div>
@@ -127,6 +129,7 @@
           </div>
         </div>
         <div style="width:180px;min-width:160px;text-align:center">
+          <!-- Kept hero ad small and blended -->
           <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
           <ins id="1101940" data-width="160" data-height="160"></ins>
           <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({"adzone":1101940});</script>
@@ -142,11 +145,6 @@
           <div class="sub">Portrait, well‑lit. On‑device only.</div>
           <label for="file" class="choose" id="chooseBtn">➕ Choose Image</label>
           <input id="file" type="file" accept="image/*" />
-          <div class="ad-wrap">
-            <ins id="1101674" data-width="auto" data-height="90"></ins>
-            <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101674});}catch(e){}</script>
-            <div class="ad-note">sponsored</div>
-          </div>
         </div>
         <div class="card step">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
@@ -155,9 +153,9 @@
           </div>
           <div class="sub">Mesh, box, key ratios (jaw/face, cheekbones, eye angle, lip ratio), hair/skin palette.</div>
           <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-            <button id="run" class="btn primary" disabled>Run Mapping</button>
-            <button id="exportJSON" class="btn">Export JSON</button>
-            <button id="copyPrompt" class="btn">Copy Prompt Chunk</button>
+            <button id="run" class="btn primary pulse" disabled>Run Mapping</button>
+            <button id="exportJSON" class="btn pulse">Export JSON</button>
+            <button id="copyPrompt" class="btn pulse">Copy Prompt Chunk</button>
           </div>
           <div class="sub" id="progress" style="margin-top:6px">—</div>
         </div>
@@ -165,6 +163,12 @@
           <div><span class="num">?</span><strong>Help & Policy</strong></div>
           <a href="#faq" class="btn">Open FAQ</a>
           <button id="toggleJ1NX" class="btn">Open J1NX</button>
+          <!-- Moved ad here, under Help/Policy as requested -->
+          <div class="ad-wrap" style="margin-top:10px">
+            <ins id="1101674" data-width="auto" data-height="90"></ins>
+            <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101674});}catch(e){}</script>
+            <div class="ad-note">sponsored</div>
+          </div>
         </div>
       </aside>
 
@@ -178,7 +182,7 @@
 
         <div class="card" style="margin-top:10px;padding:10px;display:grid;gap:10px;grid-template-columns:1fr auto;align-items:center">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button id="run2" class="btn primary" disabled>Run Mapping</button>
+            <button id="run2" class="btn primary pulse" disabled>Run Mapping</button>
             <label class="sub" style="display:flex;gap:8px;align-items:center"><input id="showVectors" type="checkbox" checked> Show Guides</label>
           </div>
           <div class="sub" id="note">Ready</div>
@@ -217,11 +221,11 @@
           <h3>FAQ / Safety</h3>
           <details open>
             <summary><strong>Is this facial recognition?</strong></summary>
-            <p class="sub">No. It does not identify or verify people. It produces **non‑identifying descriptors** (shapes, ratios, colors) for creative image generation. Use only with consent; never analyze minors.</p>
+            <p class="sub">No. It does not identify or verify people. It produces <b>non‑identifying descriptors</b> (shapes, ratios, colors) for creative image generation. Use only with consent; never analyze minors.</p>
           </details>
           <details>
             <summary><strong>Will it recreate a specific person exactly?</strong></summary>
-            <p class="sub">No. Prompt text cannot force a model to copy a real identity. Exact likeness typically requires training a LoRA/embedding **with consent**, which is out of scope here. The output aims for <em>consistent vibe/structure</em>, not identity.</p>
+            <p class="sub">No. Prompt text cannot force a model to copy a real identity. Exact likeness typically requires training a LoRA/embedding <b>with consent</b>, which is out of scope here. The output aims for <em>consistent vibe/structure</em>, not identity.</p>
           </details>
           <details>
             <summary><strong>What’s in the JSON export?</strong></summary>
@@ -268,8 +272,8 @@
  U|  _"\ uU |  _"\ u  \"/_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \"/_ \/U |  _"\ uU /"___|u\| ___"|/   
  \| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
   |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
-  |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
-  ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+  |_|       |_| \_\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+  ||>>_     //   \_    \   <<,-,,-.   ||>>_   _// \_  )(\,-      \     //   \_  _)(|_   <<   >>    
  (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
     </pre>
     <pre class="footer-camo" id="footerCamo"></pre>
@@ -283,7 +287,13 @@
 
   <script>
   // ===== Config & helpers =====
-  const CFG = { consentRequired:true };
+  const CFG = {
+    consentRequired:true,
+    // Use official Google storage for the .task file (more reliable than some CDNs)
+    faceModel:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+    wasmRoot:"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+  };
+
   const els = { file:$('#file'), choose:$('#chooseBtn'), preview:$('#preview'), overlay:$('#overlay'), legend:$('#legend'), grid:$('#gridToggle'), run:$('#run'), run2:$('#run2'), showVectors:$('#showVectors'), progress:$('#progress'), note:$('#note'), promptOut:$('#promptOut'), measures:$('#measures'), palette:$('#palette'), attrs:$('#attrs'), exportJSON:$('#exportJSON'), copyPrompt:$('#copyPrompt'), consent:$('#consent'), agree:$('#agree'), accept:$('#accept'), deny:$('#deny'), jOpen:$('#toggleJ1NX'), jWrap:$('#j1nxFloatTrue'), jBubble:$('#j1nxBubbleTextTrue'), jInput:$('#j1nxInputTrue'), jSend:$('#j1nxSendTrue'), jClear:$('#j1nxClearTrue'), jSave:$('#j1nxSaveTrue'), jEgg:$('#j1nxEasterEggTrue') };
   const ctx = els.preview.getContext('2d');
   const octx = els.overlay.getContext('2d');
@@ -304,30 +314,46 @@
   els.choose.addEventListener('click',()=>els.file.click());
   els.file.addEventListener('change',(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; state.imgName=f.name||'image'; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ state.imgEl=img; fitDraw(img); els.run.disabled=false; els.run2.disabled=false; note('Ready. Click Run Mapping.'); URL.revokeObjectURL(url); }; img.src=url; });
 
-  // ===== MediaPipe Face Landmarker =====
-  async function ensureFace(){ if(window._pfFace) return true; note('Loading face landmarker…'); await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14'); const vision=await window.tasksVision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'); window._pfFace = await window.tasksVision.FaceLandmarker.createFromOptions(vision,{ baseOptions:{modelAssetPath:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/face_landmarker.task'}, numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false }); return true; }
+  // ===== MediaPipe Face Landmarker (robust browser usage) =====
+  async function ensureFace(){
+    if(window._pfFace) return true;
+    try{
+      note('Loading face landmarker…');
+      await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
+      // Use global classes directly (script tag exposes them on window)
+      const vision = await globalThis.FilesetResolver.forVisionTasks(CFG.wasmRoot);
+      window._pfFace = await globalThis.FaceLandmarker.createFromOptions(vision, {
+        baseOptions:{ modelAssetPath: CFG.faceModel },
+        numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
+      });
+      return true;
+    }catch(err){
+      console.error(err);
+      note('Failed to load face model. Check network/CORS.');
+      return false;
+    }
+  }
   function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
   function P(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
   function boxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs), maxX:Math.max(...xs), minY:Math.min(...ys), maxY:Math.max(...ys)} }
   function drawFace(lm){ if(!lm) return; const bbox=boxFrom(lm); octx.save(); octx.strokeStyle='rgba(100,242,227,.6)'; octx.lineWidth=1.4; octx.strokeRect(bbox.minX,bbox.minY,bbox.maxX-bbox.minX,bbox.maxY-bbox.minY); octx.restore(); if(state.vectors){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1; lm.forEach(p=>{ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.stroke();}); octx.restore(); }
-    // corner brackets
     const pad=10; const L=bbox.minX, T=bbox.minY, R=bbox.maxX, B=bbox.maxY; const Lw=24, Lh=18; octx.strokeStyle='rgba(35,215,186,.85)'; octx.lineWidth=2; [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ octx.beginPath(); octx.moveTo(x,y+Lh); octx.lineTo(x,y); octx.lineTo(x+Lw,y); octx.stroke(); });
     return bbox; }
 
   function hex(r,g,b){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
   function avgRect(rect){ const {minX,maxX,minY,maxY}=rect; const w=maxX-minX,h=maxY-minY; const sx=Math.max(0,minX|0), sy=Math.max(0,minY|0), sw=Math.max(1,w|0), sh=Math.max(1,h|0); const tmp=document.createElement('canvas'); tmp.width=sw; tmp.height=sh; const t=tmp.getContext('2d'); t.drawImage(els.preview,sx,sy,sw,sh,0,0,sw,sh); const d=t.getImageData(0,0,sw,sh).data; let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} return hex((R/n)|0,(G/n)|0,(B/n)|0); }
 
-  function classifyShape(r){ // coarse guess from ratios
-    const {jaw_face, cheek_face, forehead_face}=r; if(!jaw_face||!cheek_face) return 'undetermined'; const jf=jaw_face, cf=cheek_face; if(cf>0.7&&jf>0.6) return 'square'; if(cf>0.72&&jf<0.55) return 'heart'; if(jf<0.52&&cf<0.62) return 'oval'; if(jf>0.62&&cf<0.6) return 'triangle'; return 'round'; }
+  function classifyShape(r){ const {jaw_face, cheek_face, forehead_face}=r; if(!jaw_face||!cheek_face) return 'undetermined'; const jf=jaw_face, cf=cheek_face; if(cf>0.7&&jf>0.6) return 'square'; if(cf>0.72&&jf<0.55) return 'heart'; if(jf<0.52&&cf<0.62) return 'oval'; if(jf>0.62&&cf<0.6) return 'triangle'; return 'round'; }
 
-  function buildPrompt(state){ const r=state.face.ratios, a=state.face.attrs, shape=state.face.shape; const hair=a.hairHex?`hair-color: ${a.hairHex}`:''; const skin=a.skinHex?`skin-tone: ${a.skinHex}`:''; const eyes=a.eyeHue?`eye-hue: ${a.eyeHue}`:''; const ratios=['jaw/face '+(r.jaw_face||'-'),'cheekbone/face '+(r.cheek_face||'-'),'forehead/face '+(r.forehead_face||'-'),'eye-angle '+(state.face.angles.eye||'-'),'lip-thickness '+(r.lip_ratio||'-')].join(' • '); const lines=[ `face-shape: ${shape}`, hair, skin, eyes, `ratios: ${ratios}` ].filter(Boolean); return lines.join('\n'); }
+  function buildPrompt(state){ const r=state.face.ratios, a=state.face.attrs, shape=state.face.shape; const hair=a.hairHex?`hair-color: ${a.hairHex}`:''; const skin=a.skinHex?`skin-tone: ${a.skinHex}`:''; const eyes=a.eyeHue?`eye-hue: ${a.eyeHue}`:''; const ratios=['jaw/face '+(r.jaw_face||'-'),'cheekbone/face '+(r.cheek_face||'-'),'forehead/face '+(r.forehead_face||'-'),'eye-angle '+(state.face.angles.eye||'-'),'lip-thickness '+(r.lip_ratio||'-')].join(' • '); const lines=[ `face-shape: ${shape}`, hair, skin, eyes, `ratios: ${ratios}` ].filter(Boolean); return lines.join('
+'); }
 
-  async function run(){ if(!state.imgEl) return; if(CFG.consentRequired && !state._ok){ els.consent.classList.add('open'); return; } await ensureFace(); startScan(); const res=await window._pfFace.detect(state.imgEl); stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); return; } const lm=res.faceLandmarks[0]; const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, leftEyeOut:33, rightEyeOut:263, leftBrowMid:105, rightBrowMid:334, upperLip:13, lowerLip:14 };
+  async function run(){ if(!state.imgEl) return; if(CFG.consentRequired && !state._ok){ els.consent.classList.add('open'); return; } const ok = await ensureFace(); if(!ok){ return; } startScan(); let res; try{ res=await window._pfFace.detect(state.imgEl); }catch(e){ console.error(e); note('Face detection error.'); stopScan(); return; } stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); return; } const lm=res.faceLandmarks[0]; const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, leftEyeOut:33, rightEyeOut:263, upperLip:13, lowerLip:14 };
     drawFace(lm);
     // Ratios
     const faceH=mpDist(lm[IDX.top],lm[IDX.chin]);
     const jawW=mpDist(lm[IDX.leftJaw],lm[IDX.rightJaw]);
-    const cheekW=mpDist(lm[234],lm[454]); // same as jaw anchors for approx cheek width
+    const cheekW=mpDist(lm[234],lm[454]);
     const foreheadH=mpDist(lm[8],lm[10]);
     const lipT=mpDist(lm[IDX.upperLip],lm[IDX.lowerLip]);
     const eyeAngle=Math.atan2(lm[IDX.rightEyeIn].y - lm[IDX.leftEyeIn].y, lm[IDX.rightEyeIn].x - lm[IDX.leftEyeIn].x) * 57.2958; // deg
@@ -335,13 +361,11 @@
     const ratios={ jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3), forehead_face:+(foreheadH/faceH).toFixed(3), lip_ratio:+(lipT/faceH).toFixed(3) };
     state.face.ratios=ratios; state.face.angles={ eye:+eyeAngle.toFixed(2) };
 
-    // Hair & skin average
+    // Hair & skin averages
     const bbox=boxFrom(lm); const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY}; const skinRect={minX:bbox.minX+(bbox.maxX-bbox.minX)*0.3, maxX:bbox.maxX-(bbox.maxX-bbox.minX)*0.3, minY:bbox.minY+(bbox.maxY-bbox.minY)*0.45, maxY:bbox.minY+(bbox.maxY-bbox.minY)*0.7};
     const hairHex=avgRect(hairRect), skinHex=avgRect(skinRect);
-
-    // Eye hue rough estimate = average of small patch around inner eye points
-    function smallPatch(idx){ const q=P(lm[idx]); const r=8; const rect={minX:q.x-r,maxX:q.x+r,minY:q.y-r,maxY:q.y+r}; return avgRect(rect); }
-    const eyeHue=smallPatch(IDX.leftEyeIn);
+    // Eye hue sample
+    const eyeHue=(function(){ const q=P(lm[133]); const r=8; return avgRect({minX:q.x-r,maxX:q.x+r,minY:q.y-r,maxY:q.y+r}); })();
 
     state.face.attrs={ hairHex, skinHex, eyeHue };
     state.face.shape=classifyShape(ratios);
@@ -351,7 +375,9 @@
     els.palette.innerHTML = [hairHex, skinHex, eyeHue].map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');
 
     // Measures & prompt
-    const mtxt = Object.entries(ratios).map(([k,v])=>`${k}: ${v}`).join('\n') + `\nEye angle (deg): ${state.face.angles.eye}`;
+    const mtxt = Object.entries(ratios).map(([k,v])=>`${k}: ${v}`).join('
+') + `
+Eye angle (deg): ${state.face.angles.eye}`;
     els.measures.textContent = mtxt;
     const prompt = buildPrompt(state);
     els.promptOut.textContent = prompt;
@@ -360,10 +386,10 @@
 
   // Wire UI
   els.grid.addEventListener('change',()=>{ state.gridOn=els.grid.checked; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); });
-  els.showVectors.addEventListener('change',()=>{ state.vectors=els.showVectors.checked; run(); });
+  els.showVectors?.addEventListener('change',()=>{ state.vectors=els.showVectors.checked; run(); });
   els.run.addEventListener('click',run); els.run2.addEventListener('click',run);
   els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.textContent||''); note('Prompt chunk copied.'); });
-  els.exportJSON.addEventListener('click',()=>{ const data={ version:'pf_facemapper_1', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, landmarks:state.face.landmarks, ratios:state.face.ratios, angles:state.face.angles, attrs:state.face.attrs, shape:state.face.shape, prompt_chunk:els.promptOut.textContent }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_facemapper.json'; a.click(); URL.revokeObjectURL(a.href); });
+  els.exportJSON.addEventListener('click',()=>{ const data={ version:'pf_facemapper_2', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, landmarks:state.face.landmarks, ratios:state.face.ratios, angles:state.face.angles, attrs:state.face.attrs, shape:state.face.shape, prompt_chunk:els.promptOut.textContent }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_facemapper.json'; a.click(); URL.revokeObjectURL(a.href); });
 
   // Consent
   els.agree.addEventListener('change',()=>els.accept.disabled=!els.agree.checked);
@@ -382,4 +408,4 @@
   (function(){ const camo=document.getElementById('footerCamo'); if(!camo) return; const colors=["#64f2e3","#23d7ba","#be9cff","#ffd166"]; let i=0; setInterval(()=>{ camo.textContent=['█▄▀','▞▚','▓▒░','◢◣◥◤'][i%4].repeat(28); camo.style.color=colors[i%colors.length]; i++; },380); })();
   </script>
 </body>
-  </html>
+</html>
