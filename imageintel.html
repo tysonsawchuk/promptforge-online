@@ -3,23 +3,23 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PromptForge — Image Intelligence (Live Scan • Face Mapping • Objects • OCR)</title>
-  <meta name="description" content="On‑device image analysis with live scan drawing: face landmarks + reproducible ratios, object boxes, OCR word boxes, palette & EXIF, style/length‑aware caption & prompt builder, JSON export. J1NX, ANSI footer, and blended ad placements preserved." />
-  <link rel="canonical" href="https://promptforge.online/imageintel.html" />
+  <title>PromptForge — Face Mapper (Landmarks • Ratios • Palette • Prompt Pack)</title>
+  <meta name="description" content="On‑device face mapping with MediaPipe: 468‑pt mesh, reproducible ratios, hair/skin palette, non‑identifying descriptors, and prompt‑ready text/JSON export for image models. Big live overlay shows what the AI is analyzing. Everything runs in your browser." />
+  <link rel="canonical" href="https://promptforge.online/facemapper.html" />
   <meta name="theme-color" content="#08131b" />
 
-  <!-- Open Graph / Twitter -->
+  <!-- OG/Twitter -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="PromptForge — Image Intelligence" />
-  <meta property="og:description" content="Face mapping + ratios, objects, OCR, palette, EXIF — client‑side. Build ready prompts and export JSON." />
-  <meta property="og:image" content="/assets/og/imagetoprompt.png" />
-  <meta property="og:url" content="https://promptforge.online/imageintel.html" />
+  <meta property="og:title" content="PromptForge — Face Mapper" />
+  <meta property="og:description" content="Landmarks, ratios, palette, and prompt‑ready descriptors. Client‑side, privacy‑friendly." />
+  <meta property="og:image" content="/assets/og/facemapper.png" />
+  <meta property="og:url" content="https://promptforge.online/facemapper.html" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <!-- JSON‑LD (Org + WebSite + Breadcrumbs) -->
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PromptForge","url":"https://promptforge.online/","logo":"https://promptforge.online/assets/og/home.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PromptForge","url":"https://promptforge.online/","potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},{"@type":"ListItem","position":3,"name":"Image Intelligence"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},{"@type":"ListItem","position":3,"name":"Face Mapper"}]}</script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,10 +29,9 @@
   <style>
     :root{ --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba; --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; --warn:#ffd166; --bad:#ff6b6b; }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{margin:0;background:radial-gradient(1200px 700px at 10% -10%,rgba(100,242,227,.07),transparent 55%),radial-gradient(1000px 600px at 120% -10%,rgba(35,215,186,.06),transparent 55%),var(--bg);color:var(--ink);font:14px/1.6 Inter,system-ui,Segoe UI,Roboto,Arial}
     a{color:var(--aqua)}
-    .wrap{max-width:1200px;margin:0 auto;padding:18px}
+    .wrap{max-width:1240px;margin:0 auto;padding:18px}
 
     .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
     .brand{font-weight:900;font-size:22px;letter-spacing:.4px;color:var(--aqua)}
@@ -40,15 +39,14 @@
     .tool-links{display:flex;gap:8px;flex-wrap:wrap}
     .pill{border:1px solid var(--edge);border-radius:999px;padding:.25rem .6rem;color:var(--muted);font-size:12px}
 
-    .hero{margin-top:12px;display:grid;gap:12px;grid-template-columns:1.1fr .9fr}
-    @media(max-width:900px){.hero{grid-template-columns:1fr}}
+    .hero{margin-top:12px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}}
     .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:14px;box-shadow:0 14px 40px rgba(0,0,0,.55)}
     .hero h1{margin:.2rem 0 .4rem}
     .sub{color:var(--muted);font-size:12px}
 
-    .grid{display:grid;gap:16px}
-    @media(min-width:1024px){.grid{grid-template-columns:330px 1fr}}
-    h3{margin:.2rem 0 .8rem;color:var(--muted);font-size:15px}
+    main.grid{display:grid;gap:16px;margin-top:14px}
+    @media(min-width:1120px){main.grid{grid-template-columns:370px 1fr}}
 
     .steps{position:sticky;top:14px;display:flex;flex-direction:column;gap:10px}
     .step{border-left:3px solid #0f2630;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(10,26,34,.6),rgba(10,26,34,.3))}
@@ -61,51 +59,46 @@
 
     .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer}
     .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
-    .btn.warn{border-color:var(--warn);color:var(--warn)}
 
-    textarea,.outbox{width:100%;min-height:120px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;box-shadow:0 0 22px rgba(100,242,227,.08)}
-    .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-
-    #previewWrap{position:relative}
-    #preview{width:100%;border-radius:10px;background:#061219}
-    #overlay{position:absolute;left:0;top:0;width:100%;border-radius:10px;pointer-events:none}
+    /* Big preview + overlay */
+    #stage{position:relative}
+    #preview{width:100%;height:auto;border-radius:12px;background:#061219;display:block}
+    #overlay{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:12px;pointer-events:none}
     .legend{position:absolute;right:10px;top:10px;background:#08141caa;border:1px solid #10313b;border-radius:10px;padding:8px 10px;font:12px/1.3 ui-monospace,monospace}
 
-    .switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-    .switch input{accent-color:var(--aqua)}
+    .kv{display:grid;grid-template-columns:160px 1fr;gap:10px;align-items:center}
+    .outbox{width:100%;min-height:90px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;box-shadow:0 0 22px rgba(100,242,227,.08);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
 
-    /* —— Ad styling: visually blended in cards —— */
+    /* Blended ad card */
     .ad-wrap{display:block;min-height:90px;border:1px solid var(--edge);border-radius:12px;margin:8px 0;padding:8px;text-align:center;color:var(--muted);background:linear-gradient(180deg,rgba(10,26,34,.45),rgba(10,26,34,.2));box-shadow:inset 0 0 0 1px rgba(100,242,227,.04)}
     .ad-note{font-size:11px;color:var(--muted);opacity:.85;margin-top:6px}
-    .ad-right{display:flex;gap:8px;align-items:center}
 
-    /* J1NX float — canonical visual parity */
+    /* J1NX float (compact) */
     .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
-    .j1nx-true-cutout-img{width:220px;height:220px;object-fit:contain;border-radius:24px;background:transparent!important;margin-bottom:-20px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none!important}
-    .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:280px;max-width:330px;position:relative;z-index:1}
-    .j1nx-bubble-text-true{font-size:1.02em;color:#fff;margin:.42em 0 .20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1;max-height:180px;overflow:auto}
-    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em 0}
-    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
-    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:var(--aqua);font-family:inherit;font-weight:600;cursor:pointer;transition:background .13s,color .13s,border .13s;box-shadow:0 1.5px 9px #be9cff33}
-    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
-    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
-    @media(max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:96px;height:96px}}
+    .j1nx-true-cutout-img{width:180px;height:180px;object-fit:contain;border-radius:20px;background:transparent!important;margin-bottom:-16px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s}
+    .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:260px;max-width:320px}
+    .j1nx-bubble-text-true{font-size:1.02em;color:#fff;margin:.42em 0 .20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1;max-height:160px;overflow:auto}
 
-    /* Footer styles (ANSI + nav) */
+    /* Footer (ANSI) */
     footer{margin:18px auto;padding:0 12px 16px;text-align:center;max-width:860px;color:#eaf7ff}
     .footer-art{font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text;margin:0 0 10px}
     .footer-camo{font-family:"Fira Mono",monospace;font-size:.85em;letter-spacing:2px;color:#64f2e3;min-height:.8em;white-space:pre}
     .footer-bar{color:#88fffd;margin:10px auto 6px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
     .footer-bar a{color:var(--aqua);text-decoration:none}
     .footer-bar a:hover{text-decoration:underline;color:#fff}
+
+    /* Consent modal */
+    .modal{position:fixed;inset:0;background:rgba(4,10,14,.72);display:none;align-items:center;justify-content:center;z-index:5000}
+    .modal.open{display:flex}
+    .sheet{width:min(640px,92vw);background:#0c1620;border:1px solid #12323d;border-radius:14px;padding:14px}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
       <div>
-        <div class="brand">PromptForge — Image Intelligence</div>
-        <div class="crumbs">Home › Tools › Image → Prompt (with Face Mapping)</div>
+        <div class="brand">PromptForge — Face Mapper</div>
+        <div class="crumbs">Home › Tools › Face Mapping (non‑identifying)</div>
       </div>
       <div class="tool-links">
         <a class="pill" href="/">Home</a>
@@ -121,40 +114,35 @@
 
     <section class="hero">
       <div class="card">
-        <h1>Analyze → Measure → Explain → Export</h1>
-        <p class="sub">Drop a photo. Watch a <b>live scan</b> paint what the model sees: a face mesh with reproducible ratios, object boxes, OCR word boxes, palette, and EXIF. Then generate a <b>style/length‑aware</b> caption and a clean prompt chunk for SDXL/Flux/MJ, or export a JSON bundle. Everything runs <b>client‑side by default</b>.</p>
+        <h1>Map a Face → Get Clean Descriptors</h1>
+        <p class="sub">Drop a portrait. Watch a **large live overlay** trace the mesh and measurements: facial ratios, angles, hair/skin palette. Then export a <b>Face Descriptor Pack</b> (prompt‑ready text + JSON). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors.</p>
       </div>
-      <div class="card ad-right">
-        <div style="flex:1">
+      <div class="card" style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+        <div>
           <h3>Quick links</h3>
-          <p class="sub">PromptForge tools & docs.</p>
           <div class="tool-links" style="margin-top:6px">
             <a class="pill" href="/picture.html">Image Prompt Builder</a>
-            <a class="pill" href="/movie.html">Video Prompt Builder</a>
-            <a class="pill" href="/ansiart.html">ANSI/ASCII Studio</a>
-            <a class="pill" href="/watermark.html">Watermark & Privacy</a>
             <a class="pill" href="/compare.html">Model Compare</a>
+            <a class="pill" href="/watermark.html">Watermark & EXIF</a>
           </div>
         </div>
-        <div style="width:128px;min-width:128px;text-align:center">
-          <!-- Blended ad block: same card backdrop, subtle border -->
+        <div style="width:180px;min-width:160px;text-align:center">
           <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
-          <ins id="1101940" data-width="128" data-height="160"></ins>
+          <ins id="1101940" data-width="160" data-height="160"></ins>
           <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({"adzone":1101940});</script>
           <div class="ad-note">sponsored</div>
         </div>
       </div>
     </section>
 
-    <main class="grid" style="margin-top:14px">
+    <main class="grid">
       <aside class="steps">
         <div class="card step active">
           <div><span class="num">1</span><strong>Choose Image</strong></div>
-          <div class="sub">Portrait or scene. Private: runs in your browser.</div>
-          <label for="file" class="choose" id="chooseBtn" title="Select a local photo (nothing is uploaded by default)">➕ Choose Image</label>
+          <div class="sub">Portrait, well‑lit. On‑device only.</div>
+          <label for="file" class="choose" id="chooseBtn">➕ Choose Image</label>
           <input id="file" type="file" accept="image/*" />
           <div class="ad-wrap">
-            <script async src="https://poweredby.jads.co/js/jads.js"></script>
             <ins id="1101674" data-width="auto" data-height="90"></ins>
             <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101674});}catch(e){}</script>
             <div class="ad-note">sponsored</div>
@@ -162,127 +150,89 @@
         </div>
         <div class="card step">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <div><span class="num">2</span><strong>Analyze</strong></div>
-            <label class="switch" title="Show overlay grid while scanning"><input id="gridToggle" type="checkbox" checked> Face Grid</label>
+            <div><span class="num">2</span><strong>Map & Measure</strong></div>
+            <label class="sub" style="display:flex;gap:8px;align-items:center"><input id="gridToggle" type="checkbox" checked> Overlay Grid</label>
           </div>
-          <div class="sub">Face Mode = landmarks + ratios • Full‑AI = objects + OCR • Remote = optional Qwen caption (configurable).</div>
+          <div class="sub">Mesh, box, key ratios (jaw/face, cheekbones, eye angle, lip ratio), hair/skin palette.</div>
           <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-            <button id="analyze" class="btn primary" disabled>Run (Fast)</button>
-            <button id="enable-face" class="btn">Face Mode</button>
-            <button id="enable-ai" class="btn">Enable Full‑AI</button>
-            <button id="remoteCap" class="btn" title="Uses your server if configured">Remote Caption (Qwen*)</button>
+            <button id="run" class="btn primary" disabled>Run Mapping</button>
+            <button id="exportJSON" class="btn">Export JSON</button>
+            <button id="copyPrompt" class="btn">Copy Prompt Chunk</button>
           </div>
           <div class="sub" id="progress" style="margin-top:6px">—</div>
         </div>
         <div class="card step">
-          <div><span class="num">3</span><strong>Build & Export</strong></div>
-          <div class="sub">Assemble prompt and export JSON for advanced workflows.</div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button id="build" class="btn">Build Prompt</button>
-            <button id="exportJSON" class="btn">Export JSON</button>
-          </div>
-        </div>
-        <div class="card step">
-          <div><span class="num">?</span><strong>Help & FAQ</strong></div>
-          <div class="sub">Use prompt directly or fine‑tune locally. Privacy inside.</div>
+          <div><span class="num">?</span><strong>Help & Policy</strong></div>
           <a href="#faq" class="btn">Open FAQ</a>
           <button id="toggleJ1NX" class="btn">Open J1NX</button>
         </div>
       </aside>
 
       <section class="card">
-        <h3>Preview</h3>
-        <div id="previewWrap">
-          <canvas id="preview" width="900" height="560"></canvas>
-          <canvas id="overlay" width="900" height="560"></canvas>
-          <div class="legend" id="legend">Live: grid • scan • boxes • mesh • words</div>
+        <h3>Live Face Overlay</h3>
+        <div id="stage">
+          <canvas id="preview" width="1080" height="680"></canvas>
+          <canvas id="overlay" width="1080" height="680"></canvas>
+          <div class="legend" id="legend">Live: grid • scan • face box • landmarks • angles</div>
         </div>
 
-        <!-- Always-visible action bar under the canvas -->
-        <div class="card" style="margin-top:10px;padding:10px;display:grid;gap:10px;grid-template-columns:1fr 1fr;align-items:center">
-          <div style="display:flex;flex-wrap:wrap;gap:8px">
-            <button id="analyze2" class="btn primary" disabled>Run (Fast)</button>
-            <button id="enable-face2" class="btn">Face Mode</button>
-            <button id="enable-ai2" class="btn">Enable Full‑AI</button>
+        <div class="card" style="margin-top:10px;padding:10px;display:grid;gap:10px;grid-template-columns:1fr auto;align-items:center">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="run2" class="btn primary" disabled>Run Mapping</button>
+            <label class="sub" style="display:flex;gap:8px;align-items:center"><input id="showVectors" type="checkbox" checked> Show Guides</label>
           </div>
-          <div style="display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap">
-            <label class="switch" title="Adjust caption/prompt target length">
-              <span>Length:</span>
-              <input id="lenSlider" type="range" min="120" max="600" step="20" value="240" style="width:180px">
-              <span id="lenVal" class="sub">≈240 chars</span>
-            </label>
-            <label class="switch" title="Writing style for description and prompt">
-              <span>Style:</span>
-              <select id="styleSel" class="btn" style="padding:6px 10px">
-                <option value="poetic" selected>Poetic</option>
-                <option value="neutral">Neutral</option>
-                <option value="technical">Technical</option>
-              </select>
-            </label>
+          <div class="sub" id="note">Ready</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+          <div>
+            <h3>Face Prompt (non‑identifying)</h3>
+            <div class="outbox" id="promptOut">—</div>
+            <p class="sub" style="margin:.4rem 0 0">Format targets SDXL/Flux/MJ: high‑level shape, features, color hints, ratios. Not for person identification.</p>
+          </div>
+          <div>
+            <h3>Key Measurements</h3>
+            <div class="outbox" id="measures">—</div>
           </div>
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
           <div>
-            <h3>Professional Description</h3>
-            <textarea id="caption" class="mono" placeholder="—" title="Caption derived from colors, objects, composition. Honors style + length."></textarea>
+            <h3>Palette</h3>
+            <div class="outbox" id="palette" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
           </div>
           <div>
-            <h3>Prompt</h3>
-            <textarea id="promptOut" class="mono" placeholder="—" title="Copy into SDXL/Flux/MJ/etc. Includes face ratios + palette if available."></textarea>
-            <div style="display:flex;gap:8px;margin-top:8px"><button id="copyPrompt" class="btn">Copy Prompt</button><button id="copyAlt" class="btn">Copy Alt‑text</button></div>
+            <h3>Attributes</h3>
+            <div class="outbox" id="attrs">—</div>
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
-          <div>
-            <h3>Objects & OCR</h3>
-            <div id="objects" class="outbox mono">—</div>
-            <div id="ocr" class="outbox mono" style="margin-top:8px">—</div>
-          </div>
-          <div>
-            <h3>Palette & EXIF</h3>
-            <div id="palette" class="outbox mono" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"></div>
-            <div id="exif" class="outbox mono" style="margin-top:8px">—</div>
-          </div>
-        </div>
-
-        <div class="ad-wrap">
+        <div class="ad-wrap" style="margin-top:12px">
           <ins id="1101622" data-width="auto" data-height="250"></ins>
           <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101622});}catch(e){}</script>
           <div class="ad-note">sponsored</div>
         </div>
 
         <div class="card" id="faq" style="margin-top:12px">
-          <h3>Help & FAQ — hidden in plain sight</h3>
+          <h3>FAQ / Safety</h3>
           <details open>
-            <summary><strong>What happens to my image?</strong></summary>
-            <p class="sub">Analysis is on‑device by default. Export JSON only if you choose. Don’t analyze images without permission; don’t process minors. This tool does <em>not</em> identify people; it provides descriptors for creative generation only.</p>
+            <summary><strong>Is this facial recognition?</strong></summary>
+            <p class="sub">No. It does not identify or verify people. It produces **non‑identifying descriptors** (shapes, ratios, colors) for creative image generation. Use only with consent; never analyze minors.</p>
           </details>
           <details>
-            <summary><strong>How accurate are face measurements?</strong></summary>
-            <p class="sub">We estimate 468+ landmarks (MediaPipe Face Landmarker) and compute stable ratios (jaw width vs. face height, eye separation vs. eye width, nose height vs. face height). Use them as consistent descriptors rather than biometrics.</p>
+            <summary><strong>Will it recreate a specific person exactly?</strong></summary>
+            <p class="sub">No. Prompt text cannot force a model to copy a real identity. Exact likeness typically requires training a LoRA/embedding **with consent**, which is out of scope here. The output aims for <em>consistent vibe/structure</em>, not identity.</p>
           </details>
           <details>
             <summary><strong>What’s in the JSON export?</strong></summary>
-            <p class="sub"><code>version</code>, filename, image size; <code>prompt_chunk</code>; <code>caption</code>; <code>palette</code>; <code>landmarks</code> (normalized); <code>measurements</code> ratios; objects & OCR; trimmed EXIF; and an <code>embedding</code> stub.</p>
+            <p class="sub">Filename, image size; 468‑pt landmarks (normalized); computed ratios/angles; attributes (hair hue, guessed face shape, brow/eye/lip style); palette (hair/skin triad); and the prompt chunk.</p>
           </details>
-          <details>
-            <summary><strong>Can this describe explicit anatomy?</strong></summary>
-            <p class="sub">Not on this page. For policy and ad‑safety, we generate <b>non‑explicit</b> descriptions. If you want an age‑gated, no‑ads lab for <b>synthetic</b> (AI‑generated) images only, we can spin a separate <code>/labs</code> tool.</p>
-          </details>
-        </div>
-
-        <div class="ad-wrap">
-          <ins id="1101675" data-width="auto" data-height="90"></ins>
-          <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101675});}catch(e){}</script>
-          <div class="ad-note">sponsored</div>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- ===== Consent Modal ===== -->
+  <!-- Consent Modal -->
   <div id="consent" class="modal" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="sheet">
       <h3>Face Mapping — Consent</h3>
@@ -292,12 +242,12 @@
     </div>
   </div>
 
-  <!-- ===== J1NX FLOAT (canonical look) ===== -->
+  <!-- J1NX (compact) -->
   <div class="j1nx-float-true" id="j1nxFloatTrue" style="display:none">
     <img src="/j1nx/j1nx_cutout.png" alt="J1NX" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1NX:</b> Drop a photo, then hit <b>Face Mode</b> or <b>Full‑AI</b>. I’ll narrate and help build your prompt.
+        <b>J1NX:</b> Drop a portrait and hit <b>Run Mapping</b>. I’ll explain the mesh and ratios.
       </div>
       <div class="j1nx-bubble-row-true">
         <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Ask J1NX…" maxlength="140" autocomplete="off"/>
@@ -311,7 +261,7 @@
     </div>
   </div>
 
-  <!-- ===== ANSI FOOTER (exact vibe) ===== -->
+  <!-- ANSI FOOTER -->
   <footer>
     <pre class="footer-art">
   ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
@@ -331,202 +281,105 @@
     </div>
   </footer>
 
-  <!-- ===== App Code ===== -->
   <script>
-  // ---------- Config (optional remote caption endpoint using Qwen/Qwen3‑Omni etc.)
-  const CFG = { qwenEndpoint: "" /* e.g. '/api/qwen-caption' (multipart form: image -> caption) */ };
-
-  // ---------- Lazy loader for JS files
-  const Loader = { loaded:new Set(), js(src){return new Promise((res,rej)=>{ if(Loader.loaded.has(src)) return res(); const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>{Loader.loaded.add(src);res();}; s.onerror=()=>rej(new Error('Failed '+src)); document.head.appendChild(s); });} };
-
-  // ---------- Elements & State
-  const els = {
-    file:$('#file'), chooseBtn:$('#chooseBtn'),
-    preview:$('#preview'), overlay:$('#overlay'), legend:$('#legend'),
-    analyze:$('#analyze'), enableFace:$('#enable-face'), enableAI:$('#enable-ai'), gridToggle:$('#gridToggle'),
-    analyze2:$('#analyze2'), enableFace2:$('#enable-face2'), enableAI2:$('#enable-ai2'),
-    remoteCap:$('#remoteCap'),
-    progress:$('#progress'),
-    caption:$('#caption'), promptOut:$('#promptOut'),
-    objects:$('#objects'), ocr:$('#ocr'),
-    palette:$('#palette'), exif:$('#exif'),
-    build:$('#build'), exportJSON:$('#exportJSON'),
-    copyPrompt:$('#copyPrompt'), copyAlt:$('#copyAlt'),
-    consent:$('#consent'), agree:$('#agree'), accept:$('#accept'), deny:$('#deny'),
-    lenSlider:$('#lenSlider'), lenVal:$('#lenVal'), styleSel:$('#styleSel'),
-    jOpen:$('#toggleJ1NX'), jWrap:$('#j1nxFloatTrue'), jBubble:$('#j1nxBubbleTextTrue'), jInput:$('#j1nxInputTrue'), jSend:$('#j1nxSendTrue'), jClear:$('#j1nxClearTrue'), jSave:$('#j1nxSaveTrue'), jEgg:$('#j1nxEasterEggTrue')
-  };
+  // ===== Config & helpers =====
+  const CFG = { consentRequired:true };
+  const els = { file:$('#file'), choose:$('#chooseBtn'), preview:$('#preview'), overlay:$('#overlay'), legend:$('#legend'), grid:$('#gridToggle'), run:$('#run'), run2:$('#run2'), showVectors:$('#showVectors'), progress:$('#progress'), note:$('#note'), promptOut:$('#promptOut'), measures:$('#measures'), palette:$('#palette'), attrs:$('#attrs'), exportJSON:$('#exportJSON'), copyPrompt:$('#copyPrompt'), consent:$('#consent'), agree:$('#agree'), accept:$('#accept'), deny:$('#deny'), jOpen:$('#toggleJ1NX'), jWrap:$('#j1nxFloatTrue'), jBubble:$('#j1nxBubbleTextTrue'), jInput:$('#j1nxInputTrue'), jSend:$('#j1nxSendTrue'), jClear:$('#j1nxClearTrue'), jSave:$('#j1nxSaveTrue'), jEgg:$('#j1nxEasterEggTrue') };
   const ctx = els.preview.getContext('2d');
   const octx = els.overlay.getContext('2d');
-  const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, faceEnabled:false, fullAIEnabled:false, consentOK:false, gridOn:true,
-                  face:{landmarks:[], ratios:{}, attrs:{}}, det:{objects:[], ocr:'', exif:{}, palette:[]}, timers:{scan:null},
-                  targetLen:240, style:'poetic' };
-  function $(id){ return document.getElementById(id.replace('#','')) || document.querySelector(id); }
-  function note(m){ els.progress.textContent = m; }
+  function $(q){return document.querySelector(q)}
+  function note(m){ els.progress.textContent=m; els.note.textContent=m; }
 
-  // ---------- Draw fitted image + remember draw rect
-  function fitDrawImage(img){
-    const cw=els.preview.width, ch=els.preview.height; ctx.clearRect(0,0,cw,ch); octx.clearRect(0,0,cw,ch);
-    const ar=img.width/img.height, car=cw/ch; let dw,dh,dx,dy; if(ar>car){ dw=cw; dh=cw/ar; dx=0; dy=(ch-dh)/2; } else { dh=ch; dw=ch*ar; dy=0; dx=(cw-dw)/2; }
-    ctx.drawImage(img,dx,dy,dw,dh); state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height;
-  }
+  const Loader = { loaded:new Set(), js(src){return new Promise((res,rej)=>{ if(Loader.loaded.has(src)) return res(); const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>{Loader.loaded.add(src);res();}; s.onerror=()=>rej(new Error('load '+src)); document.head.appendChild(s); });} };
 
-  // ---------- Grid + scan line + attention pulse
-  function drawGrid(){ if(!state.gridOn) return; const {dx,dy,dw,dh}=state.draw; const step=dw/18; octx.save(); octx.strokeStyle='rgba(100,242,227,0.18)'; octx.lineWidth=1; for(let x=dx; x<=dx+dw; x+=step){ octx.beginPath(); octx.moveTo(x,dy); octx.lineTo(x,dy+dh); octx.stroke(); } for(let y=dy; y<=dy+dh; y+=step){ octx.beginPath(); octx.moveTo(dx,y); octx.lineTo(dx+dw,y); octx.stroke(); } octx.restore(); }
-  function startScan(){ stopScan(); let y=0, t=0; state.timers.scan=setInterval(()=>{ octx.clearRect(0,0,els.overlay.width,els.overlay.height); drawGrid(); octx.fillStyle='rgba(35,215,186,0.14)'; octx.fillRect(0,y,els.overlay.width,8); // pulse dot following the bar
-    const px = state.draw.dx + (Math.sin(t/18)*.5+.5)*state.draw.dw; const py=y+4; octx.beginPath(); octx.arc(px,py,6,0,Math.PI*2); octx.fillStyle='rgba(100,242,227,0.75)'; octx.fill(); y=(y+3)%els.overlay.height; t++; },16); }
-  function stopScan(){ if(state.timers.scan){ clearInterval(state.timers.scan); state.timers.scan=null; octx.clearRect(0,0,els.overlay.width,els.overlay.height);} }
+  const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, gridOn:true, vectors:true,
+    face:{landmarks:[], ratios:{}, angles:{}, attrs:{}, shape:''}, palette:[] };
 
-  // ---------- Utils
-  const toHex=(r,g,b)=>'#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-  const ratio=(a,b)=> b? +(a/b).toFixed(4):0;
-  const clampToChars=(txt,n)=>{ if(!txt) return ''; if(txt.length<=n) return txt; const p1 = txt.slice(0,n); const cut = Math.max(p1.lastIndexOf('. '), p1.lastIndexOf(', '), p1.lastIndexOf(' ')); return (cut>80?txt.slice(0,cut):p1).replace(/[\s\.,;:-]+$/,'')+'…'; };
-  const stylize=(base)=>{ switch(state.style){ case 'neutral': return base.replace(/—|–/g,'-'); case 'technical': return base+" Lighting: even; Focus: sharp; Composition: center-weighted."; default: return base; } };
+  function fitDraw(img){ const C=els.preview, W=C.width, H=C.height; ctx.clearRect(0,0,W,H); octx.clearRect(0,0,W,H); const ar=img.width/img.height, car=W/H; let dw,dh,dx,dy; if(ar>car){dw=W;dh=W/ar;dx=0;dy=(H-dh)/2}else{dh=H;dw=H*ar;dy=0;dx=(W-dw)/2} ctx.drawImage(img,dx,dy,dw,dh); state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height; }
+  function drawGrid(){ if(!state.gridOn) return; const {dx,dy,dw,dh}=state.draw; const step=dw/18; octx.save(); octx.strokeStyle='rgba(100,242,227,0.18)'; octx.lineWidth=1; for(let x=dx;x<=dx+dw;x+=step){ octx.beginPath(); octx.moveTo(x,dy); octx.lineTo(x,dy+dh); octx.stroke(); } for(let y=dy;y<=dy+dh;y+=step){ octx.beginPath(); octx.moveTo(dx,y); octx.lineTo(dx+dw,y); octx.stroke(); } octx.restore(); }
+  function startScan(){ stopScan(); let y=0,t=0; state._scan=setInterval(()=>{ octx.clearRect(0,0,els.overlay.width,els.overlay.height); drawGrid(); octx.fillStyle='rgba(35,215,186,0.14)'; octx.fillRect(0,y,els.overlay.width,8); const px=state.draw.dx+(Math.sin(t/18)*.5+.5)*state.draw.dw; const py=y+4; octx.beginPath(); octx.arc(px,py,6,0,Math.PI*2); octx.fillStyle='rgba(100,242,227,0.75)'; octx.fill(); y=(y+3)%els.overlay.height; t++; },16); }
+  function stopScan(){ if(state._scan){ clearInterval(state._scan); state._scan=null; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); } }
 
-  // ---------- File load + EXIF
-  els.chooseBtn.addEventListener('click',()=>els.file.click());
-  els.file.addEventListener('change', async (e)=>{
-    const f=e.target.files && e.target.files[0]; if(!f) return; state.imgName=f.name||'image';
-    const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ state.imgEl=img; fitDrawImage(img); [els.analyze,els.analyze2].forEach(b=>b.disabled=false); note('Ready. Pick modes, then Run.'); URL.revokeObjectURL(url); }; img.src=url;
-    try{ await Loader.js('https://cdn.jsdelivr.net/npm/exifreader@4.12.0/dist/exif-reader.min.js'); const ab=await f.arrayBuffer(); const tags=window.ExifReader?ExifReader.load(ab):{}; state.det.exif=tags||{}; const out=[]; ['Make','Model','LensModel','FNumber','ExposureTime','ISOSpeedRatings','DateTimeOriginal'].forEach(k=>{ if(tags[k]) out.push(`${k}: ${tags[k].description||tags[k].value}`); }); els.exif.textContent=out.join('\n')||'—'; }catch(err){ els.exif.textContent='—'; }
-  });
+  // ===== File load =====
+  els.choose.addEventListener('click',()=>els.file.click());
+  els.file.addEventListener('change',(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; state.imgName=f.name||'image'; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ state.imgEl=img; fitDraw(img); els.run.disabled=false; els.run2.disabled=false; note('Ready. Click Run Mapping.'); URL.revokeObjectURL(url); }; img.src=url; });
 
-  // ---------- Face Mode (MediaPipe)
-  async function ensureFace(){ if(!state.consentOK){ els.consent.classList.add('open'); return false; } if(window._pfFace) return true; note('Loading face landmarker…'); await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14'); const vision = await window.tasksVision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'); window._pfFace = await window.tasksVision.FaceLandmarker.createFromOptions(vision, { baseOptions:{modelAssetPath:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/face_landmarker.task'}, numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false }); return true; }
+  // ===== MediaPipe Face Landmarker =====
+  async function ensureFace(){ if(window._pfFace) return true; note('Loading face landmarker…'); await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14'); const vision=await window.tasksVision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'); window._pfFace = await window.tasksVision.FaceLandmarker.createFromOptions(vision,{ baseOptions:{modelAssetPath:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/face_landmarker.task'}, numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false }); return true; }
   function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
-  function canvasPt(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
-  function drawFaceDots(lm){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1.1; octx.beginPath(); lm.forEach(p=>{ const {x,y}=canvasPt(p); octx.moveTo(x,y); octx.arc(x,y,0.9,0,Math.PI*2); }); octx.stroke(); octx.restore(); }
-  function drawFaceBox(lm){ const xs=lm.map(p=>canvasPt(p).x), ys=lm.map(p=>canvasPt(p).y); const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys); octx.save(); octx.strokeStyle='rgba(100,242,227,.55)'; octx.strokeRect(minX,minY,maxX-minX,maxY-minY); octx.restore(); return {minX,maxX,minY,maxY}; }
-  function sampleAvgRect(imgRect){ const {minX,maxX,minY,maxY}=imgRect; const w=maxX-minX,h=maxY-minY; const sx=Math.max(0,minX|0), sy=Math.max(0,minY|0), sw=Math.max(1,w|0), sh=Math.max(1,h|0); const tmp=document.createElement('canvas'); tmp.width=sw; tmp.height=sh; const tctx=tmp.getContext('2d'); tctx.drawImage(els.preview, sx, sy, sw, sh, 0, 0, sw, sh); const d=tctx.getImageData(0,0,sw,sh).data; let r=0,g=0,b=0,n=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; n++; } return toHex((r/n)|0,(g/n)|0,(b/n)|0); }
-  async function runFace(){ if(!state.imgEl) return; if(!(await ensureFace())) return; startScan(); const res = await window._pfFace.detect(state.imgEl); stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); state.face.landmarks=[]; state.face.ratios={}; return; } const lm=res.faceLandmarks[0]; drawFaceDots(lm); const bbox=drawFaceBox(lm);
-    // ratios
-    const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, leftEyeOut:33, rightEyeOut:263, noseTip:1 };
-    const faceH=mpDist(lm[IDX.top],lm[IDX.chin]); const jawW=mpDist(lm[IDX.leftJaw],lm[IDX.rightJaw]); const eyeSep=mpDist(lm[IDX.leftEyeIn],lm[IDX.rightEyeIn]); const eyeW=(mpDist(lm[IDX.leftEyeIn],lm[IDX.leftEyeOut])+mpDist(lm[IDX.rightEyeIn],lm[IDX.rightEyeOut]))/2; const noseH=mpDist(lm[IDX.top],lm[IDX.noseTip]);
+  function P(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
+  function boxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs), maxX:Math.max(...xs), minY:Math.min(...ys), maxY:Math.max(...ys)} }
+  function drawFace(lm){ if(!lm) return; const bbox=boxFrom(lm); octx.save(); octx.strokeStyle='rgba(100,242,227,.6)'; octx.lineWidth=1.4; octx.strokeRect(bbox.minX,bbox.minY,bbox.maxX-bbox.minX,bbox.maxY-bbox.minY); octx.restore(); if(state.vectors){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1; lm.forEach(p=>{ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.stroke();}); octx.restore(); }
+    // corner brackets
+    const pad=10; const L=bbox.minX, T=bbox.minY, R=bbox.maxX, B=bbox.maxY; const Lw=24, Lh=18; octx.strokeStyle='rgba(35,215,186,.85)'; octx.lineWidth=2; [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ octx.beginPath(); octx.moveTo(x,y+Lh); octx.lineTo(x,y); octx.lineTo(x+Lw,y); octx.stroke(); });
+    return bbox; }
+
+  function hex(r,g,b){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
+  function avgRect(rect){ const {minX,maxX,minY,maxY}=rect; const w=maxX-minX,h=maxY-minY; const sx=Math.max(0,minX|0), sy=Math.max(0,minY|0), sw=Math.max(1,w|0), sh=Math.max(1,h|0); const tmp=document.createElement('canvas'); tmp.width=sw; tmp.height=sh; const t=tmp.getContext('2d'); t.drawImage(els.preview,sx,sy,sw,sh,0,0,sw,sh); const d=t.getImageData(0,0,sw,sh).data; let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} return hex((R/n)|0,(G/n)|0,(B/n)|0); }
+
+  function classifyShape(r){ // coarse guess from ratios
+    const {jaw_face, cheek_face, forehead_face}=r; if(!jaw_face||!cheek_face) return 'undetermined'; const jf=jaw_face, cf=cheek_face; if(cf>0.7&&jf>0.6) return 'square'; if(cf>0.72&&jf<0.55) return 'heart'; if(jf<0.52&&cf<0.62) return 'oval'; if(jf>0.62&&cf<0.6) return 'triangle'; return 'round'; }
+
+  function buildPrompt(state){ const r=state.face.ratios, a=state.face.attrs, shape=state.face.shape; const hair=a.hairHex?`hair-color: ${a.hairHex}`:''; const skin=a.skinHex?`skin-tone: ${a.skinHex}`:''; const eyes=a.eyeHue?`eye-hue: ${a.eyeHue}`:''; const ratios=['jaw/face '+(r.jaw_face||'-'),'cheekbone/face '+(r.cheek_face||'-'),'forehead/face '+(r.forehead_face||'-'),'eye-angle '+(state.face.angles.eye||'-'),'lip-thickness '+(r.lip_ratio||'-')].join(' • '); const lines=[ `face-shape: ${shape}`, hair, skin, eyes, `ratios: ${ratios}` ].filter(Boolean); return lines.join('\n'); }
+
+  async function run(){ if(!state.imgEl) return; if(CFG.consentRequired && !state._ok){ els.consent.classList.add('open'); return; } await ensureFace(); startScan(); const res=await window._pfFace.detect(state.imgEl); stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); return; } const lm=res.faceLandmarks[0]; const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, leftEyeOut:33, rightEyeOut:263, leftBrowMid:105, rightBrowMid:334, upperLip:13, lowerLip:14 };
+    drawFace(lm);
+    // Ratios
+    const faceH=mpDist(lm[IDX.top],lm[IDX.chin]);
+    const jawW=mpDist(lm[IDX.leftJaw],lm[IDX.rightJaw]);
+    const cheekW=mpDist(lm[234],lm[454]); // same as jaw anchors for approx cheek width
+    const foreheadH=mpDist(lm[8],lm[10]);
+    const lipT=mpDist(lm[IDX.upperLip],lm[IDX.lowerLip]);
+    const eyeAngle=Math.atan2(lm[IDX.rightEyeIn].y - lm[IDX.leftEyeIn].y, lm[IDX.rightEyeIn].x - lm[IDX.leftEyeIn].x) * 57.2958; // deg
+
+    const ratios={ jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3), forehead_face:+(foreheadH/faceH).toFixed(3), lip_ratio:+(lipT/faceH).toFixed(3) };
+    state.face.ratios=ratios; state.face.angles={ eye:+eyeAngle.toFixed(2) };
+
+    // Hair & skin average
+    const bbox=boxFrom(lm); const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY}; const skinRect={minX:bbox.minX+(bbox.maxX-bbox.minX)*0.3, maxX:bbox.maxX-(bbox.maxX-bbox.minX)*0.3, minY:bbox.minY+(bbox.maxY-bbox.minY)*0.45, maxY:bbox.minY+(bbox.maxY-bbox.minY)*0.7};
+    const hairHex=avgRect(hairRect), skinHex=avgRect(skinRect);
+
+    // Eye hue rough estimate = average of small patch around inner eye points
+    function smallPatch(idx){ const q=P(lm[idx]); const r=8; const rect={minX:q.x-r,maxX:q.x+r,minY:q.y-r,maxY:q.y+r}; return avgRect(rect); }
+    const eyeHue=smallPatch(IDX.leftEyeIn);
+
+    state.face.attrs={ hairHex, skinHex, eyeHue };
+    state.face.shape=classifyShape(ratios);
     state.face.landmarks = lm.map(p=>[+p.x.toFixed(5), +p.y.toFixed(5), +(p.z||0).toFixed(5)]);
-    state.face.ratios = { jaw_to_face:ratio(jawW,faceH), eyeSep_to_eyeW:ratio(eyeSep,eyeW), nose_to_face:ratio(noseH,faceH) };
-    els.legend.textContent = `Ratios • jaw/face ${state.face.ratios.jaw_to_face} • eye‑sep/eye‑width ${state.face.ratios.eyeSep_to_eyeW} • nose/face ${state.face.ratios.nose_to_face}`;
-    // simple attributes (non‑explicit): hair hue via top strip of bbox
-    const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY};
-    state.face.attrs.hairColor = sampleAvgRect(hairRect);
-    note('Face mesh complete.'); }
 
-  // ---------- Full‑AI (objects + OCR) with live boxes
-  async function ensureFullAI(){ if(window._pfDetLoaded) return true; note('Loading detectors…'); await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js'); await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2'); await Loader.js('https://cdn.jsdelivr.net/npm/tesseract.js@5.0.3/dist/tesseract.min.js'); window._pfDetLoaded=true; return true; }
-  function drawBox(x,y,w,h, label, score){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1.4; octx.strokeRect(x,y,w,h); if(label){ octx.fillStyle='rgba(8,20,28,.9)'; octx.fillRect(x,y-16, Math.max(44, label.length*7+30), 16); octx.fillStyle='#64f2e3'; octx.font='12px ui-monospace,monospace'; octx.fillText(`${label}${score!==undefined?` ${score}`:''}`, x+6, y-4); } octx.restore(); }
-  async function runObjects(){ if(!state.imgEl) return []; await ensureFullAI(); startScan(); const model = await cocoSsd.load({base:'lite_mobilenet_v2'}); const preds = await model.detect(els.preview); stopScan(); if(state.gridOn) drawGrid(); preds.forEach(p=>{ const [bx,by,bw,bh]=p.bbox; drawBox(bx,by,bw,bh,p.class, +p.score.toFixed(2)); }); return preds.map(p=>({label:p.class, score:+p.score.toFixed(3), box:p.bbox})); }
-  async function runOCR(){ if(!state.imgEl) return ''; await ensureFullAI(); startScan(); const r = await Tesseract.recognize(els.preview,'eng',{logger:()=>{}}); stopScan(); if(state.gridOn) drawGrid(); try{ const words=r.data.words||[]; words.forEach(w=>{ if(w.bbox){ drawBox(w.bbox.x0,w.bbox.y0,w.bbox.x1-w.bbox.x0,w.bbox.y1-w.bbox.y0, w.text); } }); }catch(e){} return (r && r.data && r.data.text ? r.data.text.trim() : '') || ''; }
+    // Palette chips
+    els.palette.innerHTML = [hairHex, skinHex, eyeHue].map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');
 
-  // ---------- Palette
-  async function buildPalette(){ if(!window.ColorThief) await Loader.js('https://cdn.jsdelivr.net/npm/color-thief-browser@2.0.2/dist/color-thief.umd.js'); try{ const tmp=document.createElement('canvas'); tmp.width=state.imgEl.width; tmp.height=state.imgEl.height; tmp.getContext('2d').drawImage(state.imgEl,0,0); const img2=new Image(); img2.src=tmp.toDataURL('image/jpeg'); await img2.decode(); const thief=new ColorThief(); const pal=thief.getPalette(img2,6); state.det.palette=pal.map(([r,g,b])=>toHex(r,g,b)); els.palette.innerHTML=state.det.palette.map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');}catch(e){ els.palette.textContent='—'; } }
-
-  // ---------- SMART CAPTION (style + length aware)
-  function smartCaption(){
-    const tgt = state.targetLen|0;
-    const tags = (state.det.objects||[]).filter(o=>o.score>0.35).slice(0,6).map(o=>o.label);
-    const colors = (state.det.palette||[]).slice(0,4);
-    const ocr = (state.det.ocr||'').trim().replace(/\s+/g,' ').slice(0,80);
-    const r = state.face.ratios||{};
-    const hints = [];
-    if(colors.length) hints.push(`tones of ${colors.join(', ')}`);
-    if(tags.length) hints.push(tags.length>1?`notable objects: ${tags.join(', ')}`:`object: ${tags[0]}`);
-    if(ocr) hints.push(`visible text: “${ocr}”`);
-    const ratioBits = [];
-    if(r.jaw_to_face) ratioBits.push(`jaw/face ${r.jaw_to_face}`);
-    if(r.eyeSep_to_eyeW) ratioBits.push(`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`);
-    if(r.nose_to_face) ratioBits.push(`nose/face ${r.nose_to_face}`);
-
-    // Core sentence blocks — kept SFW.
-    let base = `A carefully framed photograph with balanced lighting and clear subject focus`;
-    if(hints.length) base += `, featuring ${hints.join('; ')}`;
-    base += `. `;
-    if(ratioBits.length) base += `Facial proportions noted (${ratioBits.join(' • ')}). `;
-    base += `Color palette skews ${colors.length?`toward ${colors[0]}`:'toward neutral hues'}.`;
-
-    // Style adapter
-    base = stylize(base);
-
-    // Expand or contract toward target length with neutral, non‑explicit fillers
-    if(base.length < tgt){
-      const extras = [
-        ' Depth of field is moderate for context while preserving subject clarity.',
-        ' The composition favors a center‑weighted balance with gentle falloff to the edges.',
-        ' Texture is retained without harsh noise; contrast remains natural.',
-        ' Background elements are readable but do not distract from the subject.',
-        ' Overall mood is calm and observational.'
-      ];
-      let i=0; while(base.length < tgt && i<extras.length){ base += ' '+extras[i++]; }
-    }
-
-    return clampToChars(base, tgt);
+    // Measures & prompt
+    const mtxt = Object.entries(ratios).map(([k,v])=>`${k}: ${v}`).join('\n') + `\nEye angle (deg): ${state.face.angles.eye}`;
+    els.measures.textContent = mtxt;
+    const prompt = buildPrompt(state);
+    els.promptOut.textContent = prompt;
+    note('Mapped. Export or copy.');
   }
 
-  // ---------- Prompt (ready chunk for SDXL/Flux/MJ)
-  function buildPrompt(){
-    state.style = els.styleSel.value;
-    state.targetLen = +els.lenSlider.value|0;
-    // Ensure caption exists & honors style/length
-    const caption = smartCaption();
-    els.caption.value = caption;
+  // Wire UI
+  els.grid.addEventListener('change',()=>{ state.gridOn=els.grid.checked; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); });
+  els.showVectors.addEventListener('change',()=>{ state.vectors=els.showVectors.checked; run(); });
+  els.run.addEventListener('click',run); els.run2.addEventListener('click',run);
+  els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.textContent||''); note('Prompt chunk copied.'); });
+  els.exportJSON.addEventListener('click',()=>{ const data={ version:'pf_facemapper_1', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, landmarks:state.face.landmarks, ratios:state.face.ratios, angles:state.face.angles, attrs:state.face.attrs, shape:state.face.shape, prompt_chunk:els.promptOut.textContent }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_facemapper.json'; a.click(); URL.revokeObjectURL(a.href); });
 
-    const r=state.face.ratios||{};
-    const palette=(state.det.palette||[]).slice(0,3).join(', ');
-    const tags=(state.det.objects||[]).filter(o=>o.score>0.35).map(o=>o.label);
-    const hair=state.face.attrs?.hairColor;
+  // Consent
+  els.agree.addEventListener('change',()=>els.accept.disabled=!els.agree.checked);
+  els.accept.addEventListener('click',()=>{ state._ok=true; els.consent.classList.remove('open'); run(); });
+  els.deny.addEventListener('click',()=>{ els.consent.classList.remove('open'); });
 
-    const parts = [];
-    parts.push(`[subject description] ${caption}`);
-    if(tags.length) parts.push(`objects: ${tags.join(', ')}`);
-    if(palette) parts.push(`palette: ${palette}`);
-    if(hair) parts.push(`hair-hint: ${hair}`);
-    const ratioLine = [
-      r.jaw_to_face?`jaw/face ${r.jaw_to_face}`:null,
-      r.eyeSep_to_eyeW?`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`:null,
-      r.nose_to_face?`nose/face ${r.nose_to_face}`:null
-    ].filter(Boolean).join(' • ');
-    if(ratioLine) parts.push(`face‑ratios: ${ratioLine}`);
-
-    // Soft, engine‑friendly formatting
-    const prompt = clampToChars(parts.filter(Boolean).join(' \n '), Math.max(160, state.targetLen+80));
-    els.promptOut.value = prompt;
-    return prompt;
-  }
-
-  // ---------- Export JSON
-  function exportJSON(){ const data={ version:'pf_imageintel_4', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, prompt_chunk:els.promptOut.value, caption:els.caption.value, palette:state.det.palette, landmarks:state.face.landmarks, measurements:state.face.ratios, attrs:state.face.attrs, objects:state.det.objects, ocr:state.det.ocr, exif: state.det.exif? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {}, embedding:{type:'stub',dims:0} }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href); }
-
-  // ---------- Remote Caption (optional server using Qwen/Qwen3‑Omni)
-  async function remoteCaption(){ if(!CFG.qwenEndpoint){ note('Remote caption not configured. Set CFG.qwenEndpoint.'); return; } if(!state.imgEl){ note('Load an image first.'); return; } try{ note('Sending to remote caption…'); const blob = await new Promise(r=>els.preview.toBlob(r,'image/jpeg',0.92)); const fd=new FormData(); fd.append('image', blob, state.imgName||'image.jpg'); const res=await fetch(CFG.qwenEndpoint,{method:'POST',body:fd}); const j=await res.json(); if(j && j.caption){ els.caption.value = clampToChars(stylize(j.caption), state.targetLen); buildPrompt(); note('Remote caption received.'); } else { note('Remote caption failed: bad response.'); } }catch(e){ note('Remote caption error.'); } }
-
-  // ---------- Wire UI
-  function mirror(srcBtn, dstBtn){ dstBtn.addEventListener('click', ()=>srcBtn.click()); }
-  mirror(els.analyze, els.analyze2); mirror(els.enableFace, els.enableFace2); mirror(els.enableAI, els.enableAI2);
-  els.gridToggle.addEventListener('change',()=>{ state.gridOn = !!els.gridToggle.checked; if(!state.timers.scan){ octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); } });
-  els.enableFace.addEventListener('click',async()=>{ state.faceEnabled=!state.faceEnabled; els.enableFace.classList.toggle('primary',state.faceEnabled); els.enableFace2.classList.toggle('primary',state.faceEnabled); if(state.faceEnabled && state.imgEl){ if(!state.consentOK){ els.consent.classList.add('open'); } else { await runFace(); } } note(state.faceEnabled?'Face Mode enabled.':'Face Mode disabled.'); });
-  els.enableAI.addEventListener('click',async()=>{ state.fullAIEnabled=!state.fullAIEnabled; els.enableAI.classList.toggle('primary',state.fullAIEnabled); els.enableAI2.classList.toggle('primary',state.fullAIEnabled); if(state.fullAIEnabled){ await ensureFullAI(); note('Full‑AI ready. Click Run.'); } else { note('Full‑AI disabled.'); } });
-  [els.analyze, els.analyze2].forEach(btn=>btn.addEventListener('click', async()=>{ if(!state.imgEl){ note('Choose an image first.'); return; } startScan(); try{ await buildPalette(); }catch(e){} if(state.faceEnabled){ await runFace(); } if(state.fullAIEnabled){ try{ state.det.objects=await runObjects(); }catch(e){ state.det.objects=[]; } try{ state.det.ocr=await runOCR(); }catch(e){ state.det.ocr=''; } els.objects.textContent=(state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ')||'—'; els.ocr.textContent=state.det.ocr||'—'; } els.caption.value = smartCaption(); buildPrompt(); stopScan(); note('Done. Build or Export next.'); }));
-  els.remoteCap.addEventListener('click', remoteCaption);
-  els.build.addEventListener('click',()=>{ buildPrompt(); note('Prompt refreshed.'); });
-  els.exportJSON.addEventListener('click',()=>exportJSON());
-  els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.value||''); note('Prompt copied.'); });
-  els.copyAlt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.caption.value||''); note('Alt‑text copied.'); });
-  els.lenSlider.addEventListener('input',(e)=>{ state.targetLen=+e.target.value; els.lenVal.textContent = `≈${state.targetLen} chars`; els.caption.value = smartCaption(); buildPrompt(); });
-  els.styleSel.addEventListener('change',(e)=>{ state.style=e.target.value; els.caption.value = smartCaption(); buildPrompt(); });
-
-  // ---------- Consent
-  els.agree.addEventListener('change',()=>{ els.accept.disabled=!els.agree.checked; });
-  els.accept.addEventListener('click',()=>{ state.consentOK=true; els.consent.classList.remove('open'); if(state.faceEnabled) runFace(); });
-  els.deny.addEventListener('click',()=>{ els.consent.classList.remove('open'); state.faceEnabled=false; els.enableFace.classList.remove('primary'); els.enableFace2.classList.remove('primary'); });
-
-  // ---------- J1NX helper (toggle + lightweight chat shell)
+  // J1NX (toggle only)
   els.jOpen.addEventListener('click',()=>{ els.jWrap.style.display = (els.jWrap.style.display==='none'?'flex':'none'); });
   const say=(t)=>{ els.jBubble.innerHTML += '<br/>'+(t||'').replace(/</g,'&lt;'); els.jBubble.scrollTop=els.jBubble.scrollHeight; };
   els.jSend?.addEventListener('click',()=>{ const v=els.jInput.value.trim(); if(!v) return; say('<b>You:</b> '+v); els.jInput.value=''; });
-  els.jClear?.addEventListener('click',()=>{ els.jBubble.innerHTML='<b>J1NX:</b> Reset. What\'s next?'; });
+  els.jClear?.addEventListener('click',()=>{ els.jBubble.innerHTML='<b>J1NX:</b> Reset. Ready.'; });
   els.jSave?.addEventListener('click',()=>{ const blob=new Blob([els.jBubble.textContent||''],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); URL.revokeObjectURL(a.href); });
-  (function(){ let taps=0,tid; els.jWrap?.addEventListener('click',()=>{ clearTimeout(tid); taps++; tid=setTimeout(()=>{ if(taps>=2){ els.jEgg.textContent='NSFW hint unlocked (demo): try the labs when available.'; els.jEgg.style.opacity=1; } taps=0; },240); },{passive:true}); })();
+  (function(){ let taps=0,tid; els.jWrap?.addEventListener('click',()=>{ clearTimeout(tid); taps++; tid=setTimeout(()=>{ if(taps>=2){ els.jEgg.textContent='NSFW hint unlocked (demo): try labs when available.'; els.jEgg.style.opacity=1; } taps=0; },240); },{passive:true}); })();
 
-  // ---------- Footer camo animation
-  (function(){ const camoEl=document.getElementById('footerCamo'); if(!camoEl) return; const colors=["#64f2e3","#23d7ba","#be9cff","#ffd166"]; let i=0; setInterval(()=>{ camoEl.textContent = ['█▄▀','▞▚','▓▒░','◢◣◥◤'][i%4].repeat(28); camoEl.style.color=colors[i%colors.length]; i++; }, 380); })();
+  // Footer camo shimmer
+  (function(){ const camo=document.getElementById('footerCamo'); if(!camo) return; const colors=["#64f2e3","#23d7ba","#be9cff","#ffd166"]; let i=0; setInterval(()=>{ camo.textContent=['█▄▀','▞▚','▓▒░','◢◣◥◤'][i%4].repeat(28); camo.style.color=colors[i%colors.length]; i++; },380); })();
   </script>
 </body>
-</html>
+  </html>
