@@ -4,14 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>PromptForge — Image Intelligence (Live Scan • Face Mapping • Objects • OCR)</title>
-  <meta name="description" content="On‑device image analysis with live scan drawing: face landmarks + reproducible ratios, object boxes, OCR word boxes, palette & EXIF, poetic/technical caption & prompt builder with length/style controls, JSON export. J1NX, footer, and ad placements preserved." />
+  <meta name="description" content="On‑device image analysis with live scan drawing: face landmarks + reproducible ratios, object boxes, OCR word boxes, palette & EXIF, style/length‑aware caption & prompt builder, JSON export. J1NX, ANSI footer, and blended ad placements preserved." />
   <link rel="canonical" href="https://promptforge.online/imageintel.html" />
   <meta name="theme-color" content="#08131b" />
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="PromptForge — Image Intelligence" />
-  <meta property="og:description" content="Face mapping + ratios, objects, OCR, palette, EXIF — client‑side. Build prompts and export JSON." />
+  <meta property="og:description" content="Face mapping + ratios, objects, OCR, palette, EXIF — client‑side. Build ready prompts and export JSON." />
   <meta property="og:image" content="/assets/og/imagetoprompt.png" />
   <meta property="og:url" content="https://promptforge.online/imageintel.html" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -74,14 +74,12 @@
     .switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
     .switch input{accent-color:var(--aqua)}
 
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:60}
-    .modal.open{display:flex}
-    .sheet{background:var(--card);border:1px solid var(--edge);border-radius:14px;max-width:740px;width:92%;padding:16px}
-
-    .ad-wrap{display:block;min-height:90px;border:1px dashed var(--edge);border-radius:12px;margin:8px 0;padding:8px;text-align:center;color:var(--muted)}
+    /* —— Ad styling: visually blended in cards —— */
+    .ad-wrap{display:block;min-height:90px;border:1px solid var(--edge);border-radius:12px;margin:8px 0;padding:8px;text-align:center;color:var(--muted);background:linear-gradient(180deg,rgba(10,26,34,.45),rgba(10,26,34,.2));box-shadow:inset 0 0 0 1px rgba(100,242,227,.04)}
+    .ad-note{font-size:11px;color:var(--muted);opacity:.85;margin-top:6px}
     .ad-right{display:flex;gap:8px;align-items:center}
 
-    /* J1NX float — visual parity */
+    /* J1NX float — canonical visual parity */
     .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
     .j1nx-true-cutout-img{width:220px;height:220px;object-fit:contain;border-radius:24px;background:transparent!important;margin-bottom:-20px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none!important}
     .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:280px;max-width:330px;position:relative;z-index:1}
@@ -124,7 +122,7 @@
     <section class="hero">
       <div class="card">
         <h1>Analyze → Measure → Explain → Export</h1>
-        <p class="sub">Drop a photo. Watch a <b>live scan</b> paint what the model sees: a face mesh with reproducible ratios, object boxes, OCR word boxes, palette, and EXIF. Then auto‑build a professional caption and a clean prompt chunk for SDXL/Flux/MJ, or export a JSON bundle. Everything runs <b>client‑side by default</b>.</p>
+        <p class="sub">Drop a photo. Watch a <b>live scan</b> paint what the model sees: a face mesh with reproducible ratios, object boxes, OCR word boxes, palette, and EXIF. Then generate a <b>style/length‑aware</b> caption and a clean prompt chunk for SDXL/Flux/MJ, or export a JSON bundle. Everything runs <b>client‑side by default</b>.</p>
       </div>
       <div class="card ad-right">
         <div style="flex:1">
@@ -138,10 +136,12 @@
             <a class="pill" href="/compare.html">Model Compare</a>
           </div>
         </div>
-        <div style="width:108px;min-width:108px;text-align:center">
+        <div style="width:128px;min-width:128px;text-align:center">
+          <!-- Blended ad block: same card backdrop, subtle border -->
           <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
-          <ins id="1101940" data-width="108" data-height="140"></ins>
+          <ins id="1101940" data-width="128" data-height="160"></ins>
           <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({"adzone":1101940});</script>
+          <div class="ad-note">sponsored</div>
         </div>
       </div>
     </section>
@@ -157,6 +157,7 @@
             <script async src="https://poweredby.jads.co/js/jads.js"></script>
             <ins id="1101674" data-width="auto" data-height="90"></ins>
             <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101674});}catch(e){}</script>
+            <div class="ad-note">sponsored</div>
           </div>
         </div>
         <div class="card step">
@@ -224,7 +225,7 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
           <div>
             <h3>Professional Description</h3>
-            <textarea id="caption" class="mono" placeholder="—" title="Short caption derived from colors, objects, composition."></textarea>
+            <textarea id="caption" class="mono" placeholder="—" title="Caption derived from colors, objects, composition. Honors style + length."></textarea>
           </div>
           <div>
             <h3>Prompt</h3>
@@ -249,6 +250,7 @@
         <div class="ad-wrap">
           <ins id="1101622" data-width="auto" data-height="250"></ins>
           <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101622});}catch(e){}</script>
+          <div class="ad-note">sponsored</div>
         </div>
 
         <div class="card" id="faq" style="margin-top:12px">
@@ -274,6 +276,7 @@
         <div class="ad-wrap">
           <ins id="1101675" data-width="auto" data-height="90"></ins>
           <script>try{(adsbyjuicy=window.adsbyjuicy||[]).push({adzone:1101675});}catch(e){}</script>
+          <div class="ad-note">sponsored</div>
         </div>
       </section>
     </main>
@@ -356,7 +359,7 @@
   const ctx = els.preview.getContext('2d');
   const octx = els.overlay.getContext('2d');
   const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, faceEnabled:false, fullAIEnabled:false, consentOK:false, gridOn:true,
-                  face:{landmarks:[], ratios:{}, attrs:{}}, det:{objects:[], ocr:'', exif:{}, palette:[]}, timers:{scan:null, pulse:null},
+                  face:{landmarks:[], ratios:{}, attrs:{}}, det:{objects:[], ocr:'', exif:{}, palette:[]}, timers:{scan:null},
                   targetLen:240, style:'poetic' };
   function $(id){ return document.getElementById(id.replace('#','')) || document.querySelector(id); }
   function note(m){ els.progress.textContent = m; }
@@ -392,7 +395,7 @@
   async function ensureFace(){ if(!state.consentOK){ els.consent.classList.add('open'); return false; } if(window._pfFace) return true; note('Loading face landmarker…'); await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14'); const vision = await window.tasksVision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm'); window._pfFace = await window.tasksVision.FaceLandmarker.createFromOptions(vision, { baseOptions:{modelAssetPath:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/face_landmarker.task'}, numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false }); return true; }
   function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
   function canvasPt(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
-  function drawFaceDots(lm){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1.2; octx.beginPath(); lm.forEach(p=>{ const {x,y}=canvasPt(p); octx.moveTo(x,y); octx.arc(x,y,0.9,0,Math.PI*2); }); octx.stroke(); octx.restore(); }
+  function drawFaceDots(lm){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1.1; octx.beginPath(); lm.forEach(p=>{ const {x,y}=canvasPt(p); octx.moveTo(x,y); octx.arc(x,y,0.9,0,Math.PI*2); }); octx.stroke(); octx.restore(); }
   function drawFaceBox(lm){ const xs=lm.map(p=>canvasPt(p).x), ys=lm.map(p=>canvasPt(p).y); const minX=Math.min(...xs), maxX=Math.max(...xs), minY=Math.min(...ys), maxY=Math.max(...ys); octx.save(); octx.strokeStyle='rgba(100,242,227,.55)'; octx.strokeRect(minX,minY,maxX-minX,maxY-minY); octx.restore(); return {minX,maxX,minY,maxY}; }
   function sampleAvgRect(imgRect){ const {minX,maxX,minY,maxY}=imgRect; const w=maxX-minX,h=maxY-minY; const sx=Math.max(0,minX|0), sy=Math.max(0,minY|0), sw=Math.max(1,w|0), sh=Math.max(1,h|0); const tmp=document.createElement('canvas'); tmp.width=sw; tmp.height=sh; const tctx=tmp.getContext('2d'); tctx.drawImage(els.preview, sx, sy, sw, sh, 0, 0, sw, sh); const d=tctx.getImageData(0,0,sw,sh).data; let r=0,g=0,b=0,n=0; for(let i=0;i<d.length;i+=4){ r+=d[i]; g+=d[i+1]; b+=d[i+2]; n++; } return toHex((r/n)|0,(g/n)|0,(b/n)|0); }
   async function runFace(){ if(!state.imgEl) return; if(!(await ensureFace())) return; startScan(); const res = await window._pfFace.detect(state.imgEl); stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); state.face.landmarks=[]; state.face.ratios={}; return; } const lm=res.faceLandmarks[0]; drawFaceDots(lm); const bbox=drawFaceBox(lm);
@@ -410,18 +413,86 @@
   // ---------- Full‑AI (objects + OCR) with live boxes
   async function ensureFullAI(){ if(window._pfDetLoaded) return true; note('Loading detectors…'); await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js'); await Loader.js('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2'); await Loader.js('https://cdn.jsdelivr.net/npm/tesseract.js@5.0.3/dist/tesseract.min.js'); window._pfDetLoaded=true; return true; }
   function drawBox(x,y,w,h, label, score){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1.4; octx.strokeRect(x,y,w,h); if(label){ octx.fillStyle='rgba(8,20,28,.9)'; octx.fillRect(x,y-16, Math.max(44, label.length*7+30), 16); octx.fillStyle='#64f2e3'; octx.font='12px ui-monospace,monospace'; octx.fillText(`${label}${score!==undefined?` ${score}`:''}`, x+6, y-4); } octx.restore(); }
-  async function runObjects(){ if(!state.imgEl) return []; await ensureFullAI(); const model = await cocoSsd.load({base:'lite_mobilenet_v2'}); startScan(); const preds = await model.detect(els.preview); stopScan(); if(state.gridOn) drawGrid(); preds.forEach(p=>{ const [bx,by,bw,bh]=p.bbox; drawBox(bx,by,bw,bh,p.class, +p.score.toFixed(2)); }); return preds.map(p=>({label:p.class, score:+p.score.toFixed(3), box:p.bbox})); }
+  async function runObjects(){ if(!state.imgEl) return []; await ensureFullAI(); startScan(); const model = await cocoSsd.load({base:'lite_mobilenet_v2'}); const preds = await model.detect(els.preview); stopScan(); if(state.gridOn) drawGrid(); preds.forEach(p=>{ const [bx,by,bw,bh]=p.bbox; drawBox(bx,by,bw,bh,p.class, +p.score.toFixed(2)); }); return preds.map(p=>({label:p.class, score:+p.score.toFixed(3), box:p.bbox})); }
   async function runOCR(){ if(!state.imgEl) return ''; await ensureFullAI(); startScan(); const r = await Tesseract.recognize(els.preview,'eng',{logger:()=>{}}); stopScan(); if(state.gridOn) drawGrid(); try{ const words=r.data.words||[]; words.forEach(w=>{ if(w.bbox){ drawBox(w.bbox.x0,w.bbox.y0,w.bbox.x1-w.bbox.x0,w.bbox.y1-w.bbox.y0, w.text); } }); }catch(e){} return (r && r.data && r.data.text ? r.data.text.trim() : '') || ''; }
 
   // ---------- Palette
   async function buildPalette(){ if(!window.ColorThief) await Loader.js('https://cdn.jsdelivr.net/npm/color-thief-browser@2.0.2/dist/color-thief.umd.js'); try{ const tmp=document.createElement('canvas'); tmp.width=state.imgEl.width; tmp.height=state.imgEl.height; tmp.getContext('2d').drawImage(state.imgEl,0,0); const img2=new Image(); img2.src=tmp.toDataURL('image/jpeg'); await img2.decode(); const thief=new ColorThief(); const pal=thief.getPalette(img2,6); state.det.palette=pal.map(([r,g,b])=>toHex(r,g,b)); els.palette.innerHTML=state.det.palette.map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');}catch(e){ els.palette.textContent='—'; } }
 
-  // ---------- Caption & Prompt
-  function heuristicCaption(){ const colors=(state.det.palette||[]).slice(0,3).join(', '); const objects=(state.det.objects||[]).filter(o=>o.score>0.4).slice(0,4).map(o=>o.label).join(', '); let base = objects?`A well‑composed photograph featuring ${objects}${colors?` in tones of ${colors}`:''}.`:`A quiet, well‑composed photograph${colors?` in tones of ${colors}`:''}.`; base = stylize(base); return clampToChars(base, state.targetLen); }
-  function buildPrompt(){ const tags=(state.det.objects||[]).filter(o=>o.score>0.4).map(o=>o.label); const r=state.face.ratios||{}; const palette=(state.det.palette||[]).slice(0,3).join(', '); const hair=state.face.attrs?.hairColor; let cap=els.caption.value.trim(); if(!cap) cap=heuristicCaption(); else cap=clampToChars(stylize(cap), state.targetLen); els.caption.value=cap; const parts=[cap]; if(tags.length) parts.push(`objects: ${tags.join(', ')}`); if(palette) parts.push(`palette: ${palette}`); if(hair) parts.push(`hair-hint: ${hair}`); const chunk=[]; if(r.jaw_to_face) chunk.push(`jaw/face ${r.jaw_to_face}`); if(r.eyeSep_to_eyeW) chunk.push(`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`); if(r.nose_to_face) chunk.push(`nose/face ${r.nose_to_face}`); if(chunk.length) parts.push(`face‑ratios: ${chunk.join(' • ')}`); const prompt = clampToChars(parts.filter(Boolean).join(' \n '), Math.max(160, state.targetLen+80)); els.promptOut.value=prompt; return prompt; }
+  // ---------- SMART CAPTION (style + length aware)
+  function smartCaption(){
+    const tgt = state.targetLen|0;
+    const tags = (state.det.objects||[]).filter(o=>o.score>0.35).slice(0,6).map(o=>o.label);
+    const colors = (state.det.palette||[]).slice(0,4);
+    const ocr = (state.det.ocr||'').trim().replace(/\s+/g,' ').slice(0,80);
+    const r = state.face.ratios||{};
+    const hints = [];
+    if(colors.length) hints.push(`tones of ${colors.join(', ')}`);
+    if(tags.length) hints.push(tags.length>1?`notable objects: ${tags.join(', ')}`:`object: ${tags[0]}`);
+    if(ocr) hints.push(`visible text: “${ocr}”`);
+    const ratioBits = [];
+    if(r.jaw_to_face) ratioBits.push(`jaw/face ${r.jaw_to_face}`);
+    if(r.eyeSep_to_eyeW) ratioBits.push(`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`);
+    if(r.nose_to_face) ratioBits.push(`nose/face ${r.nose_to_face}`);
+
+    // Core sentence blocks — kept SFW.
+    let base = `A carefully framed photograph with balanced lighting and clear subject focus`;
+    if(hints.length) base += `, featuring ${hints.join('; ')}`;
+    base += `. `;
+    if(ratioBits.length) base += `Facial proportions noted (${ratioBits.join(' • ')}). `;
+    base += `Color palette skews ${colors.length?`toward ${colors[0]}`:'toward neutral hues'}.`;
+
+    // Style adapter
+    base = stylize(base);
+
+    // Expand or contract toward target length with neutral, non‑explicit fillers
+    if(base.length < tgt){
+      const extras = [
+        ' Depth of field is moderate for context while preserving subject clarity.',
+        ' The composition favors a center‑weighted balance with gentle falloff to the edges.',
+        ' Texture is retained without harsh noise; contrast remains natural.',
+        ' Background elements are readable but do not distract from the subject.',
+        ' Overall mood is calm and observational.'
+      ];
+      let i=0; while(base.length < tgt && i<extras.length){ base += ' '+extras[i++]; }
+    }
+
+    return clampToChars(base, tgt);
+  }
+
+  // ---------- Prompt (ready chunk for SDXL/Flux/MJ)
+  function buildPrompt(){
+    state.style = els.styleSel.value;
+    state.targetLen = +els.lenSlider.value|0;
+    // Ensure caption exists & honors style/length
+    const caption = smartCaption();
+    els.caption.value = caption;
+
+    const r=state.face.ratios||{};
+    const palette=(state.det.palette||[]).slice(0,3).join(', ');
+    const tags=(state.det.objects||[]).filter(o=>o.score>0.35).map(o=>o.label);
+    const hair=state.face.attrs?.hairColor;
+
+    const parts = [];
+    parts.push(`[subject description] ${caption}`);
+    if(tags.length) parts.push(`objects: ${tags.join(', ')}`);
+    if(palette) parts.push(`palette: ${palette}`);
+    if(hair) parts.push(`hair-hint: ${hair}`);
+    const ratioLine = [
+      r.jaw_to_face?`jaw/face ${r.jaw_to_face}`:null,
+      r.eyeSep_to_eyeW?`eye‑sep/eye‑width ${r.eyeSep_to_eyeW}`:null,
+      r.nose_to_face?`nose/face ${r.nose_to_face}`:null
+    ].filter(Boolean).join(' • ');
+    if(ratioLine) parts.push(`face‑ratios: ${ratioLine}`);
+
+    // Soft, engine‑friendly formatting
+    const prompt = clampToChars(parts.filter(Boolean).join(' \n '), Math.max(160, state.targetLen+80));
+    els.promptOut.value = prompt;
+    return prompt;
+  }
 
   // ---------- Export JSON
-  function exportJSON(){ const data={ version:'pf_imageintel_3', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, prompt_chunk:els.promptOut.value, caption:els.caption.value, palette:state.det.palette, landmarks:state.face.landmarks, measurements:state.face.ratios, attrs:state.face.attrs, objects:state.det.objects, ocr:state.det.ocr, exif: state.det.exif? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {}, embedding:{type:'stub',dims:0} }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href); }
+  function exportJSON(){ const data={ version:'pf_imageintel_4', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, prompt_chunk:els.promptOut.value, caption:els.caption.value, palette:state.det.palette, landmarks:state.face.landmarks, measurements:state.face.ratios, attrs:state.face.attrs, objects:state.det.objects, ocr:state.det.ocr, exif: state.det.exif? Object.fromEntries(Object.entries(state.det.exif).slice(0,40).map(([k,v])=>[k, v && (v.description||v.value||'')])) : {}, embedding:{type:'stub',dims:0} }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_imageintel.json'; a.click(); URL.revokeObjectURL(a.href); }
 
   // ---------- Remote Caption (optional server using Qwen/Qwen3‑Omni)
   async function remoteCaption(){ if(!CFG.qwenEndpoint){ note('Remote caption not configured. Set CFG.qwenEndpoint.'); return; } if(!state.imgEl){ note('Load an image first.'); return; } try{ note('Sending to remote caption…'); const blob = await new Promise(r=>els.preview.toBlob(r,'image/jpeg',0.92)); const fd=new FormData(); fd.append('image', blob, state.imgName||'image.jpg'); const res=await fetch(CFG.qwenEndpoint,{method:'POST',body:fd}); const j=await res.json(); if(j && j.caption){ els.caption.value = clampToChars(stylize(j.caption), state.targetLen); buildPrompt(); note('Remote caption received.'); } else { note('Remote caption failed: bad response.'); } }catch(e){ note('Remote caption error.'); } }
@@ -432,21 +503,21 @@
   els.gridToggle.addEventListener('change',()=>{ state.gridOn = !!els.gridToggle.checked; if(!state.timers.scan){ octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); } });
   els.enableFace.addEventListener('click',async()=>{ state.faceEnabled=!state.faceEnabled; els.enableFace.classList.toggle('primary',state.faceEnabled); els.enableFace2.classList.toggle('primary',state.faceEnabled); if(state.faceEnabled && state.imgEl){ if(!state.consentOK){ els.consent.classList.add('open'); } else { await runFace(); } } note(state.faceEnabled?'Face Mode enabled.':'Face Mode disabled.'); });
   els.enableAI.addEventListener('click',async()=>{ state.fullAIEnabled=!state.fullAIEnabled; els.enableAI.classList.toggle('primary',state.fullAIEnabled); els.enableAI2.classList.toggle('primary',state.fullAIEnabled); if(state.fullAIEnabled){ await ensureFullAI(); note('Full‑AI ready. Click Run.'); } else { note('Full‑AI disabled.'); } });
-  [els.analyze, els.analyze2].forEach(btn=>btn.addEventListener('click', async()=>{ if(!state.imgEl){ note('Choose an image first.'); return; } startScan(); try{ await buildPalette(); }catch(e){} if(state.faceEnabled){ await runFace(); } if(state.fullAIEnabled){ try{ state.det.objects=await runObjects(); }catch(e){ state.det.objects=[]; } try{ state.det.ocr=await runOCR(); }catch(e){ state.det.ocr=''; } els.objects.textContent=(state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ')||'—'; els.ocr.textContent=state.det.ocr||'—'; } if(!els.caption.value) els.caption.value=heuristicCaption(); buildPrompt(); stopScan(); note('Done. Build or Export next.'); }));
+  [els.analyze, els.analyze2].forEach(btn=>btn.addEventListener('click', async()=>{ if(!state.imgEl){ note('Choose an image first.'); return; } startScan(); try{ await buildPalette(); }catch(e){} if(state.faceEnabled){ await runFace(); } if(state.fullAIEnabled){ try{ state.det.objects=await runObjects(); }catch(e){ state.det.objects=[]; } try{ state.det.ocr=await runOCR(); }catch(e){ state.det.ocr=''; } els.objects.textContent=(state.det.objects||[]).map(o=>`${o.label} (${o.score})`).join(', ')||'—'; els.ocr.textContent=state.det.ocr||'—'; } els.caption.value = smartCaption(); buildPrompt(); stopScan(); note('Done. Build or Export next.'); }));
   els.remoteCap.addEventListener('click', remoteCaption);
   els.build.addEventListener('click',()=>{ buildPrompt(); note('Prompt refreshed.'); });
   els.exportJSON.addEventListener('click',()=>exportJSON());
   els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.value||''); note('Prompt copied.'); });
   els.copyAlt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.caption.value||''); note('Alt‑text copied.'); });
-  els.lenSlider.addEventListener('input',(e)=>{ state.targetLen=+e.target.value; els.lenVal.textContent = `≈${state.targetLen} chars`; if(els.caption.value) els.caption.value = clampToChars(stylize(els.caption.value), state.targetLen); });
-  els.styleSel.addEventListener('change',(e)=>{ state.style=e.target.value; if(els.caption.value) els.caption.value = clampToChars(stylize(els.caption.value), state.targetLen); });
+  els.lenSlider.addEventListener('input',(e)=>{ state.targetLen=+e.target.value; els.lenVal.textContent = `≈${state.targetLen} chars`; els.caption.value = smartCaption(); buildPrompt(); });
+  els.styleSel.addEventListener('change',(e)=>{ state.style=e.target.value; els.caption.value = smartCaption(); buildPrompt(); });
 
   // ---------- Consent
   els.agree.addEventListener('change',()=>{ els.accept.disabled=!els.agree.checked; });
   els.accept.addEventListener('click',()=>{ state.consentOK=true; els.consent.classList.remove('open'); if(state.faceEnabled) runFace(); });
   els.deny.addEventListener('click',()=>{ els.consent.classList.remove('open'); state.faceEnabled=false; els.enableFace.classList.remove('primary'); els.enableFace2.classList.remove('primary'); });
 
-  // ---------- J1NX helper
+  // ---------- J1NX helper (toggle + lightweight chat shell)
   els.jOpen.addEventListener('click',()=>{ els.jWrap.style.display = (els.jWrap.style.display==='none'?'flex':'none'); });
   const say=(t)=>{ els.jBubble.innerHTML += '<br/>'+(t||'').replace(/</g,'&lt;'); els.jBubble.scrollTop=els.jBubble.scrollHeight; };
   els.jSend?.addEventListener('click',()=>{ const v=els.jInput.value.trim(); if(!v) return; say('<b>You:</b> '+v); els.jInput.value=''; });
