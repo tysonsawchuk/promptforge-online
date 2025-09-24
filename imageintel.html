@@ -1,849 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>PromptForge — Face Mapper (Studio Build v3)</title>
-  <meta name="description" content="On-device face mapper with MediaPipe (468 pts). CSI-style overlay, tessellation, ratios, angles, palette, prompt chunk, descriptor, JSON export. J1NX + ANSI footer preserved. Adult Mode gated. Client-only." />
-  <link rel="canonical" href="https://promptforge.online/facemapper.html" />
-  <meta name="theme-color" content="#08131b" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="PromptForge — Face Mapper (Studio v3)" />
-  <meta property="og:description" content="Landmarks, tessellation, ratios, angles, palette and prompt-ready descriptors. Client-side, privacy-friendly." />
-  <meta property="og:image" content="/assets/og/facemapper.png" />
-  <meta property="og:url" content="https://promptforge.online/facemapper.html" />
-  <meta name="twitter:card" content="summary_large_image" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PromptForge — FaceMapper VIDEO · Studio v4</title>
+<meta name="description" content="Movie-style face mapper (VIDEO): mower scan → detector → vectors → tessellation → region highlights. Unified measurements & ratios, prompt/alt/desc, JSON export. Privacy: on-device."/>
+<link rel="canonical" href="https://promptforge.online/facemapper.html"/>
+<meta name="theme-color" content="#08131b"/>
 
-  <!-- JSON-LD (Org + WebSite + Breadcrumbs) -->
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"PromptForge",
-    "url":"https://promptforge.online/",
-    "logo":"https://promptforge.online/assets/og/home.png",
-    "sameAs":[
-      "https://x.com/GoreandGiggles",
-      "https://bsky.app/profile/goreandgiggles.bsky.social",
-      "https://promptforge.online/support.html"
-    ]
-  }</script>
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"PromptForge",
-    "url":"https://promptforge.online/",
-    "potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}
-  }</script>
-  <script type="application/ld+json">{
-    "@context":"https://schema.org",
-    "@type":"BreadcrumbList",
-    "itemListElement":[
-      {"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},
-      {"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},
-      {"@type":"ListItem","position":3,"name":"Face Mapper"}
-    ]
-  }</script>
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website"/>
+<meta property="og:title" content="PromptForge — FaceMapper (Studio v4)"/>
+<meta property="og:description" content="Real-time MediaPipe overlay with unified JSON output."/>
+<meta property="og:image" content="/assets/og/facemapper.png"/>
+<meta property="og:url" content="https://promptforge.online/facemapper.html"/>
+<meta name="twitter:card" content="summary_large_image"/>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- JSON-LD -->
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  "name":"PromptForge",
+  "url":"https://promptforge.online/",
+  "logo":"https://promptforge.online/assets/og/home.png",
+  "sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]
+}</script>
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"PromptForge",
+  "url":"https://promptforge.online/",
+  "potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}
+}</script>
 
-  <!-- MediaPipe Tasks Vision (exact include per spec) -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
+<style>
+:root{
+  --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --edge:#173041; --card:#0c1922;
+  --ok:#7ef1a6; --warn:#ffd166; --bad:#ff6b6b; --pink:#ff5a7a;
+}
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;background:
+  radial-gradient(1200px 700px at 10% -10%,rgba(100,242,227,.07),transparent 55%),
+  radial-gradient(1000px 600px at 120% -10%,rgba(35,215,186,.06),transparent 55%),
+  var(--bg); color:var(--ink); font:14px/1.6 Inter,system-ui,Segoe UI,Roboto}
+a{color:var(--aqua);text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:16px}
 
-  <!-- CSP NOTE (add server-side): allow cdn.jsdelivr.net + storage.googleapis.com in script-src, connect-src, and img-src if needed. -->
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:22px;letter-spacing:.4px;color:var(--aqua)}
+.lang{display:flex;gap:8px}
+select{background:#0d1f28;border:1px solid var(--edge);color:var(--ink);border-radius:8px;padding:6px 8px}
 
-  <style>
-    :root{
-      --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba;
-      --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; --warn:#ffd166; --bad:#ff6b6b;
-      --red:#ff5a7a;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:radial-gradient(1200px 700px at 10% -10%,rgba(100,242,227,.07),transparent 55%),radial-gradient(1000px 600px at 120% -10%,rgba(35,215,186,.06),transparent 55%),var(--bg);color:var(--ink);font:14px/1.6 Inter,system-ui,Segoe UI,Roboto,Arial}
+.grid{display:grid;gap:14px;grid-template-columns:360px 1fr}
+@media(max-width:1100px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:12px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+h1{margin:.2rem 0 .4rem}
+.muted{color:var(--muted)}
 
-    a{color:var(--aqua)}
-    .wrap{max-width:1240px;margin:0 auto;padding:18px}
+.btn{background:#0d1f28;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
+.btn.danger{border-color:var(--pink)}
 
-    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .brand{font-weight:900;font-size:22px;letter-spacing:.4px;color:var(--aqua)}
-    .crumbs{color:var(--muted);font-size:12px}
-    .tool-links{display:flex;gap:8px;flex-wrap:wrap}
-    .pill{border:1px solid var(--edge);border-radius:999px;padding:.25rem .6rem;color:var(--muted);font-size:12px}
+.toasts{position:fixed;right:14px;top:14px;display:flex;flex-direction:column;gap:8px;z-index:9999}
+.toast{background:#0e1b24;border:1px solid #11313b;color:var(--ink);padding:8px 10px;border-radius:8px;font:12px ui-monospace,monospace;box-shadow:0 7px 30px rgba(0,0,0,.35)}
+.toast.ok{border-color:#1f5645}.toast.warn{border-color:#6d5b18}.toast.bad{border-color:#61202b}
 
-    .hero{margin-top:12px;display:grid;gap:12px;grid-template-columns:1.2fr .8fr}
-    @media(max-width:980px){.hero{grid-template-columns:1fr}}
-    .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:14px;box-shadow:0 14px 40px rgba(0,0,0,.55)}
-    .hero h1{margin:.2rem 0 .4rem}
-    .sub{color:var(--muted);font-size:12px}
+#stage{position:relative}
+#video,#prev,#over{display:block;width:100%;border-radius:12px}
+#video{background:#000;max-height:62vh}
+#prev{position:absolute;left:0;top:0;opacity:0;pointer-events:none}
+#over{position:absolute;left:0;top:0;pointer-events:none;z-index:30}
+.legend{position:absolute;right:10px;top:10px;background:#07161fdd;border:1px solid #0f2a33;border-radius:10px;padding:6px 8px;font:12px ui-monospace,monospace;z-index:35}
+.badge{position:absolute;left:10px;top:10px;background:#07161fdd;border:1px solid #0f2a33;border-radius:999px;padding:4px 10px;font:12px ui-monospace,monospace;z-index:35;display:none}
 
-    main.grid{display:grid;gap:16px;margin-top:14px}
-    @media(min-width:1120px){main.grid{grid-template-columns:360px 1fr}}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:7px 10px;border:1px solid var(--edge);border-radius:9px;background:#0e1a22;cursor:pointer;font-weight:600}
+.tab.active{border-color:var(--aqua);color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
+.panel{display:none;margin-top:8px}.panel.active{display:block}
+.out{min-height:110px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;font:12.5px ui-monospace,monospace;white-space:pre-wrap}
 
-    .steps{position:sticky;top:14px;display:flex;flex-direction:column;gap:10px}
-    .step{border-left:3px solid #0f2630;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(10,26,34,.6),rgba(10,26,34,.3))}
-    .step.active{border-left-color:var(--aqua)}
-    .step .num{display:inline-block;width:22px;height:22px;border-radius:50%;background:#0f2a33;border:1px solid var(--edge);text-align:center;line-height:22px;margin-right:8px;color:var(--aqua)}
+.diag{background:#07141c;border:1px solid #0f2833;border-radius:12px;color:#a1ffe3;padding:10px;font:12px ui-monospace,monospace;white-space:pre-wrap;min-height:80px}
 
-    .choose{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px 14px;border:1.5px solid var(--aqua);border-radius:12px;background:linear-gradient(90deg,#0a2831,#0a2e2b);color:#eafffb;font-weight:800;cursor:pointer;box-shadow:0 0 0 0 rgba(100,242,227,.45);transition:box-shadow .25s}
-    .choose:hover{box-shadow:0 0 0 4px rgba(100,242,227,.15),0 0 24px rgba(100,242,227,.25)}
-    #file{display:none}
-
-    .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer;position:relative}
-    .btn[disabled]{opacity:.5;cursor:not-allowed}
-    .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
-    .btn.pulse-red::after{
-      content:"";position:absolute;inset:-7px;border-radius:14px;border:2px solid rgba(255,90,122,.9);
-      box-shadow:0 0 14px rgba(255,90,122,.55),0 0 28px rgba(255,90,122,.35);
-      opacity:.0;animation:pf-pulse 2.2s infinite
-    }
-    @keyframes pf-pulse{0%{opacity:.0;transform:scale(.96)}50%{opacity:.8;transform:scale(1.05)}100%{opacity:.0;transform:scale(1.12)}}
-    @media (prefers-reduced-motion: reduce){
-      .btn.pulse-red::after{animation:none;opacity:0}
-      .scan-line,.scan-dot{display:none}
-    }
-
-    /* Stage */
-    #stage{position:relative}
-    #preview{width:100%;height:auto;border-radius:12px;background:#061219;display:block}
-    #overlay{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:12px;pointer-events:none}
-
-    /* HUD legend & badge */
-    .legend{position:absolute;right:10px;top:10px;background:#08141caa;border:1px solid #10313b;border-radius:10px;padding:8px 10px;font:12px/1.3 ui-monospace,monospace}
-    .face-badge{position:absolute;left:10px;top:10px;background:#071820d0;border:1px solid #10313b;border-radius:999px;padding:4px 10px;font:12px/1 ui-monospace,monospace}
-
-    /* Tabs */
-    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-    .tab{padding:7px 10px;border:1px solid var(--edge);border-radius:9px;background:#0e1a22;cursor:pointer;font-weight:600}
-    .tab.active{border-color:var(--aqua);color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
-    .panel{display:none;margin-top:10px}
-    .panel.active{display:block}
-    .outbox{width:100%;min-height:110px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;box-shadow:0 0 22px rgba(100,242,227,.08);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;white-space:pre-wrap}
-
-    .kv{display:grid;grid-template-columns:160px 1fr;gap:10px;align-items:center}
-
-    /* Palette chips */
-    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px;margin-right:6px;margin-bottom:6px}
-    .chip i{width:18px;height:18px;border-radius:4px;display:inline-block;border:1px solid #0a2c33}
-
-    /* Toasts */
-    .toasts{position:fixed;right:14px;top:14px;display:flex;flex-direction:column;gap:8px;z-index:5000}
-    .toast{background:#0e1b24;border:1px solid #11313b;color:var(--ink);padding:8px 10px;border-radius:8px;font:12px/1.3 ui-monospace,monospace;box-shadow:0 7px 30px rgba(0,0,0,.35)}
-    .toast.ok{border-color:#1f5645}
-    .toast.warn{border-color:#6d5b18}
-    .toast.bad{border-color:#61202b}
-
-    /* Consent / Adult Mode modal */
-    .modal{position:fixed;inset:0;background:rgba(4,10,14,.72);display:none;align-items:center;justify-content:center;z-index:5500}
-    .modal.open{display:flex}
-    .sheet{width:min(640px,92vw);background:#0c1620;border:1px solid #12323d;border-radius:14px;padding:14px}
-    .sheet h3{margin:.2rem 0 .5rem}
-    .sheet label{display:flex;gap:8px;align-items:flex-start;margin:8px 0;color:#d6f5ff}
-    .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-
-    /* Accessibility */
-    :focus-visible{outline:2px solid var(--aqua);outline-offset:2px}
-
-    .muted{color:var(--muted)}
-    .right{display:flex;justify-content:flex-end;gap:8px}
-    .hint{font-size:12px;color:var(--muted)}
-  </style>
+footer{margin:20px auto;text-align:center;color:#d6f5ff}
+#j1nxFloatTrue{position:fixed;right:18px;bottom:18px;z-index:50;pointer-events:auto}
+</style>
 </head>
+
 <body>
   <div class="wrap" aria-live="polite">
-    <div class="top">
-      <div>
-        <div class="brand">PromptForge — Face Mapper</div>
-        <div class="crumbs">Home › Tools › Face Mapping (non-identifying)</div>
-      </div>
-      <div class="tool-links" role="navigation" aria-label="Internal links">
-        <a class="pill" href="/">Home</a>
-        <a class="pill" href="/picture.html">Picture Builder</a>
-        <a class="pill" href="/movie.html">Movie Builder</a>
-        <a class="pill" href="/ansiart.html">ANSI/ASCII Studio</a>
-        <a class="pill" href="/watermark.html">Watermark</a>
-        <a class="pill" href="/compare.html">Model Compare</a>
-        <a class="pill" href="/support.html">Support</a>
-        <a class="pill" href="/legal.html">Legal</a>
+    <div class="header">
+      <div class="brand" id="titleBrand">PromptForge — FaceMapper</div>
+      <div class="lang">
+        <label for="langSel" class="muted" id="labelLang">Language</label>
+        <select id="langSel" aria-label="Language">
+          <option value="en" selected>English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+        </select>
       </div>
     </div>
 
-    <section class="hero" aria-label="Intro">
-      <div class="card">
-        <h1>Map a Face → See What the Model Sees</h1>
-        <p class="sub">Drop a portrait and run the mapper. You’ll get a <b>live CSI-style overlay</b> with <b>tessellation mesh</b>, box & corners, region highlights, 468 points, and gauges—plus <b>prompt-ready text</b>, a natural-language descriptor, raw measurements, JSON export, and a simple palette (hair/skin/eye). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors. Everything runs on-device.</p>
-      </div>
-      <div class="card">
-        <h3>Quick notes</h3>
-        <ul class="sub" style="margin:.4rem 0 .6rem 1.2rem">
-          <li>Works best with a well-lit, front-facing portrait.</li>
-          <li>Outputs avoid identity; numbers are reproducible on the same crop.</li>
-          <li>Adult Mode (optional) allows nudity, with gate + denylist.</li>
-        </ul>
-        <div class="hint">Privacy: Runs in your browser. No uploads.</div>
-      </div>
-    </section>
+    <header class="card">
+      <h1 id="h1">PF FaceMapper — VIDEO (“see what the model sees”)</h1>
+      <p class="muted" id="intro">
+        Real-time MediaPipe Face Landmarker with cinematic overlay: mower scan → detector → feature vectors → tessellation → region highlights.
+        Unified measures/ratios, prompt/alt/desc, JSON export. Not for identification; creative descriptors only.
+      </p>
+    </header>
 
     <main class="grid">
-      <!-- ===== Steps & Buttons (sequenced glow) ===== -->
-      <aside class="steps" aria-label="Steps">
-        <div class="card step step1 active">
-          <div><span class="num">1</span><strong>Choose Image</strong></div>
-          <div class="sub">Portrait, well-lit. On-device only.</div>
-          <label for="file" class="choose" id="chooseBtn" role="button" aria-controls="file">➕ Choose Image</label>
-          <input id="file" type="file" accept="image/*" />
-          <div class="row" style="margin-top:8px">
-            <label class="muted" title="Allow nudity after consent.">
-              <input type="checkbox" id="adultToggle"> Adult Mode
-            </label>
-          </div>
+      <aside class="card" aria-label="Controls">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button id="enableCam" class="btn primary">Enable Camera</button>
+          <label class="btn"><input id="file" type="file" accept="image/*" hidden><span id="btnImage">Load Image</span></label>
+          <label class="muted" style="display:flex;gap:6px;align-items:center"><input id="gridToggle" type="checkbox" checked> <span id="labelGuides">Show Guides</span></label>
         </div>
 
-        <div class="card step step2">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <div><span class="num">2</span><strong>Map & Measure</strong></div>
-            <label class="sub" style="display:flex;gap:8px;align-items:center"><input id="gridToggle" type="checkbox" checked> Show Guides</label>
-          </div>
-          <div class="sub">Mesh, box, eye-angle arc, lip tick, face-shape badge, palette.</div>
-          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-            <button id="run" class="btn primary pulse-red" aria-live="polite" disabled>Run Mapping</button>
-            <button id="retry" class="btn">Retry</button>
-          </div>
-          <div class="sub" id="progress" style="margin-top:6px">—</div>
+        <div style="margin-top:10px">
+          <h3 style="margin:0 0 6px 0" id="hDiag">Model Diagnostics</h3>
+          <div id="diag" class="diag"></div>
+          <p class="muted" style="margin-top:6px" id="diagNote">
+            Host must be <b>HTTPS</b>. CSP must allow <code>cdn.jsdelivr.net</code> (script/connect) and <code>storage.googleapis.com</code> (connect/img).
+          </p>
         </div>
 
-        <div class="card step step3">
-          <div><span class="num">3</span><strong>After Mapping</strong></div>
+        <div style="margin-top:10px">
+          <h3 style="margin:0 0 6px 0" id="hAfter">After Mapping</h3>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button id="copyPrompt" class="btn" disabled>Copy Prompt</button>
+            <button id="copyAlt" class="btn" disabled>Copy alt</button>
             <button id="exportJSON" class="btn" disabled>Export JSON</button>
-            <button id="openJ1NX" class="btn">Open J1NX</button>
+            <button id="snapJSON" class="btn" disabled>Snapshot</button>
           </div>
-          <div class="hint" id="note">Tip: prompt chunk is non-identifying and model-ready (SDXL/Flux/MJ).</div>
-        </div>
-
-        <div class="card step">
-          <div><span class="num">?</span><strong>Help & Policy</strong></div>
-          <a href="#faq" class="btn">Open FAQ</a>
-          <div class="hint">Ads do not run inside Adult Mode.</div>
+          <p class="muted" style="margin-top:6px" id="afterNote">Snapshot saves current frame’s schema as <code>.pf_facemapper.json</code>.</p>
         </div>
       </aside>
 
-      <!-- ===== Stage & Outputs ===== -->
       <section>
         <div id="stage" class="card" aria-label="Stage">
-          <canvas id="preview" width="16" height="9" aria-label="Image preview canvas"></canvas>
-          <canvas id="overlay" width="16" height="9" aria-hidden="true"></canvas>
+          <video id="video" playsinline muted></video>
+          <canvas id="prev" width="16" height="9"></canvas>
+          <canvas id="over" width="16" height="9" aria-hidden="true"></canvas>
           <div class="legend" id="legend">—</div>
-          <div class="face-badge" id="faceBadge" aria-hidden="true" style="display:none">shape: —</div>
+          <div class="badge" id="badge">shape: —</div>
         </div>
 
-        <div class="card" id="outputs" aria-label="Outputs">
+        <div class="card">
           <div class="tabs" role="tablist">
-            <button class="tab active" role="tab" aria-selected="true" aria-controls="p1" id="t1">Prompt Chunk</button>
-            <button class="tab" role="tab" aria-controls="p2" id="t2">Stylistic Descriptor</button>
-            <button class="tab" role="tab" aria-controls="p3" id="t3">Measurements</button>
-            <button class="tab" role="tab" aria-controls="p4" id="t4">JSON Export</button>
-            <button class="tab" role="tab" aria-controls="p5" id="t5">Palette</button>
+            <button class="tab active" id="t1" aria-controls="p1" role="tab" aria-selected="true">Prompt</button>
+            <button class="tab" id="t2" aria-controls="p2" role="tab">Descriptor</button>
+            <button class="tab" id="t3" aria-controls="p3" role="tab">Measurements</button>
+            <button class="tab" id="t4" aria-controls="p4" role="tab">JSON</button>
+            <button class="tab" id="t5" aria-controls="p5" role="tab">Palette</button>
           </div>
-
-          <div class="panel active" id="p1" role="tabpanel" aria-labelledby="t1">
-            <div class="outbox" id="promptOut"></div>
-          </div>
-
-          <div class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
-            <div class="outbox" id="descriptor"></div>
-          </div>
-
-          <div class="panel" id="p3" role="tabpanel" aria-labelledby="t3">
-            <div class="outbox" id="measures"></div>
-            <div class="hint" style="margin-top:6px">Landmark indices used: top(10), chin(152), jaw(234↔454), inner-eye(133↔362), lips(13↔14), forehead(8↔10).</div>
-          </div>
-
-          <div class="panel" id="p4" role="tabpanel" aria-labelledby="t4">
-            <div class="outbox" id="jsonOut" style="min-height:140px"></div>
-            <div class="right"><button id="downloadJSON" class="btn" disabled>Download .pf_facemapper.json</button></div>
-          </div>
-
-          <div class="panel" id="p5" role="tabpanel" aria-labelledby="t5">
-            <div id="palette" class="row" aria-live="polite"></div>
-            <div class="row"><button id="copyPalette" class="btn" disabled>Copy Palette</button></div>
-          </div>
-        </div>
-
-        <div id="faq" class="card" aria-label="FAQ">
-          <h3>FAQ</h3>
-          <ul class="sub" style="margin:.2rem 0 .6rem 1.2rem">
-            <li><b>Does this upload my photo?</b> No. It runs entirely in your browser.</li>
-            <li><b>What is it for?</b> Creative, non-identifying face descriptors (prompts, ratios, palettes).</li>
-            <li><b>Adult Mode?</b> Optional and gated. Never analyze minors. Ads do not run inside Adult Mode flows.</li>
-          </ul>
+          <div class="panel active" id="p1" role="tabpanel" aria-labelledby="t1"><div id="outPrompt" class="out"></div></div>
+          <div class="panel" id="p2" role="tabpanel" aria-labelledby="t2"><div id="outDesc" class="out"></div></div>
+          <div class="panel" id="p3" role="tabpanel" aria-labelledby="t3"><div id="outMeasures" class="out"></div></div>
+          <div class="panel" id="p4" role="tabpanel" aria-labelledby="t4"><div id="outJSON" class="out" style="min-height:160px"></div></div>
+          <div class="panel" id="p5" role="tabpanel" aria-labelledby="t5"><div id="outPalette" class="out"></div></div>
         </div>
       </section>
     </main>
   </div>
 
-  <!-- ===== Toasts ===== -->
-  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
 
-  <!-- ===== Adult Mode Interstitial ===== -->
-  <div class="modal" id="adultModal" role="dialog" aria-modal="true" aria-labelledby="adultTitle" aria-describedby="adultDesc">
-    <div class="sheet">
-      <h3 id="adultTitle">Adult Mode — Consent Required</h3>
-      <p class="muted" id="adultDesc">Adult Mode allows nudity. We do not run ads inside this flow. You must confirm:</p>
-      <label><input type="checkbox" id="ageChk"> I am 18+ (or local age of majority).</label>
-      <label><input type="checkbox" id="consentChk"> I have consent to analyze this image. No minors.</label>
-      <div class="hint">We block predator terms and anything implying minors/exploitation.</div>
-      <div class="row right">
-        <button class="btn" id="adultCancel">Cancel</button>
-        <button class="btn primary" id="adultContinue" disabled>Continue</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== Predatory term denylist (client-side guard only) ===== -->
-  <script>
-    const PREDATOR_DENYLIST = [
-      "underage","minor","teeny","preteen","child","kid","schoolgirl","schoolboy","young-looking","lolita",
-      "barely legal","jailbait","young teen","hs girl","hs boy","middle school","elementary"
-    ];
-  </script>
-
-  <!-- ===== Core Script (Model-safe init + CSI overlay + tessellation stages) ===== -->
-  <script>
-  // ===== Config =====
-  const CFG = {
-    MODEL_PATH: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-    WASM_ROOT:  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
-  };
-
-  // ===== Utils =====
-  const $ = q => document.querySelector(q);
-  const on = (el,ev,fn,opts)=>el.addEventListener(ev,fn,opts||{});
-  const toastBox = $('#toasts');
-  function toast(msg, kind='ok', ms=2200){
-    const t = document.createElement('div');
-    t.className = 'toast '+(kind||'');
-    t.textContent = msg;
-    toastBox.appendChild(t);
-    setTimeout(()=>{ t.remove(); }, ms);
-  }
-
-  // ===== Elements =====
-  const els = {
-    file: $('#file'),
-    choose: $('#chooseBtn'),
-    adultToggle: $('#adultToggle'),
-    adultModal: $('#adultModal'), ageChk: $('#ageChk'), consentChk: $('#consentChk'),
-    adultCancel: $('#adultCancel'), adultContinue: $('#adultContinue'),
-    preview: $('#preview'), overlay: $('#overlay'),
-    legend: $('#legend'), faceBadge: $('#faceBadge'),
-    grid: $('#gridToggle'),
-    run: $('#run'), retry: $('#retry'),
-    copyPrompt: $('#copyPrompt'), exportJSON: $('#exportJSON'),
-    downloadJSON: $('#downloadJSON'), copyPalette: $('#copyPalette'),
-    openJ1NX: $('#openJ1NX'),
-    progress: $('#progress'),
-    tabs: [$('#t1'),$('#t2'),$('#t3'),$('#t4'),$('#t5')],
-    panels:[$('#p1'),$('#p2'),$('#p3'),$('#p4'),$('#p5')],
-    promptOut: $('#promptOut'), measures: $('#measures'),
-    jsonOut: $('#jsonOut'), palette: $('#palette'), descriptor: $('#descriptor')
-  };
-
-  // ===== State =====
-  const state = {
-    adult:false, adultGated:false,
-    imgEl:null, imgName:'', imgW:0, imgH:0,
-    draw:{dx:0,dy:0,dw:0,dh:0},
-    gridOn:true,
-    face:{landmarks:[], ratios:{}, angles:{}, attrs:{}, shape:''},
-    loading:false,
-    prefersReduced: window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  };
-
-  // ===== DPR-aware canvas scale =====
-  function scaleCanvases(){
-    const dpr = window.devicePixelRatio || 1;
-    [els.preview,els.overlay].forEach(c=>{
-      const rect=c.getBoundingClientRect();
-      if(!rect.width||!rect.height) return;
-      c.width = Math.round(rect.width*dpr);
-      c.height= Math.round(rect.height*dpr);
-      const g=c.getContext('2d');
-      g.setTransform(dpr,0,0,dpr,0,0);
-    });
-  }
-  scaleCanvases();
-  on(window,'resize',()=>{ scaleCanvases(); if(state.imgEl) fitDraw(state.imgEl); });
-
-  // ===== Contexts =====
-  const ctx = els.preview.getContext('2d');
-  const octx = els.overlay.getContext('2d');
-
-  // ===== Grid / Scan visuals =====
-  function drawGrid(){
-    const {dx,dy,dw,dh}=state.draw;
-    if(!dw||!dh) return;
-    const step=dw/18;
-    octx.save();
-    octx.strokeStyle='rgba(100,242,227,0.18)';
-    octx.lineWidth=1;
-    for(let x=dx;x<=dx+dw;x+=step){ octx.beginPath(); octx.moveTo(x,dy); octx.lineTo(x,dy+dh); octx.stroke(); }
-    for(let y=dy;y<=dy+dh;y+=step){ octx.beginPath(); octx.moveTo(dx,y); octx.lineTo(dx+dw,y); octx.stroke(); }
-    octx.restore();
-  }
-
-  let rafScan=null, scanY=0, scanT=0;
-  function startScan(text){
-    if(state.prefersReduced) return;
-    cancelScan();
-    const draw = ()=>{
-      const W=els.overlay.width, H=els.overlay.height;
-      octx.clearRect(0,0,W,H);
-      if(state.gridOn) drawGrid();
-      octx.fillStyle='rgba(35,215,186,0.14)';
-      octx.fillRect(0,scanY,W,8);
-      const px=state.draw.dx+(Math.sin(scanT/18)*.5+.5)*state.draw.dw;
-      const py=scanY+4;
-      octx.beginPath(); octx.arc(px,py,6,0,Math.PI*2); octx.fillStyle='rgba(255,90,122,0.85)'; octx.fill();
-      if(text){
-        octx.fillStyle='rgba(232,248,255,0.92)';
-        octx.font='12px ui-monospace,monospace';
-        octx.fillText(text, 10, 18);
-      }
-      scanY=(scanY+3)%H; scanT++;
-      rafScan=requestAnimationFrame(draw);
-    };
-    rafScan=requestAnimationFrame(draw);
-  }
-  function cancelScan(){
-    if(rafScan){ cancelAnimationFrame(rafScan); rafScan=null; }
-    octx.clearRect(0,0,els.overlay.width,els.overlay.height);
-    if(state.gridOn) drawGrid();
-  }
-
-  // ===== Fit image =====
-  function fitDraw(img){
-    const C=els.preview, W=C.width, H=C.height;
-    ctx.clearRect(0,0,W,H); octx.clearRect(0,0,els.overlay.width,els.overlay.height);
-    const ar=img.width/img.height, car=W/H;
-    let dw,dh,dx,dy;
-    if(ar>car){ dw=W; dh=W/ar; dx=0; dy=(H-dh)/2; } else { dh=H; dw=H*ar; dy=0; dx=(W-dw)/2; }
-    ctx.drawImage(img,dx,dy,dw,dh);
-    state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height;
-    if(state.gridOn) drawGrid();
-  }
-
-  // ===== Coords / measurements =====
-  function P(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
-  function boxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs), maxX:Math.max(...xs), minY:Math.min(...ys), maxY:Math.max(...ys)} }
-  function hex(r,g,b){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
-  function avgRect(rect){
-    const {minX,maxX,minY,maxY}=rect;
-    const w=Math.max(1,(maxX-minX)|0), h=Math.max(1,(maxY-minY)|0);
-    const sx=Math.max(0,Math.floor(minX)), sy=Math.max(0,Math.floor(minY));
-    const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
-    const t=tmp.getContext('2d'); t.drawImage(els.preview,sx,sy,w,h,0,0,w,h);
-    const d=t.getImageData(0,0,w,h).data;
-    let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;}
-    return hex((R/n)|0,(G/n)|0,(B/n)|0);
-  }
-  function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
-
-  // ===== DrawingUtils & connectors =====
-  let DU=null;
-  function ensureDU(){ if(!DU) DU = new globalThis.DrawingUtils(octx); return DU; }
-
-  function drawBBoxCorners(bbox){
-    octx.save();
-    octx.strokeStyle='rgba(100,242,227,.65)'; octx.lineWidth=1.4;
-    octx.strokeRect(bbox.minX,bbox.minY,bbox.maxX-bbox.minX,bbox.maxY-bbox.minY);
-    const L=bbox.minX, T=bbox.minY, R=bbox.maxX, B=bbox.maxY; const Lw=24, Lh=18;
-    octx.strokeStyle='rgba(35,215,186,.9)'; octx.lineWidth=2;
-    [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ octx.beginPath(); octx.moveTo(x,y+Lh); octx.lineTo(x,y); octx.lineTo(x+Lw,y); octx.stroke(); });
-    octx.restore();
-  }
-
-  function drawEyeAngleArc(lm){
-    const L=133, R=362;
-    const a=P(lm[L]), b=P(lm[R]);
-    const angleDeg = Math.atan2(b.y-a.y, b.x-a.x) * 57.2958;
-    octx.save(); octx.strokeStyle='rgba(180,255,240,.8)'; octx.lineWidth=1.4;
-    octx.beginPath(); octx.moveTo(a.x,a.y); octx.lineTo(b.x,b.y); octx.stroke();
-    const midx=(a.x+b.x)/2, midy=(a.y+b.y)/2;
-    octx.beginPath(); octx.arc(midx,midy,18,0,Math.PI*2); octx.stroke();
-    octx.fillStyle='#d8ffff'; octx.font='11px ui-monospace,monospace';
-    octx.fillText(angleDeg.toFixed(2)+'°', midx+22, midy+4);
-    octx.restore();
-    return +angleDeg.toFixed(2);
-  }
-
-  function drawLipTick(lm){
-    const U=13,L=14; const u=P(lm[U]), l=P(lm[L]);
-    octx.save(); octx.strokeStyle='rgba(255,210,102,.9)'; octx.lineWidth=2;
-    octx.beginPath(); octx.moveTo((u.x+l.x)/2, u.y); octx.lineTo((u.x+l.x)/2, l.y); octx.stroke();
-    octx.restore();
-  }
-
-  // Highlight regions (eyes, brows, lips, face_oval)
-  function highlightRegions(lm){
-    const F = globalThis.FaceLandmarker;
-    const du = ensureDU();
-    const HL = (connectors, color)=> du.drawConnectors(lm, connectors, {color, lineWidth: 2.0});
-    HL(F.FACE_LANDMARKS_RIGHT_EYE,   'rgba(255,255,255,0.95)');
-    HL(F.FACE_LANDMARKS_LEFT_EYE,    'rgba(255,255,255,0.95)');
-    HL(F.FACE_LANDMARKS_RIGHT_EYEBROW, 'rgba(255,220,120,0.95)');
-    HL(F.FACE_LANDMARKS_LEFT_EYEBROW,  'rgba(255,220,120,0.95)');
-    HL(F.FACE_LANDMARKS_LIPS,        'rgba(255,120,160,0.95)');
-    HL(F.FACE_LANDMARKS_FACE_OVAL,   'rgba(140,255,220,0.95)');
-  }
-
-  // Tessellation staged animation: batches across frames, then fade points
-  async function animateTessellation(lm){
-    const du = ensureDU();
-    const connectors = globalThis.FaceLandmarker.FACE_LANDMARKS_TESSELATION || [];
-    if(!connectors.length){ return; }
-    const batch = 90; // draw ~90 connectors per frame
-    let i=0, alpha=1;
-    return new Promise(resolve=>{
-      function step(){
-        if(state.gridOn) drawGrid();
-        octx.save();
-        octx.globalAlpha = 0.88;
-        du.drawConnectors(lm, connectors.slice(i, i+batch), {color:'rgba(100,242,227,0.95)', lineWidth: 0.9});
-        octx.restore();
-        i+=batch;
-        if(i<connectors.length && !state.prefersReduced){ requestAnimationFrame(step); }
-        else{
-          // Fade out the 468 dots after drawing whole mesh
-          if(!state.prefersReduced){
-            (function fade(){
-              octx.save(); octx.globalAlpha = alpha; octx.fillStyle='rgba(100,242,227,0.95)';
-              for(const p of lm){ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.fill(); }
-              octx.restore();
-              alpha -= 0.18;
-              if(alpha>0){ requestAnimationFrame(fade); } else { resolve(); }
-            })();
-          } else { resolve(); }
-        }
-      }
-      step();
-    });
-  }
-
-  // ===== Tabs =====
-  els.tabs.forEach((tab,i)=>{
-    on(tab,'click',()=>{
-      els.tabs.forEach(t=>t.classList.remove('active'));
-      els.panels.forEach(p=>p.classList.remove('active'));
-      tab.classList.add('active'); els.panels[i].classList.add('active');
-    });
-  });
-
-  // ===== Adult gating =====
-  on(els.adultToggle,'change',()=>{
-    if(els.adultToggle.checked && !state.adultGated){
-      els.adultModal.classList.add('open');
-    } else { state.adult = els.adultToggle.checked; }
-  });
-  on(els.adultCancel,'click',()=>{
-    els.adultModal.classList.remove('open');
-    els.adultToggle.checked = false;
-  });
-  function updateAdultContinue(){ els.adultContinue.disabled = !(els.ageChk.checked && els.consentChk.checked); }
-  on(els.ageChk,'change',updateAdultContinue);
-  on(els.consentChk,'change',updateAdultContinue);
-  on(els.adultContinue,'click',()=>{
-    state.adultGated = true; state.adult = true;
-    els.adultModal.classList.remove('open');
-    toast('Adult Mode enabled ✓', 'ok');
-  });
-
-  // ===== File open =====
-  on(els.choose,'click',()=>els.file.click());
-  on(els.file,'change',e=>{
-    const f=e.target.files&&e.target.files[0];
-    if(!f) return;
-    const lower=(f.name||'').toLowerCase();
-    if(PREDATOR_DENYLIST.some(w=>lower.includes(w))){
-      toast('Blocked: file name trips policy denylist.', 'bad', 3000);
-      e.target.value='';
-      return;
-    }
-    const url=URL.createObjectURL(f);
-    const img=new Image();
-    img.onload=()=>{
-      state.imgEl=img; state.imgName=f.name||'image';
-      fitDraw(img);
-      els.run.disabled=false;
-      toast(`Image loaded ✓ (${img.width}×${img.height})`,'ok');
-      els.progress.textContent='Ready. Click Run Mapping.';
-      setPulse(1);
-      URL.revokeObjectURL(url);
-    };
-    img.onerror=()=>{ toast('Could not load image. Try JPG/PNG.','bad',2800); };
-    img.src=url;
-  });
-
-  // ===== Robust wait for Tasks script =====
-  function waitForTasksLib(maxMs=8000){
-    return new Promise((resolve,reject)=>{
-      const t0=performance.now();
-      (function poll(){
-        if (globalThis.FilesetResolver && globalThis.FaceLandmarker && globalThis.DrawingUtils) return resolve(true);
-        if (performance.now()-t0>maxMs) return reject(new Error('Tasks library not available'));
-        setTimeout(poll, 100);
-      })();
-    });
-  }
-
-  // ===== Model loader (safe) =====
-  async function ensureFace(){
-    if(window._pfFace) return true;
-    try{
-      state.loading = true;
-      startScan('Loading face model…');  // show scan even while loading
-      els.progress.textContent='Loading face model…';
-      await waitForTasksLib(); // ensures script is ready
-
-      // DEBUG: HEAD fetch to verify CORS/CSP reachability (remove before prod if you prefer)
-      try {
-        const head = await fetch(CFG.MODEL_PATH, { method:'HEAD', mode:'no-cors' });
-        console.debug('Model HEAD ok (no-cors):', head && head.type);
-      } catch(e){ console.debug('HEAD check skipped/blocked:', e?.message); }
-
-      const v = await globalThis.FilesetResolver.forVisionTasks(CFG.WASM_ROOT);
-      window._pfFace = await globalThis.FaceLandmarker.createFromOptions(v, {
-        baseOptions:{ modelAssetPath: CFG.MODEL_PATH },
-        numFaces:1, runningMode:'IMAGE',
-        outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
-      });
-      toast('Model loaded ✓','ok');
-      cancelScan();
-      els.progress.textContent='Model ready.';
-      state.loading=false;
-      return true;
-    }catch(e){
-      console.error(e);
-      cancelScan();
-      toast('Model load blocked (allow jsDelivr + storage.googleapis.com).','bad',3600);
-      els.progress.textContent='Model load failed.';
-      state.loading=false;
-      return false;
-    }
-  }
-
-  // ===== Shape classify & text =====
-  function classifyShape(r){ const jf=r.jaw_face, cf=r.cheek_face; if(jf==null||cf==null) return 'undetermined';
-    if(cf>0.7&&jf>0.6) return 'square';
-    if(cf>0.72&&jf<0.55) return 'heart';
-    if(jf<0.52&&cf<0.62) return 'oval';
-    if(jf>0.62&&cf<0.60) return 'triangle';
-    return 'round';
-  }
-  function buildPrompt(){
-    const r=state.face.ratios, a=state.face.attrs, shape=state.face.shape;
-    const ratios=[
-      'jaw/face '+(r.jaw_face??'-'),
-      'cheekbone/face '+(r.cheek_face??'-'),
-      'forehead/face '+(r.forehead_face??'-'),
-      'eye-angle '+(state.face.angles.eye??'-'),
-      'lip-thickness '+(r.lip_ratio??'-')
-    ].join(' • ');
-    return [
-      `face-shape: ${shape}`,
-      a.hairHex?`hair-color: ${a.hairHex}`:'',
-      a.skinHex?`skin-tone: ${a.skinHex}`:'',
-      a.eyeHue?`eye-hue: ${a.eyeHue}`:'',
-      `ratios: ${ratios}`
-    ].filter(Boolean).join('\n');
-  }
-  function buildDescriptor(){
-    const r=state.face.ratios||{}, a=state.face.attrs||{}, ang=state.face.angles?.eye;
-    const parts=[];
-    const shapeMap={oval:'soft oval outline', round:'rounded outline', square:'defined square outline', heart:'heart-tapered outline', triangle:'tapered jawline'};
-    if(state.face.shape && shapeMap[state.face.shape]) parts.push(shapeMap[state.face.shape]);
-    if(r.jaw_face!=null) parts.push((r.jaw_face>0.6?'strong':'moderate')+' jaw width');
-    if(r.cheek_face!=null) parts.push((r.cheek_face>0.64?'pronounced':'balanced')+' cheekbones');
-    if(typeof ang==='number') parts.push((ang>2?'slight up-tilted':ang<-2?'slight down-tilted':'level')+' eye line');
-    if(r.forehead_face!=null) parts.push((r.forehead_face>0.23?'taller':'balanced')+' forehead height');
-    if(r.lip_ratio!=null) parts.push((r.lip_ratio>0.045?'medium ':'subtle ')+'lip fullness');
-    return `${parts.join(', ')}. Palette hints — hair ${a.hairHex||'—'}, skin ${a.skinHex||'—'}, eyes ${a.eyeHue||'—'}.`;
-  }
-
-  // ===== Sequenced glow =====
-  function setPulse(step){
-    [els.run, els.copyPrompt, els.exportJSON].forEach(b=>b.classList.remove('pulse-red'));
-    if(step===1){ els.run.classList.add('pulse-red'); }
-    if(step===2){ els.copyPrompt.classList.add('pulse-red'); setTimeout(()=>els.exportJSON.classList.add('pulse-red'), 2000); }
-  }
-
-  // ===== RUN =====
-  async function run(){
-    if(!state.imgEl) return;
-
-    if(els.adultToggle.checked && !state.adultGated){ els.adultModal.classList.add('open'); return; }
-
-    // Ensure model
-    const ok = await ensureFace(); if(!ok) return;
-
-    // Show analysis scan while detecting
-    startScan('Analyzing…');
-    els.progress.textContent='Analyzing…';
-
-    let res;
-    try{ res = await window._pfFace.detect(state.imgEl); }
-    catch(e){ console.error(e); toast('Detection error.','bad',2600); cancelScan(); return; }
-
-    cancelScan();
-    octx.clearRect(0,0,els.overlay.width,els.overlay.height);
-    if(state.gridOn) drawGrid();
-
-    if(!res || !res.faceLandmarks || !res.faceLandmarks.length){
-      toast('No face found.','warn',2500); els.progress.textContent='No face found.'; return;
-    }
-
-    const lm = res.faceLandmarks[0];
-
-    // Stage A: bbox + corners
-    const bbox=boxFrom(lm);
-    drawBBoxCorners(bbox);
-
-    // Stage B: feature vectors (eye angle, lip tick)
-    const angle = drawEyeAngleArc(lm);
-    drawLipTick(lm);
-
-    // Stage C: tessellation animation (batches), then fade points
-    await animateTessellation(lm);
-
-    // Stage D: brighter region overlays
-    highlightRegions(lm);
-
-    // Measurements
-    const faceH=mpDist(lm[10],lm[152]);
-    const jawW=mpDist(lm[234],lm[454]);
-    const cheekW=mpDist(lm[234],lm[454]); // proxy same anchors
-    const foreheadH=mpDist(lm[8],lm[10]);
-    const lipT=mpDist(lm[13],lm[14]);
-
-    const ratios={
-      jaw_face:+(jawW/faceH).toFixed(3),
-      cheek_face:+(cheekW/faceH).toFixed(3),
-      forehead_face:+(foreheadH/faceH).toFixed(3),
-      lip_ratio:+(lipT/faceH).toFixed(3)
-    };
-    state.face.ratios=ratios;
-    state.face.angles={ eye:+angle.toFixed(2) };
-
-    // Palette (hair band above bbox; skin mid-face; eye patch @133 ~8px)
-    const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY};
-    const skinRect={minX:bbox.minX+(bbox.maxX-bbox.minX)*0.3, maxX:bbox.maxX-(bbox.maxX-bbox.minX)*0.3, minY:bbox.minY+(bbox.maxY-bbox.minY)*0.45, maxY:bbox.minY+(bbox.maxY-bbox.minY)*0.7};
-    const eyePt=P(lm[133]); const r=8; const eyeRect={minX:eyePt.x-r, maxX:eyePt.x+r, minY:eyePt.y-r, maxY:eyePt.y+r};
-
-    const hairHex=avgRect(hairRect), skinHex=avgRect(skinRect), eyeHue=avgRect(eyeRect);
-    state.face.attrs={ hairHex, skinHex, eyeHue };
-    state.face.shape=classifyShape(ratios);
-    state.face.landmarks = lm.map(p=>[+p.x.toFixed(5), +p.y.toFixed(5), +(p.z||0).toFixed(5)]);
-
-    // Badge + legend + chips
-    els.faceBadge.style.display='block';
-    els.faceBadge.textContent='shape: '+state.face.shape;
-    els.legend.textContent = `eye-angle: ${state.face.angles.eye}°, jaw/face: ${ratios.jaw_face}, cheek/face: ${ratios.cheek_face}`;
-
-    els.palette.innerHTML = [ ['Hair',hairHex], ['Skin',skinHex], ['Eyes',eyeHue] ]
-      .map(([label,hex])=>`<span class="chip"><i style="background:${hex}"></i><code>${label}: ${hex}</code></span>`).join('');
-    els.copyPalette.disabled = false;
-
-    // Outputs
-    const prompt = buildPrompt();
-    els.promptOut.textContent = prompt;
-
-    const mtxt = `face_height: ${faceH.toFixed(4)}
-jaw_width: ${jawW.toFixed(4)}
-cheek_width: ${cheekW.toFixed(4)}
-forehead_height: ${foreheadH.toFixed(4)}
-lip_thickness: ${lipT.toFixed(4)}
-eye_angle_deg: ${state.face.angles.eye}
-ratios:
-  jaw/face: ${ratios.jaw_face}
-  cheek/face: ${ratios.cheek_face}
-  forehead/face: ${ratios.forehead_face}
-  lip/face: ${ratios.lip_ratio}`;
-    els.measures.textContent = mtxt;
-
-    const desc = buildDescriptor();
-    els.descriptor.textContent = desc;
-
-    const data = {
-      version: "pf_facemapper_3",
-      filename: state.imgName,
-      image: { width: state.imgW, height: state.imgH },
-      landmarks: state.face.landmarks, // normalized [x,y,z]
-      ratios: state.face.ratios,
-      angles: state.face.angles,
-      attrs: state.face.attrs,
-      shape: state.face.shape,
-      prompt_chunk: prompt
-    };
-    els.jsonOut.textContent = JSON.stringify(data,null,2);
-    els.downloadJSON.disabled = false;
-
-    // Enable buttons + pulse sequence for after-map
-    els.copyPrompt.disabled=false;
-    els.exportJSON.disabled=false;
-    setPulse(2);
-
-    toast('Mapping complete ✓','ok');
-    els.progress.textContent='Mapped. Export or copy.';
-  }
-
-  // ===== Wire UI =====
-  on(els.grid,'change',()=>{ state.gridOn=els.grid.checked; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); });
-  on(els.run,'click',run);
-  on(els.retry,'click',()=>{ if(state.imgEl){ fitDraw(state.imgEl); setPulse(1); els.progress.textContent='Ready. Click Run Mapping.'; } });
-
-  on(els.copyPrompt,'click',()=>{
-    navigator.clipboard.writeText(els.promptOut.textContent||'');
-    toast('Prompt copied ✓','ok');
-  });
-  on(els.exportJSON,'click',()=>{
-    if(!state.imgEl) return;
-    const blob=new Blob([($('#jsonOut').textContent)||'{}'],{type:'application/json'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-    a.download=(state.imgName||'image')+'.pf_facemapper.json';
-    a.click(); URL.revokeObjectURL(a.href);
-    toast('JSON exported ✓','ok');
-  });
-  on(els.downloadJSON,'click',()=>els.exportJSON.click());
-  on(els.copyPalette,'click',()=>{
-    const txt = ($('#palette').textContent||'').trim();
-    navigator.clipboard.writeText(txt);
-    toast('Palette copied ✓','ok');
-  });
-  on(els.openJ1NX,'click',()=>{ const w=$('#j1nxFloatTrue'); if(!w) return; w.style.display = (w.style.display==='none'?'flex':'none'); });
-
-  // Step 1 pulse & heads-up
-  setPulse(1);
-  toast('Model loads on first run.','warn',1800);
-
-  // ===== DEBUG SNIPPETS (TEMP - remove before production if desired) =====
-  console.debug('FilesetResolver present?', !!globalThis.FilesetResolver);
-  console.debug('FaceLandmarker present?', !!globalThis.FaceLandmarker);
-  console.debug('DrawingUtils present?', !!globalThis.DrawingUtils);
-  </script>
-
-  <!-- ===== EXACT J1NX + ANSI FOOTER (verbatim) ===== -->
-  <!-- J1NX FLOATS OVER EVERYTHING, APPEARS FIRST IN SOURCE, ALWAYS FIXED -->
-  <div class="j1nx-float-true" id="j1nxFloatTrue">
+  <!-- J1NX FLOAT (verbatim IDs; paste your exact styling/JS if you have it) -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue" style="display:none">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG?
       </div>
       <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off"/>
         <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
       </div>
       <div class="j1nx-bubble-row-true">
@@ -856,135 +187,261 @@ ratios:
     </div>
   </div>
 
-  <!-- ====== ANSI ART FOOTER ====== -->
-  <footer style="margin: 0 auto 0 auto;padding: 0;text-align: center;max-width: 820px;width: 100%;display: flex;flex-direction: column;align-items: center;background: none;position: relative;z-index: 100;font-family: inherit;font-size: 1rem;color: #d6f5ff;">
-    <pre class="footer-art" style="margin:0 0 12px 0;font-family:'Fira Mono',monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+  <footer>
+    <pre style="margin:0 0 12px 0;font-family:'Fira Mono',monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)
     </pre>
-    <pre class="footer-camo" id="footerCamo" style="font-family:inherit;font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px 0;text-align:center;opacity:.93;white-space:pre"></pre>
-    <div class="footer-bar" style="color:#88fffd;margin:12px auto 8px auto;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap">
-      Made underground in BC, Canada &bull; #PromptForge &bull;
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#64f2e3;text-decoration:none">Bluesky</a> &bull;
-      <a href="https://x.com/GoreandGiggles" style="color:#64f2e3;text-decoration:none">Twitter/X</a> &bull;
-      <a href="/legal.html" style="color:#64f2e3;text-decoration:none">Legal</a>
+    <div style="color:#88fffd;margin:12px auto 8px auto;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap">
+      Made underground in BC, Canada • #PromptForge •
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> •
+      <a href="https://x.com/GoreandGiggles">Twitter/X</a> •
+      <a href="/legal.html">Legal</a>
     </div>
   </footer>
 
-  <!-- Footer camo shimmer (exact behavior) -->
-  <script>
-    (function(){
-      const camoEl = document.getElementById("footerCamo");
-      if (camoEl) {
-        const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
-        const chars = "░▒▓▚▞▐▉█▛";
-        function camoTick(t){
-          let out = "";
-          for(let i=0;i<62;i++){
-            out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
-          }
-          camoEl.innerHTML = out;
-        }
-        let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
-      }
-    })();
-  </script>
+<script type="module">
+/* ---- ESM import (works in CodePen and on-site) ---- */
+import { FilesetResolver, FaceLandmarker, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-  <!-- J1NX logic (exact block) -->
-  <script>
-  (function(){
-    const j1nxFloat = document.getElementById('j1nxFloatTrue');
-    const cutout = document.getElementById('j1nxCutoutTrue');
-    const bubble = document.getElementById('j1nxBubbleTrueMain');
-    function isMobile() { return window.innerWidth < 700; }
-    function shrinkJ1nx() {
-      if(isMobile()) {
-        j1nxFloat.classList.remove('j1nx-open');
-        bubble.style.display = "none";
-      } else {
-        j1nxFloat.classList.add('j1nx-open');
-        bubble.style.display = "flex";
-      }
-    }
-    cutout.onclick = function() {
-      if(isMobile()) {
-        if(j1nxFloat.classList.contains('j1nx-open')) {
-          j1nxFloat.classList.remove('j1nx-open');
-          bubble.style.display = "none";
-        } else {
-          j1nxFloat.classList.add('j1nx-open');
-          bubble.style.display = "flex";
-        }
-      }
-    };
-    window.addEventListener('resize', shrinkJ1nx);
-    shrinkJ1nx();
-  })();
-  (function(){
-    let chatHistory = [];
-    let nsfwUnlocked = false;
-    function renderChat() {
-      const out = chatHistory.map(line => `<div>${line}</div>`).join('');
-      document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
-    }
-    function addMsg(msg, isUser) {
-      if (!msg) return;
-      const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
-      chatHistory.push(name + msg);
-      if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
-      renderChat();
-    }
-    document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', function() {
-      nsfwUnlocked = true;
-      document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-      addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-    });
-    document.getElementById('j1nxSendTrue').onclick = function() {
-      const input = document.getElementById('j1nxInputTrue');
-      const val = (input.value || '').trim();
-      if (!val) return;
-      addMsg(val, true);
-      if (/^unlock$/i.test(val)) {
-        nsfwUnlocked = true;
-        document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
-        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
-        input.value = "";
-        return;
-      }
-      try {
-        let reply = (window.j1nxBrain ? window.j1nxBrain(val, chatHistory.length, nsfwUnlocked) : "J1NX brain not loaded (assets/j1nx_brain.js).");
-        let replyText = (reply && typeof reply === 'object')
-          ? (reply.text || reply.reply || JSON.stringify(reply))
-          : reply;
-        addMsg(replyText, false);
-      } catch(e) { addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false); }
-      input.value = "";
-    };
-    document.getElementById('j1nxInputTrue').addEventListener('keydown', function(e){
-      if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
-    });
-    document.getElementById('j1nxSaveTrue').onclick = function() {
-      const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
-      const blob = new Blob([text], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
-      setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
-    };
-    document.getElementById('j1nxClearTrue').onclick = function() {
-      chatHistory = [];
-      renderChat();
-    };
-    renderChat();
-  })();
-  </script>
+/* ---- Config ---- */
+const WASM_ROOT = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
 
-  <!-- Optional: external J1NX brain if you use it on the site -->
-  <script src="assets/j1nx_brain.js"></script>
+/* ---- i18n ---- */
+const I18N = {
+  en:{brand:"PromptForge — FaceMapper", h1:"PF FaceMapper — VIDEO (“see what the model sees”)", intro:"Real-time MediaPipe Face Landmarker with cinematic overlay: mower scan → detector → feature vectors → tessellation → region highlights. Unified measures/ratios, prompt/alt/desc, JSON export. Not for identification; creative descriptors only.", btnImage:"Load Image", labelGuides:"Show Guides", hDiag:"Model Diagnostics", diagNote:"Host must be HTTPS. CSP must allow cdn.jsdelivr.net (script/connect) and storage.googleapis.com (connect/img).", hAfter:"After Mapping", afterNote:"Snapshot saves current frame’s schema as .pf_facemapper.json", Language:"Language"},
+  es:{brand:"PromptForge — Mapeador Facial", h1:"PF FaceMapper — VÍDEO («lo que ve el modelo»)", intro:"Marcador facial de MediaPipe en tiempo real con superposición cinematográfica: escaneo → detector → vectores → teselación → regiones. Medidas/relaciones unificadas, prompt/alt/desc y exportación JSON. No para identificación.", btnImage:"Cargar imagen", labelGuides:"Mostrar guías", hDiag:"Diagnóstico del modelo", diagNote:"Servidor HTTPS. Permite cdn.jsdelivr.net y storage.googleapis.com en CSP.", hAfter:"Después del mapeo", afterNote:"Snapshot guarda el esquema del fotograma como .pf_facemapper.json", Language:"Idioma"},
+  fr:{brand:"PromptForge — Cartographe de Visage", h1:"PF FaceMapper — VIDÉO («ce que voit le modèle»)", intro:"Repérage facial MediaPipe en temps réel avec surimpression cinématographique : tondeuse → détecteur → vecteurs → tesselation → régions. Mesures/rapports unifiés, prompt/alt/desc, export JSON. Pas pour l’identification.", btnImage:"Charger une image", labelGuides:"Afficher les repères", hDiag:"Diagnostics du modèle", diagNote:"HTTPS requis. Autoriser cdn.jsdelivr.net et storage.googleapis.com dans la CSP.", hAfter:"Après cartographie", afterNote:"Snapshot enregistre le schéma du frame en .pf_facemapper.json", Language:"Langue"}
+};
+const $ = s=>document.querySelector(s);
+const langSel = $('#langSel');
+function applyI18n(lang){
+  const t=I18N[lang]||I18N.en;
+  $('#titleBrand').textContent=t.brand;
+  $('#h1').textContent=t.h1;
+  $('#intro').textContent=t.intro;
+  $('#btnImage').textContent=t.btnImage;
+  $('#labelGuides').textContent=t.labelGuides;
+  $('#hDiag').textContent=t.hDiag;
+  $('#diagNote').innerHTML=t.diagNote.replace('CSP','<abbr title="Content Security Policy">CSP</abbr>');
+  $('#hAfter').textContent=t.hAfter;
+  $('#afterNote').innerHTML=t.afterNote;
+  $('#labelLang').textContent=t.Language;
+}
+applyI18n('en');
+langSel.addEventListener('change',()=>applyI18n(langSel.value));
+
+/* ---- UI refs ---- */
+const el={
+  camBtn:$('#enableCam'), file:$('#file'),
+  video:$('#video'), prev:$('#prev'), over:$('#over'), legend:$('#legend'), badge:$('#badge'), grid:$('#gridToggle'),
+  outPrompt:$('#outPrompt'), outDesc:$('#outDesc'), outMeasures:$('#outMeasures'), outJSON:$('#outJSON'), outPalette:$('#outPalette'),
+  copyPrompt:$('#copyPrompt'), copyAlt:$('#copyAlt'), exportJSON:$('#exportJSON'), snapJSON:$('#snapJSON'),
+  tabs:[$('#t1'),$('#t2'),$('#t3'),$('#t4'),$('#t5')], panels:[$('#p1'),$('#p2'),$('#p3'),$('#p4'),$('#p5')],
+  diag:$('#diag'), toasts:$('#toasts')
+};
+function toast(msg,kind='ok',ms=2200){ const t=document.createElement('div'); t.className='toast '+kind; t.textContent=msg; el.toasts.appendChild(t); setTimeout(()=>t.remove(),ms); }
+
+/* ---- Tabs ---- */
+el.tabs.forEach((tab,i)=>tab.addEventListener('click',()=>{ el.tabs.forEach(t=>t.classList.remove('active')); el.panels.forEach(p=>p.classList.remove('active')); tab.classList.add('active'); el.panels[i].classList.add('active'); }));
+
+/* ---- Canvas + DPR ---- */
+let W=0,H=0; const ctxPrev=el.prev.getContext('2d'), ctxOver=el.over.getContext('2d');
+function scaleCanv(){ const dpr=window.devicePixelRatio||1; const r=el.video.getBoundingClientRect(); if(!r.width||!r.height) return;
+  [el.prev,el.over].forEach(c=>{ c.width=Math.round(r.width*dpr); c.height=Math.round(r.height*dpr); const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); });
+  W=el.prev.width; H=el.prev.height;
+}
+addEventListener('resize',scaleCanv);
+
+/* ---- Diagnostics ---- */
+(async()=>{
+  const lines=[]; lines.push(`origin: ${location.protocol}//${location.host}`); lines.push(`https: ${location.protocol==='https:'}`);
+  try{ const r=await fetch(MODEL_URL,{method:'HEAD'}); lines.push(`HEAD model: ${r.status}`); }catch(e){ lines.push(`HEAD model BLOCKED: ${e?.message||'no details'}`); }
+  lines.push(`ESM import: FilesetResolver=${!!FilesetResolver}, DrawingUtils=${!!DrawingUtils}`);
+  el.diag.textContent=lines.join('\n');
+})();
+
+/* ---- Face Landmarker (VIDEO) ---- */
+let faceTask=null, running=false, lastVideoTime=-1;
+async function ensureFace(){
+  if(faceTask) return true;
+  try{
+    const fs = await FilesetResolver.forVisionTasks(WASM_ROOT);               /* official flow */  /* :contentReference[oaicite:4]{index=4} */
+    faceTask = await FaceLandmarker.createFromOptions(fs,{
+      baseOptions:{ modelAssetPath: MODEL_URL },
+      runningMode:"VIDEO", numFaces:1
+    });                                                                       /* :contentReference[oaicite:5]{index=5} */
+    toast('Model loaded ✓','ok');
+    return true;
+  }catch(e){
+    toast('Model load failed. Check HTTPS/CSP.','bad',4000);
+    el.diag.textContent += `\nINIT ERROR: ${(e&&e.message)||e}`;
+    return false;
+  }
+}
+
+/* ---- Camera (getUserMedia) ---- */
+async function startCam(){
+  if(!(await ensureFace())) return;
+  const stream = await navigator.mediaDevices.getUserMedia({                 /* :contentReference[oaicite:6]{index=6} */
+    video:{facingMode:"user", width:{ideal:1280}, height:{ideal:720}}, audio:false
+  });
+  el.video.srcObject=stream; await el.video.play(); scaleCanv(); running=true; lastVideoTime=-1; loop();
+}
+el.video.addEventListener('loadeddata', scaleCanv);
+
+/* ---- Image loader (still) ---- */
+el.file.addEventListener('change',async ev=>{
+  const f=ev.target.files?.[0]; if(!f) return;
+  const url=URL.createObjectURL(f); const img=new Image();
+  img.onload=async()=>{ if(!(await ensureFace())) return;
+    scaleCanv(); ctxPrev.clearRect(0,0,W,H);
+    const ar=img.width/img.height, car=W/H; let dw,dh,dx,dy; if(ar>car){ dw=W; dh=W/ar; dx=0; dy=(H-dh)/2; } else { dh=H; dw=H*ar; dy=0; dx=(W-dw)/2; }
+    ctxPrev.drawImage(img,dx,dy,dw,dh);
+    const res = await faceTask.detect(img); render(res); URL.revokeObjectURL(url);
+  };
+  img.src=url;
+});
+
+/* ---- Cinematic grid + mower ---- */
+let scanRAF=0, scanY=0, scanT=0, gridOn=true;
+function drawGrid(){ const step=(W||1)/18; ctxOver.save(); ctxOver.strokeStyle='rgba(100,242,227,0.18)'; ctxOver.lineWidth=1;
+  for(let x=0;x<=W;x+=step){ ctxOver.beginPath(); ctxOver.moveTo(x,0); ctxOver.lineTo(x,H); ctxOver.stroke(); }
+  for(let y=0;y<=H;y+=step){ ctxOver.beginPath(); ctxOver.moveTo(0,y); ctxOver.lineTo(W,y); ctxOver.stroke(); }
+  ctxOver.restore();
+}
+function scanStart(text){ cancelAnimationFrame(scanRAF); const loop=()=>{ ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); ctxOver.fillStyle='rgba(35,215,186,0.12)'; ctxOver.fillRect(0,scanY,W,8);
+  const px=(Math.sin(scanT/18)*.5+.5)*W; ctxOver.beginPath(); ctxOver.arc(px,scanY+4,5,0,Math.PI*2); ctxOver.fillStyle='rgba(255,90,122,.85)'; ctxOver.fill();
+  if(text){ ctxOver.fillStyle='rgba(232,248,255,.92)'; ctxOver.font='12px ui-monospace,monospace'; ctxOver.fillText(text,10,18); }
+  scanY=(scanY+3)%H; scanT++; scanRAF=requestAnimationFrame(loop); }; loop();
+}
+function scanStop(){ cancelAnimationFrame(scanRAF); ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); }
+
+/* ---- DrawingUtils overlays ---- */
+let DU=null; function du(){ return DU||(DU=new DrawingUtils(ctxOver)); }     /* official helper */ /* :contentReference[oaicite:7]{index=7} */
+const F=()=>FaceLandmarker;
+function P(p){ return { x:p.x*W, y:p.y*H }; }
+function bboxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs),maxX:Math.max(...xs),minY:Math.min(...ys),maxY:Math.max(...ys)}; }
+function dist(a,b){ const dx=a.x+b.x-(a.x+a.x); /* keep math inline */ return Math.hypot(a.x-b.x,a.y-b.y); }
+function drawCorners(b){ ctxOver.save(); ctxOver.strokeStyle='rgba(100,242,227,.7)'; ctxOver.lineWidth=1.4; ctxOver.strokeRect(b.minX,b.minY,b.maxX-b.minX,b.maxY-b.minY);
+  const L=b.minX,T=b.minY,R=b.maxX,B=b.maxY,Lw=24,Lh=18; ctxOver.strokeStyle='rgba(35,215,186,.95)'; ctxOver.lineWidth=2;
+  [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ ctxOver.beginPath(); ctxOver.moveTo(x,y+Lh); ctxOver.lineTo(x,y); ctxOver.lineTo(x+Lw,y); ctxOver.stroke(); }); ctxOver.restore(); }
+function eyeAngle(lm){ const a=P(lm[133]), b=P(lm[362]); const deg=Math.atan2(b.y-a.y,b.x-a.x)*57.2958; ctxOver.save(); ctxOver.strokeStyle='rgba(180,255,240,.9)'; ctxOver.lineWidth=1.4;
+  ctxOver.beginPath(); ctxOver.moveTo(a.x,a.y); ctxOver.lineTo(b.x,b.y); ctxOver.stroke(); const mX=(a.x+b.x)/2,mY=(a.y+b.y)/2; ctxOver.beginPath(); ctxOver.arc(mX,mY,18,0,Math.PI*2); ctxOver.stroke();
+  ctxOver.fillStyle='#d8ffff'; ctxOver.font='11px ui-monospace,monospace'; ctxOver.fillText(deg.toFixed(2)+'°',mX+22,mY+4); ctxOver.restore(); return +deg.toFixed(2); }
+function lipTick(lm){ const u=P(lm[13]), l=P(lm[14]); ctxOver.save(); ctxOver.strokeStyle='rgba(255,210,102,.95)'; ctxOver.lineWidth=2; ctxOver.beginPath(); ctxOver.moveTo((u.x+l.x)/2,u.y); ctxOver.lineTo((u.x+l.x)/2,l.y); ctxOver.stroke(); ctxOver.restore(); }
+function highlightRegions(lm){ const d=du(); const drawC=(conn,col)=>d.drawConnectors(lm,conn,{color:col,lineWidth:2});
+  drawC(F().FACE_LANDMARKS_RIGHT_EYE,'rgba(255,255,255,.95)'); drawC(F().FACE_LANDMARKS_LEFT_EYE,'rgba(255,255,255,.95)');
+  drawC(F().FACE_LANDMARKS_RIGHT_EYEBROW,'rgba(255,220,120,.95)'); drawC(F().FACE_LANDMARKS_LEFT_EYEBROW,'rgba(255,220,120,.95)');
+  drawC(F().FACE_LANDMARKS_LIPS,'rgba(255,120,160,.95)'); drawC(F().FACE_LANDMARKS_FACE_OVAL,'rgba(140,255,220,.95)');
+}
+
+/* ---- Palette ---- */
+function regionAvg(rect){ const sx=Math.max(0,Math.floor(rect.minX)), sy=Math.max(0,Math.floor(rect.minY)); const w=Math.max(1,(rect.maxX-rect.minX)|0), h=Math.max(1,(rect.maxY-rect.minY)|0);
+  const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h; const t=tmp.getContext('2d'); t.drawImage(el.prev,sx,sy,w,h,0,0,w,h);
+  const d=t.getImageData(0,0,w,h).data; let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} const hex=v=>('#'+v.toString(16).padStart(2,'0'));
+  const r=(R/n)|0,g=(G/n)|0,b=(B/n)|0; return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''); }
+function paletteFrom(lm,b){ const hair={minX:b.minX,maxX:b.maxX,minY:Math.max(0,b.minY-0.18*(b.maxY-b.minY)),maxY:b.minY};
+  const skin={minX:b.minX+(b.maxX-b.minX)*.3,maxX:b.maxX-(b.maxX-b.minX)*.3,minY:b.minY+(b.maxY-b.minY)*.45,maxY:b.minY+(b.maxY-b.minY)*.7};
+  const e=P(lm[133]); const eye={minX:e.x-8,maxX:e.x+8,minY:e.y-8,maxY:e.y+8}; return { hair:regionAvg(hair), skin:regionAvg(skin), eyes:regionAvg(eye) };
+}
+
+/* ---- Schema + text ---- */
+function classifyShape(jf,cf){ if(cf>0.7 && jf>0.6) return 'square'; if(cf>0.72 && jf<0.55) return 'heart'; if(jf<0.52 && cf<0.62) return 'oval'; if(jf>0.62 && cf<0.60) return 'triangle'; return 'round'; }
+function schemaFor({faceH,jawW,cheekW,foreheadH,lipT,eyeDeg,ratios,shape,pal,frame,w,h,lm}){
+  return {
+    version:"pf_facemapper_3",
+    indices:{ faceH:[10,152], jawW:[234,454], cheekW:[234,454], foreheadH:[8,10], lipT:[13,14], eyeAngle:[133,362] },  /* 468-pt family */  /* :contentReference[oaicite:8]{index=8} */
+    frame, image:{ width:w, height:h },
+    measures_px:{ face_height:+faceH.toFixed(4), jaw_width:+jawW.toFixed(4), cheek_width:+cheekW.toFixed(4), forehead_height:+foreheadH.toFixed(4), lip_thickness:+lipT.toFixed(4), eye_angle_deg:+eyeDeg.toFixed(2) },
+    ratios:{ jaw_face:+ratios.jaw_face, cheek_face:+ratios.cheek_face, forehead_face:+ratios.forehead_face, lip_face:+ratios.lip_face },
+    shape, palette_hex:pal,
+    landmarks_norm: lm.map(p=>[+p.x.toFixed(5),+p.y.toFixed(5),+(p.z||0).toFixed(5)])
+  };
+}
+function promptText(shape,ratios,pal,eyeDeg){
+  const r=`jaw/face ${ratios.jaw_face} • cheek/face ${ratios.cheek_face} • forehead/face ${ratios.forehead_face} • lip/face ${ratios.lip_face} • eye-angle ${eyeDeg}`;
+  return [`face-shape: ${shape}`,`hair-color: ${pal.hair}`,`skin-tone: ${pal.skin}`,`eye-hue: ${pal.eyes}`,`ratios: ${r}`].join('\n');
+}
+function descriptorText(shape,ratios,eyeDeg,pal){
+  const parts=[]; const map={oval:'soft oval outline',round:'rounded outline',square:'defined square outline',heart:'heart-tapered outline',triangle:'tapered jawline'};
+  if(map[shape]) parts.push(map[shape]); parts.push((ratios.jaw_face>0.6?'strong':'moderate')+' jaw'); parts.push((ratios.cheek_face>0.64?'pronounced':'balanced')+' cheekbones');
+  parts.push((eyeDeg>2?'slight up-tilted':eyeDeg<-2?'slight down-tilted':'level')+' eye line'); parts.push((ratios.forehead_face>0.23?'taller':'balanced')+' forehead'); parts.push((ratios.lip_face>0.045?'medium ':'subtle ')+'lips');
+  return `${parts.join(', ')}. Palette — hair ${pal.hair}, skin ${pal.skin}, eyes ${pal.eyes}.`;
+}
+function altText(shape,pal){ return `portrait with ${shape} face shape; hair ${pal.hair}, skin ${pal.skin}, eye hue ${pal.eyes}`; }
+
+/* ---- VIDEO loop (official video mode API) ---- */
+async function loop(){
+  if(!running || !faceTask || el.video.readyState<2){ requestAnimationFrame(loop); return; }
+  if(el.video.currentTime===lastVideoTime){ requestAnimationFrame(loop); return; }
+  lastVideoTime = el.video.currentTime;
+  ctxPrev.drawImage(el.video,0,0,W,H);
+  const result = await faceTask.detectForVideo(el.video, Math.round(el.video.currentTime*1000)); /* :contentReference[oaicite:9]{index=9} */
+  render(result);
+  requestAnimationFrame(loop);
+}
+
+/* ---- Render + Outputs ---- */
+function render(res){
+  ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid();
+  if(!res?.faceLandmarks?.length){ el.legend.textContent='—'; el.badge.style.display='none'; el.copyPrompt.disabled=true; el.copyAlt.disabled=true; el.exportJSON.disabled=true; el.snapJSON.disabled=true; return; }
+  const lm=res.faceLandmarks[0];
+  const box=bboxFrom(lm); drawCorners(box);
+  const eyeDeg=eyeAngle(lm); lipTick(lm);
+  du().drawConnectors(lm, F().FACE_LANDMARKS_TESSELLATION||[], {color:'rgba(100,242,227,.95)', lineWidth:0.9}); /* tessellation */  /* :contentReference[oaicite:10]{index=10} */
+  highlightRegions(lm);
+
+  const Q=i=>P(lm[i]); const faceH=dist(Q(10),Q(152)), jawW=dist(Q(234),Q(454)), cheekW=jawW, foreheadH=dist(Q(8),Q(10)), lipT=dist(Q(13),Q(14));
+  const ratios={ jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3), forehead_face:+(foreheadH/faceH).toFixed(3), lip_face:+(lipT/faceH).toFixed(3) };
+  const shape=classifyShape(ratios.jaw_face, ratios.cheek_face); const pal=paletteFrom(lm,box);
+  el.badge.style.display='block'; el.badge.textContent='shape: '+shape; el.legend.textContent=`eye-angle: ${eyeDeg}°, jaw/face: ${ratios.jaw_face}, cheek/face: ${ratios.cheek_face}`;
+
+  const prompt=promptText(shape,ratios,pal,eyeDeg); const desc=descriptorText(shape,ratios,eyeDeg,pal); const schema=schemaFor({ faceH,jawW,cheekW,foreheadH,lipT,eyeDeg,ratios,shape,pal, frame:{type:'video',ms:Math.round(el.video.currentTime*1000)}, w:W, h:H, lm });
+  el.outPrompt.textContent=prompt; el.outDesc.textContent=desc; el.outJSON.textContent=JSON.stringify(schema,null,2);
+  el.outMeasures.textContent=
+`face_height: ${faceH.toFixed(4)}
+jaw_width: ${jawW.toFixed(4)}
+cheek_width: ${cheekW.toFixed(4)}
+forehead_height: ${foreheadH.toFixed(4)}
+lip_thickness: ${lipT.toFixed(4)}
+eye_angle_deg: ${eyeDeg}
+ratios:
+  jaw/face: ${ratios.jaw_face}
+  cheek/face: ${ratios.cheek_face}
+  forehead/face: ${ratios.forehead_face}
+  lip/face: ${ratios.lip_face}`;
+  el.outPalette.textContent=`hair: ${pal.hair}\nskin: ${pal.skin}\neyes: ${pal.eyes}`;
+
+  el.copyPrompt.disabled=false; el.copyAlt.disabled=false; el.exportJSON.disabled=false; el.snapJSON.disabled=false;
+}
+
+/* ---- Wire UI ---- */
+el.grid.addEventListener('change',e=>{ gridOn=e.target.checked; ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); });
+$('#enableCam').addEventListener('click',()=>startCam().then(()=>toast('Camera enabled ✓','ok')).catch(e=>toast('Camera blocked','bad')));
+$('label.btn').addEventListener('click',()=>el.file.click());
+el.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(el.outPrompt.textContent||''); toast('Prompt copied ✓','ok'); });
+el.copyAlt.addEventListener('click',()=>{ const shape=el.badge.textContent.replace('shape: ','')||'face'; const palText=(el.outPalette.textContent||''); navigator.clipboard.writeText(`ALT: portrait with ${shape} face; ${palText.replace(/\n/g,', ')}`); toast('Alt copied ✓','ok'); });
+el.exportJSON.addEventListener('click',()=>{ const blob=new Blob([el.outJSON.textContent||'{}'],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='face.pf_facemapper.json'; a.click(); URL.revokeObjectURL(a.href); toast('JSON exported ✓','ok'); });
+el.snapJSON.addEventListener('click',()=>el.exportJSON.click());
+
+/* ---- Start with a scan effect until ready ---- */
+scanStart('Waiting for camera…');
+
+/* ---- J1NX simple toggles (keep IDs/classes; yours can replace this) ---- */
+(function(){
+  const float=$('#j1nxFloatTrue'), cut=$('#j1nxCutoutTrue'), bubble=$('#j1nxBubbleTrueMain'); if(!float) return;
+  function isMobile(){return innerWidth<700;}
+  function set(){ if(isMobile()){ float.classList.remove('j1nx-open'); bubble.style.display='none'; } else { float.classList.add('j1nx-open'); bubble.style.display='flex'; } }
+  addEventListener('resize',set); set();
+  cut?.addEventListener('click',()=>{ if(isMobile()){ const open=float.classList.contains('j1nx-open'); float.classList.toggle('j1nx-open',!open); bubble.style.display=open?'none':'flex'; } });
+})();
+</script>
 </body>
 </html>
