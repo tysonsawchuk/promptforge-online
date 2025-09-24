@@ -2,38 +2,70 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PromptForge — Face Mapper (Landmarks • Ratios • Palette • Prompt Pack)</title>
-  <meta name="description" content="On‑device face mapping with MediaPipe: 468‑pt mesh, reproducible ratios, hair/skin palette, non‑identifying descriptors, and prompt‑ready text/JSON export for image models. Big live overlay shows what the AI is analyzing. Everything runs in your browser." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PromptForge — Face Mapper (Studio Build v3)</title>
+  <meta name="description" content="On-device face mapper with MediaPipe (468 pts). CSI-style overlay, sequenced button guidance, prompt chunk, stylistic descriptor, raw measurements, JSON export, and palette. J1NX + ANSI footer preserved. Adult Mode is gated. No servers.">
   <link rel="canonical" href="https://promptforge.online/facemapper.html" />
   <meta name="theme-color" content="#08131b" />
-
-  <!-- OG/Twitter -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="PromptForge — Face Mapper" />
-  <meta property="og:description" content="Landmarks, ratios, palette, and prompt‑ready descriptors. Client‑side, privacy‑friendly." />
+  <meta property="og:title" content="PromptForge — Face Mapper (Studio v3)" />
+  <meta property="og:description" content="Landmarks, ratios, angles, palette and prompt-ready descriptors. Client-side, privacy-friendly." />
   <meta property="og:image" content="/assets/og/facemapper.png" />
   <meta property="og:url" content="https://promptforge.online/facemapper.html" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- JSON‑LD (Org + WebSite + Breadcrumbs) -->
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PromptForge","url":"https://promptforge.online/","logo":"https://promptforge.online/assets/og/home.png","sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PromptForge","url":"https://promptforge.online/","potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},{"@type":"ListItem","position":3,"name":"Face Mapper"}]}</script>
+  <!-- JSON-LD (Org + WebSite + Breadcrumbs) -->
+  <script type="application/ld+json">{
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"PromptForge",
+    "url":"https://promptforge.online/",
+    "logo":"https://promptforge.online/assets/og/home.png",
+    "sameAs":[
+      "https://x.com/GoreandGiggles",
+      "https://bsky.app/profile/goreandgiggles.bsky.social",
+      "https://promptforge.online/support.html"
+    ]
+  }</script>
+  <script type="application/ld+json">{
+    "@context":"https://schema.org",
+    "@type":"WebSite",
+    "name":"PromptForge",
+    "url":"https://promptforge.online/",
+    "potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}
+  }</script>
+  <script type="application/ld+json">{
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Home","item":"https://promptforge.online/"},
+      {"@type":"ListItem","position":2,"name":"Tools","item":"https://promptforge.online/#tools"},
+      {"@type":"ListItem","position":3,"name":"Face Mapper"}
+    ]
+  }</script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+  <!-- MediaPipe Tasks Vision (no bundler) -->
+  <script async src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14"></script>
+
   <style>
-    :root{ --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba; --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; --warn:#ffd166; --bad:#ff6b6b; }
+    :root{
+      --bg:#08131b; --ink:#e8f8ff; --muted:#9cc3d6; --aqua:#64f2e3; --aqua2:#23d7ba;
+      --edge:#1b2a36; --card:#0c1922; --ok:#7ef1a6; --warn:#ffd166; --bad:#ff6b6b;
+      --red:#ff5a7a;
+    }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{margin:0;background:radial-gradient(1200px 700px at 10% -10%,rgba(100,242,227,.07),transparent 55%),radial-gradient(1000px 600px at 120% -10%,rgba(35,215,186,.06),transparent 55%),var(--bg);color:var(--ink);font:14px/1.6 Inter,system-ui,Segoe UI,Roboto,Arial}
+
     a{color:var(--aqua)}
     .wrap{max-width:1240px;margin:0 auto;padding:18px}
 
-    .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
     .brand{font-weight:900;font-size:22px;letter-spacing:.4px;color:var(--aqua)}
     .crumbs{color:var(--muted);font-size:12px}
     .tool-links{display:flex;gap:8px;flex-wrap:wrap}
@@ -46,7 +78,7 @@
     .sub{color:var(--muted);font-size:12px}
 
     main.grid{display:grid;gap:16px;margin-top:14px}
-    @media(min-width:1120px){main.grid{grid-template-columns:370px 1fr}}
+    @media(min-width:1120px){main.grid{grid-template-columns:360px 1fr}}
 
     .steps{position:sticky;top:14px;display:flex;flex-direction:column;gap:10px}
     .step{border-left:3px solid #0f2630;padding:10px;border-radius:10px;background:linear-gradient(180deg,rgba(10,26,34,.6),rgba(10,26,34,.3))}
@@ -58,234 +90,818 @@
     #file{display:none}
 
     .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer;position:relative}
+    .btn[disabled]{opacity:.5;cursor:not-allowed}
     .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
-    .btn.pulse::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid rgba(100,242,227,.55);opacity:.0;animation:pulse 1.8s infinite}
-    @keyframes pulse{0%{opacity:.0;transform:scale(.96)}50%{opacity:.55;transform:scale(1.04)}100%{opacity:.0;transform:scale(1.1)}}
+    .btn.pulse-red::after{content:"";position:absolute;inset:-6px;border-radius:14px;border:2px solid rgba(255,90,122,.7);opacity:.0;animation:pf-pulse 2.2s infinite}
+    @keyframes pf-pulse{0%{opacity:.0;transform:scale(.96)}50%{opacity:.6;transform:scale(1.05)}100%{opacity:.0;transform:scale(1.12)}}
+    @media (prefers-reduced-motion: reduce){
+      .btn.pulse-red::after{animation:none;opacity:0}
+      .scan-line,.scan-dot{display:none}
+    }
 
-    /* Big preview + overlay */
+    /* Stage */
     #stage{position:relative}
     #preview{width:100%;height:auto;border-radius:12px;background:#061219;display:block}
     #overlay{position:absolute;left:0;top:0;width:100%;height:100%;border-radius:12px;pointer-events:none}
+
+    /* HUD legend & badge */
     .legend{position:absolute;right:10px;top:10px;background:#08141caa;border:1px solid #10313b;border-radius:10px;padding:8px 10px;font:12px/1.3 ui-monospace,monospace}
+    .face-badge{position:absolute;left:10px;top:10px;background:#071820d0;border:1px solid #10313b;border-radius:999px;padding:4px 10px;font:12px/1 ui-monospace,monospace}
+
+    /* Tabs */
+    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+    .tab{padding:7px 10px;border:1px solid var(--edge);border-radius:9px;background:#0e1a22;cursor:pointer;font-weight:600}
+    .tab.active{border-color:var(--aqua);color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
+    .panel{display:none;margin-top:10px}
+    .panel.active{display:block}
+    .outbox{width:100%;min-height:110px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;box-shadow:0 0 22px rgba(100,242,227,.08);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;white-space:pre-wrap}
 
     .kv{display:grid;grid-template-columns:160px 1fr;gap:10px;align-items:center}
-    .outbox{width:100%;min-height:90px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;box-shadow:0 0 22px rgba(100,242,227,.08);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
 
-    /* Blended ad card */
-    .ad-wrap{display:block;min-height:90px;border:1px solid var(--edge);border-radius:12px;margin:8px 0;padding:8px;text-align:center;color:var(--muted);background:linear-gradient(180deg,rgba(10,26,34,.45),rgba(10,26,34,.2));box-shadow:inset 0 0 0 1px rgba(100,242,227,.04)}
-    .ad-note{font-size:11px;color:var(--muted);opacity:.85;margin-top:6px}
+    /* Palette chips */
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px;margin-right:6px;margin-bottom:6px}
+    .chip i{width:18px;height:18px;border-radius:4px;display:inline-block;border:1px solid #0a2c33}
 
-    /* J1NX float (compact) */
-    .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
-    .j1nx-true-cutout-img{width:180px;height:180px;object-fit:contain;border-radius:20px;background:transparent!important;margin-bottom:-16px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s}
-    .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66,0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em 1.3em;margin-top:0;margin-bottom:.3em;display:flex;flex-direction:column;align-items:center;min-width:260px;max-width:320px}
-    .j1nx-bubble-text-true{font-size:1.02em;color:#fff;margin:.42em 0 .20em 0;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22;z-index:1;max-height:160px;overflow:auto}
+    /* Toasts */
+    .toasts{position:fixed;right:14px;top:14px;display:flex;flex-direction:column;gap:8px;z-index:5000}
+    .toast{background:#0e1b24;border:1px solid #11313b;color:var(--ink);padding:8px 10px;border-radius:8px;font:12px/1.3 ui-monospace,monospace;box-shadow:0 7px 30px rgba(0,0,0,.35)}
+    .toast.ok{border-color:#1f5645}
+    .toast.warn{border-color:#6d5b18}
+    .toast.bad{border-color:#61202b}
 
-    /* Footer (ANSI) */
-    footer{margin:18px auto;padding:0 12px 16px;text-align:center;max-width:860px;color:#eaf7ff}
-    .footer-art{font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text;margin:0 0 10px}
-    .footer-camo{font-family:"Fira Mono",monospace;font-size:.85em;letter-spacing:2px;color:#64f2e3;min-height:.8em;white-space:pre}
-    .footer-bar{color:#88fffd;margin:10px auto 6px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-    .footer-bar a{color:var(--aqua);text-decoration:none}
-    .footer-bar a:hover{text-decoration:underline;color:#fff}
-
-    /* Consent modal */
-    .modal{position:fixed;inset:0;background:rgba(4,10,14,.72);display:none;align-items:center;justify-content:center;z-index:5000}
+    /* Consent / Adult Mode modal */
+    .modal{position:fixed;inset:0;background:rgba(4,10,14,.72);display:none;align-items:center;justify-content:center;z-index:5500}
     .modal.open{display:flex}
     .sheet{width:min(640px,92vw);background:#0c1620;border:1px solid #12323d;border-radius:14px;padding:14px}
+    .sheet h3{margin:.2rem 0 .5rem}
+    .sheet label{display:flex;gap:8px;align-items:flex-start;margin:8px 0;color:#d6f5ff}
+    .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+    /* Accessibility focus ring */
+    :focus-visible{outline:2px solid var(--aqua);outline-offset:2px}
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .right{display:flex;justify-content:flex-end;gap:8px}
+    .hint{font-size:12px;color:var(--muted)}
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap" aria-live="polite">
     <div class="top">
       <div>
         <div class="brand">PromptForge — Face Mapper</div>
-        <div class="crumbs">Home › Tools › Face Mapping (non‑identifying)</div>
+        <div class="crumbs">Home › Tools › Face Mapping (non-identifying)</div>
       </div>
-      <div class="tool-links">
+      <div class="tool-links" role="navigation" aria-label="Internal links">
         <a class="pill" href="/">Home</a>
         <a class="pill" href="/picture.html">Picture Builder</a>
         <a class="pill" href="/movie.html">Movie Builder</a>
         <a class="pill" href="/ansiart.html">ANSI/ASCII Studio</a>
         <a class="pill" href="/watermark.html">Watermark</a>
-        <a class="pill" href="/playground.html">Prompt Patterns</a>
+        <a class="pill" href="/compare.html">Model Compare</a>
         <a class="pill" href="/support.html">Support</a>
         <a class="pill" href="/legal.html">Legal</a>
       </div>
     </div>
 
-    <section class="hero">
+    <section class="hero" aria-label="Intro">
       <div class="card">
-        <h1>Map a Face → Get Clean Descriptors</h1>
-        <p class="sub">Drop a portrait. Watch a <b>large live overlay</b> trace the mesh and measurements: facial ratios, angles, hair/skin palette. Then export a <b>Face Descriptor Pack</b> (prompt‑ready text + JSON). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors.</p>
+        <h1>Map a Face → See What the Model Sees</h1>
+        <p class="sub">Drop a portrait and run the mapper. You’ll get a <b>live CSI-style overlay</b> (grid, scan-line, box, 468 landmarks, gauges), plus <b>prompt-ready text</b>, a natural-language descriptor, raw measurements, JSON export, and a simple palette (hair/skin/eye). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors. Everything runs on-device.</p>
       </div>
-      <div class="card" style="display:flex;gap:12px;align-items:center;justify-content:space-between">
-        <div>
-          <h3>Quick links</h3>
-          <div class="tool-links" style="margin-top:6px">
-            <a class="pill" href="/picture.html">Image Prompt Builder</a>
-            <a class="pill" href="/compare.html">Model Compare</a>
-            <a class="pill" href="/watermark.html">Watermark & EXIF</a>
-          </div>
-        </div>
-        <div style="width:180px;min-width:160px;text-align:center">
-          <!-- Kept hero ad small and blended -->
-          <script type="text/javascript" data-cfasync="false" async src="https://poweredby.jads.co/js/jads.js"></script>
-          <ins id="1101940" data-width="160" data-height="160"></ins>
-          <script type="text/javascript" data-cfasync="false" async>(adsbyjuicy = window.adsbyjuicy || []).push({"adzone":1101940});</script>
-          <div class="ad-note">sponsored</div>
-        </div>
+      <div class="card">
+        <h3>Quick notes</h3>
+        <ul class="sub" style="margin:.4rem 0 .6rem 1.2rem">
+          <li>Works best with a well-lit, front-facing portrait.</li>
+          <li>Outputs avoid identity; numbers are reproducible on the same crop.</li>
+          <li>Adult Mode (optional) allows nudity, with gate + denylist.</li>
+        </ul>
+        <div class="hint">Privacy: Runs in your browser. No uploads.</div>
       </div>
     </section>
 
     <main class="grid">
-      <aside class="steps">
-        <div class="card step active">
+      <!-- ===== Steps & Buttons (sequenced glow) ===== -->
+      <aside class="steps" aria-label="Steps">
+        <div class="card step step1 active">
           <div><span class="num">1</span><strong>Choose Image</strong></div>
-          <div class="sub">Portrait, well‑lit. On‑device only.</div>
-          <label for="file" class="choose" id="chooseBtn">➕ Choose Image</label>
+          <div class="sub">Portrait, well-lit. On-device only.</div>
+          <label for="file" class="choose" id="chooseBtn" role="button" aria-controls="file">➕ Choose Image</label>
           <input id="file" type="file" accept="image/*" />
+          <div class="row" style="margin-top:8px">
+            <label class="muted" title="Allow nudity after consent.">
+              <input type="checkbox" id="adultToggle"> Adult Mode
+            </label>
+          </div>
         </div>
-        <div class="card step">
+
+        <div class="card step step2">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
             <div><span class="num">2</span><strong>Map & Measure</strong></div>
-            <label class="sub" style="display:flex;gap:8px;align-items:center"><input id="gridToggle" type="checkbox" checked> Overlay Grid</label>
+            <label class="sub" style="display:flex;gap:8px;align-items:center"><input id="gridToggle" type="checkbox" checked> Show Guides</label>
           </div>
-          <div class="sub">Mesh, box, key ratios (jaw/face, cheekbones, eye angle, lip ratio), hair/skin palette.</div>
+          <div class="sub">Mesh, box, eye-angle arc, lip tick, face-shape badge, palette.</div>
           <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
-            <button id="run" class="btn primary pulse" disabled>Run Mapping</button>
-            <button id="exportJSON" class="btn pulse">Export JSON</button>
-            <button id="copyPrompt" class="btn pulse">Copy Prompt Chunk</button>
+            <button id="run" class="btn primary pulse-red" aria-live="polite" disabled>Run Mapping</button>
+            <button id="retry" class="btn">Retry</button>
           </div>
           <div class="sub" id="progress" style="margin-top:6px">—</div>
         </div>
+
+        <div class="card step step3">
+          <div><span class="num">3</span><strong>After Mapping</strong></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="copyPrompt" class="btn" disabled>Copy Prompt</button>
+            <button id="exportJSON" class="btn" disabled>Export JSON</button>
+            <button id="openJ1NX" class="btn">Open J1NX</button>
+          </div>
+          <div class="hint" id="note">Tip: prompt chunk is non-identifying and model-ready (SDXL/Flux/MJ).</div>
+        </div>
+
         <div class="card step">
           <div><span class="num">?</span><strong>Help & Policy</strong></div>
           <a href="#faq" class="btn">Open FAQ</a>
-          <button id="toggleJ1NX" class="btn">Open J1NX</button>
-          <!-- Moved ad here, under Help/Policy as requested -->
-          <div class="ad-wrap" style="margin-top:10px">
-            <ins id="1101674" data-width="auto" data-height="90"></ins>
-            <script>
-  // ===== Config & helpers =====
+          <div class="hint">Ads do not run inside Adult Mode.</div>
+        </div>
+      </aside>
+
+      <!-- ===== Stage & Outputs ===== -->
+      <section>
+        <div id="stage" class="card" aria-label="Stage">
+          <canvas id="preview" width="16" height="9" aria-label="Image preview canvas"></canvas>
+          <canvas id="overlay" width="16" height="9" aria-hidden="true"></canvas>
+          <div class="legend" id="legend">—</div>
+          <div class="face-badge" id="faceBadge" aria-hidden="true" style="display:none">shape: —</div>
+        </div>
+
+        <div class="card" id="outputs" aria-label="Outputs">
+          <div class="tabs" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true" aria-controls="p1" id="t1">Prompt Chunk</button>
+            <button class="tab" role="tab" aria-controls="p2" id="t2">Stylistic Descriptor</button>
+            <button class="tab" role="tab" aria-controls="p3" id="t3">Measurements</button>
+            <button class="tab" role="tab" aria-controls="p4" id="t4">JSON Export</button>
+            <button class="tab" role="tab" aria-controls="p5" id="t5">Palette</button>
+          </div>
+
+          <div class="panel active" id="p1" role="tabpanel" aria-labelledby="t1">
+            <div class="outbox" id="promptOut"></div>
+          </div>
+
+          <div class="panel" id="p2" role="tabpanel" aria-labelledby="t2">
+            <div class="outbox" id="descriptor"></div>
+          </div>
+
+          <div class="panel" id="p3" role="tabpanel" aria-labelledby="t3">
+            <div class="outbox" id="measures"></div>
+            <div class="hint" style="margin-top:6px">Landmark indices used: top(10), chin(152), jaw(234↔454), inner-eye(133↔362), lips(13↔14), forehead(8↔10).</div>
+          </div>
+
+          <div class="panel" id="p4" role="tabpanel" aria-labelledby="t4">
+            <div class="outbox" id="jsonOut" style="min-height:140px"></div>
+            <div class="right"><button id="downloadJSON" class="btn" disabled>Download .pf_facemapper.json</button></div>
+          </div>
+
+          <div class="panel" id="p5" role="tabpanel" aria-labelledby="t5">
+            <div id="palette" class="row" aria-live="polite"></div>
+            <div class="row"><button id="copyPalette" class="btn" disabled>Copy Palette</button></div>
+          </div>
+        </div>
+
+        <div id="faq" class="card" aria-label="FAQ">
+          <h3>FAQ</h3>
+          <ul class="sub" style="margin:.2rem 0 .6rem 1.2rem">
+            <li><b>Does this upload my photo?</b> No. It runs entirely in your browser.</li>
+            <li><b>What is it for?</b> Creative, non-identifying face descriptors (prompts, ratios, palettes).</li>
+            <li><b>Adult Mode?</b> Optional and gated. Never analyze minors. Ads do not run inside Adult Mode flows.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ===== Toasts ===== -->
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ===== Adult Mode Interstitial ===== -->
+  <div class="modal" id="adultModal" role="dialog" aria-modal="true" aria-labelledby="adultTitle" aria-describedby="adultDesc">
+    <div class="sheet">
+      <h3 id="adultTitle">Adult Mode — Consent Required</h3>
+      <p class="muted" id="adultDesc">Adult Mode allows nudity. We do not run ads inside this flow. You must confirm:</p>
+      <label><input type="checkbox" id="ageChk"> I am 18+ (or local age of majority).</label>
+      <label><input type="checkbox" id="consentChk"> I have consent to analyze this image. No minors.</label>
+      <div class="hint">We block predator terms and anything implying minors/exploitation.</div>
+      <div class="row right">
+        <button class="btn" id="adultCancel">Cancel</button>
+        <button class="btn primary" id="adultContinue" disabled>Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Predatory term denylist (client-side guard only) ===== -->
+  <script>
+    const PREDATOR_DENYLIST = [
+      // neutral but block-anything implying minors/exploitation
+      "underage","minor","teeny","preteen","child","kid","schoolgirl","schoolboy","young-looking","lolita",
+      "barely legal","jailbait","young teen","hs girl","hs boy","middle school","elementary"
+    ];
+  </script>
+
+  <!-- ===== Core Script ===== -->
+  <script>
+  // ===== Config =====
   const CFG = {
-    consentRequired:true,
-    // Use official Google storage for the .task file (more reliable than some CDNs)
-    faceModel:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-    wasmRoot:"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+    MODEL_PATH: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+    WASM_ROOT:  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
   };
 
-  // Define selector helper BEFORE any usage
-  function $(q){return document.querySelector(q)}
+  // ===== Small helpers =====
+  const $ = q => document.querySelector(q);
+  const on = (el,ev,fn,opts)=>el.addEventListener(ev,fn,opts||{});
+  const toastBox = $('#toasts');
+  function toast(msg, kind='ok', ms=2200){
+    const t = document.createElement('div');
+    t.className = 'toast '+(kind||'');
+    t.textContent = msg;
+    toastBox.appendChild(t);
+    setTimeout(()=>{ t.remove(); }, ms);
+  }
 
-  // Element map
-  const els = { file:$('#file'), choose:$('#chooseBtn'), preview:$('#preview'), overlay:$('#overlay'), legend:$('#legend'), grid:$('#gridToggle'), run:$('#run'), run2:$('#run2'), showVectors:$('#showVectors'), progress:$('#progress'), note:$('#note'), promptOut:$('#promptOut'), measures:$('#measures'), palette:$('#palette'), attrs:$('#attrs'), exportJSON:$('#exportJSON'), copyPrompt:$('#copyPrompt'), consent:$('#consent'), agree:$('#agree'), accept:$('#accept'), deny:$('#deny'), jOpen:$('#toggleJ1NX'), jWrap:$('#j1nxFloatTrue'), jBubble:$('#j1nxBubbleTextTrue'), jInput:$('#j1nxInputTrue'), jSend:$('#j1nxSendTrue'), jClear:$('#j1nxClearTrue'), jSave:$('#j1nxSaveTrue'), jEgg:$('#j1nxEasterEggTrue') };
+  // ===== Elements =====
+  const els = {
+    file: $('#file'),
+    choose: $('#chooseBtn'),
+    adultToggle: $('#adultToggle'),
+    adultModal: $('#adultModal'), ageChk: $('#ageChk'), consentChk: $('#consentChk'),
+    adultCancel: $('#adultCancel'), adultContinue: $('#adultContinue'),
+    preview: $('#preview'), overlay: $('#overlay'),
+    legend: $('#legend'), faceBadge: $('#faceBadge'),
+    grid: $('#gridToggle'),
+    run: $('#run'), retry: $('#retry'),
+    copyPrompt: $('#copyPrompt'), exportJSON: $('#exportJSON'),
+    downloadJSON: $('#downloadJSON'), copyPalette: $('#copyPalette'),
+    openJ1NX: $('#openJ1NX'),
+    progress: $('#progress'),
+    // tabs
+    tabs: [$('#t1'),$('#t2'),$('#t3'),$('#t4'),$('#t5')],
+    panels:[$('#p1'),$('#p2'),$('#p3'),$('#p4'),$('#p5')],
+    // outputs
+    promptOut: $('#promptOut'), measures: $('#measures'),
+    jsonOut: $('#jsonOut'), palette: $('#palette'), descriptor: $('#descriptor')
+  };
 
+  // ===== State =====
+  const state = {
+    adult:false, adultGated:false,
+    imgEl:null, imgName:'', imgW:0, imgH:0,
+    draw:{dx:0,dy:0,dw:0,dh:0},
+    gridOn:true, vectors:true,
+    face:{landmarks:[], ratios:{}, angles:{}, attrs:{}, shape:''}
+  };
+
+  // ===== DPR-aware canvas scale =====
+  function scaleCanvases(){
+    const dpr = window.devicePixelRatio || 1;
+    [els.preview,els.overlay].forEach(c=>{
+      const rect=c.getBoundingClientRect();
+      if(!rect.width||!rect.height) return;
+      c.width = Math.round(rect.width*dpr);
+      c.height= Math.round(rect.height*dpr);
+      const g=c.getContext('2d');
+      g.setTransform(dpr,0,0,dpr,0,0);
+    });
+  }
+  scaleCanvases();
+  on(window,'resize',()=>{ scaleCanvases(); if(state.imgEl) fitDraw(state.imgEl); });
+
+  // ===== Draw helpers =====
   const ctx = els.preview.getContext('2d');
   const octx = els.overlay.getContext('2d');
-  function note(m){ els.progress.textContent=m; els.note.textContent=m; }
 
-  // Loader
-  const Loader = { loaded:new Set(), js(src){return new Promise((res,rej)=>{ if(Loader.loaded.has(src)) return res(); const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>{Loader.loaded.add(src);res();}; s.onerror=()=>rej(new Error('load '+src)); document.head.appendChild(s); });} };
+  function fitDraw(img){
+    const C=els.preview, W=C.width, H=C.height;
+    ctx.clearRect(0,0,W,H); octx.clearRect(0,0,els.overlay.width,els.overlay.height);
+    const ar=img.width/img.height, car=W/H;
+    let dw,dh,dx,dy;
+    if(ar>car){ dw=W; dh=W/ar; dx=0; dy=(H-dh)/2; } else { dh=H; dw=H*ar; dy=0; dx=(W-dw)/2; }
+    ctx.drawImage(img,dx,dy,dw,dh);
+    state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height;
+    if(state.gridOn) drawGrid();
+  }
 
-  // State
-  const state = { imgEl:null, imgName:'', imgW:0, imgH:0, draw:{dx:0,dy:0,dw:0,dh:0}, gridOn:true, vectors:true,
-    face:{landmarks:[], ratios:{}, angles:{}, attrs:{}, shape:''}, palette:[] };
+  function drawGrid(){
+    const {dx,dy,dw,dh}=state.draw;
+    const step=dw/18;
+    octx.save();
+    octx.strokeStyle='rgba(100,242,227,0.18)';
+    octx.lineWidth=1;
+    for(let x=dx;x<=dx+dw;x+=step){ octx.beginPath(); octx.moveTo(x,dy); octx.lineTo(x,dy+dh); octx.stroke(); }
+    for(let y=dy;y<=dy+dh;y+=step){ octx.beginPath(); octx.moveTo(dx,y); octx.lineTo(dx+dw,y); octx.stroke(); }
+    octx.restore();
+  }
 
-  // High-DPI canvas scaling for crisp overlay & to avoid empty draws
-  (function scaleCanvases(){ const dpr=window.devicePixelRatio||1; const canv=[els.preview,els.overlay]; canv.forEach(c=>{ const rect=c.getBoundingClientRect(); if(rect.width===0||rect.height===0) return; c.width = Math.round(rect.width*dpr); c.height = Math.round(rect.height*dpr); const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); }); })();
-  window.addEventListener('resize',()=>{ const img=state.imgEl; (function scaleCanvases(){ const dpr=window.devicePixelRatio||1; const canv=[els.preview,els.overlay]; canv.forEach(c=>{ const rect=c.getBoundingClientRect(); if(rect.width===0||rect.height===0) return; c.width = Math.round(rect.width*dpr); c.height = Math.round(rect.height*dpr); const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); }); })(); if(img) fitDraw(img); });
+  function P(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
+  function boxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs), maxX:Math.max(...xs), minY:Math.min(...ys), maxY:Math.max(...ys)} }
+  function hex(r,g,b){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
+  function avgRect(rect){
+    const {minX,maxX,minY,maxY}=rect;
+    const w=Math.max(1,(maxX-minX)|0), h=Math.max(1,(maxY-minY)|0);
+    const sx=Math.max(0,Math.floor(minX)), sy=Math.max(0,Math.floor(minY));
+    const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+    const t=tmp.getContext('2d'); t.drawImage(els.preview,sx,sy,w,h,0,0,w,h);
+    const d=t.getImageData(0,0,w,h).data;
+    let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;}
+    return hex((R/n)|0,(G/n)|0,(B/n)|0);
+  }
 
-  // Drawing helpers
-  function fitDraw(img){ const C=els.preview, W=C.width, H=C.height; ctx.clearRect(0,0,W,H); octx.clearRect(0,0,W,H); const ar=img.width/img.height, car=W/H; let dw,dh,dx,dy; if(ar>car){dw=W;dh=W/ar;dx=0;dy=(H-dh)/2}else{dh=H;dw=H*ar;dy=0;dx=(W-dw)/2} ctx.drawImage(img,dx,dy,dw,dh); state.draw={dx,dy,dw,dh}; state.imgW=img.width; state.imgH=img.height; }
-  function drawGrid(){ if(!state.gridOn) return; const {dx,dy,dw,dh}=state.draw; const step=dw/18; octx.save(); octx.strokeStyle='rgba(100,242,227,0.18)'; octx.lineWidth=1; for(let x=dx;x<=dx+dw;x+=step){ octx.beginPath(); octx.moveTo(x,dy); octx.lineTo(x,dy+dh); octx.stroke(); } for(let y=dy;y<=dy+dh;y+=step){ octx.beginPath(); octx.moveTo(dx,y); octx.lineTo(dx+dw,y); octx.stroke(); } octx.restore(); }
-  function startScan(){ stopScan(); let y=0,t=0; state._scan=setInterval(()=>{ octx.clearRect(0,0,els.overlay.width,els.overlay.height); drawGrid(); octx.fillStyle='rgba(35,215,186,0.14)'; octx.fillRect(0,y,els.overlay.width,8); const px=state.draw.dx+(Math.sin(t/18)*.5+.5)*state.draw.dw; const py=y+4; octx.beginPath(); octx.arc(px,py,6,0,Math.PI*2); octx.fillStyle='rgba(100,242,227,0.75)'; octx.fill(); y=(y+3)%els.overlay.height; t++; },16); }
-  function stopScan(){ if(state._scan){ clearInterval(state._scan); state._scan=null; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); } }
+  function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
 
-  // File open
-  els.choose.addEventListener('click',()=>els.file.click());
-  els.file.addEventListener('change',(e)=>{ const f=e.target.files&&e.target.files[0]; if(!f) return; state.imgName=f.name||'image'; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ state.imgEl=img; fitDraw(img); els.run.disabled=false; els.run2.disabled=false; note('Ready. Click Run Mapping.'); URL.revokeObjectURL(url); }; img.onerror=()=>{ note('Could not load image. Try a different file.'); }; img.src=url; });
+  function drawFace(lm){
+    const bbox=boxFrom(lm);
+    // Bounding box + corner brackets
+    octx.save();
+    octx.strokeStyle='rgba(100,242,227,.65)'; octx.lineWidth=1.4;
+    octx.strokeRect(bbox.minX,bbox.minY,bbox.maxX-bbox.minX,bbox.maxY-bbox.minY);
+    const L=bbox.minX, T=bbox.minY, R=bbox.maxX, B=bbox.maxY; const Lw=24, Lh=18;
+    octx.strokeStyle='rgba(35,215,186,.9)'; octx.lineWidth=2;
+    [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ octx.beginPath(); octx.moveTo(x,y+Lh); octx.lineTo(x,y); octx.lineTo(x+Lw,y); octx.stroke(); });
+    octx.restore();
 
-  // MediaPipe
+    // 468 landmarks (dots)
+    octx.save(); octx.fillStyle='rgba(100,242,227,.95)';
+    for(const p of lm){ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.fill(); }
+    octx.restore();
+
+    return bbox;
+  }
+
+  function drawEyeAngleArc(lm){
+    const L=133, R=362;
+    const a=P(lm[L]), b=P(lm[R]);
+    const angleDeg = Math.atan2(b.y-a.y, b.x-a.x) * 57.2958;
+    // line
+    octx.save(); octx.strokeStyle='rgba(180,255,240,.8)'; octx.lineWidth=1.4;
+    octx.beginPath(); octx.moveTo(a.x,a.y); octx.lineTo(b.x,b.y); octx.stroke();
+    // ticks
+    const midx=(a.x+b.x)/2, midy=(a.y+b.y)/2;
+    octx.beginPath(); octx.arc(midx,midy,18,0,Math.PI*2); octx.stroke();
+    // label
+    octx.fillStyle='#d8ffff'; octx.font='11px ui-monospace,monospace';
+    octx.fillText(angleDeg.toFixed(2)+'°', midx+22, midy+4);
+    octx.restore();
+    return +angleDeg.toFixed(2);
+  }
+
+  function drawLipTick(lm){
+    const U=13,L=14; const u=P(lm[U]), l=P(lm[L]);
+    octx.save(); octx.strokeStyle='rgba(255,210,102,.9)'; octx.lineWidth=2;
+    octx.beginPath(); octx.moveTo((u.x+l.x)/2, u.y); octx.lineTo((u.x+l.x)/2, l.y); octx.stroke();
+    octx.restore();
+  }
+
+  // scan line animation via rAF
+  let rafScan = null, scanY=0, scanT=0;
+  function startScan(){
+    cancelScan();
+    const h = els.overlay.height;
+    function tick(){
+      octx.clearRect(0,0,els.overlay.width,els.overlay.height);
+      if(state.gridOn) drawGrid();
+      octx.fillStyle='rgba(35,215,186,0.12)';
+      octx.fillRect(0,scanY,els.overlay.width,8);
+      const px=state.draw.dx+(Math.sin(scanT/18)*.5+.5)*state.draw.dw;
+      const py=scanY+4;
+      octx.beginPath(); octx.arc(px,py,6,0,Math.PI*2); octx.fillStyle='rgba(100,242,227,0.75)'; octx.fill();
+      scanY=(scanY+3)%h; scanT++;
+      rafScan = requestAnimationFrame(tick);
+    }
+    rafScan = requestAnimationFrame(tick);
+  }
+  function cancelScan(){ if(rafScan){ cancelAnimationFrame(rafScan); rafScan=null; } octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); }
+
+  // ===== Sequenced glow logic =====
+  function setPulse(step){
+    // remove all
+    [els.run, els.copyPrompt, els.exportJSON].forEach(b=>b.classList.remove('pulse-red'));
+    if(step===1){ els.run.classList.add('pulse-red'); }
+    if(step===2){ els.copyPrompt.classList.add('pulse-red'); setTimeout(()=>els.exportJSON.classList.add('pulse-red'), 2000); }
+  }
+
+  // ===== Tabs =====
+  els.tabs.forEach((tab,i)=>{
+    on(tab,'click',()=>{
+      els.tabs.forEach(t=>t.classList.remove('active'));
+      els.panels.forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active'); els.panels[i].classList.add('active');
+    });
+  });
+
+  // ===== Adult gating =====
+  on(els.adultToggle,'change',()=>{
+    if(els.adultToggle.checked && !state.adultGated){
+      els.adultModal.classList.add('open');
+    } else {
+      state.adult = els.adultToggle.checked;
+    }
+  });
+  on(els.adultCancel,'click',()=>{
+    els.adultModal.classList.remove('open');
+    els.adultToggle.checked = false;
+  });
+  function updateAdultContinue(){ els.adultContinue.disabled = !(els.ageChk.checked && els.consentChk.checked); }
+  on(els.ageChk,'change',updateAdultContinue);
+  on(els.consentChk,'change',updateAdultContinue);
+  on(els.adultContinue,'click',()=>{
+    state.adultGated = true; state.adult = true;
+    els.adultModal.classList.remove('open');
+    toast('Adult Mode enabled ✓', 'ok');
+  });
+
+  // ===== File open =====
+  on(els.choose,'click',()=>els.file.click());
+  on(els.file,'change',e=>{
+    const f=e.target.files&&e.target.files[0];
+    if(!f) return;
+    // denylist check on filename as a simple guard
+    const lower=(f.name||'').toLowerCase();
+    if(PREDATOR_DENYLIST.some(w=>lower.includes(w))){
+      toast('Blocked: file name trips policy denylist.', 'bad', 3000);
+      e.target.value='';
+      return;
+    }
+    const url=URL.createObjectURL(f);
+    const img=new Image();
+    img.onload=()=>{
+      state.imgEl=img; state.imgName=f.name||'image';
+      fitDraw(img);
+      els.run.disabled=false;
+      toast(`Image loaded ✓ (${img.width}×${img.height})`,'ok');
+      els.progress.textContent='Ready. Click Run Mapping.';
+      setPulse(1);
+      URL.revokeObjectURL(url);
+    };
+    img.onerror=()=>{ toast('Could not load image. Try JPG/PNG.','bad',2800); };
+    img.src=url;
+  });
+
+  // ===== MediaPipe loader =====
   async function ensureFace(){
     if(window._pfFace) return true;
     try{
-      note('Loading face landmarker…');
-      await Loader.js('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14');
-      const vision = await globalThis.FilesetResolver.forVisionTasks(CFG.wasmRoot);
-      window._pfFace = await globalThis.FaceLandmarker.createFromOptions(vision, {
-        baseOptions:{ modelAssetPath: CFG.faceModel },
-        numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
+      els.progress.textContent='Loading face model…';
+      const v = await globalThis.FilesetResolver.forVisionTasks(CFG.WASM_ROOT);
+      window._pfFace = await globalThis.FaceLandmarker.createFromOptions(v, {
+        baseOptions:{ modelAssetPath: CFG.MODEL_PATH },
+        numFaces:1, runningMode:'IMAGE',
+        outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
       });
-      note('Face model loaded.');
+      toast('Model loaded ✓','ok');
       return true;
-    }catch(err){ console.error(err); note('Failed to load face model. Allow jsdelivr + storage.googleapis.com in blockers.'); return false; }
+    }catch(e){
+      console.error(e);
+      toast('Model load blocked (allow jsDelivr + Google Storage).','bad',3400);
+      return false;
+    }
   }
-  function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
-  function P(p){ const {dx,dy,dw,dh}=state.draw; return { x: dx + p.x*dw, y: dy + p.y*dh } }
-  function boxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs), maxX:Math.max(...xs), minY:Math.min(...ys), maxY:Math.max(...ys)} }
-  function drawFace(lm){ if(!lm) return; const bbox=boxFrom(lm); octx.save(); octx.strokeStyle='rgba(100,242,227,.6)'; octx.lineWidth=1.4; octx.strokeRect(bbox.minX,bbox.minY,bbox.maxX-bbox.minX,bbox.maxY-bbox.minY); octx.restore(); if(state.vectors){ octx.save(); octx.strokeStyle='rgba(100,242,227,.9)'; octx.lineWidth=1; lm.forEach(p=>{ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.stroke();}); octx.restore(); }
-    const pad=10; const L=bbox.minX, T=bbox.minY, R=bbox.maxX, B=bbox.maxY; const Lw=24, Lh=18; octx.strokeStyle='rgba(35,215,186,.85)'; octx.lineWidth=2; [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ octx.beginPath(); octx.moveTo(x,y+Lh); octx.lineTo(x,y); octx.lineTo(x+Lw,y); octx.stroke(); });
-    return bbox; }
 
-  function hex(r,g,b){return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('')}
-  function avgRect(rect){ const {minX,maxX,minY,maxY}=rect; const w=maxX-minX,h=maxY-minY; const sx=Math.max(0,minX|0), sy=Math.max(0,minY|0), sw=Math.max(1,w|0), sh=Math.max(1,h|0); const tmp=document.createElement('canvas'); tmp.width=sw; tmp.height=sh; const t=tmp.getContext('2d'); t.drawImage(els.preview,sx,sy,sw,sh,0,0,sw,sh); const d=t.getImageData(0,0,sw,sh).data; let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} return hex((R/n)|0,(G/n)|0,(B/n)|0); }
+  // ===== Compute & classify =====
+  function classifyShape(r){ const jf=r.jaw_face, cf=r.cheek_face; if(jf==null||cf==null) return 'undetermined';
+    if(cf>0.7&&jf>0.6) return 'square';
+    if(cf>0.72&&jf<0.55) return 'heart';
+    if(jf<0.52&&cf<0.62) return 'oval';
+    if(jf>0.62&&cf<0.60) return 'triangle';
+    return 'round';
+  }
+  function buildPrompt(){
+    const r=state.face.ratios, a=state.face.attrs, shape=state.face.shape;
+    const ratios=[
+      'jaw/face '+(r.jaw_face??'-'),
+      'cheekbone/face '+(r.cheek_face??'-'),
+      'forehead/face '+(r.forehead_face??'-'),
+      'eye-angle '+(state.face.angles.eye??'-'),
+      'lip-thickness '+(r.lip_ratio??'-')
+    ].join(' • ');
+    return [
+      `face-shape: ${shape}`,
+      a.hairHex?`hair-color: ${a.hairHex}`:'',
+      a.skinHex?`skin-tone: ${a.skinHex}`:'',
+      a.eyeHue?`eye-hue: ${a.eyeHue}`:'',
+      `ratios: ${ratios}`
+    ].filter(Boolean).join('\n');
+  }
+  function buildDescriptor(){
+    const r=state.face.ratios||{}, a=state.face.attrs||{}, ang=state.face.angles?.eye;
+    const parts=[];
+    const shapeMap={oval:'soft oval outline', round:'rounded outline', square:'defined square outline', heart:'heart-tapered outline', triangle:'tapered jawline'};
+    if(state.face.shape && shapeMap[state.face.shape]) parts.push(shapeMap[state.face.shape]);
+    if(r.jaw_face!=null) parts.push((r.jaw_face>0.6?'strong':'moderate')+' jaw width');
+    if(r.cheek_face!=null) parts.push((r.cheek_face>0.64?'pronounced':'balanced')+' cheekbones');
+    if(typeof ang==='number') parts.push((ang>2?'slight up-tilted':ang<-2?'slight down-tilted':'level')+' eye line');
+    if(r.forehead_face!=null) parts.push((r.forehead_face>0.23?'taller':'balanced')+' forehead height');
+    if(r.lip_ratio!=null) parts.push((r.lip_ratio>0.045?'medium ':'subtle ')+'lip fullness');
+    return `${parts.join(', ')}. Palette hints — hair ${a.hairHex||'—'}, skin ${a.skinHex||'—'}, eyes ${a.eyeHue||'—'}.`;
+  }
 
-  function classifyShape(r){ const {jaw_face, cheek_face, forehead_face}=r; if(!jaw_face||!cheek_face) return 'undetermined'; const jf=jaw_face, cf=cheek_face; if(cf>0.7&&jf>0.6) return 'square'; if(cf>0.72&&jf<0.55) return 'heart'; if(jf<0.52&&cf<0.62) return 'oval'; if(jf>0.62&&cf<0.6) return 'triangle'; return 'round'; }
+  // ===== RUN =====
+  async function run(){
+    if(!state.imgEl) return;
 
-  function buildPrompt(state){ const r=state.face.ratios, a=state.face.attrs, shape=state.face.shape; const hair=a.hairHex?`hair-color: ${a.hairHex}`:''; const skin=a.skinHex?`skin-tone: ${a.skinHex}`:''; const eyes=a.eyeHue?`eye-hue: ${a.eyeHue}`:''; const ratios=['jaw/face '+(r.jaw_face||'-'),'cheekbone/face '+(r.cheek_face||'-'),'forehead/face '+(r.forehead_face||'-'),'eye-angle '+(state.face.angles.eye||'-'),'lip-thickness '+(r.lip_ratio||'-')].join(' • '); const lines=[ `face-shape: ${shape}`, hair, skin, eyes, `ratios: ${ratios}` ].filter(Boolean); return lines.join('\n'); }
+    // Denylist check: block if user tries to add predator terms in any user note (not present here, but future-proof)
+    // (You can hook your own "notes" input to this guard later.)
+    // if (PREDATOR_DENYLIST.some(w => (userNotes||'').toLowerCase().includes(w))) { toast('Blocked by predator-term filter.', 'bad', 3200); return; }
 
-  async function run(){ if(!state.imgEl) return; if(CFG.consentRequired && !state._ok){ els.consent.classList.add('open'); return; } const ok = await ensureFace(); if(!ok){ return; } startScan(); let res; try{ res=await window._pfFace.detect(state.imgEl); }catch(e){ console.error(e); note('Face detection error.'); stopScan(); return; } stopScan(); octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ note('No face found.'); return; } const lm=res.faceLandmarks[0]; const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, leftEyeOut:33, rightEyeOut:263, upperLip:13, lowerLip:14 };
-    drawFace(lm);
+    // Adult gate reminder
+    if(els.adultToggle.checked && !state.adultGated){ els.adultModal.classList.add('open'); return; }
+
+    const ok = await ensureFace(); if(!ok) return;
+
+    startScan(); els.progress.textContent='Analyzing…';
+
+    let res;
+    try{ res = await window._pfFace.detect(state.imgEl); }
+    catch(e){ console.error(e); toast('Detection error.','bad',2600); cancelScan(); return; }
+
+    cancelScan();
+    octx.clearRect(0,0,els.overlay.width,els.overlay.height);
+    if(state.gridOn) drawGrid();
+
+    if(!res || !res.faceLandmarks || !res.faceLandmarks.length){ toast('No face found.','warn',2500); els.progress.textContent='No face found.'; return; }
+
+    const lm = res.faceLandmarks[0];
+    // Draw features
+    const bbox=drawFace(lm);
+    const angle = drawEyeAngleArc(lm);
+    drawLipTick(lm);
+
+    // Measurements
+    const IDX={ chin:152, top:10, leftJaw:234, rightJaw:454, leftEyeIn:133, rightEyeIn:362, upperLip:13, lowerLip:14 };
     const faceH=mpDist(lm[IDX.top],lm[IDX.chin]);
     const jawW=mpDist(lm[IDX.leftJaw],lm[IDX.rightJaw]);
     const cheekW=mpDist(lm[234],lm[454]);
     const foreheadH=mpDist(lm[8],lm[10]);
     const lipT=mpDist(lm[IDX.upperLip],lm[IDX.lowerLip]);
-    const eyeAngle=Math.atan2(lm[IDX.rightEyeIn].y - lm[IDX.leftEyeIn].y, lm[IDX.rightEyeIn].x - lm[IDX.leftEyeIn].x) * 57.2958;
 
-    const ratios={ jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3), forehead_face:+(foreheadH/faceH).toFixed(3), lip_ratio:+(lipT/faceH).toFixed(3) };
-    state.face.ratios=ratios; state.face.angles={ eye:+eyeAngle.toFixed(2) };
+    const ratios={
+      jaw_face:+(jawW/faceH).toFixed(3),
+      cheek_face:+(cheekW/faceH).toFixed(3),
+      forehead_face:+(foreheadH/faceH).toFixed(3),
+      lip_ratio:+(lipT/faceH).toFixed(3)
+    };
+    state.face.ratios=ratios;
+    state.face.angles={ eye:+angle.toFixed(2) };
 
-    const bbox=boxFrom(lm); const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY}; const skinRect={minX:bbox.minX+(bbox.maxX-bbox.minX)*0.3, maxX:bbox.maxX-(bbox.maxX-bbox.minX)*0.3, minY:bbox.minY+(bbox.maxY-bbox.minY)*0.45, maxY:bbox.minY+(bbox.maxY-bbox.minY)*0.7};
-    const hairHex=avgRect(hairRect), skinHex=avgRect(skinRect);
-    const eyeHue=(function(){ const q=P(lm[133]); const r=8; return avgRect({minX:q.x-r,maxX:q.x+r,minY:q.y-r,maxY:q.y+r}); })();
+    // Palette rectangles relative to bbox
+    const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY};
+    const skinRect={minX:bbox.minX+(bbox.maxX-bbox.minX)*0.3, maxX:bbox.maxX-(bbox.maxX-bbox.minX)*0.3, minY:bbox.minY+(bbox.maxY-bbox.minY)*0.45, maxY:bbox.minY+(bbox.maxY-bbox.minY)*0.7};
+    const eyePt=P(lm[133]); const r=8; const eyeRect={minX:eyePt.x-r, maxX:eyePt.x+r, minY:eyePt.y-r, maxY:eyePt.y+r};
 
+    const hairHex=avgRect(hairRect), skinHex=avgRect(skinRect), eyeHue=avgRect(eyeRect);
     state.face.attrs={ hairHex, skinHex, eyeHue };
     state.face.shape=classifyShape(ratios);
     state.face.landmarks = lm.map(p=>[+p.x.toFixed(5), +p.y.toFixed(5), +(p.z||0).toFixed(5)]);
 
-    els.palette.innerHTML = [hairHex, skinHex, eyeHue].map(hex=>`<span style="display:inline-flex;align-items:center;gap:6px;border:1px solid #123;padding:6px 8px;border-radius:8px"><i style=\"width:18px;height:18px;border-radius:4px;background:${hex};display:inline-block\"></i><code>${hex}</code></span>`).join(' ');
+    // Badge + legend + chips
+    els.faceBadge.style.display='block';
+    els.faceBadge.textContent='shape: '+state.face.shape;
+    els.legend.textContent = `eye-angle: ${state.face.angles.eye}°, jaw/face: ${ratios.jaw_face}, cheek/face: ${ratios.cheek_face}`;
 
-    const mtxt = Object.entries(ratios).map(([k,v])=>`${k}: ${v}`).join('\n') + `\nEye angle (deg): ${state.face.angles.eye}`;
-    els.measures.textContent = mtxt;
-    const prompt = buildPrompt(state);
+    els.palette.innerHTML = [ ['Hair',hairHex], ['Skin',skinHex], ['Eyes',eyeHue] ]
+      .map(([label,hex])=>`<span class="chip"><i style="background:${hex}"></i><code>${label}: ${hex}</code></span>`).join('');
+    els.copyPalette.disabled = false;
+
+    // Outputs
+    const prompt = buildPrompt();
     els.promptOut.textContent = prompt;
-    note('Mapped. Export or copy.');
+
+    const mtxt = `face_height: ${faceH.toFixed(4)}
+jaw_width: ${jawW.toFixed(4)}
+cheek_width: ${cheekW.toFixed(4)}
+forehead_height: ${foreheadH.toFixed(4)}
+lip_thickness: ${lipT.toFixed(4)}
+eye_angle_deg: ${state.face.angles.eye}
+ratios:
+  jaw/face: ${ratios.jaw_face}
+  cheek/face: ${ratios.cheek_face}
+  forehead/face: ${ratios.forehead_face}
+  lip/face: ${ratios.lip_ratio}`;
+    els.measures.textContent = mtxt;
+
+    const desc = buildDescriptor();
+    els.descriptor.textContent = desc;
+
+    const data = {
+      version: "pf_facemapper_3",
+      filename: state.imgName,
+      image: { width: state.imgW, height: state.imgH },
+      landmarks: state.face.landmarks, // normalized [x,y,z]
+      ratios: state.face.ratios,
+      angles: state.face.angles,
+      attrs: state.face.attrs,
+      shape: state.face.shape,
+      prompt_chunk: prompt
+    };
+    els.jsonOut.textContent = JSON.stringify(data,null,2);
+    els.downloadJSON.disabled = false;
+
+    // Enable buttons + pulse sequence for after-map
+    els.copyPrompt.disabled=false;
+    els.exportJSON.disabled=false;
+    setPulse(2);
+
+    toast('Mapping complete ✓','ok');
+    els.progress.textContent='Mapped. Export or copy.';
   }
 
-  // Wire UI
-  els.grid.addEventListener('change',()=>{ state.gridOn=els.grid.checked; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); });
-  els.showVectors?.addEventListener('change',()=>{ state.vectors=els.showVectors.checked; run(); });
-  els.run.addEventListener('click',run); els.run2.addEventListener('click',run);
-  els.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(els.promptOut.textContent||''); note('Prompt chunk copied.'); });
-  els.exportJSON.addEventListener('click',()=>{ const data={ version:'pf_facemapper_2', filename:state.imgName, image:{width:state.imgW,height:state.imgH}, landmarks:state.face.landmarks, ratios:state.face.ratios, angles:state.face.angles, attrs:state.face.attrs, shape:state.face.shape, prompt_chunk:els.promptOut.textContent }; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=(state.imgName||'image')+'.pf_facemapper.json'; a.click(); URL.revokeObjectURL(a.href); });
+  // ===== Wire UI =====
+  on(els.grid,'change',()=>{ state.gridOn=els.grid.checked; octx.clearRect(0,0,els.overlay.width,els.overlay.height); if(state.gridOn) drawGrid(); });
+  on(els.run,'click',run);
+  on(els.retry,'click',()=>{ if(state.imgEl){ fitDraw(state.imgEl); setPulse(1); els.progress.textContent='Ready. Click Run Mapping.'; } });
 
-  // Consent
-  els.agree.addEventListener('change',()=>els.accept.disabled=!els.agree.checked);
-  els.accept.addEventListener('click',()=>{ state._ok=true; els.consent.classList.remove('open'); run(); });
-  els.deny.addEventListener('click',()=>{ els.consent.classList.remove('open'); });
+  on(els.copyPrompt,'click',()=>{
+    navigator.clipboard.writeText(els.promptOut.textContent||'');
+    toast('Prompt copied ✓','ok');
+  });
 
-  // J1NX (toggle only)
-  els.jOpen.addEventListener('click',()=>{ els.jWrap.style.display = (els.jWrap.style.display==='none'?'flex':'none'); });
-  const say=(t)=>{ els.jBubble.innerHTML += '<br/>'+(t||'').replace(/</g,'&lt;'); els.jBubble.scrollTop=els.jBubble.scrollHeight; };
-  els.jSend?.addEventListener('click',()=>{ const v=els.jInput.value.trim(); if(!v) return; say('<b>You:</b> '+v); els.jInput.value=''; });
-  els.jClear?.addEventListener('click',()=>{ els.jBubble.innerHTML='<b>J1NX:</b> Reset. Ready.'; });
-  els.jSave?.addEventListener('click',()=>{ const blob=new Blob([els.jBubble.textContent||''],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='j1nx_chat.txt'; a.click(); URL.revokeObjectURL(a.href); });
-  (function(){ let taps=0,tid; els.jWrap?.addEventListener('click',()=>{ clearTimeout(tid); taps++; tid=setTimeout(()=>{ if(taps>=2){ els.jEgg.textContent='NSFW hint unlocked (demo): try labs when available.'; els.jEgg.style.opacity=1; } taps=0; },240); },{passive:true}); })();
+  on(els.exportJSON,'click',()=>{
+    if(!state.imgEl) return;
+    const blob=new Blob([($('#jsonOut').textContent)||'{}'],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download=(state.imgName||'image')+'.pf_facemapper.json';
+    a.click(); URL.revokeObjectURL(a.href);
+    toast('JSON exported ✓','ok');
+  });
 
-  // Footer camo shimmer
-  (function(){ const camo=document.getElementById('footerCamo'); if(!camo) return; const colors=["#64f2e3","#23d7ba","#be9cff","#ffd166"]; let i=0; setInterval(()=>{ camo.textContent=['█▄▀','▞▚','▓▒░','◢◣◥◤'][i%4].repeat(28); camo.style.color=colors[i%colors.length]; i++; },380); })();
-</script>
+  on(els.downloadJSON,'click',()=>els.exportJSON.click());
+
+  on(els.copyPalette,'click',()=>{
+    const txt = ($('#palette').textContent||'').trim();
+    navigator.clipboard.writeText(txt);
+    toast('Palette copied ✓','ok');
+  });
+
+  on(els.openJ1NX,'click',()=>{ const w=$('#j1nxFloatTrue'); if(!w) return; w.style.display = (w.style.display==='none'?'flex':'none'); });
+
+  // ===== Init model resolver safely (after script async load) =====
+  (function waitForTasks(){
+    if(globalThis.FilesetResolver && globalThis.FaceLandmarker){
+      toast('Tasks ready ✓','ok',1500);
+    } else {
+      setTimeout(waitForTasks, 120);
+    }
+  })();
+
+  // ===== Initial UI state =====
+  // Step 1 pulsing by default
+  setPulse(1);
+  toast('Model will load on demand.','warn',1800);
+  </script>
+
+  <!-- ===== Exact J1NX + ANSI Footer (lifted as-is) ===== -->
+  <!-- Source: your provided footer/J1NX block -->
+  <div class="j1nx-float-true" id="j1nxFloatTrue" style="display:none">
+    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
+      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
+        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today? <br>(Don’t worry, I’m good at both…)
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
+        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
+      </div>
+      <div class="j1nx-bubble-row-true">
+        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
+        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
+      </div>
+      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
+        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin:18px auto;padding:0 12px 16px;text-align:center;max-width:860px;color:#eaf7ff">
+    <pre class="footer-art" style="font-family:'Fira Mono',monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre;user-select:text;margin:0 0 10px">
+  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
+U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"\ uU /"___|u\| ___"|/   
+\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
+ |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
+ |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
+ ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
+(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
+    </pre>
+    <pre class="footer-camo" id="footerCamo" style="font-family:'Fira Mono',monospace;font-size:.85em;letter-spacing:2px;color:#64f2e3;min-height:.8em;white-space:pre"></pre>
+    <div class="footer-bar" style="color:#88fffd;margin:10px auto 6px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      Made underground in BC, Canada &bull; #PromptForge &bull;
+      <a href="https://bsky.app/profile/goreandgiggles.bsky.social" style="color:#64f2e3;text-decoration:none">Bluesky</a> &bull;
+      <a href="https://x.com/GoreandGiggles" style="color:#64f2e3;text-decoration:none">Twitter/X</a> &bull;
+      <a href="/legal.html" style="color:#64f2e3;text-decoration:none">Legal</a>
+    </div>
+  </footer>
+
+  <!-- Footer camo shimmer + J1NX logic (exact behavior) -->
+  <script>
+    (function(){
+      const camoEl = document.getElementById("footerCamo");
+      if (camoEl) {
+        const colors = ["#64f2e3","#23d7ba","#4df6a0","#bdf6c3","#abffe6","#abb8b8"];
+        const chars = "░▒▓▚▞▐▉█▛";
+        function camoTick(t){
+          let out = "";
+          for(let i=0;i<62;i++){
+            out += `<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`;
+          }
+          camoEl.innerHTML = out;
+        }
+        let t=0; camoTick(0); setInterval(()=>camoTick(++t), 950);
+      }
+    })();
+
+    (function(){
+      const j1nxFloat = document.getElementById('j1nxFloatTrue');
+      const cutout = document.getElementById('j1nxCutoutTrue');
+      const bubble = document.getElementById('j1nxBubbleTrueMain');
+      function isMobile() { return window.innerWidth < 700; }
+      function shrinkJ1nx() {
+        if(isMobile()) {
+          j1nxFloat?.classList.remove('j1nx-open');
+          if(bubble) bubble.style.display = "none";
+        } else {
+          j1nxFloat?.classList.add('j1nx-open');
+          if(bubble) bubble.style.display = "flex";
+        }
+      }
+      cutout?.addEventListener('click',function(){
+        if(isMobile()) {
+          if(j1nxFloat.classList.contains('j1nx-open')) {
+            j1nxFloat.classList.remove('j1nx-open'); bubble.style.display = "none";
+          } else {
+            j1nxFloat.classList.add('j1nx-open'); bubble.style.display = "flex";
+          }
+        }
+      });
+      window.addEventListener('resize', shrinkJ1nx);
+      shrinkJ1nx();
+    })();
+
+    (function(){
+      let chatHistory = [];
+      let nsfwUnlocked = false;
+      function renderChat() {
+        const out = chatHistory.map(line => `<div>${line}</div>`).join('');
+        const box = document.getElementById('j1nxBubbleTextTrue');
+        if(box) box.innerHTML = out || "<b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or do you want to keep it PG today?<br>(Don’t worry, I’m good at both…)";
+      }
+      function addMsg(msg, isUser) {
+        if (!msg) return;
+        const name = isUser ? "<b>You:</b> " : "<b>J1nx:</b> ";
+        chatHistory.push(name + msg);
+        if (chatHistory.length > 8) chatHistory = chatHistory.slice(-8);
+        renderChat();
+      }
+      document.getElementById('j1nxBubbleTrueMain')?.addEventListener('dblclick', function() {
+        nsfwUnlocked = true;
+        const eg = document.getElementById('j1nxEasterEggTrue');
+        if(eg) eg.innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+        addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+      });
+      document.getElementById('j1nxSendTrue')?.addEventListener('click', function() {
+        const input = document.getElementById('j1nxInputTrue');
+        const val = (input?.value || '').trim();
+        if (!val) return;
+        addMsg(val, true);
+        if (/^unlock$/i.test(val)) {
+          nsfwUnlocked = true;
+          const eg = document.getElementById('j1nxEasterEggTrue');
+          if(eg) eg.innerHTML = "<b>NSFW mode unlocked!</b> You’re now in uncensored mode. Type anything...";
+          addMsg("NSFW mode unlocked! You’re now in uncensored mode.", false);
+          if(input) input.value = "";
+          return;
+        }
+        try {
+          let reply = (window.j1nxBrain ? window.j1nxBrain(val, chatHistory.length, nsfwUnlocked) : "J1NX brain not loaded (assets/j1nx_brain.js).");
+          let replyText = (reply && typeof reply === 'object') ? (reply.text || reply.reply || JSON.stringify(reply)) : reply;
+          addMsg(replyText, false);
+        } catch(e) { addMsg("Sorry, my brain glitched... (Check assets/j1nx_brain.js)", false); }
+        if(input) input.value = "";
+      });
+      document.getElementById('j1nxInputTrue')?.addEventListener('keydown', function(e){
+        if (e.key === 'Enter') document.getElementById('j1nxSendTrue').click();
+      });
+      document.getElementById('j1nxSaveTrue')?.addEventListener('click', function() {
+        const text = chatHistory.map(line => line.replace(/<[^>]+>/g,'')).join('\n');
+        const blob = new Blob([text], {type:'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'j1nx_chat.txt'; document.body.appendChild(a); a.click();
+        setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);}, 300);
+      });
+      document.getElementById('j1nxClearTrue')?.addEventListener('click', function() {
+        chatHistory = []; renderChat();
+      });
+      renderChat();
+    })();
+  </script>
+
+  <!-- Optional: external J1NX brain if you use it on the site -->
+  <script src="assets/j1nx_brain.js"></script>
 </body>
 </html>
