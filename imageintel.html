@@ -4,12 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>PromptForge — Face Mapper (Studio Build v3)</title>
-  <meta name="description" content="On-device face mapper with MediaPipe (468 pts). CSI-style overlay, sequenced button guidance, prompt chunk, stylistic descriptor, raw measurements, JSON export, and palette. J1NX + ANSI footer preserved. Adult Mode is gated. No servers.">
+  <meta name="description" content="On-device face mapper with MediaPipe (468 pts). CSI-style overlay, tessellation, ratios, angles, palette, prompt chunk, descriptor, JSON export. J1NX + ANSI footer preserved. Adult Mode gated. Client-only." />
   <link rel="canonical" href="https://promptforge.online/facemapper.html" />
   <meta name="theme-color" content="#08131b" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="PromptForge — Face Mapper (Studio v3)" />
-  <meta property="og:description" content="Landmarks, ratios, angles, palette and prompt-ready descriptors. Client-side, privacy-friendly." />
+  <meta property="og:description" content="Landmarks, tessellation, ratios, angles, palette and prompt-ready descriptors. Client-side, privacy-friendly." />
   <meta property="og:image" content="/assets/og/facemapper.png" />
   <meta property="og:url" content="https://promptforge.online/facemapper.html" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -49,8 +49,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- MediaPipe Tasks Vision (no bundler) -->
-  <script async src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14"></script>
+  <!-- MediaPipe Tasks Vision (exact include per spec) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
+
+  <!-- CSP NOTE (add server-side): allow cdn.jsdelivr.net + storage.googleapis.com in script-src, connect-src, and img-src if needed. -->
 
   <style>
     :root{
@@ -92,7 +94,6 @@
     .btn{background:#0e1f27;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer;position:relative}
     .btn[disabled]{opacity:.5;cursor:not-allowed}
     .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
-    /* +20% brighter red halo */
     .btn.pulse-red::after{
       content:"";position:absolute;inset:-7px;border-radius:14px;border:2px solid rgba(255,90,122,.9);
       box-shadow:0 0 14px rgba(255,90,122,.55),0 0 28px rgba(255,90,122,.35);
@@ -172,7 +173,7 @@
     <section class="hero" aria-label="Intro">
       <div class="card">
         <h1>Map a Face → See What the Model Sees</h1>
-        <p class="sub">Drop a portrait and run the mapper. You’ll get a <b>live CSI-style overlay</b> (grid, scan-line, box, 468 landmarks, gauges), plus <b>prompt-ready text</b>, a natural-language descriptor, raw measurements, JSON export, and a simple palette (hair/skin/eye). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors. Everything runs on-device.</p>
+        <p class="sub">Drop a portrait and run the mapper. You’ll get a <b>live CSI-style overlay</b> with <b>tessellation mesh</b>, box & corners, region highlights, 468 points, and gauges—plus <b>prompt-ready text</b>, a natural-language descriptor, raw measurements, JSON export, and a simple palette (hair/skin/eye). <u>Not for identification</u> — creative descriptors only; use with consent and never for minors. Everything runs on-device.</p>
       </div>
       <div class="card">
         <h3>Quick notes</h3>
@@ -310,12 +311,12 @@
     ];
   </script>
 
-  <!-- ===== Core Script (Model-safe init + CSI overlay) ===== -->
+  <!-- ===== Core Script (Model-safe init + CSI overlay + tessellation stages) ===== -->
   <script>
   // ===== Config =====
   const CFG = {
     MODEL_PATH: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-    WASM_ROOT:  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+    WASM_ROOT:  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
   };
 
   // ===== Utils =====
@@ -358,7 +359,8 @@
     draw:{dx:0,dy:0,dw:0,dh:0},
     gridOn:true,
     face:{landmarks:[], ratios:{}, angles:{}, attrs:{}, shape:''},
-    loading:false
+    loading:false,
+    prefersReduced: window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   };
 
   // ===== DPR-aware canvas scale =====
@@ -395,26 +397,22 @@
 
   let rafScan=null, scanY=0, scanT=0;
   function startScan(text){
+    if(state.prefersReduced) return;
     cancelScan();
     const draw = ()=>{
       const W=els.overlay.width, H=els.overlay.height;
       octx.clearRect(0,0,W,H);
       if(state.gridOn) drawGrid();
-      // scan line
       octx.fillStyle='rgba(35,215,186,0.14)';
       octx.fillRect(0,scanY,W,8);
-      // dot
       const px=state.draw.dx+(Math.sin(scanT/18)*.5+.5)*state.draw.dw;
       const py=scanY+4;
       octx.beginPath(); octx.arc(px,py,6,0,Math.PI*2); octx.fillStyle='rgba(255,90,122,0.85)'; octx.fill();
-
-      // status text
       if(text){
         octx.fillStyle='rgba(232,248,255,0.92)';
         octx.font='12px ui-monospace,monospace';
         octx.fillText(text, 10, 18);
       }
-
       scanY=(scanY+3)%H; scanT++;
       rafScan=requestAnimationFrame(draw);
     };
@@ -454,9 +452,11 @@
   }
   function mpDist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
 
-  function drawFace(lm){
-    const bbox=boxFrom(lm);
-    // Bounding box + corner brackets
+  // ===== DrawingUtils & connectors =====
+  let DU=null;
+  function ensureDU(){ if(!DU) DU = new globalThis.DrawingUtils(octx); return DU; }
+
+  function drawBBoxCorners(bbox){
     octx.save();
     octx.strokeStyle='rgba(100,242,227,.65)'; octx.lineWidth=1.4;
     octx.strokeRect(bbox.minX,bbox.minY,bbox.maxX-bbox.minX,bbox.maxY-bbox.minY);
@@ -464,20 +464,12 @@
     octx.strokeStyle='rgba(35,215,186,.9)'; octx.lineWidth=2;
     [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ octx.beginPath(); octx.moveTo(x,y+Lh); octx.lineTo(x,y); octx.lineTo(x+Lw,y); octx.stroke(); });
     octx.restore();
-
-    // 468 landmarks (dots)
-    octx.save(); octx.fillStyle='rgba(100,242,227,.95)';
-    for(const p of lm){ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.fill(); }
-    octx.restore();
-
-    return bbox;
   }
 
   function drawEyeAngleArc(lm){
     const L=133, R=362;
     const a=P(lm[L]), b=P(lm[R]);
     const angleDeg = Math.atan2(b.y-a.y, b.x-a.x) * 57.2958;
-    // line + ring + label
     octx.save(); octx.strokeStyle='rgba(180,255,240,.8)'; octx.lineWidth=1.4;
     octx.beginPath(); octx.moveTo(a.x,a.y); octx.lineTo(b.x,b.y); octx.stroke();
     const midx=(a.x+b.x)/2, midy=(a.y+b.y)/2;
@@ -493,6 +485,52 @@
     octx.save(); octx.strokeStyle='rgba(255,210,102,.9)'; octx.lineWidth=2;
     octx.beginPath(); octx.moveTo((u.x+l.x)/2, u.y); octx.lineTo((u.x+l.x)/2, l.y); octx.stroke();
     octx.restore();
+  }
+
+  // Highlight regions (eyes, brows, lips, face_oval)
+  function highlightRegions(lm){
+    const F = globalThis.FaceLandmarker;
+    const du = ensureDU();
+    const HL = (connectors, color)=> du.drawConnectors(lm, connectors, {color, lineWidth: 2.0});
+    HL(F.FACE_LANDMARKS_RIGHT_EYE,   'rgba(255,255,255,0.95)');
+    HL(F.FACE_LANDMARKS_LEFT_EYE,    'rgba(255,255,255,0.95)');
+    HL(F.FACE_LANDMARKS_RIGHT_EYEBROW, 'rgba(255,220,120,0.95)');
+    HL(F.FACE_LANDMARKS_LEFT_EYEBROW,  'rgba(255,220,120,0.95)');
+    HL(F.FACE_LANDMARKS_LIPS,        'rgba(255,120,160,0.95)');
+    HL(F.FACE_LANDMARKS_FACE_OVAL,   'rgba(140,255,220,0.95)');
+  }
+
+  // Tessellation staged animation: batches across frames, then fade points
+  async function animateTessellation(lm){
+    const du = ensureDU();
+    const connectors = globalThis.FaceLandmarker.FACE_LANDMARKS_TESSELATION || [];
+    if(!connectors.length){ return; }
+    const batch = 90; // draw ~90 connectors per frame
+    let i=0, alpha=1;
+    return new Promise(resolve=>{
+      function step(){
+        if(state.gridOn) drawGrid();
+        octx.save();
+        octx.globalAlpha = 0.88;
+        du.drawConnectors(lm, connectors.slice(i, i+batch), {color:'rgba(100,242,227,0.95)', lineWidth: 0.9});
+        octx.restore();
+        i+=batch;
+        if(i<connectors.length && !state.prefersReduced){ requestAnimationFrame(step); }
+        else{
+          // Fade out the 468 dots after drawing whole mesh
+          if(!state.prefersReduced){
+            (function fade(){
+              octx.save(); octx.globalAlpha = alpha; octx.fillStyle='rgba(100,242,227,0.95)';
+              for(const p of lm){ const q=P(p); octx.beginPath(); octx.arc(q.x,q.y,0.9,0,Math.PI*2); octx.fill(); }
+              octx.restore();
+              alpha -= 0.18;
+              if(alpha>0){ requestAnimationFrame(fade); } else { resolve(); }
+            })();
+          } else { resolve(); }
+        }
+      }
+      step();
+    });
   }
 
   // ===== Tabs =====
@@ -528,7 +566,6 @@
   on(els.file,'change',e=>{
     const f=e.target.files&&e.target.files[0];
     if(!f) return;
-    // denylist check on filename as a simple guard
     const lower=(f.name||'').toLowerCase();
     if(PREDATOR_DENYLIST.some(w=>lower.includes(w))){
       toast('Blocked: file name trips policy denylist.', 'bad', 3000);
@@ -555,7 +592,7 @@
     return new Promise((resolve,reject)=>{
       const t0=performance.now();
       (function poll(){
-        if (globalThis.FilesetResolver && globalThis.FaceLandmarker) return resolve(true);
+        if (globalThis.FilesetResolver && globalThis.FaceLandmarker && globalThis.DrawingUtils) return resolve(true);
         if (performance.now()-t0>maxMs) return reject(new Error('Tasks library not available'));
         setTimeout(poll, 100);
       })();
@@ -570,6 +607,13 @@
       startScan('Loading face model…');  // show scan even while loading
       els.progress.textContent='Loading face model…';
       await waitForTasksLib(); // ensures script is ready
+
+      // DEBUG: HEAD fetch to verify CORS/CSP reachability (remove before prod if you prefer)
+      try {
+        const head = await fetch(CFG.MODEL_PATH, { method:'HEAD', mode:'no-cors' });
+        console.debug('Model HEAD ok (no-cors):', head && head.type);
+      } catch(e){ console.debug('HEAD check skipped/blocked:', e?.message); }
+
       const v = await globalThis.FilesetResolver.forVisionTasks(CFG.WASM_ROOT);
       window._pfFace = await globalThis.FaceLandmarker.createFromOptions(v, {
         baseOptions:{ modelAssetPath: CFG.MODEL_PATH },
@@ -663,10 +707,19 @@
 
     const lm = res.faceLandmarks[0];
 
-    // Draw everything the model "sees"
-    const bbox=drawFace(lm);
+    // Stage A: bbox + corners
+    const bbox=boxFrom(lm);
+    drawBBoxCorners(bbox);
+
+    // Stage B: feature vectors (eye angle, lip tick)
     const angle = drawEyeAngleArc(lm);
     drawLipTick(lm);
+
+    // Stage C: tessellation animation (batches), then fade points
+    await animateTessellation(lm);
+
+    // Stage D: brighter region overlays
+    highlightRegions(lm);
 
     // Measurements
     const faceH=mpDist(lm[10],lm[152]);
@@ -684,7 +737,7 @@
     state.face.ratios=ratios;
     state.face.angles={ eye:+angle.toFixed(2) };
 
-    // Palette
+    // Palette (hair band above bbox; skin mid-face; eye patch @133 ~8px)
     const hairRect={minX:bbox.minX, maxX:bbox.maxX, minY:Math.max(0,bbox.minY-0.18*(bbox.maxY-bbox.minY)), maxY:bbox.minY};
     const skinRect={minX:bbox.minX+(bbox.maxX-bbox.minX)*0.3, maxX:bbox.maxX-(bbox.maxX-bbox.minX)*0.3, minY:bbox.minY+(bbox.maxY-bbox.minY)*0.45, maxY:bbox.minY+(bbox.maxY-bbox.minY)*0.7};
     const eyePt=P(lm[133]); const r=8; const eyeRect={minX:eyePt.x-r, maxX:eyePt.x+r, minY:eyePt.y-r, maxY:eyePt.y+r};
@@ -774,9 +827,14 @@ ratios:
   // Step 1 pulse & heads-up
   setPulse(1);
   toast('Model loads on first run.','warn',1800);
+
+  // ===== DEBUG SNIPPETS (TEMP - remove before production if desired) =====
+  console.debug('FilesetResolver present?', !!globalThis.FilesetResolver);
+  console.debug('FaceLandmarker present?', !!globalThis.FaceLandmarker);
+  console.debug('DrawingUtils present?', !!globalThis.DrawingUtils);
   </script>
 
-  <!-- ===== EXACT J1NX + ANSI FOOTER (from your provided file) ===== -->
+  <!-- ===== EXACT J1NX + ANSI FOOTER (verbatim) ===== -->
   <!-- J1NX FLOATS OVER EVERYTHING, APPEARS FIRST IN SOURCE, ALWAYS FIXED -->
   <div class="j1nx-float-true" id="j1nxFloatTrue">
     <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
