@@ -3,35 +3,18 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PromptForge — FaceMapper VIDEO · Studio v4</title>
-<meta name="description" content="Movie-style face mapper (VIDEO): mower scan → detector → vectors → tessellation → region highlights. Unified measurements & ratios, prompt/alt/desc, JSON export. Privacy: on-device."/>
+<title>PromptForge — FaceMapper VIDEO · Studio v4 (Clean)</title>
+<meta name="description" content="Real-time, movie-style face mapper using MediaPipe Face Landmarker. Clear CTAs, live overlay, unified JSON, and exports. Privacy: on-device."/>
 <link rel="canonical" href="https://promptforge.online/facemapper.html"/>
 <meta name="theme-color" content="#08131b"/>
 
-<!-- Open Graph / Twitter -->
+<!-- Open Graph -->
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="PromptForge — FaceMapper (Studio v4)"/>
-<meta property="og:description" content="Real-time MediaPipe overlay with unified JSON output."/>
+<meta property="og:description" content="Movie-style face mapping with unified JSON outputs."/>
 <meta property="og:image" content="/assets/og/facemapper.png"/>
 <meta property="og:url" content="https://promptforge.online/facemapper.html"/>
 <meta name="twitter:card" content="summary_large_image"/>
-
-<!-- JSON-LD -->
-<script type="application/ld+json">{
-  "@context":"https://schema.org",
-  "@type":"Organization",
-  "name":"PromptForge",
-  "url":"https://promptforge.online/",
-  "logo":"https://promptforge.online/assets/og/home.png",
-  "sameAs":["https://x.com/GoreandGiggles","https://bsky.app/profile/goreandgiggles.bsky.social","https://promptforge.online/support.html"]
-}</script>
-<script type="application/ld+json">{
-  "@context":"https://schema.org",
-  "@type":"WebSite",
-  "name":"PromptForge",
-  "url":"https://promptforge.online/",
-  "potentialAction":{"@type":"SearchAction","target":"https://promptforge.online/?q={search_term_string}","query-input":"required name=search_term_string"}
-}</script>
 
 <style>
 :root{
@@ -46,26 +29,32 @@ body{margin:0;background:
 a{color:var(--aqua);text-decoration:none}
 .wrap{max-width:1240px;margin:0 auto;padding:16px}
 
+/* Header */
 .header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .brand{font-weight:900;font-size:22px;letter-spacing:.4px;color:var(--aqua)}
 .lang{display:flex;gap:8px}
 select{background:#0d1f28;border:1px solid var(--edge);color:var(--ink);border-radius:8px;padding:6px 8px}
 
+/* Layout */
 .grid{display:grid;gap:14px;grid-template-columns:360px 1fr}
 @media(max-width:1100px){.grid{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;padding:12px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
 h1{margin:.2rem 0 .4rem}
 .muted{color:var(--muted)}
 
-.btn{background:#0d1f28;border:1px solid var(--edge);color:var(--ink);padding:9px 12px;border-radius:10px;cursor:pointer}
+/* Buttons */
+.btn{background:#0d1f28;border:1px solid var(--edge);color:var(--ink);padding:12px 14px;border-radius:12px;cursor:pointer;font-weight:700}
 .btn[disabled]{opacity:.5;cursor:not-allowed}
-.btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
-.btn.danger{border-color:var(--pink)}
+.btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.18) inset}
+.btn.ghost{background:transparent}
+:focus-visible{outline:2px solid var(--aqua);outline-offset:2px}
 
+/* Toasts */
 .toasts{position:fixed;right:14px;top:14px;display:flex;flex-direction:column;gap:8px;z-index:9999}
 .toast{background:#0e1b24;border:1px solid #11313b;color:var(--ink);padding:8px 10px;border-radius:8px;font:12px ui-monospace,monospace;box-shadow:0 7px 30px rgba(0,0,0,.35)}
 .toast.ok{border-color:#1f5645}.toast.warn{border-color:#6d5b18}.toast.bad{border-color:#61202b}
 
+/* Stage */
 #stage{position:relative}
 #video,#prev,#over{display:block;width:100%;border-radius:12px}
 #video{background:#000;max-height:62vh}
@@ -74,23 +63,25 @@ h1{margin:.2rem 0 .4rem}
 .legend{position:absolute;right:10px;top:10px;background:#07161fdd;border:1px solid #0f2a33;border-radius:10px;padding:6px 8px;font:12px ui-monospace,monospace;z-index:35}
 .badge{position:absolute;left:10px;top:10px;background:#07161fdd;border:1px solid #0f2a33;border-radius:999px;padding:4px 10px;font:12px ui-monospace,monospace;z-index:35;display:none}
 
+/* Tabs */
 .tabs{display:flex;gap:6px;flex-wrap:wrap}
 .tab{padding:7px 10px;border:1px solid var(--edge);border-radius:9px;background:#0e1a22;cursor:pointer;font-weight:600}
 .tab.active{border-color:var(--aqua);color:var(--aqua);box-shadow:0 0 0 2px rgba(100,242,227,.12) inset}
 .panel{display:none;margin-top:8px}.panel.active{display:block}
 .out{min-height:110px;background:#07141c;border:1px solid #0f2833;border-radius:12px;color:var(--ink);padding:10px;font:12.5px ui-monospace,monospace;white-space:pre-wrap}
 
+/* Diagnostics */
 .diag{background:#07141c;border:1px solid #0f2833;border-radius:12px;color:#a1ffe3;padding:10px;font:12px ui-monospace,monospace;white-space:pre-wrap;min-height:80px}
 
+/* Footer + J1NX */
 footer{margin:20px auto;text-align:center;color:#d6f5ff}
 #j1nxFloatTrue{position:fixed;right:18px;bottom:18px;z-index:50;pointer-events:auto}
 </style>
 </head>
-
 <body>
-  <div class="wrap" aria-live="polite">
+  <div class="wrap">
     <div class="header">
-      <div class="brand" id="titleBrand">PromptForge — FaceMapper</div>
+      <div class="brand" id="brand">PromptForge — FaceMapper</div>
       <div class="lang">
         <label for="langSel" class="muted" id="labelLang">Language</label>
         <select id="langSel" aria-label="Language">
@@ -102,45 +93,38 @@ footer{margin:20px auto;text-align:center;color:#d6f5ff}
     </div>
 
     <header class="card">
-      <h1 id="h1">PF FaceMapper — VIDEO (“see what the model sees”)</h1>
+      <h1 id="h1">Turn on the scanner</h1>
       <p class="muted" id="intro">
-        Real-time MediaPipe Face Landmarker with cinematic overlay: mower scan → detector → feature vectors → tessellation → region highlights.
-        Unified measures/ratios, prompt/alt/desc, JSON export. Not for identification; creative descriptors only.
+        Click <b>Enable Camera</b> to start the real-time face mapper. You’ll see the scan pass,
+        detection box, feature vectors, full mesh and region highlights. Everything runs on-device.
       </p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+        <button id="enableCam" class="btn primary" aria-label="Enable camera">Enable Camera</button>
+        <label class="btn"><input id="file" type="file" accept="image/*" hidden>Load Image</label>
+        <button id="snapshot" class="btn ghost" disabled>Snapshot</button>
+        <label class="muted" style="display:flex;gap:6px;align-items:center"><input id="gridToggle" type="checkbox" checked> Show Guides</label>
+      </div>
     </header>
 
     <main class="grid">
-      <aside class="card" aria-label="Controls">
+      <aside class="card">
+        <h3 style="margin:0 0 6px 0">Model Diagnostics</h3>
+        <div id="diag" class="diag" aria-live="polite"></div>
+        <p class="muted" style="margin-top:6px">
+          Needs HTTPS. Allow <code>cdn.jsdelivr.net</code> and <code>storage.googleapis.com</code> in CSP (script/connect/img). Based on Google’s Face Landmarker web guide. :contentReference[oaicite:5]{index=5}
+        </p>
+        <h3 style="margin:10px 0 6px 0">After Mapping</h3>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="enableCam" class="btn primary">Enable Camera</button>
-          <label class="btn"><input id="file" type="file" accept="image/*" hidden><span id="btnImage">Load Image</span></label>
-          <label class="muted" style="display:flex;gap:6px;align-items:center"><input id="gridToggle" type="checkbox" checked> <span id="labelGuides">Show Guides</span></label>
-        </div>
-
-        <div style="margin-top:10px">
-          <h3 style="margin:0 0 6px 0" id="hDiag">Model Diagnostics</h3>
-          <div id="diag" class="diag"></div>
-          <p class="muted" style="margin-top:6px" id="diagNote">
-            Host must be <b>HTTPS</b>. CSP must allow <code>cdn.jsdelivr.net</code> (script/connect) and <code>storage.googleapis.com</code> (connect/img).
-          </p>
-        </div>
-
-        <div style="margin-top:10px">
-          <h3 style="margin:0 0 6px 0" id="hAfter">After Mapping</h3>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button id="copyPrompt" class="btn" disabled>Copy Prompt</button>
-            <button id="copyAlt" class="btn" disabled>Copy alt</button>
-            <button id="exportJSON" class="btn" disabled>Export JSON</button>
-            <button id="snapJSON" class="btn" disabled>Snapshot</button>
-          </div>
-          <p class="muted" style="margin-top:6px" id="afterNote">Snapshot saves current frame’s schema as <code>.pf_facemapper.json</code>.</p>
+          <button id="copyPrompt" class="btn" disabled>Copy Prompt</button>
+          <button id="copyAlt" class="btn" disabled>Copy alt</button>
+          <button id="exportJSON" class="btn" disabled>Export JSON</button>
         </div>
       </aside>
 
       <section>
-        <div id="stage" class="card" aria-label="Stage">
+        <div id="stage" class="card" aria-label="Scanner stage">
           <video id="video" playsinline muted></video>
-          <canvas id="prev" width="16" height="9"></canvas>
+          <canvas id="prev" width="16" height="9" aria-hidden="true"></canvas>
           <canvas id="over" width="16" height="9" aria-hidden="true"></canvas>
           <div class="legend" id="legend">—</div>
           <div class="badge" id="badge">shape: —</div>
@@ -148,7 +132,7 @@ footer{margin:20px auto;text-align:center;color:#d6f5ff}
 
         <div class="card">
           <div class="tabs" role="tablist">
-            <button class="tab active" id="t1" aria-controls="p1" role="tab" aria-selected="true">Prompt</button>
+            <button class="tab active" id="t1" aria-controls="p1" role="tab">Prompt</button>
             <button class="tab" id="t2" aria-controls="p2" role="tab">Descriptor</button>
             <button class="tab" id="t3" aria-controls="p3" role="tab">Measurements</button>
             <button class="tab" id="t4" aria-controls="p4" role="tab">JSON</button>
@@ -166,23 +150,12 @@ footer{margin:20px auto;text-align:center;color:#d6f5ff}
 
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
-  <!-- J1NX FLOAT (verbatim IDs; paste your exact styling/JS if you have it) -->
+  <!-- J1NX FLOAT (verbatim IDs; drop in your exact JS/CSS if you have it) -->
   <div class="j1nx-float-true" id="j1nxFloatTrue" style="display:none">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
+    <img src="/j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
     <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
       <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> Hey you 👀—I’m J1nx. Ready to stir up a little trouble, or keep it PG?
-      </div>
-      <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off"/>
-        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
-      </div>
-      <div class="j1nx-bubble-row-true">
-        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
-        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
-      </div>
-      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">
-        Double-tap the chat bubble or type <b>'unlock'</b> to reveal NSFW mode…
+        <b>J1nx:</b> Hey you 👀—ready to scan?
       </div>
     </div>
   </div>
@@ -198,212 +171,163 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
 (__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)
     </pre>
     <div style="color:#88fffd;margin:12px auto 8px auto;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap">
-      Made underground in BC, Canada • #PromptForge •
-      <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> •
-      <a href="https://x.com/GoreandGiggles">Twitter/X</a> •
-      <a href="/legal.html">Legal</a>
+      Made underground in BC • <a href="/legal.html">Legal</a> • <a href="/support.html">Support</a>
     </div>
   </footer>
 
+<!-- App (ESM) -->
 <script type="module">
-/* ---- ESM import (works in CodePen and on-site) ---- */
+/* Import the official task as ESM so it works in CodePen + site */
 import { FilesetResolver, FaceLandmarker, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-/* ---- Config ---- */
+/* Google’s Face Landmarker web guide uses this flow (for VIDEO). :contentReference[oaicite:6]{index=6} */
 const WASM_ROOT = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
 const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
 
-/* ---- i18n ---- */
-const I18N = {
-  en:{brand:"PromptForge — FaceMapper", h1:"PF FaceMapper — VIDEO (“see what the model sees”)", intro:"Real-time MediaPipe Face Landmarker with cinematic overlay: mower scan → detector → feature vectors → tessellation → region highlights. Unified measures/ratios, prompt/alt/desc, JSON export. Not for identification; creative descriptors only.", btnImage:"Load Image", labelGuides:"Show Guides", hDiag:"Model Diagnostics", diagNote:"Host must be HTTPS. CSP must allow cdn.jsdelivr.net (script/connect) and storage.googleapis.com (connect/img).", hAfter:"After Mapping", afterNote:"Snapshot saves current frame’s schema as .pf_facemapper.json", Language:"Language"},
-  es:{brand:"PromptForge — Mapeador Facial", h1:"PF FaceMapper — VÍDEO («lo que ve el modelo»)", intro:"Marcador facial de MediaPipe en tiempo real con superposición cinematográfica: escaneo → detector → vectores → teselación → regiones. Medidas/relaciones unificadas, prompt/alt/desc y exportación JSON. No para identificación.", btnImage:"Cargar imagen", labelGuides:"Mostrar guías", hDiag:"Diagnóstico del modelo", diagNote:"Servidor HTTPS. Permite cdn.jsdelivr.net y storage.googleapis.com en CSP.", hAfter:"Después del mapeo", afterNote:"Snapshot guarda el esquema del fotograma como .pf_facemapper.json", Language:"Idioma"},
-  fr:{brand:"PromptForge — Cartographe de Visage", h1:"PF FaceMapper — VIDÉO («ce que voit le modèle»)", intro:"Repérage facial MediaPipe en temps réel avec surimpression cinématographique : tondeuse → détecteur → vecteurs → tesselation → régions. Mesures/rapports unifiés, prompt/alt/desc, export JSON. Pas pour l’identification.", btnImage:"Charger une image", labelGuides:"Afficher les repères", hDiag:"Diagnostics du modèle", diagNote:"HTTPS requis. Autoriser cdn.jsdelivr.net et storage.googleapis.com dans la CSP.", hAfter:"Après cartographie", afterNote:"Snapshot enregistre le schéma du frame en .pf_facemapper.json", Language:"Langue"}
-};
-const $ = s=>document.querySelector(s);
-const langSel = $('#langSel');
-function applyI18n(lang){
-  const t=I18N[lang]||I18N.en;
-  $('#titleBrand').textContent=t.brand;
-  $('#h1').textContent=t.h1;
-  $('#intro').textContent=t.intro;
-  $('#btnImage').textContent=t.btnImage;
-  $('#labelGuides').textContent=t.labelGuides;
-  $('#hDiag').textContent=t.hDiag;
-  $('#diagNote').innerHTML=t.diagNote.replace('CSP','<abbr title="Content Security Policy">CSP</abbr>');
-  $('#hAfter').textContent=t.hAfter;
-  $('#afterNote').innerHTML=t.afterNote;
-  $('#labelLang').textContent=t.Language;
-}
-applyI18n('en');
-langSel.addEventListener('change',()=>applyI18n(langSel.value));
-
-/* ---- UI refs ---- */
+const $=s=>document.querySelector(s);
 const el={
-  camBtn:$('#enableCam'), file:$('#file'),
+  camBtn:$('#enableCam'), file:$('#file'), snap:$('#snapshot'),
   video:$('#video'), prev:$('#prev'), over:$('#over'), legend:$('#legend'), badge:$('#badge'), grid:$('#gridToggle'),
   outPrompt:$('#outPrompt'), outDesc:$('#outDesc'), outMeasures:$('#outMeasures'), outJSON:$('#outJSON'), outPalette:$('#outPalette'),
-  copyPrompt:$('#copyPrompt'), copyAlt:$('#copyAlt'), exportJSON:$('#exportJSON'), snapJSON:$('#snapJSON'),
+  copyPrompt:$('#copyPrompt'), copyAlt:$('#copyAlt'), exportJSON:$('#exportJSON'),
   tabs:[$('#t1'),$('#t2'),$('#t3'),$('#t4'),$('#t5')], panels:[$('#p1'),$('#p2'),$('#p3'),$('#p4'),$('#p5')],
   diag:$('#diag'), toasts:$('#toasts')
 };
 function toast(msg,kind='ok',ms=2200){ const t=document.createElement('div'); t.className='toast '+kind; t.textContent=msg; el.toasts.appendChild(t); setTimeout(()=>t.remove(),ms); }
 
-/* ---- Tabs ---- */
+/* i18n (EN/ES/FR) */
+const I18N={en:{brand:"PromptForge — FaceMapper",h1:"Turn on the scanner",intro:"Click Enable Camera to start the real-time face mapper…",Language:"Language"},
+           es:{brand:"PromptForge — Mapeador Facial",h1:"Enciende el escáner",intro:"Pulsa Habilitar cámara para iniciar el mapeo en tiempo real…",Language:"Idioma"},
+           fr:{brand:"PromptForge — Cartographe de Visage",h1:"Activez le scanner",intro:"Cliquez sur Activer la caméra pour lancer la cartographie en temps réel…",Language:"Langue"}};
+const langSel=$('#langSel');
+function applyI18n(lang){ const t=I18N[lang]||I18N.en; $('#brand').textContent=t.brand; $('#h1').textContent=t.h1; $('#intro').textContent=t.intro; $('#labelLang').textContent=t.Language; }
+langSel.addEventListener('change',()=>applyI18n(langSel.value)); applyI18n('en');
+
+/* Tabs */
 el.tabs.forEach((tab,i)=>tab.addEventListener('click',()=>{ el.tabs.forEach(t=>t.classList.remove('active')); el.panels.forEach(p=>p.classList.remove('active')); tab.classList.add('active'); el.panels[i].classList.add('active'); }));
 
-/* ---- Canvas + DPR ---- */
+/* DPR + canvas sizing */
 let W=0,H=0; const ctxPrev=el.prev.getContext('2d'), ctxOver=el.over.getContext('2d');
-function scaleCanv(){ const dpr=window.devicePixelRatio||1; const r=el.video.getBoundingClientRect(); if(!r.width||!r.height) return;
+function scaleCanv(){ const dpr=window.devicePixelRatio||1; const r=el.video.getBoundingClientRect(); if(!r.width||!r.height)return;
   [el.prev,el.over].forEach(c=>{ c.width=Math.round(r.width*dpr); c.height=Math.round(r.height*dpr); const g=c.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); });
   W=el.prev.width; H=el.prev.height;
 }
 addEventListener('resize',scaleCanv);
 
-/* ---- Diagnostics ---- */
-(async()=>{
-  const lines=[]; lines.push(`origin: ${location.protocol}//${location.host}`); lines.push(`https: ${location.protocol==='https:'}`);
+/* Diagnostics (HTTPS + model availability + import success) */
+(async()=>{ const lines=[]; lines.push(`origin: ${location.protocol}//${location.host}`); lines.push(`https: ${location.protocol==='https:'}`);
   try{ const r=await fetch(MODEL_URL,{method:'HEAD'}); lines.push(`HEAD model: ${r.status}`); }catch(e){ lines.push(`HEAD model BLOCKED: ${e?.message||'no details'}`); }
-  lines.push(`ESM import: FilesetResolver=${!!FilesetResolver}, DrawingUtils=${!!DrawingUtils}`);
-  el.diag.textContent=lines.join('\n');
+  lines.push(`ESM import OK: FilesetResolver=${!!FilesetResolver}, DrawingUtils=${!!DrawingUtils}`);
+  el.diag.textContent=lines.join('\\n');
 })();
 
-/* ---- Face Landmarker (VIDEO) ---- */
+/* Face Landmarker (VIDEO), per the official guide. :contentReference[oaicite:7]{index=7} */
 let faceTask=null, running=false, lastVideoTime=-1;
 async function ensureFace(){
   if(faceTask) return true;
   try{
-    const fs = await FilesetResolver.forVisionTasks(WASM_ROOT);               /* official flow */  /* :contentReference[oaicite:4]{index=4} */
-    faceTask = await FaceLandmarker.createFromOptions(fs,{
-      baseOptions:{ modelAssetPath: MODEL_URL },
-      runningMode:"VIDEO", numFaces:1
-    });                                                                       /* :contentReference[oaicite:5]{index=5} */
-    toast('Model loaded ✓','ok');
-    return true;
-  }catch(e){
-    toast('Model load failed. Check HTTPS/CSP.','bad',4000);
-    el.diag.textContent += `\nINIT ERROR: ${(e&&e.message)||e}`;
-    return false;
-  }
+    const fs = await FilesetResolver.forVisionTasks(WASM_ROOT);
+    faceTask = await FaceLandmarker.createFromOptions(fs,{ baseOptions:{ modelAssetPath:MODEL_URL }, runningMode:"VIDEO", numFaces:1 });
+    toast('Model loaded ✓','ok'); return true;
+  }catch(e){ toast('Model load failed. Check HTTPS/CSP.','bad',4000); el.diag.textContent+=`\\nINIT ERROR: ${(e&&e.message)||e}`; return false; }
 }
 
-/* ---- Camera (getUserMedia) ---- */
+/* Camera + loop: prefer requestVideoFrameCallback with rAF fallback. :contentReference[oaicite:8]{index=8} */
+function hasRVFC(){ return 'requestVideoFrameCallback' in HTMLVideoElement.prototype; }
 async function startCam(){
   if(!(await ensureFace())) return;
-  const stream = await navigator.mediaDevices.getUserMedia({                 /* :contentReference[oaicite:6]{index=6} */
-    video:{facingMode:"user", width:{ideal:1280}, height:{ideal:720}}, audio:false
-  });
-  el.video.srcObject=stream; await el.video.play(); scaleCanv(); running=true; lastVideoTime=-1; loop();
+  const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:"user", width:{ideal:1280}, height:{ideal:720} }, audio:false });
+  el.video.srcObject=stream; await el.video.play(); scaleCanv(); running=true; lastVideoTime=-1;
+  if(hasRVFC()){ const step=async(_now,meta)=>{ if(!running) return; ctxPrev.drawImage(el.video,0,0,W,H); const res=await faceTask.detectForVideo(el.video, meta.mediaTime*1000|0); render(res); el.video.requestVideoFrameCallback(step); }; el.video.requestVideoFrameCallback(step); }
+  else { const raf=async()=>{ if(!running) return; if(el.video.readyState>=2 && el.video.currentTime!==lastVideoTime){ lastVideoTime=el.video.currentTime; ctxPrev.drawImage(el.video,0,0,W,H); const res=await faceTask.detectForVideo(el.video, lastVideoTime*1000|0); render(res); } requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
 }
-el.video.addEventListener('loadeddata', scaleCanv);
 
-/* ---- Image loader (still) ---- */
+/* Image (still) */
 el.file.addEventListener('change',async ev=>{
   const f=ev.target.files?.[0]; if(!f) return;
   const url=URL.createObjectURL(f); const img=new Image();
-  img.onload=async()=>{ if(!(await ensureFace())) return;
-    scaleCanv(); ctxPrev.clearRect(0,0,W,H);
+  img.onload=async()=>{ if(!(await ensureFace())) return; scaleCanv(); ctxPrev.clearRect(0,0,W,H);
     const ar=img.width/img.height, car=W/H; let dw,dh,dx,dy; if(ar>car){ dw=W; dh=W/ar; dx=0; dy=(H-dh)/2; } else { dh=H; dw=H*ar; dy=0; dx=(W-dw)/2; }
-    ctxPrev.drawImage(img,dx,dy,dw,dh);
-    const res = await faceTask.detect(img); render(res); URL.revokeObjectURL(url);
-  };
+    ctxPrev.drawImage(img,dx,dy,dw,dh); const res=await faceTask.detect(img); render(res); URL.revokeObjectURL(url); };
   img.src=url;
 });
 
-/* ---- Cinematic grid + mower ---- */
-let scanRAF=0, scanY=0, scanT=0, gridOn=true;
+/* Cinematic grid + scan bar */
+let scanRAF=0, scanY=0, scanT=0, gridOn=true, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function drawGrid(){ const step=(W||1)/18; ctxOver.save(); ctxOver.strokeStyle='rgba(100,242,227,0.18)'; ctxOver.lineWidth=1;
   for(let x=0;x<=W;x+=step){ ctxOver.beginPath(); ctxOver.moveTo(x,0); ctxOver.lineTo(x,H); ctxOver.stroke(); }
   for(let y=0;y<=H;y+=step){ ctxOver.beginPath(); ctxOver.moveTo(0,y); ctxOver.lineTo(W,y); ctxOver.stroke(); }
-  ctxOver.restore();
-}
-function scanStart(text){ cancelAnimationFrame(scanRAF); const loop=()=>{ ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); ctxOver.fillStyle='rgba(35,215,186,0.12)'; ctxOver.fillRect(0,scanY,W,8);
+  ctxOver.restore(); }
+function scanStart(text){ if(reduce) return; cancelAnimationFrame(scanRAF); const loop=()=>{ ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); ctxOver.fillStyle='rgba(35,215,186,0.12)'; ctxOver.fillRect(0,scanY,W,8);
   const px=(Math.sin(scanT/18)*.5+.5)*W; ctxOver.beginPath(); ctxOver.arc(px,scanY+4,5,0,Math.PI*2); ctxOver.fillStyle='rgba(255,90,122,.85)'; ctxOver.fill();
   if(text){ ctxOver.fillStyle='rgba(232,248,255,.92)'; ctxOver.font='12px ui-monospace,monospace'; ctxOver.fillText(text,10,18); }
-  scanY=(scanY+3)%H; scanT++; scanRAF=requestAnimationFrame(loop); }; loop();
-}
+  scanY=(scanY+3)%H; scanT++; scanRAF=requestAnimationFrame(loop); }; loop(); }
 function scanStop(){ cancelAnimationFrame(scanRAF); ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); }
 
-/* ---- DrawingUtils overlays ---- */
-let DU=null; function du(){ return DU||(DU=new DrawingUtils(ctxOver)); }     /* official helper */ /* :contentReference[oaicite:7]{index=7} */
+/* DrawingUtils + helpers (connector sets & tessellation per demo). :contentReference[oaicite:9]{index=9} */
+let DU=null; function du(){ return DU||(DU=new DrawingUtils(ctxOver)); }
 const F=()=>FaceLandmarker;
 function P(p){ return { x:p.x*W, y:p.y*H }; }
 function bboxFrom(lm){ const xs=lm.map(p=>P(p).x), ys=lm.map(p=>P(p).y); return {minX:Math.min(...xs),maxX:Math.max(...xs),minY:Math.min(...ys),maxY:Math.max(...ys)}; }
-function dist(a,b){ const dx=a.x+b.x-(a.x+a.x); /* keep math inline */ return Math.hypot(a.x-b.x,a.y-b.y); }
 function drawCorners(b){ ctxOver.save(); ctxOver.strokeStyle='rgba(100,242,227,.7)'; ctxOver.lineWidth=1.4; ctxOver.strokeRect(b.minX,b.minY,b.maxX-b.minX,b.maxY-b.minY);
   const L=b.minX,T=b.minY,R=b.maxX,B=b.maxY,Lw=24,Lh=18; ctxOver.strokeStyle='rgba(35,215,186,.95)'; ctxOver.lineWidth=2;
   [[L,T],[R,T],[L,B],[R,B]].forEach(([x,y])=>{ ctxOver.beginPath(); ctxOver.moveTo(x,y+Lh); ctxOver.lineTo(x,y); ctxOver.lineTo(x+Lw,y); ctxOver.stroke(); }); ctxOver.restore(); }
 function eyeAngle(lm){ const a=P(lm[133]), b=P(lm[362]); const deg=Math.atan2(b.y-a.y,b.x-a.x)*57.2958; ctxOver.save(); ctxOver.strokeStyle='rgba(180,255,240,.9)'; ctxOver.lineWidth=1.4;
-  ctxOver.beginPath(); ctxOver.moveTo(a.x,a.y); ctxOver.lineTo(b.x,b.y); ctxOver.stroke(); const mX=(a.x+b.x)/2,mY=(a.y+b.y)/2; ctxOver.beginPath(); ctxOver.arc(mX,mY,18,0,Math.PI*2); ctxOver.stroke();
-  ctxOver.fillStyle='#d8ffff'; ctxOver.font='11px ui-monospace,monospace'; ctxOver.fillText(deg.toFixed(2)+'°',mX+22,mY+4); ctxOver.restore(); return +deg.toFixed(2); }
+  ctxOver.beginPath(); ctxOver.moveTo(a.x,a.y); ctxOver.lineTo(b.x,b.y); ctxOver.stroke(); const mX=(a.x+b.x)/2,mY=(a.y+b.y)/2; ctxOver.beginPath(); ctxOver.arc(mX,mY,18,0,Math.PI*2); ctxOver.stroke(); ctxOver.fillStyle='#d8ffff'; ctxOver.font='11px ui-monospace,monospace'; ctxOver.fillText(deg.toFixed(2)+'°',mX+22,mY+4); ctxOver.restore(); return +deg.toFixed(2); }
 function lipTick(lm){ const u=P(lm[13]), l=P(lm[14]); ctxOver.save(); ctxOver.strokeStyle='rgba(255,210,102,.95)'; ctxOver.lineWidth=2; ctxOver.beginPath(); ctxOver.moveTo((u.x+l.x)/2,u.y); ctxOver.lineTo((u.x+l.x)/2,l.y); ctxOver.stroke(); ctxOver.restore(); }
 function highlightRegions(lm){ const d=du(); const drawC=(conn,col)=>d.drawConnectors(lm,conn,{color:col,lineWidth:2});
   drawC(F().FACE_LANDMARKS_RIGHT_EYE,'rgba(255,255,255,.95)'); drawC(F().FACE_LANDMARKS_LEFT_EYE,'rgba(255,255,255,.95)');
   drawC(F().FACE_LANDMARKS_RIGHT_EYEBROW,'rgba(255,220,120,.95)'); drawC(F().FACE_LANDMARKS_LEFT_EYEBROW,'rgba(255,220,120,.95)');
-  drawC(F().FACE_LANDMARKS_LIPS,'rgba(255,120,160,.95)'); drawC(F().FACE_LANDMARKS_FACE_OVAL,'rgba(140,255,220,.95)');
-}
+  drawC(F().FACE_LANDMARKS_LIPS,'rgba(255,120,160,.95)'); drawC(F().FACE_LANDMARKS_FACE_OVAL,'rgba(140,255,220,.95)'); }
 
-/* ---- Palette ---- */
-function regionAvg(rect){ const sx=Math.max(0,Math.floor(rect.minX)), sy=Math.max(0,Math.floor(rect.minY)); const w=Math.max(1,(rect.maxX-rect.minX)|0), h=Math.max(1,(rect.maxY-rect.minY)|0);
-  const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h; const t=tmp.getContext('2d'); t.drawImage(el.prev,sx,sy,w,h,0,0,w,h);
-  const d=t.getImageData(0,0,w,h).data; let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} const hex=v=>('#'+v.toString(16).padStart(2,'0'));
+/* Palette + metrics */
+function regionAvg(rect){ const sx=Math.max(0,Math.floor(rect.minX)), sy=Math.max(0,Math.floor(rect.minY));
+  const w=Math.max(1,(rect.maxX-rect.minX)|0), h=Math.max(1,(rect.maxY-rect.minY)|0); const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+  const t=tmp.getContext('2d'); t.drawImage(el.prev,sx,sy,w,h,0,0,w,h); const d=t.getImageData(0,0,w,h).data; let R=0,G=0,B=0,n=0; for(let i=0;i<d.length;i+=4){R+=d[i];G+=d[i+1];B+=d[i+2];n++;} const hex=v=>('#'+v.toString(16).padStart(2,'0'));
   const r=(R/n)|0,g=(G/n)|0,b=(B/n)|0; return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''); }
 function paletteFrom(lm,b){ const hair={minX:b.minX,maxX:b.maxX,minY:Math.max(0,b.minY-0.18*(b.maxY-b.minY)),maxY:b.minY};
   const skin={minX:b.minX+(b.maxX-b.minX)*.3,maxX:b.maxX-(b.maxX-b.minX)*.3,minY:b.minY+(b.maxY-b.minY)*.45,maxY:b.minY+(b.maxY-b.minY)*.7};
-  const e=P(lm[133]); const eye={minX:e.x-8,maxX:e.x+8,minY:e.y-8,maxY:e.y+8}; return { hair:regionAvg(hair), skin:regionAvg(skin), eyes:regionAvg(eye) };
-}
-
-/* ---- Schema + text ---- */
+  const e=P(lm[133]); const eye={minX:e.x-8,maxX:e.x+8,minY:e.y-8,maxY:e.y+8}; return { hair:regionAvg(hair), skin:regionAvg(skin), eyes:regionAvg(eye) }; }
+function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
 function classifyShape(jf,cf){ if(cf>0.7 && jf>0.6) return 'square'; if(cf>0.72 && jf<0.55) return 'heart'; if(jf<0.52 && cf<0.62) return 'oval'; if(jf>0.62 && cf<0.60) return 'triangle'; return 'round'; }
 function schemaFor({faceH,jawW,cheekW,foreheadH,lipT,eyeDeg,ratios,shape,pal,frame,w,h,lm}){
   return {
     version:"pf_facemapper_3",
-    indices:{ faceH:[10,152], jawW:[234,454], cheekW:[234,454], foreheadH:[8,10], lipT:[13,14], eyeAngle:[133,362] },  /* 468-pt family */  /* :contentReference[oaicite:8]{index=8} */
+    indices:{ faceH:[10,152], jawW:[234,454], cheekW:[234,454], foreheadH:[8,10], lipT:[13,14], eyeAngle:[133,362] },
     frame, image:{ width:w, height:h },
     measures_px:{ face_height:+faceH.toFixed(4), jaw_width:+jawW.toFixed(4), cheek_width:+cheekW.toFixed(4), forehead_height:+foreheadH.toFixed(4), lip_thickness:+lipT.toFixed(4), eye_angle_deg:+eyeDeg.toFixed(2) },
     ratios:{ jaw_face:+ratios.jaw_face, cheek_face:+ratios.cheek_face, forehead_face:+ratios.forehead_face, lip_face:+ratios.lip_face },
-    shape, palette_hex:pal,
-    landmarks_norm: lm.map(p=>[+p.x.toFixed(5),+p.y.toFixed(5),+(p.z||0).toFixed(5)])
+    shape, palette_hex:pal, landmarks_norm: lm.map(p=>[+p.x.toFixed(5),+p.y.toFixed(5),+(p.z||0).toFixed(5)])
   };
 }
-function promptText(shape,ratios,pal,eyeDeg){
-  const r=`jaw/face ${ratios.jaw_face} • cheek/face ${ratios.cheek_face} • forehead/face ${ratios.forehead_face} • lip/face ${ratios.lip_face} • eye-angle ${eyeDeg}`;
-  return [`face-shape: ${shape}`,`hair-color: ${pal.hair}`,`skin-tone: ${pal.skin}`,`eye-hue: ${pal.eyes}`,`ratios: ${r}`].join('\n');
-}
-function descriptorText(shape,ratios,eyeDeg,pal){
-  const parts=[]; const map={oval:'soft oval outline',round:'rounded outline',square:'defined square outline',heart:'heart-tapered outline',triangle:'tapered jawline'};
+function promptText(shape,ratios,pal,eyeDeg){ const r=`jaw/face ${ratios.jaw_face} • cheek/face ${ratios.cheek_face} • forehead/face ${ratios.forehead_face} • lip/face ${ratios.lip_face} • eye-angle ${eyeDeg}`;
+  return [`face-shape: ${shape}`,`hair-color: ${pal.hair}`,`skin-tone: ${pal.skin}`,`eye-hue: ${pal.eyes}`,`ratios: ${r}`].join('\\n'); }
+function descriptorText(shape,ratios,eyeDeg,pal){ const parts=[],map={oval:'soft oval outline',round:'rounded outline',square:'defined square outline',heart:'heart-tapered outline',triangle:'tapered jawline'};
   if(map[shape]) parts.push(map[shape]); parts.push((ratios.jaw_face>0.6?'strong':'moderate')+' jaw'); parts.push((ratios.cheek_face>0.64?'pronounced':'balanced')+' cheekbones');
   parts.push((eyeDeg>2?'slight up-tilted':eyeDeg<-2?'slight down-tilted':'level')+' eye line'); parts.push((ratios.forehead_face>0.23?'taller':'balanced')+' forehead'); parts.push((ratios.lip_face>0.045?'medium ':'subtle ')+'lips');
-  return `${parts.join(', ')}. Palette — hair ${pal.hair}, skin ${pal.skin}, eyes ${pal.eyes}.`;
-}
+  return `${parts.join(', ')}. Palette — hair ${pal.hair}, skin ${pal.skin}, eyes ${pal.eyes}.`; }
 function altText(shape,pal){ return `portrait with ${shape} face shape; hair ${pal.hair}, skin ${pal.skin}, eye hue ${pal.eyes}`; }
 
-/* ---- VIDEO loop (official video mode API) ---- */
-async function loop(){
-  if(!running || !faceTask || el.video.readyState<2){ requestAnimationFrame(loop); return; }
-  if(el.video.currentTime===lastVideoTime){ requestAnimationFrame(loop); return; }
-  lastVideoTime = el.video.currentTime;
-  ctxPrev.drawImage(el.video,0,0,W,H);
-  const result = await faceTask.detectForVideo(el.video, Math.round(el.video.currentTime*1000)); /* :contentReference[oaicite:9]{index=9} */
-  render(result);
-  requestAnimationFrame(loop);
-}
-
-/* ---- Render + Outputs ---- */
+/* Render per frame */
 function render(res){
   ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid();
-  if(!res?.faceLandmarks?.length){ el.legend.textContent='—'; el.badge.style.display='none'; el.copyPrompt.disabled=true; el.copyAlt.disabled=true; el.exportJSON.disabled=true; el.snapJSON.disabled=true; return; }
+  if(!res?.faceLandmarks?.length){ el.legend.textContent='—'; el.badge.style.display='none'; el.copyPrompt.disabled=true; el.copyAlt.disabled=true; el.exportJSON.disabled=true; el.snap.disabled=true; return; }
   const lm=res.faceLandmarks[0];
   const box=bboxFrom(lm); drawCorners(box);
   const eyeDeg=eyeAngle(lm); lipTick(lm);
-  du().drawConnectors(lm, F().FACE_LANDMARKS_TESSELLATION||[], {color:'rgba(100,242,227,.95)', lineWidth:0.9}); /* tessellation */  /* :contentReference[oaicite:10]{index=10} */
+  du().drawConnectors(lm, F().FACE_LANDMARKS_TESSELLATION||[], {color:'rgba(100,242,227,.95)', lineWidth:0.9});  /* demo tessellation pattern. :contentReference[oaicite:10]{index=10} */
   highlightRegions(lm);
 
   const Q=i=>P(lm[i]); const faceH=dist(Q(10),Q(152)), jawW=dist(Q(234),Q(454)), cheekW=jawW, foreheadH=dist(Q(8),Q(10)), lipT=dist(Q(13),Q(14));
   const ratios={ jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3), forehead_face:+(foreheadH/faceH).toFixed(3), lip_face:+(lipT/faceH).toFixed(3) };
-  const shape=classifyShape(ratios.jaw_face, ratios.cheek_face); const pal=paletteFrom(lm,box);
-  el.badge.style.display='block'; el.badge.textContent='shape: '+shape; el.legend.textContent=`eye-angle: ${eyeDeg}°, jaw/face: ${ratios.jaw_face}, cheek/face: ${ratios.cheek_face}`;
+  const shape=classifyShape(ratios.jaw_face, ratios.cheek_face), pal=paletteFrom(lm,box);
 
-  const prompt=promptText(shape,ratios,pal,eyeDeg); const desc=descriptorText(shape,ratios,eyeDeg,pal); const schema=schemaFor({ faceH,jawW,cheekW,foreheadH,lipT,eyeDeg,ratios,shape,pal, frame:{type:'video',ms:Math.round(el.video.currentTime*1000)}, w:W, h:H, lm });
+  el.badge.style.display='block'; el.badge.textContent='shape: '+shape;
+  el.legend.textContent=`eye-angle: ${eyeDeg}°, jaw/face: ${ratios.jaw_face}, cheek/face: ${ratios.cheek_face}`;
+
+  const prompt=promptText(shape,ratios,pal,eyeDeg), desc=descriptorText(shape,ratios,eyeDeg,pal);
+  const schema=schemaFor({ faceH,jawW,cheekW,foreheadH,lipT,eyeDeg,ratios,shape,pal, frame:{type:'video',ms:Math.round(el.video.currentTime*1000)}, w:W, h:H, lm });
+
   el.outPrompt.textContent=prompt; el.outDesc.textContent=desc; el.outJSON.textContent=JSON.stringify(schema,null,2);
   el.outMeasures.textContent=
 `face_height: ${faceH.toFixed(4)}
@@ -417,31 +341,22 @@ ratios:
   cheek/face: ${ratios.cheek_face}
   forehead/face: ${ratios.forehead_face}
   lip/face: ${ratios.lip_face}`;
-  el.outPalette.textContent=`hair: ${pal.hair}\nskin: ${pal.skin}\neyes: ${pal.eyes}`;
+  el.outPalette.textContent=`hair: ${pal.hair}\\nskin: ${pal.skin}\\neyes: ${pal.eyes}`;
 
-  el.copyPrompt.disabled=false; el.copyAlt.disabled=false; el.exportJSON.disabled=false; el.snapJSON.disabled=false;
+  el.copyPrompt.disabled=false; el.copyAlt.disabled=false; el.exportJSON.disabled=false; el.snap.disabled=false;
 }
 
-/* ---- Wire UI ---- */
+/* Wire UI */
 el.grid.addEventListener('change',e=>{ gridOn=e.target.checked; ctxOver.clearRect(0,0,W,H); if(gridOn) drawGrid(); });
-$('#enableCam').addEventListener('click',()=>startCam().then(()=>toast('Camera enabled ✓','ok')).catch(e=>toast('Camera blocked','bad')));
+$('#enableCam').addEventListener('click',()=>startCam().then(()=>{ scanStop(); toast('Camera enabled ✓','ok'); }).catch(()=>toast('Camera blocked','bad')));
 $('label.btn').addEventListener('click',()=>el.file.click());
+$('#snapshot').addEventListener('click',()=>{ el.exportJSON.click(); });
 el.copyPrompt.addEventListener('click',()=>{ navigator.clipboard.writeText(el.outPrompt.textContent||''); toast('Prompt copied ✓','ok'); });
-el.copyAlt.addEventListener('click',()=>{ const shape=el.badge.textContent.replace('shape: ','')||'face'; const palText=(el.outPalette.textContent||''); navigator.clipboard.writeText(`ALT: portrait with ${shape} face; ${palText.replace(/\n/g,', ')}`); toast('Alt copied ✓','ok'); });
+el.copyAlt.addEventListener('click',()=>{ const shape=el.badge.textContent.replace('shape: ','')||'face'; const palText=(el.outPalette.textContent||''); navigator.clipboard.writeText(`ALT: portrait with ${shape} face; ${palText.replace(/\\n/g,', ')}`); toast('Alt copied ✓','ok'); });
 el.exportJSON.addEventListener('click',()=>{ const blob=new Blob([el.outJSON.textContent||'{}'],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='face.pf_facemapper.json'; a.click(); URL.revokeObjectURL(a.href); toast('JSON exported ✓','ok'); });
-el.snapJSON.addEventListener('click',()=>el.exportJSON.click());
 
-/* ---- Start with a scan effect until ready ---- */
+/* Start with a scan effect until camera plays */
 scanStart('Waiting for camera…');
-
-/* ---- J1NX simple toggles (keep IDs/classes; yours can replace this) ---- */
-(function(){
-  const float=$('#j1nxFloatTrue'), cut=$('#j1nxCutoutTrue'), bubble=$('#j1nxBubbleTrueMain'); if(!float) return;
-  function isMobile(){return innerWidth<700;}
-  function set(){ if(isMobile()){ float.classList.remove('j1nx-open'); bubble.style.display='none'; } else { float.classList.add('j1nx-open'); bubble.style.display='flex'; } }
-  addEventListener('resize',set); set();
-  cut?.addEventListener('click',()=>{ if(isMobile()){ const open=float.classList.contains('j1nx-open'); float.classList.toggle('j1nx-open',!open); bubble.style.display=open?'none':'flex'; } });
-})();
 </script>
 </body>
 </html>
