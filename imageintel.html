@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
 <title>PF FaceMapper — Real-Time Face Mesh • Detect → Measure → Mesh → Highlight (On-Device)</title>
-<meta name="description" content="PromptForge FaceMapper: a movie-scanner style, on-device face mapping tool. Live overlays, measurements & ratios, palette sampling, JSON export. SFW front; NSFW labs isolated."/>
+<meta name="description" content="PromptForge FaceMapper: movie-scanner style, on-device face mapping. Live overlays, measurements & ratios, palette sampling, JSON export. SFW front; NSFW labs isolated."/>
 <link rel="canonical" href="https://promptforge.online/facemapper.html"/>
 
 <!-- Open Graph -->
@@ -22,7 +22,7 @@
 <meta name="twitter:description" content="Visible scan → detect → measure → mesh → highlight. Client-only. Copy prompts, export JSON."/>
 <meta name="twitter:image" content="/assets/og/facemapper.png"/>
 
-<!-- CSP: allow Tasks-Vision (ESM/WASM) & GCS model. Keep styles inline for PF vibe. -->
+<!-- CSP: allow Tasks-Vision ESM/WASM + GCS model (and inline styles for PF vibe) -->
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
   script-src 'self' https://cdn.jsdelivr.net;
@@ -224,7 +224,7 @@ footer{margin:0 auto;padding:0 0 22px 0;text-align:center;max-width:920px;width:
     <div class="micro">
       • Everything runs <b>on-device</b>. No uploads. Best in good light ~0.5–1.0 m from camera.<br/>
       • Measurements are per-frame (px) and normalized ratios; shapes are deterministic thresholds.<br/>
-      • SFW on this page. 18+ analysis tools live in <i>/labs</i> (noindex, no ads).
+      • SFW on this page. 18+ tools live in <i>/labs</i> (noindex, no ads).
     </div>
   </section>
 
@@ -340,11 +340,11 @@ U|  _"\ uU |  _"\ u  \/"_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \/"_ \/U |  _"
 })();
 </script>
 
-<!-- ====== FACEMAPPER CORE ====== -->
+<!-- ====== FACEMAPPER CORE (using correct ESM bundle URL) ====== -->
 <script type="module">
-/* ESM MediaPipe Tasks Vision */
-import { FilesetResolver, FaceLandmarker, DrawingUtils }
-  from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+/* Correct ESM import: use the actual bundle URL, not a bare specifier */
+import visionModule from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
+const { FilesetResolver, FaceLandmarker, DrawingUtils } = visionModule;
 
 const WASM_ROOT = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
 const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
@@ -539,15 +539,18 @@ function render(res, kind, dim){
   mower.style.opacity=.08; statusChip.textContent='status: mapping…';
 
   // Tessellation + regions
-  try{ draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:'rgba(100,242,227,.95)',lineWidth:.9}); }catch{}
-  draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,     {color:'rgba(255,255,255,.95)',lineWidth:2});
-  draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,      {color:'rgba(255,255,255,.95)',lineWidth:2});
-  draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW, {color:'rgba(255,220,120,.95)',lineWidth:2});
-  draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW,  {color:'rgba(255,220,120,.95)',lineWidth:2});
-  draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,          {color:'rgba(255,120,160,.95)',lineWidth:2});
-  draw.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,     {color:'rgba(140,255,220,.95)',lineWidth:2});
+  try{ (new DrawingUtils(ctxOver)).drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:'rgba(100,242,227,.95)',lineWidth:.9}); }catch{}
+  const d = new DrawingUtils(ctxOver);
+  d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,     {color:'rgba(255,255,255,.95)',lineWidth:2});
+  d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,      {color:'rgba(255,255,255,.95)',lineWidth:2});
+  d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW, {color:'rgba(255,220,120,.95)',lineWidth:2});
+  d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW,  {color:'rgba(255,220,120,.95)',lineWidth:2});
+  d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,          {color:'rgba(255,120,160,.95)',lineWidth:2});
+  d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,     {color:'rgba(140,255,220,.95)',lineWidth:2});
 
-  if(showGuides) guides(lm,W,H);
+  if(showGuides){
+    guides(lm,W,H);
+  }
 
   lastSchema = buildSchema(kind, (kind==='video')?(performance.now()|0):undefined, dim.w, dim.h, lm);
 }
@@ -564,7 +567,7 @@ async function startCam(){
 }
 btnCam.addEventListener('click', startCam);
 
-/* Image load (robust) */
+/* Image load */
 btnImgBtn.addEventListener('click', ()=> fileImg.click());
 fileImg.addEventListener('change', async ()=>{
   const f=fileImg.files && fileImg.files[0]; if(!f){ toast('No file selected','warn'); return; }
@@ -572,11 +575,10 @@ fileImg.addEventListener('change', async ()=>{
     try{
       await face.setOptions({runningMode:'IMAGE'});
       const W=cPrev.width/(devicePixelRatio||1), H=cPrev.height/(devicePixelRatio||1);
-      // draw image to preview (center fit)
+      // center-fit
       ctxPrev.clearRect(0,0,W,H);
       const r=Math.min(W/img.width, H/img.height), w=img.width*r, h=img.height*r, x=(W-w)/2, y=(H-h)/2;
       ctxPrev.drawImage(img, x, y, w, h);
-      // detect
       const res = await face.detect(img);
       render(res,'image',{w:img.width,h:img.height,drawW:W,drawH:H});
       btnShot.disabled=false; toast('Image mapped','ok'); statusChip.textContent='status: image';
@@ -606,7 +608,7 @@ function loopVideo(){
   }
 }
 
-/* Snapshot JSON (lastSchema) */
+/* Snapshot */
 btnShot.addEventListener('click', ()=>{
   if(!lastSchema){ toast('Nothing to snapshot','warn'); return; }
   const blob=new Blob([JSON.stringify(lastSchema,null,2)],{type:'application/json'});
@@ -614,8 +616,6 @@ btnShot.addEventListener('click', ()=>{
   document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},200);
   toast('Snapshot exported','ok');
 });
-
-/* A11y: aria-live chips + visible focus rings default. */
 </script>
 </body>
 </html>
