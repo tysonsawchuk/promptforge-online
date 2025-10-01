@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PF — ImageIntel (Face Mesh + Body Overlay — Stable)</title>
+<title>PF — ImageIntel (Face Mesh + Body + Cloud)</title>
 <meta name="robots" content="noindex,nofollow"/>
-<meta name="description" content="ImageIntel with persistent base image, MediaPipe face mesh tessellation overlay, pose/body skeleton, and scanner reveal. NSFW heuristics optional."/>
+<meta name="description" content="ImageIntel with persistent IMG base, MediaPipe face mesh & pose overlays, and optional Hugging Face cloud assist (BLIP caption, DETR objects)."/>
 <style>
 :root{
-  --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --ok:#55d69a; --bad:#ff6b6b; --warn:#ffd166; --dim:#9db1bd;
+  --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --vio:#be9cff;
+  --ok:#55d69a; --bad:#ff6b6b; --warn:#ffd166; --dim:#9db1bd;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace}
@@ -20,18 +21,18 @@ h1{margin:0 0 10px;font-size:1.1rem}
 .btn{cursor:pointer;border:1.5px solid var(--aqua);background:#131922;color:#b8fff6;padding:8px 12px;border-radius:10px;font-weight:700}
 .btn:hover{background:var(--aqua);color:#0e131a;border-color:#fff}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
-.step{border:1px solid var(--edge);border-radius:10px;padding:10px;background:#0f161f}
-.step.active{border-color:var(--aqua);box-shadow:0 0 0 2px #64f2e333 inset}
 
 .stage{position:relative;border:1px solid var(--edge);border-radius:12px;background:#0d131a;overflow:hidden}
 .inner{position:relative;aspect-ratio:16/9}
-#baseImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center center;display:block;user-select:none;pointer-events:none}
+#baseImg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;display:block;user-select:none;pointer-events:none}
 #over{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
 
 .legend{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;z-index:3}
+.scanLine{position:absolute;height:2px;background:linear-gradient(90deg, transparent, #64f2e3, transparent);box-shadow:0 0 10px #64f2e3aa;opacity:0;pointer-events:none;transition:opacity .12s ease}
 
-.scanLine{position:absolute;height:2px;background:linear-gradient(90deg, transparent, #64f2e3, transparent);box-shadow:0 0 12px #64f2e3aa;opacity:0;pointer-events:none;transition:opacity .12s ease}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.step{border:1px solid var(--edge);border-radius:10px;padding:10px;background:#0f161f}
+.step.active{border-color:var(--aqua);box-shadow:0 0 0 2px #64f2e333 inset}
 
 .tab-head{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .tab-head button{cursor:pointer;border:1px solid var(--edge);background:#0e141a;color:var(--ink);padding:8px 12px;border-radius:9px}
@@ -40,26 +41,23 @@ h1{margin:0 0 10px;font-size:1.1rem}
 .tab.active{display:block}
 textarea.out{width:100%;min-height:120px;background:#0b1117;color:#d8faff;border:1px solid #1b242e;border-radius:8px;padding:10px}
 
-.toastbox{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:5000}
-.toast{background:#121823ee;border:1px solid var(--edge);color:#defaff;padding:10px 12px;border-radius:10px;min-width:220px;box-shadow:0 4px 18px #0006}
-
 .diag{margin-top:12px;border:1px dashed var(--edge);padding:10px;border-radius:10px;background:#0c1117}
 .kv{display:grid;grid-template-columns:160px 1fr;gap:6px 12px}
 code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid #1b242e;border-radius:8px;padding:8px;margin-top:6px;color:#ffb4b4}
+
+.toastbox{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:5000}
+.toast{background:#121823ee;border:1px solid var(--edge);color:#defaff;padding:10px 12px;border-radius:10px;min-width:220px;box-shadow:0 4px 18px #0006}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel — Face Mesh + Body Overlay</h1>
-
-  <!-- Status -->
+  <h1>ImageIntel — Face Mesh + Body + Cloud</h1>
   <div class="row">
     <span class="badge">Bundle: <b id="bundleState">…</b></span>
     <span class="badge">Models: <b id="modelState">…</b></span>
     <span class="badge">Ready: <b id="readyState">no</b></span>
   </div>
 
-  <!-- Stage -->
   <div class="stage">
     <div class="inner" id="stage">
       <img id="baseImg" alt=""/>
@@ -72,7 +70,6 @@ code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid 
     </div>
   </div>
 
-  <!-- Wizard -->
   <div class="stepper">
     <div class="step active" id="s1">
       <h3>Step 1 — Load</h3>
@@ -81,7 +78,7 @@ code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid 
         <button class="btn" id="demo">Load Demo</button>
         <button class="btn" id="next1" disabled>Next</button>
       </div>
-      <div class="note">Pick any image. It appears instantly and stays during scroll/resize.</div>
+      <div class="note">Load any image; it stays visible (IMG base). Overlays draw over it.</div>
     </div>
 
     <div class="step" id="s2">
@@ -90,7 +87,7 @@ code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid 
         <label><input type="checkbox" id="optFace" checked> Face overlay</label>
         <label><input type="checkbox" id="optBody"> Body overlay</label>
         <label><input type="checkbox" id="optNSFW"> NSFW heuristics</label>
-        <label><input type="checkbox" id="optObjects"> Objects (future)</label>
+        <label><input type="checkbox" id="optObjects"> Objects (cloud)</label>
       </div>
       <div class="row">
         <label>Detail <input id="detail" type="range" min="1" max="3" step="1" value="2"></label>
@@ -105,10 +102,11 @@ code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid 
     <div class="step" id="s3">
       <h3>Step 3 — Cloud (optional)</h3>
       <div class="row">
-        <label><input type="checkbox" id="useCloud"> HuggingFace</label>
+        <label><input type="checkbox" id="useCloud"> Use Hugging Face</label>
         <input id="hfToken" placeholder="hf_... token" style="min-width:320px;border:1px solid var(--edge);background:#0f141a;color:#fff;padding:6px 10px;border-radius:8px">
         <button class="btn" id="run" disabled>Run Analysis</button>
       </div>
+      <div class="note">Calls BLIP caption + DETR objects via official @huggingface/inference SDK.</div>
     </div>
 
     <div class="step" id="s4">
@@ -123,7 +121,6 @@ code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid 
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="tab-head">
     <button class="active" data-tab="sfw">SFW Prompt</button>
     <button data-tab="nsfw">NSFW Prompt</button>
@@ -152,15 +149,15 @@ code.err{display:block;white-space:pre-wrap;background:#0b1117;border:1px solid 
 <div class="toastbox" id="toastbox"></div>
 
 <script type="module">
-/* ================= helpers ================= */
+/* -------------------------- Diagnostics / UI -------------------------- */
 const $=id=>document.getElementById(id);
-const toastbox=$('toastbox');
-const toast=(m)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;toastbox.appendChild(d);setTimeout(()=>d.remove(),2400);};
 $('ua').textContent=navigator.userAgent;
-const setLast=(t)=>{$('last').textContent=String(t)};
-const pushErr=(e)=>{const p=$('errors'); const c=document.createElement('code'); c.className='err'; c.textContent=String(e?.stack||e); p.appendChild(c);};
+const toastbox=document.querySelector('.toastbox');
+const toast=(m)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;toastbox.appendChild(d);setTimeout(()=>d.remove(),2500);};
+const setLast=t=>{$('last').textContent=String(t)};
+const pushErr=(e)=>{const p=$('errors'); const c=document.createElement('code'); c.className='err'; c.textContent=(e && (e.stack||e.message))? (e.stack||e.message) : String(e); p.appendChild(c);};
 
-/* ================= base layers (IMG + overlay) ================= */
+/* --------------------------- Base layers ------------------------------ */
 const stage=$('stage'), baseImg=$('baseImg'), over=$('over'), octx=over.getContext('2d');
 let imgReady=false, imgNatural={w:0,h:0}, imgBox={x:0,y:0,w:0,h:0};
 
@@ -169,7 +166,7 @@ function updateBoxes(){
   const i=baseImg.getBoundingClientRect();
   over.width = Math.max(1, Math.round(s.width));
   over.height= Math.max(1, Math.round(s.height));
-  over.style.width = s.width+'px'; over.style.height=s.height+'px';
+  over.style.width=s.width+'px'; over.style.height=s.height+'px';
   imgBox={ x:Math.round(i.left - s.left), y:Math.round(i.top - s.top), w:Math.round(i.width), h:Math.round(i.height) };
   $('renderedSz').textContent=`${imgBox.w}×${imgBox.h} @ (${imgBox.x},${imgBox.y})`;
   $('canvasSz').textContent=`${over.width}×${over.height}`;
@@ -178,7 +175,7 @@ new ResizeObserver(updateBoxes).observe(stage);
 addEventListener('resize', updateBoxes, {passive:true});
 addEventListener('scroll', updateBoxes, {passive:true});
 
-/* ================= image load ================= */
+/* ----------------------------- Loaders -------------------------------- */
 function enableStep2(){ $('preview').disabled=false; $('next2').disabled=false; $('run').disabled=false; }
 function enableNext1(){ $('next1').disabled=false; $('readyState').textContent='yes'; }
 
@@ -211,40 +208,48 @@ $('next1').addEventListener('click', ()=>setStep(2));
 $('next2').addEventListener('click', ()=>setStep(3));
 $('rerun').addEventListener('click', ()=>setStep(2));
 
-/* ================= MediaPipe models ================= */
+/* ----------------------- MediaPipe (Tasks Vision) ---------------------- */
+/* Official demo shows this import pattern & DrawingUtils usage. */
 let FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils;
 let face=null, pose=null, modelsReady=false;
+
 (async ()=>{
   try{
-    const vision=await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs');
-    ({FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils}=vision);
+    const vision = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs"); /* demo uses same style */ 
+    ({FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils} = vision);
     $('bundleState').innerHTML='<span class="ok">OK</span>';
-    const fs=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
-    face = await FaceLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"}, runningMode:'IMAGE', numFaces:5 });
-    pose = await PoseLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"}, runningMode:'IMAGE' });
+
+    const fs = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+    face = await FaceLandmarker.createFromOptions(fs,{
+      baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"},
+      runningMode:'IMAGE', numFaces:5
+    });
+    pose = await PoseLandmarker.createFromOptions(fs,{
+      baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"},
+      runningMode:'IMAGE'
+    });
     modelsReady=true;
     $('modelState').innerHTML='<span class="ok">OK</span>';
     if(imgReady) enableStep2();
   }catch(e){ $('bundleState').innerHTML='<span class="bad">FAIL</span>'; $('modelState').innerHTML='<span class="bad">FAIL</span>'; pushErr(e); }
 })();
 
-/* ================= overlay drawing ================= */
-const optFace=$('optFace'), optBody=$('optBody'), optNSFW=$('optNSFW');
+/* ------------------------- Overlay drawing ---------------------------- */
+const optFace=$('optFace'), optBody=$('optBody'), optNSFW=$('optNSFW'), optObjects=$('optObjects');
 const faceCountEl=$('faceCount'), activeFaceIdxEl=$('activeFaceIdx'), faceSelector=$('faceSelector');
 const outSFW=$('outSFW'), outNSFW=$('outNSFW'), outMeas=$('outMeas'), outJson=$('outJson');
 const copySFW=$('copySFW'), copyNSFW=$('copyNSFW'), exportJSON=$('exportJSON');
 const detail=$('detail'), spice=$('spice');
 
 let analysis=null, activeFace=0;
-
+const mapNormToBox = (p)=>({ x: imgBox.x + p.x*imgBox.w, y: imgBox.y + p.y*imgBox.h, z: p.z ?? 0 });
 const dist=(a,b,lm)=>Math.hypot(lm[a].x-lm[b].x, lm[a].y-lm[b].y);
 const eyeAngleDeg=(lm)=>+(Math.atan2(lm[362].y-lm[133].y, lm[362].x-lm[133].x)*180/Math.PI).toFixed(2);
 function bbox(lm){ let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9; for(const p of lm){ if(p.x<minX)minX=p.x; if(p.y<minY)minY=p.y; if(p.x>maxX)maxX=p.x; if(p.y>maxY)maxY=p.y; } return {minX,minY,maxX,maxY}; }
 function classify(jaw_face,cheek_face){ if(jaw_face<0.45 && cheek_face<0.55) return 'oval'; if(Math.abs(jaw_face-cheek_face)<0.03 && jaw_face>0.5) return 'round'; if(jaw_face>=0.55 && cheek_face>=0.6) return 'square'; if(cheek_face>jaw_face+0.07) return 'heart'; return 'triangle'; }
 
-function mapNormToBox(p){ return { x: imgBox.x + p.x*imgBox.w, y: imgBox.y + p.y*imgBox.h, z: p.z ?? 0 }; }
 function drawFaceMesh(faces){
-  const d=new DrawingUtils(octx);
+  const d=new DrawingUtils(octx);  /* DrawingUtils API docs show drawConnectors signatures */
   faces.forEach((f,idx)=>{
     const col = idx===activeFace ? 'rgba(100,242,227,.95)' : 'rgba(100,242,227,.35)';
     try{ d.drawConnectors(f.landmarks_canvas, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:col,lineWidth:.9}); }catch{}
@@ -260,17 +265,22 @@ function drawFaceMesh(faces){
 function drawPose(posePx){
   if(!posePx) return;
   const d=new DrawingUtils(octx);
-  // Lightweight stick figure using MediaPipe defaults
-  const POSE_LANDMARKS = PoseLandmarker.POSE_LANDMARKS;
   try{
     d.drawConnectors(posePx, PoseLandmarker.POSE_CONNECTIONS, {color:'rgba(190,156,255,.85)', lineWidth:2});
     d.drawLandmarks(posePx, {color:'rgba(190,156,255,1)',radius:2.4});
   }catch{}
 }
 
-/* scanner animation that progressively reveals */
+function drawCurrentOverlay(){
+  if(!analysis) return;
+  octx.clearRect(0,0,over.width,over.height);
+  if(optFace.checked) drawFaceMesh(analysis.faces||[]);
+  if(optBody.checked) drawPose(analysis.pose_canvas);
+}
+
+/* Scanner reveal */
 let rafId=null, sweepY=0, scanning=false;
-function startScanReveal(drawFullCb){
+function startScanReveal(){
   const scan=$('scanLine'); scanning=true; sweepY=imgBox.y; scan.style.opacity='1';
   const tick=()=>{
     if(!scanning) return;
@@ -278,47 +288,42 @@ function startScanReveal(drawFullCb){
     // Clip to current sweep and redraw
     octx.clearRect(0,0,over.width,over.height);
     octx.save(); octx.beginPath(); octx.rect(imgBox.x,imgBox.y,imgBox.w, Math.max(0, Math.min(imgBox.h, sweepY-imgBox.y))); octx.clip();
-    drawCurrentOverlay();
+    if(optFace.checked) drawFaceMesh(analysis.faces||[]);
+    if(optBody.checked) drawPose(analysis.pose_canvas);
     octx.restore();
+
     sweepY += Math.max(3, imgBox.h/36);
-    if(sweepY>imgBox.y+imgBox.h){
-      scan.style.opacity='0'; scanning=false; drawFullCb(); return;
-    }
+    if(sweepY>imgBox.y+imgBox.h){ scan.style.opacity='0'; scanning=false; drawCurrentOverlay(); return; }
     rafId=requestAnimationFrame(tick);
   };
   rafId=requestAnimationFrame(tick);
 }
 function stopScan(){ scanning=false; cancelAnimationFrame(rafId); $('scanLine').style.opacity='0'; }
 
-/* draw full overlay according to options */
-function drawCurrentOverlay(){
-  if(!analysis) return;
-  const faces=analysis.faces||[];
-  if(optFace.checked) drawFaceMesh(faces);
-  if(optBody.checked) drawPose(analysis.pose_canvas);
-}
-
-/* outputs */
+/* Outputs */
 function buildOutputs(){
   const f=analysis?.faces?.[activeFace];
   if(!f){ outSFW.value=''; outNSFW.value=''; outMeas.value=''; outJson.value=JSON.stringify(analysis||{},null,2); return; }
-  const sfw = `portrait, ${f.shape} face, jaw/face ${f.ratios.jaw_face}, cheek/face ${f.ratios.cheek_face}, eye angle ${f.measures.eye_angle_deg}°`;
+  const sfw = `portrait, ${f.shape} face, jaw/face ${f.ratios.jaw_face}, cheek/face ${f.ratios.cheek_face}, eye angle ${f.measures.eye_angle_deg}°` +
+              (analysis.cloud?.caption ? `\nCaption: ${analysis.cloud.caption}` : '') +
+              (analysis.cloud?.objects?.length ? `\nObjects: ${analysis.cloud.objects.slice(0,6).map(o=>o.label+`(${(o.score*100).toFixed(0)}%)`).join(', ')}` : '');
   const nsfw = optNSFW.checked ? (f.nsfw?.breast_size ? `${f.nsfw.breast_size} breasts, ${f.nsfw.nipples_visible?'visible nipples':'covered'}` : 'nsfw heuristics: none') : '';
   outSFW.value=sfw; outNSFW.value=nsfw;
-  outMeas.value=`H ${f.measures.face_height}px, jaw ${f.measures.jaw_width}px, cheek ${f.measures.cheek_width}px` + (analysis.pose_info?`\npose: ${analysis.pose_info}`:'');
+  outMeas.value = `H ${f.measures.face_height}px, jaw ${f.measures.jaw_width}px, cheek ${f.measures.cheek_width}px`
+                + (analysis.pose_info ? `\npose: ${analysis.pose_info}` : '');
   outJson.value=JSON.stringify(analysis,null,2);
-  copySFW.disabled=false; exportJSON.disabled=false; copyNSFW.disabled=!optNSFW.checked;
+  $('copySFW').disabled=false; $('exportJSON').disabled=false; $('copyNSFW').disabled=!optNSFW.checked;
 }
 function mkFacePills(){
   faceSelector.innerHTML='';
   (analysis.faces||[]).forEach((f,idx)=>{
     const b=document.createElement('button'); b.className='btn'; b.textContent='Face '+idx;
-    b.addEventListener('click',()=>{ activeFace=idx; activeFaceIdxEl.textContent=idx; octx.clearRect(0,0,over.width,over.height); drawCurrentOverlay(); buildOutputs(); });
+    b.addEventListener('click',()=>{ activeFace=idx; activeFaceIdxEl.textContent=idx; drawCurrentOverlay(); buildOutputs(); });
     faceSelector.appendChild(b);
   });
 }
 
-/* ================= PREVIEW ================= */
+/* ------------------------------- Preview ------------------------------ */
 $('preview').addEventListener('click', async ()=>{
   try{
     if(!imgReady){ toast('Load an image first.'); return; }
@@ -326,39 +331,39 @@ $('preview').addEventListener('click', async ()=>{
     setLast('preview start');
 
     const facesOut=[];
-    let posePx=null, poseInfo=null;
+    let poseCanvas=null, poseInfo=null;
 
-    // Face detect from IMG (robust, normalized -> map to imgBox)
+    // Face detect from IMG
     const resF = optFace.checked ? await face.detect(baseImg) : null;
     const lms = resF?.faceLandmarks || [];
     faceCountEl.textContent=lms.length;
 
-    // Build a snapshot of the rendered image (for color/NSFW sampling)
+    // Snapshot of visible image box for sampling/NSFW
     const snap=document.createElement('canvas'); snap.width=imgBox.w; snap.height=imgBox.h;
     const sctx=snap.getContext('2d',{willReadFrequently:true}); sctx.drawImage(baseImg,0,0,imgBox.w,imgBox.h);
     const snapData=sctx.getImageData(0,0,imgBox.w,imgBox.h);
-    const avgRectHex_local=(x,y,w,h,step=2)=>{ const d=snapData.data,W=snap.width,H=snap.height; const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(y+h)); let R=0,G=0,B=0,c=0; for(let yy=y0;yy<y1;yy+=step){ for(let xx=x0;xx<x1;xx+=step){ const i=(yy*W+xx)*4; R+=d[i]; G+=d[i+1]; B+=d[i+2]; c++; }} if(!c) return '#000000'; R=(R/c)|0; G=(G/c)|0; B=(B/c)|0; return '#'+[R,G,B].map(v=>v.toString(16).padStart(2,'0')).join(''); };
+    const avgRectHex=(x,y,w,h,step=2)=>{ const d=snapData.data,W=snap.width,H=snap.height; const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(y+h)); let R=0,G=0,B=0,c=0; for(let yy=y0;yy<y1;yy+=step){ for(let xx=x0;xx<x1;xx+=step){ const i=(yy*W+xx)*4; R+=d[i]; G+=d[i+1]; B+=d[i+2]; c++; }} if(!c) return '#000000'; R=(R/c)|0; G=(G/c)|0; B=(B/c)|0; return '#'+[R,G,B].map(v=>v.toString(16).padStart(2,'0')).join(''); };
 
     for(let fi=0; fi<lms.length; fi++){
       const lmN=lms[fi];
       const lmC=lmN.map(p=>mapNormToBox(p));
       const H=dist(10,152,lmC), J=dist(234,454,lmC), C=dist(234,454,lmC);
       const ratios={jaw_face:+(J/H).toFixed(3), cheek_face:+(C/H).toFixed(3)};
-      const eyeDeg=eyeAngleDeg(lmC);
       const shape=classify(ratios.jaw_face, ratios.cheek_face);
+      const eyeDeg=eyeAngleDeg(lmC);
       const bb=bbox(lmC); const fW=bb.maxX-bb.minX, fH=bb.maxY-bb.minY;
-      const hair=avgRectHex_local(bb.minX-imgBox.x, Math.max(0,bb.minY-imgBox.y-12), fW, 10, 1);
-      const skin=avgRectHex_local((bb.minX-imgBox.x)+0.35*fW, (bb.minY-imgBox.y)+0.45*fH, 18,18, 1);
-      const e=lmC[133]; const eyes=avgRectHex_local((e.x-imgBox.x)-8, (e.y-imgBox.y)-8, 16,16, 1);
+      const hair=avgRectHex(bb.minX-imgBox.x, Math.max(0,bb.minY-imgBox.y-12), fW, 10, 1);
+      const skin=avgRectHex((bb.minX-imgBox.x)+0.35*fW, (bb.minY-imgBox.y)+0.45*fH, 18,18, 1);
+      const e=lmC[133]; const eyes=avgRectHex((e.x-imgBox.x)-8,(e.y-imgBox.y)-8,16,16,1);
 
-      // NSFW chest window (optional)
+      // NSFW chest window
       let nsfw=null;
       if(optNSFW.checked){
         const cx=(bb.minX+bb.maxX)/2;
         let rect={x:cx-0.68*fW, y:bb.maxY+0.12*fH, w:1.36*fW, h:1.10*fH};
         rect.x=Math.max(imgBox.x,rect.x); rect.y=Math.max(imgBox.y,rect.y);
         rect.w=Math.min(rect.w,(imgBox.x+imgBox.w)-rect.x); rect.h=Math.min(rect.h,(imgBox.y+imgBox.h)-rect.y);
-        // skin ratio inside rect
+        // crude skin test
         const sx=Math.max(0,Math.floor(rect.x-imgBox.x)), sy=Math.max(0,Math.floor(rect.y-imgBox.y)), sw=Math.floor(rect.w), sh=Math.floor(rect.h);
         let skinCnt=0, tot=0; const d=snapData.data, W=snap.width;
         for(let yy=sy;yy<sy+sh;yy+=2){ for(let xx=sx;xx<sx+sw;xx+=2){ const i=(yy*W+xx)*4; const r=d[i],g=d[i+1],b=d[i+2]; const y=0.299*r+0.587*g+0.114*b, cb=-0.168736*r-0.331264*g+0.5*b+128, cr=0.5*r-0.418688*g-0.081312*b+128; if(cb>77&&cb<127&&cr>133&&cr<173&&y>40) skinCnt++; tot++; }}
@@ -375,51 +380,110 @@ $('preview').addEventListener('click', async ()=>{
     }
 
     // Pose detect (mapped to box) if requested
-    let poseCanvas=null;
     if(optBody.checked){
       const resP = await pose.detect(baseImg).catch(()=>null);
       const lmP = resP?.landmarks?.[0];
       if(lmP){
-        poseCanvas = lmP.map(p=>({ x: imgBox.x + p.x*imgBox.w, y: imgBox.y + p.y*imgBox.h, z:p.z||0 }));
-        const torso = Math.hypot(poseCanvas[11].x-poseCanvas[23].x, poseCanvas[11].y-poseCanvas[23].y).toFixed(1);
-        const arm   = Math.hypot(poseCanvas[11].x-poseCanvas[15].x, poseCanvas[11].y-poseCanvas[15].y).toFixed(1);
-        const leg   = Math.hypot(poseCanvas[23].x-poseCanvas[27].x, poseCanvas[23].y-poseCanvas[27].y).toFixed(1);
-        poseInfo = `torso ${torso}px, arm ${arm}px, leg ${leg}px`;
+        const px = lmP.map(p=>({ x: imgBox.x + p.x*imgBox.w, y: imgBox.y + p.y*imgBox.h, z:p.z||0 }));
+        analysis = analysis || {};
+        analysis.pose_canvas = px;
+        const torso = Math.hypot(px[11].x-px[23].x, px[11].y-px[23].y).toFixed(1);
+        const arm   = Math.hypot(px[11].x-px[15].x, px[11].y-px[15].y).toFixed(1);
+        const leg   = Math.hypot(px[23].x-px[27].x, px[23].y-px[27].y).toFixed(1);
+        analysis.pose_info = `torso ${torso}px, arm ${arm}px, leg ${leg}px`;
       }
     }
 
-    analysis={ version:'pf_facemapper_3_plus', frame:{type:'image'}, image:{natural:imgNatural, box:imgBox},
-               faces:facesOut, pose_canvas:poseCanvas, pose_info:poseInfo, scene:{bgTag:'heuristic'}, cloud:null };
+    analysis = {
+      version:'pf_facemapper_3_plus',
+      frame:{type:'image'},
+      image:{natural:imgNatural, box:imgBox},
+      faces:facesOut,
+      pose_canvas: analysis?.pose_canvas || null,
+      pose_info:   analysis?.pose_info   || null,
+      scene:{bgTag:'heuristic'}, cloud:null
+    };
 
     faceCountEl.textContent=facesOut.length; activeFace=0; activeFaceIdxEl.textContent=facesOut.length?0:'—';
     mkFacePills(); buildOutputs();
-
-    // Animate reveal then settle to full overlay
-    startScanReveal(()=>{ octx.clearRect(0,0,over.width,over.height); drawCurrentOverlay(); });
+    startScanReveal();
     setLast('preview done');
   }catch(e){ pushErr(e); toast('Preview error (Diagnostics tab)'); }
 });
 
-/* ================= RUN (reuses preview, then Step 4) ================= */
+/* ------------------------------- Cloud -------------------------------- */
+/* Official HF Inference JS SDK (browser-friendly ESM). */
+import { HfInference } from 'https://cdn.jsdelivr.net/npm/@huggingface/inference@2.6.4/+esm';
+
+async function runCloudIfEnabled(){
+  if(!$('useCloud').checked) return;
+  const token = $('hfToken').value.trim();
+  if(!token){ toast('Enter an hf_ token or disable Cloud.'); return; }
+  try{
+    const hf = new HfInference(token); /* official SDK — supported tasks listed in docs */
+    // capture the visible image box to PNG Blob
+    const boxCanvas=document.createElement('canvas'); boxCanvas.width=imgBox.w; boxCanvas.height=imgBox.h;
+    const bctx=boxCanvas.getContext('2d'); bctx.drawImage(baseImg,0,0,imgBox.w,imgBox.h);
+    const blob= await new Promise(r=>boxCanvas.toBlob(r,'image/png',0.95));
+
+    // BLIP caption (image-to-text)
+    let caption=null;
+    try{
+      const cap= await hf.imageToText({data:blob, model:'Salesforce/blip-image-captioning-base'}); /* BLIP docs */
+      caption = cap?.generated_text || null;
+    }catch(e){ pushErr('BLIP: '+(e.message||e)); }
+
+    // DETR object detection (boxes)
+    let objects=[];
+    try{
+      const det= await hf.objectDetection({data:blob, model:'facebook/detr-resnet-50'}); /* DETR doc */
+      if(Array.isArray(det)){
+        // det[i]: {score, label, box:{xmin, ymin, xmax, ymax}}
+        objects = det;
+        // draw boxes on overlay
+        octx.save(); octx.strokeStyle='rgba(255,215,0,.9)'; octx.lineWidth=2;
+        octx.fillStyle='rgba(0,0,0,.55)'; octx.font='12px ui-monospace';
+        det.slice(0,20).forEach(o=>{
+          const x=imgBox.x + o.box.xmin, y=imgBox.y + o.box.ymin, w=(o.box.xmax-o.box.xmin), h=(o.box.ymax-o.box.ymin);
+          octx.strokeRect(x,y,w,h);
+          const tag=`${o.label} ${(o.score*100).toFixed(0)}%`;
+          const tw=octx.measureText(tag).width+8;
+          octx.fillRect(x, y-16, tw, 14);
+          octx.fillStyle='#ffd700'; octx.fillText(tag, x+4, y-4);
+          octx.fillStyle='rgba(0,0,0,.55)';
+        });
+        octx.restore();
+      }
+    }catch(e){ pushErr('DETR: '+(e.message||e)); }
+
+    analysis.cloud = { caption, objects };
+    buildOutputs(); // reflect in SFW/JSON tabs
+  }catch(e){
+    pushErr(e);
+    toast('Cloud error (see Diagnostics). Local overlays still work.');
+  }
+}
+
+/* ------------------------------- Run ---------------------------------- */
 $('run').addEventListener('click', async ()=>{
   try{
     if(!imgReady){ toast('Load an image first.'); return; }
     if(!modelsReady){ toast('Models still loading.'); return; }
-    if(!analysis) await new Promise(r=>{ $('preview').click(); setTimeout(r, 20); });
+    if(!analysis) { await new Promise(r=>{ $('preview').click(); setTimeout(r, 20); }); }
     setStep(4);
-    // Optional cloud to enrich prompts later — local results already displayed
-    drawCurrentOverlay(); buildOutputs();
+    drawCurrentOverlay(); // ensure overlay is visible at top of results
+    await runCloudIfEnabled(); // cloud enrich, never blocks local results
     setLast('run done');
   }catch(e){ pushErr(e); toast('Run error (Diagnostics)'); }
 });
 
-/* ================= tabs & copy/export ================= */
+/* ------------------------- tabs & copy/export -------------------------- */
 document.querySelectorAll('.tab-head button').forEach(b=>{
   b.addEventListener('click',()=>{
     document.querySelectorAll('.tab-head button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
     document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-    const t=$('tab_'+b.dataset.tab); if(t) t.classList.add('active');
+    const t=document.getElementById('tab_'+b.dataset.tab); if(t) t.classList.add('active');
   });
 });
 $('copySFW').addEventListener('click',()=>navigator.clipboard.writeText(outSFW.value||'').then(()=>toast('Copied SFW')));
@@ -431,11 +495,10 @@ $('exportJSON').addEventListener('click',()=>{
   setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},150);
 });
 
-/* ================= enable step buttons when both image+models ready ================= */
+/* gate buttons when image+models ready */
 const maybeEnable=()=>{ if(imgReady && modelsReady){ $('preview').disabled=false; $('next2').disabled=false; $('run').disabled=false; }};
 new ResizeObserver(maybeEnable).observe(stage);
 document.addEventListener('DOMContentLoaded', maybeEnable);
-
 </script>
 </body>
 </html>
