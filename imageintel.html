@@ -7,10 +7,7 @@
 <meta name="robots" content="noindex,nofollow"/>
 <meta name="description" content="ImageIntel with persistent IMG base, MediaPipe face mesh & pose overlays, and optional Hugging Face cloud assist (BLIP caption, DETR objects)."/>
 <style>
-:root{
-  --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --vio:#be9cff;
-  --ok:#55d69a; --bad:#ff6b6b; --warn:#ffd166; --dim:#9db1bd;
-}
+:root{ --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --vio:#be9cff; --ok:#55d69a; --bad:#ff6b6b; --warn:#ffd166; --dim:#9db1bd; }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace}
 .wrap{max-width:1180px;margin:0 auto;padding:16px}
@@ -209,13 +206,12 @@ $('next2').addEventListener('click', ()=>setStep(3));
 $('rerun').addEventListener('click', ()=>setStep(2));
 
 /* ----------------------- MediaPipe (Tasks Vision) ---------------------- */
-/* Official demo shows this import pattern & DrawingUtils usage. */
 let FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils;
 let face=null, pose=null, modelsReady=false;
 
 (async ()=>{
   try{
-    const vision = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs"); /* demo uses same style */ 
+    const vision = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
     ({FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils} = vision);
     $('bundleState').innerHTML='<span class="ok">OK</span>';
 
@@ -249,7 +245,7 @@ function bbox(lm){ let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9; for(const p of lm)
 function classify(jaw_face,cheek_face){ if(jaw_face<0.45 && cheek_face<0.55) return 'oval'; if(Math.abs(jaw_face-cheek_face)<0.03 && jaw_face>0.5) return 'round'; if(jaw_face>=0.55 && cheek_face>=0.6) return 'square'; if(cheek_face>jaw_face+0.07) return 'heart'; return 'triangle'; }
 
 function drawFaceMesh(faces){
-  const d=new DrawingUtils(octx);  /* DrawingUtils API docs show drawConnectors signatures */
+  const d=new DrawingUtils(octx);
   faces.forEach((f,idx)=>{
     const col = idx===activeFace ? 'rgba(100,242,227,.95)' : 'rgba(100,242,227,.35)';
     try{ d.drawConnectors(f.landmarks_canvas, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:col,lineWidth:.9}); }catch{}
@@ -285,13 +281,11 @@ function startScanReveal(){
   const tick=()=>{
     if(!scanning) return;
     scan.style.top=sweepY+'px'; scan.style.left=imgBox.x+'px'; scan.style.width=imgBox.w+'px';
-    // Clip to current sweep and redraw
     octx.clearRect(0,0,over.width,over.height);
     octx.save(); octx.beginPath(); octx.rect(imgBox.x,imgBox.y,imgBox.w, Math.max(0, Math.min(imgBox.h, sweepY-imgBox.y))); octx.clip();
     if(optFace.checked) drawFaceMesh(analysis.faces||[]);
     if(optBody.checked) drawPose(analysis.pose_canvas);
     octx.restore();
-
     sweepY += Math.max(3, imgBox.h/36);
     if(sweepY>imgBox.y+imgBox.h){ scan.style.opacity='0'; scanning=false; drawCurrentOverlay(); return; }
     rafId=requestAnimationFrame(tick);
@@ -333,65 +327,68 @@ $('preview').addEventListener('click', async ()=>{
     const facesOut=[];
     let poseCanvas=null, poseInfo=null;
 
-    // Face detect from IMG
-    const resF = optFace.checked ? await face.detect(baseImg) : null;
-    const lms = resF?.faceLandmarks || [];
-    faceCountEl.textContent=lms.length;
+    // Face detect (callback style; detect() is sync in IMAGE mode)
+    if(optFace.checked){
+      face.detect(baseImg, undefined, (resF)=>{
+        const lms = resF?.faceLandmarks || [];
+        faceCountEl.textContent=lms.length;
 
-    // Snapshot of visible image box for sampling/NSFW
-    const snap=document.createElement('canvas'); snap.width=imgBox.w; snap.height=imgBox.h;
-    const sctx=snap.getContext('2d',{willReadFrequently:true}); sctx.drawImage(baseImg,0,0,imgBox.w,imgBox.h);
-    const snapData=sctx.getImageData(0,0,imgBox.w,imgBox.h);
-    const avgRectHex=(x,y,w,h,step=2)=>{ const d=snapData.data,W=snap.width,H=snap.height; const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(y+h)); let R=0,G=0,B=0,c=0; for(let yy=y0;yy<y1;yy+=step){ for(let xx=x0;xx<x1;xx+=step){ const i=(yy*W+xx)*4; R+=d[i]; G+=d[i+1]; B+=d[i+2]; c++; }} if(!c) return '#000000'; R=(R/c)|0; G=(G/c)|0; B=(B/c)|0; return '#'+[R,G,B].map(v=>v.toString(16).padStart(2,'0')).join(''); };
+        // snapshot for sampling / nsfw window
+        const snap=document.createElement('canvas'); snap.width=imgBox.w; snap.height=imgBox.h;
+        const sctx=snap.getContext('2d',{willReadFrequently:true}); sctx.drawImage(baseImg,0,0,imgBox.w,imgBox.h);
+        const snapData=sctx.getImageData(0,0,imgBox.w,imgBox.h);
+        const avgRectHex=(x,y,w,h,step=2)=>{ const d=snapData.data,W=snap.width,H=snap.height; const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(y+h)); let R=0,G=0,B=0,c=0; for(let yy=y0;yy<y1;yy+=step){ for(let xx=x0;xx<x1;xx+=step){ const i=(yy*W+xx)*4; R+=d[i]; G+=d[i+1]; B+=d[i+2]; c++; }} if(!c) return '#000000'; R=(R/c)|0; G=(G/c)|0; B=(B/c)|0; return '#'+[R,G,B].map(v=>v.toString(16).padStart(2,'0')).join(''); };
 
-    for(let fi=0; fi<lms.length; fi++){
-      const lmN=lms[fi];
-      const lmC=lmN.map(p=>mapNormToBox(p));
-      const H=dist(10,152,lmC), J=dist(234,454,lmC), C=dist(234,454,lmC);
-      const ratios={jaw_face:+(J/H).toFixed(3), cheek_face:+(C/H).toFixed(3)};
-      const shape=classify(ratios.jaw_face, ratios.cheek_face);
-      const eyeDeg=eyeAngleDeg(lmC);
-      const bb=bbox(lmC); const fW=bb.maxX-bb.minX, fH=bb.maxY-bb.minY;
-      const hair=avgRectHex(bb.minX-imgBox.x, Math.max(0,bb.minY-imgBox.y-12), fW, 10, 1);
-      const skin=avgRectHex((bb.minX-imgBox.x)+0.35*fW, (bb.minY-imgBox.y)+0.45*fH, 18,18, 1);
-      const e=lmC[133]; const eyes=avgRectHex((e.x-imgBox.x)-8,(e.y-imgBox.y)-8,16,16,1);
+        for(let fi=0; fi<lms.length; fi++){
+          const lmN=lms[fi];
+          const lmC=lmN.map(p=>mapNormToBox(p));
+          const H=dist(10,152,lmC), J=dist(234,454,lmC), C=dist(234,454,lmC);
+          const ratios={jaw_face:+(J/H).toFixed(3), cheek_face:+(C/H).toFixed(3)};
+          const shape=classify(ratios.jaw_face, ratios.cheek_face);
+          const eyeDeg=eyeAngleDeg(lmC);
+          const bb=bbox(lmC); const fW=bb.maxX-bb.minX, fH=bb.maxY-bb.minY;
+          const hair=avgRectHex(bb.minX-imgBox.x, Math.max(0,bb.minY-imgBox.y-12), fW, 10, 1);
+          const skin=avgRectHex((bb.minX-imgBox.x)+0.35*fW, (bb.minY-imgBox.y)+0.45*fH, 18,18, 1);
+          const e=lmC[133]; const eyes=avgRectHex((e.x-imgBox.x)-8,(e.y-imgBox.y)-8,16,16,1);
 
-      // NSFW chest window
-      let nsfw=null;
-      if(optNSFW.checked){
-        const cx=(bb.minX+bb.maxX)/2;
-        let rect={x:cx-0.68*fW, y:bb.maxY+0.12*fH, w:1.36*fW, h:1.10*fH};
-        rect.x=Math.max(imgBox.x,rect.x); rect.y=Math.max(imgBox.y,rect.y);
-        rect.w=Math.min(rect.w,(imgBox.x+imgBox.w)-rect.x); rect.h=Math.min(rect.h,(imgBox.y+imgBox.h)-rect.y);
-        // crude skin test
-        const sx=Math.max(0,Math.floor(rect.x-imgBox.x)), sy=Math.max(0,Math.floor(rect.y-imgBox.y)), sw=Math.floor(rect.w), sh=Math.floor(rect.h);
-        let skinCnt=0, tot=0; const d=snapData.data, W=snap.width;
-        for(let yy=sy;yy<sy+sh;yy+=2){ for(let xx=sx;xx<sx+sw;xx+=2){ const i=(yy*W+xx)*4; const r=d[i],g=d[i+1],b=d[i+2]; const y=0.299*r+0.587*g+0.114*b, cb=-0.168736*r-0.331264*g+0.5*b+128, cr=0.5*r-0.418688*g-0.081312*b+128; if(cb>77&&cb<127&&cr>133&&cr<173&&y>40) skinCnt++; tot++; }}
-        const skinRatio=tot?skinCnt/tot:0; const chestRatio=rect.w/H; let breast='unknown';
-        if(skinRatio>0.55){ if(chestRatio<1.55) breast='small'; else if(chestRatio<2.05) breast='medium'; else breast='large'; }
-        nsfw={chest_rect:rect, chest_skin_ratio:+skinRatio.toFixed(3), breast_size:breast, nipples_visible:(skinRatio>0.55)};
-      }
+          // NSFW chest window
+          let nsfw=null;
+          if(optNSFW.checked){
+            const cx=(bb.minX+bb.maxX)/2;
+            let rect={x:cx-0.68*fW, y:bb.maxY+0.12*fH, w:1.36*fW, h:1.10*fH};
+            rect.x=Math.max(imgBox.x,rect.x); rect.y=Math.max(imgBox.y,rect.y);
+            rect.w=Math.min(rect.w,(imgBox.x+imgBox.w)-rect.x); rect.h=Math.min(rect.h,(imgBox.y+imgBox.h)-rect.y);
+            const sx=Math.max(0,Math.floor(rect.x-imgBox.x)), sy=Math.max(0,Math.floor(rect.y-imgBox.y)), sw=Math.floor(rect.w), sh=Math.floor(rect.h);
+            let skinCnt=0, tot=0; const d=snapData.data, W=snap.width;
+            for(let yy=sy;yy<sy+sh;yy+=2){ for(let xx=sx;xx<sx+sw;xx+=2){ const i=(yy*W+xx)*4; const r=d[i],g=d[i+1],b=d[i+2]; const y=0.299*r+0.587*g+0.114*b, cb=-0.168736*r-0.331264*g+0.5*b+128, cr=0.5*r-0.418688*g-0.081312*b+128; if(cb>77&&cb<127&&cr>133&&cr<173&&y>40) skinCnt++; tot++; }}
+            const skinRatio=tot?skinCnt/tot:0; const chestRatio=rect.w/H; let breast='unknown';
+            if(skinRatio>0.55){ if(chestRatio<1.55) breast='small'; else if(chestRatio<2.05) breast='medium'; else breast='large'; }
+            nsfw={chest_rect:rect, chest_skin_ratio:+skinRatio.toFixed(3), breast_size:breast, nipples_visible:(skinRatio>0.55)};
+          }
 
-      facesOut.push({
-        index:fi,
-        measures:{face_height:+H.toFixed(2), jaw_width:+J.toFixed(2), cheek_width:+C.toFixed(2), eye_angle_deg:eyeDeg},
-        ratios, shape, palette:{hair,skin,eyes}, landmarks_canvas:lmC, nsfw
+          facesOut.push({
+            index:fi,
+            measures:{face_height:+H.toFixed(2), jaw_width:+J.toFixed(2), cheek_width:+C.toFixed(2), eye_angle_deg:eyeDeg},
+            ratios, shape, palette:{hair,skin,eyes}, landmarks_canvas:lmC, nsfw
+          });
+        }
       });
     }
 
-    // Pose detect (mapped to box) if requested
+    // Pose detect (callback, not Promise)
     if(optBody.checked){
-      const resP = await pose.detect(baseImg).catch(()=>null);
-      const lmP = resP?.landmarks?.[0];
-      if(lmP){
-        const px = lmP.map(p=>({ x: imgBox.x + p.x*imgBox.w, y: imgBox.y + p.y*imgBox.h, z:p.z||0 }));
-        analysis = analysis || {};
-        analysis.pose_canvas = px;
-        const torso = Math.hypot(px[11].x-px[23].x, px[11].y-px[23].y).toFixed(1);
-        const arm   = Math.hypot(px[11].x-px[15].x, px[11].y-px[15].y).toFixed(1);
-        const leg   = Math.hypot(px[23].x-px[27].x, px[23].y-px[27].y).toFixed(1);
-        analysis.pose_info = `torso ${torso}px, arm ${arm}px, leg ${leg}px`;
-      }
+      pose.detect(baseImg, undefined, (resP)=>{
+        const lmP = resP?.landmarks?.[0];
+        if(lmP){
+          const px = lmP.map(p=>({ x: imgBox.x + p.x*imgBox.w, y: imgBox.y + p.y*imgBox.h, z:p.z||0 }));
+          const torso = Math.hypot(px[11].x-px[23].x, px[11].y-px[23].y).toFixed(1);
+          const arm   = Math.hypot(px[11].x-px[15].x, px[11].y-px[15].y).toFixed(1);
+          const leg   = Math.hypot(px[23].x-px[27].x, px[23].y-px[27].y).toFixed(1);
+          analysis = analysis || {};
+          analysis.pose_canvas = px;
+          analysis.pose_info = `torso ${torso}px, arm ${arm}px, leg ${leg}px`;
+        }
+      });
     }
 
     analysis = {
@@ -412,7 +409,6 @@ $('preview').addEventListener('click', async ()=>{
 });
 
 /* ------------------------------- Cloud -------------------------------- */
-/* Official HF Inference JS SDK (browser-friendly ESM). */
 import { HfInference } from 'https://cdn.jsdelivr.net/npm/@huggingface/inference@2.6.4/+esm';
 
 async function runCloudIfEnabled(){
@@ -420,27 +416,24 @@ async function runCloudIfEnabled(){
   const token = $('hfToken').value.trim();
   if(!token){ toast('Enter an hf_ token or disable Cloud.'); return; }
   try{
-    const hf = new HfInference(token); /* official SDK — supported tasks listed in docs */
-    // capture the visible image box to PNG Blob
+    const hf = new HfInference(token);
     const boxCanvas=document.createElement('canvas'); boxCanvas.width=imgBox.w; boxCanvas.height=imgBox.h;
     const bctx=boxCanvas.getContext('2d'); bctx.drawImage(baseImg,0,0,imgBox.w,imgBox.h);
     const blob= await new Promise(r=>boxCanvas.toBlob(r,'image/png',0.95));
 
-    // BLIP caption (image-to-text)
+    // BLIP caption
     let caption=null;
     try{
-      const cap= await hf.imageToText({data:blob, model:'Salesforce/blip-image-captioning-base'}); /* BLIP docs */
+      const cap= await hf.imageToText({data:blob, model:'Salesforce/blip-image-captioning-base'});
       caption = cap?.generated_text || null;
     }catch(e){ pushErr('BLIP: '+(e.message||e)); }
 
-    // DETR object detection (boxes)
+    // DETR objects
     let objects=[];
     try{
-      const det= await hf.objectDetection({data:blob, model:'facebook/detr-resnet-50'}); /* DETR doc */
+      const det= await hf.objectDetection({data:blob, model:'facebook/detr-resnet-50'});
       if(Array.isArray(det)){
-        // det[i]: {score, label, box:{xmin, ymin, xmax, ymax}}
         objects = det;
-        // draw boxes on overlay
         octx.save(); octx.strokeStyle='rgba(255,215,0,.9)'; octx.lineWidth=2;
         octx.fillStyle='rgba(0,0,0,.55)'; octx.font='12px ui-monospace';
         det.slice(0,20).forEach(o=>{
@@ -457,7 +450,7 @@ async function runCloudIfEnabled(){
     }catch(e){ pushErr('DETR: '+(e.message||e)); }
 
     analysis.cloud = { caption, objects };
-    buildOutputs(); // reflect in SFW/JSON tabs
+    buildOutputs();
   }catch(e){
     pushErr(e);
     toast('Cloud error (see Diagnostics). Local overlays still work.');
@@ -471,8 +464,8 @@ $('run').addEventListener('click', async ()=>{
     if(!modelsReady){ toast('Models still loading.'); return; }
     if(!analysis) { await new Promise(r=>{ $('preview').click(); setTimeout(r, 20); }); }
     setStep(4);
-    drawCurrentOverlay(); // ensure overlay is visible at top of results
-    await runCloudIfEnabled(); // cloud enrich, never blocks local results
+    drawCurrentOverlay();
+    await runCloudIfEnabled();
     setLast('run done');
   }catch(e){ pushErr(e); toast('Run error (Diagnostics)'); }
 });
