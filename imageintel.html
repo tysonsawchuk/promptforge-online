@@ -3,44 +3,32 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PF FaceMapper — Smoke Test (Image → Landmarks)</title>
-<meta name="description" content="Barebones smoke test: pick an image, run MediaPipe Face Landmarker (IMAGE mode), draw 468 dots. No extras."/>
-<link rel="canonical" href="https://promptforge.online/facemapper-smoke.html"/>
-
-<!-- CSP: only what's required for the ESM bundle + model -->
-<meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' https://cdn.jsdelivr.net;
-  style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https://storage.googleapis.com;
-  connect-src 'self' https://cdn.jsdelivr.net https://storage.googleapis.com;
-  worker-src 'self' blob:;
-  font-src 'self' data:;
-  media-src 'self' blob:;
-  frame-ancestors 'self';
-  base-uri 'self';
-">
+<title>PF FaceMapper — Smoke Fallback (Ultra-robust, IMAGE only)</title>
+<meta name="description" content="Fallback smoke test for MediaPipe Face Landmarker. Multiple CDN and bundle fallbacks + explicit diagnostics.">
 
 <style>
-  :root { --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --bad:#ff6b6b; --ok:#55d69a; }
+  :root { --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --bad:#ff6b6b; --ok:#55d69a; --warn:#ffd166; }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-monospace, Menlo, Consolas, monospace}
   .wrap{max-width:980px;margin:0 auto;padding:16px}
-  h1{margin:0 0 10px 0;font-size:1.2rem}
-  .row{display:flex;gap:10px;align-items:center;margin:10px 0}
-  .btn{cursor:pointer;border:1.5px solid var(--aqua);background:#131922;color:var(--aqua);padding:8px 12px;border-radius:10px;font-weight:700}
+  h1{margin:0 0 10px 0;font-size:1.1rem}
+  .row{display:flex;gap:10px;align-items:center;margin:10px 0;flex-wrap:wrap}
+  .btn{cursor:pointer;border:1.5px solid var(--aqua);background:#131922;color:#b8fff6;padding:8px 12px;border-radius:10px;font-weight:700}
   .btn:hover{background:var(--aqua);color:#0e131a;border-color:#fff}
-  #status{padding:8px 10px;border:1px solid var(--edge);border-radius:8px;display:inline-block}
-  .ok{color:var(--ok)} .bad{color:var(--bad)}
+  #status{padding:8px 10px;border:1px solid var(--edge);border-radius:8px;display:inline-block;background:#0e141a}
+  .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
   .stage{position:relative;border:1px solid var(--edge);border-radius:12px;background:#0d131a;overflow:hidden}
   .inner{position:relative;aspect-ratio:16/9}
   canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .diag{margin-top:12px;border:1px dashed var(--edge);padding:8px;border-radius:10px}
+  .drop{margin-top:10px;border:1px dashed var(--edge);border-radius:10px;padding:10px;color:#9db1bd}
+  .diag{margin-top:12px;border:1px dashed var(--edge);padding:10px;border-radius:10px;background:#0c1117}
+  .kv{display:grid;grid-template-columns:180px 1fr;gap:6px 14px}
+  code{background:#0b0f14;border:1px solid #1c2833;padding:2px 5px;border-radius:6px}
   small{color:#9db1bd}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>PF FaceMapper — Smoke Test</h1>
+  <h1>PF FaceMapper — Smoke Fallback (IMAGE only)</h1>
   <div class="row">
     <input id="file" type="file" accept="image/*"/>
     <button id="demo" class="btn">Load Demo Face</button>
@@ -48,129 +36,203 @@
   </div>
 
   <div class="stage">
-    <div class="inner">
+    <div class="inner" id="stage">
       <canvas id="prev"></canvas>
       <canvas id="over"></canvas>
     </div>
   </div>
 
+  <div class="drop" id="drop">Drag & drop a JPG/PNG here.</div>
+
   <div class="diag">
-    <div>HTTPS: <span id="httpsState">…</span> • ESM: <span id="esmState">…</span> • Model HEAD: <span id="modelState">…</span></div>
-    <div>Notes: this page only does <b>IMAGE</b> mode — pick one picture, draw dots. If it fails here, your host/CSP is blocking jsDelivr or the model file.</div>
-    <small>Bundle: @mediapipe/tasks-vision@0.10.14 (vision_bundle.mjs) • Model: face_landmarker float16</small>
+    <div class="kv">
+      <div>Bundle (ESM/UMD):</div><div id="bundleState">…</div>
+      <div>Model:</div>        <div id="modelState">…</div>
+      <div>Notes:</div>        <div>IMAGE mode only. If bundle or model are blocked, your network/CSP/extension is the cause.</div>
+      <div>CDN tried:</div>    <div id="cdnTried">—</div>
+      <div>User agent:</div>   <div><small id="ua"></small></div>
+    </div>
+    <details style="margin-top:8px"><summary>Tech details</summary>
+      <small>Bundle candidates: <code>jsDelivr ESM</code> → <code>unpkg ESM</code> → <code>jsDelivr UMD</code> → <code>unpkg UMD</code>.<br>
+      Model file: <code>https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task</code>.<br>
+      If your server sends a strict CSP header, ensure it allows the chosen CDN in <code>script-src</code> and <code>connect-src</code>, and allows <code>storage.googleapis.com</code> in <code>connect-src</code>.</small>
+    </details>
   </div>
 </div>
 
 <script type="module">
-/** Minimal, hardened import (correct ESM bundle URL) */
-import visionModule from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
-const { FilesetResolver, FaceLandmarker } = visionModule;
-
-const WASM_ROOT = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
-const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
-
-/* UI refs */
-const file = document.getElementById('file');
-const demo = document.getElementById('demo');
-const status = document.getElementById('status');
-const httpsState = document.getElementById('httpsState');
-const esmState = document.getElementById('esmState');
-const modelState = document.getElementById('modelState');
-
+/* ---------- Canvas setup ---------- */
 const cPrev = document.getElementById('prev');
 const cOver = document.getElementById('over');
 const ctxPrev = cPrev.getContext('2d', { willReadFrequently:true });
 const ctxOver = cOver.getContext('2d');
-
-/* Simple sizing */
 function fit(){
-  const rect = cPrev.parentElement.getBoundingClientRect();
-  const dpr = Math.min(devicePixelRatio||1, 2);
-  cPrev.width = cOver.width = Math.round(rect.width * dpr);
-  cPrev.height= cOver.height= Math.round(rect.height* dpr);
-  cPrev.style.width = cOver.style.width = rect.width + 'px';
-  cPrev.style.height= cOver.style.height= rect.height+ 'px';
-  ctxPrev.setTransform(dpr,0,0,dpr,0,0);
-  ctxOver.setTransform(dpr,0,0,dpr,0,0);
+  const r = document.getElementById('stage').getBoundingClientRect();
+  const d = Math.min(devicePixelRatio||1, 2);
+  cPrev.width = cOver.width = Math.round(r.width * d);
+  cPrev.height= cOver.height= Math.round(r.height* d);
+  cPrev.style.width = cOver.style.width = r.width + 'px';
+  cPrev.style.height= cOver.style.height= r.height+ 'px';
+  ctxPrev.setTransform(d,0,0,d,0,0);
+  ctxOver.setTransform(d,0,0,d,0,0);
 }
 addEventListener('resize', fit, {passive:true}); fit();
 
-/* Diagnostics */
-httpsState.textContent = (location.protocol==='https:'||location.hostname==='localhost') ? 'true' : 'false';
-esmState.textContent = 'module: true';
-(async()=>{ try{
-  const r = await fetch(MODEL_URL, { method:'HEAD', mode:'cors' });
-  modelState.textContent = r.ok ? '200 OK' : String(r.status);
-} catch { modelState.textContent = 'blocked'; }})();
+/* ---------- UI refs ---------- */
+const statusEl = document.getElementById('status');
+const bundleState = document.getElementById('bundleState');
+const modelState  = document.getElementById('modelState');
+const cdnTried    = document.getElementById('cdnTried');
+document.getElementById('ua').textContent = navigator.userAgent;
 
-/* Model init */
-status.innerHTML = 'status: <b>loading model…</b>';
-let face=null;
-try{
-  const fs = await FilesetResolver.forVisionTasks(WASM_ROOT);
-  face = await FaceLandmarker.createFromOptions(fs, {
-    baseOptions:{ modelAssetPath: MODEL_URL },
-    runningMode:'IMAGE',
-    numFaces:1
+/* ---------- Fallback loader ---------- */
+const CDN = {
+  jsDelivr: {
+    esm: "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs",
+    umd: "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.js",
+    wasmRoot: "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+  },
+  unpkg: {
+    esm: "https://unpkg.com/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs",
+    umd: "https://unpkg.com/@mediapipe/tasks-vision@0.10.14/vision_bundle.js",
+    wasmRoot: "https://unpkg.com/@mediapipe/tasks-vision@0.10.14/wasm"
+  }
+};
+const MODEL_URL = "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
+
+let FaceLandmarker=null, FilesetResolver=null, wasmRootUsed='';
+
+async function tryESM(url){
+  bundleState.innerHTML = `trying ESM: <code>${url}</code>`;
+  const mod = await import(url);
+  return { FaceLandmarker: mod.FaceLandmarker, FilesetResolver: mod.FilesetResolver };
+}
+function tryUMD(url){
+  bundleState.innerHTML = `trying UMD: <code>${url}</code>`;
+  return new Promise((resolve, reject)=>{
+    const s=document.createElement('script');
+    s.src=url; s.async=true; s.crossOrigin="anonymous";
+    s.onload=()=>{
+      const FL = globalThis.FaceLandmarker;
+      const FR = globalThis.FilesetResolver;
+      if(FL && FR) resolve({ FaceLandmarker: FL, FilesetResolver: FR });
+      else reject(new Error('UMD globals missing'));
+    };
+    s.onerror=()=>reject(new Error('UMD load error'));
+    document.head.appendChild(s);
   });
-  status.innerHTML = 'status: <b class="ok">ready</b>';
-} catch (e) {
-  status.innerHTML = 'status: <b class="bad">model failed</b>';
-  console.error(e);
 }
 
-/* Core helper: draw image center-fit, then dots */
-async function runOnImage(img){
-  if(!face){ status.innerHTML='status: <b class="bad">no model</b>'; return; }
+async function loadBundle(){
+  const order = [
+    {cdn:'jsDelivr', type:'ESM', fn:()=>tryESM(CDN.jsDelivr.esm), wasm:CDN.jsDelivr.wasmRoot},
+    {cdn:'unpkg',    type:'ESM', fn:()=>tryESM(CDN.unpkg.esm),    wasm:CDN.unpkg.wasmRoot},
+    {cdn:'jsDelivr', type:'UMD', fn:()=>tryUMD(CDN.jsDelivr.umd), wasm:CDN.jsDelivr.wasmRoot},
+    {cdn:'unpkg',    type:'UMD', fn:()=>tryUMD(CDN.unpkg.umd),    wasm:CDN.unpkg.wasmRoot},
+  ];
+  const tried=[];
+  for (const step of order){
+    tried.push(`${step.cdn} ${step.type}`);
+    cdnTried.textContent = tried.join(' → ');
+    try{
+      const m = await step.fn();
+      FaceLandmarker = m.FaceLandmarker;
+      FilesetResolver = m.FilesetResolver;
+      wasmRootUsed = step.wasm;
+      bundleState.innerHTML = `<span class="ok">Bundle OK</span> via <b>${step.cdn} ${step.type}</b>`;
+      return true;
+    }catch(e){
+      // continue
+    }
+  }
+  bundleState.innerHTML = `<span class="bad">Bundle blocked</span> — all CDNs failed`;
+  return false;
+}
 
-  // fit canvas & draw
+/* ---------- Init model ---------- */
+let landmarker=null;
+async function init(){
+  statusEl.innerHTML='status: <b>loading bundle…</b>';
+  const ok = await loadBundle();
+  if(!ok){ statusEl.innerHTML='status: <b class="bad">bundle blocked</b>'; return; }
+
+  statusEl.innerHTML='status: <b>loading model…</b>';
+  try{
+    const fs = await FilesetResolver.forVisionTasks(wasmRootUsed);
+    landmarker = await FaceLandmarker.createFromOptions(fs, {
+      baseOptions:{ modelAssetPath: MODEL_URL },
+      runningMode:'IMAGE',
+      numFaces:1
+    });
+    modelState.innerHTML = `<span class="ok">Model OK</span>`;
+    statusEl.innerHTML = 'status: <b class="ok">ready</b>';
+  }catch(e){
+    console.error(e);
+    modelState.innerHTML = `<span class="bad">Model blocked</span>`;
+    statusEl.innerHTML = 'status: <b class="bad">model blocked</b>';
+  }
+}
+await init();
+
+/* ---------- Run on image ---------- */
+async function runOnImage(img){
+  if(!landmarker){ statusEl.innerHTML='status: <b class="bad">no model</b>'; return; }
   const W = cPrev.width/(devicePixelRatio||1), H = cPrev.height/(devicePixelRatio||1);
   ctxPrev.clearRect(0,0,W,H);
   const r = Math.min(W/img.width, H/img.height);
-  const dw = img.width*r, dh = img.height*r, dx = (W-dw)/2, dy = (H-dh)/2;
+  const dw = img.width*r, dh = img.height*r, dx=(W-dw)/2, dy=(H-dh)/2;
   ctxPrev.drawImage(img, dx, dy, dw, dh);
 
-  // detect
-  status.innerHTML = 'status: <b>detecting…</b>';
+  statusEl.innerHTML='status: <b>detecting…</b>';
   let res;
-  try { res = await face.detect(img); }
-  catch(e){ status.innerHTML = 'status: <b class="bad">detect error</b>'; console.error(e); return; }
+  try { res = await landmarker.detect(img); }
+  catch(e){ console.error(e); statusEl.innerHTML='status: <b class="bad">detect error</b>'; return; }
 
   ctxOver.clearRect(0,0,W,H);
   const lm = res?.faceLandmarks && res.faceLandmarks[0];
-  if(!lm){ status.innerHTML='status: <b class="bad">no face</b>'; return; }
+  if(!lm){ statusEl.innerHTML='status: <b class="warn">no face</b>'; return; }
 
-  // draw 468 dots (normalized coords → canvas pixels)
   ctxOver.save();
   ctxOver.fillStyle = '#64f2e3';
-  for(const p of lm){
+  for (const p of lm) {
     const x = dx + p.x * dw;
     const y = dy + p.y * dh;
     ctxOver.beginPath(); ctxOver.arc(x,y,2.1,0,Math.PI*2); ctxOver.fill();
   }
   ctxOver.restore();
-
-  status.innerHTML = `status: <b class="ok">ok</b> — ${lm.length} points`;
+  statusEl.innerHTML = `status: <b class="ok">ok</b> — ${lm.length} points`;
 }
 
-/* File picker */
+/* ---------- File and DnD ---------- */
+const file = document.getElementById('file');
 file.addEventListener('change', ()=>{
   const f = file.files && file.files[0]; if(!f) return;
   const url = URL.createObjectURL(f);
   const img = new Image();
   img.onload = ()=>{ runOnImage(img); URL.revokeObjectURL(url); };
-  img.onerror = ()=>{ status.innerHTML='status: <b class="bad">image load failed</b>'; URL.revokeObjectURL(url); };
+  img.onerror = ()=>{ statusEl.innerHTML='status: <b class="bad">image load failed</b>'; URL.revokeObjectURL(url); };
   img.src = url;
 });
 
-/* Tiny embedded demo face (data URL) so you can test without files */
-const demoPng = 
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAADQCAYAAAD3QmL4AAAACXBIWXMAAAsSAAALEgHS3X78AAABc0lEQVR4nO3TwQmDQBQF0eT9T2iZgQq3Zy7y1qkH1bYw+5h4v5yKp1lGgAAAAAAAAAAAAAAAPzXr8nqGk9i2y3bG2wqk9gRz8yVwz5w7k1m0t0b3m4v0bq9wq3g5w4e3Qv6wz7P3vTgPpJkAAJ4w0n8C3q7v9v0FJr7nYt9b3x2cW3O2mXxg7iB9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ+eGgAA+S9cFf7r+f3bJrS6cV7fNw9u8s7xw7v+f2C6v7p/8eZ7c4+f3b8v7n+DDkAAE9h8gMAAHyGAgAAfIYCAAB8hgIAAHyGAgAAfIYCAAB8hgIAAHyGAgAAfIYCAAB8hgIAAHyGAgAAfIYCAAB8hgIAAHyGAoB1B/0iJ7o9J0c9AAAAAElFTkSuQmCC";
+const drop = document.getElementById('drop');
+drop.addEventListener('dragover', e=>{ e.preventDefault(); drop.style.borderColor='#64f2e3'; });
+drop.addEventListener('dragleave', e=>{ drop.style.borderColor='var(--edge)'; });
+drop.addEventListener('drop', e=>{
+  e.preventDefault(); drop.style.borderColor='var(--edge)';
+  const f = e.dataTransfer.files && e.dataTransfer.files[0]; if(!f) return;
+  const url = URL.createObjectURL(f);
+  const img = new Image();
+  img.onload = ()=>{ runOnImage(img); URL.revokeObjectURL(url); };
+  img.onerror = ()=>{ statusEl.innerHTML='status: <b class="bad">image load failed</b>'; URL.revokeObjectURL(url); };
+  img.src = url;
+});
 
-demo.addEventListener('click', ()=>{
+/* ---------- Demo face ---------- */
+const demoPng="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAADQCAYAAAD3QmL4AAAACXBIWXMAAAsSAAALEgHS3X78AAABc0lEQVR4nO3TwQmDQBQF0eT9T2iZgQq3Zy7y1qkH1bYw+5h4v5yKp1lGgAAAAAAAAAAAAAAAPzXr8nqGk9i2y3bG2wqk9gRz8yVwz5w7k1m0t0b3m4v0bq9wq3g5w4e3Qv6wz7P3vTgPpJkAAJ4w0n8C3q7v9v0FJr7nYt9b3x2cW3O2mXxg7iB9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ9cT9cQ+eGgAA+S9cFf7r+f3bJrS6cV7fNw9u8s7xw7v+f2C6v7p/8eZ7c4+f3b8v7n+DDkAAE9h8gMAAHyGAgAAfIYCAAB8hgIAAHyGAgAAfIYCAAB8hgIAAHyGAgAAfIYCAAB8hgIAAHyGAgAAfIYCAAB8hgIAAHyGAoB1B/0iJ7o9J0c9AAAAAElFTkSuQmCC";
+document.getElementById('demo').addEventListener('click', ()=>{
   const img = new Image();
   img.onload = ()=> runOnImage(img);
-  img.onerror = ()=> status.innerHTML='status: <b class="bad">demo image failed</b>';
+  img.onerror = ()=> statusEl.innerHTML='status: <b class="bad">demo image failed</b>';
   img.src = demoPng;
 });
 </script>
