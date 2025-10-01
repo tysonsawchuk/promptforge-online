@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>PF — Mapper Wizard Lab (Multi-Face • Face/Body/NSFW/Landscape)</title>
 <meta name="description" content="On-device multi-face mapper with step-by-step wizard. Face mapping, pose/body, NSFW descriptors, landscape/object tags. Optional HuggingFace cloud assist." />
-
+<meta name="robots" content="noindex,nofollow"/>
 <style>
 :root{
   --bg:#0b0f14; --ink:#d6f5ff; --edge:#232a33; --aqua:#64f2e3; --vio:#be9cff;
@@ -31,7 +31,7 @@ small, .note{color:var(--dim)}
 .inner{position:relative;aspect-ratio:16/9}
 canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .legend{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;z-index:3}
-.mower{position:absolute;inset:0;background:linear-gradient(0deg,transparent 0%,rgba(255,255,255,.07) 50%,transparent 100%);background-size:100% 32%;animation:mow 1.6s linear infinite;mix-blend-mode:screen;opacity:.32;pointer-events:none}
+.mower{position:absolute;inset:0;background:linear-gradient(0deg,transparent 0%,rgba(255,255,255,.07) 50%,transparent 100%);background-size:100% 32%;animation:mow 1.6s linear infinite;mix-blend-mode:screen;opacity:.25;pointer-events:none}
 @keyframes mow{0%{background-position-y:100%}100%{background-position-y:0%}}
 
 .stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
@@ -57,6 +57,9 @@ textarea.out{width:100%;min-height:120px;background:#0b1117;color:#d8faff;border
 
 .toastbox{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:5000}
 .toast{background:#121823ee;border:1px solid var(--edge);color:#defaff;padding:10px 12px;border-radius:10px;min-width:220px;box-shadow:0 4px 18px #0006}
+
+.scan-bar{position:absolute;left:0;top:0;height:2px;background:linear-gradient(90deg, transparent, #64f2e3, transparent); box-shadow:0 0 12px #64f2e3aa; animation:scanX 1.4s linear infinite; opacity:.8; pointer-events:none}
+@keyframes scanX{0%{left:-20%}100%{left:120%}}
 </style>
 </head>
 <body>
@@ -76,6 +79,7 @@ textarea.out{width:100%;min-height:120px;background:#0b1117;color:#d8faff;border
       <canvas id="prev"></canvas>
       <canvas id="over"></canvas>
       <div class="mower"></div>
+      <div id="scanBar" class="scan-bar" style="width:40%"></div>
       <div class="legend">
         <span class="badge">faces: <span id="faceCount">0</span></span>
         <span class="badge">active face: <span id="activeFaceIdx">—</span></span>
@@ -100,7 +104,10 @@ textarea.out{width:100%;min-height:120px;background:#0b1117;color:#d8faff;border
       <div class="option"><input type="checkbox" id="scanObjects"> <label for="scanObjects">Landscape / Object Tags (cloud assist optional)</label></div>
       <div class="option"><label>Detail Level <input id="detailLevel" type="range" min="1" max="3" step="1" value="2"></label></div>
       <div class="option"><label>NSFW Spice <input id="spice" type="range" min="0" max="3" step="1" value="2"></label> <small>(0=clinical, 3=dirty slang)</small></div>
-      <div class="row"><button class="btn next" id="goTo3">Next</button></div>
+      <div class="row">
+        <button class="btn" id="preview">Preview Overlay</button>
+        <button class="btn next" id="goTo3">Next</button>
+      </div>
     </div>
     <div class="step" id="s3">
       <h3>Step 3 — Cloud Assist (optional)</h3>
@@ -149,6 +156,7 @@ textarea.out{width:100%;min-height:120px;background:#0b1117;color:#d8faff;border
         <div class="kv">
           <div>CDN tried:</div><div id="cdnTried">—</div>
           <div>UA:</div><div><small id="ua"></small></div>
+          <div>Cloud status:</div><div id="cloudStatus">idle</div>
         </div>
         <div class="note" style="margin-top:8px">Everything runs on-device except HuggingFace calls when enabled in Step 3.</div>
       </div>
@@ -178,6 +186,11 @@ function fit(){
   cPrev.style.width=cOver.style.width=r.width+'px';
   cPrev.style.height=cOver.style.height=r.height+'px';
   ctxPrev.setTransform(d,0,0,d,0,0); ctxOver.setTransform(d,0,0,d,0,0);
+  if(bitmapCache) { // keep image visible after any resize
+    ctxPrev.clearRect(0,0,cPrev.width,d?cPrev.height:0);
+    ctxPrev.drawImage(bitmapCache, imgMeta.dx, imgMeta.dy, imgMeta.dw, imgMeta.dh);
+    renderOverlay(true);
+  }
 }
 addEventListener('resize',fit,{passive:true}); fit();
 
@@ -186,6 +199,7 @@ const bundleState=document.getElementById('bundleState');
 const modelState=document.getElementById('modelState');
 const cdnTried=document.getElementById('cdnTried');
 document.getElementById('ua').textContent=navigator.userAgent;
+const cloudStatus=document.getElementById('cloudStatus');
 
 const CDN = {
   jsDelivr:{esm:"https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs",
@@ -248,6 +262,7 @@ const demo=document.getElementById('demo');
 const goTo2=document.getElementById('goTo2');
 const goTo3=document.getElementById('goTo3');
 const goTo4=document.getElementById('goTo4');
+const previewBtn=document.getElementById('preview');
 const rerun=document.getElementById('rerun');
 
 const scanFace=document.getElementById('scanFace');
@@ -265,23 +280,34 @@ function setStep(n){
     const el=document.getElementById(id);
     el.classList.toggle('active', (i+1)===n);
   });
+  // keep canvas content visible
+  if(bitmapCache){
+    ctxPrev.clearRect(0,0,cPrev.width,cPrev.height);
+    ctxPrev.drawImage(bitmapCache, imgMeta.dx, imgMeta.dy, imgMeta.dw, imgMeta.dh);
+    renderOverlay(true);
+  }
 }
 setStep(1);
 
-/* ===================== Image load ===================== */
+/* ===================== Image load & cache ===================== */
 let imgMeta=null;
+let bitmapCache=null;
+
 function drawImageFit(img){
   const W=cPrev.width/(devicePixelRatio||1), H=cPrev.height/(devicePixelRatio||1);
+  const r=Math.min(W/img.width,H/img.height);
+  const dw=img.width*r, dh=img.height*r, dx=(W-dw)/2, dy=(H-dh)/2;
   ctxPrev.clearRect(0,0,W,H);
-  const r=Math.min(W/img.width,H/img.height); const dw=img.width*r, dh=img.height*r, dx=(W-dw)/2, dy=(H-dh)/2;
   ctxPrev.drawImage(img,dx,dy,dw,dh);
   return {W,H,dx,dy,dw,dh};
 }
-function onImageReady(img){
+async function onImageReady(img){
   imgMeta=drawImageFit(img);
+  bitmapCache=await createImageBitmap(img);
   goTo2.disabled=false;
   toast('Image loaded. Choose your scans in Step 2.');
 }
+
 file.addEventListener('change',()=>{
   const f=file.files && file.files[0]; if(!f) return;
   const url=URL.createObjectURL(f); const img=new Image();
@@ -293,7 +319,7 @@ const demoPng="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAADQCAYAAAD3QmL
 demo.addEventListener('click',()=>{ const img=new Image(); img.onload=()=>onImageReady(img); img.src=demoPng; });
 
 goTo2.addEventListener('click',()=>setStep(2));
-goTo3.addEventListener('click',()=>setStep(3));
+goTo3.addEventListener('click',()=>{ setStep(3); quickPreview().catch(()=>{}); });
 
 /* ===================== Analysis core ===================== */
 const faceCountEl=document.getElementById('faceCount');
@@ -309,6 +335,30 @@ const exportJSON=document.getElementById('exportJSON');
 
 let analysis=null; // full JSON for export
 let activeFace=0;
+
+/* animation state */
+let scanY=0, rafId=null;
+function startOverlayAnimation(){
+  cancelAnimationFrame(rafId);
+  const W=cPrev.width/(devicePixelRatio||1), H=cPrev.height/(devicePixelRatio||1);
+  scanY = 0;
+  function tick(){
+    // redraw base image each frame to avoid ghosting
+    if(bitmapCache && imgMeta){
+      ctxPrev.clearRect(0,0,W,H);
+      ctxPrev.drawImage(bitmapCache, imgMeta.dx, imgMeta.dy, imgMeta.dw, imgMeta.dh);
+    }
+    renderOverlay(false, scanY); // partial reveal
+    scanY += H/28; if(scanY>H) scanY=H;
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+}
+function stopOverlayAnimation(){
+  cancelAnimationFrame(rafId);
+  renderOverlay(true); // final full overlay
+}
+
 function selectFace(i){
   activeFace=i;
   document.querySelectorAll('.face-pill').forEach((p,idx)=>p.classList.toggle('active', idx===i));
@@ -316,31 +366,43 @@ function selectFace(i){
   renderOverlay();
   renderOutputs();
 }
-function renderOverlay(){
+function renderOverlay(full=false, revealY=null){
   const W=cPrev.width/(devicePixelRatio||1), H=cPrev.height/(devicePixelRatio||1);
   ctxOver.clearRect(0,0,W,H);
   if(!analysis) return;
+
+  if(revealY!=null){ // scanner clip
+    ctxOver.save();
+    ctxOver.beginPath();
+    ctxOver.rect(0,0,W, revealY);
+    ctxOver.clip();
+  }
+
   const faces=analysis.faces||[];
   faces.forEach((f,idx)=>{
     const lm=f.landmarks_canvas;
     const d=new DrawingUtils(ctxOver);
-    try{ d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color: idx===activeFace?'rgba(100,242,227,.95)':'rgba(100,242,227,.35)', lineWidth:.9}); }catch{}
-    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,     {color:'rgba(255,255,255,.7)',lineWidth:2});
-    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,      {color:'rgba(255,255,255,.7)',lineWidth:2});
-    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,          {color:'rgba(255,120,160,.8)',lineWidth:2});
-    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,     {color:'rgba(140,255,220,.8)',lineWidth:2});
+    const mainCol = idx===activeFace?'rgba(100,242,227,.95)':'rgba(100,242,227,.35)';
+    try{ d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color: mainCol, lineWidth:.9}); }catch{}
+    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,     {color:'rgba(255,255,255,.85)',lineWidth:2});
+    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,      {color:'rgba(255,255,255,.85)',lineWidth:2});
+    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,          {color:'rgba(255,120,160,.9)',lineWidth:2});
+    d.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,     {color:'rgba(140,255,220,.9)',lineWidth:2});
     if(f.nsfw?.chest_rect){
       const r=f.nsfw.chest_rect; ctxOver.save(); ctxOver.setLineDash([6,5]); ctxOver.strokeStyle='rgba(255,120,160,.85)'; ctxOver.lineWidth=2;
       ctxOver.strokeRect(r.x,r.y,r.w,r.h); ctxOver.restore();
     }
   });
+
+  if(revealY!=null){
+    ctxOver.restore();
+  }
 }
 
 /* math helpers */
-const indices={faceH:[10,152], jawW:[234,454], cheekW:[234,454], foreheadH:[8,10], lipT:[13,14], eyeAngle:[133,362]};
 const toDeg=r=>r*180/Math.PI;
 const dist=(a,b,lm)=>Math.hypot(lm[a].x-lm[b].x, lm[a].y-lm[b].y);
-function eyeAngleDeg(lm){ const [a,b]=indices.eyeAngle; return toDeg(Math.atan2(lm[b].y-lm[a].y, lm[b].x-lm[a].x)); }
+function eyeAngleDeg(lm){ const a=133,b=362; return toDeg(Math.atan2(lm[b].y-lm[a].y, lm[b].x-lm[a].x)); }
 function bbox(lm){ let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9; for(const p of lm){ if(p.x<minX)minX=p.x; if(p.y<minY)minY=p.y; if(p.x>maxX)maxX=p.x; if(p.y>maxY)maxY=p.y; } return {minX,minY,maxX,maxY}; }
 function classify(jaw_face,cheek_face){ if(jaw_face<0.45 && cheek_face<0.55) return 'oval'; if(Math.abs(jaw_face-cheek_face)<0.03 && jaw_face>0.5) return 'round'; if(jaw_face>=0.55 && cheek_face>=0.6) return 'square'; if(cheek_face>jaw_face+0.07) return 'heart'; return 'triangle'; }
 function avgRectHex(imgData,W,H,x,y,w,h,step=2){ const d=imgData.data; const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(y+h)); let r=0,g=0,b=0,c=0;
@@ -354,7 +416,7 @@ function colorWord(hex){ const [r,g,b]=[parseInt(hex.slice(1,3),16),parseInt(hex
 /* skin mask for NSFW heuristics */
 function rgb2ycbcr(r,g,b){ const y=0.299*r+0.587*g+0.114*b, cb=-0.168736*r-0.331264*g+0.5*b+128, cr=0.5*r-0.418688*g-0.081312*b+128; return [y,cb,cr]; }
 function buildSkinMask(imgData,W,H){ const m=new Uint8Array(W*H), d=imgData.data; for(let i=0,p=0;i<d.length;i+=4,++p){ const [y,cb,cr]=rgb2ycbcr(d[i],d[i+1],d[i+2]); m[p]=(cb>77&&cb<127&&cr>133&&cr<173&&y>40)?1:0; } return m; }
-function skinRatio(mask,W,H,x,y,w,h,step=2){ const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(y+h)); let skin=0,tot=0;
+function skinRatio(mask,W,H,x,y,w,h,step=2){ const x0=Math.max(0,Math.floor(x)),y0=Math.max(0,Math.floor(y)),x1=Math.min(W,Math.floor(x+w)),y1=Math.min(H,Math.floor(h+y)); let skin=0,tot=0;
   for(let yy=y0;yy<y1;yy+=step){ for(let xx=x0;xx<x1;xx+=step){ const p=yy*W+xx; skin+=mask[p]; tot++; } } return tot?skin/tot:0; }
 
 /* background simple tag */
@@ -375,7 +437,7 @@ function assembleSFW(faceBlock, scene, detail){
   parts.push(`${faceBlock.shape} face`);
   parts.push(`jaw/face ${faceBlock.ratios.jaw_face}, cheek/face ${faceBlock.ratios.cheek_face}`);
   parts.push(`eye angle ${faceBlock.measures.eye_angle_deg}°`);
-  parts.push(`hair ${scene.hairWord}, skin ${scene.palette.skin}, eyes ${scene.palette.eyes}`);
+  parts.push(`hair ${scene.hairWord}, skin ${faceBlock.palette.skin}, eyes ${faceBlock.palette.eyes}`);
   if(scene.bgTag!=='neutral') parts.push(`${scene.bgTag} background`);
   if(detail>=2) parts.push(`photorealistic, natural lighting`);
   if(detail===3) parts.push(`sharp, high detail, minimal distortion`);
@@ -384,11 +446,11 @@ function assembleSFW(faceBlock, scene, detail){
 function assembleNSFW(faceBlock, nsfwBlock, scene, spice){
   const base=[];
   base.push(`nude ${scene.hairWord} ${faceBlock.shape} face`);
-  if(nsfwBlock.breast_size) base.push(`${nsfwBlock.breast_size} natural breasts`);
-  if(nsfwBlock.nipples_visible) base.push(`visible nipples`);
-  if(spice>=1) base.push(`pale skin ${scene.palette.skin}`);
+  if(nsfwBlock?.breast_size && nsfwBlock.breast_size!=='unknown') base.push(`${nsfwBlock.breast_size} natural breasts`);
+  if(nsfwBlock?.nipples_visible) base.push(`visible nipples`);
+  if(spice>=1) base.push(`tonality: ${faceBlock.palette.skin}`);
   if(spice>=2) base.push(`soft ${scene.lighting}`);
-  if(spice>=3) base.push(`dirty detail: ${nsfwBlock.slurs || 'explicit body focus'}`);
+  if(spice>=3) base.push(`dirty detail: ${nsfwBlock?.slurs || 'explicit body focus'}`);
   return base.filter(Boolean).join(', ');
 }
 
@@ -400,10 +462,52 @@ async function hfPOST(modelId, blob, token){
   return r.json();
 }
 
-/* Run Analysis pipeline */
-goTo4.addEventListener('click', async ()=>{
+/* ------- Quick Preview after Step 2 (no cloud) ------- */
+async function quickPreview(){
+  if(!imgMeta || !face) return;
+  const previewOK = scanFace.checked || scanBody.checked;
+  if(!previewOK) return;
+  const W=imgMeta.W, H=imgMeta.H;
+  const imgPixels=ctxPrev.getImageData(0,0,W,H);
+  let resF; try{ resF=await face.detect(cPrev); }catch(e){ return; }
+  const allLm=(resF?.faceLandmarks)||[];
+  const facesOut=[];
+  for(let fi=0; fi<allLm.length; fi++){
+    const lmN=allLm[fi];
+    const lmC = lmN.map(p=>({x:imgMeta.dx+p.x*imgMeta.dw, y:imgMeta.dy+p.y*imgMeta.dh, z:p.z}));
+    const faceHpx=dist(10,152,lmC), jawWpx=dist(234,454,lmC), cheekWpx=dist(234,454,lmC);
+    const eyeDeg=+eyeAngleDeg(lmC).toFixed(2);
+    const ratios={jaw_face:+(jawWpx/faceHpx).toFixed(3), cheek_face:+(cheekWpx/faceHpx).toFixed(3)};
+    const shape=classify(ratios.jaw_face, ratios.cheek_face);
+    const bb=bbox(lmC); const fW=(bb.maxX-bb.minX), fH=(bb.maxY-bb.minY);
+    const hair = avgRectHex(imgPixels, W,H, bb.minX, Math.max(0,bb.minY-12), fW, 10, 1);
+    const skin = avgRectHex(imgPixels, W,H, bb.minX+0.35*fW, bb.minY+0.45*fH, 18,18, 1);
+    const e = lmC[133]; const eyes = avgRectHex(imgPixels, W,H, e.x-8, e.y-8, 16,16, 1);
+    const hairWord=colorWord(hair);
+    facesOut.push({index:fi, measures:{face_height:+faceHpx.toFixed(3), jaw_width:+jawWpx.toFixed(3), cheek_width:+cheekWpx.toFixed(3), eye_angle_deg:eyeDeg}, ratios, shape, palette:{hair,skin,eyes, hairWord}, landmarks_canvas:lmC});
+  }
+  analysis = {
+    version:"pf_facemapper_3_plus",
+    frame:{type:"image"},
+    image:{width:imgMeta.dw, height:imgMeta.dh, canvas:{W,H}},
+    faces:facesOut,
+    pose:null,
+    scene:{bgTag:backgroundTag(imgPixels,W,H), note:"preview heuristics"},
+    cloud:null
+  };
+  faceCountEl.textContent=facesOut.length;
+  activeFaceIdxEl.textContent=facesOut.length?0:'—';
+  buildOutputsForFace(0, analysis, parseInt(detailLevel.value,10), parseInt(spice.value,10));
+  mkFacePills(facesOut);
+  startOverlayAnimation();
+}
+
+/* ------------- Full Analysis (Step 4) ------------- */
+document.getElementById('goTo4').addEventListener('click', runAnalysis);
+async function runAnalysis(){
   if(!imgMeta || !face){ toast('Load an image first.'); return; }
   setStep(4); statusText.textContent='analyzing…';
+  cloudStatus.textContent='idle';
   const W=imgMeta.W, H=imgMeta.H;
   const imgPixels=ctxPrev.getImageData(0,0,W,H);
   const facesOut=[];
@@ -424,24 +528,23 @@ goTo4.addEventListener('click', async ()=>{
 
   // For each face: compute blocks
   for(let fi=0; fi<allLm.length; fi++){
-    const lmN=allLm[fi]; // normalized 0..1 relative to drawn image
+    const lmN=allLm[fi];
     const lmC = lmN.map(p=>({x:imgMeta.dx+p.x*imgMeta.dw, y:imgMeta.dy+p.y*imgMeta.dh, z:p.z}));
 
-    // measures
     const faceHpx=dist(10,152,lmC);
     const jawWpx=dist(234,454,lmC);
     const cheekWpx=dist(234,454,lmC);
-    const foreHpx=dist(8,10,lmC);
-    const lipTpx=dist(13,14,lmC);
+    const foreHpx=Math.hypot(lmC[10].y-lmC[8].y, lmC[10].x-lmC[8].x);
+    const lipTpx=Math.hypot(lmC[13].y-lmC[14].y, lmC[13].x-lmC[14].x);
     const eyeDeg=+eyeAngleDeg(lmC).toFixed(2);
     const ratios={jaw_face:+(jawWpx/faceHpx).toFixed(3), cheek_face:+(cheekWpx/faceHpx).toFixed(3), forehead_face:+(foreHpx/faceHpx).toFixed(3), lip_face:+(lipTpx/faceHpx).toFixed(3)};
     const shape=classify(ratios.jaw_face, ratios.cheek_face);
     const bb=bbox(lmC); const fW=(bb.maxX-bb.minX), fH=(bb.maxY-bb.minY);
 
-    // palettes
-    const hair = avgRectHex(imgPixels.data,W,H, bb.minX, Math.max(0,bb.minY-12), fW, 10, 1);
-    const skin = avgRectHex(imgPixels.data,W,H, bb.minX+0.35*fW, bb.minY+0.45*fH, 18,18, 1);
-    const eyes = (()=>{ const e=lmC[133]; return avgRectHex(imgPixels.data,W,H, e.x-8, e.y-8, 16,16, 1); })();
+    // palettes (FIX: pass ImageData, not data array)
+    const hair = avgRectHex(imgPixels, W,H, bb.minX, Math.max(0,bb.minY-12), fW, 10, 1);
+    const skin = avgRectHex(imgPixels, W,H, bb.minX+0.35*fW, bb.minY+0.45*fH, 18,18, 1);
+    const eyes = (()=>{ const e=lmC[133]; return avgRectHex(imgPixels, W,H, e.x-8, e.y-8, 16,16, 1); })();
     const hairWord=colorWord(hair);
 
     // NSFW block if enabled
@@ -456,8 +559,8 @@ goTo4.addEventListener('click', async ()=>{
       const chestRatio = rect.w/faceHpx;
       let breast='unknown';
       if(chestSkin>0.55){ if(chestRatio<1.55) breast='small'; else if(chestRatio<2.05) breast='medium'; else breast='large'; }
-      nsfw={chest_rect:rect, chest_skin_ratio:+chestSkin.toFixed(3), breast_size:breast, nipples_visible:(chestSkin>0.55), // crude
-            nipple_confidence: +(chestSkin>0.55?0.6:0.1).toFixed(2), slurs:(spice.value>=3?'pussy, tits, nipples':'')};
+      nsfw={chest_rect:rect, chest_skin_ratio:+chestSkin.toFixed(3), breast_size:breast, nipples_visible:(chestSkin>0.55),
+            nipple_confidence: +(chestSkin>0.55?0.6:0.1).toFixed(2), slurs:(+spice.value>=3?'pussy, tits, nipples':'')};
     }
 
     facesOut.push({
@@ -465,7 +568,6 @@ goTo4.addEventListener('click', async ()=>{
       measures:{face_height:+faceHpx.toFixed(3), jaw_width:+jawWpx.toFixed(3), cheek_width:+cheekWpx.toFixed(3), forehead_height:+foreHpx.toFixed(3), lip_thickness:+lipTpx.toFixed(3), eye_angle_deg:eyeDeg},
       ratios, shape,
       palette:{hair,skin,eyes, hairWord},
-      landmarks_norm: lmN.map(p=>[+p.x.toFixed(6),+p.y.toFixed(6),+(p.z??0).toFixed(6)]),
       landmarks_canvas: lmC,
       nsfw
     });
@@ -475,30 +577,33 @@ goTo4.addEventListener('click', async ()=>{
   let cloud=null;
   if(useCloud.checked && hfTokenEl.value.trim()){
     try{
-      // Convert current canvas to blob
+      cloudStatus.textContent='preparing image…';
       const blob=await new Promise(r=>cPrev.toBlob(r,'image/png',0.92));
-      // Choose a couple models
-      // 1) BLIP caption
+      cloudStatus.textContent='BLIP caption…';
       const cap = await hfPOST('Salesforce/blip-image-captioning-large', blob, hfTokenEl.value.trim()).catch(()=>null);
-      // 2) CLIP Interrogator (returns text prompt)
+      cloudStatus.textContent='CLIP Interrogator…';
       const clip = await hfPOST('pharma/CLIP-Interrogator', blob, hfTokenEl.value.trim()).catch(()=>null);
-      // 3) DETR object detection (basic)
+      cloudStatus.textContent='DETR objects…';
       const detr = await hfPOST('facebook/detr-resnet-50', blob, hfTokenEl.value.trim()).catch(()=>null);
       cloud={caption:cap?.[0]?.generated_text||null, clip_prompt:clip?.[0]?.generated_text||clip?.generated_text||null, objects:detr||null};
-    }catch(e){ cloud={error:String(e)}; }
+      cloudStatus.textContent='done';
+    }catch(e){ cloud={error:String(e)}; cloudStatus.textContent='error'; }
   }
 
   // Minimal pose summary
   let poseBlock=null;
-  if(scanBody.checked && poseRes?.landmarks){
-    const lm=poseRes.landmarks[0]; // single person pose; model provides best guess
-    if(lm){
-      const px = lm.map(p=>({x:imgMeta.dx+p.x*imgMeta.dw, y:imgMeta.dy+p.y*imgMeta.dh, z:p.z}));
-      const torsoH = Math.hypot(px[11].y-px[23].y, px[11].x-px[23].x); // shoulder to hip roughly
-      const legL = Math.hypot(px[23].y-px[27].y, px[23].x-px[27].x);
-      const armL = Math.hypot(px[11].y-px[15].y, px[11].x-px[15].x);
-      poseBlock={torso_px:+torsoH.toFixed(1), leg_px:+legL.toFixed(1), arm_px:+armL.toFixed(1)};
-    }
+  if(scanBody.checked){
+    try{
+      const poseRes=await pose.detect(cPrev);
+      const lm=poseRes?.landmarks?.[0];
+      if(lm){
+        const px = lm.map(p=>({x:imgMeta.dx+p.x*imgMeta.dw, y:imgMeta.dy+p.y*imgMeta.dh, z:p.z}));
+        const torsoH = Math.hypot(px[11].y-px[23].y, px[11].x-px[23].x);
+        const legL = Math.hypot(px[23].y-px[27].y, px[23].x-px[27].x);
+        const armL = Math.hypot(px[11].y-px[15].y, px[11].x-px[15].x);
+        poseBlock={torso_px:+torsoH.toFixed(1), leg_px:+legL.toFixed(1), arm_px:+armL.toFixed(1)};
+      }
+    }catch{}
   }
 
   // Assemble final JSON
@@ -508,34 +613,45 @@ goTo4.addEventListener('click', async ()=>{
     image:{width:imgMeta.dw, height:imgMeta.dh, canvas:{W,H}},
     faces:facesOut,
     pose:poseBlock,
-    scene:{bgTag, note:"scene heuristics only"},
+    scene:{bgTag:bgTag, note:"scene heuristics only"},
     cloud
   };
 
-  // Build prompts for active face (0)
+  // UI: build outputs + pills
   buildOutputsForFace(0, analysis, parseInt(detailLevel.value,10), parseInt(spice.value,10));
-  // Face selector UI
-  faceSelector.innerHTML='';
-  facesOut.forEach((f,idx)=>{ const pill=document.createElement('div'); pill.className='face-pill'+(idx===0?' active':''); pill.textContent='Face '+idx; pill.addEventListener('click',()=>{buildOutputsForFace(idx,analysis,parseInt(detailLevel.value,10),parseInt(spice.value,10)); selectFace(idx);}); faceSelector.appendChild(pill); });
+  mkFacePills(facesOut);
   selectFace(0);
+
+  // Animations
+  startOverlayAnimation();
+  setTimeout(stopOverlayAnimation, 1600); // settle to full overlay after sweep
 
   statusText.textContent='done';
   copySFWBtn.disabled=false; copyNSFWBtn.disabled=!scanNSFW.checked; exportJSON.disabled=false;
-});
+}
+
+function mkFacePills(facesOut){
+  faceSelector.innerHTML='';
+  facesOut.forEach((f,idx)=>{
+    const pill=document.createElement('div'); pill.className='face-pill'+(idx===0?' active':''); pill.textContent='Face '+idx;
+    pill.addEventListener('click',()=>{buildOutputsForFace(idx,analysis,parseInt(detailLevel.value,10),parseInt(spice.value,10)); selectFace(idx);});
+    faceSelector.appendChild(pill);
+  });
+}
 
 function buildOutputsForFace(idx, analysis, detail, spiceLvl){
-  const faceBlock=analysis.faces[idx];
-  if(!faceBlock){ outSFW.value=''; outNSFW.value=''; outMeas.value=''; outJson.value=JSON.stringify(analysis,null,2); return; }
-  const scene={palette:faceBlock.palette, hairWord:faceBlock.palette.hairWord, bgTag:analysis.scene.bgTag, lighting:(analysis.cloud?.caption?.match(/candle|warm/i)?'warm candlelight':'natural light')};
-  const sfw=assembleSFW({shape:faceBlock.shape, measures:faceBlock.measures, ratios:faceBlock.ratios}, scene, detail);
-  const nsfw= scanNSFW.checked ? assembleNSFW({shape:faceBlock.shape}, faceBlock.nsfw||{}, scene, spiceLvl) : '';
+  const f=analysis?.faces?.[idx];
+  if(!f){ outSFW.value=''; outNSFW.value=''; outMeas.value=''; outJson.value=JSON.stringify(analysis||{},null,2); return; }
+  const scene={palette:f.palette, hairWord:f.palette.hairWord, bgTag:analysis.scene.bgTag, lighting:(analysis.cloud?.caption?.match(/candle|warm/i)?'warm candlelight':'natural light')};
+  const sfw=assembleSFW({shape:f.shape, measures:f.measures, ratios:f.ratios, palette:f.palette}, scene, detail);
+  const nsfw= scanNSFW.checked ? assembleNSFW({shape:f.shape, palette:f.palette}, f.nsfw||{}, scene, spiceLvl) : '';
   outSFW.value= (analysis.cloud?.clip_prompt ? `${analysis.cloud.clip_prompt}\n\n` : '') + sfw + (analysis.cloud?.caption? `\n\nCaption: ${analysis.cloud.caption}`:'');
   outNSFW.value= nsfw;
   outMeas.value=[
-    `face: H ${faceBlock.measures.face_height}px, jaw ${faceBlock.measures.jaw_width}px, cheek ${faceBlock.measures.cheek_width}px, forehead ${faceBlock.measures.forehead_height}px, lips ${faceBlock.measures.lip_thickness}px`,
-    `ratios: jaw/face ${faceBlock.ratios.jaw_face}, cheek/face ${faceBlock.ratios.cheek_face}, forehead/face ${faceBlock.ratios.forehead_face}, lip/face ${faceBlock.ratios.lip_face}`,
-    `shape: ${faceBlock.shape}, eye angle: ${faceBlock.measures.eye_angle_deg}°`,
-    `palette: hair ${faceBlock.palette.hair} (${faceBlock.palette.hairWord}), skin ${faceBlock.palette.skin}, eyes ${faceBlock.palette.eyes}`,
+    `face: H ${f.measures.face_height}px, jaw ${f.measures.jaw_width}px, cheek ${f.measures.cheek_width}px, forehead ${f.measures.forehead_height}px, lips ${f.measures.lip_thickness}px`,
+    `ratios: jaw/face ${f.ratios.jaw_face}, cheek/face ${f.ratios.cheek_face}, forehead/face ${f.ratios.forehead_face}, lip/face ${f.ratios.lip_face}`,
+    `shape: ${f.shape}, eye angle: ${f.measures.eye_angle_deg}°`,
+    `palette: hair ${f.palette.hair} (${f.palette.hairWord}), skin ${f.palette.skin}, eyes ${f.palette.eyes}`,
     analysis.pose? `pose (px): torso ${analysis.pose.torso_px}, arm ${analysis.pose.arm_px}, leg ${analysis.pose.leg_px}` : `pose: —`,
     `scene: ${analysis.scene.bgTag}${analysis.cloud?.objects?`, objects: ${JSON.stringify(analysis.cloud.objects.slice?.(0,5) || analysis.cloud.objects).slice(0,180)}…`:''}`
   ].join('\n');
@@ -553,6 +669,15 @@ copyNSFWBtn.addEventListener('click',()=>copyText(outNSFW.value));
 exportJSON.addEventListener('click',()=>{ const blob=new Blob([outJson.value],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='mapper_wizard.json'; document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},200); });
 rerun.addEventListener('click',()=>{ setStep(2); toast('Adjust options and run again.'); });
 
+/* Live re-render on option changes */
+[detailLevel, spice, scanNSFW].forEach(el=>el.addEventListener('input', ()=>{ if(analysis){ renderOutputs(); renderOverlay(true); } }));
+previewBtn.addEventListener('click', ()=>{ quickPreview().then(()=>toast('Preview rendered.')); });
+
+/* ===== Helper: keep UI scan bar in motion ===== */
+(function(){
+  const bar = document.getElementById('scanBar');
+  let t=0; setInterval(()=>{ bar.style.width = (40 + 20*Math.sin(t+=0.4))+'%'; }, 120);
+})();
 </script>
 </body>
 </html>
