@@ -1,536 +1,699 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>ImageIntel Pro Visor — PromptForge</title>
-  <meta name="description" content="On‑device photo deconstruction with MediaPipe overlays (face mesh, pose, multi‑class segments), optional NSFW boxes, and paste‑ready Replica Prompts + JSON v4 export."/>
-  <link rel="canonical" href="https://promptforge.online/imageintel.html"/>
-  <meta name="robots" content="noindex, nofollow"/>
-  <meta property="og:title" content="ImageIntel Pro Visor — PromptForge"/>
-  <meta property="og:description" content="On‑device overlays + prompts + JSON export. MediaPipe Face/Pose/Segments with optional cloud assist."/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:image" content="/assets/og/imageintel.png"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="theme-color" content="#0b0f14"/>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <style>
-    :root{
-      --bg:#0b0f14; --panel:#11161d; --edge:#232a33; --ink:#d6f5ff; --dim:#9db1bd; --aqua:#64f2e3; --aqua2:#23d7ba; --hot:#fa528e; --vio:#be9cff; --gold:#ffd166;
-    }
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Share Tech Mono",ui-monospace,monospace;}
-    .wrap{max-width:1280px;margin:0 auto;padding:20px 18px 120px;}
-    h1{font-size:28px;margin:10px 0 12px}
-    .sub{color:var(--dim);margin-top:-6px;margin-bottom:22px}
-    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
-    @media(max-width:1100px){.grid{grid-template-columns:1fr}}
-    .stage{background:linear-gradient(180deg,#0f141b,#0d1218);border:1px solid var(--edge);border-radius:14px;padding:14px;position:relative;min-height:520px}
-    .imgbox{position:relative;display:flex;align-items:center;justify-content:center;background:#0e141a;border:1px dashed #2a3946;border-radius:12px;min-height:480px;overflow:hidden}
-    .imgbox img{max-width:100%;max-height:78vh;height:auto;width:auto;display:block}
-    .overlay{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-    .hud{position:absolute;left:10px;bottom:10px;background:#0f141bdd;border:1px solid #2b3641;border-radius:10px;padding:8px 10px;font-size:12px;color:#cfe9f3}
-    .stepper{background:var(--panel);border:1px solid var(--edge);border-radius:14px;padding:14px}
-    .sec{border-bottom:1px dashed #24313e;padding:10px 0}
-    .sec:last-child{border-bottom:0}
-    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .btn{background:#1a2029;color:var(--aqua);border:1px solid var(--aqua);border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer}
-    .btn:hover{background:var(--aqua);color:#102028}
-    label{display:inline-flex;gap:8px;align-items:center}
-    input[type="range"]{width:220px}
-    .tabs{margin-top:16px;background:var(--panel);border:1px solid var(--edge);border-radius:14px}
-    .tabbar{display:flex;gap:8px;padding:8px;border-bottom:1px solid var(--edge);flex-wrap:wrap}
-    .tabbar button{background:#151b23;border:1px solid #2a3844;color:#bfeef0;border-radius:9px;padding:7px 10px;cursor:pointer}
-    .tabbar button.active{background:var(--aqua);color:#0c1b1f;border-color:#fff}
-    .tab{display:none;padding:12px}
-    .outbox{background:#0f151c;border:1px solid #263341;border-radius:10px;padding:10px;white-space:pre-wrap;min-height:120px}
-    .pill{display:inline-block;font-size:12px;border:1px solid #2a3743;background:#0e141ad9;padding:3px 7px;border-radius:999px;margin-right:6px}
-    .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-    .kpi span{background:#0e141ad9;border:1px solid #2a3743;border-radius:7px;padding:5px 8px;font-size:12px}
-    .swatch{display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:middle;border:1px solid #445}
-    .dl{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .fine{font-size:12px;color:#9fb3bd}
-    /* canvases DPR-locked via JS */
-    canvas{image-rendering:pixelated}
-    /* ===== J1NX + Footer (integrated) ===== */
-    .j1nx-float-true{position:fixed;z-index:4000;right:2vw;bottom:calc(2.8vh + 125px);display:flex;flex-direction:column;align-items:center;pointer-events:all;user-select:none;min-width:0;max-width:360px}
-    .j1nx-true-cutout-img{width:320px;height:320px;object-fit:contain;border-radius:32px;background:transparent!important;margin-bottom:-30px;position:relative;z-index:9;pointer-events:auto;transition:box-shadow .2s;box-shadow:none!important}
-    .j1nx-bubble-true-main{background:rgba(22,23,31,0.97);border-radius:17px;box-shadow:0 4px 22px #be9cff66, 0 0 0 3px #23231f;border:2px solid var(--aqua);padding:1.1em 1.3em 1em;display:flex;flex-direction:column;align-items:center;min-width:290px;max-width:330px;position:relative;z-index:1}
-    .j1nx-bubble-text-true{font-size:1.05em;color:#fff;margin:.42em 0 .20em;text-align:center;font-weight:600;text-shadow:0 1px 11px #1e1111cc;line-height:1.22}
-    .j1nx-bubble-row-true{width:100%;display:flex;justify-content:center;gap:7px;margin:.13em 0 .10em}
-    .j1nx-input-true{flex:1;font-size:1em;border-radius:8px;padding:7px 12px;border:1px solid var(--aqua);background:#171b22;color:var(--aqua);min-width:0}
-    .j1nx-btn-true{font-size:.98em;padding:6.5px 14px;border-radius:8px;background:#22252b;border:1.3px solid var(--aqua);color:var(--aqua);font-weight:600;cursor:pointer;transition:background .13s,color .13s,border .13s;box-shadow:0 1.5px 9px #be9cff33}
-    .j1nx-btn-true:hover{background:var(--aqua);color:#171b22;border-color:#fff}
-    .j1nx-easteregg-true{font-size:.91em;color:#be9cff;background:#171b22e6;border-radius:7px 13px 12px 17px;margin-top:7px;padding:7px 17px 6px 13px;opacity:.85;pointer-events:none;text-align:center;width:94%;user-select:none;box-shadow:0 3px 13px #be9cff28;font-weight:600}
-    @media(max-width:900px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:97vw;max-width:99vw}.j1nx-true-cutout-img{width:112px;height:112px}}
-    @media(max-width:700px){.j1nx-float-true{min-width:99vw;max-width:99vw;right:1vw}.j1nx-bubble-true-main{min-width:98vw;max-width:99vw}.j1nx-true-cutout-img{width:66px;height:66px}}
-    footer{margin:0 auto;padding:0;text-align:center;max-width:820px;width:100%;display:flex;flex-direction:column;align-items:center;background:none;position:relative;z-index:100;font-size:1rem;color:var(--ink)}
-    .footer-art{margin:0 0 12px;font-family:"Fira Mono",monospace;font-size:.96em;color:#a1ffe3;line-height:1.1;letter-spacing:.2px;text-align:center;white-space:pre}
-    .footer-camo{font-size:15px;line-height:1.11;letter-spacing:1.7px;margin:5px 0 12px;text-align:center;opacity:.93;white-space:pre}
-    .footer-bar{color:#88fffd;margin:12px auto 8px;font-size:1.04em;text-align:center;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}
-    .footer-bar a{color:var(--aqua);text-decoration:none}
-    .footer-bar a:hover{text-decoration:underline;color:#fff}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ImageIntel Pro Visor — Test Build (Local + Cloud Optional)</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0; --aqua:#64f2e3; --hot:#ff4d9a; --lime:#a8ff60; --gold:#ffd166;
+    --red:#ff6b6b; --green:#52ffa8; --blue:#59baff; --vio:#be9cff;
+  }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif}
+  .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
+  h1{font-weight:800;letter-spacing:.2px;margin:0 0 10px}
+  .sub{color:var(--mut);margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  @media(max-width:1100px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid #1e2632;border-radius:14px;box-shadow:0 10px 30px #0005;overflow:hidden}
+  .card h2{margin:0;padding:12px 14px;border-bottom:1px solid #1f2834;background:#0f141d}
+  .pad{padding:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .row > * {flex:0 0 auto}
+  .btn{background:#182130;border:1px solid #2a3445;color:var(--aqua);padding:9px 12px;border-radius:9px;font-weight:700;cursor:pointer}
+  .btn:hover{border-color:#3e5169;background:#1a2738}
+  .btn.primary{background:linear-gradient(180deg,#1e334a,#142130);color:#eaffff;border-color:#365674}
+  .btn.danger{color:#fff;border-color:#5b1a2b;background:#2a0d16}
+  .btn.ghost{background:transparent;border:1px dashed #3c485a}
+  .chk, .rng{accent-color:var(--aqua)}
+  label{font-size:.95rem;color:#cfe7ff}
+  .mini{font-size:.85rem;color:var(--mut)}
+  .stage{position:relative;display:inline-block;max-width:100%}
+  .stage img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid #1d2632}
+  canvas.layer{position:absolute;left:0;top:0;pointer-events:none}
+  .flex{display:flex;gap:10px;flex-wrap:wrap}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:220px}
+  textarea.input{width:100%;min-height:90px;white-space:pre-wrap}
+  .tabs{display:flex;gap:6px;border-bottom:1px solid #1c2532;padding:8px;background:#0e141d;position:sticky;top:0;z-index:5}
+  .tabbtn{padding:8px 10px;border-radius:8px;border:1px solid #2b384b;background:#162030;color:#cfe7ff;cursor:pointer}
+  .tabbtn.active{background:#1f2e42;border-color:#445b7a}
+  .tab{display:none;padding:12px}
+  .tab.active{display:block}
+  pre.code{white-space:pre-wrap;background:#0a1018;border:1px solid #1b2430;border-radius:10px;padding:12px;color:#bbdefb;overflow:auto;max-height:360px}
+  .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #243246;color:#9ad7ff;font-size:.8rem}
+  .diag{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:.9rem;line-height:1.35}
+  .good{color:var(--green)} .warn{color:var(--gold)} .bad{color:var(--red)}
+  .swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid #333;margin-right:6px;vertical-align:middle}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .kpi .box{background:#0c1320;border:1px solid #203049;border-radius:10px;padding:8px 10px;min-width:120px}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>ImageIntel Pro Visor <span class="pill">on‑device</span><span class="pill">beta</span></h1>
-    <div class="sub">Load a photo → choose overlays → preview phases → export prompts & JSON. Local runs first; cloud is optional and non‑blocking.</div>
+<div class="wrap">
+  <h1>ImageIntel Pro Visor — Test Build</h1>
+  <p class="sub">Local overlays (Face Mesh • Pose • Segments) + optional Cloud Assist (CLIP &amp; DETR) + JSON/Prompt export. DPR-sharp, on-device first.</p>
 
-    <div class="grid">
-      <!-- ========== STAGE ========== -->
-      <div class="stage">
-        <div class="imgbox" id="imgBox">
-          <img id="inImg" alt="Upload to start"/>
-          <canvas id="cvMesh" class="overlay"></canvas>
-          <canvas id="cvPose" class="overlay"></canvas>
-          <canvas id="cvSeg" class="overlay"></canvas>
-          <div class="hud" id="hud">Idle</div>
+  <div class="grid">
+    <!-- LEFT: STAGE + CONTROLS -->
+    <div class="card">
+      <h2>Stage</h2>
+      <div class="pad">
+        <div class="row">
+          <input type="file" id="fileInput" accept="image/*" class="input"/>
+          <button class="btn" id="loadDemo">Load Demo</button>
+          <button class="btn ghost" id="fitToImage">Fit Canvases</button>
+          <span id="imgInfo" class="mini"></span>
         </div>
-      </div>
-
-      <!-- ========== STEPPER ========== -->
-      <div class="stepper">
-        <div class="sec">
-          <div class="row"><b>Step 1 — Load</b></div>
-          <div class="row">
-            <input type="file" id="file" accept="image/*"/>
-            <button class="btn" id="demo">Load demo</button>
-          </div>
-        </div>
-        <div class="sec">
-          <div class="row"><b>Step 2 — Options</b></div>
-          <div class="row">
-            <label><input type="checkbox" id="optFace" checked/> Face</label>
-            <label><input type="checkbox" id="optPose" checked/> Pose</label>
-            <label><input type="checkbox" id="optSeg" checked/> Segments</label>
-            <label title="Optional, gated"><input type="checkbox" id="optNsfw"/> NSFW boxes</label>
-            <label title="Optional cloud"><input type="checkbox" id="optCloud"/> Objects+Style</label>
-          </div>
-          <div class="row">
-            <label>Detail <input type="range" id="detail" min="0" max="2" step="1" value="1"></label>
-            <label>Spice <input type="range" id="spice" min="0" max="3" step="1" value="1"></label>
-            <button class="btn" id="preview">Preview Overlay</button>
-          </div>
-        </div>
-        <div class="sec">
-          <div class="row"><b>Step 3 — Cloud Assist (optional)</b></div>
-          <div class="row">
-            <input id="hfToken" placeholder="Hugging Face token (hf_...)" style="flex:1;min-width:200px;background:#0d131a;border:1px solid #2a3846;border-radius:8px;color:#cfe9f3;padding:8px"/>
-            <button class="btn" id="runCloud">Run</button>
-          </div>
-          <div class="fine">Adds a CLIP‑style caption + DETR object boxes if a token is provided. Never blocks local overlays.</div>
+        <div style="height:10px"></div>
+        <div id="stage" class="stage">
+          <img id="imgEl" alt="preview"/>
+          <canvas id="cvFace" class="layer"></canvas>
+          <canvas id="cvPose" class="layer"></canvas>
+          <canvas id="cvSeg"  class="layer"></canvas>
+          <canvas id="cvCloud" class="layer"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- ========== OUTPUT TABS ========== -->
-    <div class="tabs" id="tabs">
-      <div class="tabbar">
-        <button data-tab="sfw" class="active">SFW Prompt</button>
-        <button data-tab="nsfw">NSFW Prompt</button>
-        <button data-tab="json">JSON</button>
-        <button data-tab="diag">Diagnostics</button>
-      </div>
-      <div class="tab" id="tab-sfw" style="display:block">
-        <div class="outbox" id="outSfw"></div>
-        <div class="dl">
-          <button class="btn" id="copySfw">Copy SFW</button>
-          <button class="btn" id="copyNeg">Copy Negative</button>
+    <div class="card">
+      <h2>Stepper</h2>
+      <div class="pad">
+        <!-- STEP 1: LOAD -->
+        <div class="card" style="border-color:#23324a">
+          <h2>Step 1 — Load</h2>
+          <div class="pad">
+            <div class="row">
+              <button class="btn primary" id="btnAnalyzeLocal">Analyze Locally (A→B→C)</button>
+              <button class="btn" id="btnClear">Clear Overlays</button>
+            </div>
+            <p class="mini">A) Face mesh • B) Pose • C) Segments — always instant on device.</p>
+          </div>
+        </div>
+
+        <!-- STEP 2: OPTIONS -->
+        <div class="card" style="border-color:#2a3244">
+          <h2>Step 2 — Options</h2>
+          <div class="pad">
+            <div class="cols">
+              <div>
+                <label><input type="checkbox" class="chk" id="optFace" checked/> Face</label><br/>
+                <label><input type="checkbox" class="chk" id="optPose" checked/> Pose</label><br/>
+                <label><input type="checkbox" class="chk" id="optSeg"  checked/> Segments</label><br/>
+                <label><input type="checkbox" class="chk" id="optNSFW"/> NSFW (type “unlock”)</label>
+              </div>
+              <div>
+                <label>Detail <input type="range" id="rngDetail" class="rng" min="0" max="3" step="1" value="2"/></label><br/>
+                <label>Spice <input type="range" id="rngSpice" class="rng" min="0" max="3" step="1" value="1"/></label><br/>
+                <label>Accuracy <input type="range" id="rngAcc" class="rng" min="0" max="3" step="1" value="2"/></label>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="box"><div class="mini">Faces</div><div id="kpiFaces">–</div></div>
+              <div class="box"><div class="mini">Pose</div><div id="kpiPose">–</div></div>
+              <div class="box"><div class="mini">Segments</div><div id="kpiSeg">–</div></div>
+            </div>
+            <div style="margin-top:10px" class="row">
+              <input id="nsfwUnlock" class="input" placeholder="Type unlock to enable NSFW…" style="min-width:280px"/>
+              <button class="btn" id="btnNSFWTest">Test NSFW (if unlocked)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3: CLOUD -->
+        <div class="card" style="border-color:#354057">
+          <h2>Step 3 — Cloud Assist (optional)</h2>
+          <div class="pad">
+            <div class="row">
+              <input id="hfToken" class="input" placeholder="Hugging Face token (optional)"/>
+              <button class="btn" id="btnCloudRun">Run CLIP + DETR</button>
+              <button class="btn ghost" id="btnCheckModels">Check Models</button>
+            </div>
+            <p class="mini">Adds: CLIP style hint • DETR object boxes. Won’t block local overlays.</p>
+          </div>
         </div>
       </div>
-      <div class="tab" id="tab-nsfw">
-        <div class="outbox" id="outNsfw"></div>
-        <div class="dl"><button class="btn" id="copyNsfw">Copy NSFW</button></div>
-      </div>
-      <div class="tab" id="tab-json">
-        <div class="outbox" id="outJson" style="font-family:ui-monospace,monospace"></div>
-        <div class="dl"><button class="btn" id="dlJson">Download JSON</button></div>
-      </div>
-      <div class="tab" id="tab-diag">
-        <div class="outbox" id="outDiag"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- J1NX FLOAT -->
-  <div class="j1nx-float-true" id="j1nxFloatTrue">
-    <img src="j1nx/j1nx_cutout.png" alt="J1nx" class="j1nx-true-cutout-img" id="j1nxCutoutTrue"/>
-    <div class="j1nx-bubble-true-main" id="j1nxBubbleTrueMain">
-      <div class="j1nx-bubble-text-true" id="j1nxBubbleTextTrue">
-        <b>J1nx:</b> I watch your overlays so you don’t have to blink. PG by default — type <b>unlock</b> for spicy.
-      </div>
-      <div class="j1nx-bubble-row-true">
-        <input class="j1nx-input-true" id="j1nxInputTrue" placeholder="Say something to J1nx..." maxlength="120" autocomplete="off" />
-        <button class="j1nx-btn-true" id="j1nxSendTrue">Send</button>
-      </div>
-      <div class="j1nx-bubble-row-true">
-        <button class="j1nx-btn-true" id="j1nxClearTrue">Clear Chat</button>
-        <button class="j1nx-btn-true" id="j1nxSaveTrue">Save Chat</button>
-      </div>
-      <div class="j1nx-easteregg-true" id="j1nxEasterEggTrue">Double‑tap the bubble or type <b>'unlock'</b> to reveal NSFW mode…</div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <pre class="footer-art">
-  ____      ____    U  ___ u  __  __    ____    _____    _____   U  ___ u   ____      ____  U _____ u   
-U|  _"\ uU |  _"\ u  \"/_ \/U|' \/ '|uU|  _"\ u|_ " _|  |" ___|   \"/_ \/U |  _"\ uU /"___|u\| ___"|/   
-\| |_) |/ \| |_) |/  | | | |\| |\/| |/\| |_) |/  | |   U| |_  u   | | | | \| |_) |/\| |  _ / |  _|"     
- |  __/    |  _ <.-,_| |_| | | |  | |  |  __/   /| |\  \|  _|/.-,_| |_| |  |  _ <   | |_| |  | |___     
- |_|       |_| \_\\_)-\___/  |_|  |_|  |_|     u |_|U   |_|    \_)-\___/   |_| \_\   \____|  |_____|    
- ||>>_     //   \\_    \\   <<,-,,-.   ||>>_   _// \\_  )(\\,-      \\     //   \\_  _)(|_   <<   >>    
-(__)__)   (__)  (__)  (__)   (./  \.) (__)__) (__) (__)(__)(_/     (__)   (__)  (__)(__)__) (__) (__)   
-    </pre>
-    <pre class="footer-camo" id="footerCamo"></pre>
-    <div class="footer-bar">Made underground in BC, Canada • #PromptForge • <a href="https://bsky.app/profile/goreandgiggles.bsky.social">Bluesky</a> • <a href="https://x.com/GoreandGiggles">Twitter/X</a> • <a href="/legal.html">Legal</a></div>
-  </footer>
+  <!-- OUTPUT TABS -->
+  <div class="card" style="margin-top:16px">
+    <div class="tabs">
+      <button class="tabbtn active" data-tab="sfw">SFW Prompt</button>
+      <button class="tabbtn" data-tab="nsfw">NSFW Prompt</button>
+      <button class="tabbtn" data-tab="json">JSON v4</button>
+      <button class="tabbtn" data-tab="diag">Diagnostics</button>
+    </div>
+    <div id="sfw" class="tab active">
+      <textarea id="sfwOut" class="input" placeholder="SFW prompt…"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="copySFW">Copy</button>
+        <button class="btn" id="improveSFW">Variant (tone)</button>
+      </div>
+    </div>
+    <div id="nsfw" class="tab">
+      <textarea id="nsfwOut" class="input" placeholder="NSFW prompt (locked by default)…"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="copyNSFW">Copy</button>
+        <span class="mini">NSFW will remain minimal unless unlocked + detector active.</span>
+      </div>
+    </div>
+    <div id="json" class="tab">
+      <pre id="jsonOut" class="code"></pre>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="downloadJSON">Download JSON</button>
+      </div>
+    </div>
+    <div id="diag" class="tab">
+      <div class="diag" id="diagLog"></div>
+    </div>
+  </div>
 
-  <!-- ===== LIBS: MediaPipe Tasks (CDN), connectors (legacy) & HF Inference optional ===== -->
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5/pose.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@huggingface/inference@2.8.1/dist/index.js" crossorigin="anonymous"></script>
-  <!-- Optional: NudeNet browser build (host yourself for stability) -->
-  <!-- <script src="https://cdn.jsdelivr.net/gh/vladmandic/nudenet/dist/browser/nudenet.js"></script> -->
+  <!-- FOOT ROW -->
+  <div class="row" style="margin-top:12px;justify-content:space-between">
+    <div>
+      <span class="pill">DPR: <span id="dprVal"></span></span>
+      <span class="pill">Image: <span id="imgDim"></span></span>
+      <span class="pill">Canvas: <span id="canDim"></span></span>
+    </div>
+    <div class="row">
+      <button class="btn danger" id="resetAll">Reset All</button>
+      <button class="btn" id="downloadZIP">Export ZIP</button>
+    </div>
+  </div>
+</div>
 
-  <script>
-  (()=>{
-    const $ = sel => document.querySelector(sel);
-    const img = $('#inImg');
-    const cvMesh=$('#cvMesh'), cvPose=$('#cvPose'), cvSeg=$('#cvSeg');
-    const hud=$('#hud');
-    const state = { dpr: Math.min(window.devicePixelRatio||1, 2), fileset:null, lmFace:null, lmPose:null, segmenter:null, drawing:{}, imgInfo:null, nsfwReady:false, nsfwDetections:[], cloud:{} };
+<!-- LIBS -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+<!-- NudeNet TFJS (optional; will skip if not reachable) -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.18.0/dist/tf.min.js"></script>
+<script>
+/* Attempt to load NudeNet TFJS wrapper dynamically if available (Vlad Mandic build or similar).
+   If not found, nsfw will remain gracefully disabled. */
+window.__loadNudeNet = async function(){
+  if (window.nudenetLoaded) return true;
+  try {
+    // Example CDN path placeholder — replace with your hosted build if you have one:
+    // const mod = await import('https://cdn.jsdelivr.net/gh/vladmandic/nudenet-models/dist/index.js');
+    // window.NudeNet = mod.default || mod.NudeNet;
+    // window.nudenetLoaded = true;
+    // For safety, keep disabled until a confirmed URL is provided:
+    window.nudenetLoaded = false;
+    return false;
+  } catch(e){
+    console.warn('NudeNet unavailable', e);
+    return false;
+  }
+};
+</script>
 
-    // ===== Load demo / file
-    $('#demo').onclick = async ()=>{
-      const demoUrl = 'https://images.unsplash.com/photo-1524255684952-d7185b509571?q=80&w=1200&auto=format&fit=crop';
-      await loadImage(demoUrl);
-    };
-    $('#file').addEventListener('change', async (e)=>{
-      const f=e.target.files?.[0]; if(!f) return; const url=URL.createObjectURL(f); await loadImage(url); setTimeout(()=>URL.revokeObjectURL(url), 10_000);
+<script>
+(async function(){
+  const $ = sel => document.querySelector(sel);
+  const logEl = $('#diagLog');
+  const dprEl = $('#dprVal'), imgDimEl = $('#imgDim'), canDimEl = $('#canDim');
+  const imgEl = $('#imgEl');
+  const cvFace = $('#cvFace'), cvPose = $('#cvPose'), cvSeg = $('#cvSeg'), cvCloud = $('#cvCloud');
+  const stage = $('#stage');
+  const kpiFaces = $('#kpiFaces'), kpiPose = $('#kpiPose'), kpiSeg = $('#kpiSeg');
+  const sfwOut = $('#sfwOut'), nsfwOut = $('#nsfwOut'), jsonOut = $('#jsonOut');
+
+  // Tabs
+  document.querySelectorAll('.tabbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      $('#'+btn.dataset.tab).classList.add('active');
     });
+  });
 
-    async function loadImage(src){
-      img.src = src; img.onload = ()=>{ alignCanvases(); hud.textContent='Loaded'; };
-    }
+  const DPR = Math.max(1, window.devicePixelRatio || 1);
+  dprEl.textContent = DPR.toFixed(2);
 
-    // ===== DPR/resize & DrawingUtils
-    function alignCanvases(){
-      const box = $('#imgBox');
-      const r = img.getBoundingClientRect();
-      [cvMesh,cvPose,cvSeg].forEach(c=>{
-        const dpr = state.dpr; c.width = Math.max(1,Math.floor(r.width*dpr)); c.height = Math.max(1,Math.floor(r.height*dpr)); c.style.width = r.width+'px'; c.style.height = r.height+'px';
-        const ctx=c.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,r.width,r.height);
+  // MediaPipe setup
+  const { FaceLandmarker, PoseLandmarker, ImageSegmenter, DrawingUtils, FilesetResolver, 
+          FaceLandmarkerOptions, PoseLandmarkerOptions, ImageSegmenterOptions } = window;
+  let faceLandmarker, poseLandmarker, imageSegmenter;
+  let drawingFace, drawingPose;
+
+  // Default model URLs (adjust if you self-host)
+  const MODEL = {
+    face: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
+    pose: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+    segm: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float16/1/selfie_multiclass_256x256.task"
+  };
+
+  // Basic state
+  let lastResults = {
+    image:{w:0,h:0,natural:{w:0,h:0}},
+    face:null, pose:null, seg:null, nsfw:null, cloud:null,
+    prompts:{sfw:"", nsfw:"", negative:"lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face"}
+  };
+
+  function log(s, cls=''){ const line = document.createElement('div'); if(cls) line.className=cls; line.textContent = s; logEl.prepend(line); }
+  function clearCanvas(c){ const ctx=c.getContext('2d'); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,c.width,c.height); }
+
+  function fitCanvases(){
+    // Match canvases to displayed <img> box with DPR scaling
+    const rect = imgEl.getBoundingClientRect();
+    [cvFace,cvPose,cvSeg,cvCloud].forEach(cv=>{
+      const ctx=cv.getContext('2d');
+      cv.style.width = rect.width + 'px';
+      cv.style.height= rect.height + 'px';
+      cv.width = Math.max(1, Math.round(rect.width * DPR));
+      cv.height= Math.max(1, Math.round(rect.height* DPR));
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      ctx.imageSmoothingEnabled = true;
+    });
+    imgDimEl.textContent = `${imgEl.naturalWidth}×${imgEl.naturalHeight}`;
+    canDimEl.textContent = `${cvFace.width}×${cvFace.height} (CSS ${Math.round(cvFace.width/DPR)}×${Math.round(cvFace.height/DPR)})`;
+  }
+
+  $('#fitToImage').addEventListener('click', fitCanvases);
+
+  async function ensureTasks(){
+    if (faceLandmarker && poseLandmarker && imageSegmenter) return true;
+    const fileset = await FilesetResolver.forVisionTasks(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm"
+    );
+    faceLandmarker = await FaceLandmarker.createFromOptions(fileset, {
+      baseOptions: { modelAssetPath: MODEL.face },
+      numFaces: 1, runningMode: "IMAGE", outputFaceBlendshapes: true, outputFacialTransformationMatrixes: true
+    });
+    poseLandmarker = await PoseLandmarker.createFromOptions(fileset, {
+      baseOptions: { modelAssetPath: MODEL.pose },
+      runningMode: "IMAGE", numPoses: 1
+    });
+    imageSegmenter = await ImageSegmenter.createFromOptions(fileset, {
+      baseOptions: { modelAssetPath: MODEL.segm },
+      runningMode: "IMAGE", outputCategoryMask: true
+    });
+    drawingFace = new DrawingUtils(cvFace.getContext('2d'));
+    drawingPose = new DrawingUtils(cvPose.getContext('2d'));
+    return true;
+  }
+
+  // Load image (file or demo)
+  function loadBlobToImg(blob){
+    const url = URL.createObjectURL(blob);
+    imgEl.onload = ()=>{ URL.revokeObjectURL(url); fitCanvases(); $('#imgInfo').textContent=`Loaded ${imgEl.naturalWidth}×${imgEl.naturalHeight}`; };
+    imgEl.src = url;
+  }
+  $('#fileInput').addEventListener('change', e=>{
+    const f=e.target.files?.[0]; if(!f) return; loadBlobToImg(f);
+  });
+  $('#loadDemo').addEventListener('click', async ()=>{
+    // Free demo from unsplash
+    const res = await fetch('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1600&q=90');
+    const blob = await res.blob(); loadBlobToImg(blob);
+  });
+
+  // Analyze pipeline
+  async function analyzeLocal(){
+    if (!imgEl.complete || !imgEl.naturalWidth){ log('Load an image first', 'warn'); return; }
+    await ensureTasks();
+    fitCanvases();
+    clearCanvas(cvFace); clearCanvas(cvPose); clearCanvas(cvSeg); clearCanvas(cvCloud);
+    const wantFace = $('#optFace').checked, wantPose=$('#optPose').checked, wantSeg=$('#optSeg').checked;
+    lastResults.image = { w: cvFace.width, h: cvFace.height, natural: { w: imgEl.naturalWidth, h: imgEl.naturalHeight } };
+
+    // Build an HTMLCanvasImageSource for tasks (draw the image into a temp canvas matching display size)
+    const tmp = document.createElement('canvas');
+    tmp.width = Math.round(imgEl.getBoundingClientRect().width);
+    tmp.height= Math.round(imgEl.getBoundingClientRect().height);
+    const tctx = tmp.getContext('2d'); tctx.drawImage(imgEl, 0,0, tmp.width, tmp.height);
+
+    // A) FACE
+    let faces= null;
+    if (wantFace){
+      const t0 = performance.now();
+      const res = faceLandmarker.detect(tmp);
+      const dt = (performance.now()-t0)|0;
+      faces = res?.faceLandmarks || [];
+      kpiFaces.textContent = faces.length;
+      log(`Face A: ${faces.length} face(s) in ${dt}ms`, 'good');
+      // Draw tessellation + key contours
+      const ctx = cvFace.getContext('2d'); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.95;
+      faces.forEach(lms=>{
+        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color: '#2bd1ff22'});
+        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color: '#ff5572'});
+        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color: '#57ff6a'});
+        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color: '#00e0ff'});
+        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_LIPS,      {color: '#ffd166'});
+        // Eye tilt label (approx): slope between two outer eye corners
+        const L = lms; const le=L[33], re=L[263]; // approx outer corners
+        if(le&&re){
+          const tilt = (Math.atan2(re.y-le.y, re.x-le.x)*180/Math.PI).toFixed(1);
+          ctx.save(); ctx.fillStyle='#bfefff'; ctx.strokeStyle='#0a141f'; ctx.lineWidth=3;
+          ctx.font='bold 12px ui-monospace'; 
+          const sx = ((le.x+re.x)/2)*cvFace.width/DPR, sy=((le.y+re.y)/2)*cvFace.height/DPR - 12;
+          ctx.strokeText(`eye tilt ${tilt}°`, sx, sy); ctx.fillText(`eye tilt ${tilt}°`, sx, sy); ctx.restore();
+          lastResults.face = lastResults.face || {}; lastResults.face.angles = { eye_tilt_deg: parseFloat(tilt) };
+        }
       });
-      state.drawing.mesh = new (window.DrawingUtils||function(){this.drawLandmarks=()=>{};this.drawConnectors=()=>{}})(cvMesh.getContext('2d'));
-      state.drawing.pose = new (window.DrawingUtils||function(){this.drawLandmarks=()=>{};this.drawConnectors=()=>{}})(cvPose.getContext('2d'));
-      state.imgInfo = { dispW: r.width, dispH:r.height, naturalW: img.naturalWidth, naturalH: img.naturalHeight };
-    }
-    window.addEventListener('resize', ()=>{ if(img.complete) alignCanvases(); });
+    } else { kpiFaces.textContent = 'off'; }
 
-    // ===== Init MediaPipe Tasks lazily on first run
-    let initPromise=null;
-    async function ensureTasks(){
-      if(initPromise) return initPromise;
-      initPromise = (async()=>{
-        hud.textContent='Loading models…';
-        const vision = await window.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm');
-        const FaceLandmarker = window.FaceLandmarker; const PoseLandmarker = window.PoseLandmarker; const ImageSegmenter = window.ImageSegmenter;
-        state.lmFace = await FaceLandmarker.createFromOptions(vision, {
-          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task' },
-          runningMode: 'IMAGE', numFaces: 1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
-        });
-        state.lmPose = await PoseLandmarker.createFromOptions(vision, {
-          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task' },
-          runningMode: 'IMAGE', numPoses: 1
-        });
-        state.segmenter = await ImageSegmenter.createFromOptions(vision, {
-          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass/float16/latest/selfie_multiclass.task' },
-          runningMode: 'IMAGE', outputCategoryMask: true, outputConfidenceMasks: false
-        });
-        hud.textContent='Models ready';
-      })();
-      return initPromise;
-    }
+    // B) POSE
+    let poses = null;
+    if (wantPose){
+      const t0 = performance.now();
+      const res = poseLandmarker.detect(tmp);
+      const dt = (performance.now()-t0)|0;
+      poses = res?.landmarks || [];
+      kpiPose.textContent = poses.length ? 'ok' : 'none';
+      log(`Pose B: ${(poses?.length||0)} pose in ${dt}ms`, 'good');
+      const ctx = cvPose.getContext('2d');
+      if (poses?.[0]){
+        drawingPose.drawLandmarks(poses[0], {radius: 2, color:'#aaf'});
+        drawingPose.drawConnectors(poses[0], PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
+        // Example labels for shoulders/hips/knees
+        const p = poses[0];
+        const S = (i)=>p[i] && [ (p[i].x*cvPose.width/DPR), (p[i].y*cvPose.height/DPR) ];
+        const pts = { LShoulder:S(11), RShoulder:S(12), LHip:S(23), RHip:S(24), LKnee:S(25), RKnee:S(26) };
+        ctx.save(); ctx.fillStyle='#e6f6ff'; ctx.strokeStyle='#081019'; ctx.lineWidth=3; ctx.font='bold 12px ui-monospace';
+        for (const [k,v] of Object.entries(pts)) if(v){ ctx.strokeText(k, v[0], v[1]); ctx.fillText(k, v[0], v[1]); }
+        ctx.restore();
+        // Simple spans (shoulder width, etc.)
+        function dist(a,b){ return Math.hypot(a[0]-b[0], a[1]-b[1]); }
+        if (pts.LShoulder && pts.RShoulder){
+          const sw = dist(pts.LShoulder, pts.RShoulder); (lastResults.body ||= {}).spans_px = (lastResults.body.spans_px||{});
+          lastResults.body.spans_px.shoulders = Math.round(sw*DPR);
+        }
+      }
+    } else { kpiPose.textContent='off'; }
 
-    // ===== Options & buttons
-    const optFace=$('#optFace'), optPose=$('#optPose'), optSeg=$('#optSeg'), optNsfw=$('#optNsfw'), optCloud=$('#optCloud');
-    const detail=$('#detail'), spice=$('#spice');
+    // C) SEGMENTS
+    let seg = null, segInfo = '';
+    if (wantSeg){
+      const t0 = performance.now();
+      const res = imageSegmenter.segment(tmp);
+      const dt = (performance.now()-t0)|0;
+      const mask = res?.categoryMask; // Uint8Array
+      kpiSeg.textContent = mask? 'ok' : 'none';
+      log(`Seg C: ${mask?'mask':'none'} in ${dt}ms`, mask?'good':'warn');
+      if (mask){
+        const ctx = cvSeg.getContext('2d');
+        const w = tmp.width, h = tmp.height;
+        const imgData = ctx.createImageData(w, h);
+        // label colors: 0=bg,1=hair,2=face,3=skin,4=clothes,5=acc
+        const COLORS = {
+          0:[0,0,0,0],
+          1:[100,240,255,120],
+          2:[255,210,80,140],
+          3:[255,120,120,80],
+          4:[120,180,255,90],
+          5:[190,120,255,90]
+        };
+        // Count labels
+        const counts = new Array(6).fill(0);
+        for (let i=0;i<mask.width*mask.height;i++){
+          const lab = mask.data[i] ?? 0;
+          counts[lab] = (counts[lab]||0)+1;
+          const [r,g,b,a]=COLORS[lab]||[0,0,0,0];
+          const j=i*4; imgData.data[j]=r; imgData.data[j+1]=g; imgData.data[j+2]=b; imgData.data[j+3]=a;
+        }
+        const tmpSeg = document.createElement('canvas'); tmpSeg.width=w; tmpSeg.height=h;
+        tmpSeg.getContext('2d').putImageData(imgData,0,0);
+        ctx.drawImage(tmpSeg, 0,0, w, h);
+        seg = {counts:{bg:counts[0], hair:counts[1], face:counts[2], skin:counts[3], clothes:counts[4], accessories:counts[5]}, size:[w,h]};
+        segInfo = `hair:${counts[1]} face:${counts[2]} skin:${counts[3]} clothes:${counts[4]}`;
+      }
+    } else { kpiSeg.textContent='off'; }
 
-    // Tabs
-    document.querySelectorAll('.tabbar button').forEach(btn=>{
-      btn.onclick=()=>{ document.querySelectorAll('.tabbar button').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-        document.querySelectorAll('.tab').forEach(t=>t.style.display='none'); $('#tab-'+btn.dataset.tab).style.display='block'; };
-    });
+    lastResults.face ||= {};
+    lastResults.pose = poses?.[0]||null;
+    lastResults.seg  = seg;
+    // Palette sampling (rough): average dominant from hair/eyes/skin regions (use seg + simple sampling)
+    computePalette();
 
-    // ===== Preview Phases (A→B→C→D→E)
-    $('#preview').onclick = async ()=>{
-      if(!img.complete || !img.naturalWidth){ alert('Load an image first.'); return; }
-      await ensureTasks(); alignCanvases();
-      const t0=performance.now();
-      clearAll(); state.nsfwDetections=[]; state.cloud={};
-      const src = img;
-      if(optFace.checked){ await phaseFace(src); }
-      if(optPose.checked){ await phasePose(src); }
-      if(optSeg.checked){ await phaseSeg(src); }
-      if(optNsfw.checked){ await phaseNSFW(src); }
-      finalizeOutputs();
-      const t1=performance.now(); logDiag(`Preview done in ${(t1-t0).toFixed(1)}ms`);
-    };
+    // Prompts + JSON
+    buildPrompts();
+    renderJSON();
+  }
 
-    // ===== Cloud Assist
-    $('#runCloud').onclick = async ()=>{
-      const token = $('#hfToken').value.trim(); if(!token){ alert('Enter a Hugging Face token'); return; }
-      const I = window.HfInference ? new window.HfInference(token) : null; if(!I){ alert('HF Inference lib not found'); return; }
-      logDiag('Cloud: starting…');
-      try{
-        const blob = await toBlob(img);
-        const [cap, det] = await Promise.all([
-          I.imageToText({ data: blob, model: 'Salesforce/blip-image-captioning-base' }).catch(()=>({generated_text:''})),
-          I.objectDetection({ data: blob, model: 'facebook/detr-resnet-50' }).catch(()=>[])
-        ]);
-        state.cloud.clip_hint = cap?.generated_text || '';
-        state.cloud.objects = (det||[]).map(o=>({ label:o.label, score:o.score, box:[o.box.xmin,o.box.ymin,o.box.width,o.box.height] }));
-        logDiag(`Cloud: caption + ${state.cloud.objects.length} boxes`);
-        drawCloudBoxes();
-        finalizeOutputs();
-      }catch(e){ console.error(e); logDiag('Cloud failed (non‑blocking).'); }
-    };
-
-    function drawCloudBoxes(){
-      if(!state.cloud.objects?.length) return; const ctx=cvSeg.getContext('2d'); const {dispW,dispH}=state.imgInfo; ctx.save(); ctx.lineWidth=2; ctx.setLineDash([6,4]); ctx.strokeStyle='#ffd166'; ctx.fillStyle='#ffd16622';
-      for(const o of state.cloud.objects){ const [x,y,w,h]=normBoxToDisp(o.box); ctx.strokeRect(x,y,w,h); ctx.fillRect(x,y,w,h); ctx.fillStyle='#ffd166'; ctx.font='12px monospace'; ctx.fillText(`${o.label} ${(o.score*100|0)}%`, x+4,y+14); ctx.fillStyle='#ffd16622'; }
-      ctx.restore();
-    }
-
-    // ===== Phase A: Face mesh + features
-    async function phaseFace(src){
-      hud.textContent='Face…'; const r = state.lmFace.detect(src); const ctx=cvMesh.getContext('2d'); const {dispW,dispH}=state.imgInfo; ctx.clearRect(0,0,dispW,dispH);
-      if(!r?.faceLandmarks?.length){ logDiag('Face: none'); return; }
-      const lm = r.faceLandmarks[0];
-      const du = state.drawing.mesh; const F = window; // FACEMESH_* exported globally by @mediapipe/face_mesh
-      du.drawConnectors(lm, F.FACEMESH_TESSELATION, {color:'#23d7ba44', lineWidth:1});
-      du.drawConnectors(lm, F.FACEMESH_CONTOURS, {color:'#64f2e3', lineWidth:1.5});
-      du.drawLandmarks(lm, {color:'#fa528e', radius:1.2});
-      // Eye tilt + oval
-      drawEyeTilt(lm, ctx);
-      // Compute features & palette via segmenter (face/skin/hair)
-      const pal = await samplePalette();
-      const faceData = computeFaceMetrics(lm, pal);
-      state.face = faceData; logDiag(`Face: 468pts, tilt ${faceData.angles.eye_tilt_deg.toFixed(1)}°`);
-    }
-
-    function drawEyeTilt(lm, ctx){
-      const L=[33,133], R=[362,263];
-      const pL = avg2(lm[L[0]], lm[L[1]]); const pR = avg2(lm[R[0]], lm[R[1]]);
-      const a = Math.atan2((pR.y-pL.y),(pR.x-pL.x))*180/Math.PI;
-      ctx.save(); ctx.strokeStyle='#be9cff'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(pL.x*cvMesh.width/state.dpr, pL.y*cvMesh.height/state.dpr); ctx.lineTo(pR.x*cvMesh.width/state.dpr, pR.y*cvMesh.height/state.dpr); ctx.stroke(); ctx.fillStyle='#be9cff'; ctx.font='12px monospace'; ctx.fillText(`eye tilt ${a.toFixed(1)}°`, (pL.x+pR.x)*0.5*cvMesh.width/state.dpr+6, (pL.y+pR.y)*0.5*cvMesh.height/state.dpr-6); ctx.restore();
-      state.eyeTilt = a;
-    }
-
-    function avg2(a,b){ return {x:(a.x+b.x)/2, y:(a.y+b.y)/2}; }
-
-    // ===== Phase B: Pose
-    async function phasePose(src){
-      hud.textContent='Pose…'; const r = state.lmPose.detect(src); const ctx=cvPose.getContext('2d'); const {dispW,dispH}=state.imgInfo; ctx.clearRect(0,0,dispW,dispH);
-      if(!r?.landmarks?.length){ logDiag('Pose: none'); return; }
-      const lm = r.landmarks[0];
-      const du = state.drawing.pose; const P = window; // POSE_CONNECTIONS exported by @mediapipe/pose
-      du.drawLandmarks(lm, {color:'#ffd166', radius:2});
-      du.drawConnectors(lm, P.POSE_CONNECTIONS, {color:'#ffd166', lineWidth:2});
-      drawPoseLabels(lm, ctx);
-      state.pose = computeBodyMetrics(lm);
-      logDiag('Pose: 33 joints');
-    }
-
-    function drawPoseLabels(lm, ctx){
-      const pt = i=>({x:lm[i].x*cvPose.width/state.dpr, y:lm[i].y*cvPose.height/state.dpr});
-      const labels=[[11,'L-shoulder'],[12,'R-shoulder'],[23,'L-hip'],[24,'R-hip'],[25,'L-knee'],[26,'R-knee']];
-      ctx.save(); ctx.fillStyle='#ffd166'; ctx.font='12px monospace';
-      for(const [i,t] of labels){ const p=pt(i); ctx.fillText(t, p.x+6, p.y-6); }
-      ctx.restore();
-    }
-
-    // ===== Phase C: Segments (animate tiles) + gauges
-    async function phaseSeg(src){
-      hud.textContent='Segments…'; const r = state.segmenter.segment(src); const mask = r.categoryMask; const {dispW,dispH}=state.imgInfo; const ctx=cvSeg.getContext('2d'); ctx.clearRect(0,0,dispW,dispH);
-      // Tile animation
-      const imgData = await maskToImageData(mask, dispW, dispH);
-      const tile=48; for(let y=0;y<dispH;y+=tile){ for(let x=0;x<dispW;x+=tile){ const sx=x, sy=y; setTimeout(()=>{ ctx.putImageData(imgData,0,0, sx,sy, Math.min(tile,dispW-sx), Math.min(tile,dispH-sy)); }, (x+y)/6); }}
-      // Gauges after fill
-      setTimeout(()=>{ drawBWHGauges(ctx, mask); }, 400);
-      state.mask = mask;
-      logDiag('Segments: hair/skin/clothes');
-    }
-
-    function drawBWHGauges(ctx, mask){
-      const {dispW,dispH}=state.imgInfo; const bin = maskToBinary(mask, [2,3,4]); // body-skin, face-skin, clothes
-      const yShoulders = Math.floor(dispH*0.32), yBust=Math.floor(dispH*0.40), yWaist=Math.floor(dispH*0.50), yHips=Math.floor(dispH*0.62);
-      const W = y=>scanlineWidth(bin, y);
-      const s={ shoulders:W(yShoulders), bust:W(yBust), waist:W(yWaist), hips:W(yHips) };
-      state.body = { spans_px:s, ratios:{ bust_waist: round(s.bust/s.waist), waist_hips: round(s.waist/s.hips) } };
-      ctx.save(); ctx.strokeStyle='#64f2e3'; ctx.setLineDash([8,6]); ctx.lineWidth=2;
-      [yBust,yWaist,yHips].forEach((y,i)=>{ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(dispW,y); ctx.stroke(); ctx.fillStyle='#64f2e3'; ctx.font='12px monospace'; const label=['bust','waist','hips'][i]; ctx.fillText(`${label}: ${s[label]}px`, 6, y-6); });
-      ctx.restore();
-    }
-
-    // ===== Phase D: NSFW (optional)
-    async function phaseNSFW(src){
-      hud.textContent='NSFW…';
-      if(!window.NudeNet){ logDiag('NSFW lib not loaded (skipped)'); return; }
-      try{
-        const det = await window.NudeNet.detect(src); // expects a browser build that accepts <img>
-        state.nsfwDetections = (det?.parts||[]).map(p=>({label:p.class, score:p.score, box:[p.box[0],p.box[1],p.box[2],p.box[3]]}));
-        const ctx=cvSeg.getContext('2d'); ctx.save(); ctx.strokeStyle='#fa528e'; ctx.setLineDash([6,4]); ctx.lineWidth=2; ctx.fillStyle='#fa528e22';
-        for(const d of state.nsfwDetections){ const [x,y,w,h]=d.box; ctx.strokeRect(x,y,w,h); ctx.fillRect(x,y,w,h); ctx.font='12px monospace'; ctx.fillStyle='#fa528e'; ctx.fillText(`${d.label} ${(d.score*100|0)}%`, x+4, y+14); ctx.fillStyle='#fa528e22'; }
-        ctx.restore(); logDiag(`NSFW: ${state.nsfwDetections.length} boxes`);
-      }catch(e){ console.warn(e); logDiag('NSFW failed (skipped)'); }
-    }
-
-    // ===== Helpers: masks & sampling
-    async function maskToImageData(mask, W, H){
-      // categoryMask -> colorized ImageData using fixed palette
-      const colors=[ [0,0,0,0], [100,242,227,70], [250,82,142,65], [190,156,255,65], [253,202,64,55], [35,215,186,55] ];
-      const imgData = new ImageData(W,H); const buf = await mask.getAsUint8Array(); // uint8 per pixel class
-      for(let i=0;i<W*H;i++){ const c=colors[buf[i]]||[0,0,0,0]; const j=i*4; imgData.data[j]=c[0]; imgData.data[j+1]=c[1]; imgData.data[j+2]=c[2]; imgData.data[j+3]=c[3]; }
-      return imgData;
-    }
-    function maskToBinary(mask, includeClasses){ const W=state.imgInfo.dispW, H=state.imgInfo.dispH; const set=new Set(includeClasses); const out=new Uint8Array(W*H); const buf=mask.getAsUint8ArraySync?mask.getAsUint8ArraySync():null; if(buf){ for(let i=0;i<W*H;i++){ out[i]=set.has(buf[i])?1:0; } return {W,H,buf:out}; }
-      return {W,H,buf:new Uint8Array(W*H)}; }
-    function scanlineWidth(bin, y){ const {W,buf}=bin; let l=-1,r=-1; const yy=Math.min(Math.max(0,y),bin.H-1); for(let x=0;x<W;x++){ if(buf[yy*W+x]){ if(l<0) l=x; r=x; } } return r>l? (r-l): 0; }
-
-    async function samplePalette(){
-      // crude averages: hair (1), face-skin (3), skin (2)
-      const mask = state.mask || state.segmenter.segment(img).categoryMask; const {dispW,dispH}=state.imgInfo; const buf=await mask.getAsUint8Array();
-      const cnv=document.createElement('canvas'); cnv.width=dispW; cnv.height=dispH; const c=cnv.getContext('2d'); c.drawImage(img,0,0,dispW,dispH); const pixels=c.getImageData(0,0,dispW,dispH).data;
-      function avgFor(cls){ let r=0,g=0,b=0,n=0; for(let i=0;i<dispW*dispH;i++){ if(buf[i]===cls){ const j=i*4; r+=pixels[j]; g+=pixels[j+1]; b+=pixels[j+2]; n++; } } if(!n) return '#808080'; return rgbToHex(r/n|0,g/n|0,b/n|0); }
-      const hair=avgFor(1), face=avgFor(3), skin=avgFor(2);
-      return { hair_hex:hair, hair_word:colorWord(hair), eyes_hex:'#4aa1a1', eyes_word:'teal', skin_hex:face, skin_word:colorWord(face) };
-    }
-    function rgbToHex(r,g,b){ return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join(''); }
-    function colorWord(hex){ const [r,g,b]=hex.match(/\w\w/g).map(h=>parseInt(h,16)); const max=Math.max(r,g,b), min=Math.min(r,g,b); const l=(max+min)/2; if(l>230) return 'porcelain'; if(l>200) return 'fair'; if(l<60) return 'ebony'; if(r>g&&r>b) return 'auburn'; if(g>r&&g>b) return 'emerald'; if(b>r&&b>g) return 'sapphire'; return 'neutral'; }
-
-    // ===== Metrics
-    function computeFaceMetrics(lm, pal){
-      const W=cvMesh.width/state.dpr, H=cvMesh.height/state.dpr;
-      const chin=lm[152], top=lm[10]; const faceH = distN(top,chin)*W; // normalized * W
-      const jawL=lm[234], jawR=lm[454]; const jawW = distN(jawL,jawR)*W;
-      const cheekL=lm[93], cheekR=lm[323]; const cheekW = distN(cheekL,cheekR)*W;
-      const forehead_face = Math.max(0, (top.y - ((lm[9].y+lm[107].y)/2))*H );
-      const eyeTilt = state.eyeTilt||0;
-      const jaw_face = jawW/faceH; const cheek_face = cheekW/faceH;
-      const shape = classifyFace(jaw_face, cheek_face);
-      const eyes = classifyEyes(lm);
-      const nose = classifyNose(lm);
-      const lips = classifyLips(lm);
-      return { shape, ratios:{ jaw_face:round(jaw_face), cheek_face:round(cheek_face), forehead_face:round(forehead_face/faceH) }, angles:{ eye_tilt_deg: round(eyeTilt) }, features:{ eyes, nose, lips }, palette:pal };
-    }
-    function round(x){ return Math.round(x*100)/100; }
-    function distN(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
-    function classifyFace(jaw, cheek){ if(jaw<0.45 && cheek>0.7) return 'heart'; if(Math.abs(jaw-0.55)<0.07 && Math.abs(cheek-0.7)<0.08) return 'oval'; if(jaw>0.7 && cheek>0.8) return 'square'; if(cheek<0.6) return 'round'; return 'oval'; }
-    function eyeAspect(l, r){ const h=(p)=>distN(lm[p[1]], lm[p[5]]); /* dummy */ }
-    function classifyEyes(lm){ // simple: width vs spacing
-      const lOuter=lm[33], lInner=lm[133]; const rInner=lm[362], rOuter=lm[263];
-      const eyeW = distN(lOuter,lInner); const inter = distN(lInner,rInner);
-      const ratio = inter/eyeW; if(ratio>1.9) return 'wide-set'; if(ratio<1.5) return 'close-set'; return 'almond'; }
-    function classifyNose(lm){ const tip=lm[1], base=lm[2]; const slope = (lm[197]?.z||0) - (lm[6]?.z||0); if(slope<-0.02) return 'aquiline'; if(slope>0.02) return 'upturned'; return 'straight'; }
-    function classifyLips(lm){ const top=lm[13], bot=lm[14]; const t=distN(top, lm[0]||top), b=distN(bot, lm[0]||bot); const h = Math.abs(bot.y-top.y); if(h<0.01) return 'thin'; if(h>0.03) return 'full'; return "medium"; }
-
-    function computeBodyMetrics(lm){
-      const px = i=>({x:lm[i].x*cvPose.width/state.dpr, y:lm[i].y*cvPose.height/state.dpr});
-      const shW = Math.hypot(px(12).x-px(11).x, px(12).y-px(11).y);
-      const torso = Math.hypot(px(24).x-px(12).x, px(24).y-px(12).y);
-      const legs = Math.hypot(px(28).y-px(26).y, px(27).y-px(25).y);
-      return { spans_px:{ shoulders: Math.round(shW) }, torso_px: Math.round(torso), legs_px: Math.round(legs) };
-    }
-
-    // ===== Outputs (prompts + JSON)
-    function finalizeOutputs(){
-      const face = state.face||{shape:'',ratios:{jaw_face:0,cheek_face:0,forehead_face:0},angles:{eye_tilt_deg:0},features:{eyes:'',nose:'',lips:''},palette:{hair_hex:'#888',hair_word:'',eyes_hex:'#888',eyes_word:'',skin_hex:'#888',skin_word:''}};
-      const body = state.body||{spans_px:{shoulders:0,bust:0,waist:0,hips:0}, ratios:{bust_waist:0,waist_hips:0}};
-      const bg = inferBackgroundTag(); const light = inferLighting(); const cam = inferCameraAngle();
-      const clip = state.cloud.clip_hint||'';
-      const spiceLvl = +($('#spice').value||0);
-      const sfw = `portrait photo, neutral expression, ${face.shape} face,\n`+
-      `jaw/face ${face.ratios.jaw_face}, cheek/face ${face.ratios.cheek_face}, eye tilt ${face.angles.eye_tilt_deg}\u00B0,\n`+
-      `${face.palette.hair_word} hair, ${face.palette.eyes_word} eyes, ${face.palette.skin_word} skin,\n`+
-      `${cam}, ${light}, ${bg},\n`+
-      `photorealistic, sharp micro-detail, minimal distortion`+
-      (clip?`\nstyle hint: ${clip}`:'');
-      const nsfw = `nude portrait, ${face.shape} face,\n`+
-      `${breastSizeFromBody()} breasts${nippleFlag()},\n`+
-      `${face.palette.skin_word} skin, ${face.palette.hair_word} hair,\n`+
-      `${light}, ${(spiceLvl>=2?'explicit body focus':'soft body focus')}`;
-      const negative = `lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face`;
-      $('#outSfw').textContent = sfw; $('#outNsfw').textContent = nsfw; $('#outDiag').textContent += '';
-      const json = {
-        version:'pf_imageintel_v4',
-        image:{ w:cvMesh.width/state.dpr, h:cvMesh.height/state.dpr, natural:{w:img.naturalWidth,h:img.naturalHeight} },
-        face,
-        body,
-        nsfw:{ enabled: !!(state.nsfwDetections?.length), detections: state.nsfwDetections||[], breast_size: breastSizeFromBody(), nipples_visible: nippleFlag().includes('nipples visible') },
-        scene:{ bgTag: bg, lighting: light, camera_angle: cam },
-        cloud:{ clip_hint: clip, objects: state.cloud.objects||[] },
-        prompts:{ sfw, nsfw, negative }
+  function computePalette(){
+    try{
+      if (!lastResults.seg) return;
+      const w = cvSeg.width/DPR, h = cvSeg.height/DPR;
+      const ctxBase = cvSeg.getContext('2d');
+      const imgData = ctxBase.getImageData(0,0,w,h).data;
+      function avgFor(alphaMin, labName){
+        // select pixels above alphaMin and within specified label tint channel heuristics (quick/dirty)
+        // Here we assume seg colors: hair has G~240,B~255; skin has R~255; face/lips R+G high
+        let R=0,G=0,B=0,N=0;
+        for(let i=0;i<imgData.length;i+=4){
+          const a=imgData[i+3]; if(a<alphaMin) continue;
+          const r=imgData[i], g=imgData[i+1], b=imgData[i+2];
+          // crude filter
+          if (labName==='hair' && g>180 && b>200) { R+=r;G+=g;B+=b;N++; }
+          if (labName==='skin' && r>200 && g<180) { R+=r;G+=g;B+=b;N++; }
+          if (labName==='face' && r>200 && g>150) { R+=r;G+=g;B+=b;N++; }
+        }
+        if(!N) return null;
+        const r=(R/N)|0, g=(G/N)|0, b=(B/N)|0;
+        return {hex:rgbToHex(r,g,b), r,g,b};
+      }
+      const hair = avgFor(40,'hair'), skin = avgFor(40,'skin') || avgFor(40,'face');
+      lastResults.face.palette = {
+        hair_hex: hair?.hex || '#999999', hair_word: colorWord(hair),
+        eyes_hex: '#336699', eyes_word: 'unknown', // eyes from seg not isolated; leave default
+        skin_hex: skin?.hex || '#caa18a', skin_word: colorWord(skin)
       };
-      $('#outJson').textContent = JSON.stringify(json,null,2);
+    }catch(e){ console.warn(e); }
+  }
+  function rgbToHex(r,g,b){ return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+  function colorWord(rgb){ if(!rgb) return 'unknown';
+    const {r,g,b}=rgb;
+    // tiny name map
+    if (r>220 && g>200 && b>180) return 'porcelain';
+    if (r>200 && g>170 && b<120) return 'golden';
+    if (r<80 && g>120 && b<90) return 'emerald';
+    if (r<120 && g<120 && b>160) return 'sapphire';
+    if (r>160 && g>120 && b<80) return 'amber';
+    return 'neutral';
+  }
+
+  function buildPrompts(){
+    const camAngle = estimateCameraAngle();
+    const lighting  = 'natural light';
+    const bgTag     = (lastResults.cloud?.objects?.[0]?.label) ? lastResults.cloud.objects[0].label : 'indoor';
+    const hairW = lastResults.face?.palette?.hair_word || 'neutral';
+    const eyesW = lastResults.face?.palette?.eyes_word || 'unknown';
+    const skinW = lastResults.face?.palette?.skin_word || 'neutral';
+    const eyeTilt = lastResults.face?.angles?.eye_tilt_deg ?? 0;
+    const clipHint = lastResults.cloud?.clip_hint ? `style hint: ${lastResults.cloud.clip_hint}` : '';
+
+    const sfw = [
+      `portrait photo, calm expression, ${camAngle} camera angle`,
+      `jaw/face ~, cheek/face ~, eye tilt ${eyeTilt}°`,
+      `${hairW} hair, ${eyesW} eyes, ${skinW} skin`,
+      `${lighting}, ${bgTag}, photorealistic, sharp micro-detail, minimal distortion`,
+      clipHint
+    ].filter(Boolean).join('\n');
+    const nsfwEnabled = $('#optNSFW').checked && (window.__nsfwUnlocked === true);
+    const nsfw = nsfwEnabled ? [
+      `nude portrait, confident pose`,
+      `${skinW} skin, ${hairW} hair`,
+      `${lighting}`,
+      (getSpice()>=2 ? 'explicit body focus' : 'soft body focus')
+    ].join('\n') : '— NSFW locked — type “unlock” & enable NSFW in Step 2.';
+
+    lastResults.prompts.sfw = sfw;
+    lastResults.prompts.nsfw = nsfw;
+    sfwOut.value = sfw;
+    nsfwOut.value = nsfw;
+  }
+
+  function estimateCameraAngle(){
+    // Use face transform matrix when available, else fallback: ear/nose disparity
+    // For brevity, we used eye tilt already; here just return coarse label:
+    try{
+      const tilt = lastResults.face?.angles?.eye_tilt_deg || 0;
+      if (Math.abs(tilt) < 5) return 'frontal';
+      if (tilt > 5) return '¾ view';
+      return '¾ view';
+    }catch(e){ return 'frontal'; }
+  }
+
+  function renderJSON(){
+    const v4 = {
+      version: "pf_imageintel_v4",
+      image: lastResults.image,
+      face: {
+        shape: lastResults.face?.shape || null,
+        ratios: lastResults.face?.ratios || null,
+        angles: lastResults.face?.angles || null,
+        features: lastResults.face?.features || null,
+        palette: lastResults.face?.palette || null
+      },
+      body: {
+        spans_px: lastResults.body?.spans_px || null,
+        ratios: lastResults.body?.ratios || null
+      },
+      nsfw: {
+        enabled: ($('#optNSFW').checked===true),
+        detections: lastResults.nsfw?.detections || [],
+        breast_size: lastResults.nsfw?.breast_size || null,
+        nipples_visible: lastResults.nsfw?.nipples_visible || null
+      },
+      scene: {
+        bgTag: lastResults.cloud?.objects?.[0]?.label || null,
+        lighting: lastResults.cloud?.lighting || "natural light",
+        camera_angle: estimateCameraAngle()
+      },
+      cloud: {
+        clip_hint: lastResults.cloud?.clip_hint || null,
+        objects: lastResults.cloud?.objects || []
+      },
+      prompts: {
+        sfw: lastResults.prompts.sfw,
+        nsfw: lastResults.prompts.nsfw,
+        negative: lastResults.prompts.negative
+      }
+    };
+    jsonOut.textContent = JSON.stringify(v4,null,2);
+  }
+
+  function getSpice(){ return parseInt($('#rngSpice').value,10)||0; }
+
+  // Buttons
+  $('#btnAnalyzeLocal').addEventListener('click', analyzeLocal);
+  $('#btnClear').addEventListener('click', ()=>{ [cvFace,cvPose,cvSeg,cvCloud].forEach(clearCanvas); log('Cleared overlays'); });
+  $('#resetAll').addEventListener('click', ()=>{
+    [cvFace,cvPose,cvSeg,cvCloud].forEach(clearCanvas);
+    sfwOut.value=''; nsfwOut.value=''; jsonOut.textContent='';
+    lastResults = { image:{w:0,h:0,natural:{w:0,h:0}}, face:null, pose:null, seg:null, nsfw:null, cloud:null, prompts:{sfw:"",nsfw:"",negative:lastResults.prompts.negative}};
+    log('Reset all');
+  });
+  $('#copySFW').addEventListener('click', ()=>{ navigator.clipboard.writeText(sfwOut.value); log('Copied SFW prompt','good'); });
+  $('#copyNSFW').addEventListener('click', ()=>{ navigator.clipboard.writeText(nsfwOut.value); log('Copied NSFW prompt','good'); });
+  $('#improveSFW').addEventListener('click', ()=>{
+    const tone = ['cinematic','editorial','studio light','film grain','bokeh','8k','DSLR'];
+    sfwOut.value = sfwOut.value + '\n' + tone[Math.floor(Math.random()*tone.length)];
+  });
+  $('#downloadJSON').addEventListener('click', ()=>{
+    const blob = new Blob([jsonOut.textContent],{type:'application/json'});
+    saveAs(blob,'imageintel_v4.json');
+  });
+  $('#downloadZIP').addEventListener('click', async ()=>{
+    const zip = new JSZip();
+    zip.file('imageintel_v4.json', jsonOut.textContent || '{}');
+    zip.file('prompt_sfw.txt', sfwOut.value||'');
+    zip.file('prompt_nsfw.txt', nsfwOut.value||'');
+    // snapshot composited image
+    const snap = await snapshotComposite();
+    if (snap) zip.file('overlay.png', snap.split(',')[1], {base64:true});
+    const blob = await zip.generateAsync({type:'blob'}); saveAs(blob,'ImageIntel_Export.zip');
+  });
+
+  async function snapshotComposite(){
+    try{
+      const w = Math.round(imgEl.getBoundingClientRect().width);
+      const h = Math.round(imgEl.getBoundingClientRect().height);
+      const c = document.createElement('canvas'); c.width=w; c.height=h;
+      const ctx=c.getContext('2d');
+      ctx.drawImage(imgEl,0,0,w,h);
+      [cvSeg,cvPose,cvFace,cvCloud].forEach(cv=>{
+        const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+        tmp.getContext('2d').drawImage(cv,0,0,w,h);
+        ctx.drawImage(tmp,0,0);
+      });
+      return c.toDataURL('image/png');
+    }catch(e){ console.warn(e); return null; }
+  }
+
+  // NSFW unlock & test
+  window.__nsfwUnlocked = false;
+  $('#nsfwUnlock').addEventListener('input', e=>{
+    if(/^\s*unlock\s*$/i.test(e.target.value)){ window.__nsfwUnlocked = true; log('NSFW mode unlocked','warn'); buildPrompts(); renderJSON(); }
+  });
+  $('#btnNSFWTest').addEventListener('click', async ()=>{
+    if (!$('#optNSFW').checked){ log('Enable NSFW option first','warn'); return; }
+    if (!window.__nsfwUnlocked){ log('Type "unlock" to enable NSFW','warn'); return; }
+    const ok = await window.__loadNudeNet();
+    if (!ok){ log('NSFW detector not available (provide NudeNet TFJS build URL). Skipping.', 'bad'); return; }
+    // If you wire NudeNet: run detection here, fill lastResults.nsfw = {detections:[{label,score,box}], ...}, then draw boxes on cvCloud.
+  });
+
+  // Cloud assist
+  $('#btnCloudRun').addEventListener('click', async ()=>{
+    const token = $('#hfToken').value.trim(); if(!token){ log('HF token empty — cloud skipped','warn'); return; }
+    if (!imgEl.complete || !imgEl.naturalWidth){ log('Load an image first','warn'); return; }
+    const imgBlob = await fetch(imgEl.src).then(r=>r.blob());
+    try{
+      // DETR
+      const detr = await hfDetect(token, imgBlob, 'facebook/detr-resnet-50');
+      drawDetr(detr);
+      // CLIP Interrogator (popular Space proxy; replace with your model endpoint if needed)
+      const clip = await hfInterrogate(token, imgBlob);
+      (lastResults.cloud ||= {}).clip_hint = clip || null;
+      log('Cloud: CLIP + DETR done','good');
+      buildPrompts(); renderJSON();
+    }catch(e){
+      console.error(e); log('Cloud failed — see console','bad');
     }
+  });
 
-    function breastSizeFromBody(){ const s=state.body?.spans_px||{}; const faceH= (state.face?.ratios?.jaw_face? (s.bust/(state.face.ratios.jaw_face||1)): 420); const ratio=(s.bust||0)/(faceH||1); if(ratio>1.4) return 'large'; if(ratio>1.1) return 'medium'; return 'small'; }
-    function nippleFlag(){ return state.nsfwDetections?.some(d=>/breast|nipple/i.test(d.label))? ', nipples visible' : ''; }
+  async function hfDetect(token, blob, model){
+    const res = await fetch(`https://api-inference.huggingface.co/models/${model}`,{
+      method:'POST',
+      headers:{Authorization:`Bearer ${token}`},
+      body: blob
+    });
+    if(!res.ok) throw new Error('HF DETR error '+res.status);
+    const arr = await res.json();
+    // Normalize boxes (x1,y1,x2,y2) or {xmin,ymin,xmax,ymax}
+    const out = (Array.isArray(arr)?arr:[]).map(o=>{
+      const b = o.box || o.bounding_box || {};
+      const x1 = b.xmin ?? b[0] ?? 0, y1 = b.ymin ?? b[1] ?? 0, x2 = b.xmax ?? b[2] ?? 0, y2 = b.ymax ?? b[3] ?? 0;
+      return {label:o.label, score:o.score, box:[x1,y1,(x2-x1),(y2-y1)]};
+    });
+    (lastResults.cloud ||= {}).objects = out;
+    return out;
+  }
+  function drawDetr(objs){
+    clearCanvas(cvCloud);
+    if(!objs?.length) return;
+    const ctx = cvCloud.getContext('2d');
+    const rect = imgEl.getBoundingClientRect();
+    const scaleX = rect.width / imgEl.naturalWidth;
+    const scaleY = rect.height/ imgEl.naturalHeight;
+    ctx.save(); ctx.lineWidth=2; ctx.font='bold 12px ui-monospace';
+    objs.forEach(o=>{
+      const [x,y,w,h]=o.box;
+      const X = x*scaleX, Y=y*scaleY, W=w*scaleX, H=h*scaleY;
+      ctx.strokeStyle='#59baff'; ctx.fillStyle='rgba(89,186,255,0.25)'; ctx.fillRect(X,Y,W,H); ctx.strokeRect(X,Y,W,H);
+      ctx.fillStyle='#e6f6ff'; ctx.strokeStyle='#0a141a'; ctx.lineWidth=3;
+      ctx.strokeText(`${o.label} ${(o.score*100|0)}%`, X+4, Y+14); ctx.fillText(`${o.label} ${(o.score*100|0)}%`, X+4, Y+14);
+    });
+    ctx.restore();
+  }
 
-    function inferCameraAngle(){ // via ear/nose disparity
-      try{ const lm = state.lmFace.lastResult?.faceLandmarks?.[0] || null; if(!lm) return 'frontal'; const L=lm[234].x, R=lm[454].x, N=lm[1].x; const dL=Math.abs(N-L), dR=Math.abs(R-N); const r=dL/dR; if(r>1.35||r<0.72) return '3/4 view'; if(r<0.55||r>1.8) return 'profile'; return 'frontal'; }catch{ return 'frontal'; }
-    }
-    function inferLighting(){ // histogram
-      const {dispW,dispH}=state.imgInfo; const cnv=document.createElement('canvas'); cnv.width=dispW; cnv.height=dispH; const c=cnv.getContext('2d'); c.drawImage(img,0,0,dispW,dispH); const data=c.getImageData(0,0,dispW,dispH).data; let sum=0, bright=0; for(let i=0;i<data.length;i+=4){ const v=(data[i]+data[i+1]+data[i+2])/3; sum+=v; if(v>220) bright++; } const avg=sum/(dispW*dispH); if(bright>dispW*dispH*0.06) return 'studio light'; if(avg<70) return 'low light'; return 'natural light'; }
-    function inferBackgroundTag(){ const objs=state.cloud.objects||[]; if(objs.length){ const k=objs[0].label.toLowerCase(); if(/tree|plant|dog|cat|grass/.test(k)) return 'forest/foliage'; if(/bed|sofa|chair|tv|laptop|keyboard|table/.test(k)) return 'indoor'; }
-      return 'unknown background'; }
+  async function hfInterrogate(token, blob){
+    // Many CLIP Interrogator endpoints exist; here we use generic image-to-text as a fallback
+    const res = await fetch(`https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large`,{
+      method:'POST', headers:{Authorization:`Bearer ${token}`}, body: blob
+    });
+    if(!res.ok) return null;
+    const json = await res.json();
+    const text = Array.isArray(json) && json[0]?.generated_text ? json[0].generated_text : null;
+    return text;
+  }
 
-    function logDiag(msg){ const t=new Date().toLocaleTimeString(); $('#outDiag').textContent += `\n[${t}] ${msg}`; }
+  // Model reachability quick check
+  $('#btnCheckModels').addEventListener('click', async ()=>{
+    async function head(url){ try{ const r=await fetch(url,{method:'HEAD'}); return r.ok; }catch(_){ return false; } }
+    const okFace = await head(MODEL.face), okPose = await head(MODEL.pose), okSeg = await head(MODEL.segm);
+    log(`Models — Face:${okFace?'OK':'X'} Pose:${okPose?'OK':'X'} Seg:${okSeg?'OK':'X'}`, (okFace&&okPose&&okSeg)?'good':'bad');
+  });
 
-    // ===== utils
-    function toBlob(image){ return fetch(image.src).then(r=>r.blob()); }
-    function normBoxToDisp(box){ // box in absolute px relative to disp dims already (HF returns px); guard for % if any
-      const {dispW,dispH}=state.imgInfo; const [x,y,w,h]=box; return [x,y,w,h]; }
-    function clearAll(){ [cvMesh,cvPose,cvSeg].forEach(c=>c.getContext('2d').clearRect(0,0,c.width,c.height)); $('#outDiag').textContent=''; }
+  // Auto-fit on window resize
+  window.addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); });
 
-    // ===== Copy / Download
-    $('#copySfw').onclick=()=>copy($('#outSfw').textContent);
-    $('#copyNsfw').onclick=()=>copy($('#outNsfw').textContent);
-    $('#copyNeg').onclick=()=>copy('lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face');
-    $('#dlJson').onclick=()=>{ const blob = new Blob([$('#outJson').textContent], {type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='pf_imageintel_v4.json'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href), 1000); };
-    async function copy(t){ try{ await navigator.clipboard.writeText(t); hud.textContent='Copied'; setTimeout(()=>hud.textContent='Idle', 900); }catch{ alert('copy failed'); } }
-
-    // ===== J1NX wiring (minimal)
-    (function(){
-      const j1nxFloat = document.getElementById('j1nxFloatTrue');
-      const cutout = document.getElementById('j1nxCutoutTrue');
-      const bubble = document.getElementById('j1nxBubbleTrueMain');
-      function isMobile() { return window.innerWidth < 700; }
-      function shrinkJ1nx(){ if(isMobile()){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } }
-      cutout.onclick=function(){ if(isMobile()){ if(j1nxFloat.classList.contains('j1nx-open')){ j1nxFloat.classList.remove('j1nx-open'); bubble.style.display='none'; } else { j1nxFloat.classList.add('j1nx-open'); bubble.style.display='flex'; } } };
-      window.addEventListener('resize', shrinkJ1nx); shrinkJ1nx();
-    })();
-    (function(){
-      let chatHistory=[]; let nsfwUnlocked=false;
-      function render(){ const out = chatHistory.map(line=>`<div>${line}</div>`).join(''); document.getElementById('j1nxBubbleTextTrue').innerHTML = out || "<b>J1nx:</b> I watch your overlays so you don’t have to blink. PG by default — type <b>unlock</b> for spicy."; }
-      function add(msg, you){ if(!msg) return; const name = you?'<b>You:</b> ':'<b>J1nx:</b> '; chatHistory.push(name+msg); if(chatHistory.length>8) chatHistory=chatHistory.slice(-8); render(); }
-      document.getElementById('j1nxBubbleTrueMain').addEventListener('dblclick', ()=>{ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b>"; add("NSFW mode unlocked!", false); });
-      document.getElementById('j1nxSendTrue').onclick = function(){ const input=document.getElementById('j1nxInputTrue'); const v=(input.value||'').trim(); if(!v) return; add(v,true); if(/^unlock$/i.test(v)){ nsfwUnlocked=true; document.getElementById('j1nxEasterEggTrue').innerHTML = "<b>NSFW mode unlocked!</b>"; add("NSFW mode unlocked!", false); input.value=''; return; } try{ let reply = window.j1nxBrain? window.j1nxBrain(v, chatHistory.length, nsfwUnlocked) : "(add assets/j1nx_brain.js)"; add((typeof reply==='object')?(reply.text||reply.reply||JSON.stringify(reply)):reply,false); }catch(e){ add('My brain glitched…', false); } input.value=''; };
-      document.getElementById('j1nxInputTrue').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('j1nxSendTrue').click(); });
-      document.getElementById('j1nxSaveTrue').onclick = function(){ const text = chatHistory.map(line=>line.replace(/<[^>]+>/g,'')).join('\n'); const blob=new Blob([text],{type:'text/plain'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='j1nx_chat.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{document.body.removeChild(a); URL.revokeObjectURL(url);},300); };
-      document.getElementById('j1nxClearTrue').onclick = function(){ chatHistory=[]; render(); };
-      render();
-    })();
-
-    // footer camo animation
-    (function(){ const camoEl=document.getElementById('footerCamo'); if(!camoEl) return; const colors=['#64f2e3','#23d7ba','#4df6a0','#bdf6c3','#abffe6','#abb8b8']; const chars='░▒▓▚▞▐▉█▛'; function tick(t){ let out=''; for(let i=0;i<62;i++){ out+=`<span style="color:${colors[(i+t)%colors.length]}">${chars[Math.floor(Math.random()*chars.length)]}</span>`; } camoEl.innerHTML=out; } let t=0; tick(0); setInterval(()=>tick(++t),950); })();
-  })();
-  </script>
-
-  <!-- External J1NX brain (optional) -->
-  <script src="/assets/j1nx_brain.js"></script>
+})();
+</script>
 </body>
 </html>
