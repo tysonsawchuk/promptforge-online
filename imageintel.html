@@ -2,89 +2,69 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>PF — Image Intelligence (Face • Pose • Objects • Cloud Assist)</title>
-<meta name="description" content="On-device face & body landmarking with animated overlays. Optional Hugging Face captioning and object detection. Multi-step wizard with SFW/NSFW outputs."/>
-<link rel="canonical" href="/imageintel.html"/>
-
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PF — ImageIntel (Face • Pose • Objects)</title>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="description" content="On-device MediaPipe face mesh + body pose overlays with scanner animation. Optional Hugging Face captioning and object detection."/>
 <style>
-:root{
-  --bg:#0b0f14; --ink:#d6f5ff; --edge:#222b35; --aqua:#64f2e3; --vio:#be9cff;
-  --ok:#55d69a; --bad:#ff6b6b; --warn:#ffd166; --dim:#9db1bd;
-}
+:root{ --bg:#0b0f14; --ink:#eaf9ff; --edge:#222b35; --aqua:#64f2e3; --vio:#be9cff; --gold:#ffd166; --ok:#55d69a; --bad:#ff6b6b; --dim:#94a8b5;}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-monospace, Menlo, Consolas, monospace}
-.wrap{max-width:1200px;margin:0 auto;padding:16px}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:16px}
 h1{margin:0 0 10px;font-size:1.1rem}
 small,.note{color:var(--dim)}
-
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
-.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;background:#0b1117dd}
-.ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
-
-.btn{cursor:pointer;border:1.5px solid var(--aqua);background:#131922;color:#b8fff6;padding:8px 12px;border-radius:10px;font-weight:700}
-.btn:hover{background:var(--aqua);color:#071017;border-color:#fff}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;background:#0d141add}
+.ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--gold)}
+.btn{cursor:pointer;border:1.5px solid var(--aqua);background:#131a22;color:#b8fff6;padding:8px 12px;border-radius:10px;font-weight:700}
+.btn:hover{background:var(--aqua);color:#081016;border-color:#fff}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.next{position:relative;animation:pulse 1.4s infinite}
+.next{animation:pulse 1.4s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(100,242,227,.45)}70%{box-shadow:0 0 0 14px rgba(100,242,227,0)}100%{box-shadow:0 0 0 0 rgba(100,242,227,0)}}
 
-.stage{position:relative;border:1px solid var(--edge);border-radius:12px;background:#0e151d;overflow:hidden;min-height:54vh}
+.stage{position:relative;border:1px solid var(--edge);border-radius:12px;background:#0e151d;overflow:hidden}
 .inner{position:relative;width:100%;aspect-ratio:16/9}
-.base{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
-#mesh,#hud{position:absolute;pointer-events:none;image-rendering:crisp-edges}
-.legend{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;z-index:10}
-.scanline{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;mix-blend-mode:screen;opacity:.25;background:linear-gradient(180deg, transparent 40%, rgba(255,255,255,.22) 50%, transparent 60%);background-size:100% 140px;animation:scan 2s linear infinite}
-@keyframes scan{0%{background-position-y:-140px}100%{background-position-y:100%}}
+#img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+#ov{position:absolute;inset:0;pointer-events:none}
+.legend{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;z-index:5}
+.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#64f2e3,transparent);box-shadow:0 0 10px #64f2e3aa;opacity:0;pointer-events:none;transition:opacity .15s ease}
 
 .stepper{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
 .step{border:1px solid var(--edge);border-radius:10px;padding:10px;background:#0f161f}
 .step.active{border-color:var(--aqua);box-shadow:0 0 0 2px #64f2e333 inset}
-.step h3{margin:0 0 8px;font-size:1rem}
 .option{display:flex;align-items:center;gap:8px;margin:6px 0}
 input[type="checkbox"],input[type="radio"]{transform:scale(1.1)}
 input[type="range"]{accent-color:var(--aqua)}
-input[type="text"]{border:1px solid var(--edge);background:#0f141a;color:var(--ink);padding:6px 10px;border-radius:8px;min-width:320px}
+input[type="text"]{border:1px solid var(--edge);background:#0f141a;color:#fff;padding:6px 10px;border-radius:8px;min-width:320px}
 
 .tabs{margin-top:14px}
-.tab-head{display:flex;flex-wrap:wrap;gap:8px}
-.tab-head button{cursor:pointer;border:1px solid var(--edge);background:#0e141a;color:var(--ink);padding:8px 12px;border-radius:9px}
+.tab-head{display:flex;gap:8px;flex-wrap:wrap}
+.tab-head button{cursor:pointer;border:1px solid var(--edge);background:#0e141a;color:#fff;padding:8px 12px;border-radius:9px}
 .tab-head button.active{border-color:var(--aqua);box-shadow:0 0 0 2px #64f2e333 inset}
 .tab{display:none;margin-top:10px;border:1px solid var(--edge);border-radius:12px;padding:12px;background:#0e141a}
 .tab.active{display:block}
 textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border:1px solid #1b242e;border-radius:8px;padding:10px}
 
 .diag{white-space:pre;min-height:120px;border:1px dashed var(--edge);padding:10px;border-radius:10px;background:#0c1117}
-.kv{display:grid;grid-template-columns:160px 1fr;gap:6px 14px}
-
-.toastbox{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:5000}
+.toastbox{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:9000}
 .toast{background:#121823ee;border:1px solid var(--edge);color:#defaff;padding:10px 12px;border-radius:10px;min-width:220px;box-shadow:0 4px 18px #0006}
-
-.hl{position:absolute;padding:2px 6px;border-radius:6px;font-size:.8rem;background:#102028aa;border:1px solid #2a3a46}
-.hl::before{content:'';position:absolute;inset:0;border-radius:6px;box-shadow:0 0 18px 2px rgba(100,242,227,.25)}
-.box{position:absolute;border:2px dashed rgba(190,156,255,.9);box-shadow:0 0 10px #be9cff55 inset}
+.hl{position:absolute;padding:2px 6px;border-radius:6px;font-size:.8rem;background:#102028cc;border:1px solid #2a3a46;color:#c8f6ff}
+.box{position:absolute;border:2px dashed rgba(190,156,255,.95);box-shadow:0 0 10px #be9cff55 inset}
 </style>
-
-<!-- MediaPipe Tasks (UMD: global FilesetResolver/FaceLandmarker/PoseLandmarker/DrawingUtils) -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.js" crossorigin="anonymous"></script>
-<!-- Hugging Face JS SDK (browser ESM via jsDelivr) -->
-<script type="module" src="https://cdn.jsdelivr.net/npm/@huggingface/inference@2.8.0/+esm"></script>
 </head>
 <body>
 <div class="wrap">
-  <h1>Image Intelligence — Face • Pose • Objects</h1>
-
+  <h1>ImageIntel — Face • Pose • Objects</h1>
   <div class="row">
     <span class="badge">Status: <b id="status">booting…</b></span>
     <span class="badge">Bundle: <b id="bundle">—</b></span>
     <span class="badge">Models: <b id="models">—</b></span>
   </div>
 
-  <!-- Stage -->
   <div class="stage">
     <div class="inner" id="stage">
-      <img id="base" class="base" alt="" />
-      <canvas id="mesh"></canvas>
-      <canvas id="hud"></canvas>
+      <img id="img" alt=""/>
+      <canvas id="ov"></canvas>
       <div class="scanline" id="scan"></div>
       <div class="legend">
         <span class="badge">faces: <span id="faceCount">0</span></span>
@@ -93,7 +73,6 @@ textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border
     </div>
   </div>
 
-  <!-- Steps -->
   <div class="stepper">
     <div class="step active" id="st1">
       <h3>Step 1 — Load</h3>
@@ -101,33 +80,30 @@ textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border
         <input id="file" type="file" accept="image/*"/>
         <button class="btn" id="demo">Load Demo</button>
       </div>
-      <div class="row">
-        <button class="btn next" id="btnTo2" disabled>Next</button>
-      </div>
+      <div class="row"><button class="btn next" id="to2" disabled>Next</button></div>
     </div>
     <div class="step" id="st2">
       <h3>Step 2 — Options</h3>
-      <div class="option"><input type="checkbox" id="optFace" checked> <label for="optFace">Face Mesh</label></div>
-      <div class="option"><input type="checkbox" id="optPose"> <label for="optPose">Body Pose lines</label></div>
+      <div class="option"><input type="checkbox" id="optFace" checked> <label for="optFace">Face mesh</label></div>
+      <div class="option"><input type="checkbox" id="optPose"> <label for="optPose">Body pose</label></div>
       <div class="option"><input type="checkbox" id="optNSFW"> <label for="optNSFW">NSFW heuristics (local)</label></div>
       <div class="option"><input type="checkbox" id="optObjects"> <label for="optObjects">Objects (cloud)</label></div>
       <div class="option"><label>Detail <input id="detail" type="range" min="1" max="3" step="1" value="2"></label></div>
-      <div class="option"><label>Spice <input id="spice" type="range" min="0" max="3" step="1" value="1"></label><small>(affects NSFW wording)</small></div>
+      <div class="option"><label>Spice <input id="spice" type="range" min="0" max="3" step="1" value="1"></label></div>
       <div class="row">
-        <button class="btn" id="btnPreview">Preview Overlay</button>
-        <button class="btn next" id="btnTo3">Next</button>
+        <button class="btn" id="preview" disabled>Preview Overlay</button>
+        <button class="btn next" id="to3" disabled>Next</button>
       </div>
     </div>
     <div class="step" id="st3">
       <h3>Step 3 — Cloud Assist (optional)</h3>
       <div class="option"><input type="checkbox" id="useCloud"> <label for="useCloud">Enable Hugging Face (caption + objects)</label></div>
       <div class="option"><input id="hfToken" type="text" placeholder="hf_... token"/></div>
-      <div class="option"><small>Uses BLIP (caption) and DETR (objects) via official @huggingface/inference SDK.</small></div>
-      <div class="row"><button class="btn next" id="btnRun">Run Analysis</button></div>
+      <div class="row"><button class="btn next" id="run" disabled>Run Analysis</button></div>
+      <div class="note">Uses BLIP caption + DETR boxes via official JS client. Local overlays do not depend on cloud calls.</div>
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs">
     <div class="tab-head">
       <button class="active" data-tab="sfw">SFW Prompt</button>
@@ -144,319 +120,187 @@ textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border
 
 <div class="toastbox" id="toasts"></div>
 
-<script>
-/* ---------------------- tiny UI helpers ---------------------- */
-const $, $$ = (q,p=document)=>p.querySelector(q), (qa,p=document)=>[...p.querySelectorAll(qa)];
-const toastbox=$("#toasts"); const toast=(m)=>{const d=document.createElement('div'); d.className='toast'; d.textContent=m; toastbox.appendChild(d); setTimeout(()=>d.remove(),3000);};
+<script type="module">
+/* === Imports (pinned) === */
+import { FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs"; /* DrawingUtils & Landmarkers */ // :contentReference[oaicite:1]{index=1}
+
+/* === Tiny helpers (fixed: separate declarations) === */
+const $ = (q,p=document)=>p.querySelector(q);
+const $$ = (qa,p=document)=>Array.from(p.querySelectorAll(qa));
+const toastbox=$("#toasts");
+const toast=(m)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;toastbox.appendChild(d);setTimeout(()=>d.remove(),2600);};
 const setStep=(n)=>["st1","st2","st3"].forEach((id,i)=>$("#"+id).classList.toggle("active",i===n-1));
 $$(".tab-head button").forEach(b=>b.addEventListener("click",()=>{ $$(".tab-head button").forEach(x=>x.classList.remove("active")); b.classList.add("active"); $$(".tab").forEach(x=>x.classList.remove("active")); $("#tab_"+b.dataset.tab).classList.add("active"); }));
 
-/* ---------------------- DOM refs ---------------------- */
+/* === DOM refs === */
 const statusEl=$("#status"), bundleEl=$("#bundle"), modelsEl=$("#models");
-const baseImg=$("#base"), mesh=$("#mesh"), hud=$("#hud"), stage=$("#stage");
-const faceCountEl=$("#faceCount"), poseStateEl=$("#poseState"), diagEl=$("#diag");
-
-const fileEl=$("#file"), demoBtn=$("#demo"), to2=$("#btnTo2"), to3=$("#btnTo3");
-const previewBtn=$("#btnPreview"), runBtn=$("#btnRun");
+const img=$("#img"), ov=$("#ov"), ovctx=ov.getContext("2d");
+const stage=$("#stage"), scan=$("#scan");
+const faceCountEl=$("#faceCount"), poseStateEl=$("#poseState"), diag=$("#diag");
+const file=$("#file"), demo=$("#demo"), to2=$("#to2"), to3=$("#to3"), run=$("#run"), preview=$("#preview");
 const optFace=$("#optFace"), optPose=$("#optPose"), optNSFW=$("#optNSFW"), optObjects=$("#optObjects");
 const detail=$("#detail"), spice=$("#spice"), useCloud=$("#useCloud"), hfToken=$("#hfToken");
 const outSFW=$("#outSFW"), outNSFW=$("#outNSFW"), outJSON=$("#outJSON");
 
-let imgFile=null, imgNatural={w:0,h:0}, imgBox={x:0,y:0,w:0,h:0};
-let lastFaceRes=null, lastPoseRes=null, lastObjects=null, lastCaption=null;
+let imgNatural={w:0,h:0}, imgBox={x:0,y:0,w:0,h:0};
+let face=null, pose=null, drawUtil=null;
+let faceRes=null, poseRes=null, objects=null, caption=null;
 
-/* ---------------------- Canvas sizing ---------------------- */
+/* === Fit overlay canvas exactly to the visible image rectangle (object-fit: contain) === */
 function syncOverlayToImage(){
-  // Position both canvases to exactly overlay the displayed image box.
-  const rImg=baseImg.getBoundingClientRect(), rStage=stage.getBoundingClientRect();
-  imgBox={ x:rImg.left-rStage.left, y:rImg.top-rStage.top, w:rImg.width, h:rImg.height };
-  [mesh,hud].forEach(c=>{
-    c.style.left = imgBox.x+"px";
-    c.style.top  = imgBox.y+"px";
-    c.width  = Math.max(1,Math.floor(imgBox.w));
-    c.height = Math.max(1,Math.floor(imgBox.h));
-  });
+  const rImg = img.getBoundingClientRect();
+  const rStage = stage.getBoundingClientRect();
+  imgBox = { x: Math.round(rImg.left - rStage.left), y: Math.round(rImg.top - rStage.top), w: Math.round(rImg.width), h: Math.round(rImg.height) };
+  ov.style.left = imgBox.x+"px"; ov.style.top = imgBox.y+"px";
+  ov.width = Math.max(1,imgBox.w);
+  ov.height= Math.max(1,imgBox.h);
 }
-addEventListener("resize", ()=>{ if(baseImg.src) { syncOverlayToImage(); drawOverlayAnimated(0); } }, {passive:true});
-document.addEventListener("scroll", ()=>{ if(baseImg.src){ syncOverlayToImage(); drawOverlayAnimated(0);} }, {passive:true});
+new ResizeObserver(syncOverlayToImage).observe(stage);
+addEventListener("scroll", ()=>{ if(img.src) { syncOverlayToImage(); drawOverlay(); } }, {passive:true});
 
-/* ---------------------- Load bundle & models ---------------------- */
-const FACE_MODEL="https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
-const POSE_MODEL="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task";
-
-let face=null, pose=null, drawing=null;
-(async()=>{
+/* === Load MediaPipe models (IMAGE mode, sync detect()) === */
+(async ()=>{
   try{
     statusEl.textContent="loading…";
-    const vision = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+    const fs = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
     bundleEl.innerHTML='<span class="ok">OK</span>';
-
-    face = await FaceLandmarker.createFromOptions(vision, {
-      baseOptions:{ modelAssetPath: FACE_MODEL },
-      runningMode:"IMAGE",
-      numFaces:5,
-      outputFaceBlendshapes:false
-    });
-    pose = await PoseLandmarker.createFromOptions(vision, {
-      baseOptions:{ modelAssetPath: POSE_MODEL },
-      runningMode:"IMAGE"
-    });
-    drawing = new DrawingUtils(mesh.getContext("2d"));
+    face = await FaceLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"}, runningMode:"IMAGE", numFaces:5 });
+    pose = await PoseLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"}, runningMode:"IMAGE" });
+    drawUtil = new DrawingUtils(ovctx);
     modelsEl.innerHTML='<span class="ok">OK</span>';
     statusEl.textContent="ready";
   }catch(e){
-    modelsEl.innerHTML='<span class="bad">error</span>';
-    statusEl.textContent="init failed";
-    log(`Init error: ${e?.message||e}`);
+    modelsEl.innerHTML='<span class="bad">error</span>'; statusEl.textContent="init failed";
+    log("Init error: "+(e?.message||e));
   }
 })();
 
-/* ---------------------- File load ---------------------- */
-fileEl.addEventListener("change", ()=>{
-  const f=fileEl.files?.[0]; if(!f) return;
-  imgFile=f;
-  const url=URL.createObjectURL(f);
-  baseImg.onload=()=>{
-    imgNatural={w:baseImg.naturalWidth,h:baseImg.naturalHeight};
+/* === Image load === */
+function enableStep2(){ preview.disabled=false; to3.disabled=false; run.disabled=false; }
+file.addEventListener("change", ()=>{
+  const f=file.files?.[0]; if(!f) return;
+  const url = URL.createObjectURL(f);
+  img.onload=()=>{
+    imgNatural={w:img.naturalWidth,h:img.naturalHeight};
     syncOverlayToImage();
-    to2.disabled=false;
-    toast("Image loaded. Preview overlay in Step 2.");
+    to2.disabled=false; enableStep2(); toast("Image loaded.");
     URL.revokeObjectURL(url);
   };
-  baseImg.src=url;
+  img.src=url; img.alt=f.name||"image";
 });
-demoBtn.addEventListener("click", ()=>{
-  imgFile=null;
-  baseImg.onload=()=>{ imgNatural={w:baseImg.naturalWidth,h:baseImg.naturalHeight}; syncOverlayToImage(); to2.disabled=false; toast("Demo loaded."); };
-  baseImg.crossOrigin="anonymous";
-  baseImg.src="https://storage.googleapis.com/mediapipe-assets/portrait.jpg";
+demo.addEventListener("click", ()=>{
+  img.onload=()=>{ imgNatural={w:img.naturalWidth,h:img.naturalHeight}; syncOverlayToImage(); to2.disabled=false; enableStep2(); toast("Demo loaded."); };
+  img.crossOrigin="anonymous";
+  img.src="https://storage.googleapis.com/mediapipe-assets/portrait.jpg"; // official sample
 });
 to2.addEventListener("click", ()=>setStep(2));
 to3.addEventListener("click", ()=>setStep(3));
 
-/* ---------------------- Overlay drawing ---------------------- */
-function clearOverlays(){
-  mesh.getContext("2d").clearRect(0,0,mesh.width,mesh.height);
-  hud.getContext("2d").clearRect(0,0,hud.width,hud.height);
-  // remove any HTML labels/boxes from previous run
-  $$(".hl", stage).forEach(n=>n.remove());
-  $$(".box", stage).forEach(n=>n.remove());
-}
-function label(x,y,text){
-  const el=document.createElement("div");
-  el.className="hl";
-  el.textContent=text;
-  el.style.left=(imgBox.x + x)+"px"; el.style.top=(imgBox.y + y)+"px";
-  stage.appendChild(el);
-  return el;
-}
-function box(x,y,w,h,text){
-  const el=document.createElement("div");
-  el.className="box";
-  el.style.left=(imgBox.x + x)+"px"; el.style.top=(imgBox.y + y)+"px";
-  el.style.width=w+"px"; el.style.height=h+"px";
-  if(text){ const t=label(x+4,y+4,text); t.style.background="#1b0f25cc"; }
-  stage.appendChild(el);
-  return el;
-}
+/* === Drawing helpers === */
+function clearOverlay(){ ovctx.clearRect(0,0,ov.width,ov.height); $$(".hl", stage).forEach(n=>n.remove()); $$(".box", stage).forEach(n=>n.remove()); }
+function label(px,py,text){ const e=document.createElement("div"); e.className="hl"; e.textContent=text; e.style.left=(imgBox.x+px)+"px"; e.style.top=(imgBox.y+py)+"px"; stage.appendChild(e); }
+function box(x,y,w,h,text){ const el=document.createElement("div"); el.className="box"; el.style.left=(imgBox.x+x)+"px"; el.style.top=(imgBox.y+y)+"px"; el.style.width=w+"px"; el.style.height=h+"px"; if(text){ const t=document.createElement("div"); t.className="hl"; t.textContent=text; t.style.left=(imgBox.x+x+4)+"px"; t.style.top=(imgBox.y+y+4)+"px"; stage.appendChild(t);} stage.appendChild(el); }
 
-function drawFaceNow(res){
-  const ctx=mesh.getContext("2d"); ctx.clearRect(0,0,mesh.width,mesh.height);
-  if(!res?.faceLandmarks?.length) return;
-  for(const [i,landmarks] of res.faceLandmarks.entries()){
-    // main tessellation (subtle)
-    drawing.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_TESSELATION, { color:"rgba(100,242,227,0.35)", lineWidth:1 });
-    // highlights (eyes, lips, oval)
-    drawing.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, { color:"#fff", lineWidth:2 });
-    drawing.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  { color:"#fff", lineWidth:2 });
-    drawing.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_LIPS,      { color:"rgba(255,120,160,.9)", lineWidth:2 });
-    drawing.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, { color:"rgba(140,255,220,.9)", lineWidth:2 });
-    // key landmark labels (animated pulsing dots)
-    const R = (k)=>({x:landmarks[k].x*mesh.width, y:landmarks[k].y*mesh.height});
-    const lip=R(13), chin=R(152), brow=R(10);
+function drawFace(){
+  if(!faceRes?.faceLandmarks?.length) return;
+  for(const lm of faceRes.faceLandmarks){
+    // landmarks are normalized; DrawingUtils multiplies by canvas size. Canvas == image box; so it aligns. :contentReference[oaicite:2]{index=2}
+    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:"rgba(100,242,227,.40)", lineWidth:1}); /* TESSELLATION (correct spelling) */
+    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,   {color:"rgba(140,255,220,.95)", lineWidth:2});
+    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,   {color:"#fff", lineWidth:2});
+    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,    {color:"#fff", lineWidth:2});
+    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,        {color:"rgba(255,120,160,.95)", lineWidth:2});
+    // simple labels
+    const px=(k)=>({x:lm[k].x*ov.width,y:lm[k].y*ov.height});
+    const lip=px(13), chin=px(152), brow=px(10);
     label(lip.x+6, lip.y-10, "lips");
-    label(chin.x+6, chin.y+4, "jaw");
-    label(brow.x+6, brow.y-8, "brow");
+    label(chin.x+6, chin.y+4,  "jaw");
+    label(brow.x+6, brow.y-8,  "brow");
   }
 }
-
-let animReq=null;
-function drawOverlayAnimated(durationMs=650){
-  cancelAnimationFrame(animReq);
-  const ctx=mesh.getContext("2d"); ctx.clearRect(0,0,mesh.width,mesh.height);
-  if(!lastFaceRes?.faceLandmarks?.length){ return; }
-  const start=performance.now();
-  const steps = [
-    {conn: FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, style:{color:"rgba(140,255,220,.95)", lineWidth:2}},
-    {conn: FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, style:{color:"#fff", lineWidth:2}},
-    {conn: FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  style:{color:"#fff", lineWidth:2}},
-    {conn: FaceLandmarker.FACE_LANDMARKS_LIPS,      style:{color:"rgba(255,120,160,.95)", lineWidth:2}},
-    {conn: FaceLandmarker.FACE_LANDMARKS_TESSELATION, style:{color:"rgba(100,242,227,.40)", lineWidth:1}}
-  ];
-  function frame(now){
-    const t = Math.min(1,(now-start)/durationMs);
-    const upto = Math.floor(t*steps.length);
-    ctx.clearRect(0,0,mesh.width,mesh.height);
-    for(const [i,landmarks] of lastFaceRes.faceLandmarks.entries()){
-      for(let s=0;s<upto;s++){ drawing.drawConnectors(landmarks, steps[s].conn, steps[s].style); }
-    }
-    if(t<1){ animReq=requestAnimationFrame(frame); } else { // add labels once done
-      for(const landmarks of lastFaceRes.faceLandmarks){
-        const R=(k)=>({x:landmarks[k].x*mesh.width, y:landmarks[k].y*mesh.height});
-        const lip=R(13), chin=R(152), brow=R(10);
-        label(lip.x+6, lip.y-10, "lips");
-        label(chin.x+6, chin.y+4, "jaw");
-        label(brow.x+6, brow.y-8, "brow");
-      }
-    }
-  }
-  animReq=requestAnimationFrame(frame);
+const POSE_LINKS=[[11,13,15],[12,14,16],[11,12],[23,24],[11,23],[12,24],[23,25,27],[24,26,28]]; // shoulders/arms/hips/legs
+function drawPose(){
+  if(!poseRes?.landmarks?.length) return;
+  const lm=poseRes.landmarks[0];
+  ovctx.save(); ovctx.strokeStyle="rgba(190,156,255,.95)"; ovctx.lineWidth=2.2; ovctx.beginPath();
+  const pt=(i)=>[lm[i].x*ov.width,lm[i].y*ov.height];
+  for(const chain of POSE_LINKS){ for(let i=0;i<chain.length-1;i++){ const [x1,y1]=pt(chain[i]), [x2,y2]=pt(chain[i+1]); ovctx.moveTo(x1,y1); ovctx.lineTo(x2,y2);} }
+  ovctx.stroke(); ovctx.restore();
+  const s11=pt(11), s12=pt(12), h23=pt(23), h24=pt(24);
+  label((s11[0]+s12[0])/2-28,(s11[1]+s12[1])/2-8,"shoulders");
+  label((h23[0]+h24[0])/2-14,(h23[1]+h24[1])/2-6,"hips");
 }
+function drawOverlay(){ clearOverlay(); if(optFace.checked) drawFace(); if(optPose.checked) drawPose(); }
 
-/* ---------------------- Preview overlay ---------------------- */
-previewBtn.addEventListener("click", ()=>{
-  if(!baseImg.src){ toast("Load an image first."); return; }
-  clearOverlays();
-  try{
-    lastFaceRes = optFace.checked && face ? face.detect(baseImg) : null;
-    faceCountEl.textContent = lastFaceRes?.faceLandmarks?.length || 0;
-  }catch(e){ log("Face detect error: "+(e?.message||e)); lastFaceRes=null; }
-  try{
-    lastPoseRes = optPose.checked && pose ? pose.detect(baseImg) : null;
-    poseStateEl.textContent = lastPoseRes?.landmarks?.length ? "on" : "off";
-  }catch(e){ log("Pose error: "+(e?.message||e)); lastPoseRes=null; poseStateEl.textContent="off"; }
-
-  // face mesh
-  if(lastFaceRes?.faceLandmarks?.length){ drawOverlayAnimated(800); }
-  // pose (draw on HUD canvas as straight lines)
-  if(lastPoseRes?.landmarks?.length){
-    const lms = lastPoseRes.landmarks[0]; // assume 1 person
-    const ctx=hud.getContext("2d"); ctx.clearRect(0,0,hud.width,hud.height); ctx.lineWidth=2; ctx.strokeStyle="rgba(190,156,255,.95)";
-    const px=(k)=>[lms[k].x*hud.width, lms[k].y*hud.height];
-    const links=[[11,13,15],[12,14,16],[11,12],[23,24],[11,23],[12,24],[23,25,27],[24,26,28]];
-    ctx.beginPath();
-    for(const chain of links){
-      for(let i=0;i<chain.length-1;i++){
-        const [x1,y1]=px(chain[i]), [x2,y2]=px(chain[i+1]); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
-      }
-    }
-    ctx.stroke();
-  }
+/* === Preview (local, sync) === */
+preview.addEventListener("click", ()=>{
+  if(!img.src){ toast("Load an image first."); return; }
+  try{ faceRes = optFace.checked ? face.detect(img) : null; }catch(e){ faceRes=null; log("face detect: "+(e?.message||e)); }
+  try{ poseRes = optPose.checked ? pose.detect(img) : null; }catch(e){ poseRes=null; log("pose detect: "+(e?.message||e)); }
+  $("#faceCount").textContent = faceRes?.faceLandmarks?.length || 0;
+  $("#poseState").textContent = poseRes?.landmarks?.length ? "on" : "off";
+  // animate reveal
+  syncOverlayToImage(); drawOverlay();
+  scan.style.opacity='1'; scan.style.top = (imgBox.y)+'px';
+  let y=imgBox.y, end=imgBox.y+imgBox.h;
+  (function step(){ if(y>=end){ scan.style.opacity='0'; return; } y+=Math.max(3,imgBox.h/28); scan.style.top=y+'px'; requestAnimationFrame(step); })();
 });
 
-/* ---------------------- Run analysis (build outputs + cloud) ---------------------- */
-runBtn.addEventListener("click", async ()=>{
-  if(!baseImg.src){ toast("Load an image first."); return; }
-  // ensure preview results present
-  if(!lastFaceRes){ previewBtn.click(); }
+/* === Run Analysis (cloud optional) === */
+run.addEventListener("click", async ()=>{
+  if(!img.src){ toast("Load an image first."); return; }
+  if(!faceRes) preview.click(); // ensure we have a local result
 
-  // Build local analysis JSON
-  const faces = (lastFaceRes?.faceLandmarks||[]).map((lm,idx)=>{
-    // compute basic measures in *pixels* against overlay canvas
-    const L=(k)=>({x:lm[k].x*mesh.width, y:lm[k].y*mesh.height});
-    const dist=(a,b)=>{const A=L(a),B=L(b); return Math.hypot(A.x-B.x, A.y-B.y);}
-    const faceH = dist(10,152), jawW = dist(234,454), cheekW = dist(234,454), eyeAng = Math.atan2(L(362).y-L(133).y, L(362).x-L(133).x)*180/Math.PI;
-    const ratios={ jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3) };
-    const shape = (()=>{
-      if(ratios.jaw_face<0.45 && ratios.cheek_face<0.55) return "oval";
-      if(Math.abs(ratios.jaw_face-ratios.cheek_face)<0.03 && ratios.jaw_face>0.5) return "round";
-      if(ratios.jaw_face>=0.55 && ratios.cheek_face>=0.60) return "square";
-      return "heart";
-    })();
-    return {
-      index:idx,
-      measures:{ face_height:+faceH.toFixed(1), jaw_width:+jawW.toFixed(1), cheek_width:+cheekW.toFixed(1), eye_angle_deg:+eyeAng.toFixed(2) },
-      ratios, shape, landmarks_norm: lm
-    };
+  // Build minimal JSON
+  const faces = (faceRes?.faceLandmarks||[]).map((lm,idx)=>{
+    const L=(k)=>({x:lm[k].x*ov.width,y:lm[k].y*ov.height});
+    const dist=(a,b)=>{const A=L(a),B=L(b); return Math.hypot(A.x-B.x,A.y-B.y);}
+    const faceH=dist(10,152), jawW=dist(234,454), cheekW=dist(234,454), eyeDeg=(Math.atan2(L(362).y-L(133).y, L(362).x-L(133).x)*180/Math.PI);
+    const ratios={jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3)};
+    let shape='oval'; if(ratios.jaw_face>=0.55 && ratios.cheek_face>=0.6) shape='square'; else if(Math.abs(ratios.jaw_face-ratios.cheek_face)<0.03 && ratios.jaw_face>0.5) shape='round';
+    return {index:idx, measures:{face_height:+faceH.toFixed(1), jaw_width:+jawW.toFixed(1), cheek_width:+cheekW.toFixed(1), eye_angle_deg:+eyeDeg.toFixed(2)}, ratios, shape};
   });
 
-  // Optional cloud: caption + objects
-  lastCaption=null; lastObjects=null;
+  // Cloud assist (optional, using official JS SDK) 
+  caption=null; objects=null;
   if(useCloud.checked && hfToken.value.trim()){
     try{
-      const blob = await new Promise(res=>{
-        // draw current view (exact overlay box) into a temp canvas
-        const t=document.createElement("canvas"); t.width=imgBox.w; t.height=imgBox.h;
-        const tctx=t.getContext("2d"); // paint the visible image area
-        // draw the base image into temp exactly like it's displayed:
-        // compute source rect that maps to displayed box (fit contain)
-        // we can just draw baseImg scaled to t since it's already object-fit contain into inner; scaling again is fine for captions/tags.
-        tctx.drawImage(baseImg, 0, 0, t.width, t.height);
-        t.toBlob(res, "image/png", 0.92);
-      });
-      // Use the browser build of @huggingface/inference; it exposes global HfInference (via the module tag).
-      const hf = new window.HfInference(hfToken.value.trim());
-      // 1) BLIP caption
-      try{ const cap = await hf.imageToText({data: blob, model:"Salesforce/blip-image-captioning-large"}); lastCaption = cap?.generated_text || null; }
-      catch(e){ log("HF caption error: "+(e?.message||e)); }
-      // 2) DETR objects
-      try{ lastObjects = await hf.objectDetection({data: blob, model:"facebook/detr-resnet-50"}); }
-      catch(e){ log("HF object error: "+(e?.message||e)); }
-    }catch(e){ log("Cloud assist error: "+(e?.message||e)); }
+      const { HfInference } = await import("https://cdn.jsdelivr.net/npm/@huggingface/inference@2.8.0/+esm"); // official client :contentReference[oaicite:3]{index=3}
+      const hf = new HfInference(hfToken.value.trim());
+      const tmp=document.createElement('canvas'); tmp.width=imgBox.w; tmp.height=imgBox.h;
+      tmp.getContext('2d').drawImage(img,0,0,tmp.width,tmp.height);
+      const blob=await new Promise(r=>tmp.toBlob(r,'image/png',0.92));
+      try{ const cap=await hf.imageToText({data:blob, model:"Salesforce/blip-image-captioning-large"}); caption=cap?.generated_text||null; }
+      catch(e){ log("HF caption: "+(e?.message||e)); }
+      try{ objects=await hf.objectDetection({data:blob, model:"facebook/detr-resnet-50"}); } // DETR model card :contentReference[oaicite:4]{index=4}
+      catch(e){ log("HF objects: "+(e?.message||e)); }
+    }catch(e){ log("HF init: "+(e?.message||e)); }
   }
 
-  // Draw cloud boxes (if any)
-  if(lastObjects?.length){
-    for(const o of lastObjects.slice(0,12)){
-      const [x,y,w,h]=[o.box.xmin, o.box.ymin, o.box.xmax-o.box.xmin, o.box.ymax-o.box.ymin];
-      box(x,y,w,h, `${o.label} ${(o.score*100|0)}%`);
-    }
-  }
+  // draw object boxes if any
+  if(objects?.length){ objects.slice(0,12).forEach(o=>{ const x=o.box.xmin, y=o.box.ymin, w=o.box.xmax-o.box.xmin, h=o.box.ymax-o.box.ymin; box(x,y,w,h,`${o.label} ${(o.score*100|0)}%`); }); }
 
-  // Assemble JSON
-  const analysis={
-    version:"pf_facemapper_3_plus",
-    frame:{type:"image"},
-    image:{natural:imgNatural, box:imgBox},
-    faces,
-    pose: lastPoseRes?.landmarks?.length? "detected":"none",
-    cloud:{ caption:lastCaption, objects:lastObjects }
-  };
-
-  // Build prompts
-  const first=faces[0];
-  const detailLvl=parseInt(detail.value,10), spiceLvl=parseInt(spice.value,10);
-  function sfwPrompt(){
-    if(!first) return "portrait photo of a person";
-    const parts=[
-      "portrait photo of a person",
-      `${first.shape} face`,
-      `jaw/face ${first.ratios.jaw_face}, cheek/face ${first.ratios.cheek_face}`,
-      `eye tilt ${first.measures.eye_angle_deg}°`,
-    ];
-    if(detailLvl>=2) parts.push("natural lighting, photorealistic");
-    if(detailLvl>=3) parts.push("sharp focus, high detail, minimal distortion");
-    if(lastCaption) parts.push(`Caption hint: ${lastCaption}`);
-    return parts.join(", ");
-  }
-  function nsfwPrompt(){
-    if(!optNSFW.checked || !first) return "";
-    const base=["nude portrait", `${first.shape} face`];
-    if(spiceLvl>=1) base.push("soft light");
-    if(spiceLvl>=2) base.push("explicit body focus");
-    if(spiceLvl>=3) base.push("vulgar slang details");
-    return base.join(", ");
-  }
-
-  outSFW.value = sfwPrompt();
-  outNSFW.value = nsfwPrompt();
+  const analysis={ version:"pf_facemapper_3_plus", image:{natural:imgNatural, box:imgBox}, faces, pose: !!(poseRes?.landmarks?.length), cloud:{caption, objects} };
   outJSON.value = JSON.stringify(analysis,null,2);
-  toast("Analysis complete. See tabs for results.");
+
+  // prompts
+  const f=faces[0]; const dl=+detail.value, sp=+spice.value;
+  outSFW.value = f ? [
+    "portrait photo of a person",
+    `${f.shape} face`,
+    `jaw/face ${f.ratios.jaw_face}, cheek/face ${f.ratios.cheek_face}`,
+    `eye tilt ${f.measures.eye_angle_deg}°`,
+    dl>=2?"natural lighting, photorealistic":null,
+    dl>=3?"sharp focus, high detail":null,
+    caption?`caption hint: ${caption}`:null
+  ].filter(Boolean).join(", ") : "portrait photo of a person";
+  outNSFW.value = (optNSFW.checked && f) ? ["nude portrait", `${f.shape} face`, sp>=1?"soft light":null, sp>=2?"explicit body focus":null, sp>=3?"dirty slang details":null].filter(Boolean).join(", ") : "";
+  toast("Analysis complete.");
 });
 
-/* ---------------------- Diagnostics ---------------------- */
-function log(s){ diagEl.textContent += (s+"\n"); }
-diagEl.textContent =
-  `UA: ${navigator.userAgent}\n`+
-  `\nHints:\n- Preview draws using normalized landmarks pinned to the image box.\n`+
-  `- If you see 0 faces, try a clearer portrait (front-lit).\n`;
-
-/* ---------------------- Safety: keep image visible on any layout shifts ---------------------- */
-const observer = new ResizeObserver(()=>{ if(baseImg.src){ syncOverlayToImage(); drawOverlayAnimated(0);} });
-observer.observe(stage);
+/* === Misc UI === */
+function log(s){ diag.textContent += s+"\n"; }
+diag.textContent = `UA: ${navigator.userAgent}\nTips:\n- detect() runs synchronously in IMAGE mode (no .catch()).\n- DrawingUtils expects normalized landmarks; canvas is sized to the image box so overlays align.\n`; // :contentReference[oaicite:5]{index=5}
 </script>
-
-<!-- Notes for maintainers:
-FaceLandmarker for web: detect() is synchronous; examples and API at Google AI Edge docs. DrawingUtils expects NormalizedLandmark[]; we pin the overlay canvas to the visible image box to align correctly. -->
 </body>
 </html>
