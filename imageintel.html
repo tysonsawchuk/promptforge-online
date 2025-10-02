@@ -3,31 +3,37 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>PF — ImageIntel (Face • Pose • Objects)</title>
+<title>PF — ImageIntel Visor (Face • Pose • Scene • Cloud)</title>
 <meta name="robots" content="noindex,nofollow"/>
-<meta name="description" content="On-device MediaPipe face mesh + body pose overlays with scanner animation. Optional Hugging Face captioning and object detection."/>
+<meta name="description" content="World-class on-device MediaPipe face mesh, full-body pose, scene tiling, and animated HUD. Terminal shows each scanning step. Optional Hugging Face caption & objects."/>
 <style>
-:root{ --bg:#0b0f14; --ink:#eaf9ff; --edge:#222b35; --aqua:#64f2e3; --vio:#be9cff; --gold:#ffd166; --ok:#55d69a; --bad:#ff6b6b; --dim:#94a8b5;}
+:root{
+  --bg:#0b0f14; --ink:#eaf9ff; --dim:#94a8b5; --edge:#222b35;
+  --aqua:#64f2e3; --vio:#be9cff; --gold:#ffd166; --ok:#55d69a; --bad:#ff6b6b;
+}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace}
-.wrap{max-width:1180px;margin:0 auto;padding:16px}
-h1{margin:0 0 10px;font-size:1.1rem}
+.wrap{max-width:1220px;margin:0 auto;padding:16px}
+h1{margin:0 0 10px;font-size:1.12rem}
 small,.note{color:var(--dim)}
+
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
 .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--edge);padding:6px 10px;border-radius:999px;background:#0d141add}
 .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--gold)}
 .btn{cursor:pointer;border:1.5px solid var(--aqua);background:#131a22;color:#b8fff6;padding:8px 12px;border-radius:10px;font-weight:700}
-.btn:hover{background:var(--aqua);color:#081016;border-color:#fff}
+.btn:hover{background:var(--aqua);color:#071017;border-color:#fff}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.next{animation:pulse 1.4s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(100,242,227,.45)}70%{box-shadow:0 0 0 14px rgba(100,242,227,0)}100%{box-shadow:0 0 0 0 rgba(100,242,227,0)}}
 
 .stage{position:relative;border:1px solid var(--edge);border-radius:12px;background:#0e151d;overflow:hidden}
 .inner{position:relative;width:100%;aspect-ratio:16/9}
 #img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
-#ov{position:absolute;inset:0;pointer-events:none}
-.legend{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;z-index:5}
-.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#64f2e3,transparent);box-shadow:0 0 10px #64f2e3aa;opacity:0;pointer-events:none;transition:opacity .15s ease}
+#hud,#mesh{position:absolute;inset:0;pointer-events:none}
+.legend{position:absolute;left:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;z-index:10}
+.hl{position:absolute;padding:2px 6px;border-radius:6px;font-size:.8rem;background:#0f2130cc;border:1px solid #2a3a46;color:#c8f6ff}
+.box{position:absolute;border:2px dashed rgba(190,156,255,.95);box-shadow:0 0 10px #be9cff55 inset}
+
+.scanbar{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#64f2e3,transparent);box-shadow:0 0 10px #64f2e3aa;opacity:0;pointer-events:none;transition:opacity .12s ease}
+.grid{position:absolute;inset:0;background-image:linear-gradient(#64f2e31c 1px,transparent 1px),linear-gradient(90deg,#64f2e31c 1px,transparent 1px);background-size:40px 40px;opacity:.22;pointer-events:none}
 
 .stepper{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
 .step{border:1px solid var(--edge);border-radius:10px;padding:10px;background:#0f161f}
@@ -37,24 +43,27 @@ input[type="checkbox"],input[type="radio"]{transform:scale(1.1)}
 input[type="range"]{accent-color:var(--aqua)}
 input[type="text"]{border:1px solid var(--edge);background:#0f141a;color:#fff;padding:6px 10px;border-radius:8px;min-width:320px}
 
+.cols{display:grid;grid-template-columns:1fr 360px;gap:12px}
+.term{background:#070c12;border:1px solid #14202b;border-radius:10px;padding:10px;min-height:220px;color:#bfeaff}
+.term pre{margin:0;white-space:pre-wrap;line-height:1.25}
+.term .prompt{color:#7ee3ff}
+.term .ok{color:#6dffb8}
+.term .err{color:#ff9a9a}
+.term .dim{color:#8aa6b3}
+
 .tabs{margin-top:14px}
-.tab-head{display:flex;gap:8px;flex-wrap:wrap}
+.tab-head{display:flex;flex-wrap:wrap;gap:8px}
 .tab-head button{cursor:pointer;border:1px solid var(--edge);background:#0e141a;color:#fff;padding:8px 12px;border-radius:9px}
 .tab-head button.active{border-color:var(--aqua);box-shadow:0 0 0 2px #64f2e333 inset}
 .tab{display:none;margin-top:10px;border:1px solid var(--edge);border-radius:12px;padding:12px;background:#0e141a}
 .tab.active{display:block}
 textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border:1px solid #1b242e;border-radius:8px;padding:10px}
-
-.diag{white-space:pre;min-height:120px;border:1px dashed var(--edge);padding:10px;border-radius:10px;background:#0c1117}
-.toastbox{position:fixed;right:14px;bottom:14px;display:flex;flex-direction:column;gap:10px;z-index:9000}
-.toast{background:#121823ee;border:1px solid var(--edge);color:#defaff;padding:10px 12px;border-radius:10px;min-width:220px;box-shadow:0 4px 18px #0006}
-.hl{position:absolute;padding:2px 6px;border-radius:6px;font-size:.8rem;background:#102028cc;border:1px solid #2a3a46;color:#c8f6ff}
-.box{position:absolute;border:2px dashed rgba(190,156,255,.95);box-shadow:0 0 10px #be9cff55 inset}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel — Face • Pose • Objects</h1>
+  <h1>ImageIntel Visor — Face • Pose • Scene • Cloud</h1>
+
   <div class="row">
     <span class="badge">Status: <b id="status">booting…</b></span>
     <span class="badge">Bundle: <b id="bundle">—</b></span>
@@ -64,11 +73,14 @@ textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border
   <div class="stage">
     <div class="inner" id="stage">
       <img id="img" alt=""/>
-      <canvas id="ov"></canvas>
-      <div class="scanline" id="scan"></div>
+      <canvas id="mesh"></canvas>
+      <canvas id="hud"></canvas>
+      <div class="grid" id="grid"></div>
+      <div class="scanbar" id="scan"></div>
       <div class="legend">
         <span class="badge">faces: <span id="faceCount">0</span></span>
         <span class="badge">pose: <span id="poseState">off</span></span>
+        <span class="badge">tiles: <span id="tileState">0%</span></span>
       </div>
     </div>
   </div>
@@ -80,227 +92,311 @@ textarea.out{width:100%;min-height:140px;background:#0b1117;color:#d8faff;border
         <input id="file" type="file" accept="image/*"/>
         <button class="btn" id="demo">Load Demo</button>
       </div>
-      <div class="row"><button class="btn next" id="to2" disabled>Next</button></div>
+      <div class="row"><button class="btn" id="to2" disabled>Next</button></div>
     </div>
     <div class="step" id="st2">
       <h3>Step 2 — Options</h3>
-      <div class="option"><input type="checkbox" id="optFace" checked> <label for="optFace">Face mesh</label></div>
-      <div class="option"><input type="checkbox" id="optPose"> <label for="optPose">Body pose</label></div>
-      <div class="option"><input type="checkbox" id="optNSFW"> <label for="optNSFW">NSFW heuristics (local)</label></div>
+      <div class="option"><input type="checkbox" id="optFace" checked> <label for="optFace">Face mesh (full tessellation)</label></div>
+      <div class="option"><input type="checkbox" id="optPose" checked> <label for="optPose">Body pose (labeled skeleton)</label></div>
+      <div class="option"><input type="checkbox" id="optNSFW" checked> <label for="optNSFW">NSFW heuristics (local)</label></div>
+      <div class="option"><input type="checkbox" id="optScene" checked> <label for="optScene">Scene tiles (color/skin sampling)</label></div>
       <div class="option"><input type="checkbox" id="optObjects"> <label for="optObjects">Objects (cloud)</label></div>
-      <div class="option"><label>Detail <input id="detail" type="range" min="1" max="3" step="1" value="2"></label></div>
-      <div class="option"><label>Spice <input id="spice" type="range" min="0" max="3" step="1" value="1"></label></div>
+      <div class="option"><label>Detail <input id="detail" type="range" min="1" max="3" step="1" value="3"></label></div>
+      <div class="option"><label>Spice <input id="spice" type="range" min="0" max="3" step="1" value="2"></label></div>
       <div class="row">
         <button class="btn" id="preview" disabled>Preview Overlay</button>
-        <button class="btn next" id="to3" disabled>Next</button>
+        <button class="btn" id="to3" disabled>Next</button>
       </div>
     </div>
     <div class="step" id="st3">
       <h3>Step 3 — Cloud Assist (optional)</h3>
-      <div class="option"><input type="checkbox" id="useCloud"> <label for="useCloud">Enable Hugging Face (caption + objects)</label></div>
+      <div class="option"><input type="checkbox" id="useCloud"> <label for="useCloud">Hugging Face (caption + objects)</label></div>
       <div class="option"><input id="hfToken" type="text" placeholder="hf_... token"/></div>
-      <div class="row"><button class="btn next" id="run" disabled>Run Analysis</button></div>
-      <div class="note">Uses BLIP caption + DETR boxes via official JS client. Local overlays do not depend on cloud calls.</div>
+      <div class="row"><button class="btn" id="run" disabled>Run Analysis</button></div>
     </div>
   </div>
 
-  <div class="tabs">
-    <div class="tab-head">
-      <button class="active" data-tab="sfw">SFW Prompt</button>
-      <button data-tab="nsfw">NSFW Prompt</button>
-      <button data-tab="json">JSON</button>
-      <button data-tab="diag">Diagnostics</button>
+  <div class="cols">
+    <div>
+      <div class="tabs">
+        <div class="tab-head">
+          <button class="active" data-tab="sfw">SFW Prompt</button>
+          <button data-tab="nsfw">NSFW Prompt</button>
+          <button data-tab="json">JSON</button>
+        </div>
+        <div class="tab active" id="tab_sfw"><textarea id="outSFW" class="out" readonly></textarea></div>
+        <div class="tab" id="tab_nsfw"><textarea id="outNSFW" class="out" readonly></textarea></div>
+        <div class="tab" id="tab_json"><textarea id="outJSON" class="out" readonly></textarea></div>
+      </div>
     </div>
-    <div class="tab active" id="tab_sfw"><textarea id="outSFW" class="out" readonly></textarea></div>
-    <div class="tab" id="tab_nsfw"><textarea id="outNSFW" class="out" readonly></textarea></div>
-    <div class="tab" id="tab_json"><textarea id="outJSON" class="out" readonly></textarea></div>
-    <div class="tab" id="tab_diag"><div id="diag" class="diag"></div></div>
+
+    <div class="term" id="term">
+      <pre id="termOut"><span class="dim">[boot]</span> ImageIntel visor starting…</pre>
+    </div>
   </div>
 </div>
 
 <div class="toastbox" id="toasts"></div>
 
 <script type="module">
-/* === Imports (pinned) === */
-import { FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs"; /* DrawingUtils & Landmarkers */ // :contentReference[oaicite:1]{index=1}
+/* -------- Imports (pinned, stable DrawingUtils & connectors) -------- */
+import { FilesetResolver, FaceLandmarker, PoseLandmarker, DrawingUtils } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs";
 
-/* === Tiny helpers (fixed: separate declarations) === */
-const $ = (q,p=document)=>p.querySelector(q);
-const $$ = (qa,p=document)=>Array.from(p.querySelectorAll(qa));
-const toastbox=$("#toasts");
-const toast=(m)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;toastbox.appendChild(d);setTimeout(()=>d.remove(),2600);};
+/* -------- Tiny helpers -------- */
+const $=(q,p=document)=>p.querySelector(q);
+const $$=(qa,p=document)=>Array.from(p.querySelectorAll(qa));
+const print=(s,cls='')=>{ const pre=$("#termOut"); pre.innerHTML += "\\n" + (cls?`<span class="${cls}">${s}</span>`:s); pre.parentElement.scrollTop = pre.parentElement.scrollHeight; };
+const toast=(m)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),2600);};
 const setStep=(n)=>["st1","st2","st3"].forEach((id,i)=>$("#"+id).classList.toggle("active",i===n-1));
 $$(".tab-head button").forEach(b=>b.addEventListener("click",()=>{ $$(".tab-head button").forEach(x=>x.classList.remove("active")); b.classList.add("active"); $$(".tab").forEach(x=>x.classList.remove("active")); $("#tab_"+b.dataset.tab).classList.add("active"); }));
 
-/* === DOM refs === */
+/* -------- DOM refs -------- */
 const statusEl=$("#status"), bundleEl=$("#bundle"), modelsEl=$("#models");
-const img=$("#img"), ov=$("#ov"), ovctx=ov.getContext("2d");
-const stage=$("#stage"), scan=$("#scan");
-const faceCountEl=$("#faceCount"), poseStateEl=$("#poseState"), diag=$("#diag");
-const file=$("#file"), demo=$("#demo"), to2=$("#to2"), to3=$("#to3"), run=$("#run"), preview=$("#preview");
-const optFace=$("#optFace"), optPose=$("#optPose"), optNSFW=$("#optNSFW"), optObjects=$("#optObjects");
+const img=$("#img"), mesh=$("#mesh"), hud=$("#hud"), mctx=mesh.getContext('2d'), hctx=hud.getContext('2d');
+const stage=$("#stage"), scan=$("#scan"), grid=$("#grid");
+const faceCountEl=$("#faceCount"), poseStateEl=$("#poseState"), tileStateEl=$("#tileState");
+const file=$("#file"), demo=$("#demo"), to2=$("#to2"), to3=$("#to3"), preview=$("#preview"), run=$("#run");
+const optFace=$("#optFace"), optPose=$("#optPose"), optNSFW=$("#optNSFW"), optScene=$("#optScene"), optObjects=$("#optObjects");
 const detail=$("#detail"), spice=$("#spice"), useCloud=$("#useCloud"), hfToken=$("#hfToken");
 const outSFW=$("#outSFW"), outNSFW=$("#outNSFW"), outJSON=$("#outJSON");
 
-let imgNatural={w:0,h:0}, imgBox={x:0,y:0,w:0,h:0};
-let face=null, pose=null, drawUtil=null;
-let faceRes=null, poseRes=null, objects=null, caption=null;
+let imgBox={x:0,y:0,w:0,h:0}, imgNatural={w:0,h:0};
+let face=null, pose=null, DU=null;
+let faceRes=null, poseRes=null, sceneTiles=null, objects=null, caption=null;
 
-/* === Fit overlay canvas exactly to the visible image rectangle (object-fit: contain) === */
-function syncOverlayToImage(){
-  const rImg = img.getBoundingClientRect();
-  const rStage = stage.getBoundingClientRect();
-  imgBox = { x: Math.round(rImg.left - rStage.left), y: Math.round(rImg.top - rStage.top), w: Math.round(rImg.width), h: Math.round(rImg.height) };
-  ov.style.left = imgBox.x+"px"; ov.style.top = imgBox.y+"px";
-  ov.width = Math.max(1,imgBox.w);
-  ov.height= Math.max(1,imgBox.h);
+function syncOverlay(){
+  const ri=img.getBoundingClientRect(), rs=stage.getBoundingClientRect();
+  imgBox={ x:Math.round(ri.left-rs.left), y:Math.round(ri.top-rs.top), w:Math.round(ri.width), h:Math.round(ri.height) };
+  [mesh,hud].forEach(c=>{ c.style.left=imgBox.x+"px"; c.style.top=imgBox.y+"px"; c.width=Math.max(1,imgBox.w); c.height=Math.max(1,imgBox.h); });
 }
-new ResizeObserver(syncOverlayToImage).observe(stage);
-addEventListener("scroll", ()=>{ if(img.src) { syncOverlayToImage(); drawOverlay(); } }, {passive:true});
+new ResizeObserver(syncOverlay).observe(stage);
+addEventListener("scroll",()=>{ if(img.src){ syncOverlay(); drawAllImmediate(); } },{passive:true});
 
-/* === Load MediaPipe models (IMAGE mode, sync detect()) === */
-(async ()=>{
+/* -------- Init models -------- */
+(async()=>{
   try{
-    statusEl.textContent="loading…";
-    const fs = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
-    bundleEl.innerHTML='<span class="ok">OK</span>';
-    face = await FaceLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"}, runningMode:"IMAGE", numFaces:5 });
-    pose = await PoseLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"}, runningMode:"IMAGE" });
-    drawUtil = new DrawingUtils(ovctx);
-    modelsEl.innerHTML='<span class="ok">OK</span>';
-    statusEl.textContent="ready";
-  }catch(e){
-    modelsEl.innerHTML='<span class="bad">error</span>'; statusEl.textContent="init failed";
-    log("Init error: "+(e?.message||e));
-  }
+    statusEl.textContent="loading…"; print("$ visor init", "prompt");
+    const fs=await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm");
+    bundleEl.innerHTML='<span class="ok">OK</span>'; print("vision bundle: ok", "ok");
+
+    face=await FaceLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"}, runningMode:"IMAGE", numFaces:5 });
+    pose=await PoseLandmarker.createFromOptions(fs,{ baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"}, runningMode:"IMAGE" });
+    DU=new DrawingUtils(mctx);
+    modelsEl.innerHTML='<span class="ok">OK</span>'; statusEl.textContent="ready"; print("models: face+pose ready", "ok");
+  }catch(e){ modelsEl.innerHTML='<span class="bad">error</span>'; statusEl.textContent="init failed"; print(String(e),"err"); }
 })();
 
-/* === Image load === */
-function enableStep2(){ preview.disabled=false; to3.disabled=false; run.disabled=false; }
+/* -------- Loading an image -------- */
+function enable(){ preview.disabled=false; to3.disabled=false; run.disabled=false; }
 file.addEventListener("change", ()=>{
   const f=file.files?.[0]; if(!f) return;
-  const url = URL.createObjectURL(f);
-  img.onload=()=>{
-    imgNatural={w:img.naturalWidth,h:img.naturalHeight};
-    syncOverlayToImage();
-    to2.disabled=false; enableStep2(); toast("Image loaded.");
-    URL.revokeObjectURL(url);
-  };
+  const url=URL.createObjectURL(f);
+  img.onload=()=>{ imgNatural={w:img.naturalWidth,h:img.naturalHeight}; syncOverlay(); to2.disabled=false; enable(); toast("Image loaded."); print(`loaded file: ${f.name}  ${imgNatural.w}x${imgNatural.h}`,"dim"); URL.revokeObjectURL(url); };
   img.src=url; img.alt=f.name||"image";
 });
 demo.addEventListener("click", ()=>{
-  img.onload=()=>{ imgNatural={w:img.naturalWidth,h:img.naturalHeight}; syncOverlayToImage(); to2.disabled=false; enableStep2(); toast("Demo loaded."); };
-  img.crossOrigin="anonymous";
-  img.src="https://storage.googleapis.com/mediapipe-assets/portrait.jpg"; // official sample
+  img.onload=()=>{ imgNatural={w:img.naturalWidth,h:img.naturalHeight}; syncOverlay(); to2.disabled=false; enable(); toast("Demo loaded."); print("demo portrait loaded","dim"); };
+  img.crossOrigin="anonymous"; img.src="https://storage.googleapis.com/mediapipe-assets/portrait.jpg";
 });
-to2.addEventListener("click", ()=>setStep(2));
-to3.addEventListener("click", ()=>setStep(3));
+to2.addEventListener("click",()=>setStep(2));
+to3.addEventListener("click",()=>setStep(3));
 
-/* === Drawing helpers === */
-function clearOverlay(){ ovctx.clearRect(0,0,ov.width,ov.height); $$(".hl", stage).forEach(n=>n.remove()); $$(".box", stage).forEach(n=>n.remove()); }
-function label(px,py,text){ const e=document.createElement("div"); e.className="hl"; e.textContent=text; e.style.left=(imgBox.x+px)+"px"; e.style.top=(imgBox.y+py)+"px"; stage.appendChild(e); }
-function box(x,y,w,h,text){ const el=document.createElement("div"); el.className="box"; el.style.left=(imgBox.x+x)+"px"; el.style.top=(imgBox.y+y)+"px"; el.style.width=w+"px"; el.style.height=h+"px"; if(text){ const t=document.createElement("div"); t.className="hl"; t.textContent=text; t.style.left=(imgBox.x+x+4)+"px"; t.style.top=(imgBox.y+y+4)+"px"; stage.appendChild(t);} stage.appendChild(el); }
+/* -------- Fancy Drawing -------- */
+function clearHUD(){ mctx.clearRect(0,0,mesh.width,mesh.height); hctx.clearRect(0,0,hud.width,hud.height); $$(".hl",stage).forEach(n=>n.remove()); $$(".box",stage).forEach(n=>n.remove()); }
+function label(x,y,t){ const el=document.createElement('div'); el.className='hl'; el.textContent=t; el.style.left=(imgBox.x+x)+"px"; el.style.top=(imgBox.y+y)+"px"; stage.appendChild(el); return el; }
+function box(x,y,w,h,t){ const el=document.createElement('div'); el.className='box'; el.style.left=(imgBox.x+x)+"px"; el.style.top=(imgBox.y+y)+"px"; el.style.width=w+"px"; el.style.height=h+"px"; stage.appendChild(el); if(t){ const L=label(x+4,y+4,t); L.style.background="#1b0f25cc"; } return el; }
 
-function drawFace(){
-  if(!faceRes?.faceLandmarks?.length) return;
+function drawFaceMeshFancy(){
+  if(!optFace.checked || !faceRes?.faceLandmarks?.length) return;
+  mctx.clearRect(0,0,mesh.width,mesh.height);
   for(const lm of faceRes.faceLandmarks){
-    // landmarks are normalized; DrawingUtils multiplies by canvas size. Canvas == image box; so it aligns. :contentReference[oaicite:2]{index=2}
-    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:"rgba(100,242,227,.40)", lineWidth:1}); /* TESSELLATION (correct spelling) */
-    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,   {color:"rgba(140,255,220,.95)", lineWidth:2});
-    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,   {color:"#fff", lineWidth:2});
-    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,    {color:"#fff", lineWidth:2});
-    drawUtil.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,        {color:"rgba(255,120,160,.95)", lineWidth:2});
-    // simple labels
-    const px=(k)=>({x:lm[k].x*ov.width,y:lm[k].y*ov.height});
-    const lip=px(13), chin=px(152), brow=px(10);
+    DU.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_TESSELLATION, {color:"rgba(100,242,227,.42)", lineWidth:1});
+    DU.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,   {color:"rgba(140,255,220,.98)", lineWidth:2});
+    DU.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,   {color:"#fff", lineWidth:2});
+    DU.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,    {color:"#fff", lineWidth:2});
+    DU.drawConnectors(lm, FaceLandmarker.FACE_LANDMARKS_LIPS,        {color:"rgba(255,120,160,.98)", lineWidth:2});
+    // pulse dots on key features
+    mctx.save(); mctx.fillStyle="rgba(190,156,255,.95)"; mctx.shadowColor="#be9cff"; mctx.shadowBlur=14;
+    [33,133,362,263,1,13,14].forEach(i=>{ const p=lm[i]; mctx.beginPath(); mctx.arc(p.x*mesh.width,p.y*mesh.height,2.6,0,Math.PI*2); mctx.fill(); });
+    mctx.restore();
+    // labels
+    const R=k=>({x:lm[k].x*mesh.width,y:lm[k].y*mesh.height});
+    const lip=R(13), chin=R(152), brow=R(10);
     label(lip.x+6, lip.y-10, "lips");
-    label(chin.x+6, chin.y+4,  "jaw");
-    label(brow.x+6, brow.y-8,  "brow");
+    label(chin.x+6, chin.y+4 , "jaw");
+    label(brow.x+6, brow.y-8 , "brow");
   }
 }
-const POSE_LINKS=[[11,13,15],[12,14,16],[11,12],[23,24],[11,23],[12,24],[23,25,27],[24,26,28]]; // shoulders/arms/hips/legs
-function drawPose(){
-  if(!poseRes?.landmarks?.length) return;
+const POSE_LINKS=[[11,13,15],[12,14,16],[11,12],[23,24],[11,23],[12,24],[23,25,27],[24,26,28]];
+function drawPoseLabeled(){
+  if(!optPose.checked || !poseRes?.landmarks?.length) return;
   const lm=poseRes.landmarks[0];
-  ovctx.save(); ovctx.strokeStyle="rgba(190,156,255,.95)"; ovctx.lineWidth=2.2; ovctx.beginPath();
-  const pt=(i)=>[lm[i].x*ov.width,lm[i].y*ov.height];
-  for(const chain of POSE_LINKS){ for(let i=0;i<chain.length-1;i++){ const [x1,y1]=pt(chain[i]), [x2,y2]=pt(chain[i+1]); ovctx.moveTo(x1,y1); ovctx.lineTo(x2,y2);} }
-  ovctx.stroke(); ovctx.restore();
-  const s11=pt(11), s12=pt(12), h23=pt(23), h24=pt(24);
-  label((s11[0]+s12[0])/2-28,(s11[1]+s12[1])/2-8,"shoulders");
-  label((h23[0]+h24[0])/2-14,(h23[1]+h24[1])/2-6,"hips");
-}
-function drawOverlay(){ clearOverlay(); if(optFace.checked) drawFace(); if(optPose.checked) drawPose(); }
+  hctx.clearRect(0,0,hud.width,hud.height);
+  hctx.save(); hctx.strokeStyle="rgba(190,156,255,.95)"; hctx.lineWidth=2.2; hctx.beginPath();
+  const P=i=>[lm[i].x*hud.width, lm[i].y*hud.height];
+  for(const chain of POSE_LINKS){ for(let i=0;i<chain.length-1;i++){ const [x1,y1]=P(chain[i]), [x2,y2]=P(chain[i+1]); hctx.moveTo(x1,y1); hctx.lineTo(x2,y2); } }
+  hctx.stroke(); hctx.restore();
+  const S=P(11), R=P(12), H1=P(23), H2=P(24);
+  label((S[0]+R[0])/2-28,(S[1]+R[1])/2-8,"shoulders");
+  label((H1[0]+H2[0])/2-14,(H1[1]+H2[1])/2-6,"hips");
 
-/* === Preview (local, sync) === */
-preview.addEventListener("click", ()=>{
+  // chest/waist/hip segments (rough)
+  const chestY=(S[1]+R[1])/2 + 28, waistY=(H1[1]+H2[1])/2 - 10, hipY=(H1[1]+H2[1])/2 + 12;
+  hctx.strokeStyle="rgba(100,242,227,.7)";
+  [chestY,waistY,hipY].forEach((y,i)=>{ hctx.beginPath(); hctx.moveTo(imgBox.w*0.25,y); hctx.lineTo(imgBox.w*0.75,y); hctx.stroke(); const t=["chest","waist","hips"][i]; label(imgBox.w*0.75+6, y-10, t); });
+}
+function drawTilesProgress(pct){ tileStateEl.textContent = Math.round(pct*100)+"%"; }
+
+/* -------- Scene tiling (visible “AI deconstruction”) -------- */
+function analyzeSceneTiled(slowMs=800){
+  return new Promise((resolve)=>{
+    if(!optScene.checked){ drawTilesProgress(1); return resolve([]); }
+    const W=imgBox.w, H=imgBox.h, tile=40;
+    const cvs=document.createElement('canvas'); cvs.width=W; cvs.height=H; const c=cvs.getContext('2d',{willReadFrequently:true});
+    c.drawImage(img,0,0,W,H); const data=c.getImageData(0,0,W,H).data;
+
+    const tiles=[]; let yi=0;
+    function step(){
+      const row=Math.min(H, yi+tile);
+      for(let y=yi; y<row; y+=4){
+        for(let x=0; x<W; x+=4){
+          const idx=(y*W+x)*4; const r=data[idx], g=data[idx+1], b=data[idx+2];
+          // quick skin heuristic in YCbCr
+          const yv=0.299*r+0.587*g+0.114*b, cb=-0.168736*r-0.331264*g+0.5*b+128, cr=0.5*r-0.418688*g-0.081312*b+128;
+          if(cb>77&&cb<127&&cr>133&&cr<173&&yv>40){ // mark
+            mctx.fillStyle="rgba(255,160,190,.20)";
+            mctx.fillRect(x, y, 4, 4);
+          }
+        }
+      }
+      yi += tile;
+      drawTilesProgress(yi/H);
+      if(yi < H){ setTimeout(step, slowMs/Math.ceil(H/tile)); } else { resolve(tiles); }
+    }
+    step();
+  });
+}
+
+/* -------- Preview: animated passes (face → pose → scene) -------- */
+preview.addEventListener("click", async ()=>{
   if(!img.src){ toast("Load an image first."); return; }
-  try{ faceRes = optFace.checked ? face.detect(img) : null; }catch(e){ faceRes=null; log("face detect: "+(e?.message||e)); }
-  try{ poseRes = optPose.checked ? pose.detect(img) : null; }catch(e){ poseRes=null; log("pose detect: "+(e?.message||e)); }
-  $("#faceCount").textContent = faceRes?.faceLandmarks?.length || 0;
-  $("#poseState").textContent = poseRes?.landmarks?.length ? "on" : "off";
-  // animate reveal
-  syncOverlayToImage(); drawOverlay();
-  scan.style.opacity='1'; scan.style.top = (imgBox.y)+'px';
+  clearHUD(); syncOverlay();
+  print("$ preview --run", "prompt");
+
+  try{ faceRes = optFace.checked ? face.detect(img) : null; }catch(e){ faceRes=null; print("face.detect: "+(e?.message||e),"err"); }
+  faceCountEl.textContent = faceRes?.faceLandmarks?.length || 0;
+  scan.style.opacity='1'; scan.style.top=imgBox.y+'px';
   let y=imgBox.y, end=imgBox.y+imgBox.h;
-  (function step(){ if(y>=end){ scan.style.opacity='0'; return; } y+=Math.max(3,imgBox.h/28); scan.style.top=y+'px'; requestAnimationFrame(step); })();
+
+  const sweep = ()=>new Promise(res=>{
+    (function step(){ if(y>=end){ scan.style.opacity='0'; return res(); }
+      y += Math.max(3, imgBox.h/28); scan.style.top=y+'px';
+      drawFaceMeshFancy();
+      requestAnimationFrame(step);
+    })();
+  });
+  await sweep(); print("face mesh: ok","ok");
+
+  try{ poseRes = optPose.checked ? pose.detect(img) : null; }catch(e){ poseRes=null; print("pose.detect: "+(e?.message||e),"err"); }
+  poseStateEl.textContent = poseRes?.landmarks?.length ? "on" : "off";
+  drawPoseLabeled(); print("pose: "+(poseRes?.landmarks?.length?"ok":"none"), poseRes?.landmarks?.length?"ok":"dim");
+
+  await analyzeSceneTiled(900); print("scene tiles: sampled","ok");
+  to3.disabled=false; run.disabled=false;
 });
 
-/* === Run Analysis (cloud optional) === */
+/* -------- Run: build outputs + optional cloud -------- */
 run.addEventListener("click", async ()=>{
   if(!img.src){ toast("Load an image first."); return; }
-  if(!faceRes) preview.click(); // ensure we have a local result
+  if(!faceRes){ await new Promise(r=>{ preview.click(); setTimeout(r,800); }); }
 
-  // Build minimal JSON
-  const faces = (faceRes?.faceLandmarks||[]).map((lm,idx)=>{
-    const L=(k)=>({x:lm[k].x*ov.width,y:lm[k].y*ov.height});
-    const dist=(a,b)=>{const A=L(a),B=L(b); return Math.hypot(A.x-B.x,A.y-B.y);}
-    const faceH=dist(10,152), jawW=dist(234,454), cheekW=dist(234,454), eyeDeg=(Math.atan2(L(362).y-L(133).y, L(362).x-L(133).x)*180/Math.PI);
-    const ratios={jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3)};
-    let shape='oval'; if(ratios.jaw_face>=0.55 && ratios.cheek_face>=0.6) shape='square'; else if(Math.abs(ratios.jaw_face-ratios.cheek_face)<0.03 && ratios.jaw_face>0.5) shape='round';
-    return {index:idx, measures:{face_height:+faceH.toFixed(1), jaw_width:+jawW.toFixed(1), cheek_width:+cheekW.toFixed(1), eye_angle_deg:+eyeDeg.toFixed(2)}, ratios, shape};
-  });
+  print("$ analyze --assemble", "prompt");
 
-  // Cloud assist (optional, using official JS SDK) 
-  caption=null; objects=null;
-  if(useCloud.checked && hfToken.value.trim()){
-    try{
-      const { HfInference } = await import("https://cdn.jsdelivr.net/npm/@huggingface/inference@2.8.0/+esm"); // official client :contentReference[oaicite:3]{index=3}
-      const hf = new HfInference(hfToken.value.trim());
-      const tmp=document.createElement('canvas'); tmp.width=imgBox.w; tmp.height=imgBox.h;
-      tmp.getContext('2d').drawImage(img,0,0,tmp.width,tmp.height);
-      const blob=await new Promise(r=>tmp.toBlob(r,'image/png',0.92));
-      try{ const cap=await hf.imageToText({data:blob, model:"Salesforce/blip-image-captioning-large"}); caption=cap?.generated_text||null; }
-      catch(e){ log("HF caption: "+(e?.message||e)); }
-      try{ objects=await hf.objectDetection({data:blob, model:"facebook/detr-resnet-50"}); } // DETR model card :contentReference[oaicite:4]{index=4}
-      catch(e){ log("HF objects: "+(e?.message||e)); }
-    }catch(e){ log("HF init: "+(e?.message||e)); }
+  // measurements for first face
+  let faces=[];
+  if(faceRes?.faceLandmarks?.length){
+    faces = faceRes.faceLandmarks.map((lm,idx)=>{
+      const L=k=>({x:lm[k].x*mesh.width, y:lm[k].y*mesh.height});
+      const dist=(a,b)=>{const A=L(a),B=L(b); return Math.hypot(A.x-B.x, A.y-B.y);};
+      const faceH=dist(10,152), jawW=dist(234,454), cheekW=dist(234,454), eyeDeg=(Math.atan2(L(362).y-L(133).y, L(362).x-L(133).x)*180/Math.PI);
+      const ratios={jaw_face:+(jawW/faceH).toFixed(3), cheek_face:+(cheekW/faceH).toFixed(3)};
+      let shape='oval'; if(ratios.jaw_face>=0.55 && ratios.cheek_face>=0.6) shape='square'; else if(Math.abs(ratios.jaw_face-ratios.cheek_face)<0.03 && ratios.jaw_face>0.5) shape='round';
+      return { index:idx, measures:{face_height:+faceH.toFixed(1), jaw_width:+jawW.toFixed(1), cheek_width:+cheekW.toFixed(1), eye_angle_deg:+eyeDeg.toFixed(2)}, ratios, shape };
+    });
   }
 
-  // draw object boxes if any
-  if(objects?.length){ objects.slice(0,12).forEach(o=>{ const x=o.box.xmin, y=o.box.ymin, w=o.box.xmax-o.box.xmin, h=o.box.ymax-o.box.ymin; box(x,y,w,h,`${o.label} ${(o.score*100|0)}%`); }); }
+  // NSFW heuristics quick pass (under-face chest window from largest face bbox)
+  let nsfw=null;
+  if(optNSFW.checked && faces[0] && faceRes.faceLandmarks[0]){
+    const lm=faceRes.faceLandmarks[0];
+    const xs=lm.map(p=>p.x), ys=lm.map(p=>p.y);
+    const bb={ x:Math.min(...xs)*mesh.width, y:Math.min(...ys)*mesh.height, w:(Math.max(...xs)-Math.min(...xs))*mesh.width, h:(Math.max(...ys)-Math.min(...ys))*mesh.height };
+    const rect={ x: (bb.x+bb.w/2) - 0.68*bb.w, y: bb.y + bb.h*1.12, w: 1.36*bb.w, h: 1.10*bb.h };
+    // clamp
+    rect.x=Math.max(0,rect.x); rect.y=Math.max(0,rect.y); rect.w=Math.min(rect.w, mesh.width-rect.x); rect.h=Math.min(rect.h, mesh.height-rect.y);
+    // sample for skin %
+    const snap=document.createElement('canvas'); snap.width=mesh.width; snap.height=mesh.height; snap.getContext('2d').drawImage(img,0,0,mesh.width,mesh.height);
+    const d=snap.getContext('2d').getImageData(rect.x,rect.y,rect.w,rect.h).data;
+    let skin=0, tot=0;
+    for(let i=0;i<d.length;i+=16){ const r=d[i],g=d[i+1],b=d[i+2]; const y=0.299*r+0.587*g+0.114*b, cb=-0.168736*r-0.331264*g+0.5*b+128, cr=0.5*r-0.418688*g-0.081312*b+128; if(cb>77&&cb<127&&cr>133&&cr<173&&y>40) skin++; tot++; }
+    const ratio=tot?skin/tot:0;
+    let breast='unknown'; if(ratio>0.55){ const chestRatio=rect.w/faces[0].measures.face_height; breast = chestRatio<1.55?'small':(chestRatio<2.05?'medium':'large'); }
+    nsfw={ chest_rect:rect, chest_skin_ratio:+ratio.toFixed(3), breast_size:breast, nipples_visible:(ratio>0.55) };
+    box(rect.x,rect.y,rect.w,rect.h, `${breast||'—'} chest`);
+  }
 
-  const analysis={ version:"pf_facemapper_3_plus", image:{natural:imgNatural, box:imgBox}, faces, pose: !!(poseRes?.landmarks?.length), cloud:{caption, objects} };
+  // Optional cloud
+  caption=null; objects=null;
+  if(useCloud.checked && hfToken.value.trim()){
+    print("$ cloud --huggingface (blip+detr)","prompt");
+    try{
+      const { HfInference } = await import("https://cdn.jsdelivr.net/npm/@huggingface/inference@2.8.0/+esm");
+      const hf=new HfInference(hfToken.value.trim());
+      const t=document.createElement('canvas'); t.width=imgBox.w; t.height=imgBox.h; t.getContext('2d').drawImage(img,0,0,t.width,t.height);
+      const blob=await new Promise(r=>t.toBlob(r,'image/png',0.92));
+      try{ const cap=await hf.imageToText({data:blob, model:"Salesforce/blip-image-captioning-large"}); caption=cap?.generated_text||null; print("cloud: caption ✓","ok"); }catch(e){ print("cloud: caption × "+(e?.message||e),"err"); }
+      try{ objects=await hf.objectDetection({data:blob, model:"facebook/detr-resnet-50"}); print("cloud: objects ✓","ok"); }catch(e){ print("cloud: objects × "+(e?.message||e),"err"); }
+    }catch(e){ print("cloud init: "+(e?.message||e),"err"); }
+  }
+
+  if(objects?.length){
+    objects.slice(0,16).forEach(o=>{ const x=o.box.xmin, y=o.box.ymin, w=o.box.xmax-o.box.xmin, h=o.box.ymax-o.box.ymin; box(x,y,w,h,`${o.label} ${(o.score*100|0)}%`); });
+  }
+
+  const analysis={ version:"pf_facemapper_3_plus", image:{natural:imgNatural, box:imgBox}, faces, nsfw, pose: !!(poseRes?.landmarks?.length), scene:{tiles:true}, cloud:{caption, objects} };
   outJSON.value = JSON.stringify(analysis,null,2);
 
-  // prompts
+  // prompts (richer)
   const f=faces[0]; const dl=+detail.value, sp=+spice.value;
   outSFW.value = f ? [
-    "portrait photo of a person",
+    "portrait, photorealistic",
     `${f.shape} face`,
     `jaw/face ${f.ratios.jaw_face}, cheek/face ${f.ratios.cheek_face}`,
     `eye tilt ${f.measures.eye_angle_deg}°`,
-    dl>=2?"natural lighting, photorealistic":null,
-    dl>=3?"sharp focus, high detail":null,
-    caption?`caption hint: ${caption}`:null
-  ].filter(Boolean).join(", ") : "portrait photo of a person";
-  outNSFW.value = (optNSFW.checked && f) ? ["nude portrait", `${f.shape} face`, sp>=1?"soft light":null, sp>=2?"explicit body focus":null, sp>=3?"dirty slang details":null].filter(Boolean).join(", ") : "";
-  toast("Analysis complete.");
+    dl>=2?"natural light, balanced exposure":null,
+    dl>=3?"sharp micro-detail, minimal distortion":null,
+    caption?`scene hint: ${caption}`:null
+  ].filter(Boolean).join(", ") : "portrait, photorealistic";
+  outNSFW.value = (optNSFW.checked && f) ? [
+    "nude portrait",
+    `${f.shape} face`,
+    nsfw?.breast_size?`${nsfw.breast_size} breasts`:null,
+    nsfw?.nipples_visible?"visible nipples":null,
+    sp>=1?"soft rimlight":null,
+    sp>=2?"explicit body focus":null,
+    sp>=3?"dirty slang details":null
+  ].filter(Boolean).join(", ") : "";
+
+  print("assemble: done","ok"); toast("Analysis complete.");
 });
 
-/* === Misc UI === */
-function log(s){ diag.textContent += s+"\n"; }
-diag.textContent = `UA: ${navigator.userAgent}\nTips:\n- detect() runs synchronously in IMAGE mode (no .catch()).\n- DrawingUtils expects normalized landmarks; canvas is sized to the image box so overlays align.\n`; // :contentReference[oaicite:5]{index=5}
+/* -------- Draw everything immediately (e.g., on resize) -------- */
+function drawAllImmediate(){ clearHUD(); drawFaceMeshFancy(); drawPoseLabeled(); }
+
+/* -------- Enable buttons once an image is loaded -------- */
+function enableAll(){ preview.disabled=false; to3.disabled=false; run.disabled=false; }
+document.addEventListener("DOMContentLoaded",()=>{ print("ready.","ok"); });
+
 </script>
 </body>
 </html>
