@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ImageIntel Pro Visor — Fixed Test Build (Face • Pose • Segments)</title>
+<title>ImageIntel Pro Visor — Working Test Build (Face • Pose • Segments)</title>
 <style>
   :root{
     --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0; --aqua:#64f2e3; --hot:#ff4d9a; --lime:#a8ff60; --gold:#ffd166;
@@ -35,8 +35,8 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel Pro Visor — Fixed Test Build</h1>
-  <p class="sub">MediaPipe Tasks (Face • Pose • Segments) with crisp overlays. Cloud + NSFW wiring hooks are stubbed but won’t block locals.</p>
+  <h1>ImageIntel Pro Visor — Working Test Build</h1>
+  <p class="sub">MediaPipe Tasks (Face • Pose • Segments) with crisp DPR overlays. Cloud + NSFW will come after this base is locked.</p>
 
   <div class="grid">
     <!-- LEFT: STAGE -->
@@ -91,15 +91,15 @@
   </div>
 </div>
 
-<!-- LIBS: MediaPipe Tasks Vision web bundle -->
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.js"></script>
+<!-- EVERYTHING runs in a single ES module so the vision API is guaranteed -->
+<script type="module">
+  import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.mjs";
 
-<script>
-(function(){
   const $ = s=>document.querySelector(s);
   const logEl = $('#log');
   const imgEl = $('#imgEl');
   const cvFace = $('#cvFace'), cvPose = $('#cvPose'), cvSeg = $('#cvSeg');
+
   const DPR = Math.max(1, window.devicePixelRatio || 1);
   $('#kDpr').textContent = DPR.toFixed(2);
 
@@ -112,8 +112,7 @@
   let fileset = null, faceLM = null, poseLM = null, segm = null, drawFace = null, drawPose = null;
 
   function log(msg, cls='mut'){
-    const d=document.createElement('div'); d.className=cls; d.textContent=msg;
-    logEl.prepend(d);
+    const d=document.createElement('div'); d.className=cls; d.textContent=msg; logEl.prepend(d);
   }
 
   function fitCanvases(){
@@ -135,32 +134,34 @@
 
   async function ensureTasks(){
     if (faceLM && poseLM && segm) return true;
-    const wasmRoot = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm";
-    if (!window.vision || !window.vision.FilesetResolver){
-      log('MediaPipe vision bundle missing or blocked', 'bad');
+    try{
+      const wasmRoot = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm";
+      fileset = await vision.FilesetResolver.forVisionTasks(wasmRoot);
+
+      faceLM = await vision.FaceLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: MODEL.face },
+        numFaces: 1, runningMode: "IMAGE",
+        outputFaceBlendshapes: true,
+        outputFacialTransformationMatrixes: true
+      });
+      poseLM = await vision.PoseLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: MODEL.pose },
+        runningMode: "IMAGE", numPoses: 1
+      });
+      segm = await vision.ImageSegmenter.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: MODEL.segm },
+        runningMode: "IMAGE", outputCategoryMask: true
+      });
+
+      drawFace = new vision.DrawingUtils(cvFace.getContext('2d'));
+      drawPose = new vision.DrawingUtils(cvPose.getContext('2d'));
+      log('MediaPipe tasks ready', 'good');
+      return true;
+    }catch(e){
+      console.error(e);
+      log('Failed to init MediaPipe vision tasks (blocked network or CSP)', 'bad');
       return false;
     }
-    fileset = await window.vision.FilesetResolver.forVisionTasks(wasmRoot);
-
-    faceLM = await window.vision.FaceLandmarker.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: MODEL.face },
-      numFaces: 1, runningMode: "IMAGE",
-      outputFaceBlendshapes: true,
-      outputFacialTransformationMatrixes: true
-    });
-    poseLM = await window.vision.PoseLandmarker.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: MODEL.pose },
-      runningMode: "IMAGE", numPoses: 1
-    });
-    segm = await window.vision.ImageSegmenter.createFromOptions(fileset, {
-      baseOptions: { modelAssetPath: MODEL.segm },
-      runningMode: "IMAGE", outputCategoryMask: true
-    });
-
-    drawFace = new window.vision.DrawingUtils(cvFace.getContext('2d'));
-    drawPose = new window.vision.DrawingUtils(cvPose.getContext('2d'));
-    log('MediaPipe tasks ready', 'good');
-    return true;
   }
 
   function clearOverlays(){
@@ -168,13 +169,12 @@
   }
 
   function imageToCanvasSource(){
-    // MP can take HTMLImageElement directly; we’ll also provide a display-sized canvas to keep scale consistent
     const r = imgEl.getBoundingClientRect();
     const c = document.createElement('canvas');
     c.width = Math.max(1, Math.round(r.width)); 
     c.height= Math.max(1, Math.round(r.height));
     c.getContext('2d').drawImage(imgEl, 0, 0, c.width, c.height);
-    return c; // HTMLCanvasElement is a valid ImageSource
+    return c; // HTMLCanvasElement works as ImageSource
   }
 
   async function analyze(){
@@ -197,11 +197,11 @@
       log(`Face: ${faces.length} in ${dt}ms`, faces.length?'good':'warn');
       const ctx = cvFace.getContext('2d'); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.98;
       faces.forEach(lms=>{
-        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color:'#2bd1ff2a'});
-        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color:'#00e0ff'});
-        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color:'#ff5572'});
-        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
-        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
+        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color:'#2bd1ff2a'});
+        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color:'#00e0ff'});
+        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color:'#ff5572'});
+        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
+        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
 
         // Eye tilt label (outer corners approx indices 33 & 263)
         const L=lms, le=L[33], re=L[263];
@@ -226,7 +226,7 @@
       log(`Pose: ${poses.length} in ${dt}ms`, poses.length?'good':'warn');
       if (poses[0]){
         drawPose.drawLandmarks(poses[0], {radius:2, color:'#aaf'});
-        drawPose.drawConnectors(poses[0], window.vision.PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
+        drawPose.drawConnectors(poses[0], vision.PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
         // label a few joints
         const p=poses[0], ctx=cvPose.getContext('2d');
         const S=i=>p[i] && [ p[i].x*cvPose.width/window.devicePixelRatio, p[i].y*cvPose.height/window.devicePixelRatio ];
@@ -249,10 +249,7 @@
         const w = src.width, h = src.height;
         const imgData = ctx.createImageData(w,h);
         // classes: 0 bg, 1 hair, 2 face, 3 skin, 4 clothes, 5 accessories
-        const COLORS = {
-          0:[0,0,0,0], 1:[100,240,255,120], 2:[255,210,80,140],
-          3:[255,120,120,80], 4:[120,180,255,90], 5:[190,120,255,90]
-        };
+        const COLORS = { 0:[0,0,0,0], 1:[100,240,255,120], 2:[255,210,80,140], 3:[255,120,120,80], 4:[120,180,255,90], 5:[190,120,255,90] };
         for(let i=0;i<mask.width*mask.height;i++){
           const lab = mask.data[i]||0;
           const [r,g,b,a] = COLORS[lab]||[0,0,0,0];
@@ -272,6 +269,7 @@
     imgEl.src = url;
   }
 
+  // UI handlers
   $('#fileInput').addEventListener('change', e=>{
     const f=e.target.files?.[0]; if(!f) return; loadBlob(f);
   });
@@ -279,16 +277,14 @@
     const res = await fetch('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1400&q=85');
     loadBlob(await res.blob());
   });
-
   $('#btnFit').addEventListener('click', fitCanvases);
   $('#btnAnalyze').addEventListener('click', analyze);
-  $('#btnClear').addEventListener('click', clearOverlays);
+  $('#btnClear').addEventListener('click', ()=>[cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height)));
 
-  // Self test: check bundle + HEAD model URLs + init tasks once
+  // Self test: check model URLs + instantiate tasks
   $('#btnSelfTest').addEventListener('click', async ()=>{
     try{
       log('--- Self-Test start ---','mut');
-      if (!window.vision){ log('vision_bundle.js not present', 'bad'); return; }
       async function head(u){ try{ const r=await fetch(u,{method:'HEAD'}); return r.ok; }catch(e){ return false; } }
       const h1 = await head(MODEL.face), h2 = await head(MODEL.pose), h3 = await head(MODEL.segm);
       log(`HEAD face:${h1?'OK':'X'} pose:${h2?'OK':'X'} seg:${h3?'OK':'X'}`, (h1&&h2&&h3)?'good':'warn');
@@ -300,7 +296,6 @@
 
   // Fit on resize
   addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); }, {passive:true});
-})();
 </script>
 </body>
 </html>
