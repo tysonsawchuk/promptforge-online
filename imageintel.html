@@ -3,27 +3,27 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ImageIntel Pro Visor — Working Test Build (Face • Pose • Segments)</title>
+<title>ImageIntel Pro Visor — CSP-Resilient Build (Configurable Sources)</title>
 <style>
   :root{
-    --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0; --aqua:#64f2e3; --hot:#ff4d9a; --lime:#a8ff60; --gold:#ffd166;
-    --red:#ff6b6b; --green:#52ffa8; --blue:#59baff; --vio:#be9cff;
+    --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0; --aqua:#64f2e3; --gold:#ffd166; --green:#52ffa8; --red:#ff6b6b;
   }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
   .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
   h1{margin:.2rem 0 .4rem;font-weight:800}
   .sub{color:var(--mut);margin:0 0 1rem}
-  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+  .grid{display:grid;grid-template-columns:1.25fr .75fr;gap:16px}
   @media(max-width:1100px){.grid{grid-template-columns:1fr}}
   .card{background:var(--panel);border:1px solid #1e2835;border-radius:14px;box-shadow:0 8px 24px #0005;overflow:hidden}
   .card h2{margin:0;padding:10px 12px;border-bottom:1px solid #1b2531;background:#0e141c;font-size:1rem}
   .pad{padding:12px}
   .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .col{display:flex;flex-direction:column;gap:8px}
   .btn{background:#182130;border:1px solid #2a3445;color:var(--aqua);padding:8px 12px;border-radius:9px;font-weight:700;cursor:pointer}
   .btn:hover{border-color:#3c4d64;background:#1a2738}
   .btn.primary{background:#1d3147;border-color:#355773;color:#e9fbff}
   .btn.warn{background:#2a2412;border-color:#6a4; color:#efe6c8}
-  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:240px}
+  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:260px;width:100%}
   .mini{font-size:.9rem;color:var(--mut)}
   .stage{position:relative;display:inline-block;max-width:100%}
   .stage img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid #1d2632}
@@ -31,12 +31,13 @@
   .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #243246;color:#9ad7ff;font-size:.8rem}
   .diag{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:.9rem;line-height:1.35;white-space:pre-wrap}
   .good{color:var(--green)} .warn{color:var(--gold)} .bad{color:var(--red)} .mut{color:#9fb3c0}
+  .krow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel Pro Visor — Working Test Build</h1>
-  <p class="sub">MediaPipe Tasks (Face • Pose • Segments) with crisp DPR overlays. Cloud + NSFW will come after this base is locked.</p>
+  <h1>ImageIntel Pro Visor — CSP-Resilient Build</h1>
+  <p class="sub">Configure your own URLs for the MediaPipe bundle, WASM, and .task models. Works on locked CSP when you self-host the files.</p>
 
   <div class="grid">
     <!-- LEFT: STAGE -->
@@ -44,7 +45,7 @@
       <h2>Stage</h2>
       <div class="pad">
         <div class="row">
-          <input type="file" id="fileInput" accept="image/*" class="input"/>
+          <input type="file" id="fileInput" accept="image/*" class="input" style="max-width:360px"/>
           <button class="btn" id="btnDemo">Load Demo</button>
           <button class="btn" id="btnFit">Fit Canvases</button>
           <button class="btn warn" id="btnSelfTest">Self-Test</button>
@@ -60,23 +61,31 @@
       </div>
     </div>
 
-    <!-- RIGHT: CONTROLS -->
+    <!-- RIGHT: CONFIG + CONTROLS -->
     <div class="card">
-      <h2>Controls</h2>
-      <div class="pad">
+      <h2>Engine Config (edit if CDN is blocked)</h2>
+      <div class="pad col">
+        <input id="uBundle" class="input" placeholder="vision_bundle.mjs URL"
+               value="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.mjs"/>
+        <input id="uWasm" class="input" placeholder="WASM base URL (folder only)"
+               value="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm"/>
+        <input id="uFace" class="input" placeholder="Face .task URL"
+               value="https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"/>
+        <input id="uPose" class="input" placeholder="Pose .task URL"
+               value="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"/>
+        <input id="uSegm" class="input" placeholder="Segmentation .task URL"
+               value="https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float16/1/selfie_multiclass_256x256.task"/>
         <div class="row">
-          <label class="mini"><input type="checkbox" id="optFace" checked/> Face</label>
-          <label class="mini"><input type="checkbox" id="optPose" checked/> Pose</label>
-          <label class="mini"><input type="checkbox" id="optSeg"  checked/> Segments</label>
-        </div>
-        <div class="row" style="margin-top:6px">
-          <button class="btn primary" id="btnAnalyze">Analyze (A→B→C)</button>
+          <button class="btn primary" id="btnInit">Init Engine</button>
+          <button class="btn" id="btnAnalyze">Analyze (A→B→C)</button>
           <button class="btn" id="btnClear">Clear Overlays</button>
         </div>
-        <div style="margin-top:10px">
-          <span class="pill">DPR: <span id="kDpr">–</span></span>
-          <span class="pill">Image: <span id="kImg">–</span></span>
-          <span class="pill">Canvas: <span id="kCan">–</span></span>
+        <div class="krow">
+          <div><span class="pill">DPR: <span id="kDpr">–</span></span></div>
+          <div>
+            <span class="pill">Image: <span id="kImg">–</span></span>
+            <span class="pill">Canvas: <span id="kCan">–</span></span>
+          </div>
         </div>
       </div>
     </div>
@@ -91,29 +100,21 @@
   </div>
 </div>
 
-<!-- EVERYTHING runs in a single ES module so the vision API is guaranteed -->
 <script type="module">
-  import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.mjs";
-
   const $ = s=>document.querySelector(s);
   const logEl = $('#log');
+  function log(msg, cls='mut'){ const d=document.createElement('div'); d.className=cls; d.textContent=msg; logEl.prepend(d); }
+
   const imgEl = $('#imgEl');
   const cvFace = $('#cvFace'), cvPose = $('#cvPose'), cvSeg = $('#cvSeg');
-
   const DPR = Math.max(1, window.devicePixelRatio || 1);
   $('#kDpr').textContent = DPR.toFixed(2);
 
-  const MODEL = {
-    face: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
-    pose: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
-    segm: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float16/1/selfie_multiclass_256x256.task"
-  };
-
-  let fileset = null, faceLM = null, poseLM = null, segm = null, drawFace = null, drawPose = null;
-
-  function log(msg, cls='mut'){
-    const d=document.createElement('div'); d.className=cls; d.textContent=msg; logEl.prepend(d);
-  }
+  // State
+  let vision = null;           // imported module
+  let fileset = null;
+  let faceLM = null, poseLM = null, segm = null;
+  let drawFace = null, drawPose = null;
 
   function fitCanvases(){
     if (!imgEl.naturalWidth) { log('No image to fit', 'warn'); return; }
@@ -131,42 +132,7 @@
     $('#kImg').textContent = imgEl.naturalWidth + '×' + imgEl.naturalHeight;
     $('#kCan').textContent = Math.round(cvFace.width/DPR) + '×' + Math.round(cvFace.height/DPR);
   }
-
-  async function ensureTasks(){
-    if (faceLM && poseLM && segm) return true;
-    try{
-      const wasmRoot = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm";
-      fileset = await vision.FilesetResolver.forVisionTasks(wasmRoot);
-
-      faceLM = await vision.FaceLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: MODEL.face },
-        numFaces: 1, runningMode: "IMAGE",
-        outputFaceBlendshapes: true,
-        outputFacialTransformationMatrixes: true
-      });
-      poseLM = await vision.PoseLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: MODEL.pose },
-        runningMode: "IMAGE", numPoses: 1
-      });
-      segm = await vision.ImageSegmenter.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: MODEL.segm },
-        runningMode: "IMAGE", outputCategoryMask: true
-      });
-
-      drawFace = new vision.DrawingUtils(cvFace.getContext('2d'));
-      drawPose = new vision.DrawingUtils(cvPose.getContext('2d'));
-      log('MediaPipe tasks ready', 'good');
-      return true;
-    }catch(e){
-      console.error(e);
-      log('Failed to init MediaPipe vision tasks (blocked network or CSP)', 'bad');
-      return false;
-    }
-  }
-
-  function clearOverlays(){
-    [cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height));
-  }
+  addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); }, {passive:true});
 
   function imageToCanvasSource(){
     const r = imgEl.getBoundingClientRect();
@@ -174,22 +140,67 @@
     c.width = Math.max(1, Math.round(r.width)); 
     c.height= Math.max(1, Math.round(r.height));
     c.getContext('2d').drawImage(imgEl, 0, 0, c.width, c.height);
-    return c; // HTMLCanvasElement works as ImageSource
+    return c;
+  }
+
+  async function initEngine(){
+    // read URLs
+    const uBundle = $('#uBundle').value.trim();
+    const uWasm   = $('#uWasm').value.trim().replace(/\/+$/,'');
+    const uFace   = $('#uFace').value.trim();
+    const uPose   = $('#uPose').value.trim();
+    const uSegm   = $('#uSegm').value.trim();
+
+    // 1) load module via dynamic import (CSP-friendly when hosted same-origin)
+    try{
+      log('Loading vision bundle…', 'mut');
+      vision = await import(/* @vite-ignore */ uBundle);
+      if (!vision?.FilesetResolver) throw new Error('vision bundle loaded but API missing');
+      log('Vision bundle loaded ✔︎', 'good');
+    }catch(e){
+      console.error(e);
+      log('Failed to import vision bundle (CSP/script-src). Host it on same origin and update the URL.', 'bad');
+      return false;
+    }
+
+    // 2) construct tasks
+    try{
+      fileset = await vision.FilesetResolver.forVisionTasks(uWasm);
+      faceLM = await vision.FaceLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: uFace },
+        numFaces: 1, runningMode: "IMAGE",
+        outputFaceBlendshapes: true,
+        outputFacialTransformationMatrixes: true
+      });
+      poseLM = await vision.PoseLandmarker.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: uPose },
+        runningMode: "IMAGE", numPoses: 1
+      });
+      segm = await vision.ImageSegmenter.createFromOptions(fileset, {
+        baseOptions: { modelAssetPath: uSegm },
+        runningMode: "IMAGE", outputCategoryMask: true
+      });
+      drawFace = new vision.DrawingUtils(cvFace.getContext('2d'));
+      drawPose = new vision.DrawingUtils(cvPose.getContext('2d'));
+      log('MediaPipe tasks ready ✔︎', 'good');
+      return true;
+    }catch(e){
+      console.error(e);
+      log('Failed to init tasks (blocked model/wasm URLs). Host .task & /wasm locally and update paths.', 'bad');
+      return false;
+    }
   }
 
   async function analyze(){
     if (!imgEl.naturalWidth){ log('Load an image first', 'warn'); return; }
-    const ok = await ensureTasks(); if(!ok) return;
-    fitCanvases(); clearOverlays();
-
-    const wantFace = $('#optFace').checked;
-    const wantPose = $('#optPose').checked;
-    const wantSegm = $('#optSeg').checked;
+    if (!faceLM || !poseLM || !segm){ const ok = await initEngine(); if(!ok) return; }
+    fitCanvases();
+    [cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height));
 
     const src = imageToCanvasSource();
 
     // FACE
-    if (wantFace){
+    if ($('#optFace').checked){
       const t0=performance.now();
       const res = faceLM.detect(src);
       const dt=((performance.now()-t0)|0);
@@ -203,7 +214,7 @@
         drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
         drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
 
-        // Eye tilt label (outer corners approx indices 33 & 263)
+        // Eye tilt label
         const L=lms, le=L[33], re=L[263];
         if(le && re){
           const tilt=(Math.atan2((re.y-le.y),(re.x-le.x))*180/Math.PI).toFixed(1);
@@ -218,7 +229,7 @@
     }
 
     // POSE
-    if (wantPose){
+    if ($('#optPose').checked){
       const t0=performance.now();
       const res = poseLM.detect(src);
       const dt=((performance.now()-t0)|0);
@@ -238,7 +249,7 @@
     }
 
     // SEGMENTATION
-    if (wantSegm){
+    if ($('#optSeg').checked){
       const t0=performance.now();
       const res = segm.segment(src);
       const dt=((performance.now()-t0)|0);
@@ -248,11 +259,10 @@
         const ctx=cvSeg.getContext('2d');
         const w = src.width, h = src.height;
         const imgData = ctx.createImageData(w,h);
-        // classes: 0 bg, 1 hair, 2 face, 3 skin, 4 clothes, 5 accessories
+        // 0 bg, 1 hair, 2 face, 3 skin, 4 clothes, 5 accessories
         const COLORS = { 0:[0,0,0,0], 1:[100,240,255,120], 2:[255,210,80,140], 3:[255,120,120,80], 4:[120,180,255,90], 5:[190,120,255,90] };
         for(let i=0;i<mask.width*mask.height;i++){
-          const lab = mask.data[i]||0;
-          const [r,g,b,a] = COLORS[lab]||[0,0,0,0];
+          const lab = mask.data[i]||0; const [r,g,b,a] = COLORS[lab]||[0,0,0,0];
           const j=i*4; imgData.data[j]=r; imgData.data[j+1]=g; imgData.data[j+2]=b; imgData.data[j+3]=a;
         }
         const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
@@ -262,14 +272,32 @@
     }
   }
 
-  // Load/fit image
+  // Quick HEAD test for your current URLs
+  async function selfTest(){
+    const urls = {
+      bundle: $('#uBundle').value.trim(),
+      wasm: $('#uWasm').value.trim().replace(/\/+$/,'') + '/vision_wasm_internal.wasm', // one file to probe
+      face: $('#uFace').value.trim(),
+      pose: $('#uPose').value.trim(),
+      segm: $('#uSegm').value.trim()
+    };
+    try{
+      log('--- Self-Test start ---','mut');
+      const checks = await Promise.all(Object.entries(urls).map(async ([k,u])=>{
+        try{ const r=await fetch(u,{method:'HEAD'}); return [k,r.ok]; }catch(_){ return [k,false]; }
+      }));
+      checks.forEach(([k,ok])=> log(`${k}: ${ok?'OK':'X'}`, ok?'good':'warn'));
+      log('Try Init Engine next if all OK.','mut');
+      log('--- Self-Test done ---','mut');
+    }catch(e){ console.error(e); log('Self-Test error: '+e.message,'bad'); }
+  }
+
+  // UI handlers
   function loadBlob(blob){
     const url = URL.createObjectURL(blob);
     imgEl.onload = ()=>{ URL.revokeObjectURL(url); $('#imgMeta').textContent = `Loaded ${imgEl.naturalWidth}×${imgEl.naturalHeight}`; fitCanvases(); };
     imgEl.src = url;
   }
-
-  // UI handlers
   $('#fileInput').addEventListener('change', e=>{
     const f=e.target.files?.[0]; if(!f) return; loadBlob(f);
   });
@@ -278,24 +306,10 @@
     loadBlob(await res.blob());
   });
   $('#btnFit').addEventListener('click', fitCanvases);
+  $('#btnInit').addEventListener('click', initEngine);
   $('#btnAnalyze').addEventListener('click', analyze);
   $('#btnClear').addEventListener('click', ()=>[cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height)));
-
-  // Self test: check model URLs + instantiate tasks
-  $('#btnSelfTest').addEventListener('click', async ()=>{
-    try{
-      log('--- Self-Test start ---','mut');
-      async function head(u){ try{ const r=await fetch(u,{method:'HEAD'}); return r.ok; }catch(e){ return false; } }
-      const h1 = await head(MODEL.face), h2 = await head(MODEL.pose), h3 = await head(MODEL.segm);
-      log(`HEAD face:${h1?'OK':'X'} pose:${h2?'OK':'X'} seg:${h3?'OK':'X'}`, (h1&&h2&&h3)?'good':'warn');
-      const ok = await ensureTasks(); if(!ok) return;
-      log('All tasks constructed ✔︎','good');
-      log('--- Self-Test done ---','mut');
-    }catch(e){ console.error(e); log('Self-Test error: '+e.message, 'bad'); }
-  });
-
-  // Fit on resize
-  addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); }, {passive:true});
+  $('#btnSelfTest').addEventListener('click', selfTest);
 </script>
 </body>
 </html>
