@@ -3,696 +3,303 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ImageIntel Pro Visor — Test Build (Local + Cloud Optional)</title>
+<title>ImageIntel Pro Visor — Fixed Test Build (Face • Pose • Segments)</title>
 <style>
   :root{
     --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0; --aqua:#64f2e3; --hot:#ff4d9a; --lime:#a8ff60; --gold:#ffd166;
     --red:#ff6b6b; --green:#52ffa8; --blue:#59baff; --vio:#be9cff;
   }
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,"Apple Color Emoji","Segoe UI Emoji",sans-serif}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
   .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
-  h1{font-weight:800;letter-spacing:.2px;margin:0 0 10px}
-  .sub{color:var(--mut);margin:0 0 16px}
+  h1{margin:.2rem 0 .4rem;font-weight:800}
+  .sub{color:var(--mut);margin:0 0 1rem}
   .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
   @media(max-width:1100px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid #1e2632;border-radius:14px;box-shadow:0 10px 30px #0005;overflow:hidden}
-  .card h2{margin:0;padding:12px 14px;border-bottom:1px solid #1f2834;background:#0f141d}
-  .pad{padding:14px}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .row > * {flex:0 0 auto}
-  .btn{background:#182130;border:1px solid #2a3445;color:var(--aqua);padding:9px 12px;border-radius:9px;font-weight:700;cursor:pointer}
-  .btn:hover{border-color:#3e5169;background:#1a2738}
-  .btn.primary{background:linear-gradient(180deg,#1e334a,#142130);color:#eaffff;border-color:#365674}
-  .btn.danger{color:#fff;border-color:#5b1a2b;background:#2a0d16}
-  .btn.ghost{background:transparent;border:1px dashed #3c485a}
-  .chk, .rng{accent-color:var(--aqua)}
-  label{font-size:.95rem;color:#cfe7ff}
-  .mini{font-size:.85rem;color:var(--mut)}
+  .card{background:var(--panel);border:1px solid #1e2835;border-radius:14px;box-shadow:0 8px 24px #0005;overflow:hidden}
+  .card h2{margin:0;padding:10px 12px;border-bottom:1px solid #1b2531;background:#0e141c;font-size:1rem}
+  .pad{padding:12px}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .btn{background:#182130;border:1px solid #2a3445;color:var(--aqua);padding:8px 12px;border-radius:9px;font-weight:700;cursor:pointer}
+  .btn:hover{border-color:#3c4d64;background:#1a2738}
+  .btn.primary{background:#1d3147;border-color:#355773;color:#e9fbff}
+  .btn.warn{background:#2a2412;border-color:#6a4; color:#efe6c8}
+  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:240px}
+  .mini{font-size:.9rem;color:var(--mut)}
   .stage{position:relative;display:inline-block;max-width:100%}
   .stage img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid #1d2632}
   canvas.layer{position:absolute;left:0;top:0;pointer-events:none}
-  .flex{display:flex;gap:10px;flex-wrap:wrap}
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:220px}
-  textarea.input{width:100%;min-height:90px;white-space:pre-wrap}
-  .tabs{display:flex;gap:6px;border-bottom:1px solid #1c2532;padding:8px;background:#0e141d;position:sticky;top:0;z-index:5}
-  .tabbtn{padding:8px 10px;border-radius:8px;border:1px solid #2b384b;background:#162030;color:#cfe7ff;cursor:pointer}
-  .tabbtn.active{background:#1f2e42;border-color:#445b7a}
-  .tab{display:none;padding:12px}
-  .tab.active{display:block}
-  pre.code{white-space:pre-wrap;background:#0a1018;border:1px solid #1b2430;border-radius:10px;padding:12px;color:#bbdefb;overflow:auto;max-height:360px}
   .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #243246;color:#9ad7ff;font-size:.8rem}
-  .diag{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:.9rem;line-height:1.35}
-  .good{color:var(--green)} .warn{color:var(--gold)} .bad{color:var(--red)}
-  .swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid #333;margin-right:6px;vertical-align:middle}
-  .kpi{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
-  .kpi .box{background:#0c1320;border:1px solid #203049;border-radius:10px;padding:8px 10px;min-width:120px}
+  .diag{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:.9rem;line-height:1.35;white-space:pre-wrap}
+  .good{color:var(--green)} .warn{color:var(--gold)} .bad{color:var(--red)} .mut{color:#9fb3c0}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel Pro Visor — Test Build</h1>
-  <p class="sub">Local overlays (Face Mesh • Pose • Segments) + optional Cloud Assist (CLIP &amp; DETR) + JSON/Prompt export. DPR-sharp, on-device first.</p>
+  <h1>ImageIntel Pro Visor — Fixed Test Build</h1>
+  <p class="sub">MediaPipe Tasks (Face • Pose • Segments) with crisp overlays. Cloud + NSFW wiring hooks are stubbed but won’t block locals.</p>
 
   <div class="grid">
-    <!-- LEFT: STAGE + CONTROLS -->
+    <!-- LEFT: STAGE -->
     <div class="card">
       <h2>Stage</h2>
       <div class="pad">
         <div class="row">
           <input type="file" id="fileInput" accept="image/*" class="input"/>
-          <button class="btn" id="loadDemo">Load Demo</button>
-          <button class="btn ghost" id="fitToImage">Fit Canvases</button>
-          <span id="imgInfo" class="mini"></span>
+          <button class="btn" id="btnDemo">Load Demo</button>
+          <button class="btn" id="btnFit">Fit Canvases</button>
+          <button class="btn warn" id="btnSelfTest">Self-Test</button>
         </div>
+        <div class="mini" id="imgMeta">No image loaded.</div>
         <div style="height:10px"></div>
         <div id="stage" class="stage">
           <img id="imgEl" alt="preview"/>
           <canvas id="cvFace" class="layer"></canvas>
           <canvas id="cvPose" class="layer"></canvas>
           <canvas id="cvSeg"  class="layer"></canvas>
-          <canvas id="cvCloud" class="layer"></canvas>
         </div>
       </div>
     </div>
 
+    <!-- RIGHT: CONTROLS -->
     <div class="card">
-      <h2>Stepper</h2>
+      <h2>Controls</h2>
       <div class="pad">
-        <!-- STEP 1: LOAD -->
-        <div class="card" style="border-color:#23324a">
-          <h2>Step 1 — Load</h2>
-          <div class="pad">
-            <div class="row">
-              <button class="btn primary" id="btnAnalyzeLocal">Analyze Locally (A→B→C)</button>
-              <button class="btn" id="btnClear">Clear Overlays</button>
-            </div>
-            <p class="mini">A) Face mesh • B) Pose • C) Segments — always instant on device.</p>
-          </div>
+        <div class="row">
+          <label class="mini"><input type="checkbox" id="optFace" checked/> Face</label>
+          <label class="mini"><input type="checkbox" id="optPose" checked/> Pose</label>
+          <label class="mini"><input type="checkbox" id="optSeg"  checked/> Segments</label>
         </div>
-
-        <!-- STEP 2: OPTIONS -->
-        <div class="card" style="border-color:#2a3244">
-          <h2>Step 2 — Options</h2>
-          <div class="pad">
-            <div class="cols">
-              <div>
-                <label><input type="checkbox" class="chk" id="optFace" checked/> Face</label><br/>
-                <label><input type="checkbox" class="chk" id="optPose" checked/> Pose</label><br/>
-                <label><input type="checkbox" class="chk" id="optSeg"  checked/> Segments</label><br/>
-                <label><input type="checkbox" class="chk" id="optNSFW"/> NSFW (type “unlock”)</label>
-              </div>
-              <div>
-                <label>Detail <input type="range" id="rngDetail" class="rng" min="0" max="3" step="1" value="2"/></label><br/>
-                <label>Spice <input type="range" id="rngSpice" class="rng" min="0" max="3" step="1" value="1"/></label><br/>
-                <label>Accuracy <input type="range" id="rngAcc" class="rng" min="0" max="3" step="1" value="2"/></label>
-              </div>
-            </div>
-            <div class="kpi">
-              <div class="box"><div class="mini">Faces</div><div id="kpiFaces">–</div></div>
-              <div class="box"><div class="mini">Pose</div><div id="kpiPose">–</div></div>
-              <div class="box"><div class="mini">Segments</div><div id="kpiSeg">–</div></div>
-            </div>
-            <div style="margin-top:10px" class="row">
-              <input id="nsfwUnlock" class="input" placeholder="Type unlock to enable NSFW…" style="min-width:280px"/>
-              <button class="btn" id="btnNSFWTest">Test NSFW (if unlocked)</button>
-            </div>
-          </div>
+        <div class="row" style="margin-top:6px">
+          <button class="btn primary" id="btnAnalyze">Analyze (A→B→C)</button>
+          <button class="btn" id="btnClear">Clear Overlays</button>
         </div>
-
-        <!-- STEP 3: CLOUD -->
-        <div class="card" style="border-color:#354057">
-          <h2>Step 3 — Cloud Assist (optional)</h2>
-          <div class="pad">
-            <div class="row">
-              <input id="hfToken" class="input" placeholder="Hugging Face token (optional)"/>
-              <button class="btn" id="btnCloudRun">Run CLIP + DETR</button>
-              <button class="btn ghost" id="btnCheckModels">Check Models</button>
-            </div>
-            <p class="mini">Adds: CLIP style hint • DETR object boxes. Won’t block local overlays.</p>
-          </div>
+        <div style="margin-top:10px">
+          <span class="pill">DPR: <span id="kDpr">–</span></span>
+          <span class="pill">Image: <span id="kImg">–</span></span>
+          <span class="pill">Canvas: <span id="kCan">–</span></span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- OUTPUT TABS -->
+  <!-- DIAGNOSTICS -->
   <div class="card" style="margin-top:16px">
-    <div class="tabs">
-      <button class="tabbtn active" data-tab="sfw">SFW Prompt</button>
-      <button class="tabbtn" data-tab="nsfw">NSFW Prompt</button>
-      <button class="tabbtn" data-tab="json">JSON v4</button>
-      <button class="tabbtn" data-tab="diag">Diagnostics</button>
-    </div>
-    <div id="sfw" class="tab active">
-      <textarea id="sfwOut" class="input" placeholder="SFW prompt…"></textarea>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="copySFW">Copy</button>
-        <button class="btn" id="improveSFW">Variant (tone)</button>
-      </div>
-    </div>
-    <div id="nsfw" class="tab">
-      <textarea id="nsfwOut" class="input" placeholder="NSFW prompt (locked by default)…"></textarea>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="copyNSFW">Copy</button>
-        <span class="mini">NSFW will remain minimal unless unlocked + detector active.</span>
-      </div>
-    </div>
-    <div id="json" class="tab">
-      <pre id="jsonOut" class="code"></pre>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="downloadJSON">Download JSON</button>
-      </div>
-    </div>
-    <div id="diag" class="tab">
-      <div class="diag" id="diagLog"></div>
-    </div>
-  </div>
-
-  <!-- FOOT ROW -->
-  <div class="row" style="margin-top:12px;justify-content:space-between">
-    <div>
-      <span class="pill">DPR: <span id="dprVal"></span></span>
-      <span class="pill">Image: <span id="imgDim"></span></span>
-      <span class="pill">Canvas: <span id="canDim"></span></span>
-    </div>
-    <div class="row">
-      <button class="btn danger" id="resetAll">Reset All</button>
-      <button class="btn" id="downloadZIP">Export ZIP</button>
+    <h2>Diagnostics</h2>
+    <div class="pad">
+      <div id="log" class="diag"></div>
     </div>
   </div>
 </div>
 
-<!-- LIBS -->
+<!-- LIBS: MediaPipe Tasks Vision web bundle -->
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
-<!-- NudeNet TFJS (optional; will skip if not reachable) -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.18.0/dist/tf.min.js"></script>
-<script>
-/* Attempt to load NudeNet TFJS wrapper dynamically if available (Vlad Mandic build or similar).
-   If not found, nsfw will remain gracefully disabled. */
-window.__loadNudeNet = async function(){
-  if (window.nudenetLoaded) return true;
-  try {
-    // Example CDN path placeholder — replace with your hosted build if you have one:
-    // const mod = await import('https://cdn.jsdelivr.net/gh/vladmandic/nudenet-models/dist/index.js');
-    // window.NudeNet = mod.default || mod.NudeNet;
-    // window.nudenetLoaded = true;
-    // For safety, keep disabled until a confirmed URL is provided:
-    window.nudenetLoaded = false;
-    return false;
-  } catch(e){
-    console.warn('NudeNet unavailable', e);
-    return false;
-  }
-};
-</script>
 
 <script>
-(async function(){
-  const $ = sel => document.querySelector(sel);
-  const logEl = $('#diagLog');
-  const dprEl = $('#dprVal'), imgDimEl = $('#imgDim'), canDimEl = $('#canDim');
+(function(){
+  const $ = s=>document.querySelector(s);
+  const logEl = $('#log');
   const imgEl = $('#imgEl');
-  const cvFace = $('#cvFace'), cvPose = $('#cvPose'), cvSeg = $('#cvSeg'), cvCloud = $('#cvCloud');
-  const stage = $('#stage');
-  const kpiFaces = $('#kpiFaces'), kpiPose = $('#kpiPose'), kpiSeg = $('#kpiSeg');
-  const sfwOut = $('#sfwOut'), nsfwOut = $('#nsfwOut'), jsonOut = $('#jsonOut');
-
-  // Tabs
-  document.querySelectorAll('.tabbtn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      btn.classList.add('active');
-      $('#'+btn.dataset.tab).classList.add('active');
-    });
-  });
-
+  const cvFace = $('#cvFace'), cvPose = $('#cvPose'), cvSeg = $('#cvSeg');
   const DPR = Math.max(1, window.devicePixelRatio || 1);
-  dprEl.textContent = DPR.toFixed(2);
+  $('#kDpr').textContent = DPR.toFixed(2);
 
-  // MediaPipe setup
-  const { FaceLandmarker, PoseLandmarker, ImageSegmenter, DrawingUtils, FilesetResolver, 
-          FaceLandmarkerOptions, PoseLandmarkerOptions, ImageSegmenterOptions } = window;
-  let faceLandmarker, poseLandmarker, imageSegmenter;
-  let drawingFace, drawingPose;
-
-  // Default model URLs (adjust if you self-host)
   const MODEL = {
     face: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task",
     pose: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
     segm: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float16/1/selfie_multiclass_256x256.task"
   };
 
-  // Basic state
-  let lastResults = {
-    image:{w:0,h:0,natural:{w:0,h:0}},
-    face:null, pose:null, seg:null, nsfw:null, cloud:null,
-    prompts:{sfw:"", nsfw:"", negative:"lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face"}
-  };
+  let fileset = null, faceLM = null, poseLM = null, segm = null, drawFace = null, drawPose = null;
 
-  function log(s, cls=''){ const line = document.createElement('div'); if(cls) line.className=cls; line.textContent = s; logEl.prepend(line); }
-  function clearCanvas(c){ const ctx=c.getContext('2d'); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,c.width,c.height); }
-
-  function fitCanvases(){
-    // Match canvases to displayed <img> box with DPR scaling
-    const rect = imgEl.getBoundingClientRect();
-    [cvFace,cvPose,cvSeg,cvCloud].forEach(cv=>{
-      const ctx=cv.getContext('2d');
-      cv.style.width = rect.width + 'px';
-      cv.style.height= rect.height + 'px';
-      cv.width = Math.max(1, Math.round(rect.width * DPR));
-      cv.height= Math.max(1, Math.round(rect.height* DPR));
-      ctx.setTransform(DPR,0,0,DPR,0,0);
-      ctx.imageSmoothingEnabled = true;
-    });
-    imgDimEl.textContent = `${imgEl.naturalWidth}×${imgEl.naturalHeight}`;
-    canDimEl.textContent = `${cvFace.width}×${cvFace.height} (CSS ${Math.round(cvFace.width/DPR)}×${Math.round(cvFace.height/DPR)})`;
+  function log(msg, cls='mut'){
+    const d=document.createElement('div'); d.className=cls; d.textContent=msg;
+    logEl.prepend(d);
   }
 
-  $('#fitToImage').addEventListener('click', fitCanvases);
+  function fitCanvases(){
+    if (!imgEl.naturalWidth) { log('No image to fit', 'warn'); return; }
+    const rect = imgEl.getBoundingClientRect();
+    [cvFace, cvPose, cvSeg].forEach(cv=>{
+      const ctx=cv.getContext('2d');
+      cv.style.width  = rect.width + 'px';
+      cv.style.height = rect.height + 'px';
+      cv.width  = Math.max(1, Math.round(rect.width  * DPR));
+      cv.height = Math.max(1, Math.round(rect.height * DPR));
+      ctx.setTransform(DPR,0,0,DPR,0,0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.clearRect(0,0,cv.width,cv.height);
+    });
+    $('#kImg').textContent = imgEl.naturalWidth + '×' + imgEl.naturalHeight;
+    $('#kCan').textContent = Math.round(cvFace.width/DPR) + '×' + Math.round(cvFace.height/DPR);
+  }
 
   async function ensureTasks(){
-    if (faceLandmarker && poseLandmarker && imageSegmenter) return true;
-    const fileset = await FilesetResolver.forVisionTasks(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm"
-    );
-    faceLandmarker = await FaceLandmarker.createFromOptions(fileset, {
+    if (faceLM && poseLM && segm) return true;
+    const wasmRoot = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm";
+    if (!window.vision || !window.vision.FilesetResolver){
+      log('MediaPipe vision bundle missing or blocked', 'bad');
+      return false;
+    }
+    fileset = await window.vision.FilesetResolver.forVisionTasks(wasmRoot);
+
+    faceLM = await window.vision.FaceLandmarker.createFromOptions(fileset, {
       baseOptions: { modelAssetPath: MODEL.face },
-      numFaces: 1, runningMode: "IMAGE", outputFaceBlendshapes: true, outputFacialTransformationMatrixes: true
+      numFaces: 1, runningMode: "IMAGE",
+      outputFaceBlendshapes: true,
+      outputFacialTransformationMatrixes: true
     });
-    poseLandmarker = await PoseLandmarker.createFromOptions(fileset, {
+    poseLM = await window.vision.PoseLandmarker.createFromOptions(fileset, {
       baseOptions: { modelAssetPath: MODEL.pose },
       runningMode: "IMAGE", numPoses: 1
     });
-    imageSegmenter = await ImageSegmenter.createFromOptions(fileset, {
+    segm = await window.vision.ImageSegmenter.createFromOptions(fileset, {
       baseOptions: { modelAssetPath: MODEL.segm },
       runningMode: "IMAGE", outputCategoryMask: true
     });
-    drawingFace = new DrawingUtils(cvFace.getContext('2d'));
-    drawingPose = new DrawingUtils(cvPose.getContext('2d'));
+
+    drawFace = new window.vision.DrawingUtils(cvFace.getContext('2d'));
+    drawPose = new window.vision.DrawingUtils(cvPose.getContext('2d'));
+    log('MediaPipe tasks ready', 'good');
     return true;
   }
 
-  // Load image (file or demo)
-  function loadBlobToImg(blob){
-    const url = URL.createObjectURL(blob);
-    imgEl.onload = ()=>{ URL.revokeObjectURL(url); fitCanvases(); $('#imgInfo').textContent=`Loaded ${imgEl.naturalWidth}×${imgEl.naturalHeight}`; };
-    imgEl.src = url;
+  function clearOverlays(){
+    [cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height));
   }
-  $('#fileInput').addEventListener('change', e=>{
-    const f=e.target.files?.[0]; if(!f) return; loadBlobToImg(f);
-  });
-  $('#loadDemo').addEventListener('click', async ()=>{
-    // Free demo from unsplash
-    const res = await fetch('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1600&q=90');
-    const blob = await res.blob(); loadBlobToImg(blob);
-  });
 
-  // Analyze pipeline
-  async function analyzeLocal(){
-    if (!imgEl.complete || !imgEl.naturalWidth){ log('Load an image first', 'warn'); return; }
-    await ensureTasks();
-    fitCanvases();
-    clearCanvas(cvFace); clearCanvas(cvPose); clearCanvas(cvSeg); clearCanvas(cvCloud);
-    const wantFace = $('#optFace').checked, wantPose=$('#optPose').checked, wantSeg=$('#optSeg').checked;
-    lastResults.image = { w: cvFace.width, h: cvFace.height, natural: { w: imgEl.naturalWidth, h: imgEl.naturalHeight } };
+  function imageToCanvasSource(){
+    // MP can take HTMLImageElement directly; we’ll also provide a display-sized canvas to keep scale consistent
+    const r = imgEl.getBoundingClientRect();
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(r.width)); 
+    c.height= Math.max(1, Math.round(r.height));
+    c.getContext('2d').drawImage(imgEl, 0, 0, c.width, c.height);
+    return c; // HTMLCanvasElement is a valid ImageSource
+  }
 
-    // Build an HTMLCanvasImageSource for tasks (draw the image into a temp canvas matching display size)
-    const tmp = document.createElement('canvas');
-    tmp.width = Math.round(imgEl.getBoundingClientRect().width);
-    tmp.height= Math.round(imgEl.getBoundingClientRect().height);
-    const tctx = tmp.getContext('2d'); tctx.drawImage(imgEl, 0,0, tmp.width, tmp.height);
+  async function analyze(){
+    if (!imgEl.naturalWidth){ log('Load an image first', 'warn'); return; }
+    const ok = await ensureTasks(); if(!ok) return;
+    fitCanvases(); clearOverlays();
 
-    // A) FACE
-    let faces= null;
+    const wantFace = $('#optFace').checked;
+    const wantPose = $('#optPose').checked;
+    const wantSegm = $('#optSeg').checked;
+
+    const src = imageToCanvasSource();
+
+    // FACE
     if (wantFace){
-      const t0 = performance.now();
-      const res = faceLandmarker.detect(tmp);
-      const dt = (performance.now()-t0)|0;
-      faces = res?.faceLandmarks || [];
-      kpiFaces.textContent = faces.length;
-      log(`Face A: ${faces.length} face(s) in ${dt}ms`, 'good');
-      // Draw tessellation + key contours
-      const ctx = cvFace.getContext('2d'); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.95;
+      const t0=performance.now();
+      const res = faceLM.detect(src);
+      const dt=((performance.now()-t0)|0);
+      const faces = res?.faceLandmarks || [];
+      log(`Face: ${faces.length} in ${dt}ms`, faces.length?'good':'warn');
+      const ctx = cvFace.getContext('2d'); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.98;
       faces.forEach(lms=>{
-        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color: '#2bd1ff22'});
-        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color: '#ff5572'});
-        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color: '#57ff6a'});
-        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color: '#00e0ff'});
-        drawingFace.drawConnectors(lms, FaceLandmarker.FACE_LANDMARKS_LIPS,      {color: '#ffd166'});
-        // Eye tilt label (approx): slope between two outer eye corners
-        const L = lms; const le=L[33], re=L[263]; // approx outer corners
-        if(le&&re){
-          const tilt = (Math.atan2(re.y-le.y, re.x-le.x)*180/Math.PI).toFixed(1);
-          ctx.save(); ctx.fillStyle='#bfefff'; ctx.strokeStyle='#0a141f'; ctx.lineWidth=3;
-          ctx.font='bold 12px ui-monospace'; 
-          const sx = ((le.x+re.x)/2)*cvFace.width/DPR, sy=((le.y+re.y)/2)*cvFace.height/DPR - 12;
-          ctx.strokeText(`eye tilt ${tilt}°`, sx, sy); ctx.fillText(`eye tilt ${tilt}°`, sx, sy); ctx.restore();
-          lastResults.face = lastResults.face || {}; lastResults.face.angles = { eye_tilt_deg: parseFloat(tilt) };
+        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color:'#2bd1ff2a'});
+        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color:'#00e0ff'});
+        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color:'#ff5572'});
+        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
+        drawFace.drawConnectors(lms, window.vision.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
+
+        // Eye tilt label (outer corners approx indices 33 & 263)
+        const L=lms, le=L[33], re=L[263];
+        if(le && re){
+          const tilt=(Math.atan2((re.y-le.y),(re.x-le.x))*180/Math.PI).toFixed(1);
+          const x=((le.x+re.x)/2)*cvFace.width/window.devicePixelRatio;
+          const y=((le.y+re.y)/2)*cvFace.height/window.devicePixelRatio - 12;
+          ctx.save(); ctx.font='bold 12px ui-monospace'; ctx.lineWidth=3;
+          ctx.strokeStyle='#061019'; ctx.fillStyle='#e6f6ff';
+          ctx.strokeText(`eye tilt ${tilt}°`, x, y); ctx.fillText(`eye tilt ${tilt}°`, x, y);
+          ctx.restore();
         }
       });
-    } else { kpiFaces.textContent = 'off'; }
+    }
 
-    // B) POSE
-    let poses = null;
+    // POSE
     if (wantPose){
-      const t0 = performance.now();
-      const res = poseLandmarker.detect(tmp);
-      const dt = (performance.now()-t0)|0;
-      poses = res?.landmarks || [];
-      kpiPose.textContent = poses.length ? 'ok' : 'none';
-      log(`Pose B: ${(poses?.length||0)} pose in ${dt}ms`, 'good');
-      const ctx = cvPose.getContext('2d');
-      if (poses?.[0]){
-        drawingPose.drawLandmarks(poses[0], {radius: 2, color:'#aaf'});
-        drawingPose.drawConnectors(poses[0], PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
-        // Example labels for shoulders/hips/knees
-        const p = poses[0];
-        const S = (i)=>p[i] && [ (p[i].x*cvPose.width/DPR), (p[i].y*cvPose.height/DPR) ];
-        const pts = { LShoulder:S(11), RShoulder:S(12), LHip:S(23), RHip:S(24), LKnee:S(25), RKnee:S(26) };
-        ctx.save(); ctx.fillStyle='#e6f6ff'; ctx.strokeStyle='#081019'; ctx.lineWidth=3; ctx.font='bold 12px ui-monospace';
-        for (const [k,v] of Object.entries(pts)) if(v){ ctx.strokeText(k, v[0], v[1]); ctx.fillText(k, v[0], v[1]); }
+      const t0=performance.now();
+      const res = poseLM.detect(src);
+      const dt=((performance.now()-t0)|0);
+      const poses = res?.landmarks || [];
+      log(`Pose: ${poses.length} in ${dt}ms`, poses.length?'good':'warn');
+      if (poses[0]){
+        drawPose.drawLandmarks(poses[0], {radius:2, color:'#aaf'});
+        drawPose.drawConnectors(poses[0], window.vision.PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
+        // label a few joints
+        const p=poses[0], ctx=cvPose.getContext('2d');
+        const S=i=>p[i] && [ p[i].x*cvPose.width/window.devicePixelRatio, p[i].y*cvPose.height/window.devicePixelRatio ];
+        const lbl={LShoulder:S(11),RShoulder:S(12),LHip:S(23),RHip:S(24),LKnee:S(25),RKnee:S(26)};
+        ctx.save(); ctx.font='bold 12px ui-monospace'; ctx.lineWidth=3; ctx.strokeStyle='#081019'; ctx.fillStyle='#e6f6ff';
+        for (const [k,v] of Object.entries(lbl)) if(v){ ctx.strokeText(k, v[0], v[1]); ctx.fillText(k, v[0], v[1]); }
         ctx.restore();
-        // Simple spans (shoulder width, etc.)
-        function dist(a,b){ return Math.hypot(a[0]-b[0], a[1]-b[1]); }
-        if (pts.LShoulder && pts.RShoulder){
-          const sw = dist(pts.LShoulder, pts.RShoulder); (lastResults.body ||= {}).spans_px = (lastResults.body.spans_px||{});
-          lastResults.body.spans_px.shoulders = Math.round(sw*DPR);
-        }
       }
-    } else { kpiPose.textContent='off'; }
+    }
 
-    // C) SEGMENTS
-    let seg = null, segInfo = '';
-    if (wantSeg){
-      const t0 = performance.now();
-      const res = imageSegmenter.segment(tmp);
-      const dt = (performance.now()-t0)|0;
-      const mask = res?.categoryMask; // Uint8Array
-      kpiSeg.textContent = mask? 'ok' : 'none';
-      log(`Seg C: ${mask?'mask':'none'} in ${dt}ms`, mask?'good':'warn');
+    // SEGMENTATION
+    if (wantSegm){
+      const t0=performance.now();
+      const res = segm.segment(src);
+      const dt=((performance.now()-t0)|0);
+      const mask = res?.categoryMask;
+      log(`Seg: ${mask?'mask ok':'none'} in ${dt}ms`, mask?'good':'warn');
       if (mask){
-        const ctx = cvSeg.getContext('2d');
-        const w = tmp.width, h = tmp.height;
-        const imgData = ctx.createImageData(w, h);
-        // label colors: 0=bg,1=hair,2=face,3=skin,4=clothes,5=acc
+        const ctx=cvSeg.getContext('2d');
+        const w = src.width, h = src.height;
+        const imgData = ctx.createImageData(w,h);
+        // classes: 0 bg, 1 hair, 2 face, 3 skin, 4 clothes, 5 accessories
         const COLORS = {
-          0:[0,0,0,0],
-          1:[100,240,255,120],
-          2:[255,210,80,140],
-          3:[255,120,120,80],
-          4:[120,180,255,90],
-          5:[190,120,255,90]
+          0:[0,0,0,0], 1:[100,240,255,120], 2:[255,210,80,140],
+          3:[255,120,120,80], 4:[120,180,255,90], 5:[190,120,255,90]
         };
-        // Count labels
-        const counts = new Array(6).fill(0);
-        for (let i=0;i<mask.width*mask.height;i++){
-          const lab = mask.data[i] ?? 0;
-          counts[lab] = (counts[lab]||0)+1;
-          const [r,g,b,a]=COLORS[lab]||[0,0,0,0];
+        for(let i=0;i<mask.width*mask.height;i++){
+          const lab = mask.data[i]||0;
+          const [r,g,b,a] = COLORS[lab]||[0,0,0,0];
           const j=i*4; imgData.data[j]=r; imgData.data[j+1]=g; imgData.data[j+2]=b; imgData.data[j+3]=a;
         }
-        const tmpSeg = document.createElement('canvas'); tmpSeg.width=w; tmpSeg.height=h;
-        tmpSeg.getContext('2d').putImageData(imgData,0,0);
-        ctx.drawImage(tmpSeg, 0,0, w, h);
-        seg = {counts:{bg:counts[0], hair:counts[1], face:counts[2], skin:counts[3], clothes:counts[4], accessories:counts[5]}, size:[w,h]};
-        segInfo = `hair:${counts[1]} face:${counts[2]} skin:${counts[3]} clothes:${counts[4]}`;
-      }
-    } else { kpiSeg.textContent='off'; }
-
-    lastResults.face ||= {};
-    lastResults.pose = poses?.[0]||null;
-    lastResults.seg  = seg;
-    // Palette sampling (rough): average dominant from hair/eyes/skin regions (use seg + simple sampling)
-    computePalette();
-
-    // Prompts + JSON
-    buildPrompts();
-    renderJSON();
-  }
-
-  function computePalette(){
-    try{
-      if (!lastResults.seg) return;
-      const w = cvSeg.width/DPR, h = cvSeg.height/DPR;
-      const ctxBase = cvSeg.getContext('2d');
-      const imgData = ctxBase.getImageData(0,0,w,h).data;
-      function avgFor(alphaMin, labName){
-        // select pixels above alphaMin and within specified label tint channel heuristics (quick/dirty)
-        // Here we assume seg colors: hair has G~240,B~255; skin has R~255; face/lips R+G high
-        let R=0,G=0,B=0,N=0;
-        for(let i=0;i<imgData.length;i+=4){
-          const a=imgData[i+3]; if(a<alphaMin) continue;
-          const r=imgData[i], g=imgData[i+1], b=imgData[i+2];
-          // crude filter
-          if (labName==='hair' && g>180 && b>200) { R+=r;G+=g;B+=b;N++; }
-          if (labName==='skin' && r>200 && g<180) { R+=r;G+=g;B+=b;N++; }
-          if (labName==='face' && r>200 && g>150) { R+=r;G+=g;B+=b;N++; }
-        }
-        if(!N) return null;
-        const r=(R/N)|0, g=(G/N)|0, b=(B/N)|0;
-        return {hex:rgbToHex(r,g,b), r,g,b};
-      }
-      const hair = avgFor(40,'hair'), skin = avgFor(40,'skin') || avgFor(40,'face');
-      lastResults.face.palette = {
-        hair_hex: hair?.hex || '#999999', hair_word: colorWord(hair),
-        eyes_hex: '#336699', eyes_word: 'unknown', // eyes from seg not isolated; leave default
-        skin_hex: skin?.hex || '#caa18a', skin_word: colorWord(skin)
-      };
-    }catch(e){ console.warn(e); }
-  }
-  function rgbToHex(r,g,b){ return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join(''); }
-  function colorWord(rgb){ if(!rgb) return 'unknown';
-    const {r,g,b}=rgb;
-    // tiny name map
-    if (r>220 && g>200 && b>180) return 'porcelain';
-    if (r>200 && g>170 && b<120) return 'golden';
-    if (r<80 && g>120 && b<90) return 'emerald';
-    if (r<120 && g<120 && b>160) return 'sapphire';
-    if (r>160 && g>120 && b<80) return 'amber';
-    return 'neutral';
-  }
-
-  function buildPrompts(){
-    const camAngle = estimateCameraAngle();
-    const lighting  = 'natural light';
-    const bgTag     = (lastResults.cloud?.objects?.[0]?.label) ? lastResults.cloud.objects[0].label : 'indoor';
-    const hairW = lastResults.face?.palette?.hair_word || 'neutral';
-    const eyesW = lastResults.face?.palette?.eyes_word || 'unknown';
-    const skinW = lastResults.face?.palette?.skin_word || 'neutral';
-    const eyeTilt = lastResults.face?.angles?.eye_tilt_deg ?? 0;
-    const clipHint = lastResults.cloud?.clip_hint ? `style hint: ${lastResults.cloud.clip_hint}` : '';
-
-    const sfw = [
-      `portrait photo, calm expression, ${camAngle} camera angle`,
-      `jaw/face ~, cheek/face ~, eye tilt ${eyeTilt}°`,
-      `${hairW} hair, ${eyesW} eyes, ${skinW} skin`,
-      `${lighting}, ${bgTag}, photorealistic, sharp micro-detail, minimal distortion`,
-      clipHint
-    ].filter(Boolean).join('\n');
-    const nsfwEnabled = $('#optNSFW').checked && (window.__nsfwUnlocked === true);
-    const nsfw = nsfwEnabled ? [
-      `nude portrait, confident pose`,
-      `${skinW} skin, ${hairW} hair`,
-      `${lighting}`,
-      (getSpice()>=2 ? 'explicit body focus' : 'soft body focus')
-    ].join('\n') : '— NSFW locked — type “unlock” & enable NSFW in Step 2.';
-
-    lastResults.prompts.sfw = sfw;
-    lastResults.prompts.nsfw = nsfw;
-    sfwOut.value = sfw;
-    nsfwOut.value = nsfw;
-  }
-
-  function estimateCameraAngle(){
-    // Use face transform matrix when available, else fallback: ear/nose disparity
-    // For brevity, we used eye tilt already; here just return coarse label:
-    try{
-      const tilt = lastResults.face?.angles?.eye_tilt_deg || 0;
-      if (Math.abs(tilt) < 5) return 'frontal';
-      if (tilt > 5) return '¾ view';
-      return '¾ view';
-    }catch(e){ return 'frontal'; }
-  }
-
-  function renderJSON(){
-    const v4 = {
-      version: "pf_imageintel_v4",
-      image: lastResults.image,
-      face: {
-        shape: lastResults.face?.shape || null,
-        ratios: lastResults.face?.ratios || null,
-        angles: lastResults.face?.angles || null,
-        features: lastResults.face?.features || null,
-        palette: lastResults.face?.palette || null
-      },
-      body: {
-        spans_px: lastResults.body?.spans_px || null,
-        ratios: lastResults.body?.ratios || null
-      },
-      nsfw: {
-        enabled: ($('#optNSFW').checked===true),
-        detections: lastResults.nsfw?.detections || [],
-        breast_size: lastResults.nsfw?.breast_size || null,
-        nipples_visible: lastResults.nsfw?.nipples_visible || null
-      },
-      scene: {
-        bgTag: lastResults.cloud?.objects?.[0]?.label || null,
-        lighting: lastResults.cloud?.lighting || "natural light",
-        camera_angle: estimateCameraAngle()
-      },
-      cloud: {
-        clip_hint: lastResults.cloud?.clip_hint || null,
-        objects: lastResults.cloud?.objects || []
-      },
-      prompts: {
-        sfw: lastResults.prompts.sfw,
-        nsfw: lastResults.prompts.nsfw,
-        negative: lastResults.prompts.negative
-      }
-    };
-    jsonOut.textContent = JSON.stringify(v4,null,2);
-  }
-
-  function getSpice(){ return parseInt($('#rngSpice').value,10)||0; }
-
-  // Buttons
-  $('#btnAnalyzeLocal').addEventListener('click', analyzeLocal);
-  $('#btnClear').addEventListener('click', ()=>{ [cvFace,cvPose,cvSeg,cvCloud].forEach(clearCanvas); log('Cleared overlays'); });
-  $('#resetAll').addEventListener('click', ()=>{
-    [cvFace,cvPose,cvSeg,cvCloud].forEach(clearCanvas);
-    sfwOut.value=''; nsfwOut.value=''; jsonOut.textContent='';
-    lastResults = { image:{w:0,h:0,natural:{w:0,h:0}}, face:null, pose:null, seg:null, nsfw:null, cloud:null, prompts:{sfw:"",nsfw:"",negative:lastResults.prompts.negative}};
-    log('Reset all');
-  });
-  $('#copySFW').addEventListener('click', ()=>{ navigator.clipboard.writeText(sfwOut.value); log('Copied SFW prompt','good'); });
-  $('#copyNSFW').addEventListener('click', ()=>{ navigator.clipboard.writeText(nsfwOut.value); log('Copied NSFW prompt','good'); });
-  $('#improveSFW').addEventListener('click', ()=>{
-    const tone = ['cinematic','editorial','studio light','film grain','bokeh','8k','DSLR'];
-    sfwOut.value = sfwOut.value + '\n' + tone[Math.floor(Math.random()*tone.length)];
-  });
-  $('#downloadJSON').addEventListener('click', ()=>{
-    const blob = new Blob([jsonOut.textContent],{type:'application/json'});
-    saveAs(blob,'imageintel_v4.json');
-  });
-  $('#downloadZIP').addEventListener('click', async ()=>{
-    const zip = new JSZip();
-    zip.file('imageintel_v4.json', jsonOut.textContent || '{}');
-    zip.file('prompt_sfw.txt', sfwOut.value||'');
-    zip.file('prompt_nsfw.txt', nsfwOut.value||'');
-    // snapshot composited image
-    const snap = await snapshotComposite();
-    if (snap) zip.file('overlay.png', snap.split(',')[1], {base64:true});
-    const blob = await zip.generateAsync({type:'blob'}); saveAs(blob,'ImageIntel_Export.zip');
-  });
-
-  async function snapshotComposite(){
-    try{
-      const w = Math.round(imgEl.getBoundingClientRect().width);
-      const h = Math.round(imgEl.getBoundingClientRect().height);
-      const c = document.createElement('canvas'); c.width=w; c.height=h;
-      const ctx=c.getContext('2d');
-      ctx.drawImage(imgEl,0,0,w,h);
-      [cvSeg,cvPose,cvFace,cvCloud].forEach(cv=>{
         const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
-        tmp.getContext('2d').drawImage(cv,0,0,w,h);
-        ctx.drawImage(tmp,0,0);
-      });
-      return c.toDataURL('image/png');
-    }catch(e){ console.warn(e); return null; }
-  }
-
-  // NSFW unlock & test
-  window.__nsfwUnlocked = false;
-  $('#nsfwUnlock').addEventListener('input', e=>{
-    if(/^\s*unlock\s*$/i.test(e.target.value)){ window.__nsfwUnlocked = true; log('NSFW mode unlocked','warn'); buildPrompts(); renderJSON(); }
-  });
-  $('#btnNSFWTest').addEventListener('click', async ()=>{
-    if (!$('#optNSFW').checked){ log('Enable NSFW option first','warn'); return; }
-    if (!window.__nsfwUnlocked){ log('Type "unlock" to enable NSFW','warn'); return; }
-    const ok = await window.__loadNudeNet();
-    if (!ok){ log('NSFW detector not available (provide NudeNet TFJS build URL). Skipping.', 'bad'); return; }
-    // If you wire NudeNet: run detection here, fill lastResults.nsfw = {detections:[{label,score,box}], ...}, then draw boxes on cvCloud.
-  });
-
-  // Cloud assist
-  $('#btnCloudRun').addEventListener('click', async ()=>{
-    const token = $('#hfToken').value.trim(); if(!token){ log('HF token empty — cloud skipped','warn'); return; }
-    if (!imgEl.complete || !imgEl.naturalWidth){ log('Load an image first','warn'); return; }
-    const imgBlob = await fetch(imgEl.src).then(r=>r.blob());
-    try{
-      // DETR
-      const detr = await hfDetect(token, imgBlob, 'facebook/detr-resnet-50');
-      drawDetr(detr);
-      // CLIP Interrogator (popular Space proxy; replace with your model endpoint if needed)
-      const clip = await hfInterrogate(token, imgBlob);
-      (lastResults.cloud ||= {}).clip_hint = clip || null;
-      log('Cloud: CLIP + DETR done','good');
-      buildPrompts(); renderJSON();
-    }catch(e){
-      console.error(e); log('Cloud failed — see console','bad');
+        tmp.getContext('2d').putImageData(imgData,0,0);
+        ctx.drawImage(tmp,0,0,w,h);
+      }
     }
+  }
+
+  // Load/fit image
+  function loadBlob(blob){
+    const url = URL.createObjectURL(blob);
+    imgEl.onload = ()=>{ URL.revokeObjectURL(url); $('#imgMeta').textContent = `Loaded ${imgEl.naturalWidth}×${imgEl.naturalHeight}`; fitCanvases(); };
+    imgEl.src = url;
+  }
+
+  $('#fileInput').addEventListener('change', e=>{
+    const f=e.target.files?.[0]; if(!f) return; loadBlob(f);
+  });
+  $('#btnDemo').addEventListener('click', async ()=>{
+    const res = await fetch('https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=1400&q=85');
+    loadBlob(await res.blob());
   });
 
-  async function hfDetect(token, blob, model){
-    const res = await fetch(`https://api-inference.huggingface.co/models/${model}`,{
-      method:'POST',
-      headers:{Authorization:`Bearer ${token}`},
-      body: blob
-    });
-    if(!res.ok) throw new Error('HF DETR error '+res.status);
-    const arr = await res.json();
-    // Normalize boxes (x1,y1,x2,y2) or {xmin,ymin,xmax,ymax}
-    const out = (Array.isArray(arr)?arr:[]).map(o=>{
-      const b = o.box || o.bounding_box || {};
-      const x1 = b.xmin ?? b[0] ?? 0, y1 = b.ymin ?? b[1] ?? 0, x2 = b.xmax ?? b[2] ?? 0, y2 = b.ymax ?? b[3] ?? 0;
-      return {label:o.label, score:o.score, box:[x1,y1,(x2-x1),(y2-y1)]};
-    });
-    (lastResults.cloud ||= {}).objects = out;
-    return out;
-  }
-  function drawDetr(objs){
-    clearCanvas(cvCloud);
-    if(!objs?.length) return;
-    const ctx = cvCloud.getContext('2d');
-    const rect = imgEl.getBoundingClientRect();
-    const scaleX = rect.width / imgEl.naturalWidth;
-    const scaleY = rect.height/ imgEl.naturalHeight;
-    ctx.save(); ctx.lineWidth=2; ctx.font='bold 12px ui-monospace';
-    objs.forEach(o=>{
-      const [x,y,w,h]=o.box;
-      const X = x*scaleX, Y=y*scaleY, W=w*scaleX, H=h*scaleY;
-      ctx.strokeStyle='#59baff'; ctx.fillStyle='rgba(89,186,255,0.25)'; ctx.fillRect(X,Y,W,H); ctx.strokeRect(X,Y,W,H);
-      ctx.fillStyle='#e6f6ff'; ctx.strokeStyle='#0a141a'; ctx.lineWidth=3;
-      ctx.strokeText(`${o.label} ${(o.score*100|0)}%`, X+4, Y+14); ctx.fillText(`${o.label} ${(o.score*100|0)}%`, X+4, Y+14);
-    });
-    ctx.restore();
-  }
+  $('#btnFit').addEventListener('click', fitCanvases);
+  $('#btnAnalyze').addEventListener('click', analyze);
+  $('#btnClear').addEventListener('click', clearOverlays);
 
-  async function hfInterrogate(token, blob){
-    // Many CLIP Interrogator endpoints exist; here we use generic image-to-text as a fallback
-    const res = await fetch(`https://api-inference.huggingface.co/models/Salesforce/blip-image-captioning-large`,{
-      method:'POST', headers:{Authorization:`Bearer ${token}`}, body: blob
-    });
-    if(!res.ok) return null;
-    const json = await res.json();
-    const text = Array.isArray(json) && json[0]?.generated_text ? json[0].generated_text : null;
-    return text;
-  }
-
-  // Model reachability quick check
-  $('#btnCheckModels').addEventListener('click', async ()=>{
-    async function head(url){ try{ const r=await fetch(url,{method:'HEAD'}); return r.ok; }catch(_){ return false; } }
-    const okFace = await head(MODEL.face), okPose = await head(MODEL.pose), okSeg = await head(MODEL.segm);
-    log(`Models — Face:${okFace?'OK':'X'} Pose:${okPose?'OK':'X'} Seg:${okSeg?'OK':'X'}`, (okFace&&okPose&&okSeg)?'good':'bad');
+  // Self test: check bundle + HEAD model URLs + init tasks once
+  $('#btnSelfTest').addEventListener('click', async ()=>{
+    try{
+      log('--- Self-Test start ---','mut');
+      if (!window.vision){ log('vision_bundle.js not present', 'bad'); return; }
+      async function head(u){ try{ const r=await fetch(u,{method:'HEAD'}); return r.ok; }catch(e){ return false; } }
+      const h1 = await head(MODEL.face), h2 = await head(MODEL.pose), h3 = await head(MODEL.segm);
+      log(`HEAD face:${h1?'OK':'X'} pose:${h2?'OK':'X'} seg:${h3?'OK':'X'}`, (h1&&h2&&h3)?'good':'warn');
+      const ok = await ensureTasks(); if(!ok) return;
+      log('All tasks constructed ✔︎','good');
+      log('--- Self-Test done ---','mut');
+    }catch(e){ console.error(e); log('Self-Test error: '+e.message, 'bad'); }
   });
 
-  // Auto-fit on window resize
-  window.addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); });
-
+  // Fit on resize
+  addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); }, {passive:true});
 })();
 </script>
 </body>
