@@ -1,294 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>ImageIntel Pro Visor — Single-File Face Mesh (Tablet-Ready)</title>
-<meta name="theme-color" content="#0b0f14">
-<style>
-  :root{--bg:#0b0f14;--panel:#0f1621;--ink:#e6f6ff;--mut:#9fb3c0;--a:#64f2e3;--ok:#52ffa8;--warn:#ffd166;--bad:#ff6b6b}
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-  .wrap{max-width:1100px;margin:18px auto;padding:0 12px}
-  h1{margin:.2rem 0 .2rem;font-weight:800;font-size:1.15rem}
-  .sub{color:var(--mut);margin:0 0 .6rem}
-  .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
-  @media (max-width:980px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid #1b2636;border-radius:12px;box-shadow:0 6px 16px #0005;overflow:hidden}
-  .card h2{margin:0;padding:10px 12px;border-bottom:1px solid #172232;background:#0c1220;font-size:.95rem}
-  .pad{padding:10px}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .btn{background:#132033;border:1px solid #2a3b51;color:var(--ink);padding:8px 12px;border-radius:10px;font-weight:700;cursor:pointer}
-  .btn:active{transform:translateY(1px)}
-  .btn.primary{background:#18314d;border-color:#355773}
-  .input{background:#0b1320;border:1px solid #223149;color:#cfe9ff;border-radius:10px;padding:9px 11px;min-width:220px}
-  .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #223148;color:#a9d8ff;font-size:.78rem}
-  .stage{position:relative;display:inline-block;max-width:100%}
-  .stage img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid #1a2535}
-  canvas.layer{position:absolute;left:0;top:0;pointer-events:none}
-  .tabs{display:flex;gap:6px;border-top:1px solid #172232;background:#0c1220}
-  .tab{flex:1;text-align:center;padding:8px 8px;cursor:pointer;color:#b9d8f0}
-  .tab.active{background:#0f1727;color:#fff;font-weight:700}
-  .panel{display:none;padding:10px}
-  .panel.active{display:block}
-  textarea.code{width:100%;min-height:160px;background:#0b1320;color:#cff;border:1px solid #223149;border-radius:10px;padding:10px;font-family:ui-monospace,Consolas,Menlo,monospace}
-  .diag{font-family:ui-monospace,Consolas,Menlo,monospace;font-size:.9rem;line-height:1.35;white-space:pre-wrap}
-  .ok{color:var(--ok)} .w{color:var(--warn)} .bad{color:var(--bad)} .mut{color:var(--mut)}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Image Deconstructor — preview</title>
+  <style>
+    body { margin: 0; background: #111; color: #eee; font-family: sans-serif; }
+    .container { padding: 16px; max-width: 900px; margin: auto; }
+    .stage { position: relative; display: inline-block; }
+    .stage img { max-width: 100%; display: block; }
+    canvas.overlay { position: absolute; left: 0; top: 0; pointer-events: none; }
+    .controls { margin: 12px 0; }
+    button { padding: 8px 12px; margin-right: 8px; }
+    .output { background: #222; padding: 12px; margin-top: 12px; white-space: pre-wrap; font-family: monospace; }
+    .tabs { margin-top: 12px; }
+    .tab-btn { padding: 6px 10px; cursor: pointer; border: 1px solid #555; background: #222; color: #eee; margin-right:4px; }
+    .tab-btn.active { background: #444; }
+    .tab-content { display: none; padding: 8px; background: #222; margin-top: 4px; }
+    .tab-content.active { display: block; }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>ImageIntel Pro Visor — Face Mesh (Working Core)</h1>
-  <p class="sub">Single-file build. Face tessellation + contours + dots, measurements, palette sampling, JSON + SFW prompt export. (Pose/Segments next.)</p>
-
-  <div class="grid">
-    <!-- Stage -->
-    <div class="card">
-      <h2>Stage</h2>
-      <div class="pad">
-        <div class="row">
-          <input type="file" id="fileInput" accept="image/*" class="input"/>
-          <button class="btn" id="btnDemo">Load Demo</button>
-          <button class="btn primary" id="btnAnalyze">Analyze</button>
-          <button class="btn" id="btnClear">Clear</button>
-        </div>
-        <div style="height:8px"></div>
-        <div class="row" style="gap:6px">
-          <span class="pill">DPR <span id="kDpr">–</span></span>
-          <span class="pill">IMG <span id="kImg">–</span></span>
-          <span class="pill">CAN <span id="kCan">–</span></span>
-          <span class="pill">Engine <span id="kEng">Mediapipe Tasks</span></span>
-        </div>
-        <div style="height:10px"></div>
-
-        <div id="stage" class="stage">
-          <img id="imgEl" alt="preview"/>
-          <canvas id="cvFace" class="layer"></canvas>
-        </div>
-      </div>
+  <div class="container">
+    <h2>Image Deconstructor (face + body + objects)</h2>
+    <div class="controls">
+      <input type="file" id="fileInput" accept="image/*"/>
+      <button id="btnDemo">Demo Image</button>
+      <button id="btnAnalyze">Analyze</button>
+    </div>
+    <div class="stage" id="stage">
+      <img id="imgEl" />
+      <canvas id="cvFace" class="overlay"></canvas>
+      <canvas id="cvPose" class="overlay"></canvas>
+      <canvas id="cvObjs" class="overlay"></canvas>
     </div>
 
-    <!-- Output / Tabs -->
-    <div class="card">
-      <h2>Output</h2>
-      <div class="tabs">
-        <div class="tab active" data-tab="prompt">Prompt</div>
-        <div class="tab" data-tab="json">JSON</div>
-        <div class="tab" data-tab="diag">Diagnostics</div>
-      </div>
-      <div id="panel-prompt" class="panel active">
-        <textarea id="taPrompt" class="code" spellcheck="false"></textarea>
-        <div class="row" style="margin-top:6px"><button class="btn" id="btnCopyP">Copy</button></div>
-      </div>
-      <div id="panel-json" class="panel">
-        <textarea id="taJson" class="code" spellcheck="false"></textarea>
-        <div class="row" style="margin-top:6px"><button class="btn" id="btnCopyJ">Copy</button></div>
-      </div>
-      <div id="panel-diag" class="panel">
-        <div id="log" class="diag"></div>
-      </div>
+    <div class="tabs">
+      <span class="tab-btn active" data-tab="prompt">Prompt</span>
+      <span class="tab-btn" data-tab="json">JSON</span>
+      <span class="tab-btn" data-tab="diag">Diagnostics</span>
     </div>
+    <div id="prompt" class="tab-content active"></div>
+    <div id="json" class="tab-content"></div>
+    <div id="diag" class="tab-content"></div>
   </div>
-</div>
 
-<!-- Only dependency: MediaPipe Tasks Vision (ES module) -->
-<script type="module">
-  import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.mjs";
+  <!-- Import TFJS & model libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.19.0/dist/tf-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.19.0/dist/tf-backend-webgl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.19.0/dist/tf-converter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.2/dist/face-landmarks-detection.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@3.4.0/dist/pose-detection.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
 
-  const $=s=>document.querySelector(s);
-  const logEl=$('#log');
-  const log=(m,c='mut')=>{const d=document.createElement('div');d.className=c;d.textContent=m;logEl.prepend(d);};
-  const imgEl=$('#imgEl'); const cvFace=$('#cvFace');
-  const DPR = Math.max(1, window.devicePixelRatio || 1);
-  $('#kDpr').textContent = DPR.toFixed(2);
+  <script>
+  (async ()=>{
+    const imgEl = document.getElementById('imgEl');
+    const cvFace = document.getElementById('cvFace');
+    const cvPose = document.getElementById('cvPose');
+    const cvObjs = document.getElementById('cvObjs');
+    const stage = document.getElementById('stage');
+    const promptDiv = document.getElementById('prompt');
+    const jsonDiv = document.getElementById('json');
+    const diagDiv = document.getElementById('diag');
 
-  // State
-  let fileset=null, faceLM=null, drawFace=null;
-  let lastRes=null; // for prompt/JSON
+    // Setup model handles
+    let faceModel, poseModel, objModel;
+    await tf.setBackend('webgl');
+    await tf.ready();
 
-  // UI: Tabs
-  document.querySelectorAll('.tab').forEach(t=>{
-    t.onclick=()=>{
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active'); $('#panel-'+t.dataset.tab).classList.add('active');
-    };
-  });
+    faceModel = await faceLandmarksDetection.load(
+      faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
+    );
+    poseModel = await poseDetection.createDetector(
+      poseDetection.SupportedModels.MoveNet
+    );
+    objModel = await cocoSsd.load();
 
-  function fitCanvas(){
-    if(!imgEl.naturalWidth) return;
-    const rect = imgEl.getBoundingClientRect();
-    const ctx=cvFace.getContext('2d');
-    cvFace.style.width=rect.width+'px';
-    cvFace.style.height=rect.height+'px';
-    cvFace.width = Math.max(1,Math.round(rect.width*DPR));
-    cvFace.height= Math.max(1,Math.round(rect.height*DPR));
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    ctx.clearRect(0,0,cvFace.width,cvFace.height);
-    $('#kImg').textContent = imgEl.naturalWidth+'×'+imgEl.naturalHeight;
-    $('#kCan').textContent = Math.round(cvFace.width/DPR)+'×'+Math.round(cvFace.height/DPR);
-  }
-  addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvas(); }, {passive:true});
+    logDiag("Models loaded");
 
-  function imgToSource(){
-    const r = imgEl.getBoundingClientRect();
-    const c = document.createElement('canvas');
-    c.width = Math.max(1,Math.round(r.width));
-    c.height= Math.max(1,Math.round(r.height));
-    c.getContext('2d').drawImage(imgEl,0,0,c.width,c.height);
-    return c;
-  }
-
-  async function ensureFace(){
-    if (faceLM) return true;
-    try{
-      const wasmRoot = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm";
-      fileset = await vision.FilesetResolver.forVisionTasks(wasmRoot);
-      faceLM = await vision.FaceLandmarker.createFromOptions(fileset, {
-        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task" },
-        runningMode: "IMAGE",
-        numFaces: 1,
-        outputFaceBlendshapes: true,
-        outputFacialTransformationMatrixes: true
-      });
-      drawFace = new vision.DrawingUtils(cvFace.getContext('2d'));
-      log('FaceLandmarker ready', 'ok');
-      return true;
-    }catch(e){
-      console.error(e);
-      log('Failed to init MediaPipe (likely network/CSP). Needs internet & modules allowed.', 'bad');
-      return false;
+    function logDiag(msg){
+      diagDiv.textContent = msg + "\n" + diagDiv.textContent;
     }
-  }
 
-  function classifyFaceShape(ratios){
-    // crude bucket using jaw/face & cheek/face
-    const j=ratios.jaw_face, c=ratios.cheek_face;
-    if (j<0.45 && c>0.58) return 'heart';
-    if (j>0.6 && c<0.55)  return 'square';
-    if (Math.abs(c-0.58)<0.03) return 'oval';
-    return 'round';
-  }
-  function hex(n){ return n.toString(16).padStart(2,'0'); }
-  function rgb2hex(r,g,b){ return '#'+hex(r)+hex(g)+hex(b); }
-  function wordForColor([r,g,b]){
-    // simple buckets
-    const h = (x)=>Math.round(x/51)*51; // 6-level
-    const R=h(r),G=h(g),B=h(b);
-    if (R>G&&R>B) return 'warm';
-    if (G>R&&G>B) return 'cool';
-    if (B>R&&B>G) return 'deep blue';
-    if (R>200&&G>200&&B>200) return 'pale';
-    if (R<60&&G<60&&B<60) return 'dark';
-    return 'neutral';
-  }
+    function fitCanvas(canvas){
+      const r = imgEl.getBoundingClientRect();
+      canvas.style.width = r.width + "px";
+      canvas.style.height = r.height + "px";
+      canvas.width = r.width * window.devicePixelRatio;
+      canvas.height = r.height * window.devicePixelRatio;
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(window.devicePixelRatio,0,0,window.devicePixelRatio,0,0);
+    }
 
-  function samplePalette(canvas, maskFn){
-    const ctx = canvas.getContext('2d');
-    const {width:w,height:h} = canvas;
-    const data = ctx.getImageData(0,0,w,h).data;
-    let rs=0,gs=0,bs=0,cnt=0;
-    for(let y=0;y<h;y+=4){
-      for(let x=0;x<w;x+=4){
-        if (maskFn && !maskFn(x,y,w,h)) continue;
-        const i=(y*w+x)*4;
-        const r=data[i],g=data[i+1],b=data[i+2],a=data[i+3];
-        if (a<200) continue;
-        rs+=r; gs+=g; bs+=b; cnt++;
+    document.getElementById('fileInput').addEventListener('change', async evt=>{
+      const f = evt.target.files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      imgEl.onload = ()=> {
+        fitCanvas(cvFace);
+        fitCanvas(cvPose);
+        fitCanvas(cvObjs);
+      };
+      imgEl.src = url;
+    });
+    document.getElementById('btnDemo').addEventListener('click', async ()=>{
+      const resp = await fetch('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800');
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      imgEl.onload = ()=> {
+        fitCanvas(cvFace);
+        fitCanvas(cvPose);
+        fitCanvas(cvObjs);
+      };
+      imgEl.src = url;
+    });
+
+    document.getElementById('btnAnalyze').addEventListener('click', async ()=>{
+      if (!imgEl.naturalWidth) {
+        alert("Load an image first");
+        return;
       }
-    }
-    if (!cnt) return {hex:'#888888', word:'neutral', rgb:[136,136,136]};
-    const rgb=[Math.round(rs/cnt), Math.round(gs/cnt), Math.round(bs/cnt)];
-    return {hex: rgb2hex(...rgb), word: wordForColor(rgb), rgb};
-  }
+      fitCanvas(cvFace); fitCanvas(cvPose); fitCanvas(cvObjs);
 
-  function buildOutputs(meas, palette){
-    const {eyeTilt, ratios, faceShape, cameraAngle, lighting, bgTag} = meas;
-    const sfwPrompt =
-`portrait photo, ${meas.expression||'neutral expression'}, ${faceShape} face,
-jaw/face ${ratios.jaw_face.toFixed(2)}, cheek/face ${ratios.cheek_face.toFixed(2)}, eye tilt ${eyeTilt.toFixed(1)}°,
-${palette.hair.word} hair, ${palette.eyes.word} eyes, ${palette.skin.word} skin,
-${cameraAngle}, ${lighting}, ${bgTag},
-photorealistic, sharp micro-detail, minimal distortion`;
+      const src = document.createElement('canvas');
+      src.width = imgEl.naturalWidth;
+      src.height = imgEl.naturalHeight;
+      src.getContext('2d').drawImage(imgEl, 0, 0);
 
-    const negative = `lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face`;
-
-    const json = {
-      version: "pf_imageintel_v4",
-      image: { w: cvFace.width/DPR, h: cvFace.height/DPR, natural:{w:imgEl.naturalWidth,h:imgEl.naturalHeight} },
-      face: {
-        shape: faceShape,
-        ratios: {
-          jaw_face: +ratios.jaw_face.toFixed(3),
-          cheek_face: +ratios.cheek_face.toFixed(3),
-          forehead_face: +ratios.forehead_face.toFixed(3),
-        },
-        angles: { eye_tilt_deg: +eyeTilt.toFixed(2) },
-        features: { eyes:"", nose:"", lips:"" }, // to refine in next pass
-        palette: {
-          hair_hex: palette.hair.hex, hair_word: palette.hair.word,
-          eyes_hex: palette.eyes.hex, eyes_word: palette.eyes.word,
-          skin_hex: palette.skin.hex, skin_word: palette.skin.word
+      // 1. Face landmarks
+      const faces = await faceModel.estimateFaces({input: src, returnTensors:false});
+      logDiag(`Faces: ${faces.length}`);
+      const ctxF = cvFace.getContext('2d');
+      ctxF.clearRect(0,0,cvFace.width, cvFace.height);
+      for (const f of faces){
+        for (const [x,y,z] of f.scaledMesh){
+          ctxF.beginPath();
+          ctxF.arc(x, y, 1, 0, Math.PI*2);
+          ctxF.fillStyle = "cyan";
+          ctxF.fill();
         }
-      },
-      body:{ spans_px:{}, ratios:{} }, // reserved for pose/segments phase
-      nsfw:{ enabled:false },          // gated; reserved
-      scene:{ bgTag, lighting, camera_angle: cameraAngle },
-      cloud:{},
-      prompts:{ sfw: sfwPrompt, negative }
-    };
+      }
 
-    $('#taPrompt').value = sfwPrompt + "\n\nNegative:\n" + negative;
-    $('#taJson').value = JSON.stringify(json,null,2);
-  }
+      // 2. Pose detection
+      const poses = await poseModel.estimatePoses(src);
+      logDiag(`Poses: ${poses.length}`);
+      const ctxP = cvPose.getContext('2d');
+      ctxP.clearRect(0,0,cvPose.width, cvPose.height);
+      for (const p of poses){
+        for (const kp of p.keypoints){
+          const {x,y,score} = kp;
+          if (score > 0.3){
+            ctxP.beginPath();
+            ctxP.arc(x, y, 3, 0, Math.PI*2);
+            ctxP.fillStyle = "lime";
+            ctxP.fill();
+          }
+        }
+      }
 
-  function mid(a,b){ return {x:(a.x+b.x)/2, y:(a.y+b.y)/2}; }
-  function dist(a,b){ const dx=a.x-b.x, dy=a.y-b.y; return Math.hypot(dx,dy); }
+      // 3. Object detection
+      const objs = await objModel.detect(src);
+      logDiag(`Objects: ${objs.length}`);
+      const ctxO = cvObjs.getContext('2d');
+      ctxO.clearRect(0,0,cvObjs.width, cvObjs.height);
+      ctxO.strokeStyle = "magenta";
+      ctxO.lineWidth = 2;
+      ctxO.font = "16px sans-serif";
+      for (const o of objs){
+        const [x,y,w,h] = o.bbox;
+        ctxO.strokeRect(x,y,w,h);
+        ctxO.fillStyle = "magenta";
+        ctxO.fillText(o.class + " " + (o.score*100).toFixed(1)+"%", x, y-4);
+      }
 
-  async function analyze(){
-    if (!imgEl.naturalWidth){ log('Load an image first','w'); return; }
-    const ok = await ensureFace(); if(!ok) return;
-    fitCanvas();
+      // Construct prompt + JSON
+      const prompt = `portrait, ${faces.length} face, ${poses.length} pose, objects: ${objs.map(o=>o.class).join(", ")}`;
+      promptDiv.textContent = prompt;
+      const j = {
+        faces: faces.map(f=> ({mesh: f.scaledMesh})),
+        poses: poses.map(p=>p.keypoints),
+        objects: objs
+      };
+      jsonDiv.textContent = JSON.stringify(j, null, 2);
+    });
 
-    const src = imgToSource();
-    const res = faceLM.detect(src);
-    const faces = res?.faceLandmarks || [];
-    const ctx = cvFace.getContext('2d');
-    ctx.clearRect(0,0,cvFace.width,cvFace.height);
-
-    log(`Faces: ${faces.length}`, faces.length?'ok':'w');
-    if (!faces.length) return;
-
-    // draw tessellation + contours + points
-    const lms = faces[0];
-    drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color:'#2bd1ff22'});
-    drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color:'#00e0ff'});
-    drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color:'#ff5572'});
-    drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
-    drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
-
-    // glowing dots
-    ctx.save(); ctx.fillStyle='#5df'; ctx.globalAlpha=0.9;
-    const W=cvFace.width/DPR, H=cvFace.height/DPR;
-    lms.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*W,p.y*H,1.2,0,Math.PI*2); ctx.fill(); });
-    ctx.restore();
-
-    // measurements
-    const L=lms;
-    const idx={ chin:152, top:10, leftCheek:234, rightCheek:454, leftEye:33, rightEye:263, nose:1, leftEar:234, rightEar:454 };
-    const chin=L[idx.chin], top=L[idx.top], lc=L[idx.leftCheek], rc=L[idx.rightCheek], le=L[idx.leftEye], re=L[idx.rightEye], nose=L[idx.nose];
-    const faceH = dist(chin, top);
-    const jawWidth = dist(lc, rc);
-    const cheekWidth = dist(L[227], L[447]);
-    const foreheadWidth = dist(L[70], L[300]);
-    const eyeTilt = (le && re) ? (Math.atan2((re.y-le.y),(re.x-le.x))*180/Math.PI) : 0;
-
-    // guide lines
-    ctx.save(); ctx.strokeStyle='#86f'; ctx.lineWidth=1.5;
-    const midEye = mid(le,re);
-    ctx.beginPath(); ctx.moveTo(midEye.x*W, (midEye.y*H)-18); ctx.lineTo((midEye.x*W)+64, (midEye.y*H)-18); ctx.stroke();
-    ctx.font='bold 12px ui-monospace'; ctx.fillStyle='#e6f6ff'; ctx.strokeStyle='#061019'; ctx.lineWidth=3;
-    const label=`eye tilt ${eyeTilt.toFixed(1)}°`;
-    ctx.strokeText(label, (midEye.x*W)+4, (midEye.y*H)-20); ctx.fillText(label, (midEye.x*W)+4, (midEye.y*H)-20);
-
-    function drawHLine(pa,pb,txt,yOff=0){
-      const a={x:pa
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.onclick = ()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        btn.classList.add('active');
+        const t = btn.getAttribute('data-tab');
+        document.getElementById(t).classList.add('active');
+      };
+    });
+  })();
+  </script>
+</body>
+</html>
