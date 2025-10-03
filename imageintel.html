@@ -1,201 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Image Deconstructor — preview</title>
+  <title>Face Mesh Test Overlay</title>
   <style>
-    body { margin: 0; background: #111; color: #eee; font-family: sans-serif; }
-    .container { padding: 16px; max-width: 900px; margin: auto; }
-    .stage { position: relative; display: inline-block; }
-    .stage img { max-width: 100%; display: block; }
-    canvas.overlay { position: absolute; left: 0; top: 0; pointer-events: none; }
-    .controls { margin: 12px 0; }
-    button { padding: 8px 12px; margin-right: 8px; }
-    .output { background: #222; padding: 12px; margin-top: 12px; white-space: pre-wrap; font-family: monospace; }
-    .tabs { margin-top: 12px; }
-    .tab-btn { padding: 6px 10px; cursor: pointer; border: 1px solid #555; background: #222; color: #eee; margin-right:4px; }
-    .tab-btn.active { background: #444; }
-    .tab-content { display: none; padding: 8px; background: #222; margin-top: 4px; }
-    .tab-content.active { display: block; }
+    body { margin:0; background:#000; color:#fff; text-align:center; }
+    #stage { position: relative; display:inline-block; }
+    #stage img { max-width:100%; }
+    canvas { position:absolute; top:0; left:0; pointer-events:none; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Image Deconstructor (face + body + objects)</h2>
-    <div class="controls">
-      <input type="file" id="fileInput" accept="image/*"/>
-      <button id="btnDemo">Demo Image</button>
-      <button id="btnAnalyze">Analyze</button>
-    </div>
-    <div class="stage" id="stage">
-      <img id="imgEl" />
-      <canvas id="cvFace" class="overlay"></canvas>
-      <canvas id="cvPose" class="overlay"></canvas>
-      <canvas id="cvObjs" class="overlay"></canvas>
-    </div>
-
-    <div class="tabs">
-      <span class="tab-btn active" data-tab="prompt">Prompt</span>
-      <span class="tab-btn" data-tab="json">JSON</span>
-      <span class="tab-btn" data-tab="diag">Diagnostics</span>
-    </div>
-    <div id="prompt" class="tab-content active"></div>
-    <div id="json" class="tab-content"></div>
-    <div id="diag" class="tab-content"></div>
+  <h3>Face Mesh Test</h3>
+  <input type="file" id="fileIn" accept="image/*"/>
+  <button id="btnDemo">Demo</button>
+  <div id="stage">
+    <img id="imgEl" />
+    <canvas id="cv"></canvas>
   </div>
+  <pre id="log"></pre>
 
-  <!-- Import TFJS & model libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.19.0/dist/tf-core.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.19.0/dist/tf-backend-webgl.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter@4.19.0/dist/tf-converter.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.2/dist/face-landmarks-detection.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@3.4.0/dist/pose-detection.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.19.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.5/dist/face-landmarks-detection.min.js"></script>
   <script>
-  (async ()=>{
-    const imgEl = document.getElementById('imgEl');
-    const cvFace = document.getElementById('cvFace');
-    const cvPose = document.getElementById('cvPose');
-    const cvObjs = document.getElementById('cvObjs');
-    const stage = document.getElementById('stage');
-    const promptDiv = document.getElementById('prompt');
-    const jsonDiv = document.getElementById('json');
-    const diagDiv = document.getElementById('diag');
+    (async ()=>{
+      const imgEl = document.getElementById('imgEl');
+      const cv = document.getElementById('cv');
+      const logEl = document.getElementById('log');
 
-    // Setup model handles
-    let faceModel, poseModel, objModel;
-    await tf.setBackend('webgl');
-    await tf.ready();
+      function log(m){ logEl.textContent = m + "\n" + logEl.textContent; }
 
-    faceModel = await faceLandmarksDetection.load(
-      faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
-    );
-    poseModel = await poseDetection.createDetector(
-      poseDetection.SupportedModels.MoveNet
-    );
-    objModel = await cocoSsd.load();
+      await tf.setBackend('webgl');
+      await tf.ready();
+      log("TFJS backend: " + tf.getBackend());
 
-    logDiag("Models loaded");
+      const model = await faceLandmarksDetection.load(
+        faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
+      );
+      log("FaceMesh model loaded");
 
-    function logDiag(msg){
-      diagDiv.textContent = msg + "\n" + diagDiv.textContent;
-    }
-
-    function fitCanvas(canvas){
-      const r = imgEl.getBoundingClientRect();
-      canvas.style.width = r.width + "px";
-      canvas.style.height = r.height + "px";
-      canvas.width = r.width * window.devicePixelRatio;
-      canvas.height = r.height * window.devicePixelRatio;
-      const ctx = canvas.getContext('2d');
-      ctx.setTransform(window.devicePixelRatio,0,0,window.devicePixelRatio,0,0);
-    }
-
-    document.getElementById('fileInput').addEventListener('change', async evt=>{
-      const f = evt.target.files[0];
-      if (!f) return;
-      const url = URL.createObjectURL(f);
-      imgEl.onload = ()=> {
-        fitCanvas(cvFace);
-        fitCanvas(cvPose);
-        fitCanvas(cvObjs);
-      };
-      imgEl.src = url;
-    });
-    document.getElementById('btnDemo').addEventListener('click', async ()=>{
-      const resp = await fetch('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800');
-      const blob = await resp.blob();
-      const url = URL.createObjectURL(blob);
-      imgEl.onload = ()=> {
-        fitCanvas(cvFace);
-        fitCanvas(cvPose);
-        fitCanvas(cvObjs);
-      };
-      imgEl.src = url;
-    });
-
-    document.getElementById('btnAnalyze').addEventListener('click', async ()=>{
-      if (!imgEl.naturalWidth) {
-        alert("Load an image first");
-        return;
-      }
-      fitCanvas(cvFace); fitCanvas(cvPose); fitCanvas(cvObjs);
-
-      const src = document.createElement('canvas');
-      src.width = imgEl.naturalWidth;
-      src.height = imgEl.naturalHeight;
-      src.getContext('2d').drawImage(imgEl, 0, 0);
-
-      // 1. Face landmarks
-      const faces = await faceModel.estimateFaces({input: src, returnTensors:false});
-      logDiag(`Faces: ${faces.length}`);
-      const ctxF = cvFace.getContext('2d');
-      ctxF.clearRect(0,0,cvFace.width, cvFace.height);
-      for (const f of faces){
-        for (const [x,y,z] of f.scaledMesh){
-          ctxF.beginPath();
-          ctxF.arc(x, y, 1, 0, Math.PI*2);
-          ctxF.fillStyle = "cyan";
-          ctxF.fill();
-        }
+      function fitCanvas(){
+        const r = imgEl.getBoundingClientRect();
+        cv.style.width = r.width + "px";
+        cv.style.height = r.height + "px";
+        cv.width = r.width * window.devicePixelRatio;
+        cv.height = r.height * window.devicePixelRatio;
+        const ctx = cv.getContext('2d');
+        ctx.setTransform(window.devicePixelRatio,0,0,window.devicePixelRatio,0,0);
       }
 
-      // 2. Pose detection
-      const poses = await poseModel.estimatePoses(src);
-      logDiag(`Poses: ${poses.length}`);
-      const ctxP = cvPose.getContext('2d');
-      ctxP.clearRect(0,0,cvPose.width, cvPose.height);
-      for (const p of poses){
-        for (const kp of p.keypoints){
-          const {x,y,score} = kp;
-          if (score > 0.3){
-            ctxP.beginPath();
-            ctxP.arc(x, y, 3, 0, Math.PI*2);
-            ctxP.fillStyle = "lime";
-            ctxP.fill();
-          }
-        }
+      document.getElementById('fileIn').onchange = e => {
+        const f = e.target.files[0];
+        if (!f) return;
+        const url = URL.createObjectURL(f);
+        imgEl.onload = fitCanvas;
+        imgEl.src = url;
+      };
+
+      document.getElementById('btnDemo').onclick = async ()=>{
+        const resp = await fetch('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800');
+        const blob = await resp.blob();
+        const url = URL.createObjectURL(blob);
+        imgEl.onload = fitCanvas;
+        imgEl.src = url;
+      };
+
+      // analyze & draw
+      async function analyze(){
+        if (!imgEl.naturalWidth) { log("Load image first"); return; }
+        fitCanvas();
+        const off = document.createElement('canvas');
+        off.width = imgEl.naturalWidth;
+        off.height = imgEl.naturalHeight;
+        off.getContext('2d').drawImage(imgEl, 0, 0);
+
+        const faces = await model.estimateFaces({input: off, returnTensors:false});
+        log("faces: " + faces.length);
+        const ctx = cv.getContext('2d');
+        ctx.clearRect(0,0,cv.width,cv.height);
+
+        faces.forEach(f=>{
+          f.scaledMesh.forEach(pt=>{
+            const [x,y,z] = pt;
+            ctx.beginPath();
+            ctx.arc(x, y, 1.5, 0, Math.PI*2);
+            ctx.fillStyle = "cyan";
+            ctx.fill();
+          });
+        });
       }
 
-      // 3. Object detection
-      const objs = await objModel.detect(src);
-      logDiag(`Objects: ${objs.length}`);
-      const ctxO = cvObjs.getContext('2d');
-      ctxO.clearRect(0,0,cvObjs.width, cvObjs.height);
-      ctxO.strokeStyle = "magenta";
-      ctxO.lineWidth = 2;
-      ctxO.font = "16px sans-serif";
-      for (const o of objs){
-        const [x,y,w,h] = o.bbox;
-        ctxO.strokeRect(x,y,w,h);
-        ctxO.fillStyle = "magenta";
-        ctxO.fillText(o.class + " " + (o.score*100).toFixed(1)+"%", x, y-4);
-      }
-
-      // Construct prompt + JSON
-      const prompt = `portrait, ${faces.length} face, ${poses.length} pose, objects: ${objs.map(o=>o.class).join(", ")}`;
-      promptDiv.textContent = prompt;
-      const j = {
-        faces: faces.map(f=> ({mesh: f.scaledMesh})),
-        poses: poses.map(p=>p.keypoints),
-        objects: objs
+      // auto-run analyze after load
+      imgEl.onload = ()=>{
+        fitCanvas();
+        analyze();
       };
-      jsonDiv.textContent = JSON.stringify(j, null, 2);
-    });
-
-    // Tab switching
-    document.querySelectorAll('.tab-btn').forEach(btn=>{
-      btn.onclick = ()=>{
-        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-        btn.classList.add('active');
-        const t = btn.getAttribute('data-tab');
-        document.getElementById(t).classList.add('active');
-      };
-    });
-  })();
+    })();
   </script>
 </body>
 </html>
