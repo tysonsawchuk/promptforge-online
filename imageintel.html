@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ImageIntel Pro Visor — CSP/Offline-Model Build (Works w/ Dropped .task Files)</title>
+<title>ImageIntel Pro Visor — Dual Engine (Tasks or TFJS WebGL Fallback)</title>
 <style>
   :root{
-    --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0; --aqua:#64f2e3; --gold:#ffd166; --green:#52ffa8; --red:#ff6b6b;
+    --bg:#0b0f14; --panel:#121822; --ink:#e9fbff; --mut:#9fb3c0;
+    --aqua:#64f2e3; --gold:#ffd166; --green:#52ffa8; --red:#ff6b6b;
   }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
   .wrap{max-width:1200px;margin:24px auto;padding:0 16px}
@@ -18,7 +19,6 @@
   .card h2{margin:0;padding:10px 12px;border-bottom:1px solid #1b2531;background:#0e141c;font-size:1rem}
   .pad{padding:12px}
   .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .col{display:flex;flex-direction:column;gap:8px}
   .btn{background:#182130;border:1px solid #2a3445;color:var(--aqua);padding:8px 12px;border-radius:9px;font-weight:700;cursor:pointer}
   .btn:hover{border-color:#3c4d64;background:#1a2738}
   .btn.primary{background:#1d3147;border-color:#355773;color:#e9fbff}
@@ -31,15 +31,12 @@
   .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #243246;color:#9ad7ff;font-size:.8rem}
   .diag{font-family:ui-monospace,SFMono-Regular,Consolas,Menlo,monospace;font-size:.9rem;line-height:1.35;white-space:pre-wrap}
   .good{color:var(--green)} .warn{color:var(--gold)} .bad{color:var(--red)} .mut{color:#9fb3c0}
-  .drop{border:1px dashed #2a3750;border-radius:10px;padding:10px;background:#0f1621}
-  .drop:focus-within{outline:2px solid #355773}
-  .filelabel{font-size:.85rem;color:#bfefff;margin-top:4px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel Pro Visor — CSP/Offline-Model Build</h1>
-  <p class="sub">If networks are blocked, drop the <strong>.task</strong> model files below. No external fetch needed for models. Only the WASM folder must be reachable (host it on your domain if needed).</p>
+  <h1>ImageIntel Pro Visor — Dual Engine</h1>
+  <p class="sub">It tries MediaPipe Tasks; if your CSP blocks WASM, it auto-switches to TFJS (WebGL) so overlays still work.</p>
 
   <div class="grid">
     <!-- LEFT: STAGE -->
@@ -63,56 +60,22 @@
       </div>
     </div>
 
-    <!-- RIGHT: CONFIG + CONTROLS -->
+    <!-- RIGHT: CONTROLS -->
     <div class="card">
-      <h2>Engine Config</h2>
-      <div class="pad col">
-        <div class="mini">1) <b>WASM base URL (folder)</b> — host the /wasm folder on your domain if CDN is blocked</div>
-        <input id="uWasm" class="input" placeholder="WASM base URL (folder only)"
-               value="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm"/>
-
-        <div class="mini" style="margin-top:8px">2) <b>Load vision bundle</b> — use CDN or your hosted <code>vision_bundle.mjs</code></div>
-        <input id="uBundle" class="input" placeholder="vision_bundle.mjs URL"
-               value="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.mjs"/>
-        <div class="row"><button class="btn primary" id="btnLoadBundle">Load Bundle</button></div>
-
-        <div class="mini" style="margin-top:8px">3) <b>Models</b> — use <em>either</em> URL mode or drop local .task files (buffer mode has priority)</div>
-
-        <!-- BUFFER MODE: drop .task files -->
-        <div class="drop">
-          <div class="mini">Drop <b>face .task</b> here or click to choose</div>
-          <input id="fFace" type="file" accept=".task,application/octet-stream" class="input" />
-          <div class="filelabel" id="fFaceLbl">No file</div>
-        </div>
-        <div class="drop" style="margin-top:8px">
-          <div class="mini">Drop <b>pose .task</b> here or click to choose</div>
-          <input id="fPose" type="file" accept=".task,application/octet-stream" class="input" />
-          <div class="filelabel" id="fPoseLbl">No file</div>
-        </div>
-        <div class="drop" style="margin-top:8px">
-          <div class="mini">Drop <b>segmentation .task</b> here or click to choose</div>
-          <input id="fSegm" type="file" accept=".task,application/octet-stream" class="input" />
-          <div class="filelabel" id="fSegmLbl">No file</div>
-        </div>
-
-        <!-- URL MODE (fallback) -->
-        <input id="uFace" class="input" placeholder="Face .task URL"
-               value="https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"/>
-        <input id="uPose" class="input" placeholder="Pose .task URL"
-               value="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"/>
-        <input id="uSegm" class="input" placeholder="Segmentation .task URL"
-               value="https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float16/1/selfie_multiclass_256x256.task"/>
-
+      <h2>Engine & Controls</h2>
+      <div class="pad">
         <div class="row">
-          <button class="btn" id="btnInit">Init Engine</button>
-          <button class="btn" id="btnAnalyze">Analyze (A→B→C)</button>
-          <button class="btn" id="btnClear">Clear Overlays</button>
-        </div>
-
-        <div class="row" style="margin-top:8px">
+          <span class="pill">Engine: <span id="engine">uninitialized</span></span>
           <span class="pill">DPR: <span id="kDpr">–</span></span>
           <span class="pill">Image: <span id="kImg">–</span></span>
           <span class="pill">Canvas: <span id="kCan">–</span></span>
+        </div>
+        <div class="row" style="margin-top:6px">
+          <button class="btn primary" id="btnAnalyze">Analyze (A→B→C)</button>
+          <button class="btn" id="btnClear">Clear Overlays</button>
+        </div>
+        <div class="mini" style="margin-top:10px">
+          If MediaPipe Tasks fail (WASM blocked), fallback will read: <b>“Switched to TFJS fallback (WebGL) ✔︎”</b>
         </div>
       </div>
     </div>
@@ -127,7 +90,24 @@
   </div>
 </div>
 
+<!-- Load TFJS + model libraries (WebGL only; no WASM) -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.19.0/dist/tf.min.js"></script>
+<script>
+  // force WebGL backend to avoid WASM entirely
+  (async()=>{ try{ await tf.setBackend('webgl'); await tf.ready(); }catch(e){} })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.5/dist/face-landmarks-detection.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@3.4.0/dist/pose-detection.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-segmentation@1.0.2/dist/body-segmentation.min.js"></script>
+
+<!-- MediaPipe Tasks Vision as an ES module (will likely fail under your CSP; we catch and fallback) -->
 <script type="module">
+  import * as vision from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/vision_bundle.mjs";
+  window.__visionBundle = vision;
+</script>
+
+<script>
+(function(){
   const $ = s=>document.querySelector(s);
   const logEl = $('#log');
   function log(msg, cls='mut'){ const d=document.createElement('div'); d.className=cls; d.textContent=msg; logEl.prepend(d); }
@@ -136,86 +116,12 @@
   const cvFace = $('#cvFace'), cvPose = $('#cvPose'), cvSeg = $('#cvSeg');
   const DPR = Math.max(1, window.devicePixelRatio || 1);
   $('#kDpr').textContent = DPR.toFixed(2);
+  const engineEl = $('#engine');
 
-  // dynamic MediaPipe module
-  let vision = null;
-  // tasks state
-  let fileset = null, faceLM = null, poseLM = null, segm = null;
-  let drawFace = null, drawPose = null;
-
-  // local buffers if provided
-  const modelBuf = { face:null, pose:null, segm:null };
-
-  // file pickers → buffers
-  async function fileToBuf(inputEl, labelEl, key){
-    const f = inputEl.files?.[0];
-    if(!f){ labelEl.textContent='No file'; modelBuf[key]=null; return; }
-    const buf = await f.arrayBuffer();
-    modelBuf[key] = buf;
-    labelEl.textContent = `${f.name} (${(f.size/1024/1024).toFixed(2)} MB) loaded`;
-    log(`Loaded ${key} model buffer (${f.size} bytes)`, 'good');
-  }
-  $('#fFace').addEventListener('change', ()=>fileToBuf($('#fFace'), $('#fFaceLbl'), 'face'));
-  $('#fPose').addEventListener('change', ()=>fileToBuf($('#fPose'), $('#fPoseLbl'), 'pose'));
-  $('#fSegm').addEventListener('change', ()=>fileToBuf($('#fSegm'), $('#fSegmLbl'), 'segm'));
-
-  async function loadBundle(){
-    const uBundle = $('#uBundle').value.trim();
-    try{
-      log('Loading vision bundle…','mut');
-      vision = await import(/* @vite-ignore */ uBundle);
-      if (!vision?.FilesetResolver) throw new Error('vision bundle loaded but API missing');
-      log('Vision bundle loaded ✔︎','good');
-      return true;
-    }catch(e){
-      console.error(e);
-      log('Failed to import vision bundle (CSP/script-src). Host it on same origin and update the URL.', 'bad');
-      return false;
-    }
-  }
-
-  async function initEngine(){
-    if (!vision){ const okB = await loadBundle(); if(!okB) return false; }
-
-    const wasmBase = $('#uWasm').value.trim().replace(/\/+$/,'');
-    const optsFace = modelBuf.face ? { baseOptions:{ modelAssetBuffer: new Uint8Array(modelBuf.face) }, numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true }
-                                  : { baseOptions:{ modelAssetPath: $('#uFace').value.trim() }, numFaces:1, runningMode:'IMAGE', outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true };
-    const optsPose = modelBuf.pose ? { baseOptions:{ modelAssetBuffer: new Uint8Array(modelBuf.pose) }, runningMode:'IMAGE', numPoses:1 }
-                                  : { baseOptions:{ modelAssetPath: $('#uPose').value.trim() }, runningMode:'IMAGE', numPoses:1 };
-    const optsSegm = modelBuf.segm ? { baseOptions:{ modelAssetBuffer: new Uint8Array(modelBuf.segm) }, runningMode:'IMAGE', outputCategoryMask:true }
-                                  : { baseOptions:{ modelAssetPath: $('#uSegm').value.trim() }, runningMode:'IMAGE', outputCategoryMask:true };
-
-    try{
-      // verify wasm file presence (both .wasm and .js loader must exist)
-      const wasmUrl = wasmBase + '/vision_wasm_internal.wasm';
-      const wasmJs  = wasmBase + '/vision_wasm_internal.js';
-      const okWasm = await quickGet(wasmUrl);
-      const okJs   = await quickGet(wasmJs);
-      log(`WASM check: wasm ${okWasm?'OK':'X'} • js ${okJs?'OK':'X'}`, (okWasm&&okJs)?'good':'warn');
-
-      fileset = await vision.FilesetResolver.forVisionTasks(wasmBase);
-      faceLM  = await vision.FaceLandmarker.createFromOptions(fileset, optsFace);
-      poseLM  = await vision.PoseLandmarker.createFromOptions(fileset, optsPose);
-      segm    = await vision.ImageSegmenter.createFromOptions(fileset, optsSegm);
-
-      drawFace = new vision.DrawingUtils(cvFace.getContext('2d'));
-      drawPose = new vision.DrawingUtils(cvPose.getContext('2d'));
-      log('MediaPipe tasks ready ✔︎', 'good');
-      return true;
-    }catch(e){
-      console.error(e);
-      log('Failed to init tasks. If using URL mode, models or WASM base are blocked. Prefer buffer mode + host /wasm locally.', 'bad');
-      return false;
-    }
-  }
-
-  async function quickGet(u){
-    try{
-      // Some hosts block HEAD; fetch small range
-      const r = await fetch(u, { headers:{ 'Range':'bytes=0-32' }});
-      return r.ok || r.status === 206;
-    }catch(_){ return false; }
-  }
+  // STATE
+  let engine = 'none'; // 'tasks' | 'tfjs'
+  let tasks = { fileset:null, face:null, pose:null, segm:null, drawFace:null, drawPose:null };
+  let tfModels = { face:null, pose:null, segm:null };
 
   function fitCanvases(){
     if (!imgEl.naturalWidth) { log('No image to fit', 'warn'); return; }
@@ -235,7 +141,7 @@
   }
   addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvases(); }, {passive:true});
 
-  function imageToCanvasSource(){
+  function imageToCanvas(){
     const r = imgEl.getBoundingClientRect();
     const c = document.createElement('canvas');
     c.width = Math.max(1, Math.round(r.width)); 
@@ -244,108 +150,187 @@
     return c;
   }
 
+  async function tryInitTasks(){
+    try{
+      const vision = window.__visionBundle;
+      if (!vision || !vision.FilesetResolver) throw new Error('vision bundle missing');
+      // IMPORTANT: this line will fail if WASM is CSP-blocked
+      const wasmBase = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.13/wasm";
+      tasks.fileset = await vision.FilesetResolver.forVisionTasks(wasmBase);
+      tasks.face = await vision.FaceLandmarker.createFromOptions(tasks.fileset, {
+        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task" },
+        numFaces: 1, runningMode: "IMAGE",
+        outputFaceBlendshapes: true,
+        outputFacialTransformationMatrixes: true
+      });
+      tasks.pose = await vision.PoseLandmarker.createFromOptions(tasks.fileset, {
+        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task" },
+        runningMode: "IMAGE", numPoses: 1
+      });
+      tasks.segm = await vision.ImageSegmenter.createFromOptions(tasks.fileset, {
+        baseOptions: { modelAssetPath: "https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float16/1/selfie_multiclass_256x256.task" },
+        runningMode: "IMAGE", outputCategoryMask: true
+      });
+      tasks.drawFace = new vision.DrawingUtils(cvFace.getContext('2d'));
+      tasks.drawPose = new vision.DrawingUtils(cvPose.getContext('2d'));
+      engine = 'tasks'; engineEl.textContent = 'MediaPipe Tasks (WASM)';
+      log('MediaPipe Tasks initialized ✔︎','good');
+      return true;
+    }catch(e){
+      console.warn('Tasks init failed, switching to TFJS.', e);
+      log('MediaPipe Tasks blocked (WASM). Switched to TFJS fallback (WebGL) ✔︎','warn');
+      engine = 'tfjs'; engineEl.textContent = 'TFJS (WebGL)';
+      return false;
+    }
+  }
+
+  async function ensureTFModels(){
+    if (tfModels.face && tfModels.pose && tfModels.segm) return true;
+    try{
+      // FACE MESH (MediaPipeFaceMesh via TFJS graph)
+      tfModels.face = await faceLandmarksDetection.load(faceLandmarksDetection.SupportedPackages.mediapipeFacemesh, {
+        shouldLoadIrisModel: true,
+        maxFaces: 1
+      });
+      // POSE (MoveNet Lightning)
+      tfModels.pose = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, {
+        modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
+      });
+      // SEGMENTATION (SelfieSegmentation)
+      tfModels.segm = await bodySegmentation.createSegmenter(
+        bodySegmentation.SupportedModels.MediaPipeSelfieSegmentation,
+        { runtime: 'tfjs', modelType: 'general' }
+      );
+      engine = 'tfjs'; engineEl.textContent = 'TFJS (WebGL)';
+      log('TFJS models ready ✔︎','good');
+      return true;
+    }catch(e){
+      console.error(e); log('TFJS model init failed', 'bad'); return false;
+    }
+  }
+
+  async function ensureEngine(){
+    if (engine === 'tasks') return true;
+    const okTasks = await tryInitTasks();
+    if (okTasks) return true;
+    // fallback path
+    const okTf = await ensureTFModels();
+    return okTf;
+  }
+
   async function analyze(){
     if (!imgEl.naturalWidth){ log('Load an image first', 'warn'); return; }
-    if (!faceLM || !poseLM || !segm){ const ok = await initEngine(); if(!ok) return; }
+    const ok = await ensureEngine(); if(!ok){ log('No engine available', 'bad'); return; }
     fitCanvases();
     [cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height));
+    const src = imageToCanvas();
 
-    const src = imageToCanvasSource();
-
-    // FACE
-    const wantFace = true;
-    if (wantFace){
-      const t0=performance.now();
-      const res = faceLM.detect(src);
-      const dt=((performance.now()-t0)|0);
-      const faces = res?.faceLandmarks || [];
-      log(`Face: ${faces.length} in ${dt}ms`, faces.length?'good':'warn');
-      const ctx = cvFace.getContext('2d'); ctx.lineWidth = 1.2; ctx.globalAlpha = 0.98;
+    if (engine === 'tasks'){
+      // A) FACE
+      const rF = tasks.face.detect(src);
+      const faces = rF?.faceLandmarks || [];
+      log(`Face (Tasks): ${faces.length}`,(faces.length?'good':'warn'));
       faces.forEach(lms=>{
-        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color:'#2bd1ff2a'});
-        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color:'#00e0ff'});
-        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color:'#ff5572'});
-        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
-        drawFace.drawConnectors(lms, vision.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
-        const L=lms, le=L[33], re=L[263];
-        if(le && re){
-          const tilt=(Math.atan2((re.y-le.y),(re.x-le.x))*180/Math.PI).toFixed(1);
-          const x=((le.x+re.x)/2)*cvFace.width/window.devicePixelRatio;
-          const y=((le.y+re.y)/2)*cvFace.height/window.devicePixelRatio - 12;
-          ctx.save(); ctx.font='bold 12px ui-monospace'; ctx.lineWidth=3;
-          ctx.strokeStyle='#061019'; ctx.fillStyle='#e6f6ff';
-          ctx.strokeText(`eye tilt ${tilt}°`, x, y); ctx.fillText(`eye tilt ${tilt}°`, x, y);
-          ctx.restore();
-        }
+        tasks.drawFace.drawConnectors(lms, __visionBundle.FaceLandmarker.FACE_LANDMARKS_TESSELATION, {color:'#2bd1ff2a'});
+        tasks.drawFace.drawConnectors(lms, __visionBundle.FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {color:'#00e0ff'});
+        tasks.drawFace.drawConnectors(lms, __visionBundle.FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {color:'#ff5572'});
+        tasks.drawFace.drawConnectors(lms, __visionBundle.FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,  {color:'#57ff6a'});
+        tasks.drawFace.drawConnectors(lms, __visionBundle.FaceLandmarker.FACE_LANDMARKS_LIPS,      {color:'#ffd166'});
       });
-    }
 
-    // POSE
-    const t1=performance.now();
-    const resP = poseLM.detect(src);
-    const dtP=((performance.now()-t1)|0);
-    const poses = resP?.landmarks || [];
-    log(`Pose: ${poses.length} in ${dtP}ms`, poses.length?'good':'warn');
-    if (poses[0]){
-      drawPose.drawLandmarks(poses[0], {radius:2, color:'#aaf'});
-      drawPose.drawConnectors(poses[0], vision.PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
-      // simple labels
-      const p=poses[0], ctx=cvPose.getContext('2d');
-      const S=i=>p[i] && [ p[i].x*cvPose.width/window.devicePixelRatio, p[i].y*cvPose.height/window.devicePixelRatio ];
-      const lbl={LShoulder:S(11),RShoulder:S(12),LHip:S(23),RHip:S(24),LKnee:S(25),RKnee:S(26)};
-      ctx.save(); ctx.font='bold 12px ui-monospace'; ctx.lineWidth=3; ctx.strokeStyle='#081019'; ctx.fillStyle='#e6f6ff';
-      for (const [k,v] of Object.entries(lbl)) if(v){ ctx.strokeText(k, v[0], v[1]); ctx.fillText(k, v[0], v[1]); }
-      ctx.restore();
-    }
-
-    // SEGMENTATION
-    const t2=performance.now();
-    const resS = segm.segment(src);
-    const dtS=((performance.now()-t2)|0);
-    const mask = resS?.categoryMask;
-    log(`Seg: ${mask?'mask ok':'none'} in ${dtS}ms`, mask?'good':'warn');
-    if (mask){
-      const ctx=cvSeg.getContext('2d');
-      const w = src.width, h = src.height;
-      const imgData = ctx.createImageData(w,h);
-      const COLORS = { 0:[0,0,0,0], 1:[100,240,255,120], 2:[255,210,80,140], 3:[255,120,120,80], 4:[120,180,255,90], 5:[190,120,255,90] };
-      for(let i=0;i<mask.width*mask.height;i++){
-        const lab = mask.data[i]||0; const [r,g,b,a] = COLORS[lab]||[0,0,0,0];
-        const j=i*4; imgData.data[j]=r; imgData.data[j+1]=g; imgData.data[j+2]=b; imgData.data[j+3]=a;
+      // B) POSE
+      const rP = tasks.pose.detect(src);
+      const poses = rP?.landmarks || [];
+      log(`Pose (Tasks): ${poses.length}`,(poses.length?'good':'warn'));
+      if (poses[0]){
+        tasks.drawPose.drawLandmarks(poses[0], {radius:2, color:'#aaf'});
+        tasks.drawPose.drawConnectors(poses[0], __visionBundle.PoseLandmarker.POSE_CONNECTIONS, {color:'#89f'});
       }
-      const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
-      tmp.getContext('2d').putImageData(imgData,0,0);
-      ctx.drawImage(tmp,0,0,w,h);
+
+      // C) SEG
+      const rS = tasks.segm.segment(src);
+      const mask = rS?.categoryMask;
+      log(`Seg (Tasks): ${mask?'mask ok':'none'}`, mask?'good':'warn');
+      if (mask){
+        const ctx=cvSeg.getContext('2d');
+        const w = src.width, h = src.height;
+        const imgData = ctx.createImageData(w,h);
+        const COLORS = { 0:[0,0,0,0], 1:[100,240,255,120], 2:[255,210,80,140], 3:[255,120,120,80], 4:[120,180,255,90], 5:[190,120,255,90] };
+        for(let i=0;i<mask.width*mask.height;i++){
+          const lab = mask.data[i]||0; const [r,g,b,a] = COLORS[lab]||[0,0,0,0];
+          const j=i*4; imgData.data[j]=r; imgData.data[j+1]=g; imgData.data[j+2]=b; imgData.data[j+3]=a;
+        }
+        const tmp=document.createElement('canvas'); tmp.width=w; tmp.height=h;
+        tmp.getContext('2d').putImageData(imgData,0,0);
+        ctx.drawImage(tmp,0,0,w,h);
+      }
+      return;
+    }
+
+    // TFJS FALLBACK (WebGL)
+    // A) FACE
+    const fRes = await tfModels.face.estimateFaces({input: src, returnTensors:false, flipHorizontal:false, predictIrises:true});
+    log(`Face (TFJS): ${fRes.length}`,(fRes.length?'good':'warn'));
+    const ctxF = cvFace.getContext('2d'); ctxF.lineWidth=1.2;
+    fRes.forEach(face=>{
+      const pts = face.scaledMesh || []; // 468 points
+      ctxF.strokeStyle = '#2bd1ff55';
+      for(let i=0;i<pts.length;i+=1){
+        const [x,y] = pts[i];
+        ctxF.beginPath(); ctxF.arc(x,y,1.2,0,Math.PI*2); ctxF.stroke();
+      }
+      // simple oval from bounding box
+      const bb = face.box; if (bb){
+        ctxF.strokeStyle='#00e0ff'; ctxF.strokeRect(bb.xMin,bb.yMin,bb.width,bb.height);
+      }
+    });
+
+    // B) POSE (MoveNet)
+    const detector = tfModels.pose;
+    const pRes = await detector.estimatePoses(src, {flipHorizontal:false});
+    log(`Pose (TFJS): ${pRes.length}`,(pRes.length?'good':'warn'));
+    const ctxP = cvPose.getContext('2d'); ctxP.strokeStyle='#89f'; ctxP.fillStyle='#aaf';
+    if (pRes[0]?.keypoints){
+      const kp = pRes[0].keypoints;
+      // draw skeleton (subset connections)
+      const C = (a,b)=>{ if(kp[a]?.score>0.3 && kp[b]?.score>0.3){ ctxP.beginPath(); ctxP.moveTo(kp[a].x,kp[a].y); ctxP.lineTo(kp[b].x,kp[b].y); ctxP.stroke(); } };
+      // arms/legs/torso minimal set
+      C(5,7); C(7,9); C(6,8); C(8,10); C(11,13); C(13,15); C(12,14); C(14,16); C(5,6); C(5,11); C(6,12); C(11,12);
+      kp.forEach(k=>{ if(k.score>0.3){ ctxP.beginPath(); ctxP.arc(k.x,k.y,2,0,Math.PI*2); ctxP.fill(); } });
+    }
+
+    // C) SEGMENTATION (SelfieSegmentation)
+    const segmenter = tfModels.segm;
+    const seg = await segmenter.segmentPeople(src, {multiSegmentation:false, segmentBodyParts:false});
+    const mask = seg?.[0]?.mask;
+    log(`Seg (TFJS): ${mask?'mask ok':'none'}`, mask?'good':'warn');
+    if (mask){
+      const ctxS = cvSeg.getContext('2d');
+      // mask is an ImageData-like tensor; convert to ImageData
+      const {width,height, data} = mask;
+      const id = ctxS.createImageData(width,height);
+      // data is Uint8ClampedArray alpha 0/255; colorize as skin overlay
+      for(let i=0;i<width*height;i++){
+        const a = data[i]; // 0 or 255
+        id.data[i*4+0] = 255;
+        id.data[i*4+1] = 120;
+        id.data[i*4+2] = 120;
+        id.data[i*4+3] = a ? 80 : 0;
+      }
+      const tmp=document.createElement('canvas'); tmp.width=width; tmp.height=height;
+      tmp.getContext('2d').putImageData(id,0,0);
+      ctxS.drawImage(tmp,0,0,src.width,src.height);
     }
   }
 
+  // Self-test prints current engine / backend
   async function selfTest(){
-    const wasmBase = $('#uWasm').value.trim().replace(/\/+$/,'');
-    const urls = {
-      wasm: wasmBase + '/vision_wasm_internal.wasm',
-      wasmJs: wasmBase + '/vision_wasm_internal.js',
-      bundle: $('#uBundle').value.trim(),
-      face: $('#uFace').value.trim(),
-      pose: $('#uPose').value.trim(),
-      segm: $('#uSegm').value.trim()
-    };
-    log('--- Self-Test start ---','mut');
-    // Model buffers short-circuit URL checks
-    if (modelBuf.face) log('face: using buffer ✔︎','good'); else log('face URL: '+urls.face,'mut');
-    if (modelBuf.pose) log('pose: using buffer ✔︎','good'); else log('pose URL: '+urls.pose,'mut');
-    if (modelBuf.segm) log('segm: using buffer ✔︎','good'); else log('segm URL: '+urls.segm,'mut');
-    // Probe wasm/js (range fetch)
-    const [okWasm, okJs] = await Promise.all([quickGet(urls.wasm), quickGet(urls.wasmJs)]);
-    log(`WASM check: wasm ${okWasm?'OK':'X'} • js ${okJs?'OK':'X'}`, (okWasm&&okJs)?'good':'warn');
-    log('If X, host /wasm locally and update base URL.', (okWasm&&okJs)?'mut':'bad');
-    log('--- Self-Test done ---','mut');
-  }
-
-  async function quickGet(u){
-    try{
-      const r = await fetch(u, { headers:{ 'Range':'bytes=0-32' }});
-      return r.ok || r.status === 206;
-    }catch(_){ return false; }
+    log('--- Self-Test ---','mut');
+    log('tf.getBackend(): '+(tf.getBackend?.()||'unknown'),'mut');
+    if (window.__visionBundle){ log('vision bundle present (module import ok)','mut'); }
+    await ensureEngine();
+    log('Engine: '+engine,'good');
+    log('--------------','mut');
   }
 
   // UI: image
@@ -362,13 +347,15 @@
     loadBlob(await res.blob());
   });
   $('#btnFit').addEventListener('click', fitCanvases);
-
-  // UI: engine
-  $('#btnLoadBundle').addEventListener('click', loadBundle);
-  $('#btnInit').addEventListener('click', initEngine);
   $('#btnAnalyze').addEventListener('click', analyze);
   $('#btnClear').addEventListener('click', ()=>[cvFace,cvPose,cvSeg].forEach(cv=>cv.getContext('2d').clearRect(0,0,cv.width,cv.height)));
   $('#btnSelfTest').addEventListener('click', selfTest);
+
+  // Recommend HTTP (not file://) to avoid CORS issues on image draw
+  if (location.protocol === 'file:'){
+    log('Tip: run over http:// (e.g., `python -m http.server`) to avoid CORS/security limits.', 'warn');
+  }
+})();
 </script>
 </body>
 </html>
