@@ -3,420 +3,268 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ImageIntel — Deconstructor (face+pose+segments)</title>
+<title>ImageIntel — local Human (face+pose+segments)</title>
 <style>
-  :root{
-    --bg:#0b0f14;--panel:#0f1621;--ink:#e9fbff;--mut:#9fb3c0;
-    --aqua:#64f2e3;--mag:#ff5ad6;--lime:#6dffb8;--gold:#ffd166;--red:#ff6b6b
-  }
-  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif}
-  .wrap{max-width:1200px;margin:18px auto;padding:0 12px}
-  h1{margin:0 0 6px;font-weight:800;font-size:1.25rem}
-  .sub{color:var(--mut);margin:0 0 14px}
-  .grid{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}
-  @media(max-width:1100px){.grid{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid #1e2835;border-radius:14px;box-shadow:0 10px 28px #0006;overflow:hidden}
-  .card h2{margin:0;padding:10px 12px;border-bottom:1px solid #15202b;background:#0e141c;font-size:.95rem}
-  .pad{padding:12px}
-  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  :root{--bg:#0b0f14;--panel:#0f1621;--ink:#e9fbff;--mut:#9fb3c0;--aqua:#64f2e3;--lime:#6dffb8;--mag:#ff5ad6;--gold:#ffd166;--red:#ff6b6b}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif}
+  .wrap{max-width:1100px;margin:18px auto;padding:0 12px}
+  h1{margin:0 0 8px;font-size:1.1rem}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
   .btn{background:#172335;border:1px solid #2a3a50;color:var(--aqua);padding:8px 12px;border-radius:9px;font-weight:700;cursor:pointer}
-  .btn:hover{border-color:#3f5676;background:#1a2b43}
-  .btn.primary{background:#1d3147;border-color:#355773;color:#e9fbff}
-  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:220px}
+  .btn:hover{border-color:#3b5678;background:#1a2b43}
+  .input{background:#0f1621;border:1px solid #233044;color:#bfefff;border-radius:8px;padding:8px 10px;min-width:240px}
   .stage{position:relative;display:inline-block;max-width:100%}
   .stage img{display:block;max-width:100%;height:auto;border-radius:10px;border:1px solid #1b2531}
-  canvas.layer{position:absolute;left:0;top:0;pointer-events:none}
-  .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #243246;color:#9ad7ff;font-size:.78rem}
-  .tabs{display:flex;gap:6px;margin-top:8px}
-  .tab{padding:7px 10px;border:1px solid #2b3b52;background:#0e1520;border-radius:8px;cursor:pointer;color:#a7c7ff}
-  .tab.active{background:#142034;color:#fff;border-color:#3b5a84}
-  .panel{display:none;margin-top:8px;background:#0e1520;border:1px solid #1c2b3f;border-radius:10px;padding:10px;white-space:pre-wrap;font-family:ui-monospace,Consolas,Menlo,monospace;font-size:.92rem}
-  .panel.active{display:block}
-  .terminal{background:#071019;border:1px solid #193047;border-radius:10px;padding:10px;height:200px;overflow:auto;color:#bff3ff}
-  .t-good{color:#6dffb8}.t-warn{color:#ffd166}.t-bad{color:#ff6b6b}.t-muted{color:#9fb3c0}
-  .kv{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  canvas.overlay{position:absolute;left:0;top:0;pointer-events:none}
+  .term{background:#071019;border:1px solid #193047;border-radius:10px;padding:10px;height:210px;overflow:auto;white-space:pre-wrap;font-family:ui-monospace,Consolas,Menlo,monospace}
+  .kv{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-block;padding:3px 8px;border-radius:999px;background:#0e1722;border:1px solid #243246;color:#9ad7ff;font-size:.8rem}
+  .panel{background:#0e1520;border:1px solid #1c2b3f;border-radius:10px;padding:10px;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>ImageIntel — Deconstructor (alpha)</h1>
-  <p class="sub">Face mesh • Pose • Segments • Objects (basic) • Prompt & JSON export. One-file test build using <em>Human</em> for widest device support.</p>
-
-  <div class="grid">
-    <!-- Left: Stage -->
-    <div class="card">
-      <h2>Stage</h2>
-      <div class="pad">
-        <div class="row">
-          <input id="fileInput" type="file" accept="image/*" class="input"/>
-          <button class="btn" id="btnDemo">Load Demo</button>
-          <button class="btn primary" id="btnAnalyze">Analyze (Scan)</button>
-          <button class="btn" id="btnClear">Clear Overlays</button>
-        </div>
-        <div class="kv">
-          <span class="pill">DPR: <span id="kDpr">–</span></span>
-          <span class="pill">Image: <span id="kImg">–</span></span>
-          <span class="pill">Canvas: <span id="kCan">–</span></span>
-          <span class="pill">Engine: <span id="kEngine">Human</span></span>
-        </div>
-        <div style="height:8px"></div>
-        <div id="stage" class="stage">
-          <img id="imgEl" alt="preview"/>
-          <canvas id="cvMain" class="layer"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: Outputs -->
-    <div class="card">
-      <h2>Outputs</h2>
-      <div class="pad">
-        <div class="tabs">
-          <div class="tab active" data-panel="pPrompt">Prompt</div>
-          <div class="tab" data-panel="pJSON">JSON</div>
-          <div class="tab" data-panel="pDiag">Diagnostics</div>
-        </div>
-        <div id="pPrompt" class="panel active"></div>
-        <div id="pJSON" class="panel"></div>
-        <div id="pDiag" class="panel">
-          <div id="term" class="terminal"></div>
-        </div>
-      </div>
-    </div>
+  <h1>ImageIntel — local Human (alpha)</h1>
+  <div class="row">
+    <input id="fileInput" type="file" accept="image/*" class="input"/>
+    <button class="btn" id="btnAnalyze">Analyze</button>
+    <button class="btn" id="btnClear">Clear</button>
+    <button class="btn" id="btnGrid">Test Grid</button>
+    <button class="btn" id="btnSelfTest">Self-Test</button>
   </div>
+  <div class="kv">
+    <span class="pill">DPR: <span id="kDpr">–</span></span>
+    <span class="pill">Image: <span id="kImg">–</span></span>
+    <span class="pill">Canvas: <span id="kCan">–</span></span>
+    <span class="pill">Engine: <span id="kEng">–</span></span>
+  </div>
+
+  <div class="stage" style="margin-top:10px">
+    <img id="imgEl" alt="preview" decoding="async" loading="eager"/>
+    <canvas id="cv" class="overlay"></canvas>
+  </div>
+
+  <div class="panel"><div id="term" class="term"></div></div>
+  <div class="panel" id="outPrompt" style="display:none"></div>
+  <div class="panel" id="outJSON" style="display:none; white-space:pre-wrap"></div>
 </div>
 
-<!-- Human all-in-one (UMD global) -->
-<script src="https://unpkg.com/human/dist/human.js"></script>
+<!-- Load local Human bundle (no CDN) -->
+<script src="/vendor/human/human.js"></script>
 <script>
-(async ()=>{
-  // UI refs
-  const $ = s=>document.querySelector(s);
-  const imgEl = $('#imgEl');
-  const cv = $('#cvMain');
-  const term = $('#term');
-  const DPR = Math.max(1, window.devicePixelRatio || 1);
-  $('#kDpr').textContent = DPR.toFixed(2);
+(function(){
+  const $=s=>document.querySelector(s);
+  const imgEl=$('#imgEl'); const cv=$('#cv'); const term=$('#term');
+  const DPR=Math.max(1,window.devicePixelRatio||1); $('#kDpr').textContent=DPR.toFixed(2);
 
-  // Terminal logger
-  function tlog(msg, cls='t-muted'){
-    const d=document.createElement('div'); d.className=cls; d.textContent=msg; term.appendChild(d);
-    term.scrollTop = term.scrollHeight;
+  let human=null;
+
+  function log(msg, lvl='log'){
+    const d=document.createElement('div');
+    d.textContent=msg;
+    d.style.color = lvl==='err'?'#ff6b6b':(lvl==='warn'?'#ffd166':'#bff3ff');
+    term.appendChild(d); term.scrollTop=term.scrollHeight;
+    try{ console[lvl==='err'?'error':lvl==='warn'?'warn':'log'](msg); }catch{}
   }
 
-  // Human config: enable face mesh, pose, segmentation, lightweight objects (optional)
-  const humanConfig = {
-    backend: 'webgl',            // falls back to 'wasm' or 'cpu' if needed
-    modelBasePath: 'https://unpkg.com/human/models', // CDN models
-    filter:{ enabled: true, equalizeHistogram: false },
-    face: { enabled: true, mesh: { enabled: true, keepInvalid: false }, iris: { enabled: true }, detector: { maxDetected: 1 } },
-    body: { enabled: true, model: 'movenet', // reliable & fast
-            maxDetections: 1 },
-    segmentation: { enabled: true, person: true, // soft alpha mask of person
-                    resolution: 256 },
-    object: { enabled: true, // basic scene objects
-              model: 'mobilenet', // light
-              skipAllowed: true },
-    gesture: { enabled: false },
-    hand: { enabled: false },
-    debug: false
-  };
+  async function headOK(url){
+    try{
+      const r=await fetch(url,{method:'HEAD'}); return r.ok;
+    }catch{ return false; }
+  }
 
-  const human = new Human.Human(humanConfig);
-  await human.load();   // preload models
-  await human.warmup(); // speed up first inference
-  tlog('Human engine ready ✓', 't-good');
+  async function selfTest(){
+    log('— Self-Test —');
+    const paths=[
+      '/vendor/human/human.js',
+      '/models/human/face/face-detection-short-range.json',
+      '/models/human/body/movenet-lightning.json',
+      '/models/human/segmentation/selfie_segmentation_landscape.json',
+      '/models/human/object/ssd_mobilenetv1.json'
+    ];
+    for(const p of paths){
+      const ok = await headOK(p);
+      log((ok?'OK  ':'X   ')+p, ok?'log':'err');
+    }
+  }
 
-  // DPR-safe canvas sizing locked to displayed image box
   function fitCanvas(){
-    if (!imgEl.naturalWidth) return;
-    const r = imgEl.getBoundingClientRect();
-    cv.style.width  = r.width + 'px';
-    cv.style.height = r.height + 'px';
-    cv.width  = Math.max(1, Math.round(r.width  * DPR));
-    cv.height = Math.max(1, Math.round(r.height * DPR));
-    const ctx = cv.getContext('2d');
-    ctx.setTransform(DPR,0,0,DPR,0,0);
+    if(!imgEl.naturalWidth) return;
+    const r=imgEl.getBoundingClientRect();
+    cv.style.width=r.width+'px'; cv.style.height=r.height+'px';
+    cv.width=Math.max(1,Math.round(r.width*DPR));
+    cv.height=Math.max(1,Math.round(r.height*DPR));
+    const ctx=cv.getContext('2d'); ctx.setTransform(DPR,0,0,DPR,0,0);
     ctx.clearRect(0,0,cv.width,cv.height);
-    $('#kImg').textContent = imgEl.naturalWidth + '×' + imgEl.naturalHeight;
-    $('#kCan').textContent = Math.round(cv.width/DPR) + '×' + Math.round(cv.height/DPR);
+    $('#kImg').textContent=imgEl.naturalWidth+'×'+imgEl.naturalHeight;
+    $('#kCan').textContent=Math.round(cv.width/DPR)+'×'+Math.round(cv.height/DPR);
   }
   addEventListener('resize', ()=>{ if(imgEl.naturalWidth) fitCanvas(); }, {passive:true});
 
-  // Helpers
-  function loadBlob(blob){
-    const url = URL.createObjectURL(blob);
-    imgEl.onload = ()=>{ URL.revokeObjectURL(url); fitCanvas(); tlog(`image loaded ${imgEl.naturalWidth}×${imgEl.naturalHeight}`,'t-good'); };
-    imgEl.src = url;
-  }
-
-  // UI events
   $('#fileInput').addEventListener('change', e=>{
-    const f=e.target.files?.[0]; if(!f) return; loadBlob(f);
-  });
-  $('#btnDemo').addEventListener('click', async ()=>{
-    try{
-      const r = await fetch('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1200&q=85');
-      loadBlob(await r.blob());
-    }catch(e){ tlog('demo fetch failed: ' + e.message, 't-bad'); }
-  });
-  $('#btnClear').addEventListener('click', ()=>{
-    cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
-    $('#pPrompt').textContent=''; $('#pJSON').textContent='';
+    const f=e.target.files?.[0]; if(!f){ log('no file','warn'); return; }
+    const url=URL.createObjectURL(f);
+    imgEl.onload=()=>{ URL.revokeObjectURL(url); fitCanvas(); log(`image loaded ${imgEl.naturalWidth}×${imgEl.naturalHeight}`); };
+    imgEl.onerror=()=>{ log('image failed to load','err'); };
+    imgEl.crossOrigin='anonymous';
+    imgEl.src=url;
   });
 
-  // Color sampling (simple): average color in a polygon/box
-  function avgColor(ctx, box){
-    const [x,y,w,h] = box.map(v=>Math.max(0, Math.round(v)));
-    const data = ctx.getImageData(x,y,w,h).data;
-    let r=0,g=0,b=0,n=0;
-    for(let i=0;i<data.length;i+=4){ r+=data[i]; g+=data[i+1]; b+=data[i+2]; n++; }
-    if(n===0) return {hex:'#000000',word:'black'};
-    r=Math.round(r/n); g=Math.round(g/n); b=Math.round(b/n);
-    const hex = '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-    const word = (()=>{
-      // ultra simple mapping
-      const max=Math.max(r,g,b), min=Math.min(r,g,b);
-      if (max-min<15) return 'gray';
-      if (r>g && r>b) return r>200?'red':'auburn';
-      if (g>r && g>b) return g>200?'lime':'olive';
-      if (b>r && b>g) return b>200?'blue':'navy';
-      if (r>200 && g>180 && b<140) return 'blonde';
-      if (r>200 && g>200 && b>200) return 'pale';
-      if (r<70 && g<70 && b<70) return 'black';
-      return 'tan';
-    })();
-    return {hex, word};
+  $('#btnGrid').addEventListener('click', ()=>{
+    if(!imgEl.naturalWidth){ log('load image first','warn'); return; }
+    const ctx=cv.getContext('2d'); const w=cv.width/DPR,h=cv.height/DPR;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.strokeStyle='#64f2e380';
+    for(let x=0;x<w;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let y=0;y<h;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+    ctx.fillStyle='#ff5ad6'; ctx.font='12px ui-monospace'; ctx.fillText('grid ok',10,20);
+    log('grid drawn ✓');
+  });
+
+  $('#btnSelfTest').addEventListener('click', selfTest);
+
+  async function ensureHuman(){
+    if (human) return true;
+    if (!window.Human){ log('Human bundle not found at /vendor/human/human.js','err'); return false; }
+    try{
+      const cfg={
+        backend:'webgl',
+        modelBasePath:'/models/human', // LOCAL models
+        face:{enabled:true, mesh:{enabled:true}, iris:{enabled:true}, detector:{maxDetected:1}},
+        body:{enabled:true, model:'movenet', maxDetections:1},
+        segmentation:{enabled:true, person:true, resolution:256},
+        object:{enabled:true, model:'mobilenet', skipAllowed:true},
+        debug:false
+      };
+      human = new window.Human.Human(cfg);
+      await human.load(); log('models loaded ✓');
+      await human.warmup(); log('warmup ✓');
+      $('#kEng').textContent='Human (local)';
+      return true;
+    }catch(e){
+      log('Human init failed: '+(e?.message||e),'err');
+      return false;
+    }
   }
 
   function drawOverlay(result){
-    const ctx = cv.getContext('2d');
-    ctx.clearRect(0,0,cv.width,cv.height);
-
-    // Face mesh (neon dots + contours)
-    for (const face of result.face){
-      if (!face.mesh) continue;
-      ctx.globalAlpha=0.95;
-      ctx.fillStyle= 'rgba(100,240,255,0.95)';
-      for(const pt of face.mesh){ ctx.beginPath(); ctx.arc(pt[0], pt[1], 1.2, 0, Math.PI*2); ctx.fill(); }
-      // face box
-      if (face.box){
-        const b = face.box; ctx.strokeStyle='#00e0ff'; ctx.lineWidth=1.2;
-        ctx.strokeRect(b[0], b[1], b[2], b[3]);
+    const ctx=cv.getContext('2d'); ctx.clearRect(0,0,cv.width,cv.height);
+    // face
+    for(const face of result.face||[]){
+      if(face.mesh){
+        ctx.fillStyle='rgba(100,240,255,0.95)';
+        for(const p of face.mesh){ ctx.beginPath(); ctx.arc(p[0],p[1],1.2,0,Math.PI*2); ctx.fill(); }
       }
-      // eye tilt
-      if (face.annotations?.leftEyeUpper0 && face.annotations?.rightEyeUpper0){
-        const L=face.annotations.leftEyeUpper0[0], R=face.annotations.rightEyeUpper0.slice(-1)[0];
-        const tilt=(Math.atan2((R[1]-L[1]),(R[0]-L[0]))*180/Math.PI).toFixed(1);
-        ctx.save(); ctx.font='bold 12px ui-monospace'; ctx.lineWidth=3; ctx.strokeStyle='#061019'; ctx.fillStyle='#e6f6ff';
-        ctx.strokeText(`eye tilt ${tilt}°`, (L[0]+R[0])/2, (L[1]+R[1])/2 - 12);
-        ctx.fillText(`eye tilt ${tilt}°`,   (L[0]+R[0])/2, (L[1]+R[1])/2 - 12);
-        ctx.restore();
-      }
+      if(face.box){ const [x,y,w,h]=face.box; ctx.strokeStyle='#64f2e3'; ctx.lineWidth=1.2; ctx.strokeRect(x,y,w,h); }
     }
-
-    // Pose skeleton
-    for (const body of result.body){
-      const kp = body.keypoints || [];
-      ctx.strokeStyle='#89f'; ctx.fillStyle='#aaf'; ctx.lineWidth=2;
-      const C=(a,b)=>{ if(kp[a]?.score>0.3 && kp[b]?.score>0.3){ ctx.beginPath(); ctx.moveTo(kp[a].x,kp[a].y); ctx.lineTo(kp[b].x,kp[b].y); ctx.stroke(); } };
+    // pose
+    for(const body of result.body||[]){
+      const kp=body.keypoints||[]; ctx.strokeStyle='#6dffb8'; ctx.fillStyle='#6dffb8'; ctx.lineWidth=2;
+      const C=(a,b)=>{ if(kp[a]?.score>0.3&&kp[b]?.score>0.3){ ctx.beginPath(); ctx.moveTo(kp[a].x,kp[a].y); ctx.lineTo(kp[b].x,kp[b].y); ctx.stroke(); } };
       C(5,7); C(7,9); C(6,8); C(8,10); C(11,13); C(13,15); C(12,14); C(14,16); C(5,6); C(5,11); C(6,12); C(11,12);
       kp.forEach(k=>{ if(k.score>0.3){ ctx.beginPath(); ctx.arc(k.x,k.y,2,0,Math.PI*2); ctx.fill(); } });
     }
-
-    // Segmentation (person) overlay (soft rose tint)
-    if (result.segmentation?.data){
-      const {width,height,data} = result.segmentation;
-      const id = ctx.createImageData(width,height);
-      for(let i=0;i<width*height;i++){
-        const a = data[i]; // 0..255 alpha of person
-        id.data[i*4+0]=255; id.data[i*4+1]=120; id.data[i*4+2]=120; id.data[i*4+3]= a ? 60 : 0;
-      }
+    // segmentation
+    if(result.segmentation?.data){
+      const {width,height,data}=result.segmentation;
+      const id=ctx.createImageData(width,height);
+      for(let i=0;i<width*height;i++){ const a=data[i]; id.data[i*4+0]=255; id.data[i*4+1]=120; id.data[i*4+2]=120; id.data[i*4+3]=a?60:0; }
       const tmp=document.createElement('canvas'); tmp.width=width; tmp.height=height;
       tmp.getContext('2d').putImageData(id,0,0);
-      ctx.drawImage(tmp,0,0,cv.width/DPR,cv.height/DPR);
+      ctx.drawImage(tmp,0,0,cv.width/(window.devicePixelRatio||1),cv.height/(window.devicePixelRatio||1));
     }
-
-    // Objects (basic)
-    if (result.object && result.object.length){
-      ctx.strokeStyle = '#ff5ad6'; ctx.fillStyle='#ff5ad6'; ctx.lineWidth=2;
-      ctx.font='12px ui-monospace';
-      for(const o of result.object){
-        if (!o.box) continue;
-        const [x,y,w,h] = o.box;
-        ctx.strokeRect(x,y,w,h);
-        ctx.fillText(`${o.label} ${(o.score*100|0)}%`, x, y-4);
-      }
+    // objects
+    if(result.object?.length){
+      ctx.strokeStyle='#ff5ad6'; ctx.fillStyle='#ff5ad6'; ctx.lineWidth=2; ctx.font='12px ui-monospace';
+      for(const o of result.object){ if(!o.box) continue; const [x,y,w,h]=o.box; ctx.strokeRect(x,y,w,h); ctx.fillText(`${o.label} ${(o.score*100|0)}%`, x, y-4); }
     }
   }
 
-  // Measurements & attributes
-  function computeAttributes(result){
-    const ctxSrc = (()=>{
-      const r = imgEl.getBoundingClientRect();
-      const c = document.createElement('canvas');
-      c.width = Math.round(r.width); c.height = Math.round(r.height);
-      c.getContext('2d').drawImage(imgEl,0,0,c.width,c.height);
-      return c.getContext('2d');
-    })();
+  function avgColor(ctx, box){
+    const [x,y,w,h]=box.map(v=>Math.max(0,Math.round(v)));
+    if (w<2||h<2) return {word:'unknown'};
+    const data=ctx.getImageData(x,y,w,h).data; let r=0,g=0,b=0,n=0;
+    for(let i=0;i<data.length;i+=4){ r+=data[i]; g+=data[i+1]; b+=data[i+2]; n++; }
+    if(!n) return {word:'unknown'};
+    r=Math.round(r/n); g=Math.round(g/n); b=Math.round(b/n);
+    if (r>200 && g>180 && b<140) return {word:'blonde'};
+    if (r<70&&g<70&&b<70) return {word:'black'};
+    if (r>200&&g>200&&b>200) return {word:'pale'};
+    if (g>r && g>b) return {word:'olive'};
+    if (r>g && r>b) return {word:'auburn'};
+    return {word:'tan'};
+  }
 
-    let faceShape='unknown', eyeTilt=0, hairWord='unknown', eyeWord='unknown', skinWord='unknown';
-    let cameraAngle='frontal', lighting='unknown', bgTag='unknown';
-    let breastSize='unknown'; // NSFW later (stub)
-    let B=0,W=0,H=0;
+  function computeAttrs(result){
+    const tmp=document.createElement('canvas');
+    const r=imgEl.getBoundingClientRect(); tmp.width=Math.round(r.width); tmp.height=Math.round(r.height);
+    const cx=tmp.getContext('2d'); cx.drawImage(imgEl,0,0,tmp.width,tmp.height);
 
-    // Face ratios & colors
-    const f = result.face?.[0];
-    if (f?.box){
-      const [x,y,w,h] = f.box;
-      // sample hair above forehead
-      const hair = avgColor(ctxSrc, [x + w*0.2, Math.max(0, y - h*0.2), w*0.6, h*0.15]);
-      // sample skin in cheek area
-      const skin = avgColor(ctxSrc, [x + w*0.3, y + h*0.45, w*0.4, h*0.2]);
-      // sample eyes (approx small box)
-      const eyes = avgColor(ctxSrc, [x + w*0.3, y + h*0.28, w*0.4, h*0.1]);
-
-      hairWord=hair.word; eyeWord=eyes.word; skinWord=skin.word;
+    let faceShape='unknown', eyeTilt=0, hairWord='unknown', eyeWord='unknown', skinWord='unknown', cameraAngle='frontal', lighting='unknown', bgTag='unknown';
+    const f=result.face?.[0];
+    if(f?.box){
+      const [x,y,w,h]=f.box;
+      hairWord=avgColor(cx,[x+w*0.2, Math.max(0,y-h*0.2), w*0.6, h*0.15]).word;
+      skinWord=avgColor(cx,[x+w*0.3, y+h*0.45, w*0.4, h*0.2]).word;
+      eyeWord =avgColor(cx,[x+w*0.35, y+h*0.28, w*0.3, h*0.1]).word;
+      const wh=w/Math.max(1,h); faceShape=wh<0.75?'long':(wh>0.9?'round':'oval');
     }
-    // eye tilt
-    if (f?.annotations?.leftEyeUpper0 && f?.annotations?.rightEyeUpper0){
+    if(f?.annotations?.leftEyeUpper0 && f?.annotations?.rightEyeUpper0){
       const L=f.annotations.leftEyeUpper0[0], R=f.annotations.rightEyeUpper0.slice(-1)[0];
-      eyeTilt = +(Math.atan2((R[1]-L[1]),(R[0]-L[0]))*180/Math.PI).toFixed(1);
+      eyeTilt=+(Math.atan2((R[1]-L[1]),(R[0]-L[0]))*180/Math.PI).toFixed(1);
     }
-    // simple face shape heuristic by width/height
-    if (f?.box){
-      const wh = f.box[2]/Math.max(1,f.box[3]);
-      faceShape = wh<0.75?'long': (wh>0.9?'round':'oval');
+    const objs=result.object||[];
+    if (objs.length){
+      const set=new Set(objs.map(o=>o.label));
+      if (set.has('chair')||set.has('couch')) bgTag='indoor';
+      else if (set.has('car')||set.has('bicycle')) bgTag='street';
+      else bgTag=[...set].slice(0,3).join('/');
     }
-
-    // Body B/W/H via keypoint spans across segmentation alpha (very approximate baseline)
-    const body = result.body?.[0];
-    if (body?.keypoints){
-      const kp = body.keypoints;
-      const shoulderL=kp[5], shoulderR=kp[6];
-      if (shoulderL?.score>0.3 && shoulderR?.score>0.3) B = Math.hypot(shoulderR.x-shoulderL.x, shoulderR.y-shoulderL.y);
-      // mid torso rows for W/H rough (screen space, not physical)
-      // (this is intentionally simple now; we refine with segmentation scanlines later)
-      W = B*0.65; H = B*1.0;
-    }
-
-    // Camera angle via face keypoints (nose vs ears)
-    if (f?.annotations?.midwayBetweenEyes && f?.annotations?.rightEarTragion && f?.annotations?.leftEarTragion){
-      const nose = f.annotations.midwayBetweenEyes[0];
-      const re = f.annotations.rightEarTragion[0];
-      const le = f.annotations.leftEarTragion[0];
-      const dr = Math.hypot(nose[0]-re[0], nose[1]-re[1]);
-      const dl = Math.hypot(nose[0]-le[0], nose[1]-le[1]);
-      cameraAngle = Math.abs(dr-dl) < 15 ? 'frontal' : (dr<dl ? '¾ left' : '¾ right');
-    }
-
-    // Lighting inference stub: histogram mean brightness
+    // quick lighting
     (()=>{
-      const r = imgEl.getBoundingClientRect();
-      const c = document.createElement('canvas'); c.width=Math.round(r.width); c.height=Math.round(r.height);
-      const cx = c.getContext('2d'); cx.drawImage(imgEl,0,0,c.width,c.height);
-      const data = cx.getImageData(0,0,c.width,c.height).data;
-      let lum=0; for(let i=0;i<data.length;i+=4){ lum += (0.2126*data[i] + 0.7152*data[i+1] + 0.0722*data[i+2]); }
+      const data=cx.getImageData(0,0,tmp.width,tmp.height).data; let lum=0;
+      for(let i=0;i<data.length;i+=4){ lum+= (0.2126*data[i]+0.7152*data[i+1]+0.0722*data[i+2]); }
       lum/= (data.length/4);
       lighting = lum>180?'bright studio': lum<60?'low / moody':'natural soft';
     })();
 
-    // Background tag via objects
-    const objs = result.object || [];
-    if (objs.length){
-      const set=new Set(objs.map(o=>o.label));
-      if (set.has('chair')||set.has('couch')) bgTag='indoor';
-      else if (set.has('person') && set.size===1) bgTag='plain';
-      else if (set.has('car')||set.has('bicycle')) bgTag='street';
-      else bgTag=[...set].slice(0,3).join('/');
-    }
-
-    return {
-      faceShape, eyeTilt, hairWord, eyeWord, skinWord,
-      cameraAngle, lighting, bgTag,
-      spans:{ bust:B|0, waist:W|0, hips:H|0 }
-    };
+    return {faceShape,eyeTilt,hairWord,eyeWord,skinWord,cameraAngle,lighting,bgTag};
   }
 
-  function buildPrompts(attr, result){
-    const sfw = [
-      'portrait photo',
-      `${attr.faceShape} face`,
-      `eye tilt ${attr.eyeTilt}°`,
-      `${attr.hairWord} hair, ${attr.eyeWord} eyes, ${attr.skinWord} skin`,
-      `${attr.cameraAngle}, ${attr.lighting}, ${attr.bgTag}`,
-      'photorealistic, sharp micro-detail, minimal distortion'
-    ].join(', ');
-
-    const negative = 'lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face';
-
-    // nsfw stub stays empty for now
-    return { sfw, nsfw:'', negative };
+  function buildPrompts(attr){
+    const sfw=['portrait photo',`${attr.faceShape} face`,`eye tilt ${attr.eyeTilt}°`,
+               `${attr.hairWord} hair, ${attr.eyeWord} eyes, ${attr.skinWord} skin`,
+               `${attr.cameraAngle}, ${attr.lighting}, ${attr.bgTag}`,
+               'photorealistic, sharp micro-detail, minimal distortion'].join(', ');
+    const negative='lowres, bad anatomy, extra limbs, deformed hands, oversharpen, cartoonish, unrealistic skin, fused features, duplicate face';
+    return {sfw,negative};
   }
 
-  function exportJSONv4(attr, result){
-    const r = imgEl.getBoundingClientRect();
-    const j = {
-      version: 'pf_imageintel_v4',
-      image: { w: Math.round(r.width), h: Math.round(r.height),
-               natural: { w: imgEl.naturalWidth, h: imgEl.naturalHeight } },
-      face: {
-        shape: attr.faceShape,
-        ratios: { jaw_face: null, cheek_face: null, forehead_face: null }, // TODO refine
-        angles: { eye_tilt_deg: attr.eyeTilt },
-        features: { eyes: 'unknown', nose: 'unknown', lips: 'unknown' },   // TODO classify
-        palette: {
-          hair_hex: null, hair_word: attr.hairWord,
-          eyes_hex: null, eyes_word: attr.eyeWord,
-          skin_hex: null, skin_word: attr.skinWord
-        }
-      },
-      body: {
-        spans_px: { shoulders: attr.spans.bust, bust: attr.spans.bust, waist: attr.spans.waist, hips: attr.spans.hips },
-        ratios: { bust_waist: attr.spans.waist? +(attr.spans.bust/attr.spans.waist).toFixed(2): null,
-                  waist_hips: attr.spans.hips? +(attr.spans.waist/attr.spans.hips).toFixed(2): null }
-      },
-      nsfw: { enabled: false },
-      scene: { bgTag: attr.bgTag, lighting: attr.lighting, camera_angle: attr.cameraAngle },
-      cloud: { clip_hint: null, objects: (result.object||[]).map(o=>({ label:o.label, score:+o.score.toFixed(2) })) },
-      prompts: buildPrompts(attr, result)
-    };
-    return j;
-  }
-
-  async function analyze(){
-    if (!imgEl.naturalWidth){ tlog('load an image first', 't-warn'); return; }
-    fitCanvas();
-
-    const t0 = performance.now();
-    const result = await human.detect(imgEl); // universal input, Human handles it
-    const t1 = performance.now();
-
-    tlog(`detect: ${(t1-t0|0)}ms faces:${result.face?.length||0} body:${result.body?.length||0} objs:${result.object?.length||0} seg:${result.segmentation? '1':'0'}`,'t-good');
-
+  $('#btnAnalyze').addEventListener('click', async ()=>{
+    if(!imgEl.naturalWidth){ log('load an image first','warn'); return; }
+    const ok = await ensureHuman(); if(!ok) return;
+    const t0=performance.now();
+    const result=await human.detect(imgEl);
+    log(`detect ${(performance.now()-t0|0)}ms faces:${result.face?.length||0} body:${result.body?.length||0} objs:${result.object?.length||0} seg:${result.segmentation?'1':'0'}`);
     drawOverlay(result);
-    const attr = computeAttributes(result);
-    const prompts = buildPrompts(attr, result);
-    const j = exportJSONv4(attr, result);
-
-    $('#pPrompt').textContent =
-      `SFW (Replica)\n${prompts.sfw}\n\nNegative\n${prompts.negative}`;
-
-    $('#pJSON').textContent = JSON.stringify(j, null, 2);
-  }
-
-  // Tabs
-  document.querySelectorAll('.tab').forEach(tab=>{
-    tab.addEventListener('click', ()=>{
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-      tab.classList.add('active'); $('#'+tab.dataset.panel).classList.add('active');
-    });
+    const a=computeAttrs(result); const p=buildPrompts(a);
+    const outP=$('#outPrompt'), outJ=$('#outJSON');
+    outP.style.display='block'; outJ.style.display='block';
+    outP.textContent=`SFW (Replica)\n${p.sfw}\n\nNegative\n${p.negative}`;
+    const j={version:'pf_imageintel_v4', image:{natural:{w:imgEl.naturalWidth,h:imgEl.naturalHeight}},
+             face:{shape:a.faceShape,angles:{eye_tilt_deg:a.eyeTilt},palette:{hair_word:a.hairWord,eyes_word:a.eyeWord,skin_word:a.skinWord}},
+             scene:{bgTag:a.bgTag,lighting:a.lighting,camera_angle:a.cameraAngle}};
+    outJ.textContent=JSON.stringify(j,null,2);
   });
 
-  // Hook analyze
-  $('#btnAnalyze').addEventListener('click', analyze);
+  $('#btnClear').addEventListener('click', ()=>{
+    cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
+    $('#outPrompt').style.display='none'; $('#outJSON').style.display='none';
+  });
 
+  // boot note
+  if (window.Human){ $('#kEng').textContent='Human (pending init)'; } else { $('#kEng').textContent='not loaded'; }
+  log('Ready. Step 1: choose an image. Step 2: Self-Test. Step 3: Analyze.');
 })();
 </script>
 </body>
