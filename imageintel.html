@@ -1,57 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ImageIntel — Smoke Test A (inline JS + file load)</title>
-  <style>
-    body{font-family:system-ui,Segoe UI,Roboto,Arial;background:#0c1016;color:#e9f3ff;margin:0;padding:16px}
-    .row{display:grid;gap:12px;grid-template-columns:1fr 1fr}
-    .card{background:#101723;border:1px solid #1a2331;border-radius:12px;padding:12px}
-    img{max-width:100%;height:auto;display:block;background:#0b1522;border-radius:8px}
-    pre{background:#0a1220;border:1px solid #1f2a3d;border-radius:8px;padding:10px;min-height:120px;white-space:pre-wrap}
-    button,input{background:#162233;color:#cfe7ff;border:1px solid #233146;border-radius:10px;padding:.6rem .9rem;font-weight:700}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>ImageIntel Pro — Face Baseline (v12.5)</title>
+<meta name="theme-color" content="#0c1016"/>
+<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+<link rel="preconnect" href="https://storage.googleapis.com"/>
+<style>
+  :root{ --bg:#0c1016;--panel:#101723;--ink:#e9f3ff;--edge:#1a2331;--aqua:#67f0e1;--vio:#a98eff;--hot:#ff6ea8 }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  .bar{position:sticky;top:0;z-index:50;background:#0c1016cc;border-bottom:1px solid #152131;backdrop-filter:saturate(1.2) blur(8px)}
+  .inner{max-width:1100px;margin:0 auto;padding:.75rem 1rem;display:flex;gap:.5rem;align-items:center}
+  .badge{font-size:.75rem;border:1px solid var(--vio);color:var(--vio);padding:.1rem .5rem;border-radius:.5rem}
+  .wrap{max-width:1100px;margin:0 auto;padding:1rem;display:grid;gap:12px}
+  .card{background:#101723;border:1px solid #1a2331;border-radius:14px;overflow:hidden}
+  .card>header{padding:.6rem .8rem;border-bottom:1px solid #1a2331;background:linear-gradient(180deg,#0f1624,#0e1622)}
+  .row{display:grid;gap:12px}
+  @media(min-width:900px){.row{grid-template-columns:1fr 1fr}}
+  .controls{display:flex;flex-wrap:wrap;gap:.5rem;padding:.7rem}
+  .btn{background:#162233;border:1px solid #233146;color:#cfe7ff;border-radius:10px;padding:.65rem .95rem;font-weight:700;cursor:pointer}
+  .btn.hot{border-color:var(--hot);color:#fff;box-shadow:0 0 0 2px #ff6ea81f inset}
+  .stage{position:relative;aspect-ratio:1/1;background:#0b1522}
+  .stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+  canvas{position:absolute;inset:0}
+  textarea,pre{width:100%;min-height:140px;background:#0a1220;border:1px solid #1f2a3d;border-radius:10px;color:#cfe7ff;font-family:ui-monospace,monospace;padding:.8rem;line-height:1.4}
+</style>
 </head>
 <body>
-  <h1>Smoke Test A <span style="font-size:.8rem;border:1px solid #a98eff;color:#a98eff;padding:.1rem .4rem;border-radius:.4rem">v0</span></h1>
-  <p>If you see “JS running ✓” below and you can load a local image into the preview, then inline JS is allowed here.
-     If not, your CSP is blocking scripts and that’s why the big page does nothing.</p>
-
-  <div class="row">
-    <div class="card">
-      <h3>1) Pick a local image</h3>
-      <input type="file" id="file" accept="image/*;capture=camera" />
-      <p id="meta">No image</p>
-      <img id="preview" alt="preview will appear here" />
+  <div class="bar"><div class="inner">
+    <h1 style="font-size:1rem">ImageIntel Pro — <span class="badge">v12.5 Face Baseline</span></h1>
+    <div style="margin-left:auto;display:flex;gap:.5rem">
+      <button id="btnInit" class="btn">Init Face Models</button>
+      <span id="initState" style="align-self:center;opacity:.8">Not started</span>
+      <button id="btnAnalyze" class="btn hot" disabled>Analyze</button>
     </div>
+  </div></div>
+
+  <div class="wrap">
     <div class="card">
-      <h3>2) Diagnostics</h3>
-      <pre id="diag"></pre>
-      <button id="copy">Copy Diag</button>
+      <header><strong>Step 1 · Load image</strong></header>
+      <div class="controls">
+        <button id="btnPick" class="btn">Load image…</button>
+        <input id="file" type="file" accept="image/*;capture=camera" style="display:none" />
+        <button id="btnDemo" class="btn">Use Demo Photo</button>
+        <input id="urlIn" class="btn" placeholder="Paste image URL" style="min-width:260px" />
+        <button id="btnLoadUrl" class="btn">Load URL</button>
+        <span id="imgInfo" style="opacity:.8">No image</span>
+      </div>
+      <div class="row" style="padding:.7rem">
+        <div class="card" style="grid-column:1/-1">
+          <header><strong>Face (468) · MediaPipe tessellation</strong></header>
+          <div class="stage">
+            <img id="imgFace" alt="" />
+            <canvas id="cvFace" aria-label="face overlay"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <header><strong>Diagnostics</strong></header>
+      <div style="padding:.7rem">
+        <pre id="diag"></pre>
+        <div class="controls" style="justify-content:flex-end"><button id="copyDiag" class="btn">Copy Diag</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <header><strong>Prompt (SFW baseline)</strong></header>
+      <div style="padding:.7rem"><textarea id="outPrompt"></textarea></div>
     </div>
   </div>
 
-  <!-- Inline JS on purpose (to test CSP) -->
-  <script>
-    const log = (m)=>{ const d=document.getElementById('diag'); d.textContent += (d.textContent?'\n':'') + m; };
-    log('JS running ✓'); // <— If you do NOT see this, scripts are blocked by CSP.
+<script>
+  // ===== helpers =====
+  const $=s=>document.querySelector(s); const log=m=>{ const d=$('#diag'); d.textContent+=(d.textContent?'\n':'')+m; };
+  function sizeCanvas(cv){ const dpr=window.devicePixelRatio||1; const r=cv.parentElement.getBoundingClientRect(); cv.width=Math.max(1,Math.floor(r.width*dpr)); cv.height=Math.max(1,Math.floor(r.height*dpr)); const ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return ctx; }
+  function show(img){ ['imgFace'].forEach(id=>{ const tag=document.getElementById(id); tag.src=img.src; tag.style.objectFit='contain'; }); $('#imgInfo').textContent=`${img.naturalWidth}×${img.naturalHeight}`; }
+  window.addEventListener('resize',()=>{ sizeCanvas($('#cvFace')); if(window.__last) drawFace(window.__last); });
 
-    // Minimal loader (no external URLs, no CORS): just show a local file
-    document.getElementById('file').addEventListener('change', e=>{
-      const f = e.target.files && e.target.files[0];
-      if(!f){ log('No file'); return; }
-      const url = URL.createObjectURL(f);
-      const img = document.getElementById('preview');
-      img.onload = ()=>{ document.getElementById('meta').textContent = `${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; log('Loaded local file ✓'); };
-      img.onerror = ()=>{ log('Image failed to load'); };
-      img.src = url;
-    });
+  // ===== image loaders =====
+  $('#btnPick').onclick=()=>$('#file').click();
+  $('#file').onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f){log('No file');return;} const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{ show(img); log('Loaded local file ✓'); }; img.onerror=()=>log('Local file load error'); img.src=url; };
+  const DEMO='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1024&auto=format&fit=crop';
+  $('#btnDemo').onclick=()=> loadFromUrl(DEMO);
+  $('#btnLoadUrl').onclick=()=> loadFromUrl($('#urlIn').value);
+  async function loadFromUrl(u){ const url=String(u||'').trim(); if(!url){log('Empty URL');return;} try{ const r=await fetch(url,{mode:'cors'}); if(!r.ok) throw new Error('HTTP '+r.status); const b=await r.blob(); const o=URL.createObjectURL(b); const img=new Image(); img.onload=()=>{ show(img); log('Loaded URL via blob ✓'); }; img.onerror=()=>{ log('Blob URL failed; trying direct'); direct(url); }; img.src=o; }catch(e){ log('Fetch failed: '+e.message); direct(url); } }
+  function direct(url){ const img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{ show(img); log('Loaded direct URL ✓'); }; img.onerror=()=>{ log('Direct URL failed: '+url); }; img.src=url; }
 
-    document.getElementById('copy').onclick = async ()=>{
-      try { await navigator.clipboard.writeText(document.getElementById('diag').textContent||''); log('Diag copied'); }
-      catch(e){ log('Clipboard failed: '+e.message); }
-    };
-  </script>
+  // ===== mediapipe tasks (face only) =====
+  let FaceLandmarker, FilesetResolver, faceTask, fileset;
+  async function loadVision(){
+    const srcs=[
+      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js',
+      'https://unpkg.com/@mediapipe/tasks-vision@0.10.7/vision_bundle.js',
+      '/vendor/mediapipe/vision_bundle.js'
+    ];
+    for(const s of srcs){
+      try{ log('Loading vision bundle: '+s); await new Promise((res,rej)=>{ const t=document.createElement('script'); t.src=s; t.async=true; t.onload=res; t.onerror=()=>rej(new Error('script load failed')); document.head.appendChild(t); }); if(window.vision){ ({FaceLandmarker, FilesetResolver}=window.vision); log('Vision bundle ✓'); return true; } else { log('Loaded but window.vision missing'); } }catch(e){ log('Bundle failed: '+e.message); }
+    }
+    return false;
+  }
+
+  async function initFace(){
+    $('#initState').textContent='Initializing…';
+    try{
+      if(!(await loadVision())){ $('#initState').textContent='Failed (bundle)'; return; }
+      fileset = await FilesetResolver.forVisionTasks({ baseUrl:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' });
+      log('FilesetResolver ✓');
+      faceTask = await FaceLandmarker.createFromOptions(fileset,{
+        baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' },
+        runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true
+      });
+      log('FaceLandmarker ✓'); $('#btnAnalyze').disabled=false; $('#initState').textContent='Ready';
+    }catch(e){ log('Init error: '+e.message); $('#initState').textContent='Failed'; }
+  }
+  $('#btnInit').onclick=()=>{ $('#diag').textContent=''; initFace(); };
+
+  function drawFace(res){ const cv=$('#cvFace'); const ctx=sizeCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!res?.faceLandmarks?.length){ return; }
+    const lm=res.faceLandmarks[0]; const W=cv.clientWidth, H=cv.clientHeight; ctx.save(); ctx.lineJoin='round'; ctx.lineCap='round'; ctx.shadowColor='rgba(103,240,225,.7)'; ctx.shadowBlur=10; ctx.strokeStyle='#67f0e1'; ctx.lineWidth=1.4;
+    if(FaceLandmarker && FaceLandmarker.FACE_LANDMARKS_TESSELATION){
+      FaceLandmarker.FACE_LANDMARKS_TESSELATION.forEach(seg=>{ ctx.beginPath(); seg.forEach((i,j)=>{ const p=lm[i]; const x=p.x*W, y=p.y*H; if(j===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke(); });
+    } else {
+      for(let i=0;i<lm.length;i+=3){ const p=lm[i]; ctx.beginPath(); ctx.arc(p.x*W,p.y*H,1.6,0,Math.PI*2); ctx.fillStyle='#a98eff'; ctx.fill(); }
+    }
+    ctx.restore();
+  }
+
+  $('#btnAnalyze').onclick=()=>{
+    try{
+      const img=$('#imgFace'); if(!img.src){ log('Analyze blocked: load an image first'); return; }
+      const res = faceTask.detect(img);
+      drawFace(res);
+      // simple prompt sample
+      const lm=res.faceLandmarks?.[0]; if(lm){ const L=lm[33], R=lm[263]; const deg=(Math.atan2(R.y-L.y,R.x-L.x)*180/Math.PI+360)%180; $('#outPrompt').value=`portrait photo, face mesh detected (468), eye tilt ${deg.toFixed(1)}°, photorealistic, sharp micro‑detail`; }
+      log('Analyze ✓');
+    }catch(e){ log('Analyze error: '+e.message); }
+  };
+
+  // boot
+  window.addEventListener('load',()=>{ sizeCanvas($('#cvFace')); log('UI ready'); });
+  window.addEventListener('error',e=>{ log('JS error: '+e.message) });
+  window.addEventListener('unhandledrejection',e=>{ log('Promise reject: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason))) });
+</script>
 </body>
 </html>
