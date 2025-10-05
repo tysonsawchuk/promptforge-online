@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ImageIntel Pro — Online Tasks Demo (v12.2)</title>
+<title>ImageIntel Pro — Online Tasks Demo (v12.3)</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
 <link rel="preconnect" href="https://storage.googleapis.com"/>
 <meta name="theme-color" content="#0c1016"/>
@@ -12,7 +12,6 @@
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
   h1,h2,h3{margin:0 0 .5rem 0;font-weight:700}
-  a{color:var(--aqua)}
   .bar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0c1016 0%,rgba(12,16,22,.85) 100%);backdrop-filter:saturate(1.3) blur(8px);border-bottom:1px solid #152131}
   .bar-inner{max-width:1400px;margin:0 auto;padding:.75rem 1rem;display:flex;gap:.75rem;align-items:center}
   .badge{font-size:.75rem;border:1px solid var(--vio);color:var(--vio);padding:.15rem .45rem;border-radius:.5rem}
@@ -28,9 +27,11 @@
   .stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
   .canvas{position:absolute;inset:0}
   .controls{display:flex;flex-wrap:wrap;gap:.5rem}
-  .btn{background:#162233;border:1px solid #233146;color:#cfe7ff;border-radius:10px;padding:.55rem .8rem;font-weight:600;cursor:pointer}
+  .btn{background:#162233;border:1px solid #233146;color:#cfe7ff;border-radius:10px;padding:.65rem .95rem;font-weight:700;cursor:pointer}
+  .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px #0da5b055 inset}
   .btn.hot{border-color:var(--hot);color:#fff;background:linear-gradient(180deg,#2b1421,#1a0f16)}
   .btn:disabled{opacity:.5;cursor:not-allowed}
+  .hint{font-size:.82rem;color:#bcd}
   .segLegend{position:absolute;right:8px;bottom:8px;font-size:.72rem;background:#0c1016cc;padding:.3rem .5rem;border:1px solid #2a3a4f;border-radius:.5rem}
   .tabs{display:flex;gap:2px;margin-top:10px}
   .tab{flex:1;background:#0e1622;border:1px solid #24334a;padding:.6rem .8rem;border-radius:10px 10px 0 0;text-align:center;color:#b7d0ea;font-weight:700;cursor:pointer}
@@ -46,14 +47,15 @@
   .copy{position:absolute;right:.6rem;top:.6rem;z-index:4}
   .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#111c2d;color:#fff;border:1px solid #27405a;padding:.6rem 1rem;border-radius:999px;font-weight:700;box-shadow:0 8px 18px rgba(0,0,0,.35);opacity:0;transition:opacity .2s, transform .2s}
   .toast.show{opacity:1;transform:translate(-50%,-6px)}
+  .drop{position:absolute;inset:0;border:2px dashed #2b3a4f;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#bcd;opacity:.9;pointer-events:none}
+  .drop.show{border-color:#67f0e1;color:#eafffb}
 </style>
 </head>
 <body>
   <div class="bar">
     <div class="bar-inner">
-      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.2 Online Beta</span></h1>
+      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.3 Online Beta</span></h1>
       <div style="margin-left:auto;display:flex;gap:.5rem">
-        <button id="btnInstall" class="btn" disabled>Install (PWA)</button>
         <button id="btnSelfTest" class="btn">Self‑Test</button>
         <button id="btnAnalyze" class="btn hot">Analyze Image</button>
         <button id="btnClear" class="btn">Clear</button>
@@ -68,7 +70,8 @@
       </header>
       <div class="grid2" style="padding:10px">
         <div class="controls">
-          <input type="file" id="file" accept="image/*;capture=camera" class="btn" />
+          <button id="btnPrimaryLoad" class="btn primary">Load image…</button>
+          <input type="file" id="file" accept="image/*;capture=camera" style="display:none" />
           <button id="btnDemo" class="btn">Use Demo Photo</button>
           <input id="urlIn" placeholder="Paste image URL" class="btn" style="min-width:280px" />
           <button id="btnLoadUrl" class="btn">Load URL</button>
@@ -83,6 +86,7 @@
             <input type="checkbox" id="cbSeg" checked/> Segments
             <input type="checkbox" id="cbObj" checked/> Objects
           </label>
+          <div class="hint">Tip: If a URL fails (CORS), use the Demo or choose a local file.</div>
         </div>
       </div>
     </div>
@@ -91,7 +95,7 @@
       <section class="card">
         <header><h3>Face (468) — neon mesh</h3><button class="btn copy" data-copy="face">Copy PNG</button></header>
         <div class="stage" id="stageFace" data-drop>
-          <div class="pill" style="position:absolute;inset:auto auto 8px 8px;opacity:.8">Drop image here</div>
+          <div class="drop" id="dropFace">Drop image here</div>
           <img id="imgFace" alt=""/>
           <canvas class="canvas" id="cvFace" aria-label="face overlay"></canvas>
         </div>
@@ -99,6 +103,7 @@
       <section class="card">
         <header><h3>Pose (33) — skeleton + labels</h3><button class="btn copy" data-copy="pose">Copy PNG</button></header>
         <div class="stage" id="stagePose" data-drop>
+          <div class="drop" id="dropPose">Drop image here</div>
           <img id="imgPose" alt=""/>
           <canvas class="canvas" id="cvPose" aria-label="pose overlay"></canvas>
         </div>
@@ -106,6 +111,7 @@
       <section class="card">
         <header><h3>Segments — person mask + scanlines</h3><button class="btn copy" data-copy="seg">Copy PNG</button></header>
         <div class="stage" id="stageSeg" data-drop>
+          <div class="drop" id="dropSeg">Drop image here</div>
           <img id="imgSeg" alt=""/>
           <canvas class="canvas" id="cvSeg" aria-label="segmentation overlay"></canvas>
           <div class="segLegend" id="segLegend">—</div>
@@ -114,6 +120,7 @@
       <section class="card">
         <header><h3>Objects — boxes + scores</h3><button class="btn copy" data-copy="obj">Copy PNG</button></header>
         <div class="stage" id="stageObj" data-drop>
+          <div class="drop" id="dropObj">Drop image here</div>
           <img id="imgObj" alt=""/>
           <canvas class="canvas" id="cvObj" aria-label="object overlay"></canvas>
         </div>
@@ -152,114 +159,76 @@
   <!-- MediaPipe Tasks (online) -->
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js"></script>
   <script>
-  // ======= PWA (manifest + SW guarded) =======
-  (function(){
-    let deferred; const installBtn=document.getElementById('btnInstall');
-    window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferred=e; installBtn.disabled=false;});
-    installBtn.onclick=()=> deferred && deferred.prompt();
-
-    // Manifest (ok to use blob for manifest)
-    const manifest={ name:"ImageIntel Pro", short_name:"ImageIntel", display:"standalone", background_color:"#0c1016", theme_color:"#0c1016", icons:[{src:"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%230c1016'/><path d='M20 70 L45 30 L60 55 L70 45 L80 60' stroke='%2367f0e1' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>", sizes:"100x100", type:"image/svg+xml"}]};
-    const blob=new Blob([JSON.stringify(manifest)],{type:'application/json'}); const url=URL.createObjectURL(blob); const link=document.createElement('link'); link.rel='manifest'; link.href=url; document.head.appendChild(link);
-
-    // Service worker — ONLY register from http/https (or localhost) AND only from a real file path
-    const SW_PATH='service-worker.js';
-    async function tryRegisterSW(){
-      if(!('serviceWorker' in navigator)) return diagAdd('SW: not supported in this browser');
-      const secure = location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1';
-      if(!secure){ diagAdd('SW: skipped (insecure origin '+location.protocol+')'); return; }
-      try{
-        const head = await fetch(SW_PATH,{method:'HEAD'}); // requires that you deploy a real file at this path
-        if(!head.ok){ diagAdd('SW: skipped (missing \''+SW_PATH+'\' on server)'); return; }
-        await navigator.serviceWorker.register(SW_PATH);
-        diagAdd('SW: registered from '+SW_PATH);
-      }catch(err){ diagAdd('SW: failed '+(err&&err.message?err.message:err)); }
-    }
-    // Defer SW registration to idle so it never blocks
-    if(document.readyState==='complete') setTimeout(tryRegisterSW,0); else window.addEventListener('load',()=>{ els('.canvas').forEach(setupDprCanvas); diagAdd('UI ready'); });
-
-  // Drag & Drop support on any stage
-  els('[data-drop]').forEach(stage=>{
-    stage.addEventListener('dragover',e=>{e.preventDefault(); stage.style.outline='2px dashed #67f0e1';});
-    stage.addEventListener('dragleave',()=>{stage.style.outline='';});
-    stage.addEventListener('drop',e=>{ e.preventDefault(); stage.style.outline=''; const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImageToAllStages(img); imgInfo.textContent=`${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.src=url; });
-  });
-  })();
-
-  // ======= Helpers =======
+  // ======= Helpers & state =======
   const el = s=>document.querySelector(s); const els = s=>[...document.querySelectorAll(s)];
   const toast=msg=>{const t=el('#toast'); t.textContent=msg||'Copied'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200)}
   const copyText=t=>{navigator.clipboard.writeText(t||''); toast('Copied');}
+  function diagAdd(msg){ const box=el('#outDiag'); box.textContent += (box.textContent?"\n":"") + msg; }
+
+  // Strong loader with fallbacks: File -> fetch(url)->blob -> direct URL -> embedded demo
+  const DEMO_URL = 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1200&auto=format&fit=crop';
+  // lightweight base64 (tiny image) — only used if everything else fails, just to prove rendering path
+  const DEMO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAABkCAYAAAB2cvZFAAAACXBIWXMAAAsSAAALEgHS3X78AAAB7ElEQVR4nO3ZwQ3CMBAF0eZb4o6p0qv4x1Y0e1Dq1cW3sS9H2qg4kQO7zP1u0c1g5kR1t3A8g0E0klyjH5w+v04bq0w9f7o/0sH2y7jWwCq8z8Zz3Q2j0b7G7eJ4o9oYB1M0d4m8u8F5h1nYH6Q8D0wYp3cQ4jvCw1gH5bZ2Gqv0eX4H0v4b7G0g3zVf5g4J4Jr/2wDgWk7KQ2cZUp3d1O9qgQb8f3s7Qw3b3m7IYH3QbZ3m4gYb2kZB1m2qYw1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY9v8w7v3fKk7+7v9Y7P8b1f4f8f9f4G5QeZJ8n3e7w7w+v+0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZz2x7A0QG5v8E5zj1sJ6vXcR6v0d3+f3zM1B7k5bF3AAAAAElFTkSuQmCC';
+
   function fitImageToAllStages(img){ ['Face','Pose','Seg','Obj'].forEach(k=>{const tag=document.getElementById('img'+k); tag.src = img.src; tag.style.objectFit='contain';}); }
   function setupDprCanvas(canvas){ const parent=canvas.parentElement; const dpr=window.devicePixelRatio||1; const {width,height}=parent.getBoundingClientRect(); canvas.width=Math.max(1,Math.floor(width*dpr)); canvas.height=Math.max(1,Math.floor(height*dpr)); const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return ctx; }
   window.addEventListener('resize',()=>{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>{const c=document.getElementById(id); if(!c) return; setupDprCanvas(c); }); if(window.__lastDetections) drawAll(window.__lastDetections,true); });
 
-  // ======= Tab logic =======
-  els('.tab').forEach(t=>t.onclick=()=>{ els('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active'); els('[id^=panel-]').forEach(p=>p.hidden=true); el('#panel-'+t.dataset.tab).hidden=false; });
+  // Primary load flow
+  el('#btnPrimaryLoad').onclick=()=> el('#file').click();
+  el('#file').onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f){ toast('No file'); return; } const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.onerror=()=>{toast('File load error'); diagAdd('File load error for '+(f&&f.name));}; img.src=url; };
 
-  // ======= Inputs =======
-  const imgInfo=el('#imgInfo');
-  el('#detail').oninput=e=> el('#detailVal').textContent=parseFloat(e.target.value).toFixed(2);
-  el('#accuracy').oninput=e=> el('#accVal').textContent=parseFloat(e.target.value).toFixed(2);
-  el('#file').onchange=async e=>{const f=e.target.files&&e.target.files[0]; if(!f){ toast('No file'); return; }
-    const url=URL.createObjectURL(f); const img=new Image();
-    img.onload=()=>{fitImageToAllStages(img); imgInfo.textContent=`${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded'); };
-    img.onerror=()=>{ toast('File could not load'); diagAdd('File load error for '+(f&&f.name)); };
-    img.src=url; };
-    img.onload=()=>{fitImageToAllStages(img); imgInfo.textContent=`${new URL(u).hostname} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded'); };
-    img.onerror=()=>{ toast('Image load failed (CORS or URL)'); diagAdd('Image load failed for '+u); };
-    img.src=u;
+  async function loadFromUrlSmart(u){
+    const url=u.trim(); if(!url){ toast('Empty URL'); return; }
+    // Try fetch->blob (works around many CORS cases when server allows), then fall back to direct src
+    try{
+      const res = await fetch(url,{mode:'cors'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      const blob = await res.blob();
+      const obj  = URL.createObjectURL(blob);
+      const img  = new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${new URL(url).hostname} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.onerror=()=>{diagAdd('Blob URL failed, try direct'); loadFromUrlDirect(url);}; img.src=obj; return;
+    }catch(err){ diagAdd('Fetch CORS/HTTP failed: '+(err&&err.message?err.message:err)); }
+    loadFromUrlDirect(url);
   }
-  el('#btnLoadUrl').onclick=()=> loadFromUrl(el('#urlIn').value);
-  el('#urlIn').addEventListener('keydown',e=>{ if(e.key==='Enter') loadFromUrl(e.target.value); });
-  el('#btnDemo').onclick=()=>{ const url='https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1200&auto=format&fit=crop'; const img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{fitImageToAllStages(img); imgInfo.textContent=`Demo — ${img.naturalWidth}×${img.naturalHeight}`}; img.src=url; };
+  function loadFromUrlDirect(url){
+    const img=new Image(); img.crossOrigin='anonymous';
+    img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${new URL(url).hostname} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded'); };
+    img.onerror=()=>{ diagAdd('Direct URL failed: '+url); toast('URL failed — using embedded demo'); loadEmbeddedDemo(); };
+    img.src=url;
+  }
+  function loadEmbeddedDemo(){ const img=new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`Embedded demo — ${img.naturalWidth}×${img.naturalHeight}`; toast('Embedded demo shown'); }; img.src=DEMO_B64; }
 
-  // ======= Diagnostics helpers =======
-  function diagAdd(msg){ const box=el('#outDiag'); box.textContent += (box.textContent?"\n":"") + msg; }
+  el('#btnLoadUrl').onclick=()=> loadFromUrlSmart(el('#urlIn').value);
+  el('#btnDemo').onclick=()=> loadFromUrlSmart(DEMO_URL);
+
+  // Drag & Drop
+  els('[data-drop]').forEach(stage=>{
+    const overlay=stage.querySelector('.drop');
+    stage.addEventListener('dragover',e=>{e.preventDefault(); overlay.classList.add('show');});
+    stage.addEventListener('dragleave',()=>overlay.classList.remove('show'));
+    stage.addEventListener('drop',e=>{ e.preventDefault(); overlay.classList.remove('show'); const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.src=url; });
+  });
 
   // ======= MediaPipe Tasks setup (ONLINE) =======
-  const visionNS = window.vision || {};
-  const { FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = visionNS;
+  const { FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = window.vision || {};
   let faceTask, poseTask, segTask, objTask, fileset;
-
-  async function ensureTasks(){
-    if(fileset) return; if(!FilesetResolver){ diagAdd('Vision bundle not ready'); throw new Error('vision bundle missing'); }
-    fileset = await FilesetResolver.forVisionTasks({ baseUrl: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' });
-    diagAdd('FilesetResolver online');
-  }
-  async function loadEngines(){
-    await ensureTasks(); const runningMode='IMAGE';
+  async function ensureTasks(){ if(fileset) return; if(!FilesetResolver) throw new Error('vision bundle missing'); fileset = await FilesetResolver.forVisionTasks({ baseUrl: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' }); diagAdd('FilesetResolver online'); }
+  async function loadEngines(){ await ensureTasks(); const runningMode='IMAGE';
     faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode, numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true});
     poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode, numPoses:1});
     segTask  = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode, outputCategoryMask:true});
     objTask  = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite'}, runningMode, scoreThreshold:0.4, maxResults:8 });
-    diagAdd('Tasks ready (face/pose/seg/obj)');
-  }
+    diagAdd('Tasks ready (face/pose/seg/obj)'); }
 
-  // ======= Draw utils =======
+  // ======= Draw utils (unchanged visuals) =======
   function circle(ctx,x,y,r,stroke,fill){ ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); if(fill){ctx.fillStyle=fill; ctx.fill()} ctx.lineWidth=2; ctx.strokeStyle=stroke; ctx.stroke(); }
   function line(ctx,a,b,stroke, width){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle=stroke; ctx.lineWidth=width||2; ctx.stroke(); }
   function text(ctx,str,x,y,color){ ctx.fillStyle=color; ctx.font='600 12px ui-monospace,monospace'; ctx.fillText(str,x+4,y-4); }
-  function drawFace(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections || !detections.faceLandmarks?.length) return; const lm=detections.faceLandmarks[0];
-    ctx.save(); ctx.lineJoin='round'; ctx.lineCap='round';
-    const idx=[[10,338,297,332,284,251,389,356,454,323,361,288,397,365,379,378,400,377,152,148,176,149,150,136,172,58,132,93,234,127,162,21,54,103,67,109,10]];
-    ctx.shadowColor='rgba(103,240,225,.7)'; ctx.shadowBlur=8; ctx.strokeStyle='#67f0e1'; ctx.lineWidth=2;
-    idx.forEach(arr=>{ ctx.beginPath(); arr.forEach((i,j)=>{ const p=lm[i]; if(j===0) ctx.moveTo(p.x*cv.clientWidth, p.y*cv.clientHeight); else ctx.lineTo(p.x*cv.clientWidth, p.y*cv.clientHeight);}); ctx.stroke();});
-    ctx.shadowBlur=18; ctx.fillStyle='rgba(169,142,255,.9)';
-    for(let i=0;i<lm.length;i+=3){ const p=lm[i]; circle(ctx,p.x*cv.clientWidth,p.y*cv.clientHeight,1.8,'rgba(255,110,168,.8)','rgba(169,142,255,.9)'); }
-    ctx.restore();
-  }
-  function drawPose(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections?.poseLandmarks?.length) return; const lm=detections.poseLandmarks[0]; const J=(i)=>({x:lm[i].x*cv.clientWidth,y:lm[i].y*cv.clientHeight});
-    const bones=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]];
-    ctx.lineCap='round'; ctx.lineJoin='round'; bones.forEach(([a,b])=> line(ctx,J(a),J(b),'#67f0e1',3));
-    [11,12,13,14,15,16,23,24,25,26,27,28].forEach(i=>{ const p=J(i); circle(ctx,p.x,p.y,3,'#ff6ea8','#a98eff'); });
-    const labels={11:'L-Shoulder',12:'R-Shoulder',23:'L-Hip',24:'R-Hip'}; Object.entries(labels).forEach(([i,name])=>{const p=J(+i); text(ctx,name,p.x,p.y,'#cfe7ff')});
-  }
+  function drawFace(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections || !detections.faceLandmarks?.length) return; const lm=detections.faceLandmarks[0]; ctx.save(); ctx.lineJoin='round'; ctx.lineCap='round'; const idx=[[10,338,297,332,284,251,389,356,454,323,361,288,397,365,379,378,400,377,152,148,176,149,150,136,172,58,132,93,234,127,162,21,54,103,67,109,10]]; ctx.shadowColor='rgba(103,240,225,.7)'; ctx.shadowBlur=8; ctx.strokeStyle='#67f0e1'; ctx.lineWidth=2; idx.forEach(arr=>{ ctx.beginPath(); arr.forEach((i,j)=>{ const p=lm[i]; if(j===0) ctx.moveTo(p.x*cv.clientWidth, p.y*cv.clientHeight); else ctx.lineTo(p.x*cv.clientWidth, p.y*cv.clientHeight);}); ctx.stroke();}); ctx.shadowBlur=18; ctx.fillStyle='rgba(169,142,255,.9)'; for(let i=0;i<lm.length;i+=3){ const p=lm[i]; circle(ctx,p.x*cv.clientWidth,p.y*cv.clientHeight,1.8,'rgba(255,110,168,.8)','rgba(169,142,255,.9)'); } ctx.restore(); }
+  function drawPose(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections?.poseLandmarks?.length) return; const lm=detections.poseLandmarks[0]; const J=(i)=>({x:lm[i].x*cv.clientWidth,y:lm[i].y*cv.clientHeight}); const bones=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]]; ctx.lineCap='round'; ctx.lineJoin='round'; bones.forEach(([a,b])=> line(ctx,J(a),J(b),'#67f0e1',3)); [11,12,13,14,15,16,23,24,25,26,27,28].forEach(i=>{ const p=J(i); circle(ctx,p.x,p.y,3,'#ff6ea8','#a98eff'); }); const labels={11:'L-Shoulder',12:'R-Shoulder',23:'L-Hip',24:'R-Hip'}; Object.entries(labels).forEach(([i,name])=>{const p=J(+i); text(ctx,name,p.x,p.y,'#cfe7ff')}); }
   function drawSeg(cv, seg){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!seg?.categoryMask) return; const {width,height} = seg.categoryMask; const mask=seg.categoryMask.getAsUint8Array(); const imgData=ctx.createImageData(width,height); for(let i=0;i<mask.length;i++){ const m=mask[i]; const o=i*4; if(m===1){ imgData.data[o]=103; imgData.data[o+1]=240; imgData.data[o+2]=225; imgData.data[o+3]=70; } else { imgData.data[o+3]=0; } } const tmp=document.createElement('canvas'); tmp.width=width; tmp.height=height; tmp.getContext('2d').putImageData(imgData,0,0); ctx.save(); ctx.imageSmoothingEnabled=true; ctx.globalCompositeOperation='lighter'; ctx.drawImage(tmp,0,0,cv.clientWidth,cv.clientHeight); ctx.restore(); ctx.strokeStyle='rgba(255,110,168,.6)'; ctx.setLineDash([8,6]); const y1=cv.clientHeight*.35, y2=cv.clientHeight*.55, y3=cv.clientHeight*.75; [y1,y2,y3].forEach((y,i)=>{ ctx.beginPath(); ctx.moveTo(12,y); ctx.lineTo(cv.clientWidth-12,y); ctx.stroke(); text(ctx,['bust','waist','hips'][i],14,y,'#ffbed8'); }); el('#segLegend').textContent='person mask + bust/waist/hips scanlines'; }
   function drawObj(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections?.detections?.length) return; ctx.setLineDash([8,4]); ctx.lineWidth=2; detections.detections.forEach(d=>{ const [x,y,w,h]=[d.boundingBox.originX*cv.clientWidth, d.boundingBox.originY*cv.clientHeight, d.boundingBox.width*cv.clientWidth, d.boundingBox.height*cv.clientHeight]; ctx.strokeStyle='#ff6ea8'; ctx.strokeRect(x,y,w,h); const lab=`${d.categories[0].categoryName} ${(d.categories[0].score*100|0)}%`; ctx.fillStyle='#0c1016'; ctx.strokeStyle='#a98eff'; ctx.setLineDash([]); const tw=ctx.measureText(lab).width+10; ctx.fillRect(x,y-18, tw, 18); ctx.strokeRect(x,y-18, tw, 18); ctx.fillStyle='#fff'; ctx.fillText(lab,x+5,y-5); ctx.setLineDash([8,4]); }); }
-
-  function drawAll(all, fromResize){ window.__lastDetections = all; if(el('#cbFace').checked) drawFace(el('#cvFace'), all); if(el('#cbPose').checked) drawPose(el('#cvPose'), all); if(el('#cbSeg').checked) drawSeg(el('#cvSeg'), all.seg); if(el('#cbObj').checked) drawObj(el('#cvObj'), all.obj); if(!fromResize) phasedPulse(); }
-  function phasedPulse(){ const cards = els('.row .card'); const colors=['#67f0e1','#a98eff','#ff6ea8','#ffd166']; cards.forEach((c,i)=>{ c.style.boxShadow='none'; setTimeout(()=>{c.style.boxShadow=`0 0 0 2px ${colors[i]} inset, 0 12px 28px rgba(0,0,0,.35)`; setTimeout(()=>c.style.boxShadow='none',320);}, i*260); }); }
+  function drawAll(all, fromResize){ window.__lastDetections = all; if(el('#cbFace').checked) drawFace(el('#cvFace'), all); if(el('#cbPose').checked) drawPose(el('#cvPose'), all); if(el('#cbSeg').checked) drawSeg(el('#cvSeg'), all.seg); if(el('#cbObj').checked) drawObj(el('#cvObj'), all.obj); }
 
   // ======= Measurement / Prompt =======
   function computeStats(all){ const stats={}; if(all?.faceLandmarks?.[0]){ const lm=all.faceLandmarks[0]; const L=lm[33], R=lm[263]; const rad=Math.atan2((R.y-L.y),(R.x-L.x)); let deg=(rad*180/Math.PI); if(deg<0) deg+=180; stats.eye_tilt_deg=+(deg.toFixed(1)); const top=lm[10], bottom=lm[152], left=lm[234], right=lm[454]; const w=Math.hypot(right.x-left.x,right.y-left.y); const h=Math.hypot(bottom.x-top.x,bottom.y-top.y); const r=h/(w+1e-6); stats.face_shape=r>1.25?'long': r>1.05?'oval':'round'; }
@@ -273,16 +242,13 @@
   // ======= Analyze / Self‑Test =======
   el('#btnSelfTest').onclick=async()=>{
     const lines=[]; lines.push(`Origin: ${location.protocol}//${location.host}`);
-    lines.push('SW support: '+(('serviceWorker' in navigator)?'yes':'no'));
-    const secure = location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1';
-    lines.push('Secure origin: '+(secure?'yes':'no')); lines.push('SW expected path: service-worker.js');
-    try{ await ensureTasks(); lines.push('✅ FilesetResolver online'); }catch(e){ lines.push('❌ FilesetResolver failed: '+e.message); }
+    try{ await ensureTasks(); lines.push('✅ FilesetResolver online'); }catch(e){ lines.push('❌ Vision bundle failed: '+e.message); }
     el('#outDiag').textContent='Self‑Test (online)\n'+lines.join('\n'); els('.tab').forEach(t=>{ if(t.dataset.tab==='diag'){ t.click(); }});
   };
 
   el('#btnAnalyze').onclick=async()=>{
     try{
-      if(!el('#imgFace').src){ toast('Load an image first'); return; }
+      if(!el('#imgFace').src){ toast('Load an image first'); diagAdd('Analyze blocked: no image'); els('.tab').find(t=>t.dataset.tab==='diag').click(); return; }
       els('.canvas').forEach(c=>setupDprCanvas(c));
       el('#outDiag').textContent=`[${new Date().toLocaleTimeString()}] analyze start`;
       const t0=performance.now(); await loadEngines(); const img=el('#imgFace');
@@ -302,7 +268,7 @@
     }catch(e){ console.error(e); el('#outDiag').textContent+=`\n✗ error: ${e.message}`; els('.tab').find(t=>t.dataset.tab==='diag').click(); toast('Analyze failed'); }
   };
 
-  el('#btnClear').onclick=()=>{ ['Face','Pose','Seg','Obj'].forEach(k=>{ const c=el('#cv'+k); const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height); el('#img'+k).src='';}); el('#outPrompt').value=''; el('#outJSON').textContent=''; el('#outDiag').textContent='Cleared'; };
+  el('#btnClear').onclick=()=>{ ['Face','Pose','Seg','Obj'].forEach(k=>{ const c=el('#cv'+k); c.getContext('2d').clearRect(0,0,c.width,c.height); el('#img'+k).src='';}); el('#outPrompt').value=''; el('#outJSON').textContent=''; el('#outDiag').textContent='Cleared'; };
 
   el('#btnCopyPrompt').onclick=()=>copyText(el('#outPrompt').value);
   el('#btnCopyNeg').onclick=()=>copyText(NEG);
@@ -310,13 +276,7 @@
   el('#btnCopyDiag').onclick=()=>copyText(el('#outDiag').textContent);
   els('.copy').forEach(b=> b.onclick=()=>{ const id=b.dataset.copy; const stage=el('#stage'+id.charAt(0).toUpperCase()+id.slice(1)); const canvas=stage.querySelector('canvas'); const data=canvas.toDataURL('image/png'); const a=document.createElement('a'); a.href=data; a.download=`${id}.png`; a.click(); });
 
-  window.addEventListener('load',()=>{ els('.canvas').forEach(setupDprCanvas); });
+  window.addEventListener('load',()=>{ els('.canvas').forEach(setupDprCanvas); diagAdd('UI ready'); });
   </script>
-
-  <!--
-  To enable install/offline when deployed on your domain, add /service-worker.js next to this file with:
-  self.addEventListener('install',e=>e.waitUntil(caches.open('imgintel-v1').then(c=>c.addAll(['./']))));
-  self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match('./'))));
-  -->
 </body>
 </html>
