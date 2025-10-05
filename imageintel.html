@@ -1,394 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ImageIntel Pro — Online Tasks Demo (v12.4.3)</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
-<link rel="preconnect" href="https://storage.googleapis.com"/>
-<meta name="theme-color" content="#0c1016"/>
-<style>
-  :root{ --bg:#0c1016;--panel:#101723;--ink:#e9f3ff;--dim:#9ab3c7;--edge:#1a2331;--hot:#ff6ea8;--aqua:#67f0e1;--vio:#a98eff;--gold:#ffd166;--ok:#3ddc97;--warn:#ffbe0b;--bad:#ff3b30; }
-  *{box-sizing:border-box}
-  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
-  h1,h2,h3{margin:0 0 .5rem 0;font-weight:700}
-  .bar{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,#0c1016 0%,rgba(12,16,22,.85) 100%);backdrop-filter:saturate(1.3) blur(8px);border-bottom:1px solid #152131}
-  .bar-inner{max-width:1400px;margin:0 auto;padding:.75rem 1rem;display:flex;gap:.75rem;align-items:center}
-  .badge{font-size:.75rem;border:1px solid var(--vio);color:var(--vio);padding:.15rem .45rem;border-radius:.5rem}
-  .wrap{max-width:1400px;margin:0 auto;padding:1rem}
-  .row{display:grid;gap:12px}
-  @media(min-width:1200px){.row{grid-template-columns:repeat(4,1fr)}}
-  @media(min-width:740px) and (max-width:1199px){.row{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:739px){.row{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;overflow:hidden;position:relative}
-  .card > header{display:flex;align-items:center;gap:.5rem;padding:.6rem .75rem;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#121a28,rgba(18,26,40,.4));}
-  .card h3{font-size:.9rem;letter-spacing:.2px}
-  .stage{position:relative;aspect-ratio:1/1;background:#0b1522;display:flex;align-items:center;justify-content:center}
-  .stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
-  .canvas{position:absolute;inset:0}
-  .controls{display:flex;flex-wrap:wrap;gap:.5rem}
-  .btn{background:#162233;border:1px solid #233146;color:#cfe7ff;border-radius:10px;padding:.65rem .95rem;font-weight:700;cursor:pointer}
-  .btn.primary{border-color:var(--aqua);box-shadow:0 0 0 2px #0da5b055 inset}
-  .btn.hot{border-color:var(--hot);color:#fff;background:linear-gradient(180deg,#2b1421,#1a0f16)}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .hint{font-size:.82rem;color:#bcd}
-  .segLegend{position:absolute;right:8px;bottom:8px;font-size:.72rem;background:#0c1016cc;padding:.3rem .5rem;border:1px solid #2a3a4f;border-radius:.5rem}
-  .tabs{display:flex;gap:2px;margin-top:10px}
-  .tab{flex:1;background:#0e1622;border:1px solid #24334a;padding:.6rem .8rem;border-radius:10px 10px 0 0;text-align:center;color:#b7d0ea;font-weight:700;cursor:pointer}
-  .tab.active{background:#122033;border-bottom-color:transparent;color:#fff}
-  .panel{border:1px solid #24334a;border-top:none;background:#0e1622;border-radius:0 10px 10px 10px;padding:.6rem}
-  textarea,pre{width:100%;min-height:140px;background:#0a1220;border:1px solid #1f2a3d;border-radius:10px;color:#cfe7ff;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;padding:.8rem;line-height:1.4}
-  .grid2{display:grid;gap:10px}
-  @media(min-width:900px){.grid2{grid-template-columns:1fr 1fr}}
-  .range{display:flex;gap:.6rem;align-items:center}
-  .range input{flex:1}
-  .pill{padding:.2rem .5rem;border-radius:999px;border:1px solid #2b3a4f;background:#0f1727;font-size:.72rem}
-  .diag{font-size:.88rem;color:#bcd}
-  .copy{position:absolute;right:.6rem;top:.6rem;z-index:4}
-  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:16px;background:#111c2d;color:#fff;border:1px solid #27405a;padding:.6rem 1rem;border-radius:999px;font-weight:700;box-shadow:0 8px 18px rgba(0,0,0,.35);opacity:0;transition:opacity .2s, transform .2s}
-  .toast.show{opacity:1;transform:translate(-50%,-6px)}
-  .drop{position:absolute;inset:0;border:2px dashed #2b3a4f;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#bcd;opacity:.9;pointer-events:none}
-  .drop.show{border-color:#67f0e1;color:#eafffb}
-  .progress{height:8px;background:#0f1b2a;border:1px solid #2a3a43;border-radius:999px;overflow:hidden}
-  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#67f0e1,#a98eff);transition:width .25s ease}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ImageIntel — Smoke Test A (inline JS + file load)</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;background:#0c1016;color:#e9f3ff;margin:0;padding:16px}
+    .row{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+    .card{background:#101723;border:1px solid #1a2331;border-radius:12px;padding:12px}
+    img{max-width:100%;height:auto;display:block;background:#0b1522;border-radius:8px}
+    pre{background:#0a1220;border:1px solid #1f2a3d;border-radius:8px;padding:10px;min-height:120px;white-space:pre-wrap}
+    button,input{background:#162233;color:#cfe7ff;border:1px solid #233146;border-radius:10px;padding:.6rem .9rem;font-weight:700}
+  </style>
 </head>
 <body>
-  <div class="bar">
-    <div class="bar-inner">
-      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.4.3 Online Beta</span></h1>
-      <div style="margin-left:auto;display:flex;gap:.5rem">
-        <button id="btnSelfTest" class="btn">Self‑Test</button>
-        <button id="btnAnalyze" class="btn hot" disabled>Analyze Image</button>
-        <button id="btnClear" class="btn">Clear</button>
-      </div>
+  <h1>Smoke Test A <span style="font-size:.8rem;border:1px solid #a98eff;color:#a98eff;padding:.1rem .4rem;border-radius:.4rem">v0</span></h1>
+  <p>If you see “JS running ✓” below and you can load a local image into the preview, then inline JS is allowed here.
+     If not, your CSP is blocking scripts and that’s why the big page does nothing.</p>
+
+  <div class="row">
+    <div class="card">
+      <h3>1) Pick a local image</h3>
+      <input type="file" id="file" accept="image/*;capture=camera" />
+      <p id="meta">No image</p>
+      <img id="preview" alt="preview will appear here" />
+    </div>
+    <div class="card">
+      <h3>2) Diagnostics</h3>
+      <pre id="diag"></pre>
+      <button id="copy">Copy Diag</button>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="card" style="margin-bottom:12px">
-      <header>
-        <h3>Step 1 · Load image</h3>
-      </header>
-      <div class="grid2" style="padding:10px">
-        <div class="controls">
-          <button id="btnPrimaryLoad" class="btn primary">Load image…</button>
-          <input type="file" id="file" accept="image/*;capture=camera" style="display:none" />
-          <button id="btnDemo" class="btn">Use Demo Photo</button>
-          <input id="urlIn" placeholder="Paste image URL" class="btn" style="min-width:280px" />
-          <button id="btnLoadUrl" class="btn">Load URL</button>
-          <span class="pill" id="imgInfo">No image</span>
-        </div>
-        <div class="controls">
-          <label class="range">Detail <input type="range" id="detail" min="0" max="1" step="0.01" value="0.7"/><span class="pill" id="detailVal">0.70</span></label>
-          <label class="range">Accuracy <input type="range" id="accuracy" min="0" max="1" step="0.01" value="0.75"/><span class="pill" id="accVal">0.75</span></label>
-          <label style="display:flex;gap:10px;align-items:center">
-            <input type="checkbox" id="cbFace" checked/> Face
-            <input type="checkbox" id="cbPose" checked/> Pose
-            <input type="checkbox" id="cbSeg" checked/> Segments
-            <input type="checkbox" id="cbObj" checked/> Objects
-          </label>
-          <div class="hint">Tip: If a URL fails (CORS), use the Demo or choose a local file.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:12px">
-      <header>
-        <h3>Step 1.5 · Initialize models</h3>
-      </header>
-      <div style="padding:10px" class="grid2">
-        <div>
-          <div class="controls">
-            <button id="btnInit" class="btn">Initialize MediaPipe models</button>
-            <span class="pill" id="initState">Not started</span>
-          </div>
-          <div class="progress" style="margin-top:8px"><i id="initProg"></i></div>
-        </div>
-        <div>
-          <div class="hint">Loads Face (468), Pose (33), Segmentation (person), Objects. Progress and any errors will also appear in Diagnostics.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row" id="stages">
-      <section class="card">
-        <header><h3>Face (468) — neon mesh</h3><button class="btn copy" data-copy="face">Copy PNG</button></header>
-        <div class="stage" id="stageFace" data-drop>
-          <div class="drop" id="dropFace">Drop image here</div>
-          <img id="imgFace" alt=""/>
-          <canvas class="canvas" id="cvFace" aria-label="face overlay"></canvas>
-        </div>
-      </section>
-      <section class="card">
-        <header><h3>Pose (33) — skeleton + labels</h3><button class="btn copy" data-copy="pose">Copy PNG</button></header>
-        <div class="stage" id="stagePose" data-drop>
-          <div class="drop" id="dropPose">Drop image here</div>
-          <img id="imgPose" alt=""/>
-          <canvas class="canvas" id="cvPose" aria-label="pose overlay"></canvas>
-        </div>
-      </section>
-      <section class="card">
-        <header><h3>Segments — person mask + scanlines</h3><button class="btn copy" data-copy="seg">Copy PNG</button></header>
-        <div class="stage" id="stageSeg" data-drop>
-          <div class="drop" id="dropSeg">Drop image here</div>
-          <img id="imgSeg" alt=""/>
-          <canvas class="canvas" id="cvSeg" aria-label="segmentation overlay"></canvas>
-          <div class="segLegend" id="segLegend">—</div>
-        </div>
-      </section>
-      <section class="card">
-        <header><h3>Objects — boxes + scores</h3><button class="btn copy" data-copy="obj">Copy PNG</button></header>
-        <div class="stage" id="stageObj" data-drop>
-          <div class="drop" id="dropObj">Drop image here</div>
-          <img id="imgObj" alt=""/>
-          <canvas class="canvas" id="cvObj" aria-label="object overlay"></canvas>
-        </div>
-      </section>
-    </div>
-
-    <div class="card" style="margin-top:12px">
-      <header><h3>Step 2 · Outputs</h3></header>
-      <div class="tabs">
-        <div class="tab active" data-tab="prompt">SFW Prompt</div>
-        <div class="tab" data-tab="json">JSON</div>
-        <div class="tab" data-tab="diag">Diagnostics</div>
-      </div>
-      <div class="panel">
-        <div id="panel-prompt">
-          <div class="controls" style="justify-content:flex-end;margin-bottom:6px">
-            <button class="btn" id="btnCopyPrompt">Copy Prompt</button>
-            <button class="btn" id="btnCopyNeg">Copy Negative</button>
-          </div>
-          <textarea id="outPrompt"></textarea>
-        </div>
-        <div id="panel-json" hidden>
-          <div class="controls" style="justify-content:flex-end;margin-bottom:6px"><button class="btn" id="btnCopyJSON">Copy JSON</button></div>
-          <pre id="outJSON" class="diag"></pre>
-        </div>
-        <div id="panel-diag" hidden>
-          <div class="controls" style="justify-content:flex-end;margin-bottom:6px"><button class="btn" id="btnCopyDiag">Copy Diag</button></div>
-          <pre id="outDiag" class="diag"></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast" id="toast">Copied</div>
-
-  <!-- MediaPipe Tasks (online) -->
-  <script id="visionScript" src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js"></script>
+  <!-- Inline JS on purpose (to test CSP) -->
   <script>
-  // ======= Helpers & state =======
-  const $ = s=>document.querySelector(s); const $$ = s=>[...document.querySelectorAll(s)];
-  const toast=msg=>{const t=$('#toast'); t.textContent=msg||'Copied'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200)}
-  const copyText=t=>{navigator.clipboard.writeText(t||''); toast('Copied');}
-  let __lastDiag='';
-  const diagAdd=msg=>{ const box=$('#outDiag'); const line=(box.textContent?"
-":"") + msg; box.textContent += line; __lastDiag += line; }
+    const log = (m)=>{ const d=document.getElementById('diag'); d.textContent += (d.textContent?'\n':'') + m; };
+    log('JS running ✓'); // <— If you do NOT see this, scripts are blocked by CSP.
 
-  const DEMO_URL='https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1200&auto=format&fit=crop';
-  const DEMO_B64='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAABkCAYAAAB2cvZFAAAACXBIWXMAAAsSAAALEgHS3X78AAAB7ElEQVR4nO3ZwQ3CMBAF0eZb4o6p0qv4x1Y0e1Dq1cW3sS9H2qg4kQO7zP1u0c1g5kR1t3A8g0E0klyjH5w+v04bq0w9f7o/0sH2y7jWwCq8z8Zz3Q2j0b7G7eJ4o9oYB1M0d4m8u8F5h1nYH6Q8D0wYp3cQ4jvCw1gH5bZ2Gqv0eX4H0v4b7G0g3zVf5g4J4Jr/2wDgWk7KQ2cZUp3d1O9qgQb8f3s7Qw3b3m7IYH3QbZ3m4gYb2kZB1m2qYw1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY9v8w7v3fKk7+7v9Y7P8b1f4f8f9f4G5QeZJ8n3e7w7w+v+0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZz2x7A0QG5v8E5zj1sJ6vXcR6v0d3+f3zM1B7k5bF3AAAAAElFTkSuQmCC';
+    // Minimal loader (no external URLs, no CORS): just show a local file
+    document.getElementById('file').addEventListener('change', e=>{
+      const f = e.target.files && e.target.files[0];
+      if(!f){ log('No file'); return; }
+      const url = URL.createObjectURL(f);
+      const img = document.getElementById('preview');
+      img.onload = ()=>{ document.getElementById('meta').textContent = `${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; log('Loaded local file ✓'); };
+      img.onerror = ()=>{ log('Image failed to load'); };
+      img.src = url;
+    });
 
-  function fitImage(img){ ['Face','Pose','Seg','Obj'].forEach(k=>{const tag=document.getElementById('img'+k); tag.src=img.src; tag.style.objectFit='contain';}); $('#imgInfo').textContent=`${img.naturalWidth}×${img.naturalHeight}`; }
-  function setupDprCanvas(canvas){ const parent=canvas.parentElement; const dpr=window.devicePixelRatio||1; const {width,height}=parent.getBoundingClientRect(); canvas.width=Math.max(1,Math.floor(width*dpr)); canvas.height=Math.max(1,Math.floor(height*dpr)); const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return ctx; }
-  window.addEventListener('resize',()=>{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>{const c=document.getElementById(id); if(!c) return; setupDprCanvas(c); }); if(window.__last) drawAll(window.__last,true); });
-
-  // ======= Loaders =======
-  $('#btnPrimaryLoad').onclick=()=> $('#file').click();
-  $('#file').onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f){ toast('No file'); return; } const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImage(img); toast('Image loaded');}; img.onerror=()=>{toast('File load error'); diagAdd('File load error '+(f&&f.name));}; img.src=url; };
-
-  async function loadFromUrlSmart(u){ const url=String(u||'').trim(); if(!url){ toast('Empty URL'); return; }
-    try{ const res=await fetch(url,{mode:'cors'}); if(!res.ok) throw new Error('HTTP '+res.status); const blob=await res.blob(); const obj=URL.createObjectURL(blob); const img=new Image(); img.onload=()=>{fitImage(img); toast('Image loaded');}; img.onerror=()=>{diagAdd('Blob URL failed, trying direct'); loadDirect(url)}; img.src=obj; return; }catch(err){ diagAdd('Fetch failed: '+(err&&err.message?err.message:err)); }
-    loadDirect(url);
-  }
-  function loadDirect(url){ const img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{fitImage(img); toast('Image loaded');}; img.onerror=()=>{ diagAdd('Direct URL failed: '+url); toast('Using embedded demo'); loadEmbedded();}; img.src=url; }
-  function loadEmbedded(){ const img=new Image(); img.onload=()=>{fitImage(img); toast('Embedded demo');}; img.src=DEMO_B64; }
-  $('#btnLoadUrl').onclick=()=> loadFromUrlSmart($('#urlIn').value);
-  $('#btnDemo').onclick=()=> loadFromUrlSmart(DEMO_URL);
-  $$('[data-drop]').forEach(stage=>{ const overlay=stage.querySelector('.drop'); stage.addEventListener('dragover',e=>{e.preventDefault(); overlay.classList.add('show');}); stage.addEventListener('dragleave',()=>overlay.classList.remove('show')); stage.addEventListener('drop',e=>{ e.preventDefault(); overlay.classList.remove('show'); const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImage(img); toast('Image loaded');}; img.src=url; }); });
-
-  // ======= MediaPipe Tasks setup (ONLINE, sequential with progress) =======
-  let FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver;
-  let faceTask, poseTask, segTask, objTask, fileset;
-  const prog = $('#initProg'); const setProg=p=>prog.style.width=(p*100).toFixed(0)+'%';
-
-  async function loadVisionBundle(){
-    const sources=[
-      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js',
-      'https://unpkg.com/@mediapipe/tasks-vision@0.10.7/vision_bundle.js',
-      // Self-hosted fallback if you upload the file to your domain
-      '/vendor/mediapipe/vision_bundle.js'
-    ];
-    for(const src of sources){
-      try{
-        diagAdd('Loading vision bundle: '+src);
-        await new Promise((resolve,reject)=>{
-          const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>resolve(); s.onerror=()=>reject(new Error('script load failed')); document.head.appendChild(s);
-        });
-        if(window.vision){ diagAdd('Vision bundle ✓'); return true; }
-        else diagAdd('Vision bundle loaded but window.vision missing');
-      }catch(e){ diagAdd('Vision bundle failed: '+src+' — '+e.message); }
-    }
-    return false;
-  }"]`)){
-          if(window.vision){ diagAdd('Vision bundle already present'); return true; }
-        }
-        diagAdd('Loading vision bundle: '+src);
-        await new Promise((resolve,reject)=>{
-          const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>resolve(); s.onerror=()=>reject(new Error('script load failed')); document.head.appendChild(s);
-        });
-        if(window.vision){ diagAdd('Vision bundle ✓'); return true; }
-      }catch(e){ diagAdd('Vision bundle failed: '+src+' — '+e.message); }
-    }
-    toast('Vision bundle failed');
-    return false;
-  }
-
-  async function initModels(){
-    $('#initState').textContent='Initializing…'; setProg(0.05); diagAdd('Init: starting');
-    try{
-      const ok=await loadVisionBundle();
-      if(!ok || !window.vision){ const reason='vision_bundle not available (CSP or CDN blocked)'; diagAdd('Init fatal: '+reason); $('#initState').textContent='Failed — bundle'; toast('Init failed — open Diagnostics'); return; }
-      ({ FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = window.vision);
-
-      diagAdd('Init: resolving WASM');
-      try{
-        fileset = await FilesetResolver.forVisionTasks({ baseUrl: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' });
-        diagAdd('Init: FilesetResolver ✓'); setProg(0.20);
-      }catch(e){ diagAdd('FilesetResolver ❌ '+e.message); $('#initState').textContent='Failed — wasm'; toast('Init failed — see Diagnostics'); return; }
-
-      let okCount=0; const setFail=r=>{ $('#initState').textContent='Failed — '+r; };
-      try{ faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true}); diagAdd('FaceLandmarker ✓'); okCount++; }catch(e){ diagAdd('FaceLandmarker ❌ '+e.message); }
-      setProg(0.40);
-      try{ poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode:'IMAGE', numPoses:1}); diagAdd('PoseLandmarker ✓'); okCount++; }catch(e){ diagAdd('PoseLandmarker ❌ '+e.message); }
-      setProg(0.60);
-      try{ segTask = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode:'IMAGE', outputCategoryMask:true}); diagAdd('ImageSegmenter ✓'); okCount++; }catch(e){ diagAdd('ImageSegmenter ❌ '+e.message); }
-      setProg(0.80);
-      try{ objTask = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite' }, runningMode:'IMAGE', maxResults:8, scoreThreshold:0.4}); diagAdd('ObjectDetector ✓'); okCount++; }catch(e){ diagAdd('ObjectDetector ❌ '+e.message); }
-      setProg(1);
-
-      if(okCount===0){ setFail('models'); toast('All model inits failed — see Diagnostics'); }
-      else { $('#initState').textContent='Ready'; $('#btnAnalyze').disabled=false; toast('Models ready'); }
-    }catch(err){ console.error(err); diagAdd('Init fatal: '+(err&&err.message?err.message:err)); $('#initState').textContent='Failed'; toast('Init failed — see Diagnostics'); }
-  }
-      ({ FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = window.vision);
-
-      // 2) Resolve WASM fileset
-      diagAdd('Init: resolving WASM');
-      fileset = await FilesetResolver.forVisionTasks({ baseUrl:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' });
-      diagAdd('Init: FilesetResolver ✓'); setProg(0.20);
-
-      // 3) Create tasks sequentially; if any model fails, log and continue
-      try{
-        faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true});
-        diagAdd('Init: FaceLandmarker ✓'); setProg(0.40);
-      }catch(e){ diagAdd('Init: FaceLandmarker ❌ '+e.message); }
-
-      try{
-        poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode:'IMAGE', numPoses:1});
-        diagAdd('Init: PoseLandmarker ✓'); setProg(0.60);
-      }catch(e){ diagAdd('Init: PoseLandmarker ❌ '+e.message); }
-
-      try{
-        segTask = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode:'IMAGE', outputCategoryMask:true});
-        diagAdd('Init: ImageSegmenter ✓'); setProg(0.80);
-      }catch(e){ diagAdd('Init: ImageSegmenter ❌ '+e.message); }
-
-      try{
-        objTask = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite' }, runningMode:'IMAGE', maxResults:8, scoreThreshold:0.4});
-        diagAdd('Init: ObjectDetector ✓'); setProg(1.00);
-      }catch(e){ diagAdd('Init: ObjectDetector ❌ '+e.message); }
-
-      const anyReady = !!(faceTask||poseTask||segTask||objTask);
-      if(!anyReady){ $('#initState').textContent='Failed'; toast('All model inits failed — see Diagnostics'); return; }
-      $('#initState').textContent='Ready'; $('#btnAnalyze').disabled=false; toast('Models ready');
-    }catch(err){
-      console.error(err); diagAdd('Init fatal: '+(err&&err.message?err.message:err)); $('#initState').textContent='Failed'; toast('Init failed — see Diagnostics');
-    }
-  });
-      diagAdd('Init: FilesetResolver ✓'); setProg(0.20);
-
-      faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true});
-      diagAdd('Init: FaceLandmarker ✓'); setProg(0.45);
-
-      poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode:'IMAGE', numPoses:1});
-      diagAdd('Init: PoseLandmarker ✓'); setProg(0.65);
-
-      segTask = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode:'IMAGE', outputCategoryMask:true});
-      diagAdd('Init: ImageSegmenter ✓'); setProg(0.80);
-
-      objTask = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite' }, runningMode:'IMAGE', maxResults:8, scoreThreshold:0.4});
-      diagAdd('Init: ObjectDetector ✓'); setProg(1.00);
-
-      $('#initState').textContent='Ready'; $('#btnAnalyze').disabled=false; toast('Models ready');
-    }catch(err){
-      console.error(err); diagAdd('Init error: '+(err&&err.message?err.message:err)); $('#initState').textContent='Failed'; toast('Init failed — see Diagnostics');
-    }
-  }
-  $('#btnInit').onclick=()=>{ $('#outDiag').textContent=''; __lastDiag=''; $$('.tab').forEach(t=>{ if(t.dataset.tab==='diag') t.click(); }); initModels(); };
-
-  // ======= Drawing (uses tasks constants when available) =======
-  function ctx(cv){ return setupDprCanvas(cv); }
-  function drawFace(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const l=res&&res.faceLandmarks&&res.faceLandmarks[0]; if(!l) return; c.save(); c.lineJoin='round'; c.lineCap='round'; c.shadowColor='rgba(103,240,225,.7)'; c.shadowBlur=10; c.strokeStyle='#67f0e1'; c.lineWidth=1.5; const W=cv.clientWidth, H=cv.clientHeight; const drawLine=(arr)=>{ c.beginPath(); arr.forEach((idx,j)=>{ const p=l[idx]; const x=p.x*W, y=p.y*H; if(j===0) c.moveTo(x,y); else c.lineTo(x,y); }); c.stroke(); }; if(FaceLandmarker && FaceLandmarker.FACE_LANDMARKS_TESSELATION){ FaceLandmarker.FACE_LANDMARKS_TESSELATION.forEach(seg=> drawLine(seg)); } else { for(let i=0;i<l.length;i+=3){ const p=l[i]; c.beginPath(); c.arc(p.x*W,p.y*H,1.6,0,Math.PI*2); c.fillStyle='rgba(169,142,255,.9)'; c.fill(); } } c.restore(); }
-
-  function drawPose(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const l=res&&res.poseLandmarks&&res.poseLandmarks[0]; if(!l) return; const W=cv.clientWidth,H=cv.clientHeight; const P=i=>({x:l[i].x*W,y:l[i].y*H}); const bones=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]]; c.lineCap='round'; c.lineJoin='round'; c.shadowBlur=8; c.shadowColor='rgba(103,240,225,.5)'; bones.forEach(([a,b])=>{ const A=P(a), B=P(b); c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.strokeStyle='#67f0e1'; c.lineWidth=3; c.stroke(); }); [11,12,13,14,15,16,23,24,25,26,27,28].forEach(i=>{ const p=P(i); c.beginPath(); c.arc(p.x,p.y,3,0,Math.PI*2); c.fillStyle='#a98eff'; c.strokeStyle='#ff6ea8'; c.lineWidth=2; c.fill(); c.stroke(); }); }
-
-  function drawSeg(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const m=res&&res.categoryMask; if(!m) return; const {width,height}=m; const data=m.getAsUint8Array(); const img=c.createImageData(width,height); for(let i=0;i<data.length;i++){ const v=data[i]; const o=i*4; if(v===1){ img.data[o]=103; img.data[o+1]=240; img.data[o+2]=225; img.data[o+3]=70; } else { img.data[o+3]=0; } } const tmp=document.createElement('canvas'); tmp.width=width; tmp.height=height; tmp.getContext('2d').putImageData(img,0,0); c.save(); c.globalCompositeOperation='lighter'; c.drawImage(tmp,0,0,cv.clientWidth,cv.clientHeight); c.restore(); const y1=cv.clientHeight*.35, y2=cv.clientHeight*.55, y3=cv.clientHeight*.75; c.setLineDash([8,6]); c.strokeStyle='rgba(255,110,168,.6)'; [y1,y2,y3].forEach((y,i)=>{ c.beginPath(); c.moveTo(12,y); c.lineTo(cv.clientWidth-12,y); c.stroke(); c.fillStyle='#ffbed8'; c.font='600 12px ui-monospace,monospace'; c.fillText(['bust','waist','hips'][i],14,y-6); }); $('#segLegend').textContent='person mask + bust/waist/hips scanlines'; }
-
-  function drawObj(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const arr=res&&res.detections||[]; c.setLineDash([8,4]); c.lineWidth=2; arr.forEach(d=>{ const W=cv.clientWidth,H=cv.clientHeight; const x=d.boundingBox.originX*W, y=d.boundingBox.originY*H, w=d.boundingBox.width*W, h=d.boundingBox.height*H; c.strokeStyle='#ff6ea8'; c.strokeRect(x,y,w,h); const lab=`${d.categories[0].categoryName} ${(d.categories[0].score*100|0)}%`; c.fillStyle='#0c1016'; c.strokeStyle='#a98eff'; c.setLineDash([]); const tw=c.measureText(lab).width+10; c.fillRect(x,y-18,tw,18); c.strokeRect(x,y-18,tw,18); c.fillStyle='#fff'; c.fillText(lab,x+5,y-5); c.setLineDash([8,4]); }); }
-
-  function drawAll(all, fromResize){ window.__last=all; if($('#cbFace').checked) drawFace($('#cvFace'), all.face||all); if($('#cbPose').checked) drawPose($('#cvPose'), all.pose||all); if($('#cbSeg').checked) drawSeg($('#cvSeg'), all.seg); if($('#cbObj').checked) drawObj($('#cvObj'), all.obj); }
-
-  // ======= Prompt =======
-  function computeStats(all){ const s={}; if(all.face?.faceLandmarks?.[0]||all.faceLandmarks?.[0]){ const lm=(all.face?.faceLandmarks||all.faceLandmarks)[0]; const L=lm[33], R=lm[263]; const rad=Math.atan2((R.y-L.y),(R.x-L.x)); let deg=(rad*180/Math.PI); if(deg<0) deg+=180; s.eye_tilt_deg=+(deg.toFixed(1)); const top=lm[10],bottom=lm[152],left=lm[234],right=lm[454]; const w=Math.hypot(right.x-left.x,right.y-left.y); const h=Math.hypot(bottom.x-top.x, bottom.y-top.y); const r=h/(w+1e-6); s.face_shape=r>1.25?'long': r>1.05?'oval':'round'; }
-    const pl=(all.pose?.poseLandmarks||all.poseLandmarks); if(pl?.[0]){ const p=pl[0]; const S=(a,b)=>Math.hypot((p[a].x-p[b].x),(p[a].y-p[b].y)); s.shoulder_span=+((S(11,12))*100).toFixed(1); s.hip_span=+((S(23,24))*100).toFixed(1); s.shoulder_to_hip_ratio=+(s.shoulder_span/(s.hip_span||1)).toFixed(2); }
-    if(all.obj?.detections?.length){ s.objects=all.obj.detections.slice(0,8).map(d=>({name:d.categories[0].categoryName, score:+(d.categories[0].score.toFixed(2))})); }
-    if(all.seg?.categoryMask){ const mask=all.seg.categoryMask.getAsUint8Array(); const person=mask.filter(v=>v===1).length; s.person_coverage=+((person/mask.length)*100).toFixed(1); }
-    return s; }
-  function makePrompt(s){ const acc=+$('#accuracy').value; const parts=['portrait photo']; if(s.face_shape) parts.push(`${s.face_shape} face`); if(s.eye_tilt_deg!=null) parts.push(`eye tilt ${s.eye_tilt_deg}°`); if(s.shoulder_span) parts.push(`shoulder span ~${s.shoulder_span.toFixed(0)} (rel)`); if(s.objects?.length){ const tops=s.objects.slice(0,3).map(o=>o.name).join('/'); parts.push(`scene contains ${tops}`);} parts.push('photorealistic, sharp micro‑detail, minimal distortion'); return parts.join(', '); }
-  const NEG='lowres, bad anatomy, extra limbs, deformed, fused features, duplicate face, cartoonish, unrealistic skin, oversharpen';
-
-  // ======= Self‑Test / Analyze =======
-  $('#btnSelfTest').onclick=async()=>{ const lines=[]; lines.push(`Origin: ${location.protocol}//${location.host}`); lines.push('Vision bundle: '+(window.vision?'present':'missing')); $('#outDiag').textContent='Self‑Test\n'+lines.join('\n'); $$('.tab').forEach(t=>{ if(t.dataset.tab==='diag') t.click(); }); };
-
-  $('#btnAnalyze').onclick=async()=>{
-    try{
-      if(!$('#imgFace').src){ toast('Load an image first'); diagAdd('Analyze blocked: no image'); $$('.tab').find(t=>t.dataset.tab==='diag').click(); return; }
-      ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>setupDprCanvas(document.getElementById(id)));
-      $('#outDiag').textContent=`[${new Date().toLocaleTimeString()}] analyze start`;
-      const img=$('#imgFace');
-      const face = $('#cbFace').checked ? faceTask.detect(img) : null;
-      const pose = $('#cbPose').checked ? poseTask.detect(img) : null;
-      const seg  = $('#cbSeg').checked  ? segTask.segment(img)   : null;
-      const obj  = $('#cbObj').checked  ? objTask.detect(img)    : null;
-      const all={ face, pose, seg, obj };
-      drawAll(all);
-      const stats=computeStats(all); const prompt=makePrompt(stats);
-      $('#outPrompt').value=prompt; $('#outJSON').textContent=JSON.stringify({image:{w:img.naturalWidth,h:img.naturalHeight}, stats, prompt, negative:NEG}, null, 2);
-      $('#outDiag').textContent+=`\n✓ done`;
-      $$('.tab').find(t=>t.dataset.tab==='prompt').click();
-    }catch(e){ console.error(e); diagAdd('Analyze error: '+(e&&e.message?e.message:e)); $$('.tab').find(t=>t.dataset.tab==='diag').click(); toast('Analyze failed'); }
-  };
-
-  $('#btnClear').onclick=()=>{ ['Face','Pose','Seg','Obj'].forEach(k=>{ const c=$('#cv'+k); c.getContext('2d').clearRect(0,0,c.width,c.height); $('#img'+k).src='';}); $('#outPrompt').value=''; $('#outJSON').textContent=''; $('#outDiag').textContent='Cleared'; };
-  $('#btnCopyPrompt').onclick=()=>copyText($('#outPrompt').value);
-  $('#btnCopyNeg').onclick=()=>copyText(NEG);
-  $('#btnCopyJSON').onclick=()=>copyText($('#outJSON').textContent);
-  $('#btnCopyDiag').onclick=()=>copyText($('#outDiag').textContent);
-  $$('.copy').forEach(b=> b.onclick=()=>{ const id=b.dataset.copy; const stage=document.getElementById('stage'+id.charAt(0).toUpperCase()+id.slice(1)); const canvas=stage.querySelector('canvas'); const data=canvas.toDataURL('image/png'); const a=document.createElement('a'); a.href=data; a.download=`${id}.png`; a.click(); });
-
-  // Auto-canvas sizing
-  window.addEventListener('load',()=>{ try{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>setupDprCanvas(document.getElementById(id))); diagAdd('UI ready'); }catch(e){ const box=document.getElementById('outDiag'); if(box){ box.textContent='Boot error: '+e.message; } console.error('Boot error', e); } });
-
-  // Global error taps so Diagnostics always shows something
-  window.addEventListener('error', (e)=>{ try{ const box=document.getElementById('outDiag'); if(box){ box.textContent += (box.textContent?'
-':'')+'JS error: '+e.message; } }catch{} });
-  window.addEventListener('unhandledrejection',(e)=>{ try{ const box=document.getElementById('outDiag'); if(box){ box.textContent += (box.textContent?'
-':'')+'Promise reject: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason)); } }catch{} });
-
-  // Enable Analyze only after explicit init
-  // (prevents the "Analyze does nothing" issue on some devices)
+    document.getElementById('copy').onclick = async ()=>{
+      try { await navigator.clipboard.writeText(document.getElementById('diag').textContent||''); log('Diag copied'); }
+      catch(e){ log('Clipboard failed: '+e.message); }
+    };
   </script>
 </body>
 </html>
