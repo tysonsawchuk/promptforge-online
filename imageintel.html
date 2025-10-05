@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ImageIntel Pro — Online Tasks Demo (v12.4.1)</title>
+<title>ImageIntel Pro — Online Tasks Demo (v12.4.3)</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
 <link rel="preconnect" href="https://storage.googleapis.com"/>
 <meta name="theme-color" content="#0c1016"/>
@@ -56,7 +56,7 @@
 <body>
   <div class="bar">
     <div class="bar-inner">
-      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.4.1 Online Beta</span></h1>
+      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.4.3 Online Beta</span></h1>
       <div style="margin-left:auto;display:flex;gap:.5rem">
         <button id="btnSelfTest" class="btn">Self‑Test</button>
         <button id="btnAnalyze" class="btn hot" disabled>Analyze Image</button>
@@ -341,7 +341,7 @@
   function drawAll(all, fromResize){ window.__last=all; if($('#cbFace').checked) drawFace($('#cvFace'), all.face||all); if($('#cbPose').checked) drawPose($('#cvPose'), all.pose||all); if($('#cbSeg').checked) drawSeg($('#cvSeg'), all.seg); if($('#cbObj').checked) drawObj($('#cvObj'), all.obj); }
 
   // ======= Prompt =======
-  function computeStats(all){ const s={}; if(all.face?.faceLandmarks?.[0]||all.faceLandmarks?.[0]){ const lm=(all.face?.faceLandmarks||all.faceLandmarks)[0]; const L=lm[33], R=lm[263]; const rad=Math.atan2((R.y-L.y),(R.x-L.x)); let deg=(rad*180/Math.PI); if(deg<0) deg+=180; s.eye_tilt_deg=+(deg.toFixed(1)); const top=lm[10],bottom=lm[152],left=lm[234],right=lm[454]; const w=Math.hypot(right.x-left.x,right.y-left.y); const h=Math.hypot(bottom.x-top.y?bottom.x-top.y:bottom.y-top.y, bottom.y-top.y); const r=h/(w+1e-6); s.face_shape=r>1.25?'long': r>1.05?'oval':'round'; }
+  function computeStats(all){ const s={}; if(all.face?.faceLandmarks?.[0]||all.faceLandmarks?.[0]){ const lm=(all.face?.faceLandmarks||all.faceLandmarks)[0]; const L=lm[33], R=lm[263]; const rad=Math.atan2((R.y-L.y),(R.x-L.x)); let deg=(rad*180/Math.PI); if(deg<0) deg+=180; s.eye_tilt_deg=+(deg.toFixed(1)); const top=lm[10],bottom=lm[152],left=lm[234],right=lm[454]; const w=Math.hypot(right.x-left.x,right.y-left.y); const h=Math.hypot(bottom.x-top.x, bottom.y-top.y); const r=h/(w+1e-6); s.face_shape=r>1.25?'long': r>1.05?'oval':'round'; }
     const pl=(all.pose?.poseLandmarks||all.poseLandmarks); if(pl?.[0]){ const p=pl[0]; const S=(a,b)=>Math.hypot((p[a].x-p[b].x),(p[a].y-p[b].y)); s.shoulder_span=+((S(11,12))*100).toFixed(1); s.hip_span=+((S(23,24))*100).toFixed(1); s.shoulder_to_hip_ratio=+(s.shoulder_span/(s.hip_span||1)).toFixed(2); }
     if(all.obj?.detections?.length){ s.objects=all.obj.detections.slice(0,8).map(d=>({name:d.categories[0].categoryName, score:+(d.categories[0].score.toFixed(2))})); }
     if(all.seg?.categoryMask){ const mask=all.seg.categoryMask.getAsUint8Array(); const person=mask.filter(v=>v===1).length; s.person_coverage=+((person/mask.length)*100).toFixed(1); }
@@ -379,7 +379,13 @@
   $$('.copy').forEach(b=> b.onclick=()=>{ const id=b.dataset.copy; const stage=document.getElementById('stage'+id.charAt(0).toUpperCase()+id.slice(1)); const canvas=stage.querySelector('canvas'); const data=canvas.toDataURL('image/png'); const a=document.createElement('a'); a.href=data; a.download=`${id}.png`; a.click(); });
 
   // Auto-canvas sizing
-  window.addEventListener('load',()=>{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>setupDprCanvas(document.getElementById(id))); diagAdd('UI ready'); });
+  window.addEventListener('load',()=>{ try{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>setupDprCanvas(document.getElementById(id))); diagAdd('UI ready'); }catch(e){ const box=document.getElementById('outDiag'); if(box){ box.textContent='Boot error: '+e.message; } console.error('Boot error', e); } });
+
+  // Global error taps so Diagnostics always shows something
+  window.addEventListener('error', (e)=>{ try{ const box=document.getElementById('outDiag'); if(box){ box.textContent += (box.textContent?'
+':'')+'JS error: '+e.message; } }catch{} });
+  window.addEventListener('unhandledrejection',(e)=>{ try{ const box=document.getElementById('outDiag'); if(box){ box.textContent += (box.textContent?'
+':'')+'Promise reject: '+(e.reason&&e.reason.message?e.reason.message:String(e.reason)); } }catch{} });
 
   // Enable Analyze only after explicit init
   // (prevents the "Analyze does nothing" issue on some devices)
