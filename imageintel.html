@@ -1,352 +1,486 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>PromptForge — ImageIntel Pro Visor v12.6 (Local-Only Core)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PromptForge ImageIntel Pro Visor v12.6 — On-device, local-only MediaPipe Tasks with cinematic overlays and diagnostics.">
-  <link rel="canonical" href="https://promptforge.online/tools/imageintel-v12-6-local.html">
+  <meta charset="utf-8" />
+  <title>PromptForge — ImageIntel Pro Visor v12.6 (Core: Analyzer → Prompt)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="On-device image analyzer to prompt: face mesh, pose, segmentation, object detection, lighting & composition → paste-ready prompt." />
+  <link rel="canonical" href="https://promptforge.online/imageintel_v12_6_core.html" />
   <style>
     :root{
       --bg:#0b0f14;--panel:#0f141b;--ink:#d6f5ff;--muted:#9db1bd;
-      --hl:#64f2e3;--ok:#23d7ba;--bad:#fa528e;--grid:#1c2430;--accent:#9b8cff;
+      --hl:#64f2e3;--ok:#23d7ba;--bad:#fa528e;--warn:#ffd166;
+      --box:#82b1ff;--pose:#ff9ad6;--seg:#26f7a8;--mesh:#60f8e9;--iris:#ff89f0;
+      --grid:#1c2430;--edge:#19222c;
     }
-    *{box-sizing:border-box} html,body{height:100%}
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,ui-monospace,monospace}
-    .wrap{max-width:1200px;margin:0 auto;padding:20px}
-    .title{display:flex;align-items:center;gap:12px}
-    .badge{border:1px solid var(--hl);color:var(--hl);padding:2px 8px;border-radius:999px;font-size:12px}
-    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:16px;margin-top:16px}
-    .card{background:var(--panel);border:1px solid #1b222c;border-radius:14px;overflow:hidden}
-    .card h3{margin:0;padding:12px 14px;border-bottom:1px solid #17202a;background:#0e131a;font-weight:600}
+    .wrap{max-width:1220px;margin:0 auto;padding:20px}
+    h1{margin:0 0 8px 0}
+    .muted{color:var(--muted)}
+    .badge{border:1px solid var(--hl);color:var(--hl);border-radius:999px;padding:2px 8px;font-size:12px}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:14px}
+    .card{background:var(--panel);border:1px solid var(--edge);border-radius:14px;overflow:hidden}
+    .card h3{margin:0;padding:12px 14px;background:#0d1117;border-bottom:1px solid #141b24}
     .body{padding:12px 14px}
     .toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-    button{background:#121821;color:var(--ink);border:1px solid #2a3543;border-radius:10px;padding:8px 12px;cursor:pointer}
-    button:hover{border-color:var(--hl);color:var(--hl)}
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    input[type="file"]{display:none}
-    .fileLabel{border:1px dashed #2a3543;border-radius:10px;padding:10px 14px;cursor:pointer}
     .pill{border:1px solid #253142;padding:4px 8px;border-radius:999px;font-size:12px}
-    #stageWrap{position:relative;background:#0b1118;border:1px solid #18202a;border-radius:12px;overflow:hidden}
-    #stage{display:block;width:100%;height:auto;background:#000}
-    #overlay{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-    #diag{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0a0f15;border-radius:10px;padding:10px;white-space:pre-wrap;line-height:1.35;border:1px solid #19222c}
-    .ok{color:var(--ok)} .bad{color:var(--bad)}
+    .fileLabel{border:1px dashed #2a3543;border-radius:10px;padding:10px 14px;cursor:pointer}
+    input[type=file]{display:none}
+    #stageWrap{position:relative;background:#0a0f15;border:1px solid var(--edge);border-radius:12px;overflow:hidden}
+    #imgCan,#ovCan,#hudCan{display:block;position:absolute;left:0;top:0;width:100%;height:100%}
+    #gridbg{position:absolute;inset:0;pointer-events:none;opacity:.20;mix-blend-mode:screen}
+    .legend{display:flex;gap:12px;font-size:12px;margin-top:8px;color:#b9c9d6}
+    .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+    .sw-mesh{background:var(--mesh)} .sw-iris{background:var(--iris)}
+    .sw-pose{background:var(--pose)} .sw-box{background:var(--box)} .sw-seg{background:var(--seg)}
     .switch{display:inline-flex;align-items:center;gap:8px}
-    .gaugeRow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-    .gauge{background:#0c1219;border:1px solid #1a2330;border-radius:8px;padding:6px 8px}
-    .gauge b{display:block;font-size:12px;margin-bottom:4px;color:#bfe9ff}
-    .bar{height:6px;background:#0e1520;border-radius:999px;overflow:hidden}
-    .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--hl),var(--accent))}
-    .kv{display:grid;grid-template-columns:120px 1fr;gap:6px;font-size:13px;color:#cbe7ff}
-    .kv .k{color:#81d1ff}
-    canvas.gridBG{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; mix-blend-mode:screen; opacity:.22}
-    .legend{display:flex;gap:12px;font-size:12px;color:#b6c7d4}
-    .legend .sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
-    .sw-mesh{background:#60f8e9}.sw-iris{background:#ff89f0}.sw-aux{background:#ffd166}
-    .footerNote{margin-top:12px;color:#9fb0bc;font-size:12px}
+    .kv{display:grid;grid-template-columns:120px 1fr;gap:6px;font-size:13px}
+    .ok{color:var(--ok)} .bad{color:var(--bad)} .warn{color:var(--warn)}
+    #diag{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;background:#0b0f14;border:1px solid var(--edge);border-radius:10px;padding:10px;line-height:1.35}
+    textarea{width:100%;min-height:160px;background:#0b0f14;color:var(--ink);border:1px solid var(--edge);border-radius:10px;padding:10px;resize:vertical}
+    button{background:#111722;color:var(--ink);border:1px solid #2a3543;border-radius:10px;padding:8px 12px;cursor:pointer}
+    button:hover{border-color:var(--hl);color:var(--hl)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="title">
-      <h1 style="margin:0">ImageIntel Pro Visor <span class="badge">v12.6 · local-only</span></h1>
-      <span class="muted">Face first; Pose/Seg/Obj re-enable after greenlights</span>
-    </div>
+    <h1>ImageIntel Pro Visor <span class="badge">v12.6 · local-only</span></h1>
+    <div class="muted">Analyzer → Prompt. SFW core now (face/pose/seg/objects/lighting). NSFW taxonomy is gated and will ship on <code>/labs</code> after core approval.</div>
 
     <div class="grid">
-      <!-- LEFT: Stage + Controls -->
+      <!-- LEFT: Stage -->
       <div class="card">
         <h3>Stage</h3>
         <div class="body">
           <div class="toolbar">
-            <label class="fileLabel"><input id="fileInput" type="file" accept="image/*">Choose image…</label>
-            <span class="pill" id="imgInfo">No image loaded</span>
+            <label class="fileLabel"><input id="file" type="file" accept="image/*">Choose image…</label>
+            <span id="imgInfo" class="pill">No image</span>
             <span class="pill">Mode: IMAGE</span>
             <span class="pill">Runtime: MediaPipe Tasks</span>
           </div>
-
-          <div id="stageWrap">
-            <canvas id="stage" width="1024" height="640"></canvas>
-            <canvas id="overlay" width="1024" height="640"></canvas>
-            <canvas id="gridbg" class="gridBG" width="1024" height="640"></canvas>
+          <div id="stageWrap" style="aspect-ratio: 16/10;">
+            <canvas id="imgCan"></canvas>
+            <canvas id="ovCan"></canvas>
+            <canvas id="hudCan"></canvas>
+            <canvas id="gridbg"></canvas>
           </div>
-
           <div class="row" style="margin-top:10px">
-            <div class="switch">
-              <input type="checkbox" id="toggleMesh" checked>
-              <label for="toggleMesh">Face mesh</label>
-            </div>
-            <div class="switch">
-              <input type="checkbox" id="toggleIris" checked>
-              <label for="toggleIris">Iris</label>
-            </div>
-            <div class="switch">
-              <input type="checkbox" id="toggleAux" checked>
-              <label for="toggleAux">Axes + Guides</label>
-            </div>
-            <div class="switch">
-              <input type="checkbox" id="toggleGrid" checked>
-              <label for="toggleGrid">HUD Grid</label>
-            </div>
+            <label class="switch"><input id="tMesh" type="checkbox" checked>Face mesh</label>
+            <label class="switch"><input id="tIris" type="checkbox" checked>Iris</label>
+            <label class="switch"><input id="tPose" type="checkbox" checked>Pose</label>
+            <label class="switch"><input id="tSeg"  type="checkbox" checked>Seg</label>
+            <label class="switch"><input id="tObj"  type="checkbox" checked>Objects</label>
+            <label class="switch"><input id="tGrid" type="checkbox" checked>HUD Grid</label>
           </div>
-
-          <div class="legend" style="margin-top:8px">
+          <div class="legend">
             <span><span class="sw sw-mesh"></span>Mesh</span>
             <span><span class="sw sw-iris"></span>Iris</span>
-            <span><span class="sw sw-aux"></span>Guides</span>
+            <span><span class="sw sw-pose"></span>Pose</span>
+            <span><span class="sw sw-seg"></span>Seg</span>
+            <span><span class="sw sw-box"></span>Boxes</span>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: Diagnostics + Blendshapes -->
+      <!-- RIGHT: Diagnostics + Prompt -->
       <div class="card">
         <h3>Diagnostics</h3>
         <div class="body">
           <div id="diag">Ready.\nUpload an image to begin.</div>
-          <div style="height:10px"></div>
+          <div style="height:8px"></div>
           <div class="kv">
-            <div class="k">Bundle</div><div id="kvBundle" class="v muted">—</div>
-            <div class="k">Fileset</div><div id="kvFileset" class="v muted">—</div>
-            <div class="k">Face model</div><div id="kvFaceModel" class="v muted">—</div>
-            <div class="k">Inference</div><div id="kvInfer" class="v muted">—</div>
+            <div>Bundle</div><div id="kvBundle" class="muted">—</div>
+            <div>Fileset</div><div id="kvFileset" class="muted">—</div>
+            <div>Face model</div><div id="kvFace" class="muted">—</div>
+            <div>Pose model</div><div id="kvPose" class="muted">—</div>
+            <div>Segmenter</div><div id="kvSeg" class="muted">—</div>
+            <div>Detector</div><div id="kvDet" class="muted">—</div>
+            <div>Inference</div><div id="kvRun" class="muted">—</div>
           </div>
-          <div style="height:12px"></div>
-          <div class="gaugeRow" id="blendshapeGauges"></div>
-          <div class="footerNote">Tip: If you see <span class="bad">Unexpected token '&lt;'</span>, your server is serving HTML for a binary path. Fix the path or MIME (wasm: <code>application/wasm</code>, task/tflite: <code>application/octet-stream</code>).</div>
+        </div>
+      </div>
+
+      <div class="card" style="grid-column: 1 / span 2">
+        <h3>Prompt (SFW core)</h3>
+        <div class="body">
+          <div class="row">
+            <button id="btnAnalyze">Analyze → Build prompt</button>
+            <button id="btnCopy">Copy</button>
+            <span class="muted">Outputs lighting, composition, subject, pose, objects, palette.</span>
+          </div>
+          <div style="height:8px"></div>
+          <textarea id="promptOut" placeholder="Prompt will appear here…"></textarea>
+          <div style="height:6px"></div>
+          <div class="muted" style="font-size:12px">NSFW anatomy taxonomy will be a separate gated route (<code>/labs/imageintel-nsfw</code>) after you approve this core.</div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // --------- tiny HUD grid backdrop ----------
-    const gridBG = document.getElementById('gridbg');
-    const gb = gridBG.getContext('2d');
-    function drawGrid(){
-      const w = gridBG.width, h = gridBG.height;
-      gb.clearRect(0,0,w,h);
-      gb.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid') || '#1c2430';
-      gb.lineWidth = 1;
-      const step = 32;
-      gb.beginPath();
-      for(let x=0;x<=w;x+=step){ gb.moveTo(x,0); gb.lineTo(x,h); }
-      for(let y=0;y<=h;y+=step){ gb.moveTo(0,y); gb.lineTo(w,y); }
-      gb.stroke();
-      // crosshair
-      gb.strokeStyle = '#223041';
-      gb.beginPath();
-      gb.moveTo(w/2,0); gb.lineTo(w/2,h);
-      gb.moveTo(0,h/2); gb.lineTo(w,h/2);
-      gb.stroke();
-    }
+  // ---------- utilities ----------
+  const el = id => document.getElementById(id);
+  const kv = (id,val,ok)=>{ const e=el(id); e.textContent=val; e.className = ok?'ok': (val==='—'?'muted':'bad'); };
+  const diag = el('diag');
+  const log = (...a)=>{ diag.textContent += '\\n' + a.join(' '); diag.scrollTop = diag.scrollHeight; };
+  const ok  = (t)=>log('✓', t);
+  const bad = (t)=>log('✗', t);
+
+  // ---------- canvas layout ----------
+  const wrap = document.getElementById('stageWrap');
+  const imgCan = el('imgCan'), ovCan = el('ovCan'), hudCan = el('hudCan'), gridbg = el('gridbg');
+  const ic = imgCan.getContext('2d'), oc = ovCan.getContext('2d'), hc = hudCan.getContext('2d'), gb = gridbg.getContext('2d');
+
+  function sizeAll(){
+    const r = wrap.getBoundingClientRect();
+    for(const c of [imgCan, ovCan, hudCan, gridbg]){ c.width = Math.floor(r.width); c.height = Math.floor(r.height); }
     drawGrid();
-  </script>
+    if(currentImageEl){ drawImageFit(currentImageEl); }
+  }
+  window.addEventListener('resize', sizeAll);
 
-  <script>
-  // ---------- App state ----------
-  const diagEl = document.getElementById('diag');
-  const kv = (id,val,ok)=>{ const el=document.getElementById(id); el.textContent=val; el.className = ok ? 'ok' : (val==='—'?'muted':'bad'); };
-  const log = (...a)=>{ diagEl.textContent += '\\n' + a.join(' '); diagEl.scrollTop = diagEl.scrollHeight; };
-  const ok  = (t)=>{ log('✓', t); };
-  const bad = (t)=>{ log('✗', t); };
-
-  const stage = document.getElementById('stage');
-  const overlay = document.getElementById('overlay');
-  const s = stage.getContext('2d');
-  const o = overlay.getContext('2d');
-  const fileInput = document.getElementById('fileInput');
-  const imgInfo = document.getElementById('imgInfo');
-
-  const toggleMesh = document.getElementById('toggleMesh');
-  const toggleIris = document.getElementById('toggleIris');
-  const toggleAux  = document.getElementById('toggleAux');
-  const toggleGrid = document.getElementById('toggleGrid');
-
-  // resize overlay to match image ratio
-  function fitCanvasTo(img){
-    const maxW = stage.width, maxH = stage.height;
-    const r = Math.min(maxW/img.naturalWidth, maxH/img.naturalHeight);
-    const w = Math.round(img.naturalWidth * r);
-    const h = Math.round(img.naturalHeight * r);
-    // clear
-    s.clearRect(0,0,stage.width,stage.height);
-    o.clearRect(0,0,overlay.width,overlay.height);
-    // center
-    const x = Math.floor((stage.width - w)/2);
-    const y = Math.floor((stage.height - h)/2);
-    return {x,y,w,h};
+  function drawGrid(){
+    const w=gridbg.width,h=gridbg.height, step=32;
+    gb.clearRect(0,0,w,h);
+    gb.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid')||'#1c2430';
+    gb.lineWidth=1; gb.beginPath();
+    for(let x=0;x<=w;x+=step){ gb.moveTo(x,0); gb.lineTo(x,h); }
+    for(let y=0;y<=h;y+=step){ gb.moveTo(0,y); gb.lineTo(w,y); }
+    gb.stroke();
+    gb.strokeStyle = '#223041'; gb.beginPath();
+    gb.moveTo(w/2,0); gb.lineTo(w/2,h);
+    gb.moveTo(0,h/2); gb.lineTo(w,h/2);
+    gb.stroke();
   }
 
-  // draw image
-  function drawImageCentered(img,rect){
-    s.fillStyle = '#000'; s.fillRect(0,0,stage.width, stage.height);
-    s.drawImage(img, rect.x, rect.y, rect.w, rect.h);
+  // fit image, compute rect
+  let drawRect = {x:0,y:0,w:0,h:0}, currentImageEl=null;
+  function drawImageFit(img){
+    const W = imgCan.width, H = imgCan.height;
+    const r = Math.min(W/img.naturalWidth, H/img.naturalHeight);
+    const w = Math.round(img.naturalWidth * r), h = Math.round(img.naturalHeight * r);
+    const x = Math.floor((W - w)/2), y = Math.floor((H - h)/2);
+    drawRect = {x,y,w,h};
+    ic.fillStyle = '#000'; ic.fillRect(0,0,W,H);
+    ic.drawImage(img, x, y, w, h);
+    oc.clearRect(0,0,ovCan.width,ovCan.height);
+    hc.clearRect(0,0,hudCan.width,hudCan.height);
   }
 
-  // draw overlay features
-  function drawOverlay(detections, rect){
-    o.clearRect(0,0,overlay.width, overlay.height);
-    if(!detections || !detections.faceLandmarks || detections.faceLandmarks.length===0) return;
+  // ---------- toggles ----------
+  const tMesh=el('tMesh'), tIris=el('tIris'), tPose=el('tPose'), tSeg=el('tSeg'), tObj=el('tObj'), tGrid=el('tGrid');
+  tGrid.addEventListener('change', ()=> gridbg.style.display = tGrid.checked?'block':'none');
 
-    const meshColor = '#60f8e9';
-    const irisColor = '#ff89f0';
-    const auxColor  = '#ffd166';
-
-    const faces = detections.faceLandmarks;
-    // helpers map from normalized landmark -> canvas coords
-    const toXY = (pt)=>({ 
-      x: rect.x + pt.x * rect.w,
-      y: rect.y + pt.y * rect.h
-    });
-
-    // Mesh points
-    if (toggleMesh.checked){
-      o.fillStyle = meshColor;
-      faces.forEach(face=>{
-        for (let i=0;i<face.length;i++){
-          const p = toXY(face[i]);
-          o.beginPath(); o.arc(p.x, p.y, 1.6, 0, Math.PI*2); o.fill();
-        }
-      });
-    }
-    // Iris (approx by drawing around eye landmarks if present)
-    if (toggleIris.checked){
-      o.strokeStyle = irisColor; o.lineWidth = 1.5;
-      faces.forEach(face=>{
-        // Common iris indices from MediaPipe iris (approx): 468.. — face model may include iris landmarks near the end
-        const IRIS = [468,469,470,471,472].filter(i=>i<face.length);
-        if (IRIS.length){
-          const pts = IRIS.map(i=>toXY(face[i]));
-          o.beginPath(); pts.forEach((p,idx)=> idx? o.lineTo(p.x,p.y): o.moveTo(p.x,p.y)); o.closePath(); o.stroke();
-        }
-      });
-    }
-    // Axes + guides
-    if (toggleAux.checked){
-      o.strokeStyle = auxColor; o.lineWidth=1;
-      // bounds
-      o.strokeRect(rect.x, rect.y, rect.w, rect.h);
-      // thirds
-      o.beginPath();
-      o.moveTo(rect.x + rect.w/3, rect.y); o.lineTo(rect.x + rect.w/3, rect.y+rect.h);
-      o.moveTo(rect.x + 2*rect.w/3, rect.y); o.lineTo(rect.x + 2*rect.w/3, rect.y+rect.h);
-      o.moveTo(rect.x, rect.y + rect.h/3); o.lineTo(rect.x + rect.w, rect.y + rect.h/3);
-      o.moveTo(rect.x, rect.y + 2*rect.h/3); o.lineTo(rect.x + rect.w, rect.y + 2*rect.h/3);
-      o.stroke();
-    }
-  }
-
-  // Blendshape gauges UI
-  function renderBlendshapeGauges(categories){
-    const host = document.getElementById('blendshapeGauges');
-    host.innerHTML = '';
-    if(!categories || !categories.length){ return; }
-    // show top 8 strongest magnitudes
-    const top = [...categories].sort((a,b)=>b.score-a.score).slice(0,8);
-    for(const c of top){
-      const div = document.createElement('div');
-      div.className = 'gauge';
-      const label = document.createElement('b');
-      label.textContent = c.categoryName;
-      const bar = document.createElement('div'); bar.className = 'bar';
-      const fill = document.createElement('span'); fill.style.width = Math.round(c.score*100) + '%';
-      bar.appendChild(fill);
-      const pct = document.createElement('div'); pct.style.fontSize='12px'; pct.style.color='#cfe9ff';
-      pct.textContent = (c.score*100).toFixed(1) + '%';
-      div.appendChild(label); div.appendChild(bar); div.appendChild(pct);
-      host.appendChild(div);
-    }
-  }
-
-  // grid toggle
-  toggleGrid.addEventListener('change', ()=>{
-    document.getElementById('gridbg').style.display = toggleGrid.checked ? 'block':'none';
-  });
-
-  // ---------- MediaPipe (local-only) ----------
+  // ---------- local-only MediaPipe wiring ----------
   const VISION_SRC = '/vendor/mediapipe/vision_bundle.js';
-  const WASM_BASE = '/vendor/mediapipe/wasm';
-  const FACE_MODEL = '/models/face_landmarker.task';
+  const WASM_BASE  = '/vendor/mediapipe/wasm';
+  const FACE_TASK  = '/models/face_landmarker.task';
+  const POSE_TASK  = '/models/pose_landmarker_full.task';
+  const SEG_TFLITE = '/models/selfie_multiclass_256.tflite';
+  const DET_TFLITE = '/models/efficientdet_lite0.tflite';
 
-  let vision, FilesetResolver, FaceLandmarker, resolver, faceLandmarker;
+  let vision, FilesetResolver, FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector;
+  let resolver, faceModel, poseModel, segModel, detModel;
 
-  async function loadVisionLocal(){
+  async function loadBundle(){
+    kv('kvBundle', VISION_SRC, false);
     log('Loading vision bundle:', VISION_SRC);
-    kv('kvBundle','/vendor/mediapipe/vision_bundle.js', false);
-    const el = document.createElement('script');
-    el.src = VISION_SRC; el.async = true;
-    await new Promise((res,rej)=>{ el.onload=res; el.onerror=rej; document.head.appendChild(el); });
+    const s = document.createElement('script'); s.src = VISION_SRC; s.async = true;
+    await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); });
     if(!window.vision) throw new Error('window.vision undefined');
     vision = window.vision;
-    ({ FilesetResolver, FaceLandmarker } = vision);
+    ({ FilesetResolver, FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector } = vision);
     ok('Vision bundle ✓'); kv('kvBundle','OK',true);
   }
 
-  async function initFace(){
-    if(!FilesetResolver) throw new Error('FilesetResolver missing');
-    log('Resolving fileset… base:', WASM_BASE);
+  async function initModels(){
     kv('kvFileset', WASM_BASE, false);
     resolver = await FilesetResolver.forVisionTasks({ baseUrl: WASM_BASE });
-    ok('FilesetResolver ✓'); kv('kvFileset','OK',true);
+    ok('Fileset ✓'); kv('kvFileset','OK',true);
 
-    log('Loading face model:', FACE_MODEL);
-    kv('kvFaceModel', FACE_MODEL, false);
-    faceLandmarker = await FaceLandmarker.createFromOptions(resolver, {
-      baseOptions: { modelAssetPath: FACE_MODEL },
-      outputFaceBlendshapes: true,
-      runningMode: 'IMAGE',
-      numFaces: 2
+    // Face
+    kv('kvFace', FACE_TASK, false);
+    faceModel = await FaceLandmarker.createFromOptions(resolver,{
+      baseOptions:{ modelAssetPath: FACE_TASK },
+      outputFaceBlendshapes:true, runningMode:'IMAGE', numFaces:3
     });
-    ok('FaceLandmarker ✓'); kv('kvFaceModel','OK',true);
+    ok('Face ✓'); kv('kvFace','OK',true);
+
+    // Pose
+    kv('kvPose', POSE_TASK, false);
+    poseModel = await PoseLandmarker.createFromOptions(resolver,{
+      baseOptions:{ modelAssetPath: POSE_TASK }, runningMode:'IMAGE', numPoses:2
+    });
+    ok('Pose ✓'); kv('kvPose','OK',true);
+
+    // Segmenter (people)
+    kv('kvSeg', SEG_TFLITE, false);
+    segModel = await ImageSegmenter.createFromOptions(resolver,{
+      baseOptions:{ modelAssetPath: SEG_TFLITE }, runningMode:'IMAGE', outputCategoryMask:true
+    });
+    ok('Seg ✓'); kv('kvSeg','OK',true);
+
+    // Object detector
+    kv('kvDet', DET_TFLITE, false);
+    detModel = await ObjectDetector.createFromOptions(resolver,{
+      baseOptions:{ modelAssetPath: DET_TFLITE }, runningMode:'IMAGE', scoreThreshold:0.35
+    });
+    ok('Objects ✓'); kv('kvDet','OK',true);
   }
 
   async function bootstrap(){
     try{
-      await loadVisionLocal();
-      await initFace();
+      await loadBundle();
+      await initModels();
     }catch(e){
-      bad('Init error: ' + (e && e.message || e));
-      if((e+'').includes('<')) bad('You are likely receiving HTML for a binary path. Check 404/redirect/MIME.');
+      bad('Init error: ' + (e?.message || e));
+      if((e+'').includes('<')) bad('You are likely receiving HTML for a binary path. Fix path/MIME.');
     }
   }
-
   bootstrap();
 
-  // ---------- Image flow ----------
-  fileInput.addEventListener('change', async (ev)=>{
-    const f = ev.target.files && ev.target.files[0]; if(!f) return;
+  // ---------- file input ----------
+  el('file').addEventListener('change', ev=>{
+    const f = ev.target.files?.[0]; if(!f) return;
     const img = new Image();
-    img.onload = async ()=>{
-      const rect = fitCanvasTo(img);
-      drawImageCentered(img, rect);
-      imgInfo.textContent = `${img.naturalWidth}×${img.naturalHeight} · ${(f.size/1024).toFixed(1)} KB`;
-      await runFace(img, rect);
+    img.onload = ()=>{
+      currentImageEl = img;
+      sizeAll();
+      drawImageFit(img);
+      el('imgInfo').textContent = `${img.naturalWidth}×${img.naturalHeight} · ${(f.size/1024).toFixed(1)} KB`;
     };
     img.src = URL.createObjectURL(f);
   });
 
-  async function runFace(img, rect){
-    if(!faceLandmarker){ bad('FaceLandmarker not ready'); return; }
-    kv('kvInfer','—', false);
-    try{
-      const result = await faceLandmarker.detect(img);
-      ok('Inference ✓'); kv('kvInfer','OK', true);
+  // ---------- analysis + overlays ----------
+  function p2c(pt){ return { x: drawRect.x + pt.x*drawRect.w, y: drawRect.y + pt.y*drawRect.h }; }
 
-      const faces = result.faceLandmarks || [];
-      drawOverlay({ faceLandmarks: faces }, rect);
-
-      // blendshapes
-      if(result.faceBlendshapes && result.faceBlendshapes.length){
-        renderBlendshapeGauges(result.faceBlendshapes[0].categories);
-      }else{
-        renderBlendshapeGauges([]);
+  function drawFaceMesh(faces){
+    if(!tMesh.checked && !tIris.checked) return;
+    oc.save();
+    for(const face of faces){
+      if(tMesh.checked){
+        oc.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--mesh')||'#60f8e9';
+        for(const lm of face){ const p=p2c(lm); oc.beginPath(); oc.arc(p.x,p.y,1.4,0,Math.PI*2); oc.fill(); }
       }
-    }catch(e){
-      bad('Run error: ' + (e && e.message || e));
+      if(tIris.checked){
+        const idx=[468,469,470,471,472].filter(i=>i<face.length);
+        if(idx.length){
+          oc.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--iris')||'#ff89f0';
+          oc.lineWidth=1.5; oc.beginPath();
+          idx.forEach((i,k)=>{ const p=p2c(face[i]); k?oc.lineTo(p.x,p.y):oc.moveTo(p.x,p.y); });
+          oc.closePath(); oc.stroke();
+        }
+      }
     }
+    oc.restore();
   }
+
+  function drawPose(poses){
+    if(!tPose.checked) return;
+    hc.save(); hc.lineWidth=2; hc.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--pose')||'#ff9ad6';
+    for(const pose of poses){
+      const pts = pose; // list of landmarks
+      const lines = [
+        [11,13,15],[12,14,16], // arms
+        [11,12],[11,23,25,27],[12,24,26,28], // torso/legs
+        [23,24]
+      ];
+      for(const seg of lines){
+        hc.beginPath();
+        seg.forEach((idx,i)=>{ const p=p2c(pts[idx]); i?hc.lineTo(p.x,p.y):hc.moveTo(p.x,p.y);});
+        hc.stroke();
+      }
+      // joints
+      hc.fillStyle='#ffe2f6';
+      for(const i of [11,12,13,14,15,16,23,24,25,26,27,28]){
+        const p=p2c(pts[i]); hc.beginPath(); hc.arc(p.x,p.y,3,0,Math.PI*2); hc.fill();
+      }
+    }
+    hc.restore();
+  }
+
+  function drawSeg(mask){
+    if(!tSeg.checked) return;
+    // draw a neon silhouette border from category mask
+    const w = drawRect.w, h = drawRect.h;
+    const tmp = new OffscreenCanvas ? new OffscreenCanvas(w,h) : document.createElement('canvas');
+    tmp.width=w; tmp.height=h;
+    const ctx = tmp.getContext('2d');
+    const imgD = new ImageData(new Uint8ClampedArray(mask), segWidth, segHeight);
+    // scale mask into rect
+    const tmp2 = document.createElement('canvas'); tmp2.width=segWidth; tmp2.height=segHeight;
+    const t2 = tmp2.getContext('2d'); t2.putImageData(imgD,0,0);
+    ctx.drawImage(tmp2, 0,0,w,h);
+    // edge effect
+    const data = ctx.getImageData(0,0,w,h), d=data.data;
+    const out = hc;
+    out.save(); out.globalCompositeOperation='lighter';
+    out.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--seg')||'#26f7a8';
+    out.lineWidth=2;
+    // sample coarse grid for edges
+    out.beginPath();
+    const step=3;
+    for(let y=step;y<h-step;y+=step){
+      for(let x=step;x<w-step;x+=step){
+        const i=(y*w+x)*4+3; // alpha
+        const a = d[i];
+        if(a>128){
+          // check neighbors
+          const i2=(y*w+(x+step))*4+3;
+          if(d[i2]<128){ out.moveTo(drawRect.x+x, drawRect.y+y); out.lineTo(drawRect.x+x+1, drawRect.y+y); }
+        }
+      }
+    }
+    out.stroke(); out.restore();
+  }
+
+  function drawBoxes(objs){
+    if(!tObj.checked) return;
+    hc.save(); hc.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--box')||'#82b1ff';
+    hc.lineWidth=2; hc.fillStyle='rgba(130,177,255,.12)';
+    for(const d of objs){
+      const bb = d.boundingBox;
+      const x = drawRect.x + bb.originX * drawRect.w;
+      const y = drawRect.y + bb.originY * drawRect.h;
+      const w = bb.width * drawRect.w;
+      const h = bb.height * drawRect.h;
+      hc.strokeRect(x,y,w,h);
+      hc.fillRect(x,y,w,h);
+      const label = `${d.categories?.[0]?.categoryName||'obj'} ${(d.categories?.[0]?.score||0).toFixed(2)}`;
+      hc.fillStyle='#0b0f14'; hc.fillRect(x, y-16, ctxMeasure(label)+8, 16);
+      hc.fillStyle='#bfe1ff'; hc.fillText(label, x+4, y-4);
+      hc.fillStyle='rgba(130,177,255,.12)'; // reset
+    }
+    hc.restore();
+  }
+  function ctxMeasure(t){ const tmp=hudCan.getContext('2d'); tmp.font='12px ui-monospace'; return tmp.measureText(t).width; }
+
+  // ---------- core analyze + prompt ----------
+  let segWidth=0, segHeight=0;
+
+  async function analyze(){
+    if(!currentImageEl){ bad('No image'); return; }
+    kv('kvRun','…',false);
+    const img = currentImageEl;
+
+    // Face
+    const faceRes = await faceModel.detect(img);
+    const faces = faceRes.faceLandmarks || [];
+    oc.clearRect(0,0,ovCan.width,ovCan.height);
+    drawFaceMesh(faces);
+
+    // Pose
+    const poseRes = await poseModel.detect(img);
+    const poses = (poseRes.landmarks || []);
+    drawPose(poses);
+
+    // Seg
+    let maskBytes=null;
+    const segRes = await segModel.segment(img);
+    if(segRes.categoryMask){
+      const m = segRes.categoryMask; // WebGL tensor → get as ImageData-like buffer
+      // Use canvas readback helper via toCanvasImageSource
+      const off = document.createElement('canvas');
+      off.width = m.width; off.height=m.height; segWidth=m.width; segHeight=m.height;
+      const offc = off.getContext('2d'); offc.drawImage(m,0,0);
+      const id = offc.getImageData(0,0,off.width,off.height);
+      maskBytes = id.data; // RGBA; A used above as mask indicator
+    }
+    drawSeg(maskBytes||new Uint8ClampedArray());
+
+    // Objects
+    const detRes = await detModel.detect(img);
+    const dets = detRes.detections || [];
+    drawBoxes(dets);
+
+    kv('kvRun','OK',true);
+    ok('Inference ✓');
+
+    // Build prompt
+    const prompt = buildPrompt({faces, faceBlend: faceRes.faceBlendshapes||[], poses, dets, img});
+    el('promptOut').value = prompt;
+  }
+
+  function buildPrompt({faces, faceBlend, poses, dets, img}){
+    const parts=[];
+
+    // Subject count + framing
+    const subj = faces.length ? `${faces.length} person${faces.length>1?'s':''}` : 'subject';
+    parts.push(subj);
+
+    // Face cues (first face)
+    if(faces[0]){
+      const bs = (faceBlend[0]?.categories || []).sort((a,b)=>b.score-a.score).slice(0,4).map(c=>c.categoryName.replace(/_/g,' '));
+      if(bs.length) parts.push(`expression: ${bs.join(', ')}`);
+    }
+
+    // Pose summary (very coarse)
+    if(poses[0]){
+      const p=poses[0];
+      const hipY=(p[23].y+p[24].y)/2, shoulderY=(p[11].y+p[12].y)/2;
+      const stance = Math.abs(hipY-shoulderY)>0.1?'standing':'seated';
+      parts.push(`pose: ${stance}`);
+    }
+
+    // Objects list
+    if(dets.length){
+      const objs = [...new Set(dets.map(d=>d.categories?.[0]?.categoryName).filter(Boolean))];
+      if(objs.length) parts.push(`objects: ${objs.join(', ')}`);
+    }
+
+    // Colors & lighting
+    const {palette, lighting} = analyzeColorsLighting(img);
+    if(palette.length) parts.push(`palette: ${palette.slice(0,5).join(', ')}`);
+    parts.push(`lighting: ${lighting}`);
+
+    // Composition
+    parts.push('composition: centered subject, shallow depth of field, natural background');
+
+    // Output style tags (SFW)
+    parts.push('high detail, sharp focus, photorealistic, natural skin tones');
+
+    return parts.join(' · ');
+  }
+
+  function analyzeColorsLighting(img){
+    // simple palette: downsample + histogram
+    const tmp = document.createElement('canvas'); tmp.width=64; tmp.height=64;
+    const c = tmp.getContext('2d'); c.drawImage(img,0,0,64,64);
+    const d = c.getImageData(0,0,64,64).data;
+    const buckets = new Map();
+    for(let i=0;i<d.length;i+=4){
+      const r=d[i],g=d[i+1],b=d[i+2];
+      const key = `${Math.round(r/32)*32},${Math.round(g/32)*32},${Math.round(b/32)*32}`;
+      buckets.set(key, (buckets.get(key)||0)+1);
+    }
+    const top = [...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k])=>{
+      const [r,g,b]=k.split(',').map(Number);
+      return `rgb(${r},${g},${b})`;
+    });
+
+    // lighting heuristic: mean luminance + contrast
+    let sum=0, sum2=0, n=0;
+    for(let i=0;i<d.length;i+=4){ const y = 0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2]; sum+=y; sum2+=y*y; n++; }
+    const mean = sum/n, std = Math.sqrt(sum2/n - mean*mean);
+    let lighting='soft natural light';
+    if(mean>180) lighting='bright light';
+    else if(mean<70) lighting='low light';
+    if(std>70) lighting += ', high contrast';
+    else lighting += ', gentle contrast';
+    return { palette: top, lighting };
+  }
+
+  el('btnAnalyze').addEventListener('click', analyze);
+  el('btnCopy').addEventListener('click', ()=>{
+    const t = el('promptOut'); t.select(); document.execCommand('copy');
+  });
+
+  // kick initial sizing
+  sizeAll();
   </script>
 </body>
 </html>
