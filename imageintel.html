@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>ImageIntel Pro — Online Tasks Demo (v12.3)</title>
+<title>ImageIntel Pro — Online Tasks Demo (v12.4)</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net"/>
 <link rel="preconnect" href="https://storage.googleapis.com"/>
 <meta name="theme-color" content="#0c1016"/>
@@ -49,15 +49,17 @@
   .toast.show{opacity:1;transform:translate(-50%,-6px)}
   .drop{position:absolute;inset:0;border:2px dashed #2b3a4f;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#bcd;opacity:.9;pointer-events:none}
   .drop.show{border-color:#67f0e1;color:#eafffb}
+  .progress{height:8px;background:#0f1b2a;border:1px solid #2a3a43;border-radius:999px;overflow:hidden}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,#67f0e1,#a98eff);transition:width .25s ease}
 </style>
 </head>
 <body>
   <div class="bar">
     <div class="bar-inner">
-      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.3 Online Beta</span></h1>
+      <h1 style="font-size:1rem;letter-spacing:.5px">ImageIntel Pro <span class="badge">v12.4 Online Beta</span></h1>
       <div style="margin-left:auto;display:flex;gap:.5rem">
         <button id="btnSelfTest" class="btn">Self‑Test</button>
-        <button id="btnAnalyze" class="btn hot">Analyze Image</button>
+        <button id="btnAnalyze" class="btn hot" disabled>Analyze Image</button>
         <button id="btnClear" class="btn">Clear</button>
       </div>
     </div>
@@ -87,6 +89,24 @@
             <input type="checkbox" id="cbObj" checked/> Objects
           </label>
           <div class="hint">Tip: If a URL fails (CORS), use the Demo or choose a local file.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px">
+      <header>
+        <h3>Step 1.5 · Initialize models</h3>
+      </header>
+      <div style="padding:10px" class="grid2">
+        <div>
+          <div class="controls">
+            <button id="btnInit" class="btn">Initialize MediaPipe models</button>
+            <span class="pill" id="initState">Not started</span>
+          </div>
+          <div class="progress" style="margin-top:8px"><i id="initProg"></i></div>
+        </div>
+        <div>
+          <div class="hint">Loads Face (468), Pose (33), Segmentation (person), Objects. Progress and any errors will also appear in Diagnostics.</div>
         </div>
       </div>
     </div>
@@ -160,123 +180,117 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js"></script>
   <script>
   // ======= Helpers & state =======
-  const el = s=>document.querySelector(s); const els = s=>[...document.querySelectorAll(s)];
-  const toast=msg=>{const t=el('#toast'); t.textContent=msg||'Copied'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200)}
+  const $ = s=>document.querySelector(s); const $$ = s=>[...document.querySelectorAll(s)];
+  const toast=msg=>{const t=$('#toast'); t.textContent=msg||'Copied'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200)}
   const copyText=t=>{navigator.clipboard.writeText(t||''); toast('Copied');}
-  function diagAdd(msg){ const box=el('#outDiag'); box.textContent += (box.textContent?"\n":"") + msg; }
+  const diagAdd=msg=>{ const box=$('#outDiag'); box.textContent += (box.textContent?"\n":"") + msg; }
 
-  // Strong loader with fallbacks: File -> fetch(url)->blob -> direct URL -> embedded demo
-  const DEMO_URL = 'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1200&auto=format&fit=crop';
-  // lightweight base64 (tiny image) — only used if everything else fails, just to prove rendering path
-  const DEMO_B64 = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAABkCAYAAAB2cvZFAAAACXBIWXMAAAsSAAALEgHS3X78AAAB7ElEQVR4nO3ZwQ3CMBAF0eZb4o6p0qv4x1Y0e1Dq1cW3sS9H2qg4kQO7zP1u0c1g5kR1t3A8g0E0klyjH5w+v04bq0w9f7o/0sH2y7jWwCq8z8Zz3Q2j0b7G7eJ4o9oYB1M0d4m8u8F5h1nYH6Q8D0wYp3cQ4jvCw1gH5bZ2Gqv0eX4H0v4b7G0g3zVf5g4J4Jr/2wDgWk7KQ2cZUp3d1O9qgQb8f3s7Qw3b3m7IYH3QbZ3m4gYb2kZB1m2qYw1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY9v8w7v3fKk7+7v9Y7P8b1f4f8f9f4G5QeZJ8n3e7w7w+v+0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZz2x7A0QG5v8E5zj1sJ6vXcR6v0d3+f3zM1B7k5bF3AAAAAElFTkSuQmCC';
+  const DEMO_URL='https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1200&auto=format&fit=crop';
+  const DEMO_B64='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAABkCAYAAAB2cvZFAAAACXBIWXMAAAsSAAALEgHS3X78AAAB7ElEQVR4nO3ZwQ3CMBAF0eZb4o6p0qv4x1Y0e1Dq1cW3sS9H2qg4kQO7zP1u0c1g5kR1t3A8g0E0klyjH5w+v04bq0w9f7o/0sH2y7jWwCq8z8Zz3Q2j0b7G7eJ4o9oYB1M0d4m8u8F5h1nYH6Q8D0wYp3cQ4jvCw1gH5bZ2Gqv0eX4H0v4b7G0g3zVf5g4J4Jr/2wDgWk7KQ2cZUp3d1O9qgQb8f3s7Qw3b3m7IYH3QbZ3m4gYb2kZB1m2qYw1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY9v8w7v3fKk7+7v9Y7P8b1f4f8f9f4G5QeZJ8n3e7w7w+v+0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZz2x7A0QG5v8E5zj1sJ6vXcR6v0d3+f3zM1B7k5bF3AAAAAElFTkSuQmCC';
 
-  function fitImageToAllStages(img){ ['Face','Pose','Seg','Obj'].forEach(k=>{const tag=document.getElementById('img'+k); tag.src = img.src; tag.style.objectFit='contain';}); }
+  function fitImage(img){ ['Face','Pose','Seg','Obj'].forEach(k=>{const tag=document.getElementById('img'+k); tag.src=img.src; tag.style.objectFit='contain';}); $('#imgInfo').textContent=`${img.naturalWidth}×${img.naturalHeight}`; }
   function setupDprCanvas(canvas){ const parent=canvas.parentElement; const dpr=window.devicePixelRatio||1; const {width,height}=parent.getBoundingClientRect(); canvas.width=Math.max(1,Math.floor(width*dpr)); canvas.height=Math.max(1,Math.floor(height*dpr)); const ctx=canvas.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); return ctx; }
-  window.addEventListener('resize',()=>{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>{const c=document.getElementById(id); if(!c) return; setupDprCanvas(c); }); if(window.__lastDetections) drawAll(window.__lastDetections,true); });
+  window.addEventListener('resize',()=>{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>{const c=document.getElementById(id); if(!c) return; setupDprCanvas(c); }); if(window.__last) drawAll(window.__last,true); });
 
-  // Primary load flow
-  el('#btnPrimaryLoad').onclick=()=> el('#file').click();
-  el('#file').onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f){ toast('No file'); return; } const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.onerror=()=>{toast('File load error'); diagAdd('File load error for '+(f&&f.name));}; img.src=url; };
+  // ======= Loaders =======
+  $('#btnPrimaryLoad').onclick=()=> $('#file').click();
+  $('#file').onchange=e=>{ const f=e.target.files&&e.target.files[0]; if(!f){ toast('No file'); return; } const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImage(img); toast('Image loaded');}; img.onerror=()=>{toast('File load error'); diagAdd('File load error '+(f&&f.name));}; img.src=url; };
 
-  async function loadFromUrlSmart(u){
-    const url=u.trim(); if(!url){ toast('Empty URL'); return; }
-    // Try fetch->blob (works around many CORS cases when server allows), then fall back to direct src
-    try{
-      const res = await fetch(url,{mode:'cors'});
-      if(!res.ok) throw new Error('HTTP '+res.status);
-      const blob = await res.blob();
-      const obj  = URL.createObjectURL(blob);
-      const img  = new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${new URL(url).hostname} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.onerror=()=>{diagAdd('Blob URL failed, try direct'); loadFromUrlDirect(url);}; img.src=obj; return;
-    }catch(err){ diagAdd('Fetch CORS/HTTP failed: '+(err&&err.message?err.message:err)); }
-    loadFromUrlDirect(url);
+  async function loadFromUrlSmart(u){ const url=String(u||'').trim(); if(!url){ toast('Empty URL'); return; }
+    try{ const res=await fetch(url,{mode:'cors'}); if(!res.ok) throw new Error('HTTP '+res.status); const blob=await res.blob(); const obj=URL.createObjectURL(blob); const img=new Image(); img.onload=()=>{fitImage(img); toast('Image loaded');}; img.onerror=()=>{diagAdd('Blob URL failed, trying direct'); loadDirect(url)}; img.src=obj; return; }catch(err){ diagAdd('Fetch failed: '+(err&&err.message?err.message:err)); }
+    loadDirect(url);
   }
-  function loadFromUrlDirect(url){
-    const img=new Image(); img.crossOrigin='anonymous';
-    img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${new URL(url).hostname} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded'); };
-    img.onerror=()=>{ diagAdd('Direct URL failed: '+url); toast('URL failed — using embedded demo'); loadEmbeddedDemo(); };
-    img.src=url;
-  }
-  function loadEmbeddedDemo(){ const img=new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`Embedded demo — ${img.naturalWidth}×${img.naturalHeight}`; toast('Embedded demo shown'); }; img.src=DEMO_B64; }
+  function loadDirect(url){ const img=new Image(); img.crossOrigin='anonymous'; img.onload=()=>{fitImage(img); toast('Image loaded');}; img.onerror=()=>{ diagAdd('Direct URL failed: '+url); toast('Using embedded demo'); loadEmbedded();}; img.src=url; }
+  function loadEmbedded(){ const img=new Image(); img.onload=()=>{fitImage(img); toast('Embedded demo');}; img.src=DEMO_B64; }
+  $('#btnLoadUrl').onclick=()=> loadFromUrlSmart($('#urlIn').value);
+  $('#btnDemo').onclick=()=> loadFromUrlSmart(DEMO_URL);
+  $$('[data-drop]').forEach(stage=>{ const overlay=stage.querySelector('.drop'); stage.addEventListener('dragover',e=>{e.preventDefault(); overlay.classList.add('show');}); stage.addEventListener('dragleave',()=>overlay.classList.remove('show')); stage.addEventListener('drop',e=>{ e.preventDefault(); overlay.classList.remove('show'); const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImage(img); toast('Image loaded');}; img.src=url; }); });
 
-  el('#btnLoadUrl').onclick=()=> loadFromUrlSmart(el('#urlIn').value);
-  el('#btnDemo').onclick=()=> loadFromUrlSmart(DEMO_URL);
-
-  // Drag & Drop
-  els('[data-drop]').forEach(stage=>{
-    const overlay=stage.querySelector('.drop');
-    stage.addEventListener('dragover',e=>{e.preventDefault(); overlay.classList.add('show');});
-    stage.addEventListener('dragleave',()=>overlay.classList.remove('show'));
-    stage.addEventListener('drop',e=>{ e.preventDefault(); overlay.classList.remove('show'); const f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(!f) return; const url=URL.createObjectURL(f); const img=new Image(); img.onload=()=>{fitImageToAllStages(img); el('#imgInfo').textContent=`${f.name} — ${img.naturalWidth}×${img.naturalHeight}`; toast('Image loaded');}; img.src=url; });
-  });
-
-  // ======= MediaPipe Tasks setup (ONLINE) =======
+  // ======= MediaPipe Tasks setup (ONLINE, sequential with progress) =======
   const { FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = window.vision || {};
   let faceTask, poseTask, segTask, objTask, fileset;
-  async function ensureTasks(){ if(fileset) return; if(!FilesetResolver) throw new Error('vision bundle missing'); fileset = await FilesetResolver.forVisionTasks({ baseUrl: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' }); diagAdd('FilesetResolver online'); }
-  async function loadEngines(){ await ensureTasks(); const runningMode='IMAGE';
-    faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode, numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true});
-    poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode, numPoses:1});
-    segTask  = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode, outputCategoryMask:true});
-    objTask  = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite'}, runningMode, scoreThreshold:0.4, maxResults:8 });
-    diagAdd('Tasks ready (face/pose/seg/obj)'); }
+  const prog = $('#initProg'); const setProg=p=>prog.style.width=(p*100).toFixed(0)+'%';
 
-  // ======= Draw utils (unchanged visuals) =======
-  function circle(ctx,x,y,r,stroke,fill){ ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); if(fill){ctx.fillStyle=fill; ctx.fill()} ctx.lineWidth=2; ctx.strokeStyle=stroke; ctx.stroke(); }
-  function line(ctx,a,b,stroke, width){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.strokeStyle=stroke; ctx.lineWidth=width||2; ctx.stroke(); }
-  function text(ctx,str,x,y,color){ ctx.fillStyle=color; ctx.font='600 12px ui-monospace,monospace'; ctx.fillText(str,x+4,y-4); }
-  function drawFace(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections || !detections.faceLandmarks?.length) return; const lm=detections.faceLandmarks[0]; ctx.save(); ctx.lineJoin='round'; ctx.lineCap='round'; const idx=[[10,338,297,332,284,251,389,356,454,323,361,288,397,365,379,378,400,377,152,148,176,149,150,136,172,58,132,93,234,127,162,21,54,103,67,109,10]]; ctx.shadowColor='rgba(103,240,225,.7)'; ctx.shadowBlur=8; ctx.strokeStyle='#67f0e1'; ctx.lineWidth=2; idx.forEach(arr=>{ ctx.beginPath(); arr.forEach((i,j)=>{ const p=lm[i]; if(j===0) ctx.moveTo(p.x*cv.clientWidth, p.y*cv.clientHeight); else ctx.lineTo(p.x*cv.clientWidth, p.y*cv.clientHeight);}); ctx.stroke();}); ctx.shadowBlur=18; ctx.fillStyle='rgba(169,142,255,.9)'; for(let i=0;i<lm.length;i+=3){ const p=lm[i]; circle(ctx,p.x*cv.clientWidth,p.y*cv.clientHeight,1.8,'rgba(255,110,168,.8)','rgba(169,142,255,.9)'); } ctx.restore(); }
-  function drawPose(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections?.poseLandmarks?.length) return; const lm=detections.poseLandmarks[0]; const J=(i)=>({x:lm[i].x*cv.clientWidth,y:lm[i].y*cv.clientHeight}); const bones=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]]; ctx.lineCap='round'; ctx.lineJoin='round'; bones.forEach(([a,b])=> line(ctx,J(a),J(b),'#67f0e1',3)); [11,12,13,14,15,16,23,24,25,26,27,28].forEach(i=>{ const p=J(i); circle(ctx,p.x,p.y,3,'#ff6ea8','#a98eff'); }); const labels={11:'L-Shoulder',12:'R-Shoulder',23:'L-Hip',24:'R-Hip'}; Object.entries(labels).forEach(([i,name])=>{const p=J(+i); text(ctx,name,p.x,p.y,'#cfe7ff')}); }
-  function drawSeg(cv, seg){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!seg?.categoryMask) return; const {width,height} = seg.categoryMask; const mask=seg.categoryMask.getAsUint8Array(); const imgData=ctx.createImageData(width,height); for(let i=0;i<mask.length;i++){ const m=mask[i]; const o=i*4; if(m===1){ imgData.data[o]=103; imgData.data[o+1]=240; imgData.data[o+2]=225; imgData.data[o+3]=70; } else { imgData.data[o+3]=0; } } const tmp=document.createElement('canvas'); tmp.width=width; tmp.height=height; tmp.getContext('2d').putImageData(imgData,0,0); ctx.save(); ctx.imageSmoothingEnabled=true; ctx.globalCompositeOperation='lighter'; ctx.drawImage(tmp,0,0,cv.clientWidth,cv.clientHeight); ctx.restore(); ctx.strokeStyle='rgba(255,110,168,.6)'; ctx.setLineDash([8,6]); const y1=cv.clientHeight*.35, y2=cv.clientHeight*.55, y3=cv.clientHeight*.75; [y1,y2,y3].forEach((y,i)=>{ ctx.beginPath(); ctx.moveTo(12,y); ctx.lineTo(cv.clientWidth-12,y); ctx.stroke(); text(ctx,['bust','waist','hips'][i],14,y,'#ffbed8'); }); el('#segLegend').textContent='person mask + bust/waist/hips scanlines'; }
-  function drawObj(cv, detections){ const ctx=setupDprCanvas(cv); ctx.clearRect(0,0,cv.width,cv.height); if(!detections?.detections?.length) return; ctx.setLineDash([8,4]); ctx.lineWidth=2; detections.detections.forEach(d=>{ const [x,y,w,h]=[d.boundingBox.originX*cv.clientWidth, d.boundingBox.originY*cv.clientHeight, d.boundingBox.width*cv.clientWidth, d.boundingBox.height*cv.clientHeight]; ctx.strokeStyle='#ff6ea8'; ctx.strokeRect(x,y,w,h); const lab=`${d.categories[0].categoryName} ${(d.categories[0].score*100|0)}%`; ctx.fillStyle='#0c1016'; ctx.strokeStyle='#a98eff'; ctx.setLineDash([]); const tw=ctx.measureText(lab).width+10; ctx.fillRect(x,y-18, tw, 18); ctx.strokeRect(x,y-18, tw, 18); ctx.fillStyle='#fff'; ctx.fillText(lab,x+5,y-5); ctx.setLineDash([8,4]); }); }
-  function drawAll(all, fromResize){ window.__lastDetections = all; if(el('#cbFace').checked) drawFace(el('#cvFace'), all); if(el('#cbPose').checked) drawPose(el('#cvPose'), all); if(el('#cbSeg').checked) drawSeg(el('#cvSeg'), all.seg); if(el('#cbObj').checked) drawObj(el('#cvObj'), all.obj); }
+  async function initModels(){
+    $('#initState').textContent='Initializing…'; setProg(0.05); diagAdd('Init: starting');
+    try{
+      fileset = await FilesetResolver.forVisionTasks({ baseUrl:'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' });
+      diagAdd('Init: FilesetResolver ✓'); setProg(0.20);
 
-  // ======= Measurement / Prompt =======
-  function computeStats(all){ const stats={}; if(all?.faceLandmarks?.[0]){ const lm=all.faceLandmarks[0]; const L=lm[33], R=lm[263]; const rad=Math.atan2((R.y-L.y),(R.x-L.x)); let deg=(rad*180/Math.PI); if(deg<0) deg+=180; stats.eye_tilt_deg=+(deg.toFixed(1)); const top=lm[10], bottom=lm[152], left=lm[234], right=lm[454]; const w=Math.hypot(right.x-left.x,right.y-left.y); const h=Math.hypot(bottom.x-top.x,bottom.y-top.y); const r=h/(w+1e-6); stats.face_shape=r>1.25?'long': r>1.05?'oval':'round'; }
-    if(all?.poseLandmarks?.[0]){ const p=all.poseLandmarks[0]; const S=(a,b)=>Math.hypot((p[a].x-p[b].x),(p[a].y-p[b].y)); stats.shoulder_span=+((S(11,12))*100).toFixed(1); stats.hip_span=+((S(23,24))*100).toFixed(1); stats.shoulder_to_hip_ratio=+(stats.shoulder_span/(stats.hip_span||1)).toFixed(2); }
-    if(all?.obj?.detections?.length){ stats.objects=all.obj.detections.slice(0,8).map(d=>({name:d.categories[0].categoryName, score:+(d.categories[0].score.toFixed(2))})); }
-    if(all?.seg?.categoryMask){ const mask=all.seg.categoryMask.getAsUint8Array(); const person=mask.filter(v=>v===1).length; stats.person_coverage=+((person/mask.length)*100).toFixed(1); }
-    return stats; }
-  function makePrompt(stats){ const acc=+el('#accuracy').value; const tighten=x=> (acc>0.7? x : acc>0.4? x.replace(/\babout |roughly |around /g,'') : x.split(',').slice(0,Math.max(1,Math.floor(x.split(',').length*0.7))).join(', ')); const parts=[]; parts.push('portrait photo'); if(stats.face_shape) parts.push(`${stats.face_shape} face`); if(stats.eye_tilt_deg!=null) parts.push(`eye tilt ${stats.eye_tilt_deg}°`); if(stats.shoulder_span) parts.push(`shoulder span ~${stats.shoulder_span.toFixed(0)} (rel)`); if(stats.objects?.length){ const tops=stats.objects.slice(0,3).map(o=>o.name).join('/'); parts.push(`scene contains ${tops}`); } parts.push('photorealistic, sharp micro‑detail, minimal distortion'); return tighten(parts.join(', ')); }
+      faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true});
+      diagAdd('Init: FaceLandmarker ✓'); setProg(0.45);
+
+      poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode:'IMAGE', numPoses:1});
+      diagAdd('Init: PoseLandmarker ✓'); setProg(0.65);
+
+      segTask = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode:'IMAGE', outputCategoryMask:true});
+      diagAdd('Init: ImageSegmenter ✓'); setProg(0.80);
+
+      objTask = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite' }, runningMode:'IMAGE', maxResults:8, scoreThreshold:0.4});
+      diagAdd('Init: ObjectDetector ✓'); setProg(1.00);
+
+      $('#initState').textContent='Ready'; $('#btnAnalyze').disabled=false; toast('Models ready');
+    }catch(err){
+      console.error(err); diagAdd('Init error: '+(err&&err.message?err.message:err)); $('#initState').textContent='Failed'; toast('Init failed — see Diagnostics');
+    }
+  }
+  $('#btnInit').onclick=initModels;
+
+  // ======= Drawing (uses tasks constants when available) =======
+  function ctx(cv){ return setupDprCanvas(cv); }
+  function drawFace(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const l=res&&res.faceLandmarks&&res.faceLandmarks[0]; if(!l) return; c.save(); c.lineJoin='round'; c.lineCap='round'; c.shadowColor='rgba(103,240,225,.7)'; c.shadowBlur=10; c.strokeStyle='#67f0e1'; c.lineWidth=1.5; const W=cv.clientWidth, H=cv.clientHeight; const drawLine=(arr)=>{ c.beginPath(); arr.forEach((idx,j)=>{ const p=l[idx]; const x=p.x*W, y=p.y*H; if(j===0) c.moveTo(x,y); else c.lineTo(x,y); }); c.stroke(); }; if(FaceLandmarker && FaceLandmarker.FACE_LANDMARKS_TESSELATION){ FaceLandmarker.FACE_LANDMARKS_TESSELATION.forEach(seg=> drawLine(seg)); } else { for(let i=0;i<l.length;i+=3){ const p=l[i]; c.beginPath(); c.arc(p.x*W,p.y*H,1.6,0,Math.PI*2); c.fillStyle='rgba(169,142,255,.9)'; c.fill(); } } c.restore(); }
+
+  function drawPose(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const l=res&&res.poseLandmarks&&res.poseLandmarks[0]; if(!l) return; const W=cv.clientWidth,H=cv.clientHeight; const P=i=>({x:l[i].x*W,y:l[i].y*H}); const bones=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[24,26],[25,27],[26,28]]; c.lineCap='round'; c.lineJoin='round'; c.shadowBlur=8; c.shadowColor='rgba(103,240,225,.5)'; bones.forEach(([a,b])=>{ const A=P(a), B=P(b); c.beginPath(); c.moveTo(A.x,A.y); c.lineTo(B.x,B.y); c.strokeStyle='#67f0e1'; c.lineWidth=3; c.stroke(); }); [11,12,13,14,15,16,23,24,25,26,27,28].forEach(i=>{ const p=P(i); c.beginPath(); c.arc(p.x,p.y,3,0,Math.PI*2); c.fillStyle='#a98eff'; c.strokeStyle='#ff6ea8'; c.lineWidth=2; c.fill(); c.stroke(); }); }
+
+  function drawSeg(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const m=res&&res.categoryMask; if(!m) return; const {width,height}=m; const data=m.getAsUint8Array(); const img=c.createImageData(width,height); for(let i=0;i<data.length;i++){ const v=data[i]; const o=i*4; if(v===1){ img.data[o]=103; img.data[o+1]=240; img.data[o+2]=225; img.data[o+3]=70; } else { img.data[o+3]=0; } } const tmp=document.createElement('canvas'); tmp.width=width; tmp.height=height; tmp.getContext('2d').putImageData(img,0,0); c.save(); c.globalCompositeOperation='lighter'; c.drawImage(tmp,0,0,cv.clientWidth,cv.clientHeight); c.restore(); const y1=cv.clientHeight*.35, y2=cv.clientHeight*.55, y3=cv.clientHeight*.75; c.setLineDash([8,6]); c.strokeStyle='rgba(255,110,168,.6)'; [y1,y2,y3].forEach((y,i)=>{ c.beginPath(); c.moveTo(12,y); c.lineTo(cv.clientWidth-12,y); c.stroke(); c.fillStyle='#ffbed8'; c.font='600 12px ui-monospace,monospace'; c.fillText(['bust','waist','hips'][i],14,y-6); }); $('#segLegend').textContent='person mask + bust/waist/hips scanlines'; }
+
+  function drawObj(cv, res){ const c=ctx(cv); c.clearRect(0,0,cv.width,cv.height); const arr=res&&res.detections||[]; c.setLineDash([8,4]); c.lineWidth=2; arr.forEach(d=>{ const W=cv.clientWidth,H=cv.clientHeight; const x=d.boundingBox.originX*W, y=d.boundingBox.originY*H, w=d.boundingBox.width*W, h=d.boundingBox.height*H; c.strokeStyle='#ff6ea8'; c.strokeRect(x,y,w,h); const lab=`${d.categories[0].categoryName} ${(d.categories[0].score*100|0)}%`; c.fillStyle='#0c1016'; c.strokeStyle='#a98eff'; c.setLineDash([]); const tw=c.measureText(lab).width+10; c.fillRect(x,y-18,tw,18); c.strokeRect(x,y-18,tw,18); c.fillStyle='#fff'; c.fillText(lab,x+5,y-5); c.setLineDash([8,4]); }); }
+
+  function drawAll(all, fromResize){ window.__last=all; if($('#cbFace').checked) drawFace($('#cvFace'), all.face||all); if($('#cbPose').checked) drawPose($('#cvPose'), all.pose||all); if($('#cbSeg').checked) drawSeg($('#cvSeg'), all.seg); if($('#cbObj').checked) drawObj($('#cvObj'), all.obj); }
+
+  // ======= Prompt =======
+  function computeStats(all){ const s={}; if(all.face?.faceLandmarks?.[0]||all.faceLandmarks?.[0]){ const lm=(all.face?.faceLandmarks||all.faceLandmarks)[0]; const L=lm[33], R=lm[263]; const rad=Math.atan2((R.y-L.y),(R.x-L.x)); let deg=(rad*180/Math.PI); if(deg<0) deg+=180; s.eye_tilt_deg=+(deg.toFixed(1)); const top=lm[10],bottom=lm[152],left=lm[234],right=lm[454]; const w=Math.hypot(right.x-left.x,right.y-left.y); const h=Math.hypot(bottom.x-top.y?bottom.x-top.y:bottom.y-top.y, bottom.y-top.y); const r=h/(w+1e-6); s.face_shape=r>1.25?'long': r>1.05?'oval':'round'; }
+    const pl=(all.pose?.poseLandmarks||all.poseLandmarks); if(pl?.[0]){ const p=pl[0]; const S=(a,b)=>Math.hypot((p[a].x-p[b].x),(p[a].y-p[b].y)); s.shoulder_span=+((S(11,12))*100).toFixed(1); s.hip_span=+((S(23,24))*100).toFixed(1); s.shoulder_to_hip_ratio=+(s.shoulder_span/(s.hip_span||1)).toFixed(2); }
+    if(all.obj?.detections?.length){ s.objects=all.obj.detections.slice(0,8).map(d=>({name:d.categories[0].categoryName, score:+(d.categories[0].score.toFixed(2))})); }
+    if(all.seg?.categoryMask){ const mask=all.seg.categoryMask.getAsUint8Array(); const person=mask.filter(v=>v===1).length; s.person_coverage=+((person/mask.length)*100).toFixed(1); }
+    return s; }
+  function makePrompt(s){ const acc=+$('#accuracy').value; const parts=['portrait photo']; if(s.face_shape) parts.push(`${s.face_shape} face`); if(s.eye_tilt_deg!=null) parts.push(`eye tilt ${s.eye_tilt_deg}°`); if(s.shoulder_span) parts.push(`shoulder span ~${s.shoulder_span.toFixed(0)} (rel)`); if(s.objects?.length){ const tops=s.objects.slice(0,3).map(o=>o.name).join('/'); parts.push(`scene contains ${tops}`);} parts.push('photorealistic, sharp micro‑detail, minimal distortion'); return parts.join(', '); }
   const NEG='lowres, bad anatomy, extra limbs, deformed, fused features, duplicate face, cartoonish, unrealistic skin, oversharpen';
 
-  // ======= Analyze / Self‑Test =======
-  el('#btnSelfTest').onclick=async()=>{
-    const lines=[]; lines.push(`Origin: ${location.protocol}//${location.host}`);
-    try{ await ensureTasks(); lines.push('✅ FilesetResolver online'); }catch(e){ lines.push('❌ Vision bundle failed: '+e.message); }
-    el('#outDiag').textContent='Self‑Test (online)\n'+lines.join('\n'); els('.tab').forEach(t=>{ if(t.dataset.tab==='diag'){ t.click(); }});
-  };
+  // ======= Self‑Test / Analyze =======
+  $('#btnSelfTest').onclick=async()=>{ const lines=[]; lines.push(`Origin: ${location.protocol}//${location.host}`); lines.push('Vision bundle: '+(window.vision?'present':'missing')); $('#outDiag').textContent='Self‑Test\n'+lines.join('\n'); $$('.tab').forEach(t=>{ if(t.dataset.tab==='diag') t.click(); }); };
 
-  el('#btnAnalyze').onclick=async()=>{
+  $('#btnAnalyze').onclick=async()=>{
     try{
-      if(!el('#imgFace').src){ toast('Load an image first'); diagAdd('Analyze blocked: no image'); els('.tab').find(t=>t.dataset.tab==='diag').click(); return; }
-      els('.canvas').forEach(c=>setupDprCanvas(c));
-      el('#outDiag').textContent=`[${new Date().toLocaleTimeString()}] analyze start`;
-      const t0=performance.now(); await loadEngines(); const img=el('#imgFace');
-      const [face,pose,seg,obj] = await Promise.all([
-        el('#cbFace').checked ? faceTask.detect(img) : null,
-        el('#cbPose').checked ? poseTask.detect(img) : null,
-        el('#cbSeg').checked  ? segTask.segment(img) : null,
-        el('#cbObj').checked  ? objTask.detect(img) : null,
-      ]);
-      const all={ ...face, ...pose, seg, obj };
+      if(!$('#imgFace').src){ toast('Load an image first'); diagAdd('Analyze blocked: no image'); $$('.tab').find(t=>t.dataset.tab==='diag').click(); return; }
+      ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>setupDprCanvas(document.getElementById(id)));
+      $('#outDiag').textContent=`[${new Date().toLocaleTimeString()}] analyze start`;
+      const img=$('#imgFace');
+      const face = $('#cbFace').checked ? faceTask.detect(img) : null;
+      const pose = $('#cbPose').checked ? poseTask.detect(img) : null;
+      const seg  = $('#cbSeg').checked  ? segTask.segment(img)   : null;
+      const obj  = $('#cbObj').checked  ? objTask.detect(img)    : null;
+      const all={ face, pose, seg, obj };
       drawAll(all);
-      const stats=computeStats(all);
-      const prompt=makePrompt(stats);
-      el('#outPrompt').value=prompt;
-      el('#outJSON').textContent=JSON.stringify({image:{w:img.naturalWidth,h:img.naturalHeight}, stats, prompt, negative:NEG}, null, 2);
-      const t1=performance.now(); el('#outDiag').textContent+=`\n✓ done in ${(t1-t0).toFixed(0)} ms`; els('.tab').find(t=>t.dataset.tab==='prompt').click();
-    }catch(e){ console.error(e); el('#outDiag').textContent+=`\n✗ error: ${e.message}`; els('.tab').find(t=>t.dataset.tab==='diag').click(); toast('Analyze failed'); }
+      const stats=computeStats(all); const prompt=makePrompt(stats);
+      $('#outPrompt').value=prompt; $('#outJSON').textContent=JSON.stringify({image:{w:img.naturalWidth,h:img.naturalHeight}, stats, prompt, negative:NEG}, null, 2);
+      $('#outDiag').textContent+=`\n✓ done`;
+      $$('.tab').find(t=>t.dataset.tab==='prompt').click();
+    }catch(e){ console.error(e); diagAdd('Analyze error: '+(e&&e.message?e.message:e)); $$('.tab').find(t=>t.dataset.tab==='diag').click(); toast('Analyze failed'); }
   };
 
-  el('#btnClear').onclick=()=>{ ['Face','Pose','Seg','Obj'].forEach(k=>{ const c=el('#cv'+k); c.getContext('2d').clearRect(0,0,c.width,c.height); el('#img'+k).src='';}); el('#outPrompt').value=''; el('#outJSON').textContent=''; el('#outDiag').textContent='Cleared'; };
+  $('#btnClear').onclick=()=>{ ['Face','Pose','Seg','Obj'].forEach(k=>{ const c=$('#cv'+k); c.getContext('2d').clearRect(0,0,c.width,c.height); $('#img'+k).src='';}); $('#outPrompt').value=''; $('#outJSON').textContent=''; $('#outDiag').textContent='Cleared'; };
+  $('#btnCopyPrompt').onclick=()=>copyText($('#outPrompt').value);
+  $('#btnCopyNeg').onclick=()=>copyText(NEG);
+  $('#btnCopyJSON').onclick=()=>copyText($('#outJSON').textContent);
+  $('#btnCopyDiag').onclick=()=>copyText($('#outDiag').textContent);
+  $$('.copy').forEach(b=> b.onclick=()=>{ const id=b.dataset.copy; const stage=document.getElementById('stage'+id.charAt(0).toUpperCase()+id.slice(1)); const canvas=stage.querySelector('canvas'); const data=canvas.toDataURL('image/png'); const a=document.createElement('a'); a.href=data; a.download=`${id}.png`; a.click(); });
 
-  el('#btnCopyPrompt').onclick=()=>copyText(el('#outPrompt').value);
-  el('#btnCopyNeg').onclick=()=>copyText(NEG);
-  el('#btnCopyJSON').onclick=()=>copyText(el('#outJSON').textContent);
-  el('#btnCopyDiag').onclick=()=>copyText(el('#outDiag').textContent);
-  els('.copy').forEach(b=> b.onclick=()=>{ const id=b.dataset.copy; const stage=el('#stage'+id.charAt(0).toUpperCase()+id.slice(1)); const canvas=stage.querySelector('canvas'); const data=canvas.toDataURL('image/png'); const a=document.createElement('a'); a.href=data; a.download=`${id}.png`; a.click(); });
+  // Auto-canvas sizing
+  window.addEventListener('load',()=>{ ['cvFace','cvPose','cvSeg','cvObj'].forEach(id=>setupDprCanvas(document.getElementById(id))); diagAdd('UI ready'); });
 
-  window.addEventListener('load',()=>{ els('.canvas').forEach(setupDprCanvas); diagAdd('UI ready'); });
+  // Enable Analyze only after explicit init
+  // (prevents the "Analyze does nothing" issue on some devices)
   </script>
 </body>
 </html>
