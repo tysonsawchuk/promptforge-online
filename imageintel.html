@@ -183,7 +183,9 @@
   const $ = s=>document.querySelector(s); const $$ = s=>[...document.querySelectorAll(s)];
   const toast=msg=>{const t=$('#toast'); t.textContent=msg||'Copied'; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200)}
   const copyText=t=>{navigator.clipboard.writeText(t||''); toast('Copied');}
-  const diagAdd=msg=>{ const box=$('#outDiag'); box.textContent += (box.textContent?"\n":"") + msg; }
+  let __lastDiag='';
+  const diagAdd=msg=>{ const box=$('#outDiag'); const line=(box.textContent?"
+":"") + msg; box.textContent += line; __lastDiag += line; }
 
   const DEMO_URL='https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1200&auto=format&fit=crop';
   const DEMO_B64='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJgAAABkCAYAAAB2cvZFAAAACXBIWXMAAAsSAAALEgHS3X78AAAB7ElEQVR4nO3ZwQ3CMBAF0eZb4o6p0qv4x1Y0e1Dq1cW3sS9H2qg4kQO7zP1u0c1g5kR1t3A8g0E0klyjH5w+v04bq0w9f7o/0sH2y7jWwCq8z8Zz3Q2j0b7G7eJ4o9oYB1M0d4m8u8F5h1nYH6Q8D0wYp3cQ4jvCw1gH5bZ2Gqv0eX4H0v4b7G0g3zVf5g4J4Jr/2wDgWk7KQ2cZUp3d1O9qgQb8f3s7Qw3b3m7IYH3QbZ3m4gYb2kZB1m2qYw1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY1oG6mIY9v8w7v3fKk7+7v9Y7P8b1f4f8f9f4G5QeZJ8n3e7w7w+v+0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZ0k8gZz2x7A0QG5v8E5zj1sJ6vXcR6v0d3+f3zM1B7k5bF3AAAAAElFTkSuQmCC';
@@ -212,15 +214,24 @@
   const prog = $('#initProg'); const setProg=p=>prog.style.width=(p*100).toFixed(0)+'%';
 
   async function loadVisionBundle(){
-    // Try multiple CDNs for the Tasks Vision bundle; report each attempt.
     const sources=[
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js',
       'https://unpkg.com/@mediapipe/tasks-vision@0.10.7/vision_bundle.js',
-      'https://fastly.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/vision_bundle.js'
+      // Self-hosted fallback if you upload the file to your domain
+      '/vendor/mediapipe/vision_bundle.js'
     ];
     for(const src of sources){
       try{
-        if(document.querySelector(`script[src="${src}"]`)){
+        diagAdd('Loading vision bundle: '+src);
+        await new Promise((resolve,reject)=>{
+          const s=document.createElement('script'); s.src=src; s.async=true; s.onload=()=>resolve(); s.onerror=()=>reject(new Error('script load failed')); document.head.appendChild(s);
+        });
+        if(window.vision){ diagAdd('Vision bundle ✓'); return true; }
+        else diagAdd('Vision bundle loaded but window.vision missing');
+      }catch(e){ diagAdd('Vision bundle failed: '+src+' — '+e.message); }
+    }
+    return false;
+  }"]`)){
           if(window.vision){ diagAdd('Vision bundle already present'); return true; }
         }
         diagAdd('Loading vision bundle: '+src);
@@ -237,9 +248,30 @@
   async function initModels(){
     $('#initState').textContent='Initializing…'; setProg(0.05); diagAdd('Init: starting');
     try{
-      // 1) Ensure the bundle is actually present and exposes window.vision
       const ok=await loadVisionBundle();
-      if(!ok || !window.vision){ throw new Error('vision_bundle not available'); }
+      if(!ok || !window.vision){ const reason='vision_bundle not available (CSP or CDN blocked)'; diagAdd('Init fatal: '+reason); $('#initState').textContent='Failed — bundle'; toast('Init failed — open Diagnostics'); return; }
+      ({ FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = window.vision);
+
+      diagAdd('Init: resolving WASM');
+      try{
+        fileset = await FilesetResolver.forVisionTasks({ baseUrl: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.7/wasm' });
+        diagAdd('Init: FilesetResolver ✓'); setProg(0.20);
+      }catch(e){ diagAdd('FilesetResolver ❌ '+e.message); $('#initState').textContent='Failed — wasm'; toast('Init failed — see Diagnostics'); return; }
+
+      let okCount=0; const setFail=r=>{ $('#initState').textContent='Failed — '+r; };
+      try{ faceTask = await FaceLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:true, outputFacialTransformationMatrixes:true}); diagAdd('FaceLandmarker ✓'); okCount++; }catch(e){ diagAdd('FaceLandmarker ❌ '+e.message); }
+      setProg(0.40);
+      try{ poseTask = await PoseLandmarker.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/2/pose_landmarker_full.task' }, runningMode:'IMAGE', numPoses:1}); diagAdd('PoseLandmarker ✓'); okCount++; }catch(e){ diagAdd('PoseLandmarker ❌ '+e.message); }
+      setProg(0.60);
+      try{ segTask = await ImageSegmenter.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256/float32/1/selfie_multiclass_256.tflite' }, runningMode:'IMAGE', outputCategoryMask:true}); diagAdd('ImageSegmenter ✓'); okCount++; }catch(e){ diagAdd('ImageSegmenter ❌ '+e.message); }
+      setProg(0.80);
+      try{ objTask = await ObjectDetector.createFromOptions(fileset,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float32/1/efficientdet_lite0.tflite' }, runningMode:'IMAGE', maxResults:8, scoreThreshold:0.4}); diagAdd('ObjectDetector ✓'); okCount++; }catch(e){ diagAdd('ObjectDetector ❌ '+e.message); }
+      setProg(1);
+
+      if(okCount===0){ setFail('models'); toast('All model inits failed — see Diagnostics'); }
+      else { $('#initState').textContent='Ready'; $('#btnAnalyze').disabled=false; toast('Models ready'); }
+    }catch(err){ console.error(err); diagAdd('Init fatal: '+(err&&err.message?err.message:err)); $('#initState').textContent='Failed'; toast('Init failed — see Diagnostics'); }
+  }
       ({ FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector, FilesetResolver } = window.vision);
 
       // 2) Resolve WASM fileset
@@ -294,7 +326,7 @@
       console.error(err); diagAdd('Init error: '+(err&&err.message?err.message:err)); $('#initState').textContent='Failed'; toast('Init failed — see Diagnostics');
     }
   }
-  $('#btnInit').onclick=initModels;
+  $('#btnInit').onclick=()=>{ $('#outDiag').textContent=''; __lastDiag=''; $$('.tab').forEach(t=>{ if(t.dataset.tab==='diag') t.click(); }); initModels(); };
 
   // ======= Drawing (uses tasks constants when available) =======
   function ctx(cv){ return setupDprCanvas(cv); }
