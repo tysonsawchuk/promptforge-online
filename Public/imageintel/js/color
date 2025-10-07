@@ -1,0 +1,62 @@
+// ImageIntel Pro Lab — color.js
+// Lightweight color + lighting analyzer (client-side). No deps.
+// Place at: public/imageintel/js/color.js
+
+function rgbToHex(r,g,b){
+  return '#' + [r,g,b].map(x=> x.toString(16).padStart(2,'0')).join('');
+}
+
+function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+export function analyzeColors(imgEl, {samples=20000}={}){
+  // Draw to an offscreen canvas at reduced resolution to sample colors
+  const w = imgEl.naturalWidth || imgEl.width; const h = imgEl.naturalHeight || imgEl.height;
+  const scale = Math.sqrt((samples)/(w*h));
+  const tw = Math.max(1, Math.floor(w*scale));
+  const th = Math.max(1, Math.floor(h*scale));
+
+  const c = document.createElement('canvas'); c.width = tw; c.height = th;
+  const ctx = c.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(imgEl, 0, 0, tw, th);
+  const data = ctx.getImageData(0,0,tw,th).data;
+
+  // Histogram in 12-bit space (4 bits per channel)
+  const buckets = new Map();
+  let sumL=0, minL=255, maxL=0;
+  for(let i=0;i<data.length;i+=4){
+    const r=data[i], g=data[i+1], b=data[i+2];
+    const l = Math.round(0.2126*r + 0.7152*g + 0.0722*b);
+    sumL += l; minL = Math.min(minL,l); maxL = Math.max(maxL,l);
+    const key = ((r>>4)<<8)|((g>>4)<<4)|(b>>4);
+    buckets.set(key, (buckets.get(key)||0)+1);
+  }
+
+  // Dominant palette: top 5 buckets
+  const top = [...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const palette = top.map(([key])=>{
+    const r=((key>>8)&0xf)<<4, g=((key>>4)&0xf)<<4, b=(key&0xf)<<4;
+    return rgbToHex(r,g,b);
+  });
+
+  const avgL = sumL/(data.length/4);
+  const contrast = maxL - minL; // simple range proxy
+
+  // Color temperature estimate: compare blue vs red energy
+  const sampleN = Math.min(2000, data.length/4);
+  let sumR=0,sumB=0;
+  for(let i=0;i<sampleN;i++){
+    const idx = (i*4) | 0; sumR+=data[idx]; sumB+=data[idx+2];
+  }
+  const tempBias = (sumB-sumR)/sampleN; // >0 cooler, <0 warmer
+
+  const brightness = Math.round(avgL);
+  const temp = tempBias>10? 'cool' : tempBias<-10? 'warm' : 'neutral';
+
+  return {
+    palette,
+    brightness,
+    contrast,
+    temperature: temp,
+    temperatureBias: Math.round(tempBias),
+  };
+}
