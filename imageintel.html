@@ -12,7 +12,7 @@
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
     }
-    html,body{height:100%;background:var(--bg);color:var(--ink);margin:0;font-family:var(--sans);}
+    html,body{height:100%;background:var(--bg);color:var(--ink);margin:0;font-family:var(--sans);}  
     .wrap{max-width:1280px;margin:0 auto;padding:20px;}
     header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:12px}
     .brand{letter-spacing:0.12em;text-transform:uppercase;font-weight:700}
@@ -92,439 +92,64 @@
     </footer>
   </div>
 
-  <!-- Tiny inline boot so page runs without other files yet -->
-  <script>
-    (function(){
-      const term = document.getElementById('terminal');
-      function log(msg){ const d=document.createElement('div'); d.textContent=msg; term.appendChild(d); term.scrollTop=term.scrollHeight; }
-      log('ImageIntel BlackSite booting…');
-      const img = document.getElementById('input');
-      const file = document.getElementById('file');
-      const demo = document.getElementById('demo');
-      file.addEventListener('change', e=>{
-        const f = e.target.files[0]; if(!f) return;
-        const url = URL.createObjectURL(f);
-        img.onload = ()=>{ document.getElementById('status-size').textContent = img.naturalWidth+' × '+img.naturalHeight; log('loaded image: '+f.name); };
-        img.src = url;
+  <!-- Vendor libs for optional NSFW classification (not used yet) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@nsfw-filter/nsfwjs@2.6.0/dist/nsfwjs.min.js"></script>
+
+  <!-- Main app module: wires UI + object detector overlay (CDN WASM) -->
+  <script type="module">
+    import { boot, log, setVersion } from './public/imageintel/js/helpers.js';
+    import { detectOnImage } from './public/imageintel/js/object_detector.js';
+    import { generatePrompt } from './public/imageintel/js/prompts.js';
+    import { analyzeColors } from './public/imageintel/js/color.js';
+
+    setVersion('v0.1.0-alpha');
+    boot({ logEl: document.getElementById('terminal') });
+
+    const img = document.getElementById('input');
+    const file = document.getElementById('file');
+    const demo = document.getElementById('demo');
+    const mode = document.getElementById('mode');
+    const prompt = document.getElementById('prompt');
+
+    function onImageReady(){
+      document.getElementById('status-size').textContent = `${img.naturalWidth} × ${img.naturalHeight}`;
+      log('io', 'image ready');
+      // Run object detection overlay
+      detectOnImage(img).then(()=>{
+        // Basic color/lighting read + prompt
+        const colors = analyzeColors(img);
+        document.getElementById('kpi-light').textContent = `Lighting: ${colors.temperature} • ${colors.brightness}`;
+        document.getElementById('kpi-color').textContent = `Palette: ${colors.palette.join(', ')}`;
+        const out = generatePrompt({
+          mode: mode.value,
+          detail: 2,
+          readings: {
+            subject: 'photo subject',
+            pose: 'pose from detector (later)',
+            objects: document.getElementById('kpi-objects').textContent.replace('Objects: ','') || 'none',
+            lighting: `${colors.temperature} / brightness ${colors.brightness}`,
+            colors: colors.palette,
+            stats: { contrast: colors.contrast }
+          }
+        });
+        prompt.value = out;
       });
-      demo.addEventListener('click', ()=>{
-        img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format';
-        img.onload = ()=>{ document.getElementById('status-size').textContent = img.naturalWidth+' × '+img.naturalHeight; log('loaded demo image'); };
-      });
-    })();
-  </script>
-</body>
-</html>
-            <label class="switch"><input id="tSeg"  type="checkbox" checked>Seg</label>
-            <label class="switch"><input id="tObj"  type="checkbox" checked>Objects</label>
-            <label class="switch"><input id="tGrid" type="checkbox" checked>HUD Grid</label>
-          </div>
-          <div class="legend">
-            <span><span class="sw sw-mesh"></span>Mesh</span>
-            <span><span class="sw sw-iris"></span>Iris</span>
-            <span><span class="sw sw-pose"></span>Pose</span>
-            <span><span class="sw sw-seg"></span>Seg</span>
-            <span><span class="sw sw-box"></span>Boxes</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: Diagnostics + Prompt -->
-      <div class="card">
-        <h3>Diagnostics</h3>
-        <div class="body">
-          <div id="diag">Ready.\nUpload an image to begin.</div>
-          <div style="height:8px"></div>
-          <div class="kv">
-            <div>Bundle</div><div id="kvBundle" class="muted">—</div>
-            <div>Fileset</div><div id="kvFileset" class="muted">—</div>
-            <div>Face model</div><div id="kvFace" class="muted">—</div>
-            <div>Pose model</div><div id="kvPose" class="muted">—</div>
-            <div>Segmenter</div><div id="kvSeg" class="muted">—</div>
-            <div>Detector</div><div id="kvDet" class="muted">—</div>
-            <div>Inference</div><div id="kvRun" class="muted">—</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card" style="grid-column: 1 / span 2">
-        <h3>Prompt (SFW core)</h3>
-        <div class="body">
-          <div class="row">
-            <button id="btnAnalyze">Analyze → Build prompt</button>
-            <button id="btnCopy">Copy</button>
-            <span class="muted">Outputs lighting, composition, subject, pose, objects, palette.</span>
-          </div>
-          <div style="height:8px"></div>
-          <textarea id="promptOut" placeholder="Prompt will appear here…"></textarea>
-          <div style="height:6px"></div>
-          <div class="muted" style="font-size:12px">NSFW anatomy taxonomy will be a separate gated route (<code>/labs/imageintel-nsfw</code>) after you approve this core.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-  // ---------- utilities ----------
-  const el = id => document.getElementById(id);
-  const kv = (id,val,ok)=>{ const e=el(id); e.textContent=val; e.className = ok?'ok': (val==='—'?'muted':'bad'); };
-  const diag = el('diag');
-  const log = (...a)=>{ diag.textContent += '\\n' + a.join(' '); diag.scrollTop = diag.scrollHeight; };
-  const ok  = (t)=>log('✓', t);
-  const bad = (t)=>log('✗', t);
-
-  // ---------- canvas layout ----------
-  const wrap = document.getElementById('stageWrap');
-  const imgCan = el('imgCan'), ovCan = el('ovCan'), hudCan = el('hudCan'), gridbg = el('gridbg');
-  const ic = imgCan.getContext('2d'), oc = ovCan.getContext('2d'), hc = hudCan.getContext('2d'), gb = gridbg.getContext('2d');
-
-  function sizeAll(){
-    const r = wrap.getBoundingClientRect();
-    for(const c of [imgCan, ovCan, hudCan, gridbg]){ c.width = Math.floor(r.width); c.height = Math.floor(r.height); }
-    drawGrid();
-    if(currentImageEl){ drawImageFit(currentImageEl); }
-  }
-  window.addEventListener('resize', sizeAll);
-
-  function drawGrid(){
-    const w=gridbg.width,h=gridbg.height, step=32;
-    gb.clearRect(0,0,w,h);
-    gb.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid')||'#1c2430';
-    gb.lineWidth=1; gb.beginPath();
-    for(let x=0;x<=w;x+=step){ gb.moveTo(x,0); gb.lineTo(x,h); }
-    for(let y=0;y<=h;y+=step){ gb.moveTo(0,y); gb.lineTo(w,y); }
-    gb.stroke();
-    gb.strokeStyle = '#223041'; gb.beginPath();
-    gb.moveTo(w/2,0); gb.lineTo(w/2,h);
-    gb.moveTo(0,h/2); gb.lineTo(w,h/2);
-    gb.stroke();
-  }
-
-  // fit image, compute rect
-  let drawRect = {x:0,y:0,w:0,h:0}, currentImageEl=null;
-  function drawImageFit(img){
-    const W = imgCan.width, H = imgCan.height;
-    const r = Math.min(W/img.naturalWidth, H/img.naturalHeight);
-    const w = Math.round(img.naturalWidth * r), h = Math.round(img.naturalHeight * r);
-    const x = Math.floor((W - w)/2), y = Math.floor((H - h)/2);
-    drawRect = {x,y,w,h};
-    ic.fillStyle = '#000'; ic.fillRect(0,0,W,H);
-    ic.drawImage(img, x, y, w, h);
-    oc.clearRect(0,0,ovCan.width,ovCan.height);
-    hc.clearRect(0,0,hudCan.width,hudCan.height);
-  }
-
-  // ---------- toggles ----------
-  const tMesh=el('tMesh'), tIris=el('tIris'), tPose=el('tPose'), tSeg=el('tSeg'), tObj=el('tObj'), tGrid=el('tGrid');
-  tGrid.addEventListener('change', ()=> gridbg.style.display = tGrid.checked?'block':'none');
-
-  // ---------- local-only MediaPipe wiring ----------
-  const VISION_SRC = '/vendor/mediapipe/vision_bundle.js';
-  const WASM_BASE  = '/vendor/mediapipe/wasm';
-  const FACE_TASK  = '/models/face_landmarker.task';
-  const POSE_TASK  = '/models/pose_landmarker_full.task';
-  const SEG_TFLITE = '/models/selfie_multiclass_256.tflite';
-  const DET_TFLITE = '/models/efficientdet_lite0.tflite';
-
-  let vision, FilesetResolver, FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector;
-  let resolver, faceModel, poseModel, segModel, detModel;
-
-  async function loadBundle(){
-    kv('kvBundle', VISION_SRC, false);
-    log('Loading vision bundle:', VISION_SRC);
-    const s = document.createElement('script'); s.src = VISION_SRC; s.async = true;
-    await new Promise((res,rej)=>{ s.onload=res; s.onerror=rej; document.head.appendChild(s); });
-    if(!window.vision) throw new Error('window.vision undefined');
-    vision = window.vision;
-    ({ FilesetResolver, FaceLandmarker, PoseLandmarker, ImageSegmenter, ObjectDetector } = vision);
-    ok('Vision bundle ✓'); kv('kvBundle','OK',true);
-  }
-
-  async function initModels(){
-    kv('kvFileset', WASM_BASE, false);
-    resolver = await FilesetResolver.forVisionTasks({ baseUrl: WASM_BASE });
-    ok('Fileset ✓'); kv('kvFileset','OK',true);
-
-    // Face
-    kv('kvFace', FACE_TASK, false);
-    faceModel = await FaceLandmarker.createFromOptions(resolver,{
-      baseOptions:{ modelAssetPath: FACE_TASK },
-      outputFaceBlendshapes:true, runningMode:'IMAGE', numFaces:3
-    });
-    ok('Face ✓'); kv('kvFace','OK',true);
-
-    // Pose
-    kv('kvPose', POSE_TASK, false);
-    poseModel = await PoseLandmarker.createFromOptions(resolver,{
-      baseOptions:{ modelAssetPath: POSE_TASK }, runningMode:'IMAGE', numPoses:2
-    });
-    ok('Pose ✓'); kv('kvPose','OK',true);
-
-    // Segmenter (people)
-    kv('kvSeg', SEG_TFLITE, false);
-    segModel = await ImageSegmenter.createFromOptions(resolver,{
-      baseOptions:{ modelAssetPath: SEG_TFLITE }, runningMode:'IMAGE', outputCategoryMask:true
-    });
-    ok('Seg ✓'); kv('kvSeg','OK',true);
-
-    // Object detector
-    kv('kvDet', DET_TFLITE, false);
-    detModel = await ObjectDetector.createFromOptions(resolver,{
-      baseOptions:{ modelAssetPath: DET_TFLITE }, runningMode:'IMAGE', scoreThreshold:0.35
-    });
-    ok('Objects ✓'); kv('kvDet','OK',true);
-  }
-
-  async function bootstrap(){
-    try{
-      await loadBundle();
-      await initModels();
-    }catch(e){
-      bad('Init error: ' + (e?.message || e));
-      if((e+'').includes('<')) bad('You are likely receiving HTML for a binary path. Fix path/MIME.');
-    }
-  }
-  bootstrap();
-
-  // ---------- file input ----------
-  el('file').addEventListener('change', ev=>{
-    const f = ev.target.files?.[0]; if(!f) return;
-    const img = new Image();
-    img.onload = ()=>{
-      currentImageEl = img;
-      sizeAll();
-      drawImageFit(img);
-      el('imgInfo').textContent = `${img.naturalWidth}×${img.naturalHeight} · ${(f.size/1024).toFixed(1)} KB`;
-    };
-    img.src = URL.createObjectURL(f);
-  });
-
-  // ---------- analysis + overlays ----------
-  function p2c(pt){ return { x: drawRect.x + pt.x*drawRect.w, y: drawRect.y + pt.y*drawRect.h }; }
-
-  function drawFaceMesh(faces){
-    if(!tMesh.checked && !tIris.checked) return;
-    oc.save();
-    for(const face of faces){
-      if(tMesh.checked){
-        oc.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--mesh')||'#60f8e9';
-        for(const lm of face){ const p=p2c(lm); oc.beginPath(); oc.arc(p.x,p.y,1.4,0,Math.PI*2); oc.fill(); }
-      }
-      if(tIris.checked){
-        const idx=[468,469,470,471,472].filter(i=>i<face.length);
-        if(idx.length){
-          oc.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--iris')||'#ff89f0';
-          oc.lineWidth=1.5; oc.beginPath();
-          idx.forEach((i,k)=>{ const p=p2c(face[i]); k?oc.lineTo(p.x,p.y):oc.moveTo(p.x,p.y); });
-          oc.closePath(); oc.stroke();
-        }
-      }
-    }
-    oc.restore();
-  }
-
-  function drawPose(poses){
-    if(!tPose.checked) return;
-    hc.save(); hc.lineWidth=2; hc.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--pose')||'#ff9ad6';
-    for(const pose of poses){
-      const pts = pose; // list of landmarks
-      const lines = [
-        [11,13,15],[12,14,16], // arms
-        [11,12],[11,23,25,27],[12,24,26,28], // torso/legs
-        [23,24]
-      ];
-      for(const seg of lines){
-        hc.beginPath();
-        seg.forEach((idx,i)=>{ const p=p2c(pts[idx]); i?hc.lineTo(p.x,p.y):hc.moveTo(p.x,p.y);});
-        hc.stroke();
-      }
-      // joints
-      hc.fillStyle='#ffe2f6';
-      for(const i of [11,12,13,14,15,16,23,24,25,26,27,28]){
-        const p=p2c(pts[i]); hc.beginPath(); hc.arc(p.x,p.y,3,0,Math.PI*2); hc.fill();
-      }
-    }
-    hc.restore();
-  }
-
-  function drawSeg(mask){
-    if(!tSeg.checked) return;
-    // draw a neon silhouette border from category mask
-    const w = drawRect.w, h = drawRect.h;
-    const tmp = new OffscreenCanvas ? new OffscreenCanvas(w,h) : document.createElement('canvas');
-    tmp.width=w; tmp.height=h;
-    const ctx = tmp.getContext('2d');
-    const imgD = new ImageData(new Uint8ClampedArray(mask), segWidth, segHeight);
-    // scale mask into rect
-    const tmp2 = document.createElement('canvas'); tmp2.width=segWidth; tmp2.height=segHeight;
-    const t2 = tmp2.getContext('2d'); t2.putImageData(imgD,0,0);
-    ctx.drawImage(tmp2, 0,0,w,h);
-    // edge effect
-    const data = ctx.getImageData(0,0,w,h), d=data.data;
-    const out = hc;
-    out.save(); out.globalCompositeOperation='lighter';
-    out.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--seg')||'#26f7a8';
-    out.lineWidth=2;
-    // sample coarse grid for edges
-    out.beginPath();
-    const step=3;
-    for(let y=step;y<h-step;y+=step){
-      for(let x=step;x<w-step;x+=step){
-        const i=(y*w+x)*4+3; // alpha
-        const a = d[i];
-        if(a>128){
-          // check neighbors
-          const i2=(y*w+(x+step))*4+3;
-          if(d[i2]<128){ out.moveTo(drawRect.x+x, drawRect.y+y); out.lineTo(drawRect.x+x+1, drawRect.y+y); }
-        }
-      }
-    }
-    out.stroke(); out.restore();
-  }
-
-  function drawBoxes(objs){
-    if(!tObj.checked) return;
-    hc.save(); hc.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--box')||'#82b1ff';
-    hc.lineWidth=2; hc.fillStyle='rgba(130,177,255,.12)';
-    for(const d of objs){
-      const bb = d.boundingBox;
-      const x = drawRect.x + bb.originX * drawRect.w;
-      const y = drawRect.y + bb.originY * drawRect.h;
-      const w = bb.width * drawRect.w;
-      const h = bb.height * drawRect.h;
-      hc.strokeRect(x,y,w,h);
-      hc.fillRect(x,y,w,h);
-      const label = `${d.categories?.[0]?.categoryName||'obj'} ${(d.categories?.[0]?.score||0).toFixed(2)}`;
-      hc.fillStyle='#0b0f14'; hc.fillRect(x, y-16, ctxMeasure(label)+8, 16);
-      hc.fillStyle='#bfe1ff'; hc.fillText(label, x+4, y-4);
-      hc.fillStyle='rgba(130,177,255,.12)'; // reset
-    }
-    hc.restore();
-  }
-  function ctxMeasure(t){ const tmp=hudCan.getContext('2d'); tmp.font='12px ui-monospace'; return tmp.measureText(t).width; }
-
-  // ---------- core analyze + prompt ----------
-  let segWidth=0, segHeight=0;
-
-  async function analyze(){
-    if(!currentImageEl){ bad('No image'); return; }
-    kv('kvRun','…',false);
-    const img = currentImageEl;
-
-    // Face
-    const faceRes = await faceModel.detect(img);
-    const faces = faceRes.faceLandmarks || [];
-    oc.clearRect(0,0,ovCan.width,ovCan.height);
-    drawFaceMesh(faces);
-
-    // Pose
-    const poseRes = await poseModel.detect(img);
-    const poses = (poseRes.landmarks || []);
-    drawPose(poses);
-
-    // Seg
-    let maskBytes=null;
-    const segRes = await segModel.segment(img);
-    if(segRes.categoryMask){
-      const m = segRes.categoryMask; // WebGL tensor → get as ImageData-like buffer
-      // Use canvas readback helper via toCanvasImageSource
-      const off = document.createElement('canvas');
-      off.width = m.width; off.height=m.height; segWidth=m.width; segHeight=m.height;
-      const offc = off.getContext('2d'); offc.drawImage(m,0,0);
-      const id = offc.getImageData(0,0,off.width,off.height);
-      maskBytes = id.data; // RGBA; A used above as mask indicator
-    }
-    drawSeg(maskBytes||new Uint8ClampedArray());
-
-    // Objects
-    const detRes = await detModel.detect(img);
-    const dets = detRes.detections || [];
-    drawBoxes(dets);
-
-    kv('kvRun','OK',true);
-    ok('Inference ✓');
-
-    // Build prompt
-    const prompt = buildPrompt({faces, faceBlend: faceRes.faceBlendshapes||[], poses, dets, img});
-    el('promptOut').value = prompt;
-  }
-
-  function buildPrompt({faces, faceBlend, poses, dets, img}){
-    const parts=[];
-
-    // Subject count + framing
-    const subj = faces.length ? `${faces.length} person${faces.length>1?'s':''}` : 'subject';
-    parts.push(subj);
-
-    // Face cues (first face)
-    if(faces[0]){
-      const bs = (faceBlend[0]?.categories || []).sort((a,b)=>b.score-a.score).slice(0,4).map(c=>c.categoryName.replace(/_/g,' '));
-      if(bs.length) parts.push(`expression: ${bs.join(', ')}`);
     }
 
-    // Pose summary (very coarse)
-    if(poses[0]){
-      const p=poses[0];
-      const hipY=(p[23].y+p[24].y)/2, shoulderY=(p[11].y+p[12].y)/2;
-      const stance = Math.abs(hipY-shoulderY)>0.1?'standing':'seated';
-      parts.push(`pose: ${stance}`);
-    }
-
-    // Objects list
-    if(dets.length){
-      const objs = [...new Set(dets.map(d=>d.categories?.[0]?.categoryName).filter(Boolean))];
-      if(objs.length) parts.push(`objects: ${objs.join(', ')}`);
-    }
-
-    // Colors & lighting
-    const {palette, lighting} = analyzeColorsLighting(img);
-    if(palette.length) parts.push(`palette: ${palette.slice(0,5).join(', ')}`);
-    parts.push(`lighting: ${lighting}`);
-
-    // Composition
-    parts.push('composition: centered subject, shallow depth of field, natural background');
-
-    // Output style tags (SFW)
-    parts.push('high detail, sharp focus, photorealistic, natural skin tones');
-
-    return parts.join(' · ');
-  }
-
-  function analyzeColorsLighting(img){
-    // simple palette: downsample + histogram
-    const tmp = document.createElement('canvas'); tmp.width=64; tmp.height=64;
-    const c = tmp.getContext('2d'); c.drawImage(img,0,0,64,64);
-    const d = c.getImageData(0,0,64,64).data;
-    const buckets = new Map();
-    for(let i=0;i<d.length;i+=4){
-      const r=d[i],g=d[i+1],b=d[i+2];
-      const key = `${Math.round(r/32)*32},${Math.round(g/32)*32},${Math.round(b/32)*32}`;
-      buckets.set(key, (buckets.get(key)||0)+1);
-    }
-    const top = [...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k])=>{
-      const [r,g,b]=k.split(',').map(Number);
-      return `rgb(${r},${g},${b})`;
+    file.addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const url = URL.createObjectURL(f);
+      img.onload = onImageReady; img.src = url;
     });
 
-    // lighting heuristic: mean luminance + contrast
-    let sum=0, sum2=0, n=0;
-    for(let i=0;i<d.length;i+=4){ const y = 0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2]; sum+=y; sum2+=y*y; n++; }
-    const mean = sum/n, std = Math.sqrt(sum2/n - mean*mean);
-    let lighting='soft natural light';
-    if(mean>180) lighting='bright light';
-    else if(mean<70) lighting='low light';
-    if(std>70) lighting += ', high contrast';
-    else lighting += ', gentle contrast';
-    return { palette: top, lighting };
-  }
+    demo.addEventListener('click', ()=>{
+      img.onload = onImageReady;
+      img.src = 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format';
+      log('io', 'loaded demo image');
+    });
 
-  el('btnAnalyze').addEventListener('click', analyze);
-  el('btnCopy').addEventListener('click', ()=>{
-    const t = el('promptOut'); t.select(); document.execCommand('copy');
-  });
-
-  // kick initial sizing
-  sizeAll();
+    mode.addEventListener('change', ()=>{ if(img.naturalWidth) onImageReady(); });
   </script>
 </body>
 </html>
