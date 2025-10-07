@@ -1,6 +1,5 @@
 // ImageIntel Pro Lab — helpers.js
 // BlackSite core utilities: logging, status HUD, FPS, canvas helpers, MediaPipe loader, ads stub.
-//
 // Place this file at: public/imageintel/js/helpers.js
 
 // -----------------------------
@@ -116,7 +115,7 @@ export function drawLandmarks(ctx, points, color = 'rgba(0,255,209,0.8)') {
 }
 
 // -----------------------------
-// MediaPipe Tasks Vision dynamic loader
+// MediaPipe Tasks Vision dynamic loader (CDN baseUrl)
 // -----------------------------
 const MP_VERSION = '0.10.15'; // pin for stability
 const MP_BUNDLE = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`;
@@ -130,7 +129,8 @@ export async function loadTasksVision() {
 }
 
 export async function createFilesetResolver(mod) {
-  const baseUrl = '/public/imageintel/vendor/mediapipe/wasm';
+  // Use CDN so we don't need to upload .wasm files
+  const baseUrl = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm`;
   const fsr = await mod.FilesetResolver.forVisionTasks({ baseUrl });
   log('load', `fileset resolver ready @ ${baseUrl}`);
   return fsr;
