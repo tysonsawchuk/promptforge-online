@@ -35,7 +35,7 @@
 <body>
   <div class="grid"></div>
   <div class="wrap">
-    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.3-alpha</div></header>
+    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.4-alpha</div></header>
     <div class="layout">
       <div class="panel stage">
         <div class="toolbar">
@@ -100,7 +100,6 @@
     <footer class="small muted" style="margin-top:12px">Drop-in static build. No backend. <span id="ads">[ads hook]</span></footer>
   </div>
 
-  <!-- Self-contained app (all logic inline). Requires HTTPS hosting. -->
   <script type="module">
     const MP_VERSION = '0.10.15';
     const term = document.getElementById('terminal');
@@ -118,6 +117,9 @@
     const ovFace = document.getElementById('ov-face');
     const ovSeg = document.getElementById('ov-seg');
 
+    // ensure cross-origin safe image for pixel reads (color analysis, etc.)
+    img.crossOrigin = 'anonymous';
+
     function log(level, tag, msg){
       const line = document.createElement('div');
       const ts = new Date().toISOString().split('T')[1].replace('Z','');
@@ -131,16 +133,6 @@
       diag.appendChild(row);
     }
     function chip(id, text){ const el = document.getElementById(id); if(el) el.textContent = text; }
-
-    // environment diagnostics
-    (function(){
-      const served = location.protocol.startsWith('http'); chip('status-host', served?location.host:'file://');
-      diagRow('Hosting', served, served?location.origin:'Open via HTTPS (not file://)');
-      const wasm = typeof WebAssembly!=='undefined'; diagRow('WASM', wasm, wasm?'available':'unsupported');
-      const gl = !!document.createElement('canvas').getContext('webgl'); diagRow('WebGL', gl, gl?'available':'missing');
-    })();
-
-    // helpers
     function sizeOverlaysTo(el){
       const w = el.naturalWidth||el.clientWidth, h = el.naturalHeight||el.clientHeight;
       ['overlay-objects','overlay-pose','overlay-face','overlay-seg'].forEach(id=>{
@@ -153,40 +145,16 @@
       boxes.forEach((b,i)=>{ const [x,y,w,h]=b; ctx.strokeRect(x,y,w,h); const lab=labels?.[i]; if(lab){ const pad=4, tw=ctx.measureText(lab).width+pad*2, th=16; ctx.fillRect(x,y-th,tw,th); ctx.fillStyle='#00ffd1'; ctx.fillText(lab,x+pad,y-4); ctx.fillStyle='rgba(0,0,0,.6)'; }});
     }
     function rgbToHex(r,g,b){ return '#' + [r,g,b].map(x=> x.toString(16).padStart(2,'0')).join(''); }
-    function analyzeColors(imgEl){
-      const w = imgEl.naturalWidth || imgEl.width, h = imgEl.naturalHeight || imgEl.height;
-      const samples = 16000, scale = Math.sqrt(samples/(w*h));
-      const tw = Math.max(1, Math.floor(w*scale)), th = Math.max(1, Math.floor(h*scale));
-      const c = document.createElement('canvas'); c.width=tw; c.height=th;
-      const ctx = c.getContext('2d', {willReadFrequently:true}); ctx.drawImage(imgEl,0,0,tw,th);
-      const data = ctx.getImageData(0,0,tw,th).data;
-      const buckets = new Map(); let sumL=0,minL=255,maxL=0;
-      for(let i=0;i<data.length;i+=4){
-        const r=data[i], g=data[i+1], b=data[i+2];
-        const l=Math.round(0.2126*r+0.7152*g+0.0722*b);
-        sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l);
-        const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4);
-        buckets.set(key,(buckets.get(key)||0)+1);
-      }
-      const top=[...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
-      const palette=top.map(([key])=>{ const r=((key>>8)&0xf)<<4, g=((key>>4)&0xf)<<4, b=(key&0xf)<<4; return rgbToHex(r,g,b); });
-      const avgL=sumL/(data.length/4); const contrast=maxL-minL;
-      let sumR=0,sumB=0; const sampleN=Math.min(2000,data.length/4);
-      for(let i=0;i<sampleN;i++){ const idx=(i*4)|0; sumR+=data[idx]; sumB+=data[idx+2]; }
-      const tempBias=(sumB-sumR)/sampleN; const temp=tempBias>10?'cool':tempBias<-10?'warm':'neutral';
-      return { palette, brightness:Math.round(avgL), contrast, temperature:temp, temperatureBias:Math.round(tempBias) };
-    }
-    function genPrompt({mode, detail, readings}){
-      const { subject='subject', pose='pose', objects='none', lighting='neutral', colors=['#999'], stats={} } = readings||{};
-      let base=`((masterpiece)), ${subject}, ${pose}, ${objects}, ${lighting}, color scheme: ${colors.join(' / ')}, ${detail>=2?'8k, ultra-detailed, film grain':'high detail'}`;
-      if(mode==='poetic') base+=', whispers of silicon, hush of photons';
-      if(mode==='edgy') base+=', gritty, noir, cybernetic HUD, moody shadows, chromatic aberration';
-      if(mode==='numeric') return `SUBJECT=${subject}\nPOSE=${pose}\nOBJECTS=${objects}\nLIGHTING=${lighting}\nPALETTE=${colors.join(',')}\nSTATS=${JSON.stringify(stats)}`;
-      if(mode==='raw') return JSON.stringify({subject,pose,objects,lighting,colors,stats,detail},null,2);
-      return base;
-    }
 
-    // load mediapipe tasks-vision, share bundle across features
+    // env diagnostics
+    (function(){
+      const served = location.protocol.startsWith('http'); chip('status-host', served?location.host:'file://');
+      diagRow('Hosting', served, served?location.origin:'Open via HTTPS (not file://)');
+      const wasm = typeof WebAssembly!=='undefined'; diagRow('WASM', wasm, wasm?'available':'unsupported');
+      const gl = !!document.createElement('canvas').getContext('webgl'); diagRow('WebGL', gl, gl?'available':'missing');
+    })();
+
+    // shared MediaPipe bundle
     let mp=null, fsr=null;
     async function loadMP(){
       if(mp) return mp;
@@ -199,7 +167,7 @@
       return mp;
     }
 
-    // object detection
+    // OBJECTS
     let objectDetector=null;
     async function ensureObjectDetector(){
       await loadMP(); if(objectDetector) return objectDetector;
@@ -208,8 +176,7 @@
         runningMode:'IMAGE', scoreThreshold:.35, maxResults:12
       });
       const m = document.getElementById('status-models'); m.textContent = m.textContent.includes('pose')?'models: pose, object':'models: object';
-      diagRow('ObjectDetector', true, 'ready');
-      return objectDetector;
+      diagRow('ObjectDetector', true, 'ready'); return objectDetector;
     }
     async function runObjects(){
       const ctx = document.getElementById('overlay-objects').getContext('2d');
@@ -225,9 +192,8 @@
       return {labels};
     }
 
-    // pose (skeleton)
-    let pose=null;
-    const EDGES=[[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,29],[29,31],[28,30],[30,32]];
+    // POSE
+    let pose=null; const EDGES=[[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,29],[29,31],[28,30],[30,32]];
     async function ensurePose(){
       await loadMP(); if(pose) return pose;
       pose = await mp.PoseLandmarker.createFromOptions(fsr, {
@@ -237,12 +203,7 @@
       const m = document.getElementById('status-models'); m.textContent = m.textContent.includes('object')?'models: object, pose':'models: pose';
       diagRow('PoseLandmarker', true, 'ready'); return pose;
     }
-    function drawPose(ctx, L){
-      if(!L||!L[0]) return; const P=L[0];
-      ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.beginPath();
-      EDGES.forEach(([a,b])=>{ const p=P[a], q=P[b]; if(p&&q){ ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);} }); ctx.stroke();
-      ctx.fillStyle='rgba(0,255,209,.9)'; P.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill(); });
-    }
+    function drawPose(ctx, L){ if(!L||!L[0]) return; const P=L[0]; ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.beginPath(); EDGES.forEach(([a,b])=>{ const p=P[a], q=P[b]; if(p&&q){ ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);} }); ctx.stroke(); ctx.fillStyle='rgba(0,255,209,.9)'; P.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill(); }); }
     async function runPose(){
       const ctx = document.getElementById('overlay-pose').getContext('2d');
       ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
@@ -251,44 +212,80 @@
       const p = await ensurePose();
       const res = p.detect(img);
       drawPose(ctx, res.landmarks);
-      let poseText='—';
-      if(res.landmarks && res.landmarks[0]){
-        const L=res.landmarks[0], ang=(a,b)=>Math.atan2(L[b].y-L[a].y, L[b].x-L[a].x)*180/Math.PI;
-        poseText = `shoulder ${Math.round(ang(11,12))}°, hip ${Math.round(ang(23,24))}°`;
-      }
+      let poseText='—'; if(res.landmarks && res.landmarks[0]){ const L=res.landmarks[0], ang=(a,b)=>Math.atan2(L[b].y-L[a].y, L[b].x-L[a].x)*180/Math.PI; poseText = `shoulder ${Math.round(ang(11,12))}°, hip ${Math.round(ang(23,24))}°`; }
       document.getElementById('kpi-pose').textContent=`Pose: ${poseText}`;
     }
 
-    // segmentation + face mesh (placeholders wired later)
-    async function runFace(){ const c=document.getElementById('overlay-face').getContext('2d'); c.clearRect(0,0,c.canvas.width,c.canvas.height); /* next step */ }
-    async function runSeg(){ const c=document.getElementById('overlay-seg').getContext('2d'); c.clearRect(0,0,c.canvas.width,c.canvas.height); /* next step */ }
+    // FACE + SEG placeholders (to be implemented next)
+    async function runFace(){ const c=document.getElementById('overlay-face').getContext('2d'); c.clearRect(0,0,c.canvas.width,c.canvas.height); }
+    async function runSeg(){ const c=document.getElementById('overlay-seg').getContext('2d'); c.clearRect(0,0,c.canvas.width,c.canvas.height); }
 
-    // analysis pipeline
+    // COLOR/LIGHTING (guarded)
+    function analyzeColorsSafe(imgEl){
+      try{
+        const w = imgEl.naturalWidth || imgEl.width, h = imgEl.naturalHeight || imgEl.height;
+        const samples = 16000, scale = Math.sqrt(samples/(w*h));
+        const tw = Math.max(1, Math.floor(w*scale)), th = Math.max(1, Math.floor(h*scale));
+        const c = document.createElement('canvas'); c.width=tw; c.height=th;
+        const ctx = c.getContext('2d', {willReadFrequently:true}); ctx.drawImage(imgEl,0,0,tw,th);
+        const data = ctx.getImageData(0,0,tw,th).data;
+        const buckets = new Map(); let sumL=0,minL=255,maxL=0;
+        for(let i=0;i<data.length;i+=4){ const r=data[i], g=data[i+1], b=data[i+2]; const l=Math.round(0.2126*r+0.7152*g+0.0722*b); sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); buckets.set(key,(buckets.get(key)||0)+1); }
+        const top=[...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
+        const palette=top.map(([key])=>{ const r=((key>>8)&0xf)<<4, g=((key>>4)&0xf)<<4, b=(key&0xf)<<4; return rgbToHex(r,g,b); });
+        const avgL=sumL/(data.length/4); const contrast=maxL-minL;
+        let sumR=0,sumB=0; const sampleN=Math.min(2000,data.length/4);
+        for(let i=0;i<sampleN;i++){ const idx=(i*4)|0; sumR+=data[idx]; sumB+=data[idx+2]; }
+        const tempBias=(sumB-sumR)/sampleN; const temp=tempBias>10?'cool':tempBias<-10?'warm':'neutral';
+        diagRow('Color Analysis', true, 'ok'); 
+        return { palette, brightness:Math.round(avgL), contrast, temperature:temp, temperatureBias:Math.round(tempBias) };
+      }catch(e){
+        diagRow('Color Analysis', false, e.message);
+        return { palette:['#777'], brightness:50, contrast:50, temperature:'neutral', temperatureBias:0 };
+      }
+    }
+
+    function genPrompt({mode, detail, readings}){
+      const { subject='subject', pose='pose', objects='none', lighting='neutral', colors=['#999'], stats={} } = readings||{};
+      let base=`((masterpiece)), ${subject}, ${pose}, ${objects}, ${lighting}, color scheme: ${colors.join(' / ')}, ${detail>=2?'8k, ultra-detailed, film grain':'high detail'}`;
+      if(mode==='poetic') base+=', whispers of silicon, hush of photons';
+      if(mode==='edgy') base+=', gritty, noir, cybernetic HUD, moody shadows, chromatic aberration';
+      if(mode==='numeric') return `SUBJECT=${subject}\nPOSE=${pose}\nOBJECTS=${objects}\nLIGHTING=${lighting}\nPALETTE=${colors.join(',')}\nSTATS=${JSON.stringify(stats)}`;
+      if(mode==='raw') return JSON.stringify({subject,pose,objects,lighting,colors,stats,detail},null,2);
+      return base;
+    }
+
     async function analyzeAll(){
       if(!img.naturalWidth) return;
-      const colors = (function(){ // quick color read
-        const w=img.naturalWidth,h=img.naturalHeight,s=16000,sc=Math.sqrt(s/(w*h)),tw=Math.max(1,Math.floor(w*sc)),th=Math.max(1,Math.floor(h*sc));
-        const c=document.createElement('canvas'); c.width=tw;c.height=th; const x=c.getContext('2d',{willReadFrequently:true}); x.drawImage(img,0,0,tw,th);
-        const d=x.getImageData(0,0,tw,th).data; const B=new Map(); let S=0,mn=255,mx=0; for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2]; const l=Math.round(.2126*r+.7152*g+.0722*b); S+=l; mn=Math.min(mn,l); mx=Math.max(mx,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); B.set(key,(B.get(key)||0)+1);} const top=[...B.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
-        const hex=n=>{const r=((n>>8)&0xf)<<4,g=((n>>4)&0xf)<<4,b=(n&0xf)<<4; return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('')}; const palette=top.map(([k])=>hex(k));
-        const avg=S/(d.length/4); let SR=0,SB=0,N=Math.min(2000,d.length/4); for(let i=0;i<N;i++){const idx=(i*4)|0; SR+=d[idx]; SB+=d[idx+2];} const tb=(SB-SR)/N; const t=tb>10?'cool':tb<-10?'warm':'neutral'; return {palette,brightness:Math.round(avg),contrast:mx-mn,temperature:t};
-      })();
+      const colors = analyzeColorsSafe(img);
       document.getElementById('kpi-light').textContent=`Lighting: ${colors.temperature} • ${colors.brightness}`;
       document.getElementById('kpi-color').textContent=`Palette: ${colors.palette.join(', ')}`;
-
       const {labels} = await runObjects();
       await runPose();
       await runFace();
       await runSeg();
-
       const objects = labels.length?labels.join(', '):'none';
       const out = genPrompt({ mode: mode.value, detail:+detail.value, readings:{ subject:'photo subject', pose:document.getElementById('kpi-pose').textContent.replace('Pose: ','')||'neutral', objects, lighting:`${colors.temperature} / ${colors.brightness}`, colors:colors.palette, stats:{contrast:colors.contrast}} });
       promptEl.value = out;
     }
 
     function onImageReady(){ sizeOverlaysTo(img); analyzeAll(); }
-    file.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url; });
-    demo.addEventListener('click', ()=>{ img.onload=onImageReady; img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format'; });
+
+    // FILE input
+    file.addEventListener('change', e=>{
+      const f=e.target.files[0]; if(!f) return;
+      img.crossOrigin = 'anonymous';
+      const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url;
+    });
+
+    // DEMO (CORS-friendly Unsplash)
+    demo.addEventListener('click', ()=>{
+      img.crossOrigin = 'anonymous';
+      img.onload=onImageReady;
+      img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format';
+    });
+
+    // CONTROLS
     rerun.addEventListener('click', analyzeAll);
     mode.addEventListener('change', analyzeAll); detail.addEventListener('input', analyzeAll);
     [ovObjects,ovPose,ovFace,ovSeg].forEach(el=> el.addEventListener('change', analyzeAll));
