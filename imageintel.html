@@ -21,8 +21,6 @@
     .grid{position:fixed; inset:0; pointer-events:none; background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),linear-gradient(to bottom,var(--grid) 1px,transparent 1px); background-size:40px 40px;}
     .panel{background:var(--panel);border:1px solid #17222a;border-radius:16px;box-shadow:var(--shadow)}
     .layout{display:grid;grid-template-columns: 1.3fr 0.9fr; gap:16px}
-
-    /* Left column */
     .stage{position:relative;border-radius:16px;overflow:hidden}
     .toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:12px;border-bottom:1px solid #17222a}
     .btn{font-family:var(--mono);border:1px solid #24303a;background:#0d1419;color:var(--ink);padding:10px 12px;border-radius:12px;cursor:pointer}
@@ -31,8 +29,6 @@
     canvas, img#input{position:absolute; inset:0; width:100%; height:100%; object-fit:contain}
     .hud{position:absolute; top:10px; left:10px; right:10px; display:flex; gap:8px; flex-wrap:wrap; font-family:var(--mono); font-size:12px; color:var(--muted)}
     .chip{background:rgba(0,0,0,.35); padding:6px 8px; border:1px solid #1f2a33; border-radius:999px}
-
-    /* Right column */
     .side{display:grid; gap:12px}
     .section{padding:12px}
     .section h3{margin:0 0 8px 0; font-size:14px; font-family:var(--mono); opacity:.85}
@@ -53,7 +49,7 @@
   <div class="wrap">
     <header>
       <div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div>
-      <div class="ver">v0.1.1-alpha</div>
+      <div class="ver">v0.1.2-alpha</div>
     </header>
 
     <div class="layout">
@@ -126,9 +122,13 @@
     <footer class="small muted" style="margin-top:12px">Drop-in static build. No backend. <span id="ads">[ads hook]</span></footer>
   </div>
 
-  <!-- Self-contained app (no external local modules) -->
+  <!-- Pose module -->
+  <script type="module" src="./public/imageintel/js/pose.js"></script>
+
+  <!-- Core app -->
   <script type="module">
-    // ---------- basics ----------
+    import { poseOnImage } from './public/imageintel/js/pose.js';
+
     const term = document.getElementById('terminal');
     const diag = document.getElementById('diag');
     const img = document.getElementById('input');
@@ -139,6 +139,10 @@
     const promptEl = document.getElementById('prompt');
     const copyBtn = document.getElementById('copy');
     const rerun = document.getElementById('rerun');
+    const ovPose = document.getElementById('ov-pose');
+    const ovObjects = document.getElementById('ov-objects');
+    const ovSeg = document.getElementById('ov-seg');
+    const ovFace = document.getElementById('ov-face');
 
     function log(level, tag, msg){
       const line = document.createElement('div');
@@ -154,17 +158,17 @@
       diag.appendChild(row);
     }
 
-    // ---------- environment diagnostics ----------
+    // diagnostics
     (function bootstrap(){
       const served = location.protocol.startsWith('http');
       chip('status-host', served?location.host:'file://');
-      diagRow('Hosting', served, served?location.origin:'Open via a web server (https://)');
+      diagRow('Hosting', served, served?location.origin:'Open via https://');
       diagRow('WASM', typeof WebAssembly!=='undefined', typeof WebAssembly!=='undefined'?'available':'unsupported');
       const gl = !!document.createElement('canvas').getContext('webgl');
       diagRow('WebGL', gl, gl?'available':'missing');
     })();
 
-    // ---------- mini color analyzer ----------
+    // helpers
     function rgbToHex(r,g,b){ return '#' + [r,g,b].map(x=> x.toString(16).padStart(2,'0')).join(''); }
     function analyzeColors(imgEl){
       const w = imgEl.naturalWidth || imgEl.width, h = imgEl.naturalHeight || imgEl.height;
@@ -189,15 +193,13 @@
       const tempBias=(sumB-sumR)/sampleN; const temp=tempBias>10?'cool':tempBias<-10?'warm':'neutral';
       return { palette, brightness:Math.round(avgL), contrast, temperature:temp, temperatureBias:Math.round(tempBias) };
     }
-
-    // ---------- overlays helpers ----------
     function sizeOverlaysTo(el){
       const w = el.naturalWidth||el.clientWidth, h = el.naturalHeight||el.clientHeight;
       ['overlay-objects','overlay-seg','overlay-pose','overlay-face'].forEach(id=>{
-        const c=document.getElementById(id); c.width=w; c.height=h; c.style.width='100%'; c.style.height='100%';
+        const c=document.getElementById(id); if(!c) return;
+        c.width=w; c.height=h; c.style.width='100%'; c.style.height='100%';
       });
-      chip('status-size', `${w} × ${h}`);
-      log('info','canvas',`resized ${w}x${h}`);
+      chip('status-size', `${w} × ${h}`); log('info','canvas',`resized ${w}x${h}`);
     }
     function drawBoxes(ctx, boxes, labels){
       ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,0.85)';
@@ -205,28 +207,25 @@
       boxes.forEach((b,i)=>{ const [x,y,w,h]=b; ctx.strokeRect(x,y,w,h); const lab=labels?.[i]; if(lab){ const pad=4; const tw=ctx.measureText(lab).width+pad*2; const th=16; ctx.fillRect(x,y-th,tw,th); ctx.fillStyle='#00ffd1'; ctx.fillText(lab,x+pad,y-4); ctx.fillStyle='rgba(0,0,0,0.6)'; }});
     }
 
-    // ---------- MediaPipe Tasks Vision (CDN) → Object Detector only (for now) ----------
+    // Object detection (inline)
     const MP_VERSION = '0.10.15';
     let objectDetector=null;
     async function ensureObjectDetector(){
       if(objectDetector) return objectDetector;
-      try{
-        const mod = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`);
-        diagRow('Tasks Vision', true, `v${MP_VERSION}`);
-        const fsr = await mod.FilesetResolver.forVisionTasks({ baseUrl: `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm` });
-        diagRow('Fileset', true, 'CDN wasm');
-        objectDetector = await mod.ObjectDetector.createFromOptions(fsr, {
-          baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite' },
-          runningMode: 'IMAGE', scoreThreshold: 0.35, maxResults: 12
-        });
-        chip('status-models','models: object');
-        diagRow('ObjectDetector', true, 'ready');
-        return objectDetector;
-      }catch(e){ diagRow('ObjectDetector', false, e.message); throw e; }
+      const mod = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`);
+      diagRow('Tasks Vision', true, `v${MP_VERSION}`);
+      const fsr = await mod.FilesetResolver.forVisionTasks({ baseUrl: `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm` });
+      diagRow('Fileset', true, 'CDN wasm');
+      objectDetector = await mod.ObjectDetector.createFromOptions(fsr, {
+        baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite' },
+        runningMode: 'IMAGE', scoreThreshold: 0.35, maxResults: 12
+      });
+      const chipM=document.getElementById('status-models'); chipM.textContent = chipM.textContent.includes('pose')?'models: pose, object':'models: object';
+      diagRow('ObjectDetector', true, 'ready');
+      return objectDetector;
     }
-
     async function detectObjectsOn(imgEl){
-      if(!imgEl?.naturalWidth){ log('warn','detect','no image'); return; }
+      if(!ovObjects.checked) { const ctx = document.getElementById('overlay-objects').getContext('2d'); ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); return {boxes:[],labels:[]}; }
       sizeOverlaysTo(imgEl);
       const det = await ensureObjectDetector();
       const res = det.detect(imgEl);
@@ -239,33 +238,28 @@
       return {boxes,labels};
     }
 
-    // ---------- prompt generator (inline minimal) ----------
+    // replica prompt (minimal)
     function genPrompt({mode, detail, readings}){
       const { subject='subject', pose='pose', objects='none', lighting='neutral', colors=['#999'], stats={} } = readings||{};
       let base = `((masterpiece)), ${subject}, ${pose}, ${objects}, ${lighting}, color scheme: ${colors.join(' / ')}, ${detail>=2?'8k, ultra-detailed, film grain':'high detail'}`;
       if(mode==='poetic') base += ', whispers of silicon, hush of photons';
       if(mode==='edgy') base += ', gritty, noir, cybernetic HUD, moody shadows, chromatic aberration';
-      if(mode==='numeric') return `SUBJECT=${subject}
-POSE=${pose}
-OBJECTS=${objects}
-LIGHTING=${lighting}
-PALETTE=${colors.join(',')}
-STATS=${JSON.stringify(stats)}`;
+      if(mode==='numeric') return `SUBJECT=${subject}\nPOSE=${pose}\nOBJECTS=${objects}\nLIGHTING=${lighting}\nPALETTE=${colors.join(',')}\nSTATS=${JSON.stringify(stats)}`;
       if(mode==='raw') return JSON.stringify({subject,pose,objects,lighting,colors,stats,detail}, null, 2);
       return base;
     }
 
-    // ---------- IO wiring ----------
-    function analyzeAll(){
+    // main analysis
+    async function analyzeAll(){
       if(!img.naturalWidth) return;
       const colors = analyzeColors(img);
       document.getElementById('kpi-light').textContent = `Lighting: ${colors.temperature} • ${colors.brightness}`;
       document.getElementById('kpi-color').textContent = `Palette: ${colors.palette.join(', ')}`;
-      detectObjectsOn(img).then(()=>{
-        const objects = document.getElementById('kpi-objects').textContent.replace('Objects: ','')||'none';
-        const out = genPrompt({ mode: mode.value, detail: +detail.value, readings: { subject:'photo subject', pose:'pose TBD', objects, lighting:`${colors.temperature} / ${colors.brightness}`, colors: colors.palette, stats:{contrast:colors.contrast} } });
-        promptEl.value = out;
-      });
+      const {labels} = await detectObjectsOn(img);
+      if(ovPose.checked){ await poseOnImage(img); } else { const c=document.getElementById('overlay-pose').getContext('2d'); c.clearRect(0,0,c.canvas.width,c.canvas.height); document.getElementById('kpi-pose').textContent='Pose: —'; }
+      const objects = labels.length ? labels.join(', ') : 'none';
+      const out = genPrompt({ mode: mode.value, detail: +detail.value, readings: { subject:'photo subject', pose: document.getElementById('kpi-pose').textContent.replace('Pose: ','')||'neutral', objects, lighting:`${colors.temperature} / ${colors.brightness}`, colors: colors.palette, stats:{contrast:colors.contrast} } });
+      promptEl.value = out;
     }
 
     function onImageReady(){
@@ -274,10 +268,16 @@ STATS=${JSON.stringify(stats)}`;
       analyzeAll();
     }
 
+    // events
     file.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url; });
     demo.addEventListener('click', ()=>{ img.onload=onImageReady; img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format'; log('info','io','demo loaded'); });
     rerun.addEventListener('click', ()=> analyzeAll());
     mode.addEventListener('change', ()=> analyzeAll()); detail.addEventListener('input', ()=> analyzeAll());
+    ovPose.addEventListener('change', ()=> analyzeAll());
+    ovObjects.addEventListener('change', ()=> analyzeAll());
+    ovSeg.addEventListener('change', ()=> analyzeAll());  // segmentation coming next
+    ovFace.addEventListener('change', ()=> analyzeAll()); // face mesh coming next
+    copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(promptEl.value||''); copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy Prompt',900); });
   </script>
 </body>
 </html>
