@@ -35,7 +35,7 @@
 <body>
   <div class="grid"></div>
   <div class="wrap">
-    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.5b-inline</div></header>
+    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.5c-inline</div></header>
     <div class="layout">
       <div class="panel stage">
         <div class="toolbar">
@@ -119,7 +119,10 @@
 
     // Error taps → terminal
     window.addEventListener('error', e=> log('error','window', e.message||'error'));
-    window.addEventListener('unhandledrejection', e=> log('error','promise', (e.reason&&e.reason.message)||String(e.reason)));
+    window.addEventListener('unhandledrejection', e=> {
+      const r = e && e.reason; const msg = (r && (r.message||r.name)) || (typeof r==='string'? r : JSON.stringify(r||{}));
+      log('error','promise', msg);
+    });
 
     // ensure cross-origin safe image for pixel reads (color analysis, etc.)
     img.crossOrigin = 'anonymous';
@@ -165,7 +168,7 @@
       try{
         mp = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`);
         diagRow('Tasks Vision', true, `v${MP_VERSION}`);
-        fsr = await mp.FilesetResolver.forVisionTasks({ baseUrl:`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm` });
+        fsr = await mp.FilesetResolver.forVisionTasks({ baseUrl:`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm/wasm` });
         diagRow('Fileset', true, 'CDN wasm');
       }catch(e){ diagRow('Tasks Vision', false, e.message); throw e; }
       return mp;
