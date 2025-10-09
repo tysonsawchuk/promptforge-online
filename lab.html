@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ImageIntel — Reset R1</title>
+  <style>
+    :root{--bg:#070a0d;--panel:#0c1216;--ink:#d6ecff;--muted:#7ea0ba;--accent:#00ffd1;--err:#ff4d4d}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,Arial}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .panel{background:var(--panel);border:1px solid #17222a;border-radius:14px}
+    .layout{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+    .toolbar{display:flex;gap:8px;padding:10px;border-bottom:1px solid #17222a}
+    .btn{background:#0d1419;border:1px solid #24303a;color:#d6ecff;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .stage{overflow:hidden}
+    .stack{position:relative;aspect-ratio:16/10;background:#0a1115}
+    img,canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+    .diag,.term{padding:10px;font:12px ui-monospace,monospace}
+    .diag{border-top:1px solid #17222a}
+    .term{height:160px;overflow:auto;border-top:1px solid #17222a}
+    .ok{color:#49e07b}.err{color:var(--err)}.muted{color:var(--muted)}
+    .kpi{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+    .card{background:#0a1218;border:1px solid #16232c;border-radius:10px;padding:8px;min-height:42px}
+    textarea{width:100%;min-height:120px;background:#071017;color:#d6ecff;border:1px solid #16232c;border-radius:10px;padding:8px;font:12px ui-monospace,monospace}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header><div>ImageIntel Reset <span class="muted">R1</span></div><div class="muted" id="ver">MP: —</div></header>
+    <div class="layout">
+      <div class="panel stage">
+        <div class="toolbar">
+          <input id="file" class="btn" type="file" accept="image/*" />
+          <button id="demo" class="btn">Load Demo</button>
+          <span class="muted" id="status">host: — | models: —</span>
+        </div>
+        <div class="stack">
+          <img id="input" alt="" />
+          <canvas id="ov-obj"></canvas>
+          <canvas id="ov-pose"></canvas>
+        </div>
+        <div class="diag" id="diag"></div>
+        <div class="term" id="term"></div>
+      </div>
+      <div class="panel">
+        <div class="kpi">
+          <div class="card" id="k-objects">Objects: —</div>
+          <div class="card" id="k-pose">Pose: —</div>
+          <div class="card" id="k-light">Lighting: —</div>
+          <div class="card" id="k-colors">Palette: —</div>
+        </div>
+        <div style="padding:10px">
+          <div class="muted" style="margin-bottom:6px">Replica Prompt</div>
+          <textarea id="prompt"></textarea>
+          <div style="display:flex;gap:8px;margin-top:6px"><button id="copy" class="btn">Copy</button><button id="rerun" class="btn">Re-Analyze</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+const MP_VERSION='0.10.15';
+const term=document.getElementById('term');
+const diag=document.getElementById('diag');
+const img=document.getElementById('input');
+const file=document.getElementById('file');
+const demo=document.getElementById('demo');
+const promptEl=document.getElementById('prompt');
+const copyBtn=document.getElementById('copy');
+const rerun=document.getElementById('rerun');
+
+img.crossOrigin='anonymous';
+
+function log(kind, msg){const line=document.createElement('div'); line.className=kind==='err'?'err':'muted'; line.textContent=msg; term.appendChild(line); term.scrollTop=term.scrollHeight;}
+function row(stage, ok, message=''){const d=document.createElement('div'); d.innerHTML=`<span class="${ok?'ok':'err'}">${ok?'✔':'✖'}</span> <b>${stage}</b> — <span class="muted">${message}</span>`; diag.appendChild(d);} 
+function size(){const w=img.naturalWidth||img.clientWidth, h=img.naturalHeight||img.clientHeight; ['ov-obj','ov-pose'].forEach(id=>{const c=document.getElementById(id); c.width=w; c.height=h; c.style.width='100%'; c.style.height='100%';});}
+function rgbToHex(r,g,b){return '#' + [r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');}
+
+window.addEventListener('error', e=>{const t=e.target; const src=t && (t.src||t.href||t.currentSrc); log('err',`resource error ${e.message||''}${src?` @ ${src}`:''}`);}, true);
+window.addEventListener('unhandledrejection', e=>{const r=e.reason; log('err',`promise ${r && (r.message||r.name) || r}`);});
+
+let mp=null, fsr=null, obj=null, pose=null;
+
+async function loadMP(){
+  if(mp) return mp;
+  try{
+    mp = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`);
+    document.getElementById('ver').textContent = `MP: ${MP_VERSION}`;
+    row('Tasks Vision', true, `v${MP_VERSION}`);
+  }catch(e){ row('Tasks Vision', false, e.message); throw e; }
+
+  const CANDIDATES = [
+    `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm/wasm`,
+    `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm`,
+    `https://unpkg.com/@mediapipe/tasks-vision@${MP_VERSION}/wasm/wasm`,
+    `https://unpkg.com/@mediapipe/tasks-vision@${MP_VERSION}/wasm`
+  ];
+
+  async function probe(base){
+    try{
+      const test = base.replace(/\/$/,'') + '/vision_wasm_internal.js';
+      const r = await fetch(test, {mode:'cors'});
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return base;
+    }catch(_){ return null; }
+  }
+
+  let picked = null;
+  for(const b of CANDIDATES){
+    const ok = await probe(b);
+    if(ok){ picked = ok; break; }
+  }
+  if(!picked){ row('Fileset', false, 'no wasm base reachable'); throw new Error('no wasm base'); }
+
+  try{
+    fsr = await mp.FilesetResolver.forVisionTasks(picked);
+    row('Fileset', true, picked);
+  }catch(e){
+    row('Fileset', false, e.message);
+    throw e;
+  }
+  return mp;
+}
+
+
+async function ensureObjects(){ await loadMP(); if(obj) return obj; try{ obj = await mp.ObjectDetector.createFromOptions(fsr, { baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite' }, runningMode:'IMAGE', scoreThreshold:.35, maxResults:12 }); row('ObjectDetector', true, 'ready'); }catch(e){ row('ObjectDetector', false, e.message); throw e; } return obj; }
+async function ensurePose(){ await loadMP(); if(pose) return pose; try{ pose = await mp.PoseLandmarker.createFromOptions(fsr, { baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/pose_landmarker_lite.task' }, runningMode:'IMAGE', numPoses:1 }); row('PoseLandmarker', true, 'ready'); }catch(e){ row('PoseLandmarker', false, e.message); throw e; } return pose; }
+
+function drawBoxes(ctx, det){ ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); if(!det?.detections) return []; const labels=[]; ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.fillStyle='rgba(0,0,0,.6)'; ctx.font='12px ui-monospace,monospace'; det.detections.forEach(d=>{ const b=d.boundingBox; ctx.strokeRect(b.originX,b.originY,b.width,b.height); const c=d.categories?.[0]; const lab=`${c?.categoryName||'obj'} ${Math.round((c?.score||0)*100)}%`; labels.push(lab); const pad=4; const tw=ctx.measureText(lab).width+pad*2; const th=16; ctx.fillRect(b.originX,b.originY-th,tw,th); ctx.fillStyle='#00ffd1'; ctx.fillText(lab,b.originX+pad,b.originY-4); ctx.fillStyle='rgba(0,0,0,.6)'; }); return labels; }
+const EDGES=[[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,29],[29,31],[28,30],[30,32]];
+function drawPose(ctx, res){ ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); if(!res?.landmarks||!res.landmarks[0]) return '—'; const L=res.landmarks[0]; ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.beginPath(); EDGES.forEach(([a,b])=>{ const p=L[a], q=L[b]; if(p&&q){ ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);} }); ctx.stroke(); ctx.fillStyle='rgba(0,255,209,.9)'; L.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill(); }); const ang=(a,b)=>Math.atan2(L[b].y-L[a].y, L[b].x-L[a].x)*180/Math.PI; return `shoulder ${Math.round(ang(11,12))}°, hip ${Math.round(ang(23,24))}°`; }
+
+function analyzeColors(imgEl){ try{ const w=imgEl.naturalWidth||imgEl.width, h=imgEl.naturalHeight||imgEl.height; const samples=12000, s=Math.sqrt(samples/(w*h)); const tw=Math.max(1,Math.floor(w*s)), th=Math.max(1,Math.floor(h*s)); const c=document.createElement('canvas'); c.width=tw; c.height=th; const cx=c.getContext('2d',{willReadFrequently:true}); cx.drawImage(imgEl,0,0,tw,th); const data=cx.getImageData(0,0,tw,th).data; const buckets=new Map(); let sumL=0,minL=255,maxL=0; for(let i=0;i<data.length;i+=4){ const r=data[i],g=data[i+1],b=data[i+2]; const l=Math.round(0.2126*r+0.7152*g+0.0722*b); sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); buckets.set(key,(buckets.get(key)||0)+1);} const top=[...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5); const palette=top.map(([k])=>{ const r=((k>>8)&0xf)<<4, g=((k>>4)&0xf)<<4, b=(k&0xf)<<4; return rgbToHex(r,g,b);}); const avg=sumL/(data.length/4); const temp=((data[2]-data[0])>10)?'cool':((data[0]-data[2])>10)?'warm':'neutral'; return {palette,brightness:Math.round(avg),temperature:temp}; }catch(e){ return {palette:['#777'],brightness:50,temperature:'neutral'}; } }
+
+async function analyze(){ if(!img.naturalWidth) return; size(); const colors=analyzeColors(img); document.getElementById('k-light').textContent=`Lighting: ${colors.temperature} • ${colors.brightness}`; document.getElementById('k-colors').textContent=`Palette: ${colors.palette.join(', ')}`; let labels=[]; try{ const det=await (await ensureObjects()).detect(img); labels=drawBoxes(document.getElementById('ov-obj').getContext('2d'), det); }catch(e){ log('err',`objects: ${e.message||e}`);} document.getElementById('k-objects').textContent = `Objects: ${labels.length?labels.join(', '):'—'}`; try{ const pr=await (await ensurePose()).detect(img); const txt=drawPose(document.getElementById('ov-pose').getContext('2d'), pr); document.getElementById('k-pose').textContent=`Pose: ${txt}`; }catch(e){ log('err',`pose: ${e.message||e}`);} const prompt = `((masterpiece)), subject, ${document.getElementById('k-pose').textContent.replace('Pose: ','')}, objects: ${labels.join(', ')||'none'}, lighting ${colors.temperature}/${colors.brightness}, palette ${colors.palette.join(' ')}`; promptEl.value = prompt; }
+
+function onReady(){ size(); analyze(); }
+file.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; img.crossOrigin='anonymous'; const url=URL.createObjectURL(f); img.onload=onReady; img.src=url; });
+demo.addEventListener('click', ()=>{ img.crossOrigin='anonymous'; img.onload=onReady; img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format'; });
+rerun.addEventListener('click', analyze);
+copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(promptEl.value||''); copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy',800); });
+</script>
+</body>
+</html>
