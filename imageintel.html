@@ -35,9 +35,67 @@
 <body>
   <div class="grid"></div>
   <div class="wrap">
-    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.5d-inline</div></header>
+    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.5e-inline</div></header>
     <div class="layout">
-      <!-- same body content as before -->
+      <div class="panel stage">
+        <div class="toolbar">
+          <input id="file" type="file" accept="image/*" class="btn" />
+          <button id="demo" class="btn">Load Demo</button>
+          <label class="toggle"><input type="checkbox" id="ov-objects" checked> Objects</label>
+          <label class="toggle"><input type="checkbox" id="ov-pose" checked> Pose</label>
+          <label class="toggle"><input type="checkbox" id="ov-face" checked> Face</label>
+          <label class="toggle"><input type="checkbox" id="ov-seg" checked> Seg</label>
+        </div>
+        <div class="canvas-stack">
+          <img id="input" alt="" />
+          <canvas id="overlay-objects"></canvas>
+          <canvas id="overlay-pose"></canvas>
+          <canvas id="overlay-face"></canvas>
+          <canvas id="overlay-seg"></canvas>
+          <div class="hud">
+            <div class="chip" id="status-host">host: —</div>
+            <div class="chip" id="status-models">models: —</div>
+            <div class="chip" id="status-size">– × –</div>
+          </div>
+        </div>
+      </div>
+      <div class="side">
+        <div class="panel section">
+          <h3>Output Modes</h3>
+          <div class="row">
+            <select id="mode" class="btn">
+              <option value="sfw">SFW</option>
+              <option value="nsfw">NSFW-Safe</option>
+              <option value="edgy">Edgy</option>
+              <option value="poetic">Poetic</option>
+              <option value="numeric">Numeric</option>
+              <option value="raw">Raw JSON</option>
+            </select>
+            <input id="detail" type="range" min="0" max="3" step="1" value="2" />
+          </div>
+        </div>
+        <div class="panel section">
+          <h3>Quick KPIs</h3>
+          <div class="kpi">
+            <div class="card" id="kpi-subject">Subject: —</div>
+            <div class="card" id="kpi-pose">Pose: —</div>
+            <div class="card" id="kpi-objects">Objects: —</div>
+            <div class="card" id="kpi-light">Lighting: —</div>
+            <div class="card" id="kpi-color">Palette: —</div>
+            <div class="card small" id="kpi-nsfw">NSFW: —</div>
+          </div>
+        </div>
+        <div class="panel section">
+          <h3>Diagnostics</h3>
+          <div id="diag" class="diag"></div>
+          <div id="terminal" class="terminal" style="margin-top:8px"></div>
+        </div>
+        <div class="panel section out">
+          <h3>Replica Prompt</h3>
+          <textarea id="prompt" placeholder="Replica prompt will appear here…"></textarea>
+          <div class="row"><button id="copy" class="btn">Copy Prompt</button><button id="rerun" class="btn">Re-Analyze</button></div>
+        </div>
+      </div>
     </div>
     <footer class="small muted" style="margin-top:12px">Drop-in static build. No backend. <span id="ads">[ads hook]</span></footer>
   </div>
@@ -59,14 +117,17 @@
     const ovFace = document.getElementById('ov-face');
     const ovSeg = document.getElementById('ov-seg');
 
-    // Error taps → terminal
-    window.addEventListener('error', e=> log('error','window', e.message||'error'));
-    window.addEventListener('unhandledrejection', e=> {
-      const r = e && e.reason; const msg = (r && (r.message||r.name)) || (typeof r==='string'? r : JSON.stringify(r||{}));
+    // error taps with URL
+    window.addEventListener('error', e=>{
+      const t=e && e.target; const src=(t && (t.src||t.href||t.currentSrc))||'';
+      log('error','window', (e.message||'resource error') + (src?` @ ${src}`:''));
+    }, true);
+    window.addEventListener('unhandledrejection', e=>{
+      const r=e && e.reason; const msg=(r&&(r.message||r.name))||(typeof r==='string'?r:JSON.stringify(r||{}));
       log('error','promise', msg);
     });
 
-    // ensure cross-origin safe image for pixel reads (color analysis, etc.)
+    // ensure cross-origin safe image for pixel reads
     img.crossOrigin = 'anonymous';
 
     function log(level, tag, msg){
@@ -81,9 +142,9 @@
       row.innerHTML = `<span class="${ok?'ok':warn?'warn':'err'}">${ok?'✔':warn?'!':'✖'}</span> <b>${stage}</b> — <span class="muted">${message||''}</span>`;
       diag.appendChild(row);
     }
-    function chip(id, text){ const el = document.getElementById(id); if(el) el.textContent = text; }
+    function chip(id, text){ const el=document.getElementById(id); if(el) el.textContent=text; }
     function sizeOverlaysTo(el){
-      const w = el.naturalWidth||el.clientWidth, h = el.naturalHeight||el.clientHeight;
+      const w=el.naturalWidth||el.clientWidth, h=el.naturalHeight||el.clientHeight;
       ['overlay-objects','overlay-pose','overlay-face','overlay-seg'].forEach(id=>{
         const c=document.getElementById(id); if(!c) return; c.width=w; c.height=h; c.style.width='100%'; c.style.height='100%';
       });
@@ -103,7 +164,7 @@
       const gl = !!document.createElement('canvas').getContext('webgl'); diagRow('WebGL', gl, gl?'available':'missing');
     })();
 
-    // shared MediaPipe bundle
+    // MediaPipe bundle + single-thread wasm base (no COEP required)
     let mp=null, fsr=null;
     async function loadMP(){
       if(mp) return mp;
@@ -111,15 +172,15 @@
         mp = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`);
         diagRow('Tasks Vision', true, `v${MP_VERSION}`);
         fsr = await mp.FilesetResolver.forVisionTasks({ baseUrl:`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm/wasm` });
-        diagRow('Fileset', true, 'CDN wasm');
+        diagRow('Fileset', true, 'single-thread wasm');
       }catch(e){ diagRow('Tasks Vision', false, e.message); throw e; }
       return mp;
     }
 
     // STATUS chip helper
     function addModelChip(name){
-      const m = document.getElementById('status-models');
-      const t = m.textContent.replace('models:','').split(',').map(s=>s.trim()).filter(Boolean);
+      const m=document.getElementById('status-models');
+      const t=m.textContent.replace('models:','').split(',').map(s=>s.trim()).filter(Boolean);
       if(!t.includes(name)) t.push(name);
       m.textContent = `models: ${t.join(', ')||'—'}`;
     }
@@ -133,13 +194,12 @@
           baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite' },
           runningMode:'IMAGE', scoreThreshold:.35, maxResults:12
         });
-        addModelChip('object');
-        diagRow('ObjectDetector', true, 'ready');
+        addModelChip('object'); diagRow('ObjectDetector', true, 'ready');
       }catch(e){ diagRow('ObjectDetector', false, e.message); throw e; }
       return objectDetector;
     }
     async function runObjects(){
-      const ctx = document.getElementById('overlay-objects').getContext('2d');
+      const ctx=document.getElementById('overlay-objects').getContext('2d');
       ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
       if(!ovObjects.checked || !img.naturalWidth) return {labels:[]};
       sizeOverlaysTo(img);
@@ -161,14 +221,13 @@
           baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/pose_landmarker_lite.task' },
           runningMode:'IMAGE', numPoses:1, minPoseDetectionConfidence:.3, minPosePresenceConfidence:.3, minTrackingConfidence:.3
         });
-        addModelChip('pose');
-        diagRow('PoseLandmarker', true, 'ready');
+        addModelChip('pose'); diagRow('PoseLandmarker', true, 'ready');
       }catch(e){ diagRow('PoseLandmarker', false, e.message); throw e; }
       return pose;
     }
     function drawPose(ctx, L){ if(!L||!L[0]) return; const P=L[0]; ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.beginPath(); EDGES.forEach(([a,b])=>{ const p=P[a], q=P[b]; if(p&&q){ ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);} }); ctx.stroke(); ctx.fillStyle='rgba(0,255,209,.9)'; P.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill(); }); }
     async function runPose(){
-      const ctx = document.getElementById('overlay-pose').getContext('2d');
+      const ctx=document.getElementById('overlay-pose').getContext('2d');
       ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
       if(!ovPose.checked || !img.naturalWidth) { document.getElementById('kpi-pose').textContent='Pose: —'; return; }
       sizeOverlaysTo(img);
@@ -181,7 +240,7 @@
 
     // FACE
     let faceLM=null;
-    const FACE_IDX = { NOSE_TIP:1, L_EYE_OUT:33, R_EYE_OUT:263, L_EYE_UP:159, L_EYE_LOW:145, R_EYE_UP:386, R_EYE_LOW:374, MOUTH:13, IRIS_L:468, IRIS_R:473, IRIS_L_RIM:[469,470,471,472], IRIS_R_RIM:[474,475,476,477] };
+    const FACE_IDX={ NOSE_TIP:1, L_EYE_OUT:33, R_EYE_OUT:263, L_EYE_UP:159, L_EYE_LOW:145, R_EYE_UP:386, R_EYE_LOW:374, MOUTH:13, IRIS_L:468, IRIS_R:473, IRIS_L_RIM:[469,470,471,472], IRIS_R_RIM:[474,475,476,477] };
     function toPx(p,W,H){ return { x:(p.x<=1? p.x*W:p.x), y:(p.y<=1? p.y*H:p.y) }; }
     async function ensureFace(){
       await loadMP(); if(faceLM) return faceLM;
@@ -190,8 +249,7 @@
           baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
           runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
         });
-        addModelChip('face');
-        diagRow('FaceLandmarker', true, 'ready');
+        addModelChip('face'); diagRow('FaceLandmarker', true, 'ready');
       }catch(e){ diagRow('FaceLandmarker', false, e.message); throw e; }
       return faceLM;
     }
@@ -207,7 +265,7 @@
       const P=L[0]; const eyeL=P[FACE_IDX.L_EYE_OUT], eyeR=P[FACE_IDX.R_EYE_OUT]; const nose=P[FACE_IDX.NOSE_TIP]; const mouth=P[FACE_IDX.MOUTH];
       const midX=(eyeL.x+eyeR.x)/2, midY=(eyeL.y+eyeR.y)/2;
       const roll = Math.atan2( (eyeR.y-eyeL.y), (eyeR.x-eyeL.x) )*180/Math.PI;
-      const yawRaw=(nose.x-midX); const yaw=yawRaw*180; // heuristic scale
+      const yawRaw=(nose.x-midX); const yaw=yawRaw*180;
       const pitch=((nose.y-midY)-(mouth.y-midY))*120;
       const tag = Math.abs(yawRaw)>0.45? 'profile' : Math.abs(yawRaw)>0.22? '3/4' : 'frontal';
       const ipd=Math.hypot(eyeR.x-eyeL.x, eyeR.y-eyeL.y)||1;
@@ -238,15 +296,12 @@
           baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/selfie_segmenter.tflite' },
           runningMode:'IMAGE', outputCategoryMask:true
         });
-        addModelChip('seg');
-        diagRow('ImageSegmenter', true, 'ready');
+        addModelChip('seg'); diagRow('ImageSegmenter', true, 'ready');
       }catch(e){ diagRow('ImageSegmenter', false, e.message); throw e; }
       return seg;
     }
     function drawSeg(ctx, mask, W, H){
-      const id = ctx.createImageData(W,H);
-      const data = id.data;
-      const mpd = mask.getAsFloat32Array();
+      const id = ctx.createImageData(W,H); const data = id.data; const mpd = mask.getAsFloat32Array();
       for(let i=0,px=0;i<mpd.length;i++,px+=4){ const v = mpd[i];
         if(v>0.01){ data[px]=0; data[px+1]=255; data[px+2]=209; data[px+3]=Math.min(255, v*255*segOpacity); } else { data[px+3]=0; }
       }
@@ -267,36 +322,27 @@
         const v=arr[i]; if(v>0.5){ count++; const y=(i/ W)|0; const x=i - y*W; if(x<minX)minX=x; if(y<minY)minY=y; if(x>maxX)maxX=x; if(y>maxY)maxY=y; }
       }
       const area=count; const height=maxY>minY? (maxY-minY):0;
-      if(area>W*H*0.02){
-        const k = Math.round(area/1000);
-        document.getElementById('kpi-subject').textContent = `Subject: isolated ~${k}kpx`;
-      }
+      if(area>W*H*0.02){ const k=Math.round(area/1000); document.getElementById('kpi-subject').textContent = `Subject: isolated ~${k}kpx`; }
       return { isolated: area>W*H*0.02, bbox:[minX,minY,Math.max(0,maxX-minX),Math.max(0,maxY-minY)], areaPx:area, heightPx:height };
     }
 
     // COLOR/LIGHTING (guarded)
     function analyzeColorsSafe(imgEl){
       try{
-        const w = imgEl.naturalWidth || imgEl.width, h = imgEl.naturalHeight || imgEl.height;
-        const samples = 16000, scale = Math.sqrt(samples/(w*h));
-        const tw = Math.max(1, Math.floor(w*scale)), th = Math.max(1, Math.floor(h*scale));
-        const c = document.createElement('canvas'); c.width=tw; c.height=th;
-        const ctx = c.getContext('2d', {willReadFrequently:true}); ctx.drawImage(imgEl,0,0,tw,th);
-        const data = ctx.getImageData(0,0,tw,th).data;
-        const buckets = new Map(); let sumL=0,minL=255,maxL=0;
-        for(let i=0;i<data.length;i+=4){ const r=data[i], g=data[i+1], b=data[i+2]; const l=Math.round(0.2126*r+0.7152*g+0.0722*b); sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); buckets.set(key,(buckets.get(key)||0)+1); }
+        const w=imgEl.naturalWidth||imgEl.width, h=imgEl.naturalHeight||imgEl.height;
+        const samples=16000, scale=Math.sqrt(samples/(w*h));
+        const tw=Math.max(1,Math.floor(w*scale)), th=Math.max(1,Math.floor(h*scale));
+        const c=document.createElement('canvas'); c.width=tw; c.height=th; const ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(imgEl,0,0,tw,th);
+        const data=ctx.getImageData(0,0,tw,th).data; const buckets=new Map(); let sumL=0,minL=255,maxL=0;
+        for(let i=0;i<data.length;i+=4){ const r=data[i],g=data[i+1],b=data[i+2]; const l=Math.round(0.2126*r+0.7152*g+0.0722*b); sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); buckets.set(key,(buckets.get(key)||0)+1); }
         const top=[...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
         const palette=top.map(([key])=>{ const r=((key>>8)&0xf)<<4, g=((key>>4)&0xf)<<4, b=(key&0xf)<<4; return rgbToHex(r,g,b); });
-        const avgL=sumL/(data.length/4); const contrast=maxL-minL;
-        let sumR=0,sumB=0; const sampleN=Math.min(2000,data.length/4);
+        const avgL=sumL/(data.length/4); const contrast=maxL-minL; let sumR=0,sumB=0; const sampleN=Math.min(2000,data.length/4);
         for(let i=0;i<sampleN;i++){ const idx=(i*4)|0; sumR+=data[idx]; sumB+=data[idx+2]; }
         const tempBias=(sumB-sumR)/sampleN; const temp=tempBias>10?'cool':tempBias<-10?'warm':'neutral';
         diagRow('Color Analysis', true, 'ok'); 
         return { palette, brightness:Math.round(avgL), contrast, temperature:temp, temperatureBias:Math.round(tempBias) };
-      }catch(e){
-        diagRow('Color Analysis', false, e.message);
-        return { palette:['#777'], brightness:50, contrast:50, temperature:'neutral', temperatureBias:0 };
-      }
+      }catch(e){ diagRow('Color Analysis', false, e.message); return { palette:['#777'], brightness:50, contrast:50, temperature:'neutral', temperatureBias:0 }; }
     }
 
     function genPrompt({mode, detail, readings}){
@@ -322,11 +368,10 @@ STATS=${JSON.stringify(stats)}`;
       document.getElementById('kpi-color').textContent=`Palette: ${colors.palette.join(', ')}`;
 
       let labels=[]; let face={tag:null, angles:null}; let seg={isolated:false};
-
-      try{ const r = await runObjects(); labels = r.labels; }catch(e){ log('error','obj', e.message||e); }
+      try{ const r=await runObjects(); labels=r.labels; }catch(e){ log('error','obj', e.message||e); }
       try{ await runPose(); }catch(e){ log('error','pose', e.message||e); }
-      try{ face = await runFace(); }catch(e){ log('error','face', e.message||e); }
-      try{ seg = await runSeg(); }catch(e){ log('error','seg', e.message||e); }
+      try{ face=await runFace(); }catch(e){ log('error','face', e.message||e); }
+      try{ seg=await runSeg(); }catch(e){ log('error','seg', e.message||e); }
 
       const objects = labels.length?labels.join(', '):'none';
       const poseStr = document.getElementById('kpi-pose').textContent.replace('Pose: ','')||'neutral';
@@ -339,22 +384,15 @@ STATS=${JSON.stringify(stats)}`;
 
     // FILE input
     file.addEventListener('change', e=>{
-      const f=e.target.files[0]; if(!f) return;
-      img.crossOrigin = 'anonymous';
-      const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url;
-    });
+      const f=e.target.files[0]; if(!f) return; img.crossOrigin='anonymous'; const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url; });
 
-    // DEMO (CORS-friendly Unsplash)
-    demo.addEventListener('click', ()=>{
-      img.crossOrigin = 'anonymous';
-      img.onload=onImageReady;
-      img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format';
-    });
+    // DEMO
+    demo.addEventListener('click', ()=>{ img.crossOrigin='anonymous'; img.onload=onImageReady; img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format'; });
 
     // CONTROLS
     rerun.addEventListener('click', analyzeAll);
     mode.addEventListener('change', analyzeAll); detail.addEventListener('input', analyzeAll);
-    [ovObjects,ovPose,ovFace,ovSeg].forEach(el=> el.addEventListener('change', analyzeAll));
+    ;[ovObjects,ovPose,ovFace,ovSeg].forEach(el=> el.addEventListener('change', analyzeAll));
     copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(promptEl.value||''); copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy Prompt',900); });
   </script>
 </body>
