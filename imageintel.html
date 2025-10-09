@@ -35,7 +35,7 @@
 <body>
   <div class="grid"></div>
   <div class="wrap">
-    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.5e-inline</div></header>
+    <header><div class="brand">ImageIntel Pro Lab <span class="muted">— BlackSite</span></div><div class="ver">v0.1.6-threaded</div></header>
     <div class="layout">
       <div class="panel stage">
         <div class="toolbar">
@@ -117,283 +117,79 @@
     const ovFace = document.getElementById('ov-face');
     const ovSeg = document.getElementById('ov-seg');
 
-    // error taps with URL
-    window.addEventListener('error', e=>{
-      const t=e && e.target; const src=(t && (t.src||t.href||t.currentSrc))||'';
-      log('error','window', (e.message||'resource error') + (src?` @ ${src}`:''));
-    }, true);
-    window.addEventListener('unhandledrejection', e=>{
-      const r=e && e.reason; const msg=(r&&(r.message||r.name))||(typeof r==='string'?r:JSON.stringify(r||{}));
-      log('error','promise', msg);
-    });
+    // error taps
+    window.addEventListener('error', e=>{ const t=e && e.target; const src=(t && (t.src||t.href||t.currentSrc))||''; log('error','window', (e.message||'resource error') + (src?` @ ${src}`:'')); }, true);
+    window.addEventListener('unhandledrejection', e=>{ const r=e && e.reason; const msg=(r&&(r.message||r.name))||(typeof r==='string'?r:JSON.stringify(r||{})); log('error','promise', msg); });
 
-    // ensure cross-origin safe image for pixel reads
-    img.crossOrigin = 'anonymous';
+    img.crossOrigin='anonymous';
 
-    function log(level, tag, msg){
-      const line = document.createElement('div');
-      const ts = new Date().toISOString().split('T')[1].replace('Z','');
-      line.className = level==='error'?'err':level==='warn'?'warn':'muted';
-      line.textContent = `[${ts}] ${tag.padEnd(6,' ')}| ${msg}`;
-      term.appendChild(line); term.scrollTop = term.scrollHeight;
-    }
-    function diagRow(stage, ok, message, warn=false){
-      const row = document.createElement('div');
-      row.innerHTML = `<span class="${ok?'ok':warn?'warn':'err'}">${ok?'✔':warn?'!':'✖'}</span> <b>${stage}</b> — <span class="muted">${message||''}</span>`;
-      diag.appendChild(row);
-    }
-    function chip(id, text){ const el=document.getElementById(id); if(el) el.textContent=text; }
-    function sizeOverlaysTo(el){
-      const w=el.naturalWidth||el.clientWidth, h=el.naturalHeight||el.clientHeight;
-      ['overlay-objects','overlay-pose','overlay-face','overlay-seg'].forEach(id=>{
-        const c=document.getElementById(id); if(!c) return; c.width=w; c.height=h; c.style.width='100%'; c.style.height='100%';
-      });
-      chip('status-size', `${w} × ${h}`);
-    }
-    function drawBoxes(ctx, boxes, labels){
-      ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.font='12px ui-monospace,monospace'; ctx.fillStyle='rgba(0,0,0,.6)';
-      boxes.forEach((b,i)=>{ const [x,y,w,h]=b; ctx.strokeRect(x,y,w,h); const lab=labels?.[i]; if(lab){ const pad=4, tw=ctx.measureText(lab).width+pad*2, th=16; ctx.fillRect(x,y-th,tw,th); ctx.fillStyle='#00ffd1'; ctx.fillText(lab,x+pad,y-4); ctx.fillStyle='rgba(0,0,0,.6)'; }});
-    }
+    function log(level, tag, msg){ const line=document.createElement('div'); const ts=new Date().toISOString().split('T')[1].replace('Z',''); line.className=level==='error'?'err':level==='warn'?'warn':'muted'; line.textContent=`[${ts}] ${tag.padEnd(6,' ')}| ${msg}`; term.appendChild(line); term.scrollTop=term.scrollHeight; }
+    function diagRow(stage, ok, message, warn=false){ const row=document.createElement('div'); row.innerHTML = `<span class="${ok?'ok':warn?'warn':'err'}">${ok?'✔':warn?'!':'✖'}</span> <b>${stage}</b> — <span class="muted">${message||''}</span>`; diag.appendChild(row); }
+    function chip(id,text){ const el=document.getElementById(id); if(el) el.textContent=text; }
+    function sizeOverlaysTo(el){ const w=el.naturalWidth||el.clientWidth, h=el.naturalHeight||el.clientHeight; ['overlay-objects','overlay-pose','overlay-face','overlay-seg'].forEach(id=>{ const c=document.getElementById(id); if(!c) return; c.width=w; c.height=h; c.style.width='100%'; c.style.height='100%'; }); chip('status-size', `${w} × ${h}`); }
+    function drawBoxes(ctx, boxes, labels){ ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.font='12px ui-monospace,monospace'; ctx.fillStyle='rgba(0,0,0,.6)'; boxes.forEach((b,i)=>{ const [x,y,w,h]=b; ctx.strokeRect(x,y,w,h); const lab=labels?.[i]; if(lab){ const pad=4, tw=ctx.measureText(lab).width+pad*2, th=16; ctx.fillRect(x,y-th,tw,th); ctx.fillStyle='#00ffd1'; ctx.fillText(lab,x+pad,y-4); ctx.fillStyle='rgba(0,0,0,.6)'; }}); }
     function rgbToHex(r,g,b){ return '#' + [r,g,b].map(x=> x.toString(16).padStart(2,'0')).join(''); }
 
-    // env diagnostics
-    (function(){
-      const served = location.protocol.startsWith('http'); chip('status-host', served?location.host:'file://');
-      diagRow('Hosting', served, served?location.origin:'Open via HTTPS (not file://)');
-      const wasm = typeof WebAssembly!=='undefined'; diagRow('WASM', wasm, wasm?'available':'unsupported');
-      const gl = !!document.createElement('canvas').getContext('webgl'); diagRow('WebGL', gl, gl?'available':'missing');
-    })();
+    // env diag
+    (function(){ const served=location.protocol.startsWith('http'); chip('status-host', served?location.host:'file://'); diagRow('Hosting', served, served?location.origin:'Open via HTTPS (not file://)'); const wasm=typeof WebAssembly!=='undefined'; diagRow('WASM', wasm, wasm?'available':'unsupported'); const gl=!!document.createElement('canvas').getContext('webgl'); diagRow('WebGL', gl, gl?'available':'missing'); })();
 
-    // MediaPipe bundle + single-thread wasm base (no COEP required)
+    // MediaPipe (threaded) + local models (same-origin)
     let mp=null, fsr=null;
     async function loadMP(){
       if(mp) return mp;
       try{
         mp = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`);
         diagRow('Tasks Vision', true, `v${MP_VERSION}`);
-        fsr = await mp.FilesetResolver.forVisionTasks({ baseUrl:`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm/wasm` });
-        diagRow('Fileset', true, 'single-thread wasm');
+        fsr = await mp.FilesetResolver.forVisionTasks({ baseUrl:`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/wasm` });
+        diagRow('Fileset', true, 'threaded wasm');
       }catch(e){ diagRow('Tasks Vision', false, e.message); throw e; }
       return mp;
     }
 
-    // STATUS chip helper
-    function addModelChip(name){
-      const m=document.getElementById('status-models');
-      const t=m.textContent.replace('models:','').split(',').map(s=>s.trim()).filter(Boolean);
-      if(!t.includes(name)) t.push(name);
-      m.textContent = `models: ${t.join(', ')||'—'}`;
-    }
+    function addModelChip(name){ const m=document.getElementById('status-models'); const t=m.textContent.replace('models:','').split(',').map(s=>s.trim()).filter(Boolean); if(!t.includes(name)) t.push(name); m.textContent = `models: ${t.join(', ')||'—'}`; }
 
     // OBJECTS
     let objectDetector=null;
-    async function ensureObjectDetector(){
-      await loadMP(); if(objectDetector) return objectDetector;
-      try{
-        objectDetector = await mp.ObjectDetector.createFromOptions(fsr, {
-          baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite' },
-          runningMode:'IMAGE', scoreThreshold:.35, maxResults:12
-        });
-        addModelChip('object'); diagRow('ObjectDetector', true, 'ready');
-      }catch(e){ diagRow('ObjectDetector', false, e.message); throw e; }
-      return objectDetector;
-    }
-    async function runObjects(){
-      const ctx=document.getElementById('overlay-objects').getContext('2d');
-      ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-      if(!ovObjects.checked || !img.naturalWidth) return {labels:[]};
-      sizeOverlaysTo(img);
-      const det = await ensureObjectDetector();
-      const res = det.detect(img);
-      const boxes=[], labels=[];
-      (res.detections||[]).forEach(d=>{ const b=d.boundingBox; boxes.push([b.originX,b.originY,b.width,b.height]); const c=d.categories?.[0]; labels.push(`${c?.categoryName||'obj'} ${Math.round((c?.score||0)*100)}%`); });
-      drawBoxes(ctx, boxes, labels);
-      document.getElementById('kpi-objects').textContent = `Objects: ${labels.length?labels.join(', '):'—'}`;
-      return {labels};
-    }
+    async function ensureObjectDetector(){ await loadMP(); if(objectDetector) return objectDetector; try{ objectDetector = await mp.ObjectDetector.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'./public/imageintel/models/efficientdet_lite0_uint8.tflite' }, runningMode:'IMAGE', scoreThreshold:.35, maxResults:12 }); addModelChip('object'); diagRow('ObjectDetector', true, 'ready'); }catch(e){ diagRow('ObjectDetector', false, e.message); throw e; } return objectDetector; }
+    async function runObjects(){ const ctx=document.getElementById('overlay-objects').getContext('2d'); ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); if(!ovObjects.checked || !img.naturalWidth) return {labels:[]}; sizeOverlaysTo(img); const det=await ensureObjectDetector(); const res=det.detect(img); const boxes=[], labels=[]; (res.detections||[]).forEach(d=>{ const b=d.boundingBox; boxes.push([b.originX,b.originY,b.width,b.height]); const c=d.categories?.[0]; labels.push(`${c?.categoryName||'obj'} ${Math.round((c?.score||0)*100)}%`); }); drawBoxes(ctx, boxes, labels); document.getElementById('kpi-objects').textContent=`Objects: ${labels.length?labels.join(', '):'—'}`; return {labels}; }
 
     // POSE
     let pose=null; const EDGES=[[11,13],[13,15],[12,14],[14,16],[11,12],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,29],[29,31],[28,30],[30,32]];
-    async function ensurePose(){
-      await loadMP(); if(pose) return pose;
-      try{
-        pose = await mp.PoseLandmarker.createFromOptions(fsr, {
-          baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/pose_landmarker_lite.task' },
-          runningMode:'IMAGE', numPoses:1, minPoseDetectionConfidence:.3, minPosePresenceConfidence:.3, minTrackingConfidence:.3
-        });
-        addModelChip('pose'); diagRow('PoseLandmarker', true, 'ready');
-      }catch(e){ diagRow('PoseLandmarker', false, e.message); throw e; }
-      return pose;
-    }
+    async function ensurePose(){ await loadMP(); if(pose) return pose; try{ pose = await mp.PoseLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'./public/imageintel/models/pose_landmarker_lite.task' }, runningMode:'IMAGE', numPoses:1, minPoseDetectionConfidence:.3, minPosePresenceConfidence:.3, minTrackingConfidence:.3 }); addModelChip('pose'); diagRow('PoseLandmarker', true, 'ready'); }catch(e){ diagRow('PoseLandmarker', false, e.message); throw e; } return pose; }
     function drawPose(ctx, L){ if(!L||!L[0]) return; const P=L[0]; ctx.lineWidth=2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.beginPath(); EDGES.forEach(([a,b])=>{ const p=P[a], q=P[b]; if(p&&q){ ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);} }); ctx.stroke(); ctx.fillStyle='rgba(0,255,209,.9)'; P.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill(); }); }
-    async function runPose(){
-      const ctx=document.getElementById('overlay-pose').getContext('2d');
-      ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-      if(!ovPose.checked || !img.naturalWidth) { document.getElementById('kpi-pose').textContent='Pose: —'; return; }
-      sizeOverlaysTo(img);
-      const p = await ensurePose();
-      const res = p.detect(img);
-      drawPose(ctx, res.landmarks);
-      let poseText='—'; if(res.landmarks && res.landmarks[0]){ const L=res.landmarks[0], ang=(a,b)=>Math.atan2(L[b].y-L[a].y, L[b].x-L[a].x)*180/Math.PI; poseText = `shoulder ${Math.round(ang(11,12))}°, hip ${Math.round(ang(23,24))}°`; }
-      document.getElementById('kpi-pose').textContent=`Pose: ${poseText}`;
-    }
+    async function runPose(){ const ctx=document.getElementById('overlay-pose').getContext('2d'); ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); if(!ovPose.checked || !img.naturalWidth){ document.getElementById('kpi-pose').textContent='Pose: —'; return; } sizeOverlaysTo(img); const p=await ensurePose(); const res=p.detect(img); drawPose(ctx, res.landmarks); let poseText='—'; if(res.landmarks && res.landmarks[0]){ const L=res.landmarks[0], ang=(a,b)=>Math.atan2(L[b].y-L[a].y, L[b].x-L[a].x)*180/Math.PI; poseText=`shoulder ${Math.round(ang(11,12))}°, hip ${Math.round(ang(23,24))}°`; } document.getElementById('kpi-pose').textContent=`Pose: ${poseText}`; }
 
     // FACE
-    let faceLM=null;
-    const FACE_IDX={ NOSE_TIP:1, L_EYE_OUT:33, R_EYE_OUT:263, L_EYE_UP:159, L_EYE_LOW:145, R_EYE_UP:386, R_EYE_LOW:374, MOUTH:13, IRIS_L:468, IRIS_R:473, IRIS_L_RIM:[469,470,471,472], IRIS_R_RIM:[474,475,476,477] };
+    let faceLM=null; const FACE_IDX={ NOSE_TIP:1, L_EYE_OUT:33, R_EYE_OUT:263, L_EYE_UP:159, L_EYE_LOW:145, R_EYE_UP:386, R_EYE_LOW:374, MOUTH:13, IRIS_L:468, IRIS_R:473, IRIS_L_RIM:[469,470,471,472], IRIS_R_RIM:[474,475,476,477] };
     function toPx(p,W,H){ return { x:(p.x<=1? p.x*W:p.x), y:(p.y<=1? p.y*H:p.y) }; }
-    async function ensureFace(){
-      await loadMP(); if(faceLM) return faceLM;
-      try{
-        faceLM = await mp.FaceLandmarker.createFromOptions(fsr, {
-          baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/face_landmarker.task' },
-          runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false
-        });
-        addModelChip('face'); diagRow('FaceLandmarker', true, 'ready');
-      }catch(e){ diagRow('FaceLandmarker', false, e.message); throw e; }
-      return faceLM;
-    }
-    function drawFace(ctx, L){
-      if(!L||!L[0]) return; const P=L[0]; const W=ctx.canvas.width, H=ctx.canvas.height;
-      ctx.lineWidth=1.2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.fillStyle='rgba(0,255,209,.9)';
-      for(let i=0;i<P.length;i++){ const p=toPx(P[i],W,H); ctx.beginPath(); ctx.arc(p.x,p.y,1.4,0,Math.PI*2); ctx.fill(); }
-      const iris=(cIdx,rIdxs)=>{ const c=toPx(P[cIdx],W,H); const r=toPx(P[rIdxs[0]],W,H); const rad=Math.hypot(r.x-c.x,r.y-c.y)||1.5; ctx.beginPath(); ctx.arc(c.x,c.y,rad,0,Math.PI*2); ctx.stroke(); };
-      iris(FACE_IDX.IRIS_L, FACE_IDX.IRIS_L_RIM); iris(FACE_IDX.IRIS_R, FACE_IDX.IRIS_R_RIM);
-    }
-    function faceAngles(L){
-      if(!L||!L[0]) return {yaw:0,pitch:0,roll:0,tag:null,eye:null};
-      const P=L[0]; const eyeL=P[FACE_IDX.L_EYE_OUT], eyeR=P[FACE_IDX.R_EYE_OUT]; const nose=P[FACE_IDX.NOSE_TIP]; const mouth=P[FACE_IDX.MOUTH];
-      const midX=(eyeL.x+eyeR.x)/2, midY=(eyeL.y+eyeR.y)/2;
-      const roll = Math.atan2( (eyeR.y-eyeL.y), (eyeR.x-eyeL.x) )*180/Math.PI;
-      const yawRaw=(nose.x-midX); const yaw=yawRaw*180;
-      const pitch=((nose.y-midY)-(mouth.y-midY))*120;
-      const tag = Math.abs(yawRaw)>0.45? 'profile' : Math.abs(yawRaw)>0.22? '3/4' : 'frontal';
-      const ipd=Math.hypot(eyeR.x-eyeL.x, eyeR.y-eyeL.y)||1;
-      const openL=Math.abs(P[FACE_IDX.L_EYE_UP].y-P[FACE_IDX.L_EYE_LOW].y)/ipd;
-      const openR=Math.abs(P[FACE_IDX.R_EYE_UP].y-P[FACE_IDX.R_EYE_LOW].y)/ipd;
-      const eye=((openL+openR)/2)>0.08? 'eyes open':'eyes likely closed';
-      return {yaw, pitch, roll, tag, eye};
-    }
-    async function runFace(){
-      const ctx=document.getElementById('overlay-face').getContext('2d');
-      ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-      if(!ovFace.checked || !img.naturalWidth) return {tag:null};
-      sizeOverlaysTo(img);
-      const f = await ensureFace();
-      const res = f.detect(img);
-      drawFace(ctx, res.faceLandmarks);
-      const ang = faceAngles(res.faceLandmarks);
-      document.getElementById('kpi-subject').textContent = `Subject: ${ang.tag}${ang.eye? ' • '+ang.eye:''}`;
-      return { tag: ang.tag, angles: ang };
-    }
+    async function ensureFace(){ await loadMP(); if(faceLM) return faceLM; try{ faceLM = await mp.FaceLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'./public/imageintel/models/face_landmarker.task' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:false }); addModelChip('face'); diagRow('FaceLandmarker', true, 'ready'); }catch(e){ diagRow('FaceLandmarker', false, e.message); throw e; } return faceLM; }
+    function drawFace(ctx, L){ if(!L||!L[0]) return; const P=L[0]; const W=ctx.canvas.width, H=ctx.canvas.height; ctx.lineWidth=1.2; ctx.strokeStyle='rgba(0,255,209,.85)'; ctx.fillStyle='rgba(0,255,209,.9)'; for(let i=0;i<P.length;i++){ const p=toPx(P[i],W,H); ctx.beginPath(); ctx.arc(p.x,p.y,1.4,0,Math.PI*2); ctx.fill(); } const iris=(cIdx,rIdxs)=>{ const c=toPx(P[cIdx],W,H); const r=toPx(P[rIdxs[0]],W,H); const rad=Math.hypot(r.x-c.x,r.y-c.y)||1.5; ctx.beginPath(); ctx.arc(c.x,c.y,rad,0,Math.PI*2); ctx.stroke(); }; iris(FACE_IDX.IRIS_L, FACE_IDX.IRIS_L_RIM); iris(FACE_IDX.IRIS_R, FACE_IDX.IRIS_R_RIM); }
+    function faceAngles(L){ if(!L||!L[0]) return {yaw:0,pitch:0,roll:0,tag:null,eye:null}; const P=L[0]; const eyeL=P[FACE_IDX.L_EYE_OUT], eyeR=P[FACE_IDX.R_EYE_OUT]; const nose=P[FACE_IDX.NOSE_TIP]; const mouth=P[FACE_IDX.MOUTH]; const midX=(eyeL.x+eyeR.x)/2; const roll=Math.atan2((eyeR.y-eyeL.y),(eyeR.x-eyeL.x))*180/Math.PI; const yawRaw=(nose.x-midX); const yaw=yawRaw*180; const pitch=((nose.y-((eyeL.y+eyeR.y)/2))-(mouth.y-((eyeL.y+eyeR.y)/2)))*120; const tag=Math.abs(yawRaw)>0.45?'profile':Math.abs(yawRaw)>0.22?'3/4':'frontal'; const ipd=Math.hypot(eyeR.x-eyeL.x, eyeR.y-eyeL.y)||1; const openL=Math.abs(P[FACE_IDX.L_EYE_UP].y-P[FACE_IDX.L_EYE_LOW].y)/ipd; const openR=Math.abs(P[FACE_IDX.R_EYE_UP].y-P[FACE_IDX.R_EYE_LOW].y)/ipd; const eye=((openL+openR)/2)>0.08?'eyes open':'eyes likely closed'; return {yaw,pitch,roll,tag,eye}; }
+    async function runFace(){ const ctx=document.getElementById('overlay-face').getContext('2d'); ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); if(!ovFace.checked || !img.naturalWidth) return {tag:null}; sizeOverlaysTo(img); const f=await ensureFace(); const res=f.detect(img); drawFace(ctx, res.faceLandmarks); const ang=faceAngles(res.faceLandmarks); document.getElementById('kpi-subject').textContent=`Subject: ${ang.tag}${ang.eye?' • '+ang.eye:''}`; return { tag: ang.tag, angles: ang }; }
 
-    // SEGMENTATION
+    // SEG
     let seg=null; let segOpacity=0.35;
-    async function ensureSeg(){
-      await loadMP(); if(seg) return seg;
-      try{
-        seg = await mp.ImageSegmenter.createFromOptions(fsr, {
-          baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-assets/selfie_segmenter.tflite' },
-          runningMode:'IMAGE', outputCategoryMask:true
-        });
-        addModelChip('seg'); diagRow('ImageSegmenter', true, 'ready');
-      }catch(e){ diagRow('ImageSegmenter', false, e.message); throw e; }
-      return seg;
-    }
-    function drawSeg(ctx, mask, W, H){
-      const id = ctx.createImageData(W,H); const data = id.data; const mpd = mask.getAsFloat32Array();
-      for(let i=0,px=0;i<mpd.length;i++,px+=4){ const v = mpd[i];
-        if(v>0.01){ data[px]=0; data[px+1]=255; data[px+2]=209; data[px+3]=Math.min(255, v*255*segOpacity); } else { data[px+3]=0; }
-      }
-      ctx.putImageData(id,0,0);
-    }
-    async function runSeg(){
-      const ctx=document.getElementById('overlay-seg').getContext('2d');
-      ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height);
-      if(!ovSeg.checked || !img.naturalWidth) return {isolated:false};
-      sizeOverlaysTo(img);
-      const s = await ensureSeg();
-      const res = s.segment(img);
-      if(!res || !res.categoryMask) return {isolated:false};
-      drawSeg(ctx, res.categoryMask, ctx.canvas.width, ctx.canvas.height);
-      const arr = res.categoryMask.getAsFloat32Array();
-      let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9,count=0; const W=ctx.canvas.width, H=ctx.canvas.height;
-      for(let i=0;i<arr.length;i++){
-        const v=arr[i]; if(v>0.5){ count++; const y=(i/ W)|0; const x=i - y*W; if(x<minX)minX=x; if(y<minY)minY=y; if(x>maxX)maxX=x; if(y>maxY)maxY=y; }
-      }
-      const area=count; const height=maxY>minY? (maxY-minY):0;
-      if(area>W*H*0.02){ const k=Math.round(area/1000); document.getElementById('kpi-subject').textContent = `Subject: isolated ~${k}kpx`; }
-      return { isolated: area>W*H*0.02, bbox:[minX,minY,Math.max(0,maxX-minX),Math.max(0,maxY-minY)], areaPx:area, heightPx:height };
-    }
+    async function ensureSeg(){ await loadMP(); if(seg) return seg; try{ seg = await mp.ImageSegmenter.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'./public/imageintel/models/selfie_segmenter.tflite' }, runningMode:'IMAGE', outputCategoryMask:true }); addModelChip('seg'); diagRow('ImageSegmenter', true, 'ready'); }catch(e){ diagRow('ImageSegmenter', false, e.message); throw e; } return seg; }
+    function drawSeg(ctx, mask, W, H){ const id=ctx.createImageData(W,H); const data=id.data; const mpd=mask.getAsFloat32Array(); for(let i=0,px=0;i<mpd.length;i++,px+=4){ const v=mpd[i]; if(v>0.01){ data[px]=0; data[px+1]=255; data[px+2]=209; data[px+3]=Math.min(255, v*255*segOpacity);} else { data[px+3]=0; } } ctx.putImageData(id,0,0); }
+    async function runSeg(){ const ctx=document.getElementById('overlay-seg').getContext('2d'); ctx.clearRect(0,0,ctx.canvas.width,ctx.canvas.height); if(!ovSeg.checked || !img.naturalWidth) return {isolated:false}; sizeOverlaysTo(img); const s=await ensureSeg(); const res=s.segment(img); if(!res||!res.categoryMask) return {isolated:false}; drawSeg(ctx, res.categoryMask, ctx.canvas.width, ctx.canvas.height); const arr=res.categoryMask.getAsFloat32Array(); let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9,count=0; const W=ctx.canvas.width, H=ctx.canvas.height; for(let i=0;i<arr.length;i++){ const v=arr[i]; if(v>0.5){ count++; const y=(i/W)|0; const x=i - y*W; if(x<minX)minX=x; if(y<minY)minY=y; if(x>maxX)maxX=x; if(y>maxY)maxY=y; } } const area=count; const height=maxY>minY? (maxY-minY):0; if(area>W*H*0.02){ const k=Math.round(area/1000); document.getElementById('kpi-subject').textContent=`Subject: isolated ~${k}kpx`; } return { isolated: area>W*H*0.02, bbox:[minX,minY,Math.max(0,maxX-minX),Math.max(0,maxY-minY)], areaPx:area, heightPx:height }; }
 
-    // COLOR/LIGHTING (guarded)
-    function analyzeColorsSafe(imgEl){
-      try{
-        const w=imgEl.naturalWidth||imgEl.width, h=imgEl.naturalHeight||imgEl.height;
-        const samples=16000, scale=Math.sqrt(samples/(w*h));
-        const tw=Math.max(1,Math.floor(w*scale)), th=Math.max(1,Math.floor(h*scale));
-        const c=document.createElement('canvas'); c.width=tw; c.height=th; const ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(imgEl,0,0,tw,th);
-        const data=ctx.getImageData(0,0,tw,th).data; const buckets=new Map(); let sumL=0,minL=255,maxL=0;
-        for(let i=0;i<data.length;i+=4){ const r=data[i],g=data[i+1],b=data[i+2]; const l=Math.round(0.2126*r+0.7152*g+0.0722*b); sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); buckets.set(key,(buckets.get(key)||0)+1); }
-        const top=[...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
-        const palette=top.map(([key])=>{ const r=((key>>8)&0xf)<<4, g=((key>>4)&0xf)<<4, b=(key&0xf)<<4; return rgbToHex(r,g,b); });
-        const avgL=sumL/(data.length/4); const contrast=maxL-minL; let sumR=0,sumB=0; const sampleN=Math.min(2000,data.length/4);
-        for(let i=0;i<sampleN;i++){ const idx=(i*4)|0; sumR+=data[idx]; sumB+=data[idx+2]; }
-        const tempBias=(sumB-sumR)/sampleN; const temp=tempBias>10?'cool':tempBias<-10?'warm':'neutral';
-        diagRow('Color Analysis', true, 'ok'); 
-        return { palette, brightness:Math.round(avgL), contrast, temperature:temp, temperatureBias:Math.round(tempBias) };
-      }catch(e){ diagRow('Color Analysis', false, e.message); return { palette:['#777'], brightness:50, contrast:50, temperature:'neutral', temperatureBias:0 }; }
-    }
+    // COLORS
+    function analyzeColorsSafe(imgEl){ try{ const w=imgEl.naturalWidth||imgEl.width, h=imgEl.naturalHeight||imgEl.height; const samples=16000, scale=Math.sqrt(samples/(w*h)); const tw=Math.max(1,Math.floor(w*scale)), th=Math.max(1,Math.floor(h*scale)); const c=document.createElement('canvas'); c.width=tw; c.height=th; const ctx=c.getContext('2d',{willReadFrequently:true}); ctx.drawImage(imgEl,0,0,tw,th); const data=ctx.getImageData(0,0,tw,th).data; const buckets=new Map(); let sumL=0,minL=255,maxL=0; for(let i=0;i<data.length;i+=4){ const r=data[i],g=data[i+1],b=data[i+2]; const l=Math.round(0.2126*r+0.7152*g+0.0722*b); sumL+=l; minL=Math.min(minL,l); maxL=Math.max(maxL,l); const key=((r>>4)<<8)|((g>>4)<<4)|(b>>4); buckets.set(key,(buckets.get(key)||0)+1);} const top=[...buckets.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5); const palette=top.map(([key])=>{ const r=((key>>8)&0xf)<<4, g=((key>>4)&0xf)<<4, b=(key&0xf)<<4; return rgbToHex(r,g,b); }); const avgL=sumL/(data.length/4); const contrast=maxL-minL; let sumR=0,sumB=0; const sampleN=Math.min(2000,data.length/4); for(let i=0;i<sampleN;i++){ const idx=(i*4)|0; sumR+=data[idx]; sumB+=data[idx+2]; } const tempBias=(sumB-sumR)/sampleN; const temp=tempBias>10?'cool':tempBias<-10?'warm':'neutral'; diagRow('Color Analysis', true, 'ok'); return { palette, brightness:Math.round(avgL), contrast, temperature:temp, temperatureBias:Math.round(tempBias) }; }catch(e){ diagRow('Color Analysis', false, e.message); return { palette:['#777'], brightness:50, contrast:50, temperature:'neutral', temperatureBias:0 }; } }
 
-    function genPrompt({mode, detail, readings}){
-      const { subject='subject', pose='pose', objects='none', lighting='neutral', colors=['#999'], stats={} } = readings||{};
-      let base=`((masterpiece)), ${subject}, ${pose}, ${objects}, ${lighting}, color scheme: ${colors.join(' / ')}, ${detail>=2?'8k, ultra-detailed, film grain':'high detail'}`;
-      if(mode==='poetic') base+=', whispers of silicon, hush of photons';
-      if(mode==='edgy') base+=', gritty, noir, cybernetic HUD, moody shadows, chromatic aberration';
-      if(mode==='numeric') return `SUBJECT=${subject}
+    function genPrompt({mode, detail, readings}){ const { subject='subject', pose='pose', objects='none', lighting='neutral', colors=['#999'], stats={} } = readings||{}; let base=`((masterpiece)), ${subject}, ${pose}, ${objects}, ${lighting}, color scheme: ${colors.join(' / ')}, ${detail>=2?'8k, ultra-detailed, film grain':'high detail'}`; if(mode==='poetic') base+=', whispers of silicon, hush of photons'; if(mode==='edgy') base+=', gritty, noir, cybernetic HUD, moody shadows, chromatic aberration'; if(mode==='numeric') return `SUBJECT=${subject}
 POSE=${pose}
 OBJECTS=${objects}
 LIGHTING=${lighting}
 PALETTE=${colors.join(',')}
-STATS=${JSON.stringify(stats)}`;
-      if(mode==='raw') return JSON.stringify({subject,pose,objects,lighting,colors,stats,detail},null,2);
-      return base;
-    }
+STATS=${JSON.stringify(stats)}`; if(mode==='raw') return JSON.stringify({subject,pose,objects,lighting,colors,stats,detail},null,2); return base; }
 
-    async function analyzeAll(){
-      if(!img.naturalWidth) return;
-      await loadMP().catch(e=> log('error','mp', e.message||e));
-      const colors = analyzeColorsSafe(img);
-      document.getElementById('kpi-light').textContent=`Lighting: ${colors.temperature} • ${colors.brightness}`;
-      document.getElementById('kpi-color').textContent=`Palette: ${colors.palette.join(', ')}`;
-
-      let labels=[]; let face={tag:null, angles:null}; let seg={isolated:false};
-      try{ const r=await runObjects(); labels=r.labels; }catch(e){ log('error','obj', e.message||e); }
-      try{ await runPose(); }catch(e){ log('error','pose', e.message||e); }
-      try{ face=await runFace(); }catch(e){ log('error','face', e.message||e); }
-      try{ seg=await runSeg(); }catch(e){ log('error','seg', e.message||e); }
-
-      const objects = labels.length?labels.join(', '):'none';
-      const poseStr = document.getElementById('kpi-pose').textContent.replace('Pose: ','')||'neutral';
-      const subjectTag = face.tag? `${face.tag}${seg.isolated?' • subject isolated':''}` : (seg.isolated?'subject isolated':'photo subject');
-      const out = genPrompt({ mode: mode.value, detail:+detail.value, readings:{ subject:subjectTag, pose:poseStr, objects, lighting:`${colors.temperature} / ${colors.brightness}`, colors:colors.palette, stats:{contrast:colors.contrast, face:face.angles, seg} } });
-      promptEl.value = out;
-    }
+    async function analyzeAll(){ if(!img.naturalWidth) return; await loadMP().catch(e=> log('error','mp', e.message||e)); const colors=analyzeColorsSafe(img); document.getElementById('kpi-light').textContent=`Lighting: ${colors.temperature} • ${colors.brightness}`; document.getElementById('kpi-color').textContent=`Palette: ${colors.palette.join(', ')}`; let labels=[]; let face={tag:null, angles:null}; let seg={isolated:false}; try{ const r=await runObjects(); labels=r.labels; }catch(e){ log('error','obj', e.message||e); } try{ await runPose(); }catch(e){ log('error','pose', e.message||e); } try{ face=await runFace(); }catch(e){ log('error','face', e.message||e); } try{ seg=await runSeg(); }catch(e){ log('error','seg', e.message||e); }
+      const objects=labels.length?labels.join(', '):'none'; const poseStr=document.getElementById('kpi-pose').textContent.replace('Pose: ','')||'neutral'; const subjectTag = face.tag? `${face.tag}${seg.isolated?' • subject isolated':''}` : (seg.isolated?'subject isolated':'photo subject'); const out = genPrompt({ mode: mode.value, detail:+detail.value, readings:{ subject:subjectTag, pose:poseStr, objects, lighting:`${colors.temperature} / ${colors.brightness}`, colors:colors.palette, stats:{contrast:colors.contrast, face:face.angles, seg} } }); promptEl.value = out; }
 
     function onImageReady(){ sizeOverlaysTo(img); analyzeAll(); }
-
-    // FILE input
-    file.addEventListener('change', e=>{
-      const f=e.target.files[0]; if(!f) return; img.crossOrigin='anonymous'; const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url; });
-
-    // DEMO
+    file.addEventListener('change', e=>{ const f=e.target.files[0]; if(!f) return; img.crossOrigin='anonymous'; const url=URL.createObjectURL(f); img.onload=onImageReady; img.src=url; });
     demo.addEventListener('click', ()=>{ img.crossOrigin='anonymous'; img.onload=onImageReady; img.src='https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=1280&auto=format'; });
-
-    // CONTROLS
-    rerun.addEventListener('click', analyzeAll);
-    mode.addEventListener('change', analyzeAll); detail.addEventListener('input', analyzeAll);
-    ;[ovObjects,ovPose,ovFace,ovSeg].forEach(el=> el.addEventListener('change', analyzeAll));
-    copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(promptEl.value||''); copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy Prompt',900); });
+    rerun.addEventListener('click', analyzeAll); mode.addEventListener('change', analyzeAll); detail.addEventListener('input', analyzeAll); [ovObjects,ovPose,ovFace,ovSeg].forEach(el=> el.addEventListener('change', analyzeAll)); copyBtn.addEventListener('click', ()=>{ navigator.clipboard.writeText(promptEl.value||''); copyBtn.textContent='Copied'; setTimeout(()=>copyBtn.textContent='Copy Prompt',900); });
   </script>
 </body>
 </html>
