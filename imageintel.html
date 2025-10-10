@@ -1,185 +1,197 @@
-<!--
-  File: imageintel.html
-  Project: ImageIntel Pro Lab — MVP++++ (Module build; Objects + Pose + Face + Diag)
-  How to use: Drop this single file on Netlify. If not at "/", add a _redirects rule:  
-    /   /imageintel.html   200
-  Notes:
-  - Uses ESM bundle (vision_bundle.mjs) — fixes "Vision bundle not loaded".
-  - Single <script type="module"> (no globals) — reliable init before Run.
-  - Safe Mode (CPU) + Re‑Init + Overlay Test + Self‑Test + Copy Diag for quick debugging.
--->
+<!-- /imageintel.html — ImageIntel Pro Lab (Objects+Pose+Face+Diag, multi-CDN loader) -->
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ImageIntel Pro Lab — BlackSite HUD</title>
-  <meta name="color-scheme" content="dark" />
-  <style>
-    :root { --bg:#070a0f; --grid:rgba(255,255,255,0.04); --panel:#0d121a; --muted:#94a3b8; --text:#e6f1ff; --chip:#101826; --shadow:0 10px 30px rgba(0,0,0,0.45); --radius:18px; }
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;background:radial-gradient(1200px 1200px at 10% -10%, #0c1420, var(--bg)) fixed;color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;overflow:hidden}
-    body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(1000px 700px at 10% 0%, #000 80%, transparent)}
-    .app{position:relative;z-index:1;height:100%;display:grid;gap:12px;padding:12px;grid-template-columns:1.3fr .7fr;grid-template-rows:68% 32%;grid-template-areas:"stage side" "kpi side"}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(6px);position:relative}
-    .card .title{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:11px;color:var(--muted)} .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap} .col{display:grid;gap:8px}
-    .chip{background:var(--chip);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:6px 10px;font-size:12px;color:#b6cdfb}
-    .btn{background:linear-gradient(180deg,rgba(62,248,255,.15),rgba(62,248,255,.06));border:1px solid rgba(62,248,255,.45);color:#cfffff;padding:8px 12px;border-radius:10px;cursor:pointer;transition:120ms ease}
-    .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(62,248,255,.18)} .btn.secondary{border-color:rgba(102,255,153,.45);background:linear-gradient(180deg,rgba(102,255,153,.16),rgba(102,255,153,.06));color:#dbffe8} .btn.warn{border-color:rgba(255,209,102,.45);background:linear-gradient(180deg,rgba(255,209,102,.16),rgba(255,209,102,.06));color:#fff3cf} .btn.ghost{background:transparent;border:1px dashed rgba(255,255,255,.25)}
-    .toggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer} .toggle input{appearance:none;width:30px;height:18px;border-radius:999px;background:#15202f;border:1px solid rgba(255,255,255,.2);position:relative;outline:none}
-    .toggle input:checked{background:#0e2c2c;border-color:rgba(62,248,255,.5)} .toggle input::after{content:"";position:absolute;top:1px;left:1px;width:14px;height:14px;background:#9aa7bd;border-radius:50%;transition:160ms ease}
-    .toggle input:checked::after{left:calc(100% - 15px);background:#72ffd5}
-    .panel-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08)} .panel-body{padding:10px;display:grid;gap:8px}
-    #stage.card{grid-area:stage;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
-    #stage .stage-head{padding:10px;display:flex;align-items:center;justify-content:space-between}
-    #stage .canvas-wrap{position:relative;overflow:hidden;background:#0b0f14;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-    #inputImage{max-width:100%;max-height:100%;display:block;opacity:1}
-    canvas#overlay{position:absolute;left:0;top:0;image-rendering:pixelated}
-    #kpis.card{grid-area:kpi;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px;overflow:auto}
-    .kpi{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;min-height:120px;display:grid;grid-template-rows:auto 1fr}
-    .kpi h4{margin:0 0 6px 0;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)} .kpi pre{margin:0;font-size:12px;white-space:pre-wrap;color:#d9e6ff}
-    .list{display:grid;gap:6px;font-size:12px} .pill{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:10px}
-    #side.card{grid-area:side;display:grid;grid-template-rows:auto auto 1fr auto;overflow:hidden}
-    #controls{padding:10px;display:grid;gap:8px}
-    #terminal{height:200px;overflow:auto;background:#05070b;border-top:1px solid rgba(255,255,255,.08);padding:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#b0c3e6}
-    .log.ok{color:#5cff7a} .log.err{color:#ff4d6d}
-    #footer{padding:10px;display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08)}
-    .statusbar{display:flex;gap:6px;flex-wrap:wrap} .statusbar .chip.ok{border-color:rgba(102,255,153,.45);color:#d5ffe5} .statusbar .chip.err{border-color:rgba(255,77,109,.45);color:#ffd0da}
-    .swatches{display:flex;gap:4px} .swatch{width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,.15)}
-    textarea#promptOut{width:100%;resize:vertical;background:#05070b;color:#e6f1ff;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px}
-    pre#diagDump{max-height:200px;overflow:auto;background:#03050a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#cfe1ff}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ImageIntel Pro Lab — BlackSite HUD</title>
+<meta name="color-scheme" content="dark"/>
+<style>
+:root{--bg:#070a0f;--grid:rgba(255,255,255,.04);--panel:#0d121a;--muted:#94a3b8;--text:#e6f1ff;--chip:#101826;--radius:18px}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(1200px 1200px at 10% -10%,#0c1420,var(--bg)) fixed;color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(1000px 700px at 10% 0%,#000 80%,transparent)}
+.app{position:relative;z-index:1;height:100%;display:grid;gap:12px;padding:12px;grid-template-columns:1.3fr .7fr;grid-template-rows:68% 32%;grid-template-areas:"stage side" "kpi side"}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);backdrop-filter:blur(6px)}
+.title{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:11px;color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.col{display:grid;gap:8px}
+.chip{background:var(--chip);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:6px 10px;font-size:12px;color:#b6cdfb}
+.btn{background:linear-gradient(180deg,rgba(62,248,255,.15),rgba(62,248,255,.06));border:1px solid rgba(62,248,255,.45);color:#cfffff;padding:8px 12px;border-radius:10px;cursor:pointer}
+.btn.secondary{border-color:rgba(102,255,153,.45);background:linear-gradient(180deg,rgba(102,255,153,.16),rgba(102,255,153,.06));color:#dbffe8}
+.btn.warn{border-color:rgba(255,209,102,.45);background:linear-gradient(180deg,rgba(255,209,102,.16),rgba(255,209,102,.06));color:#fff3cf}
+.btn.ghost{background:transparent;border:1px dashed rgba(255,255,255,.25)}
+.toggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.toggle input{appearance:none;width:30px;height:18px;border-radius:999px;background:#15202f;border:1px solid rgba(255,255,255,.2);position:relative}
+.toggle input:checked{background:#0e2c2c;border-color:rgba(62,248,255,.5)}
+.toggle input::after{content:"";position:absolute;top:1px;left:1px;width:14px;height:14px;background:#9aa7bd;border-radius:50%;transition:160ms}
+.toggle input:checked::after{left:calc(100% - 15px);background:#72ffd5}
+#stage{grid-area:stage;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+.stage-head{padding:10px;display:flex;align-items:center;justify-content:space-between}
+.canvas-wrap{position:relative;overflow:hidden;background:#0b0f14;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+#inputImage{max-width:100%;max-height:100%;display:block}
+#overlay{position:absolute;left:0;top:0;image-rendering:pixelated}
+#kpis{grid-area:kpi;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px;overflow:auto}
+.kpi{background:#0d121a;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;min-height:120px;display:grid;grid-template-rows:auto 1fr}
+.list{display:grid;gap:6px;font-size:12px}.pill{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between}
+#side{grid-area:side;display:grid;grid-template-rows:auto auto 1fr auto}
+#terminal{height:200px;overflow:auto;background:#05070b;border-top:1px solid rgba(255,255,255,.08);padding:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#b0c3e6}
+.log.ok{color:#5cff7a}.log.err{color:#ff4d6d}
+.statusbar{display:flex;gap:6px;flex-wrap:wrap}.statusbar .chip.ok{border-color:rgba(102,255,153,.45);color:#d5ffe5}.statusbar .chip.err{border-color:rgba(255,77,109,.45);color:#ffd0da}
+textarea#promptOut{width:100%;resize:vertical;background:#05070b;color:#e6f1ff;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px}
+pre#diagDump{max-height:200px;overflow:auto;background:#03050a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#cfe1ff}
+.fatal{background:#270b0f;border:1px solid #ff4d6d;padding:12px;border-radius:12px;color:#ffd7de;margin:10px}
+</style>
 </head>
 <body>
-  <div class="app">
-    <section id="stage" class="card">
-      <div class="stage-head">
-        <div class="row">
-          <span class="title">BlackSite HUD</span>
-          <span class="chip">Objects</span>
-          <span class="chip">Pose</span>
-          <span class="chip">Face</span>
-          <span class="chip" id="fpsChip">FPS — n/a</span>
-        </div>
-        <div class="row">
-          <button id="demoBtn" class="btn">Load Demo</button>
-          <label class="btn ghost" for="file">Upload Image</label>
-          <input id="file" type="file" accept="image/*" style="display:none" />
-          <button id="runBtn" class="btn secondary" disabled>Run Analysis</button>
-        </div>
+<div class="app">
+  <section id="stage" class="card">
+    <div class="stage-head">
+      <div class="row">
+        <span class="title">BLACKSITE HUD</span>
+        <span class="chip">Objects</span><span class="chip">Pose</span><span class="chip">Face</span>
+        <span class="chip" id="fpsChip">FPS — n/a</span>
       </div>
-      <div class="canvas-wrap" id="canvasWrap">
-        <img id="inputImage" crossorigin="anonymous" alt="input" />
-        <canvas id="overlay"></canvas>
+      <div class="row">
+        <button id="demoBtn" class="btn">Load Demo</button>
+        <label class="btn ghost" for="file">Upload Image</label>
+        <input id="file" type="file" accept="image/*" style="display:none"/>
+        <button id="runBtn" class="btn secondary" disabled>Run Analysis</button>
       </div>
-      <div class="panel-body" style="grid-template-columns: 1fr auto; grid-auto-flow: column; align-items:center;">
-        <div class="statusbar" id="statusbar">
-          <span class="chip" id="st-hosting">Hosting OK</span>
-          <span class="chip" id="st-wasm">WASM — …</span>
-          <span class="chip" id="st-obj">Object Model — …</span>
-          <span class="chip" id="st-pose">Pose Model — …</span>
-          <span class="chip" id="st-face">Face Model — …</span>
-          <span class="chip" id="st-image">Image — …</span>
-          <span class="chip" id="st-run">Detectors — …</span>
-        </div>
-        <div class="row">
-          <span class="title">Snapshot & Export</span>
-          <button id="exportPng" class="btn">PNG</button>
-          <button id="exportJson" class="btn">JSON</button>
-        </div>
+    </div>
+    <div class="canvas-wrap" id="canvasWrap">
+      <img id="inputImage" crossorigin="anonymous" alt="input"/>
+      <canvas id="overlay"></canvas>
+    </div>
+    <div class="panel-body" style="display:grid;grid-template-columns:1fr auto;align-items:center;padding:10px;">
+      <div class="statusbar" id="statusbar">
+        <span class="chip" id="st-hosting">Hosting OK</span>
+        <span class="chip" id="st-wasm">WASM — …</span>
+        <span class="chip" id="st-obj">Object Model — …</span>
+        <span class="chip" id="st-pose">Pose Model — …</span>
+        <span class="chip" id="st-face">Face Model — …</span>
+        <span class="chip" id="st-image">Image — …</span>
+        <span class="chip" id="st-run">Detectors — …</span>
       </div>
-    </section>
+      <div class="row">
+        <span class="title">Snapshot & Export</span>
+        <button id="exportPng" class="btn">PNG</button>
+        <button id="exportJson" class="btn">JSON</button>
+      </div>
+    </div>
+  </section>
 
-    <section id="kpis" class="card">
-      <div class="kpi"><h4>Subject</h4><div class="list" id="subjectList"></div></div>
-      <div class="kpi"><h4>Objects</h4><div class="list" id="objectList"></div></div>
-      <div class="kpi"><h4>Pose</h4><div class="list" id="poseList"></div></div>
-      <div class="kpi"><h4>Color / Lighting</h4><div class="list" id="colorList"></div></div>
-    </section>
+  <section id="kpis" class="card">
+    <div class="kpi"><h4 class="title">Subject</h4><div class="list" id="subjectList"></div></div>
+    <div class="kpi"><h4 class="title">Objects</h4><div class="list" id="objectList"></div></div>
+    <div class="kpi"><h4 class="title">Pose</h4><div class="list" id="poseList"></div></div>
+    <div class="kpi"><h4 class="title">Color / Lighting</h4><div class="list" id="colorList"></div></div>
+  </section>
 
-    <aside id="side" class="card">
-      <div class="panel-head">
-        <span class="title">Controls</span>
-        <div class="row">
-          <label class="toggle"><input id="tgObjects" type="checkbox" checked><span>Objects</span></label>
-          <label class="toggle"><input id="tgPose" type="checkbox" checked><span>Pose</span></label>
-          <label class="toggle"><input id="tgFace" type="checkbox" checked><span>Face</span></label>
-          <label class="toggle" title="Force CPU delegates"><input id="safeMode" type="checkbox"><span>Safe Mode</span></label>
-        </div>
+  <aside id="side" class="card">
+    <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08)">
+      <span class="title">Controls</span>
+      <div class="row">
+        <label class="toggle"><input id="tgObjects" type="checkbox" checked><span>Objects</span></label>
+        <label class="toggle"><input id="tgPose" type="checkbox" checked><span>Pose</span></label>
+        <label class="toggle"><input id="tgFace" type="checkbox" checked><span>Face</span></label>
+        <label class="toggle" title="Force CPU delegates"><input id="safeMode" type="checkbox"><span>Safe Mode</span></label>
       </div>
-      <div id="controls" class="panel-body">
-        <div class="row">
-          <div class="col" style="min-width:170px"><label>Objects Opacity</label><input id="opObjects" type="range" min="0" max="1" step="0.05" value="0.9" /></div>
-          <div class="col" style="min-width:170px"><label>Pose Opacity</label><input id="opPose" type="range" min="0" max="1" step="0.05" value="0.9" /></div>
-          <div class="col" style="min-width:170px"><label>Face Opacity</label><input id="opFace" type="range" min="0" max="1" step="0.05" value="0.9" /></div>
+    </div>
+
+    <div id="controls" class="panel-body">
+      <div class="row">
+        <div class="col" style="min-width:170px"><label>Objects Opacity</label><input id="opObjects" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
+        <div class="col" style="min-width:170px"><label>Pose Opacity</label><input id="opPose" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
+        <div class="col" style="min-width:170px"><label>Face Opacity</label><input id="opFace" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
+      </div>
+      <div class="row">
+        <div class="col" style="min-width:200px;">
+          <label>Prompt Mode</label>
+          <select id="mode">
+            <option value="sfw">SFW</option>
+            <option value="nsfw_safe">NSFW-safe (redacted)</option>
+            <option value="edgy">Edgy</option>
+            <option value="poetic">Poetic</option>
+            <option value="numeric">Numeric</option>
+            <option value="json">Raw JSON</option>
+          </select>
         </div>
-        <div class="row">
-          <div class="col" style="min-width:200px;">
-            <label>Prompt Mode</label>
-            <select id="mode">
-              <option value="sfw">SFW</option>
-              <option value="nsfw_safe">NSFW-safe (redacted)</option>
-              <option value="edgy">Edgy</option>
-              <option value="poetic">Poetic</option>
-              <option value="numeric">Numeric</option>
-              <option value="json">Raw JSON</option>
-            </select>
-          </div>
-          <div class="col" style="min-width:220px;"><label>Detail</label><input id="detail" type="range" min="0" max="100" step="1" value="70" /></div>
-          <div class="col" style="min-width:280px;">
-            <label>Prompt Sources</label>
-            <div class="row">
-              <label class="toggle"><input id="infObjects" type="checkbox" checked><span>Objects</span></label>
-              <label class="toggle"><input id="infPose" type="checkbox" checked><span>Pose</span></label>
-              <label class="toggle"><input id="infFace" type="checkbox" checked><span>Face</span></label>
-              <label class="toggle"><input id="infColor" type="checkbox" checked><span>Colors/Light</span></label>
-            </div>
+        <div class="col" style="min-width:220px;"><label>Detail</label><input id="detail" type="range" min="0" max="100" step="1" value="70"/></div>
+        <div class="col" style="min-width:280px;">
+          <label>Prompt Sources</label>
+          <div class="row">
+            <label class="toggle"><input id="infObjects" type="checkbox" checked><span>Objects</span></label>
+            <label class="toggle"><input id="infPose" type="checkbox" checked><span>Pose</span></label>
+            <label class="toggle"><input id="infFace" type="checkbox" checked><span>Face</span></label>
+            <label class="toggle"><input id="infColor" type="checkbox" checked><span>Colors/Light</span></label>
           </div>
         </div>
-        <div class="row">
-          <button id="copyPrompt" class="btn">Copy Prompt</button>
-          <button id="downloadPrompt" class="btn">Download .txt</button>
-          <button id="overlayTest" class="btn ghost">Overlay Test</button>
-          <button id="reinit" class="btn warn">Re‑Init Models</button>
-          <button id="selfTest" class="btn">Self‑Test</button>
-          <button id="copyDiag" class="btn">Copy Diag</button>
-        </div>
-        <pre id="diagDump" class="slab" aria-label="Diagnostics Output"></pre>
-        <div class="divider"></div>
-        <div class="row"><span class="title">NSFW Gate</span><span class="chip" id="nsfwGate">Disabled</span></div>
       </div>
-
-      <div class="panel-head"><span class="title">Prompt Output</span><span class="chip" id="promptChars">0 chars</span></div>
-      <div class="panel-body"><textarea id="promptOut" rows="6"></textarea></div>
-
-      <div class="panel-head"><span class="title">Diagnostics</span><span class="chip">Live Terminal</span></div>
-      <div id="terminal"></div>
-
-      <div id="footer">
-        <div class="row"><span class="title">Export</span><button id="exportOverlays" class="btn">Overlays .png</button></div>
-        <div class="row"><span class="title">Ads Hook</span><span class="chip">placeholder</span></div>
+      <div class="row">
+        <button id="copyPrompt" class="btn">Copy Prompt</button>
+        <button id="downloadPrompt" class="btn">Download .txt</button>
+        <button id="overlayTest" class="btn ghost">Overlay Test</button>
+        <button id="reinit" class="btn warn">Re-Init Models</button>
+        <button id="selfTest" class="btn">Self-Test</button>
+        <button id="copyDiag" class="btn">Copy Diag</button>
       </div>
-    </aside>
-  </div>
+      <pre id="diagDump" class="slab" aria-label="Diagnostics Output"></pre>
+      <div class="row"><span class="title">NSFW Gate</span><span class="chip" id="nsfwGate">Disabled</span></div>
+    </div>
+
+    <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-top:1px solid rgba(255,255,255,.08)">
+      <span class="title">Prompt Output</span><span class="chip" id="promptChars">0 chars</span>
+    </div>
+    <div class="panel-body"><textarea id="promptOut" rows="6"></textarea></div>
+
+    <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-top:1px solid rgba(255,255,255,.08)">
+      <span class="title">Diagnostics</span><span class="chip">Live Terminal</span>
+    </div>
+    <div id="terminal"></div>
+
+    <div id="footer" style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px;border-top:1px solid rgba(255,255,255,.08)">
+      <div class="row"><span class="title">Export</span><button id="exportOverlays" class="btn">Overlays .png</button></div>
+      <div class="row"><span class="title">Ads Hook</span><span class="chip">placeholder</span></div>
+    </div>
+  </aside>
+</div>
 
 <script type="module">
-/* WHY-only comments. Tight ESM build so models are always ready before Run. */
-import vision from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs';
+/* Loader with multi-CDN fallback (why: some hosts block one CDN). */
+const CDN_TRY = [
+  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
+  'https://unpkg.com/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
+  'https://ga.jspm.io/npm:@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs'
+];
+let vision, loadErrors = [];
+for (const url of CDN_TRY) {
+  try { vision = await import(url); console.log('[ImageIntel] Loaded', url); break; }
+  catch (e) { loadErrors.push(`${url} → ${e?.message||e}`); }
+}
+const t = (id)=>document.getElementById(id);
+const logEl = t('terminal');
+const log = (msg, ok)=>{ const el=document.createElement('div'); el.textContent=msg; el.className='log'+(ok===true?' ok':ok===false?' err':''); logEl.appendChild(el); logEl.scrollTop=logEl.scrollHeight; };
+function fatal(msg){
+  const div=document.createElement('div'); div.className='fatal';
+  div.innerHTML = `<strong>FATAL:</strong> ${msg}<br><br><strong>CDN errors:</strong><br>${loadErrors.map(x=>`• ${x}`).join('<br>')}<br><br>
+  <button id="copyFatal" class="btn">Copy This</button>`;
+  document.querySelector('#controls').prepend(div);
+  t('copyFatal')?.addEventListener('click', async ()=>{ await navigator.clipboard.writeText(div.innerText); log('Fatal diagnostics copied ✓', true); });
+}
+if (!vision) { fatal('Failed to load MediaPipe Tasks bundle. Your host/network is blocking all CDNs.'); throw new Error('tasks-vision failed to load'); }
+
 const { FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker } = vision;
 
-// --- DOM refs
-const logEl = document.getElementById('terminal');
-const statusChips = { wasm: byId('st-wasm'), obj: byId('st-obj'), pose: byId('st-pose'), face: byId('st-face'), image: byId('st-image'), run: byId('st-run') };
-const img = byId('inputImage'); const overlay = byId('overlay'); const ctx = overlay.getContext('2d'); const canvasWrap = byId('canvasWrap');
-const demoBtn = byId('demoBtn'); const fileInput = byId('file'); const runBtn = byId('runBtn');
-const tgObjects = byId('tgObjects'); const tgPose = byId('tgPose'); const tgFace = byId('tgFace'); const safeModeToggle = byId('safeMode');
-const opObjects = byId('opObjects'); const opPose = byId('opPose'); const opFace = byId('opFace');
-const objectList = byId('objectList'); const subjectList = byId('subjectList'); const poseList = byId('poseList'); const colorList = byId('colorList');
-const modeSel = byId('mode'); const detailRange = byId('detail'); const promptOut = byId('promptOut'); const promptChars = byId('promptChars');
-const copyPrompt = byId('copyPrompt'); const downloadPrompt = byId('downloadPrompt'); const exportOverlays = byId('exportOverlays');
-const overlayTestBtn = byId('overlayTest'); const reinitBtn = byId('reinit'); const selfTestBtn = byId('selfTest'); const copyDiagBtn = byId('copyDiag'); const diagDump = byId('diagDump'); const fpsChip = byId('fpsChip');
-const infObjects = byId('infObjects'); const infPose = byId('infPose'); const infFace = byId('infFace'); const infColor = byId('infColor');
+/* ---- DOM refs ---- */
+const statusChips = { wasm:t('st-wasm'), obj:t('st-obj'), pose:t('st-pose'), face:t('st-face'), image:t('st-image'), run:t('st-run') };
+const img = t('inputImage'), overlay = t('overlay'), ctx = overlay.getContext('2d'), canvasWrap = t('canvasWrap');
+const demoBtn=t('demoBtn'), fileInput=t('file'), runBtn=t('runBtn'), fpsChip=t('fpsChip');
+const tgObjects=t('tgObjects'), tgPose=t('tgPose'), tgFace=t('tgFace'), safeModeToggle=t('safeMode');
+const opObjects=t('opObjects'), opPose=t('opPose'), opFace=t('opFace');
+const objectList=t('objectList'), subjectList=t('subjectList'), poseList=t('poseList'), colorList=t('colorList');
+const modeSel=t('mode'), detailRange=t('detail'), promptOut=t('promptOut'), promptChars=t('promptChars');
+const copyPrompt=t('copyPrompt'), downloadPrompt=t('downloadPrompt'), exportOverlays=t('exportOverlays');
+const overlayTestBtn=t('overlayTest'), reinitBtn=t('reinit'), selfTestBtn=t('selfTest'), copyDiagBtn=t('copyDiag'), diagDump=t('diagDump');
 
-// --- Constants
 const NS = {
   WASM_ROOT: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm',
   OBJ_MODEL: 'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite',
@@ -187,406 +199,177 @@ const NS = {
   FACE_MODEL: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task'
 };
 
-// --- State
-let visionWasm, detector, poser, facer; let lastRun = {}; let fpsTimer = { t0: 0, frames: 0 }; let safeMode = false;
+/* ---- state ---- */
+let visionWasm, detector, poser, facer, lastRun={}, safeMode=false, fpsTimer={t0:0,frames:0};
+const LM={NOSE:0,LEFT_SHOULDER:11,RIGHT_SHOULDER:12,LEFT_HIP:23,RIGHT_HIP:24};
+const FACE_LM={LEFT_EYE_TOP:159,LEFT_EYE_BOTTOM:145,RIGHT_EYE_TOP:386,RIGHT_EYE_BOTTOM:374,LEFT_EYE_IN:133,LEFT_EYE_OUT:33,RIGHT_EYE_IN:362,RIGHT_EYE_OUT:263,LEFT_IRIS_C:468,RIGHT_IRIS_C:473};
+const POSE_EDGES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32]];
+const toHex=(v)=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
+const rad2deg=r=>r*180/Math.PI; const angle=(p,q)=>rad2deg(Math.atan2(q.y-p.y,q.x-p.x)); const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 
-// --- Utils
-function byId(id){ return document.getElementById(id); }
-function log(msg, ok){ const el = document.createElement('div'); el.textContent = msg; el.className = 'log' + (ok === true ? ' ok' : ok === false ? ' err' : ''); logEl.appendChild(el); logEl.scrollTop = logEl.scrollHeight; }
-function setChip(chip, status, okLabel, errLabel){ chip.textContent = status ? (okLabel||chip.textContent.replace('…','OK')) : (errLabel||chip.textContent.replace('…','ERR')); chip.classList.toggle('ok', !!status); chip.classList.toggle('err', !status); }
-const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36).slice(-4);
+/* ---- ui helpers ---- */
+function setChip(el, ok, okL,errL){ el.textContent = ok ? (okL||'OK') : (errL||'ERR'); el.classList.toggle('ok',!!ok); el.classList.toggle('err',!ok); }
+function resizeOverlay(){ if(!img.naturalWidth) return; const r=canvasWrap.getBoundingClientRect(); const ia=img.naturalWidth/img.naturalHeight, ra=r.width/r.height; let w,h; if(ia>ra){w=r.width;h=w/ia;} else {h=r.height;w=h*ia;} overlay.width=w|0; overlay.height=h|0; img.style.width=w+'px'; img.style.height=h+'px'; }
+function scaleBox(b){ const sx=overlay.width/img.naturalWidth, sy=overlay.height/img.naturalHeight; return {x:b.originX*sx,y:b.originY*sy,w:b.width*sx,h:b.height*sy}; }
 
-function resizeOverlayToImage(){ if (!img.naturalWidth) return; const wrapRect = canvasWrap.getBoundingClientRect(); const imgAspect = img.naturalWidth / img.naturalHeight; const wrapAspect = wrapRect.width / wrapRect.height; let drawW, drawH; if (imgAspect > wrapAspect) { drawW = wrapRect.width; drawH = drawW / imgAspect; } else { drawH = wrapRect.height; drawW = drawH * imgAspect; } overlay.width = Math.floor(drawW); overlay.height = Math.floor(drawH); img.style.width = overlay.width + 'px'; img.style.height = overlay.height + 'px'; img.style.objectFit = 'contain'; }
-const toHex = v => Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
+/* ---- drawing ---- */
+function drawObjects(res, a){ if(!res) return; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=2; ctx.font='12px ui-sans-serif';
+  res.detections.forEach(d=>{ const {x,y,w,h}=scaleBox(d.boundingBox); ctx.strokeStyle='rgba(62,248,255,.9)'; ctx.shadowColor='rgba(62,248,255,.45)'; ctx.shadowBlur=8; ctx.strokeRect(x,y,w,h);
+    const name=d.categories?.[0]?.categoryName||'object', s=d.categories?.[0]?.score||0, lab=`${name} ${(s*100).toFixed(0)}%`;
+    const tw=ctx.measureText(lab).width+12, th=18; ctx.fillStyle='rgba(15,27,38,.9)'; ctx.fillRect(x,Math.max(0,y-th),tw,th);
+    ctx.strokeStyle='rgba(62,248,255,.45)'; ctx.strokeRect(x,Math.max(0,y-th),tw,th); ctx.fillStyle='#c7faff'; ctx.fillText(lab,x+6,Math.max(0,y-th)+13); });
+  ctx.restore(); }
+function drawPose(res,a){ if(!res?.landmarks?.length) return; const l=res.landmarks[0]; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=3; ctx.strokeStyle='rgba(102,255,153,.95)'; ctx.shadowColor='rgba(102,255,153,.55)'; ctx.shadowBlur=10;
+  POSE_EDGES.forEach(([i,j])=>{ const p=l[i], q=l[j]; if(!p||!q) return; ctx.beginPath(); ctx.moveTo(p.x*overlay.width,p.y*overlay.height); ctx.lineTo(q.x*overlay.width,q.y*overlay.height); ctx.stroke(); });
+  ctx.fillStyle='rgba(102,255,153,.95)'; [LM.LEFT_SHOULDER,LM.RIGHT_SHOULDER,LM.LEFT_HIP,LM.RIGHT_HIP,LM.NOSE].forEach(k=>{const p=l[k]; if(!p) return; ctx.beginPath(); ctx.arc(p.x*overlay.width,p.y*overlay.height,4,0,6.283); ctx.fill();});
+  ctx.restore(); }
+function drawFace(res,a){ if(!res?.faceLandmarks?.length) return; const l=res.faceLandmarks[0]; ctx.save(); ctx.globalAlpha=a; ctx.fillStyle='rgba(140,200,255,.9)'; ctx.shadowColor='rgba(140,200,255,.6)'; ctx.shadowBlur=8;
+  for(let i=0;i<l.length;i+=2){ const p=l[i]; ctx.beginPath(); ctx.arc(p.x*overlay.width,p.y*overlay.height,1.4,0,6.283); ctx.fill(); }
+  const LI=l[FACE_LM.LEFT_IRIS_C], RI=l[FACE_LM.RIGHT_IRIS_C]; if(LI){ctx.beginPath();ctx.arc(LI.x*overlay.width,LI.y*overlay.height,3,0,6.283);ctx.fill();} if(RI){ctx.beginPath();ctx.arc(RI.x*overlay.width,RI.y*overlay.height,3,0,6.283);ctx.fill();}
+  ctx.restore(); }
 
-// --- Drawing helpers
-function scaleBox(box){ const sx = overlay.width / img.naturalWidth; const sy = overlay.height / img.naturalHeight; return { x: box.originX * sx, y: box.originY * sy, w: box.width * sx, h: box.height * sy }; }
-function drawObjects(detections, opacity){ if (!detections) return; ctx.save(); ctx.globalAlpha = opacity; ctx.lineWidth = 2; ctx.font = '12px ui-sans-serif'; detections.detections.forEach(det => { const { x, y, w, h } = scaleBox(det.boundingBox); ctx.strokeStyle = 'rgba(62,248,255,0.9)'; ctx.shadowColor = 'rgba(62,248,255,0.45)'; ctx.shadowBlur = 8; ctx.strokeRect(x, y, w, h); const name = det.categories?.[0]?.categoryName || 'object'; const score = det.categories?.[0]?.score || 0; const label = `${name} ${(score*100).toFixed(0)}%`; const padX=6; const th=18; const tw = ctx.measureText(label).width + padX*2; ctx.fillStyle = 'rgba(15,27,38,0.9)'; ctx.fillRect(x, Math.max(0, y-th), tw, th); ctx.strokeStyle = 'rgba(62,248,255,0.45)'; ctx.strokeRect(x, Math.max(0, y-th), tw, th); ctx.fillStyle = '#c7faff'; ctx.fillText(label, x+padX, Math.max(0, y-th)+th-5); }); ctx.restore(); }
-const LM = { NOSE:0, LEFT_SHOULDER:11, RIGHT_SHOULDER:12, LEFT_HIP:23, RIGHT_HIP:24, LEFT_EYE:2, RIGHT_EYE:5 };
-const POSE_EDGES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32]];
-function drawPose(poseResult, opacity){ if (!poseResult?.landmarks?.length) return; ctx.save(); ctx.globalAlpha = opacity; ctx.lineWidth=3; const lms = poseResult.landmarks[0]; ctx.strokeStyle = 'rgba(102,255,153,0.95)'; ctx.shadowColor = 'rgba(102,255,153,0.55)'; ctx.shadowBlur = 10; POSE_EDGES.forEach(([a,b]) => { const p = lms[a], q = lms[b]; if (!p || !q) return; ctx.beginPath(); ctx.moveTo(p.x*overlay.width, p.y*overlay.height); ctx.lineTo(q.x*overlay.width, q.y*overlay.height); ctx.stroke(); }); ctx.fillStyle = 'rgba(102,255,153,0.95)'; ctx.shadowBlur = 8; for (const k of [LM.LEFT_SHOULDER, LM.RIGHT_SHOULDER, LM.LEFT_HIP, LM.RIGHT_HIP, LM.NOSE]) { const p = lms[k]; if (!p) continue; ctx.beginPath(); ctx.arc(p.x*overlay.width, p.y*overlay.height, 4, 0, Math.PI*2); ctx.fill(); } ctx.restore(); }
-const FACE_LM = { LEFT_EYE_TOP:159, LEFT_EYE_BOTTOM:145, RIGHT_EYE_TOP:386, RIGHT_EYE_BOTTOM:374, LEFT_EYE_IN:133, LEFT_EYE_OUT:33, RIGHT_EYE_IN:362, RIGHT_EYE_OUT:263, LEFT_IRIS_C:468, RIGHT_IRIS_C:473 };
-function drawFace(faceRes, opacity){ if (!faceRes?.faceLandmarks?.length) return; const lms = faceRes.faceLandmarks[0]; ctx.save(); ctx.globalAlpha = opacity; ctx.fillStyle='rgba(140,200,255,0.9)'; ctx.shadowColor='rgba(140,200,255,0.6)'; ctx.shadowBlur=8; const n=lms.length; for(let i=0;i<n;i+=2){ const p=lms[i]; const x=p.x*overlay.width, y=p.y*overlay.height; ctx.beginPath(); ctx.arc(x,y,1.4,0,Math.PI*2); ctx.fill(); } const li=lms[FACE_LM.LEFT_IRIS_C], ri=lms[FACE_LM.RIGHT_IRIS_C]; if(li){ ctx.beginPath(); ctx.arc(li.x*overlay.width, li.y*overlay.height, 3, 0, Math.PI*2); ctx.fill(); } if(ri){ ctx.beginPath(); ctx.arc(ri.x*overlay.width, ri.y*overlay.height, 3, 0, Math.PI*2); ctx.fill(); } ctx.strokeStyle='rgba(140,200,255,0.6)'; ctx.lineWidth=1; ctx.beginPath(); const outlineIdx=[10,338,297,332,284,251,389,356,454,323,361,288,397,365,379,378,400,377,152,148,176,149,150,136,172,58,132,93,234,127,162,21,54,103,67,109,10]; outlineIdx.forEach((i,ix)=>{ const p=lms[i]; const x=p.x*overlay.width, y=p.y*overlay.height; if(ix===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke(); ctx.restore(); }
+/* ---- analysis ---- */
+function eulerFromM4(m){ const r00=m[0],r10=m[1],r20=m[2],r01=m[4],r11=m[5],r21=m[6],r02=m[8],r12=m[9],r22=m[10]; const sy=Math.hypot(r00,r10); let x,y,z; if(sy>1e-6){x=Math.atan2(r21,r22);y=Math.atan2(-r20,sy);z=Math.atan2(r10,r00);} else {x=Math.atan2(-r12,r11);y=Math.atan2(-r20,sy);z=0;} return {pitch:rad2deg(x),yaw:rad2deg(y),roll:rad2deg(z)}; }
+function eyeOpen(l){ const L=(dist(l[159],l[145])/dist(l[133],l[33])), R=(dist(l[386],l[374])/dist(l[362],l[263])), a=(L+R)/2; return a>0.22?'open':a<0.12?'closed':'narrow'; }
+function gaze(l){ const lc=l[468], rc=l[473]; if(!lc||!rc) return 'unknown'; const lr=(lc.x-l[33].x)/(l[133].x-l[33].x), rr=(rc.x-l[362].x)/(l[263].x-l[362].x), a=(lr+rr)/2; return a<0.35?'looking left':a>0.65?'looking right':'looking center'; }
+function subjectSummary(pose,face){ const base={view:'unknown',eyes:'unknown',gaze:'unknown',roll:null,pitch:null,yaw:null}; if(pose?.landmarks?.length){ const l=pose.landmarks[0], L=l[11], R=l[12], LH=l[23], RH=l[24]; if(L&&R&&LH&&RH){ base.shoulders_deg=Math.abs(angle(L,R)).toFixed(1); base.hips_deg=Math.abs(angle(LH,RH)).toFixed(1); const dz=Math.abs((L.z||0)-(R.z||0)); base.view=dz<.02?'frontal':dz<.08?'3/4':'profile-ish'; } }
+  if(face?.faceLandmarks?.length){ const l=face.faceLandmarks[0]; base.eyes=eyeOpen(l); base.gaze=gaze(l); const M=face.facialTransformationMatrixes?.[0]; if(M?.data){ const e=eulerFromM4(M.data); base.roll=e.roll.toFixed(1); base.pitch=e.pitch.toFixed(1); base.yaw=e.yaw.toFixed(1);} }
+  base.isolated=true; return base; }
+function rgbToHsl(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h,s,l=(mx+mn)/2; if(mx===mn){h=s=0;}else{ const d=mx-mn; s=l>0.5? d/(2-mx-mn):d/(mx+mn); switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;} h/=6;} return [h,s,l]; }
+function stddev(a){ const m=a.reduce((x,y)=>x+y,0)/a.length; return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/a.length); }
+function kmeans(pts,k,its=8){ if(!pts.length) return {centroids:[],labels:[]}; const c=pts.slice(0,k).map(p=>p.slice()); let lab=new Array(pts.length).fill(0);
+  const d3=(a,b)=>{const dx=a[0]-b[0],dy=a[1]-b[1],dz=a[2]-b[2];return dx*dx+dy*dy+dz*dz;};
+  for(let it=0;it<its;it++){ for(let i=0;i<pts.length;i++){ let bi=-1,bd=1e9; for(let j=0;j<k;j++){ const d=d3(pts[i],c[j]); if(d<bd){bd=d;bi=j;} } lab[i]=bi; }
+    const s=Array.from({length:k},()=>[0,0,0,0]); for(let i=0;i<pts.length;i++){ const j=lab[i],p=pts[i]; s[j][0]+=p[0];s[j][1]+=p[1];s[j][2]+=p[2];s[j][3]++; }
+    for(let j=0;j<k;j++) if(s[j][3]){ c[j][0]=s[j][0]/s[j][3]; c[j][1]=s[j][1]/s[j][3]; c[j][2]=s[j][2]/s[j][3]; } }
+  return {centroids:c,labels:lab}; }
+function analyzeColor(el,maxSide=160,k=5){ const c=document.createElement('canvas'),cx=c.getContext('2d'); const w=el.naturalWidth,h=el.naturalHeight,s=Math.min(1,maxSide/Math.max(w,h)); c.width=Math.max(1,(w*s)|0); c.height=Math.max(1,(h*s)|0); cx.drawImage(el,0,0,c.width,c.height); const d=cx.getImageData(0,0,c.width,c.height).data; const pts=[]; let L=[]; for(let i=0;i<d.length;i+=20){ const r=d[i],g=d[i+1],b=d[i+2],a=d[i+3]; if(a<200) continue; const [h1,s1,l]=rgbToHsl(r,g,b); L.push((0.2126*r+0.7152*g+0.0722*b)/255); pts.push([r,g,b]); } const cl=kmeans(pts,k,6).centroids.map(c=>({r:c[0]|0,g:c[1]|0,b:c[2]|0})); const avgL=L.reduce((a,b)=>a+b,0)/(L.length||1); const tone='warm'; const lighting=avgL>0.7?'bright':avgL<0.35?'dim':'moderate'; const contrast=(stddev(L)>0.18)?'high':'low/med'; return {palette:cl,avg_brightness:+avgL.toFixed(3),tone,lighting,contrast}; }
 
-// --- Math + analysis
-const rad2deg = r => (r*180/Math.PI); function angleDegrees(p,q){ return rad2deg(Math.atan2(q.y-p.y, q.x-p.x)); }
-function eulerFromMatrix4(m){ const r00=m[0], r10=m[1], r20=m[2]; const r01=m[4], r11=m[5], r21=m[6]; const r02=m[8], r12=m[9], r22=m[10]; const sy=Math.hypot(r00,r10); let x,y,z; if(sy>1e-6){ x=Math.atan2(r21,r22); y=Math.atan2(-r20,sy); z=Math.atan2(r10,r00);} else { x=Math.atan2(-r12,r11); y=Math.atan2(-r20,sy); z=0;} return { pitch: rad2deg(x), yaw: rad2deg(y), roll: rad2deg(z) }; }
-const dist=(a,b)=> Math.hypot((a.x-b.x),(a.y-b.y));
-function eyeOpenness(lms){ const L = (dist(lms[FACE_LM.LEFT_EYE_TOP], lms[FACE_LM.LEFT_EYE_BOTTOM]) / dist(lms[FACE_LM.LEFT_EYE_IN], lms[FACE_LM.LEFT_EYE_OUT])); const R = (dist(lms[FACE_LM.RIGHT_EYE_TOP], lms[FACE_LM.RIGHT_EYE_BOTTOM]) / dist(lms[FACE_LM.RIGHT_EYE_IN], lms[FACE_LM.RIGHT_EYE_OUT])); const avg=(L+R)/2; return avg>0.22?'open':avg<0.12?'closed':'narrow'; }
-function gazeHint(lms){ const lc=lms[FACE_LM.LEFT_IRIS_C], rc=lms[FACE_LM.RIGHT_IRIS_C]; if(!lc||!rc) return 'unknown'; const leftSpan=[lms[FACE_LM.LEFT_EYE_OUT],lms[FACE_LM.LEFT_EYE_IN]]; const rightSpan=[lms[FACE_LM.RIGHT_EYE_IN],lms[FACE_LM.RIGHT_EYE_OUT]]; const lratio=(lc.x-leftSpan[0].x)/(leftSpan[1].x-leftSpan[0].x); const rratio=(rc.x-rightSpan[0].x)/(rightSpan[1].x-rightSpan[0].x); const avg=(lratio+rratio)/2; return avg<0.35?'looking left':avg>0.65?'looking right':'looking center'; }
+/* ---- prompt ---- */
+function buildPrompt(mode){ const parts=[], detail=+t('detail').value;
+  if(t('infObjects').checked && lastRun.objects?.length){ const items=lastRun.objects.map(o=>`${o.name} ${(o.score*100).toFixed(0)}%`).join(', '); parts.push(`objects: ${items}`); }
+  if(t('infPose').checked && lastRun.poseSummary){ const p=lastRun.poseSummary; parts.push(`pose: shoulders ${p.shoulders_deg||'n/a'}°, hips ${p.hips_deg||'n/a'}°, view ${p.view||'unknown'}`); }
+  if(t('infFace').checked && lastRun.poseSummary){ const p=lastRun.poseSummary; const bits=[`eyes ${p.eyes||'unknown'}`,`gaze ${p.gaze||'unknown'}`]; if(p.yaw) bits.push(`yaw ${p.yaw}°`); if(p.pitch) bits.push(`pitch ${p.pitch}°`); if(p.roll) bits.push(`roll ${p.roll}°`); parts.push(`face: ${bits.join(', ')}`); }
+  if(t('infColor').checked && lastRun.color){ const c=lastRun.color; parts.push(`palette: ${c.palette.map(p=>`#${toHex(p.r)}${toHex(p.g)}${toHex(p.b)}`).join(' ')}, brightness ${c.avg_brightness}, lighting ${c.lighting}, contrast ${c.contrast}`); }
+  const camera = detail>=60 ? `\n[ camera: 50mm, f/2.8, ISO 200, 1/250 ]` : '';
+  let out = parts.join(' | ')+camera;
+  if(mode==='nsfw_safe') out = out.replace(/\b(nude|naked|lingerie|cleavage|see-?through|erotic|fetish|nsfw)\b/gi,'[redacted]');
+  if(mode==='edgy') out = `gritty cyber-noir HUD :: ${out}`;
+  if(mode==='poetic') out = `an underground lens reading light and form :: ${out}`;
+  if(mode==='numeric') out = JSON.stringify({ shoulders_deg:+(lastRun.poseSummary?.shoulders_deg||0)||null, yaw:+(lastRun.poseSummary?.yaw||0)||null, brightness:lastRun.color?.avg_brightness||null });
+  if(mode==='json') out = JSON.stringify({ subject:lastRun.poseSummary||{}, objects:lastRun.objects||[], color:lastRun.color||{} }, null, 2);
+  t('promptOut').value = out; t('promptChars').textContent = `${out.length} chars`;
+}
 
-function subjectSummary(pose, face){ const base={ posture:'unknown', view:'unknown', eyes:'unknown', gaze:'unknown', roll:null, pitch:null, yaw:null }; if (pose?.landmarks?.length){ const lms=pose.landmarks[0]; const L=lms[LM.LEFT_SHOULDER], R=lms[LM.RIGHT_SHOULDER], LH=lms[LM.LEFT_HIP], RH=lms[LM.RIGHT_HIP]; if (L&&R&&LH&&RH){ const shoulderAngle=Math.abs(angleDegrees(L,R)); const hipAngle=Math.abs(angleDegrees(LH,RH)); const torsoTilt=Math.abs(angleDegrees({x:(L.x+R.x)/2,y:(L.y+R.y)/2},{x:(LH.x+RH.x)/2,y:(LH.y+RH.y)/2}))-90; base.shoulders_deg=shoulderAngle.toFixed(1); base.hips_deg=hipAngle.toFixed(1); base.torso_tilt_deg=Math.abs(torsoTilt).toFixed(1); const dz=Math.abs((L.z||0)-(R.z||0)); base.view= dz<0.02?'frontal': dz<0.08?'3/4':'profile-ish'; } } if (face?.faceLandmarks?.length){ const lms=face.faceLandmarks[0]; base.eyes=eyeOpenness(lms); base.gaze=gazeHint(lms); const M=face.facialTransformationMatrixes?.[0]; if (M?.data){ const e=eulerFromMatrix4(M.data); base.roll=e.roll.toFixed(1); base.pitch=e.pitch.toFixed(1); base.yaw=e.yaw.toFixed(1); } } base.isolated=true; return base; }
-
-function analyzeColor(imgEl, maxSide=160, k=5){ const c=document.createElement('canvas'); const cx=c.getContext('2d'); const w=imgEl.naturalWidth, h=imgEl.naturalHeight; const scale=Math.min(1, maxSide/Math.max(w,h)); c.width=Math.max(1,Math.floor(w*scale)); c.height=Math.max(1,Math.floor(h*scale)); cx.drawImage(imgEl,0,0,c.width,c.height); const data=cx.getImageData(0,0,c.width,c.height).data; let sumL=0,sumH=0,sumS=0,n=0; const pts=[]; for (let i=0;i<data.length;i+=4*5){ const r=data[i],g=data[i+1],b=data[i+2],a=data[i+3]; if(a<200) continue; const [h,s,l]=rgbToHsl(r,g,b); sumL+=l; sumH+=h; sumS+=s; n++; pts.push([r,g,b]); } const avgL=n?sumL/n:0, avgH=n?sumH/n:0; const clusters=kmeans(pts,k,6); const palette=clusters.centroids.map(c=>({r:Math.round(c[0]),g:Math.round(c[1]),b:Math.round(c[2])})); const warm=(avgH<60/360||avgH>300/360); const lighting=avgL>0.7?'bright':avgL<0.35?'dim':'moderate'; const contrast=stddev(pts.map(([r,g,b])=> (0.2126*r+0.7152*g+0.0722*b)/255 ))>0.18?'high':'low/med'; return { palette, avg_brightness:+avgL.toFixed(3), tone:warm?'warm':'cool/neutral', lighting, contrast }; }
-function kmeans(points,k,iters=8){ if(!points.length) return {centroids:[],labels:[]}; const centroids=points.slice(0,k).map(p=>p.slice()); let labels=new Array(points.length).fill(0); for(let it=0;it<iters;it++){ for(let i=0;i<points.length;i++){ let best=-1,bd=1e9; for(let c=0;c<k;c++){ const d=dist3(points[i],centroids[c]); if(d<bd){bd=d;best=c;} } labels[i]=best; } const sums=Array.from({length:k},()=>[0,0,0,0]); for(let i=0;i<points.length;i++){ const c=labels[i],p=points[i]; sums[c][0]+=p[0]; sums[c][1]+=p[1]; sums[c][2]+=p[2]; sums[c][3]++; } for(let c=0;c<k;c++){ if(sums[c][3]){ centroids[c][0]=sums[c][0]/sums[c][3]; centroids[c][1]=sums[c][1]/sums[c][3]; centroids[c][2]=sums[c][2]/sums[c][3]; } } } return {centroids,labels}; }
-const dist3=(a,b)=>{const dx=a[0]-b[0],dy=a[1]-b[1],dz=a[2]-b[2]; return dx*dx+dy*dy+dz*dz; }; function rgbToHsl(r,g,b){ r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){h=s=0;} else { const d=max-min; s=l>0.5? d/(2-max-min): d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break; case g:h=(b-r)/d+2;break; case b:h=(r-g)/d+4;break;} h/=6; } return [h,s,l]; } const stddev = arr => { const m=arr.reduce((a,b)=>a+b,0)/arr.length; return Math.sqrt(arr.reduce((s,x)=>s+(x-m)*(x-m),0)/arr.length); };
-
-function buildPrompt(mode){ const detail = Number(detailRange.value); const parts=[]; if (infObjects.checked && lastRun.objects?.length){ const items=lastRun.objects.map(o=>`${o.name} ${(o.score*100).toFixed(0)}%`).join(', '); parts.push(`objects: ${items}`); } if (infPose.checked && lastRun.poseSummary){ const ps=lastRun.poseSummary; parts.push(`pose: shoulders ${ps.shoulders_deg||'n/a'}°, hips ${ps.hips_deg||'n/a'}°, torso ${ps.torso_tilt_deg||'n/a'}°, view ${ps.view||'unknown'}`); } if (infFace.checked && lastRun.poseSummary){ const ps=lastRun.poseSummary; const faceBits=[`eyes ${ps.eyes||'unknown'}`, `gaze ${ps.gaze||'unknown'}`]; if(ps.yaw) faceBits.push(`yaw ${ps.yaw}°`); if(ps.pitch) faceBits.push(`pitch ${ps.pitch}°`); if(ps.roll) faceBits.push(`roll ${ps.roll}°`); parts.push(`face: ${faceBits.join(', ')}`); } if (infColor.checked && lastRun.color){ const c=lastRun.color; parts.push(`palette: ${c.palette.map(p=>`#${toHex(p.r)}${toHex(p.g)}${toHex(p.b)}`).join(' ')}, brightness ${c.avg_brightness}, tone ${c.tone}, lighting ${c.lighting}, contrast ${c.contrast}`); } const cameraBlock = detail >= 60 ? `
-[ camera: 50mm, f/2.8, ISO 200, shutter 1/250 ]` : ''; let prompt = parts.join(' | ')+cameraBlock; if (mode === 'nsfw_safe') prompt = prompt.replace(/(nude|naked|lingerie|cleavage|see-?through|erotic|fetish|nsfw)/gi, '[redacted]'); if (mode === 'edgy') prompt = `gritty cyber-noir surveillance HUD :: ${prompt}`; if (mode === 'poetic') prompt = `an underground lens reading light and form :: ${prompt}`; if (mode === 'numeric') prompt = JSON.stringify({ shoulders_deg:+lastRun.poseSummary?.shoulders_deg||null, hips_deg:+lastRun.poseSummary?.hips_deg||null, torso_tilt_deg:+lastRun.poseSummary?.torso_tilt_deg||null, yaw:+lastRun.poseSummary?.yaw||null, brightness:lastRun.color?.avg_brightness||null }); if (mode === 'json') prompt = JSON.stringify({ subject:lastRun.poseSummary||{}, objects:lastRun.objects||[], color:lastRun.color||{} }, null, 2); promptOut.value = prompt; promptChars.textContent = `${prompt.length} chars`; }
-
-function download(name, data, type='text/plain'){ const blob = new Blob([data], {type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
-async function downloadDataUrl(name, dataUrl){ const res=await fetch(dataUrl); const blob=await res.blob(); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
+/* ---- run ---- */
 function snapshot(includeOverlays=true){ const c=document.createElement('canvas'); c.width=overlay.width; c.height=overlay.height; const cx=c.getContext('2d'); cx.drawImage(img,0,0,c.width,c.height); if(includeOverlays) cx.drawImage(overlay,0,0); return c.toDataURL('image/png'); }
-
-async function runAll(){ try {
+async function runAll(){
+  if (runBtn.disabled){ log('Models not ready. Press “Re-Init Models” or check WASM/Object/Pose/Face chips.', false); return; }
   if (!img.complete || !img.naturalWidth){ log('No image loaded', false); setChip(statusChips.image,false,'Image — ERR'); return; }
   setChip(statusChips.image,true,'Image — OK'); ctx.clearRect(0,0,overlay.width,overlay.height);
   let objects=null, pose=null, face=null;
-  if (tgObjects.checked && detector) objects = await detector.detect(img);
-  if (tgPose.checked && poser) pose = await poser.detect(img);
-  if (tgFace.checked && facer) face = await facer.detect(img);
-  if (tgObjects.checked && objects) drawObjects(objects, parseFloat(opObjects.value));
-  if (tgPose.checked && pose) drawPose(pose, parseFloat(opPose.value));
-  if (tgFace.checked && face) drawFace(face, parseFloat(opFace.value));
-  objectList.innerHTML=''; const objArr=[]; if (objects?.detections?.length){ for(const det of objects.detections){ const name=det.categories?.[0]?.categoryName||'object'; const score=det.categories?.[0]?.score||0; objArr.push({ name, score, box: det.boundingBox }); const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${name}</span><span>${(score*100).toFixed(0)}%</span>`; objectList.appendChild(li); } } else { objectList.innerHTML='<span class="pill"><span>—</span><span>n/a</span></span>'; }
-  poseList.innerHTML=''; const ps=subjectSummary(pose, face); const poseKvs=[ ['View', ps.view||'unknown'], ['Shoulders', ps.shoulders_deg? ps.shoulders_deg+'°':'n/a'], ['Hips', ps.hips_deg? ps.hips_deg+'°':'n/a'], ['Torso Tilt', ps.torso_tilt_deg? ps.torso_tilt_deg+'°':'n/a'], ['Yaw', ps.yaw? ps.yaw+'°':'n/a'], ['Pitch', ps.pitch? ps.pitch+'°':'n/a'], ['Roll', ps.roll? ps.roll+'°':'n/a'] ]; for (const [k,v] of poseKvs){ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; poseList.appendChild(li); }
-  subjectList.innerHTML=''; const subj=[ ['Framing', ps.view||'unknown'], ['Isolated', 'yes'], ['Eyes', ps.eyes||'unknown'], ['Gaze', ps.gaze||'unknown'] ]; for (const [k,v] of subj){ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; subjectList.appendChild(li); }
-  let color=null; try { color=analyzeColor(img); } catch(e){ log('Color analysis skipped (CORS): '+ e.message, false); }
-  colorList.innerHTML=''; if (color){ const palDiv=document.createElement('div'); palDiv.className='row'; const sw=document.createElement('div'); sw.className='swatches'; color.palette.forEach(p=>{ const el=document.createElement('div'); el.className='swatch'; el.style.background=`rgb(${p.r},${p.g},${p.b})`; sw.appendChild(el); }); palDiv.appendChild(sw); colorList.appendChild(palDiv); const colorKvs=[ ['Brightness', color.avg_brightness.toFixed(3)], ['Tone', color.tone], ['Lighting', color.lighting], ['Contrast', color.contrast] ]; for (const [k,v] of colorKvs){ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; colorList.appendChild(li); } } else { const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>Color</span><span>n/a</span>`; colorList.appendChild(li); }
+  try{ if(t('tgObjects').checked && detector) objects = await detector.detect(img); }catch(e){ log('Object detect failed: '+e.message,false); }
+  try{ if(t('tgPose').checked && poser) pose = await poser.detect(img); }catch(e){ log('Pose detect failed: '+e.message,false); }
+  try{ if(t('tgFace').checked && facer) face = await facer.detect(img); }catch(e){ log('Face detect failed: '+e.message,false); }
+  if (t('tgObjects').checked && objects) drawObjects(objects, +t('opObjects').value);
+  if (t('tgPose').checked && pose) drawPose(pose, +t('opPose').value);
+  if (t('tgFace').checked && face) drawFace(face, +t('opFace').value);
+
+  objectList.innerHTML=''; const objArr=[];
+  if (objects?.detections?.length){ for(const d of objects.detections){ const name=d.categories?.[0]?.categoryName||'object', score=d.categories?.[0]?.score||0; objArr.push({name,score,box:d.boundingBox}); const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${name}</span><span>${(score*100).toFixed(0)}%</span>`; objectList.appendChild(li); } } else objectList.innerHTML='<span class="pill"><span>—</span><span>n/a</span></span>';
+
+  const ps = subjectSummary(pose, face);
+  poseList.innerHTML=''; [['View',ps.view||'unknown'],['Shoulders',ps.shoulders_deg?ps.shoulders_deg+'°':'n/a'],['Yaw',ps.yaw?ps.yaw+'°':'n/a'],['Pitch',ps.pitch?ps.pitch+'°':'n/a'],['Roll',ps.roll?ps.roll+'°':'n/a']].forEach(([k,v])=>{
+    const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; poseList.appendChild(li);
+  });
+  subjectList.innerHTML=''; [['Framing',ps.view||'unknown'],['Isolated','yes'],['Eyes',ps.eyes||'unknown'],['Gaze',ps.gaze||'unknown']].forEach(([k,v])=>{
+    const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; subjectList.appendChild(li);
+  });
+
+  let color=null; try { color=analyzeColor(img); } catch(e){ log('Color analysis skipped (CORS): '+e.message,false); }
+  colorList.innerHTML=''; if(color){ const sw=document.createElement('div'); sw.style.display='flex'; sw.style.gap='4px'; color.palette.forEach(p=>{ const el=document.createElement('div'); el.className='swatch'; el.style.cssText=`width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,.15);background:rgb(${p.r},${p.g},${p.b})`; sw.appendChild(el); }); colorList.appendChild(sw);
+    [['Brightness',color.avg_brightness.toFixed(3)],['Lighting',color.lighting],['Contrast',color.contrast]].forEach(([k,v])=>{ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; colorList.appendChild(li); });
+  } else { const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>Color</span><span>n/a</span>`; colorList.appendChild(li); }
+
   lastRun = { objects: objArr, poseSummary: ps, color };
-  setChip(statusChips.run,true,'Detectors — OK'); buildPrompt(modeSel.value); log('Analysis complete ✓', true);
-} catch (e){ setChip(statusChips.run,false,'Detectors — ERR'); log('runAll error: '+ e.stack, false); diagDump.textContent = diagText(); }
+  setChip(statusChips.run,true,'Detectors — OK'); buildPrompt(t('mode').value); log('Analysis complete ✓', true);
 }
 
-async function init(){ try {
-  const del = safeMode ? 'CPU' : 'GPU';
-  visionWasm = await FilesetResolver.forVisionTasks(NS.WASM_ROOT); setChip(statusChips.wasm,true,'WASM — OK'); log('WASM ready', true);
-  detector = await ObjectDetector.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.OBJ_MODEL, delegate:'CPU' }, scoreThreshold:0.5, runningMode:'IMAGE', maxResults:10 }); setChip(statusChips.obj,true,'Object Model — OK'); log('ObjectDetector ready', true);
-  try { poser = await PoseLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.POSE_MODEL, delegate: del }, runningMode:'IMAGE', numPoses:1 }); } catch(e){ log('Pose GPU failed → CPU', false); poser = await PoseLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.POSE_MODEL, delegate:'CPU' }, runningMode:'IMAGE', numPoses:1 }); }
-  setChip(statusChips.pose,true,'Pose Model — OK'); log('PoseLandmarker ready', true);
-  try { facer = await FaceLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.FACE_MODEL, delegate: del }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:true }); } catch(e){ log('Face GPU failed → CPU', false); facer = await FaceLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.FACE_MODEL, delegate:'CPU' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:true }); }
-  setChip(statusChips.face,true,'Face Model — OK'); log('FaceLandmarker ready', true);
-  runBtn.disabled = false;
-} catch (e){ log('Init error: '+ e.stack, false); if(!visionWasm) setChip(statusChips.wasm,false,'WASM — ERR'); if(!detector) setChip(statusChips.obj,false,'Object Model — ERR'); if(!poser) setChip(statusChips.pose,false,'Pose Model — ERR'); if(!facer) setChip(statusChips.face,false,'Face Model — ERR'); }
+/* ---- init/teardown ---- */
+async function closeModels(){ try{await detector?.close();}catch{} try{await poser?.close();}catch{} try{await facer?.close();}catch{} detector=poser=facer=null; runBtn.disabled=true; }
+async function init(){
+  try{
+    visionWasm = await FilesetResolver.forVisionTasks(NS.WASM_ROOT); setChip(statusChips.wasm,true,'WASM — OK'); log('WASM ready',true);
+    detector = await ObjectDetector.createFromOptions(visionWasm,{ baseOptions:{ modelAssetPath:NS.OBJ_MODEL, delegate:'CPU' }, runningMode:'IMAGE', scoreThreshold:.5, maxResults:10 }); setChip(statusChips.obj,true,'Object Model — OK'); log('ObjectDetector ready',true);
+    const del = safeMode ? 'CPU' : 'GPU';
+    try{ poser = await PoseLandmarker.createFromOptions(visionWasm,{ baseOptions:{ modelAssetPath:NS.POSE_MODEL, delegate:del }, runningMode:'IMAGE', numPoses:1 }); }
+    catch{ log('Pose GPU failed → CPU',false); poser = await PoseLandmarker.createFromOptions(visionWasm,{ baseOptions:{ modelAssetPath:NS.POSE_MODEL, delegate:'CPU' }, runningMode:'IMAGE', numPoses:1 }); }
+    setChip(statusChips.pose,true,'Pose Model — OK'); log('PoseLandmarker ready',true);
+    try{ facer = await FaceLandmarker.createFromOptions(visionWasm,{ baseOptions:{ modelAssetPath:NS.FACE_MODEL, delegate:del }, runningMode:'IMAGE', numFaces:1, outputFacialTransformationMatrixes:true }); }
+    catch{ log('Face GPU failed → CPU',false); facer = await FaceLandmarker.createFromOptions(visionWasm,{ baseOptions:{ modelAssetPath:NS.FACE_MODEL, delegate:'CPU' }, runningMode:'IMAGE', numFaces:1, outputFacialTransformationMatrixes:true }); }
+    setChip(statusChips.face,true,'Face Model — OK'); log('FaceLandmarker ready',true);
+    runBtn.disabled=false;
+  }catch(e){
+    log('Init error: '+(e?.message||e), false);
+    if(!visionWasm) setChip(statusChips.wasm,false,'WASM — ERR');
+    if(!detector) setChip(statusChips.obj,false,'Object Model — ERR');
+    if(!poser) setChip(statusChips.pose,false,'Pose Model — ERR');
+    if(!facer) setChip(statusChips.face,false,'Face Model — ERR');
+  }
   diagDump.textContent = diagText();
 }
 
-const DEMO_URL = 'https://upload.wikimedia.org/wikipedia/commons/3/39/Tree_Woman.jpg';
-function loadImage(src){ return new Promise((resolve,reject)=>{ img.onload=()=>{ resizeOverlayToImage(); setChip(statusChips.image,true,'Image — OK'); resolve(); }; img.onerror=(e)=>{ setChip(statusChips.image,false,'Image — ERR'); reject(e); }; img.src=src; }); }
-
-function webglInfo(){ const c=document.createElement('canvas'); const gl2 = c.getContext('webgl2'); const gl = gl2 || c.getContext('webgl'); return { webgl2: !!gl2, webgl: !!gl }; }
+/* ---- UI wiring ---- */
 function chipStates(){ return ['wasm','obj','pose','face','image','run'].map(k=>`${k}:${statusChips[k].classList.contains('ok')?'OK':'ERR'}`).join(' '); }
-function diagText(){ const gl=webglInfo(); return [ `UserAgent: ${navigator.userAgent}`, `Lang/Platform: ${navigator.language} / ${navigator.platform}`, `HW: ${navigator.hardwareConcurrency||'?'} cores, ${navigator.deviceMemory||'?'} GB`, `SafeMode: ${safeMode}`, `Tasks-Vision: 0.10.21`, `Chips: ${chipStates()}`, `Img: ${img.naturalWidth||0}x${img.naturalHeight||0} loaded=${img.complete}`, `WebGL: v2=${gl.webgl2} v1=${gl.webgl}` ].join('
-'); }
+function webglInfo(){ const c=document.createElement('canvas'); const gl2=c.getContext('webgl2'); const gl=gl2||c.getContext('webgl'); return {webgl2:!!gl2,webgl:!!gl}; }
+function diagText(){ const g=webglInfo(); return [
+  `UserAgent: ${navigator.userAgent}`,
+  `Lang/Platform: ${navigator.language} / ${navigator.platform}`,
+  `HW: ${navigator.hardwareConcurrency||'?'} cores, ${navigator.deviceMemory||'?'} GB`,
+  `SafeMode: ${safeMode}`,
+  `Tasks-Vision: 0.10.21`,
+  `Chips: ${chipStates()}`,
+  `Img: ${img.naturalWidth||0}x${img.naturalHeight||0} loaded=${img.complete}`,
+  `WebGL: v2=${g.webgl2} v1=${g.webgl}`
+].join('\n'); }
 
-// --- UI bindings
-window.addEventListener('resize', resizeOverlayToImage);
-img.addEventListener('load', async ()=>{ try { if (!runBtn.disabled) await runAll(); } catch(e){ log('Auto-run failed: '+e.message, false); } });
-demoBtn.addEventListener('click', async ()=>{ log('Loading demo image…'); try { await loadImage(DEMO_URL); log('Demo image loaded ✓', true); } catch(e){ log('Demo image failed', false);} });
-fileInput.addEventListener('change', async (e)=>{ const file=e.target.files?.[0]; if(!file) return; const url=URL.createObjectURL(file); log('Loading local image…'); try { await loadImage(url); URL.revokeObjectURL(url); log('Local image loaded ✓', true);} catch(err){ log('Local image failed', false); } });
+const DEMO_URL='https://upload.wikimedia.org/wikipedia/commons/3/39/Tree_Woman.jpg';
+function loadImage(src){ return new Promise((res,rej)=>{ img.onload=()=>{ resizeOverlay(); setChip(statusChips.image,true,'Image — OK'); res(); }; img.onerror=(e)=>{ setChip(statusChips.image,false,'Image — ERR'); rej(e); }; img.src=src; }); }
+
+window.addEventListener('resize', resizeOverlay);
+img.addEventListener('load', async ()=>{ try{ if(!runBtn.disabled) await runAll(); }catch(e){ log('Auto-run failed: '+e.message,false);} });
+
+t('exportPng').addEventListener('click', async ()=>{ const url=snapshot(true); const a=document.createElement('a'); a.href=url; a.download=`snapshot_${Date.now()}.png`; a.click(); });
+exportOverlays.addEventListener('click', async ()=>{ const url=snapshot(false); const a=document.createElement('a'); a.href=url; a.download=`overlays_${Date.now()}.png`; a.click(); });
+
+demoBtn.addEventListener('click', async ()=>{ log('Loading demo image…'); try{ await loadImage(DEMO_URL); log('Demo image loaded ✓',true);}catch{ log('Demo image failed',false);} });
+fileInput.addEventListener('change', async (e)=>{ const f=e.target.files?.[0]; if(!f) return; const url=URL.createObjectURL(f); log('Loading local image…'); try{ await loadImage(url); URL.revokeObjectURL(url); log('Local image loaded ✓',true);}catch{ log('Local image failed',false);} });
 runBtn.addEventListener('click', runAll);
-['change','input'].forEach(evt => { tgObjects.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); }); tgPose.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); }); tgFace.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); }); opObjects.addEventListener(evt, runAll); opPose.addEventListener(evt, runAll); opFace.addEventListener(evt, runAll); modeSel.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); detailRange.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infObjects.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infPose.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infFace.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infColor.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); });
 
-byId('overlayTest').addEventListener('click', ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); ctx.save(); ctx.strokeStyle='#9ad1ff'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(overlay.width,overlay.height); ctx.moveTo(overlay.width,0); ctx.lineTo(0,overlay.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK', 12, 22); ctx.restore(); log('Overlay test drawn (should see an X and text).', true); });
-byId('reinit').addEventListener('click', async ()=>{ log('Re-initializing models…'); try { await closeModels(); await init(); log('Re-init complete ✓', true);} catch(e){ log('Re-init failed: '+e.stack, false);} });
-byId('selfTest').addEventListener('click', ()=>{ diagDump.textContent = diagText(); log('Self-test captured environment ✓', true); });
-byId('copyDiag').addEventListener('click', async ()=>{ try { await navigator.clipboard.writeText(diagDump.textContent || diagText()); log('Diagnostics copied ✓', true);} catch(e){ log('Copy failed', false);} });
-safeModeToggle.addEventListener('change', async (e)=>{ safeMode = e.target.checked; log(`Safe Mode ${safeMode?'ON':'OFF'} — delegates=${safeMode?'CPU':'GPU'}`, true); });
+['change','input'].forEach(evt=>{
+  tgObjects.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); });
+  tgPose.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); });
+  tgFace.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); });
+  opObjects.addEventListener(evt, runAll); opPose.addEventListener(evt, runAll); opFace.addEventListener(evt, runAll);
+  modeSel.addEventListener(evt, ()=>buildPrompt(modeSel.value)); detailRange.addEventListener(evt, ()=>buildPrompt(modeSel.value));
+  ['infObjects','infPose','infFace','infColor'].forEach(id=>t(id).addEventListener(evt, ()=>buildPrompt(modeSel.value)));
+});
 
-async function closeModels(){ try { await detector?.close(); } catch(_){} try { await poser?.close(); } catch(_){} try { await facer?.close(); } catch(_){} detector=poser=facer=null; runBtn.disabled=true; setChip(statusChips.obj,false,'Object Model — …'); setChip(statusChips.pose,false,'Pose Model — …'); setChip(statusChips.face,false,'Face Model — …'); }
-function tickFPS(){ fpsTimer.frames++; const now=performance.now(); if(!fpsTimer.t0) fpsTimer.t0=now; const dt=now-fpsTimer.t0; if(dt>500){ const fps=(fpsTimer.frames/(dt/1000)).toFixed(1); fpsChip.textContent=`FPS — ${fps}`; fpsTimer.t0=now; fpsTimer.frames=0; } requestAnimationFrame(tickFPS); }
+overlayTestBtn.addEventListener('click', ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); ctx.save(); ctx.strokeStyle='#9ad1ff'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(overlay.width,overlay.height); ctx.moveTo(overlay.width,0); ctx.lineTo(0,overlay.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK', 12, 22); ctx.restore(); log('Overlay test drawn ✓', true); });
+reinitBtn.addEventListener('click', async ()=>{ log('Re-initializing models…'); try{ await closeModels(); await init(); log('Re-init complete ✓',true);}catch(e){ log('Re-init failed: '+e.message,false);} });
+selfTestBtn.addEventListener('click', ()=>{ diagDump.textContent=diagText(); log('Self-test captured environment ✓', true); });
+copyDiagBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(diagDump.textContent||diagText()); log('Diagnostics copied ✓', true);} catch{ log('Copy failed', false);} });
+safeModeToggle.addEventListener('change',(e)=>{ safeMode=e.target.checked; log(`Safe Mode ${safeMode?'ON':'OFF'} — delegates=${safeMode?'CPU':'GPU'}`,true); });
 
-// Boot
+/* ---- boot ---- */
 log('Booting BlackSite HUD…');
 await init();
-log('Click “Load Demo”, then “Run Analysis” (auto-runs after load).');
-tickFPS();
-</script>
-</body>
-</html>
-<!--
-  File: imageintel.html
-  Project: ImageIntel Pro Lab — MVP++++ (Module build; Objects + Pose + Face + Diag)
-  How to use: Drop this single file on Netlify. If not at "/", add a _redirects rule:  
-    /   /imageintel.html   200
-  Notes:
-  - Uses ESM bundle (vision_bundle.mjs) — fixes "Vision bundle not loaded".
-  - Single <script type="module"> (no globals) — reliable init before Run.
-  - Safe Mode (CPU) + Re‑Init + Overlay Test + Self‑Test + Copy Diag for quick debugging.
--->
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ImageIntel Pro Lab — BlackSite HUD</title>
-  <meta name="color-scheme" content="dark" />
-  <style>
-    :root { --bg:#070a0f; --grid:rgba(255,255,255,0.04); --panel:#0d121a; --muted:#94a3b8; --text:#e6f1ff; --chip:#101826; --shadow:0 10px 30px rgba(0,0,0,0.45); --radius:18px; }
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;background:radial-gradient(1200px 1200px at 10% -10%, #0c1420, var(--bg)) fixed;color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;overflow:hidden}
-    body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;mask-image:radial-gradient(1000px 700px at 10% 0%, #000 80%, transparent)}
-    .app{position:relative;z-index:1;height:100%;display:grid;gap:12px;padding:12px;grid-template-columns:1.3fr .7fr;grid-template-rows:68% 32%;grid-template-areas:"stage side" "kpi side"}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(6px);position:relative}
-    .card .title{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:11px;color:var(--muted)} .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap} .col{display:grid;gap:8px}
-    .chip{background:var(--chip);border:1px solid rgba(255,255,255,.08);border-radius:999px;padding:6px 10px;font-size:12px;color:#b6cdfb}
-    .btn{background:linear-gradient(180deg,rgba(62,248,255,.15),rgba(62,248,255,.06));border:1px solid rgba(62,248,255,.45);color:#cfffff;padding:8px 12px;border-radius:10px;cursor:pointer;transition:120ms ease}
-    .btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(62,248,255,.18)} .btn.secondary{border-color:rgba(102,255,153,.45);background:linear-gradient(180deg,rgba(102,255,153,.16),rgba(102,255,153,.06));color:#dbffe8} .btn.warn{border-color:rgba(255,209,102,.45);background:linear-gradient(180deg,rgba(255,209,102,.16),rgba(255,209,102,.06));color:#fff3cf} .btn.ghost{background:transparent;border:1px dashed rgba(255,255,255,.25)}
-    .toggle{display:inline-flex;align-items:center;gap:6px;cursor:pointer} .toggle input{appearance:none;width:30px;height:18px;border-radius:999px;background:#15202f;border:1px solid rgba(255,255,255,.2);position:relative;outline:none}
-    .toggle input:checked{background:#0e2c2c;border-color:rgba(62,248,255,.5)} .toggle input::after{content:"";position:absolute;top:1px;left:1px;width:14px;height:14px;background:#9aa7bd;border-radius:50%;transition:160ms ease}
-    .toggle input:checked::after{left:calc(100% - 15px);background:#72ffd5}
-    .panel-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.08)} .panel-body{padding:10px;display:grid;gap:8px}
-    #stage.card{grid-area:stage;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
-    #stage .stage-head{padding:10px;display:flex;align-items:center;justify-content:space-between}
-    #stage .canvas-wrap{position:relative;overflow:hidden;background:#0b0f14;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
-    #inputImage{max-width:100%;max-height:100%;display:block;opacity:1}
-    canvas#overlay{position:absolute;left:0;top:0;image-rendering:pixelated}
-    #kpis.card{grid-area:kpi;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px;overflow:auto}
-    .kpi{background:var(--panel);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:10px;min-height:120px;display:grid;grid-template-rows:auto 1fr}
-    .kpi h4{margin:0 0 6px 0;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)} .kpi pre{margin:0;font-size:12px;white-space:pre-wrap;color:#d9e6ff}
-    .list{display:grid;gap:6px;font-size:12px} .pill{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:10px}
-    #side.card{grid-area:side;display:grid;grid-template-rows:auto auto 1fr auto;overflow:hidden}
-    #controls{padding:10px;display:grid;gap:8px}
-    #terminal{height:200px;overflow:auto;background:#05070b;border-top:1px solid rgba(255,255,255,.08);padding:8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#b0c3e6}
-    .log.ok{color:#5cff7a} .log.err{color:#ff4d6d}
-    #footer{padding:10px;display:flex;gap:10px;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.08)}
-    .statusbar{display:flex;gap:6px;flex-wrap:wrap} .statusbar .chip.ok{border-color:rgba(102,255,153,.45);color:#d5ffe5} .statusbar .chip.err{border-color:rgba(255,77,109,.45);color:#ffd0da}
-    .swatches{display:flex;gap:4px} .swatch{width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,.15)}
-    textarea#promptOut{width:100%;resize:vertical;background:#05070b;color:#e6f1ff;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px}
-    pre#diagDump{max-height:200px;overflow:auto;background:#03050a;border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:10px;color:#cfe1ff}
-  </style>
-</head>
-<body>
-  <div class="app">
-    <section id="stage" class="card">
-      <div class="stage-head">
-        <div class="row">
-          <span class="title">BlackSite HUD</span>
-          <span class="chip">Objects</span>
-          <span class="chip">Pose</span>
-          <span class="chip">Face</span>
-          <span class="chip" id="fpsChip">FPS — n/a</span>
-        </div>
-        <div class="row">
-          <button id="demoBtn" class="btn">Load Demo</button>
-          <label class="btn ghost" for="file">Upload Image</label>
-          <input id="file" type="file" accept="image/*" style="display:none" />
-          <button id="runBtn" class="btn secondary" disabled>Run Analysis</button>
-        </div>
-      </div>
-      <div class="canvas-wrap" id="canvasWrap">
-        <img id="inputImage" crossorigin="anonymous" alt="input" />
-        <canvas id="overlay"></canvas>
-      </div>
-      <div class="panel-body" style="grid-template-columns: 1fr auto; grid-auto-flow: column; align-items:center;">
-        <div class="statusbar" id="statusbar">
-          <span class="chip" id="st-hosting">Hosting OK</span>
-          <span class="chip" id="st-wasm">WASM — …</span>
-          <span class="chip" id="st-obj">Object Model — …</span>
-          <span class="chip" id="st-pose">Pose Model — …</span>
-          <span class="chip" id="st-face">Face Model — …</span>
-          <span class="chip" id="st-image">Image — …</span>
-          <span class="chip" id="st-run">Detectors — …</span>
-        </div>
-        <div class="row">
-          <span class="title">Snapshot & Export</span>
-          <button id="exportPng" class="btn">PNG</button>
-          <button id="exportJson" class="btn">JSON</button>
-        </div>
-      </div>
-    </section>
+log('Click “Load Demo”, then “Run Analysis” (auto-runs on image load).');
+(function tick(){ fpsTimer.frames++; const now=performance.now(); if(!fpsTimer.t0) fpsTimer.t0=now; const dt=now-fpsTimer.t0; if(dt>500){ const fps=(fpsTimer.frames/(dt/1000)).toFixed(1); fpsChip.textContent=`FPS — ${fps}`; fpsTimer.t0=now; fpsTimer.frames=0; } requestAnimationFrame(tick); })();
 
-    <section id="kpis" class="card">
-      <div class="kpi"><h4>Subject</h4><div class="list" id="subjectList"></div></div>
-      <div class="kpi"><h4>Objects</h4><div class="list" id="objectList"></div></div>
-      <div class="kpi"><h4>Pose</h4><div class="list" id="poseList"></div></div>
-      <div class="kpi"><h4>Color / Lighting</h4><div class="list" id="colorList"></div></div>
-    </section>
-
-    <aside id="side" class="card">
-      <div class="panel-head">
-        <span class="title">Controls</span>
-        <div class="row">
-          <label class="toggle"><input id="tgObjects" type="checkbox" checked><span>Objects</span></label>
-          <label class="toggle"><input id="tgPose" type="checkbox" checked><span>Pose</span></label>
-          <label class="toggle"><input id="tgFace" type="checkbox" checked><span>Face</span></label>
-          <label class="toggle" title="Force CPU delegates"><input id="safeMode" type="checkbox"><span>Safe Mode</span></label>
-        </div>
-      </div>
-      <div id="controls" class="panel-body">
-        <div class="row">
-          <div class="col" style="min-width:170px"><label>Objects Opacity</label><input id="opObjects" type="range" min="0" max="1" step="0.05" value="0.9" /></div>
-          <div class="col" style="min-width:170px"><label>Pose Opacity</label><input id="opPose" type="range" min="0" max="1" step="0.05" value="0.9" /></div>
-          <div class="col" style="min-width:170px"><label>Face Opacity</label><input id="opFace" type="range" min="0" max="1" step="0.05" value="0.9" /></div>
-        </div>
-        <div class="row">
-          <div class="col" style="min-width:200px;">
-            <label>Prompt Mode</label>
-            <select id="mode">
-              <option value="sfw">SFW</option>
-              <option value="nsfw_safe">NSFW-safe (redacted)</option>
-              <option value="edgy">Edgy</option>
-              <option value="poetic">Poetic</option>
-              <option value="numeric">Numeric</option>
-              <option value="json">Raw JSON</option>
-            </select>
-          </div>
-          <div class="col" style="min-width:220px;"><label>Detail</label><input id="detail" type="range" min="0" max="100" step="1" value="70" /></div>
-          <div class="col" style="min-width:280px;">
-            <label>Prompt Sources</label>
-            <div class="row">
-              <label class="toggle"><input id="infObjects" type="checkbox" checked><span>Objects</span></label>
-              <label class="toggle"><input id="infPose" type="checkbox" checked><span>Pose</span></label>
-              <label class="toggle"><input id="infFace" type="checkbox" checked><span>Face</span></label>
-              <label class="toggle"><input id="infColor" type="checkbox" checked><span>Colors/Light</span></label>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <button id="copyPrompt" class="btn">Copy Prompt</button>
-          <button id="downloadPrompt" class="btn">Download .txt</button>
-          <button id="overlayTest" class="btn ghost">Overlay Test</button>
-          <button id="reinit" class="btn warn">Re‑Init Models</button>
-          <button id="selfTest" class="btn">Self‑Test</button>
-          <button id="copyDiag" class="btn">Copy Diag</button>
-        </div>
-        <pre id="diagDump" class="slab" aria-label="Diagnostics Output"></pre>
-        <div class="divider"></div>
-        <div class="row"><span class="title">NSFW Gate</span><span class="chip" id="nsfwGate">Disabled</span></div>
-      </div>
-
-      <div class="panel-head"><span class="title">Prompt Output</span><span class="chip" id="promptChars">0 chars</span></div>
-      <div class="panel-body"><textarea id="promptOut" rows="6"></textarea></div>
-
-      <div class="panel-head"><span class="title">Diagnostics</span><span class="chip">Live Terminal</span></div>
-      <div id="terminal"></div>
-
-      <div id="footer">
-        <div class="row"><span class="title">Export</span><button id="exportOverlays" class="btn">Overlays .png</button></div>
-        <div class="row"><span class="title">Ads Hook</span><span class="chip">placeholder</span></div>
-      </div>
-    </aside>
-  </div>
-
-<script type="module">
-/* WHY-only comments. Tight ESM build so models are always ready before Run. */
-import vision from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs';
-const { FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker } = vision;
-
-// --- DOM refs
-const logEl = document.getElementById('terminal');
-const statusChips = { wasm: byId('st-wasm'), obj: byId('st-obj'), pose: byId('st-pose'), face: byId('st-face'), image: byId('st-image'), run: byId('st-run') };
-const img = byId('inputImage'); const overlay = byId('overlay'); const ctx = overlay.getContext('2d'); const canvasWrap = byId('canvasWrap');
-const demoBtn = byId('demoBtn'); const fileInput = byId('file'); const runBtn = byId('runBtn');
-const tgObjects = byId('tgObjects'); const tgPose = byId('tgPose'); const tgFace = byId('tgFace'); const safeModeToggle = byId('safeMode');
-const opObjects = byId('opObjects'); const opPose = byId('opPose'); const opFace = byId('opFace');
-const objectList = byId('objectList'); const subjectList = byId('subjectList'); const poseList = byId('poseList'); const colorList = byId('colorList');
-const modeSel = byId('mode'); const detailRange = byId('detail'); const promptOut = byId('promptOut'); const promptChars = byId('promptChars');
-const copyPrompt = byId('copyPrompt'); const downloadPrompt = byId('downloadPrompt'); const exportOverlays = byId('exportOverlays');
-const overlayTestBtn = byId('overlayTest'); const reinitBtn = byId('reinit'); const selfTestBtn = byId('selfTest'); const copyDiagBtn = byId('copyDiag'); const diagDump = byId('diagDump'); const fpsChip = byId('fpsChip');
-const infObjects = byId('infObjects'); const infPose = byId('infPose'); const infFace = byId('infFace'); const infColor = byId('infColor');
-
-// --- Constants
-const NS = {
-  WASM_ROOT: 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm',
-  OBJ_MODEL: 'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite',
-  POSE_MODEL: 'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task',
-  FACE_MODEL: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task'
-};
-
-// --- State
-let visionWasm, detector, poser, facer; let lastRun = {}; let fpsTimer = { t0: 0, frames: 0 }; let safeMode = false;
-
-// --- Utils
-function byId(id){ return document.getElementById(id); }
-function log(msg, ok){ const el = document.createElement('div'); el.textContent = msg; el.className = 'log' + (ok === true ? ' ok' : ok === false ? ' err' : ''); logEl.appendChild(el); logEl.scrollTop = logEl.scrollHeight; }
-function setChip(chip, status, okLabel, errLabel){ chip.textContent = status ? (okLabel||chip.textContent.replace('…','OK')) : (errLabel||chip.textContent.replace('…','ERR')); chip.classList.toggle('ok', !!status); chip.classList.toggle('err', !status); }
-const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36).slice(-4);
-
-function resizeOverlayToImage(){ if (!img.naturalWidth) return; const wrapRect = canvasWrap.getBoundingClientRect(); const imgAspect = img.naturalWidth / img.naturalHeight; const wrapAspect = wrapRect.width / wrapRect.height; let drawW, drawH; if (imgAspect > wrapAspect) { drawW = wrapRect.width; drawH = drawW / imgAspect; } else { drawH = wrapRect.height; drawW = drawH * imgAspect; } overlay.width = Math.floor(drawW); overlay.height = Math.floor(drawH); img.style.width = overlay.width + 'px'; img.style.height = overlay.height + 'px'; img.style.objectFit = 'contain'; }
-const toHex = v => Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
-
-// --- Drawing helpers
-function scaleBox(box){ const sx = overlay.width / img.naturalWidth; const sy = overlay.height / img.naturalHeight; return { x: box.originX * sx, y: box.originY * sy, w: box.width * sx, h: box.height * sy }; }
-function drawObjects(detections, opacity){ if (!detections) return; ctx.save(); ctx.globalAlpha = opacity; ctx.lineWidth = 2; ctx.font = '12px ui-sans-serif'; detections.detections.forEach(det => { const { x, y, w, h } = scaleBox(det.boundingBox); ctx.strokeStyle = 'rgba(62,248,255,0.9)'; ctx.shadowColor = 'rgba(62,248,255,0.45)'; ctx.shadowBlur = 8; ctx.strokeRect(x, y, w, h); const name = det.categories?.[0]?.categoryName || 'object'; const score = det.categories?.[0]?.score || 0; const label = `${name} ${(score*100).toFixed(0)}%`; const padX=6; const th=18; const tw = ctx.measureText(label).width + padX*2; ctx.fillStyle = 'rgba(15,27,38,0.9)'; ctx.fillRect(x, Math.max(0, y-th), tw, th); ctx.strokeStyle = 'rgba(62,248,255,0.45)'; ctx.strokeRect(x, Math.max(0, y-th), tw, th); ctx.fillStyle = '#c7faff'; ctx.fillText(label, x+padX, Math.max(0, y-th)+th-5); }); ctx.restore(); }
-const LM = { NOSE:0, LEFT_SHOULDER:11, RIGHT_SHOULDER:12, LEFT_HIP:23, RIGHT_HIP:24, LEFT_EYE:2, RIGHT_EYE:5 };
-const POSE_EDGES = [[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28],[27,31],[28,32]];
-function drawPose(poseResult, opacity){ if (!poseResult?.landmarks?.length) return; ctx.save(); ctx.globalAlpha = opacity; ctx.lineWidth=3; const lms = poseResult.landmarks[0]; ctx.strokeStyle = 'rgba(102,255,153,0.95)'; ctx.shadowColor = 'rgba(102,255,153,0.55)'; ctx.shadowBlur = 10; POSE_EDGES.forEach(([a,b]) => { const p = lms[a], q = lms[b]; if (!p || !q) return; ctx.beginPath(); ctx.moveTo(p.x*overlay.width, p.y*overlay.height); ctx.lineTo(q.x*overlay.width, q.y*overlay.height); ctx.stroke(); }); ctx.fillStyle = 'rgba(102,255,153,0.95)'; ctx.shadowBlur = 8; for (const k of [LM.LEFT_SHOULDER, LM.RIGHT_SHOULDER, LM.LEFT_HIP, LM.RIGHT_HIP, LM.NOSE]) { const p = lms[k]; if (!p) continue; ctx.beginPath(); ctx.arc(p.x*overlay.width, p.y*overlay.height, 4, 0, Math.PI*2); ctx.fill(); } ctx.restore(); }
-const FACE_LM = { LEFT_EYE_TOP:159, LEFT_EYE_BOTTOM:145, RIGHT_EYE_TOP:386, RIGHT_EYE_BOTTOM:374, LEFT_EYE_IN:133, LEFT_EYE_OUT:33, RIGHT_EYE_IN:362, RIGHT_EYE_OUT:263, LEFT_IRIS_C:468, RIGHT_IRIS_C:473 };
-function drawFace(faceRes, opacity){ if (!faceRes?.faceLandmarks?.length) return; const lms = faceRes.faceLandmarks[0]; ctx.save(); ctx.globalAlpha = opacity; ctx.fillStyle='rgba(140,200,255,0.9)'; ctx.shadowColor='rgba(140,200,255,0.6)'; ctx.shadowBlur=8; const n=lms.length; for(let i=0;i<n;i+=2){ const p=lms[i]; const x=p.x*overlay.width, y=p.y*overlay.height; ctx.beginPath(); ctx.arc(x,y,1.4,0,Math.PI*2); ctx.fill(); } const li=lms[FACE_LM.LEFT_IRIS_C], ri=lms[FACE_LM.RIGHT_IRIS_C]; if(li){ ctx.beginPath(); ctx.arc(li.x*overlay.width, li.y*overlay.height, 3, 0, Math.PI*2); ctx.fill(); } if(ri){ ctx.beginPath(); ctx.arc(ri.x*overlay.width, ri.y*overlay.height, 3, 0, Math.PI*2); ctx.fill(); } ctx.strokeStyle='rgba(140,200,255,0.6)'; ctx.lineWidth=1; ctx.beginPath(); const outlineIdx=[10,338,297,332,284,251,389,356,454,323,361,288,397,365,379,378,400,377,152,148,176,149,150,136,172,58,132,93,234,127,162,21,54,103,67,109,10]; outlineIdx.forEach((i,ix)=>{ const p=lms[i]; const x=p.x*overlay.width, y=p.y*overlay.height; if(ix===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); }); ctx.stroke(); ctx.restore(); }
-
-// --- Math + analysis
-const rad2deg = r => (r*180/Math.PI); function angleDegrees(p,q){ return rad2deg(Math.atan2(q.y-p.y, q.x-p.x)); }
-function eulerFromMatrix4(m){ const r00=m[0], r10=m[1], r20=m[2]; const r01=m[4], r11=m[5], r21=m[6]; const r02=m[8], r12=m[9], r22=m[10]; const sy=Math.hypot(r00,r10); let x,y,z; if(sy>1e-6){ x=Math.atan2(r21,r22); y=Math.atan2(-r20,sy); z=Math.atan2(r10,r00);} else { x=Math.atan2(-r12,r11); y=Math.atan2(-r20,sy); z=0;} return { pitch: rad2deg(x), yaw: rad2deg(y), roll: rad2deg(z) }; }
-const dist=(a,b)=> Math.hypot((a.x-b.x),(a.y-b.y));
-function eyeOpenness(lms){ const L = (dist(lms[FACE_LM.LEFT_EYE_TOP], lms[FACE_LM.LEFT_EYE_BOTTOM]) / dist(lms[FACE_LM.LEFT_EYE_IN], lms[FACE_LM.LEFT_EYE_OUT])); const R = (dist(lms[FACE_LM.RIGHT_EYE_TOP], lms[FACE_LM.RIGHT_EYE_BOTTOM]) / dist(lms[FACE_LM.RIGHT_EYE_IN], lms[FACE_LM.RIGHT_EYE_OUT])); const avg=(L+R)/2; return avg>0.22?'open':avg<0.12?'closed':'narrow'; }
-function gazeHint(lms){ const lc=lms[FACE_LM.LEFT_IRIS_C], rc=lms[FACE_LM.RIGHT_IRIS_C]; if(!lc||!rc) return 'unknown'; const leftSpan=[lms[FACE_LM.LEFT_EYE_OUT],lms[FACE_LM.LEFT_EYE_IN]]; const rightSpan=[lms[FACE_LM.RIGHT_EYE_IN],lms[FACE_LM.RIGHT_EYE_OUT]]; const lratio=(lc.x-leftSpan[0].x)/(leftSpan[1].x-leftSpan[0].x); const rratio=(rc.x-rightSpan[0].x)/(rightSpan[1].x-rightSpan[0].x); const avg=(lratio+rratio)/2; return avg<0.35?'looking left':avg>0.65?'looking right':'looking center'; }
-
-function subjectSummary(pose, face){ const base={ posture:'unknown', view:'unknown', eyes:'unknown', gaze:'unknown', roll:null, pitch:null, yaw:null }; if (pose?.landmarks?.length){ const lms=pose.landmarks[0]; const L=lms[LM.LEFT_SHOULDER], R=lms[LM.RIGHT_SHOULDER], LH=lms[LM.LEFT_HIP], RH=lms[LM.RIGHT_HIP]; if (L&&R&&LH&&RH){ const shoulderAngle=Math.abs(angleDegrees(L,R)); const hipAngle=Math.abs(angleDegrees(LH,RH)); const torsoTilt=Math.abs(angleDegrees({x:(L.x+R.x)/2,y:(L.y+R.y)/2},{x:(LH.x+RH.x)/2,y:(LH.y+RH.y)/2}))-90; base.shoulders_deg=shoulderAngle.toFixed(1); base.hips_deg=hipAngle.toFixed(1); base.torso_tilt_deg=Math.abs(torsoTilt).toFixed(1); const dz=Math.abs((L.z||0)-(R.z||0)); base.view= dz<0.02?'frontal': dz<0.08?'3/4':'profile-ish'; } } if (face?.faceLandmarks?.length){ const lms=face.faceLandmarks[0]; base.eyes=eyeOpenness(lms); base.gaze=gazeHint(lms); const M=face.facialTransformationMatrixes?.[0]; if (M?.data){ const e=eulerFromMatrix4(M.data); base.roll=e.roll.toFixed(1); base.pitch=e.pitch.toFixed(1); base.yaw=e.yaw.toFixed(1); } } base.isolated=true; return base; }
-
-function analyzeColor(imgEl, maxSide=160, k=5){ const c=document.createElement('canvas'); const cx=c.getContext('2d'); const w=imgEl.naturalWidth, h=imgEl.naturalHeight; const scale=Math.min(1, maxSide/Math.max(w,h)); c.width=Math.max(1,Math.floor(w*scale)); c.height=Math.max(1,Math.floor(h*scale)); cx.drawImage(imgEl,0,0,c.width,c.height); const data=cx.getImageData(0,0,c.width,c.height).data; let sumL=0,sumH=0,sumS=0,n=0; const pts=[]; for (let i=0;i<data.length;i+=4*5){ const r=data[i],g=data[i+1],b=data[i+2],a=data[i+3]; if(a<200) continue; const [h,s,l]=rgbToHsl(r,g,b); sumL+=l; sumH+=h; sumS+=s; n++; pts.push([r,g,b]); } const avgL=n?sumL/n:0, avgH=n?sumH/n:0; const clusters=kmeans(pts,k,6); const palette=clusters.centroids.map(c=>({r:Math.round(c[0]),g:Math.round(c[1]),b:Math.round(c[2])})); const warm=(avgH<60/360||avgH>300/360); const lighting=avgL>0.7?'bright':avgL<0.35?'dim':'moderate'; const contrast=stddev(pts.map(([r,g,b])=> (0.2126*r+0.7152*g+0.0722*b)/255 ))>0.18?'high':'low/med'; return { palette, avg_brightness:+avgL.toFixed(3), tone:warm?'warm':'cool/neutral', lighting, contrast }; }
-function kmeans(points,k,iters=8){ if(!points.length) return {centroids:[],labels:[]}; const centroids=points.slice(0,k).map(p=>p.slice()); let labels=new Array(points.length).fill(0); for(let it=0;it<iters;it++){ for(let i=0;i<points.length;i++){ let best=-1,bd=1e9; for(let c=0;c<k;c++){ const d=dist3(points[i],centroids[c]); if(d<bd){bd=d;best=c;} } labels[i]=best; } const sums=Array.from({length:k},()=>[0,0,0,0]); for(let i=0;i<points.length;i++){ const c=labels[i],p=points[i]; sums[c][0]+=p[0]; sums[c][1]+=p[1]; sums[c][2]+=p[2]; sums[c][3]++; } for(let c=0;c<k;c++){ if(sums[c][3]){ centroids[c][0]=sums[c][0]/sums[c][3]; centroids[c][1]=sums[c][1]/sums[c][3]; centroids[c][2]=sums[c][2]/sums[c][3]; } } } return {centroids,labels}; }
-const dist3=(a,b)=>{const dx=a[0]-b[0],dy=a[1]-b[1],dz=a[2]-b[2]; return dx*dx+dy*dy+dz*dz; }; function rgbToHsl(r,g,b){ r/=255; g/=255; b/=255; const max=Math.max(r,g,b), min=Math.min(r,g,b); let h,s,l=(max+min)/2; if(max===min){h=s=0;} else { const d=max-min; s=l>0.5? d/(2-max-min): d/(max+min); switch(max){case r:h=(g-b)/d+(g<b?6:0);break; case g:h=(b-r)/d+2;break; case b:h=(r-g)/d+4;break;} h/=6; } return [h,s,l]; } const stddev = arr => { const m=arr.reduce((a,b)=>a+b,0)/arr.length; return Math.sqrt(arr.reduce((s,x)=>s+(x-m)*(x-m),0)/arr.length); };
-
-function buildPrompt(mode){ const detail = Number(detailRange.value); const parts=[]; if (infObjects.checked && lastRun.objects?.length){ const items=lastRun.objects.map(o=>`${o.name} ${(o.score*100).toFixed(0)}%`).join(', '); parts.push(`objects: ${items}`); } if (infPose.checked && lastRun.poseSummary){ const ps=lastRun.poseSummary; parts.push(`pose: shoulders ${ps.shoulders_deg||'n/a'}°, hips ${ps.hips_deg||'n/a'}°, torso ${ps.torso_tilt_deg||'n/a'}°, view ${ps.view||'unknown'}`); } if (infFace.checked && lastRun.poseSummary){ const ps=lastRun.poseSummary; const faceBits=[`eyes ${ps.eyes||'unknown'}`, `gaze ${ps.gaze||'unknown'}`]; if(ps.yaw) faceBits.push(`yaw ${ps.yaw}°`); if(ps.pitch) faceBits.push(`pitch ${ps.pitch}°`); if(ps.roll) faceBits.push(`roll ${ps.roll}°`); parts.push(`face: ${faceBits.join(', ')}`); } if (infColor.checked && lastRun.color){ const c=lastRun.color; parts.push(`palette: ${c.palette.map(p=>`#${toHex(p.r)}${toHex(p.g)}${toHex(p.b)}`).join(' ')}, brightness ${c.avg_brightness}, tone ${c.tone}, lighting ${c.lighting}, contrast ${c.contrast}`); } const cameraBlock = detail >= 60 ? `
-[ camera: 50mm, f/2.8, ISO 200, shutter 1/250 ]` : ''; let prompt = parts.join(' | ')+cameraBlock; if (mode === 'nsfw_safe') prompt = prompt.replace(/(nude|naked|lingerie|cleavage|see-?through|erotic|fetish|nsfw)/gi, '[redacted]'); if (mode === 'edgy') prompt = `gritty cyber-noir surveillance HUD :: ${prompt}`; if (mode === 'poetic') prompt = `an underground lens reading light and form :: ${prompt}`; if (mode === 'numeric') prompt = JSON.stringify({ shoulders_deg:+lastRun.poseSummary?.shoulders_deg||null, hips_deg:+lastRun.poseSummary?.hips_deg||null, torso_tilt_deg:+lastRun.poseSummary?.torso_tilt_deg||null, yaw:+lastRun.poseSummary?.yaw||null, brightness:lastRun.color?.avg_brightness||null }); if (mode === 'json') prompt = JSON.stringify({ subject:lastRun.poseSummary||{}, objects:lastRun.objects||[], color:lastRun.color||{} }, null, 2); promptOut.value = prompt; promptChars.textContent = `${prompt.length} chars`; }
-
-function download(name, data, type='text/plain'){ const blob = new Blob([data], {type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
-async function downloadDataUrl(name, dataUrl){ const res=await fetch(dataUrl); const blob=await res.blob(); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); URL.revokeObjectURL(a.href); }
-function snapshot(includeOverlays=true){ const c=document.createElement('canvas'); c.width=overlay.width; c.height=overlay.height; const cx=c.getContext('2d'); cx.drawImage(img,0,0,c.width,c.height); if(includeOverlays) cx.drawImage(overlay,0,0); return c.toDataURL('image/png'); }
-
-async function runAll(){ try {
-  if (!img.complete || !img.naturalWidth){ log('No image loaded', false); setChip(statusChips.image,false,'Image — ERR'); return; }
-  setChip(statusChips.image,true,'Image — OK'); ctx.clearRect(0,0,overlay.width,overlay.height);
-  let objects=null, pose=null, face=null;
-  if (tgObjects.checked && detector) objects = await detector.detect(img);
-  if (tgPose.checked && poser) pose = await poser.detect(img);
-  if (tgFace.checked && facer) face = await facer.detect(img);
-  if (tgObjects.checked && objects) drawObjects(objects, parseFloat(opObjects.value));
-  if (tgPose.checked && pose) drawPose(pose, parseFloat(opPose.value));
-  if (tgFace.checked && face) drawFace(face, parseFloat(opFace.value));
-  objectList.innerHTML=''; const objArr=[]; if (objects?.detections?.length){ for(const det of objects.detections){ const name=det.categories?.[0]?.categoryName||'object'; const score=det.categories?.[0]?.score||0; objArr.push({ name, score, box: det.boundingBox }); const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${name}</span><span>${(score*100).toFixed(0)}%</span>`; objectList.appendChild(li); } } else { objectList.innerHTML='<span class="pill"><span>—</span><span>n/a</span></span>'; }
-  poseList.innerHTML=''; const ps=subjectSummary(pose, face); const poseKvs=[ ['View', ps.view||'unknown'], ['Shoulders', ps.shoulders_deg? ps.shoulders_deg+'°':'n/a'], ['Hips', ps.hips_deg? ps.hips_deg+'°':'n/a'], ['Torso Tilt', ps.torso_tilt_deg? ps.torso_tilt_deg+'°':'n/a'], ['Yaw', ps.yaw? ps.yaw+'°':'n/a'], ['Pitch', ps.pitch? ps.pitch+'°':'n/a'], ['Roll', ps.roll? ps.roll+'°':'n/a'] ]; for (const [k,v] of poseKvs){ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; poseList.appendChild(li); }
-  subjectList.innerHTML=''; const subj=[ ['Framing', ps.view||'unknown'], ['Isolated', 'yes'], ['Eyes', ps.eyes||'unknown'], ['Gaze', ps.gaze||'unknown'] ]; for (const [k,v] of subj){ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; subjectList.appendChild(li); }
-  let color=null; try { color=analyzeColor(img); } catch(e){ log('Color analysis skipped (CORS): '+ e.message, false); }
-  colorList.innerHTML=''; if (color){ const palDiv=document.createElement('div'); palDiv.className='row'; const sw=document.createElement('div'); sw.className='swatches'; color.palette.forEach(p=>{ const el=document.createElement('div'); el.className='swatch'; el.style.background=`rgb(${p.r},${p.g},${p.b})`; sw.appendChild(el); }); palDiv.appendChild(sw); colorList.appendChild(palDiv); const colorKvs=[ ['Brightness', color.avg_brightness.toFixed(3)], ['Tone', color.tone], ['Lighting', color.lighting], ['Contrast', color.contrast] ]; for (const [k,v] of colorKvs){ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; colorList.appendChild(li); } } else { const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>Color</span><span>n/a</span>`; colorList.appendChild(li); }
-  lastRun = { objects: objArr, poseSummary: ps, color };
-  setChip(statusChips.run,true,'Detectors — OK'); buildPrompt(modeSel.value); log('Analysis complete ✓', true);
-} catch (e){ setChip(statusChips.run,false,'Detectors — ERR'); log('runAll error: '+ e.stack, false); diagDump.textContent = diagText(); }
-}
-
-async function init(){ try {
-  const del = safeMode ? 'CPU' : 'GPU';
-  visionWasm = await FilesetResolver.forVisionTasks(NS.WASM_ROOT); setChip(statusChips.wasm,true,'WASM — OK'); log('WASM ready', true);
-  detector = await ObjectDetector.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.OBJ_MODEL, delegate:'CPU' }, scoreThreshold:0.5, runningMode:'IMAGE', maxResults:10 }); setChip(statusChips.obj,true,'Object Model — OK'); log('ObjectDetector ready', true);
-  try { poser = await PoseLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.POSE_MODEL, delegate: del }, runningMode:'IMAGE', numPoses:1 }); } catch(e){ log('Pose GPU failed → CPU', false); poser = await PoseLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.POSE_MODEL, delegate:'CPU' }, runningMode:'IMAGE', numPoses:1 }); }
-  setChip(statusChips.pose,true,'Pose Model — OK'); log('PoseLandmarker ready', true);
-  try { facer = await FaceLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.FACE_MODEL, delegate: del }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:true }); } catch(e){ log('Face GPU failed → CPU', false); facer = await FaceLandmarker.createFromOptions(visionWasm, { baseOptions:{ modelAssetPath:NS.FACE_MODEL, delegate:'CPU' }, runningMode:'IMAGE', numFaces:1, outputFaceBlendshapes:false, outputFacialTransformationMatrixes:true }); }
-  setChip(statusChips.face,true,'Face Model — OK'); log('FaceLandmarker ready', true);
-  runBtn.disabled = false;
-} catch (e){ log('Init error: '+ e.stack, false); if(!visionWasm) setChip(statusChips.wasm,false,'WASM — ERR'); if(!detector) setChip(statusChips.obj,false,'Object Model — ERR'); if(!poser) setChip(statusChips.pose,false,'Pose Model — ERR'); if(!facer) setChip(statusChips.face,false,'Face Model — ERR'); }
-  diagDump.textContent = diagText();
-}
-
-const DEMO_URL = 'https://upload.wikimedia.org/wikipedia/commons/3/39/Tree_Woman.jpg';
-function loadImage(src){ return new Promise((resolve,reject)=>{ img.onload=()=>{ resizeOverlayToImage(); setChip(statusChips.image,true,'Image — OK'); resolve(); }; img.onerror=(e)=>{ setChip(statusChips.image,false,'Image — ERR'); reject(e); }; img.src=src; }); }
-
-function webglInfo(){ const c=document.createElement('canvas'); const gl2 = c.getContext('webgl2'); const gl = gl2 || c.getContext('webgl'); return { webgl2: !!gl2, webgl: !!gl }; }
-function chipStates(){ return ['wasm','obj','pose','face','image','run'].map(k=>`${k}:${statusChips[k].classList.contains('ok')?'OK':'ERR'}`).join(' '); }
-function diagText(){ const gl=webglInfo(); return [ `UserAgent: ${navigator.userAgent}`, `Lang/Platform: ${navigator.language} / ${navigator.platform}`, `HW: ${navigator.hardwareConcurrency||'?'} cores, ${navigator.deviceMemory||'?'} GB`, `SafeMode: ${safeMode}`, `Tasks-Vision: 0.10.21`, `Chips: ${chipStates()}`, `Img: ${img.naturalWidth||0}x${img.naturalHeight||0} loaded=${img.complete}`, `WebGL: v2=${gl.webgl2} v1=${gl.webgl}` ].join('
-'); }
-
-// --- UI bindings
-window.addEventListener('resize', resizeOverlayToImage);
-img.addEventListener('load', async ()=>{ try { if (!runBtn.disabled) await runAll(); } catch(e){ log('Auto-run failed: '+e.message, false); } });
-demoBtn.addEventListener('click', async ()=>{ log('Loading demo image…'); try { await loadImage(DEMO_URL); log('Demo image loaded ✓', true); } catch(e){ log('Demo image failed', false);} });
-fileInput.addEventListener('change', async (e)=>{ const file=e.target.files?.[0]; if(!file) return; const url=URL.createObjectURL(file); log('Loading local image…'); try { await loadImage(url); URL.revokeObjectURL(url); log('Local image loaded ✓', true);} catch(err){ log('Local image failed', false); } });
-runBtn.addEventListener('click', runAll);
-['change','input'].forEach(evt => { tgObjects.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); }); tgPose.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); }); tgFace.addEventListener(evt, ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); runAll(); }); opObjects.addEventListener(evt, runAll); opPose.addEventListener(evt, runAll); opFace.addEventListener(evt, runAll); modeSel.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); detailRange.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infObjects.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infPose.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infFace.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); infColor.addEventListener(evt, ()=>{ buildPrompt(modeSel.value); }); });
-
-byId('overlayTest').addEventListener('click', ()=>{ ctx.clearRect(0,0,overlay.width,overlay.height); ctx.save(); ctx.strokeStyle='#9ad1ff'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(overlay.width,overlay.height); ctx.moveTo(overlay.width,0); ctx.lineTo(0,overlay.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK', 12, 22); ctx.restore(); log('Overlay test drawn (should see an X and text).', true); });
-byId('reinit').addEventListener('click', async ()=>{ log('Re-initializing models…'); try { await closeModels(); await init(); log('Re-init complete ✓', true);} catch(e){ log('Re-init failed: '+e.stack, false);} });
-byId('selfTest').addEventListener('click', ()=>{ diagDump.textContent = diagText(); log('Self-test captured environment ✓', true); });
-byId('copyDiag').addEventListener('click', async ()=>{ try { await navigator.clipboard.writeText(diagDump.textContent || diagText()); log('Diagnostics copied ✓', true);} catch(e){ log('Copy failed', false);} });
-safeModeToggle.addEventListener('change', async (e)=>{ safeMode = e.target.checked; log(`Safe Mode ${safeMode?'ON':'OFF'} — delegates=${safeMode?'CPU':'GPU'}`, true); });
-
-async function closeModels(){ try { await detector?.close(); } catch(_){} try { await poser?.close(); } catch(_){} try { await facer?.close(); } catch(_){} detector=poser=facer=null; runBtn.disabled=true; setChip(statusChips.obj,false,'Object Model — …'); setChip(statusChips.pose,false,'Pose Model — …'); setChip(statusChips.face,false,'Face Model — …'); }
-function tickFPS(){ fpsTimer.frames++; const now=performance.now(); if(!fpsTimer.t0) fpsTimer.t0=now; const dt=now-fpsTimer.t0; if(dt>500){ const fps=(fpsTimer.frames/(dt/1000)).toFixed(1); fpsChip.textContent=`FPS — ${fps}`; fpsTimer.t0=now; fpsTimer.frames=0; } requestAnimationFrame(tickFPS); }
-
-// Boot
-log('Booting BlackSite HUD…');
-await init();
-log('Click “Load Demo”, then “Run Analysis” (auto-runs after load).');
-tickFPS();
+/* ---- prompt helpers in global scope for buttons ---- */
+copyPrompt.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(promptOut.value); log('Prompt copied ✓', true);}catch{ log('Clipboard failed', false);} });
+downloadPrompt.addEventListener('click', ()=>{ const blob=new Blob([promptOut.value],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`prompt_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); });
 </script>
 </body>
 </html>
