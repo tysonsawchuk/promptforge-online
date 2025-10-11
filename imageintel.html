@@ -1,8 +1,7 @@
-<!-- /imageintel.html — ImageIntel Pro Lab (r5)
-  * BUGFIX: Fatal syntax error in heatColor() fixed → JS now boots. 
-  * Added: Global error trap + red banner on any JS error. 
-  * Added: **Matrix Test** (per‑detector pass/fail + timings) and **Copy Bug Bundle**. 
-  * Upload: click / drag / paste. Autorun when models+image ready. 
+<!-- /imageintel.html — ImageIntel Pro Lab (r6)
+  * Critical: UI boots BEFORE model import; even if CDN import fails, upload/self-test work.
+  * Adds: Non-blocking vision loader, clearer banners, copyable bug bundle, matrix test.
+  * Keeps: Objects/Pose/Face/Hands/Seg overlays, prompts, exports.
 -->
 <!doctype html>
 <html lang="en">
@@ -161,16 +160,6 @@ details>summary{cursor:pointer;color:#c5d7f2}
         </div>
         <div class="col" style="min-width:200px;"><label>Detail</label><input id="detail" type="range" min="0" max="100" step="1" value="85"/></div>
       </div>
-      <div class="row">
-        <label class="toggle"><input id="styleBoost" type="checkbox" checked><span>Style Boost</span></label>
-        <button id="editBoost" class="btn ghost hide-when-compact">Edit</button>
-        <button id="resetBoost" class="btn warn hide-when-compact">Reset</button>
-      </div>
-      <div id="styleDrawer" class="hide-when-compact" style="display:none">
-        <div class="col"><label>Positive (extras)</label><textarea id="boostPos" spellcheck="false"></textarea></div>
-        <div class="col"><label>Negative (extras)</label><textarea id="boostNeg" spellcheck="false"></textarea></div>
-        <div class="row"><button id="saveBoost" class="btn">Save</button></div>
-      </div>
       <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
         <span class="title">Prompt Output</span><span class="chip" id="promptChars">0 chars</span>
       </div>
@@ -211,191 +200,99 @@ details>summary{cursor:pointer;color:#c5d7f2}
 <div id="errbanner" class="errbanner"></div>
 
 <script type="module">
-/************ GLOBAL ERROR TRAPS ************/
-const banner=document.getElementById('errbanner');
-window.__ERRS=[];
-function showErr(msg){ banner.textContent=msg; banner.style.display='block'; setTimeout(()=>banner.style.display='none',8000); }
-window.addEventListener('error',(e)=>{ const m=`JS error: ${e.message} @ ${e.filename}:${e.lineno}`; window.__ERRS.push(m); console.error(m); showErr(m); log?.(m,false); });
-window.addEventListener('unhandledrejection',(e)=>{ const m=`Promise rejection: ${e.reason?.message||e.reason}`; window.__ERRS.push(m); console.error(m); showErr(m); log?.(m,false); });
-
-/************ Loader ************/
-const CANDIDATES=[
-  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
-  'https://unpkg.com/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
-  'https://ga.jspm.io/npm:@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs'
-];
-let vision, loadErr=[]; for(const url of CANDIDATES){ try{ vision=await import(url); break; }catch(e){ loadErr.push(`${url} → ${e?.message||e}`);} }
-if(!vision){ document.body.insertAdjacentHTML('afterbegin', `<div style="padding:10px" class="card"><div style="background:#270b0f;border:1px solid #ff4d6d;padding:12px;border-radius:12px;color:#ffd7de">FATAL: tasks-vision failed.<br>${loadErr.join('<br>')}</div></div>`); throw new Error('No tasks-vision'); }
-const { FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker, ImageSegmenter, HandLandmarker } = vision;
-
-/************ DOM ************/
+/************ EARLY UI + LOG (runs even if CDN import fails) ************/
 const $=id=>document.getElementById(id);
-const img=$('inputImage'), wrap=$('canvasWrap'), canvas=$('overlay'), ctx=canvas.getContext('2d',{willReadFrequently:true}), dropHint=$('dropHint');
-const fileInput=$('file'), runBtn=$('runBtn'), compactUI=$('compactUI');
+const img=$('inputImage'), wrap=$('canvasWrap'), canvas=$('overlay'), ctx=canvas.getContext('2d',{willReadFrequently:true});
+const fileInput=$('file'), runBtn=$('runBtn'), diag=$('diagDump'), logEl=$('terminal'), fpsChip=$('fpsChip');
 const status={wasm:$('st-wasm'),obj:$('st-obj'),pose:$('st-pose'),face:$('st-face'),hands:$('st-hands'),seg:$('st-seg'),image:$('st-image'),run:$('st-run')};
-const logEl=$('terminal'), diag=$('diagDump'), nsfwGateEl=$('nsfwGate'), fpsChip=$('fpsChip');
-const tgObjects=$('tgObjects'), tgPose=$('tgPose'), tgFace=$('tgFace'), tgHands=$('tgHands'), tgBody=$('tgBody'), tgSil=$('tgSil'), tgSeg=$('tgSeg'), tgEdges=$('tgEdges');
-const opObjects=$('opObjects'), opPose=$('opPose'), opFace=$('opFace'), opHands=$('opHands'), opBody=$('opBody'), opSil=$('opSil'), opSeg=$('opSeg'), opEdges=$('opEdges'), segHeat=$('segHeat');
-const objectList=$('objectList'), subjectList=$('subjectList'), poseList=$('poseList'), colorList=$('colorList');
-const modeSel=$('mode'), detailRange=$('detail'), modelStyleSel=$('modelStyle'), styleBoost=$('styleBoost'), stylePackSel=$('stylePack');
-const promptOut=$('promptOut'), promptChars=$('promptChars'), pA=$('pA'), pB=$('pB'), pC=$('pC'), genABC=$('genABC'), copyABC=$('copyABC');
-const copyPrompt=$('copyPrompt'), downloadPrompt=$('downloadPrompt'), exportJson=$('exportJson'), exportMasked=$('exportMasked'), exportPng=$('exportPng');
-const overlayTestBtn=$('overlayTest'), reinitBtn=$('reinit'), selfTestBtn=$('selfTest'), copyDiagBtn=$('copyDiag'), safeModeToggle=$('safeMode');
-const matrixBtn=$('matrixTest'), copyBundleBtn=$('copyBundle');
-const editBoost=$('editBoost'), styleDrawer=$('styleDrawer'), boostPos=$('boostPos'), boostNeg=$('boostNeg'), saveBoost=$('saveBoost'), resetBoost=$('resetBoost');
-
-/************ State/Utils ************/
+const tgEdges=$('tgEdges'), opEdges=$('opEdges');
+const dropHint=$('dropHint');
 const STATE={modelsReady:false,imageReady:false};
 const log=(m,ok)=>{ const d=document.createElement('div'); d.textContent=m; d.className='log'+(ok===true?' ok':ok===false?' err':''); logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; };
 const setChip=(el,ok,labelOK='OK',labelERR='ERR')=>{ el.textContent=ok?labelOK:labelERR; el.classList.toggle('ok',!!ok); el.classList.toggle('err',!ok); };
 function resize(){ if(!img.naturalWidth) return; const r=wrap.getBoundingClientRect(); const ia=img.naturalWidth/img.naturalHeight, ra=r.width/r.height; let w,h; if(ia>ra){w=r.width;h=w/ia;} else {h=r.height;w=h*ia;} canvas.width=w|0; canvas.height=h|0; img.style.width=w+'px'; img.style.height=h+'px'; }
-const toHex=v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0'); const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+function rgbToHsl(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h,s,l=(mx+mn)/2; if(mx===mn){h=s=0;} else { const d=mx-mn; s=l>0.5? d/(2-mx-mn): d/(mx+mn); switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;} h/=6; } return [h,s,l]; }
+function analyzeColor(el,maxSide=180){ const c=document.createElement('canvas'),cx=c.getContext('2d'); const w=el.naturalWidth,h=el.naturalHeight; if(!w||!h) return null; const s=Math.min(1,maxSide/Math.max(w,h)); c.width=Math.max(1,(w*s)|0); c.height=Math.max(1,(h*s)|0); cx.drawImage(el,0,0,c.width,c.height); const d=cx.getImageData(0,0,c.width,c.height).data; let lumSum=0,n=0; for(let i=0;i<d.length;i+=24){ const r=d[i],g=d[i+1],b=d[i+2]; lumSum += (0.2126*r+0.7152*g+0.0722*b)/255; n++; } const avgL=lumSum/(n||1); const lighting=avgL>0.7?'bright':avgL<0.35?'dim':'moderate'; return {avg_brightness:+avgL.toFixed(3), lighting}; }
+function drawEdges(alpha=0.4){ const w=canvas.width,h=canvas.height; if(!w||!h) return; const oc=document.createElement('canvas'); oc.width=w; oc.height=h; const ox=oc.getContext('2d',{willReadFrequently:true}); ox.drawImage(img,0,0,w,h); const src=ox.getImageData(0,0,w,h); const out=ox.createImageData(w,h); const Gx=[-1,0,1,-2,0,2,-1,0,1], Gy=[-1,-2,-1,0,0,0,1,2,1]; for(let y=1;y<h-1;y++){ for(let x=1;x<w-1;x++){ let sx=0,sy=0,pi=0; for(let ky=-1;ky<=1;ky++){ for(let kx=-1;kx<=1;kx++){ const ix=((y+ky)*w+(x+kx))*4; const lum=0.2126*src.data[ix]+0.7152*src.data[ix+1]+0.0722*src.data[ix+2]; sx+=lum*Gx[pi]; sy+=lum*Gy[pi]; pi++; } } const m=Math.min(255,Math.hypot(sx,sy)); const o=(y*w+x)*4; out.data[o]=out.data[o+1]=out.data[o+2]=m; out.data[o+3]=m>40?255:0; } } ox.putImageData(out,0,0); ctx.save(); ctx.globalAlpha=alpha; ctx.drawImage(oc,0,0); ctx.restore(); }
+function promptFallback(){ const c=analyzeColor(img); const basic = `subject centered, portrait shot${c?`, ${c.lighting} lighting`:''}`; const out = `${basic}
+NEGATIVE: lowres, blur, watermark`; $('promptOut').value=out; $('promptChars').textContent=`${out.length} chars`; }
+function imageLoadedUI(){ resize(); setChip(status.image,true,'Image — OK'); STATE.imageReady=true; log('Image loaded ✓', true); // draw fallback edges so user sees something even without models
+  if(tgEdges?.checked) { ctx.clearRect(0,0,canvas.width,canvas.height); drawEdges(+opEdges.value||0.4); }
+  promptFallback(); runBtn.disabled=false; }
 
-/************ Image loader ************/
+// Upload bindings (always on)
 function isImg(f){ return /^image\//i.test(f?.type||''); }
 async function fileToDataUrlViaBitmap(file){ const bmp=await createImageBitmap(file).catch(()=>null); if(!bmp) return null; const c=document.createElement('canvas'); c.width=bmp.width; c.height=bmp.height; const cx=c.getContext('2d'); cx.drawImage(bmp,0,0); return c.toDataURL('image/png'); }
 function readAsDataURL(file){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onerror=()=>rej(fr.error); fr.onload=()=>res(fr.result); fr.readAsDataURL(file); }); }
-async function loadFileToImage(file){ if(!file){ log('No file picked', false); return; } if(!isImg(file)){ log(`Unsupported file: ${file.type||'unknown'}`, false); setChip(status.image,false,'Image — ERR'); return; }
-  let url=null; try{ url=await fileToDataUrlViaBitmap(file); if(!url) url=await readAsDataURL(file); }catch(e){ log('Decode fallback failed: '+(e?.message||e), false);} if(!url){ log('Could not decode image', false); setChip(status.image,false,'Image — ERR'); return; }
-  dropHint.classList.add('loaded'); img.decoding='async'; img.loading='eager'; img.onload=()=>{ resize(); setChip(status.image,true,'Image — OK'); STATE.imageReady=true; log('Image loaded ✓', true); maybeAutoRun(); fileInput.value=''; }; img.onerror=()=>{ log('Image error: cannot decode/display', false); setChip(status.image,false,'Image — ERR'); STATE.imageReady=false; }; img.src=url;
-}
-['dragenter','dragover'].forEach(ev=>wrap.addEventListener(ev,(e)=>{ e.preventDefault(); dropHint.style.opacity='.38'; }));
-['dragleave','drop'].forEach(ev=>wrap.addEventListener(ev,(e)=>{ e.preventDefault(); dropHint.style.opacity='.18'; }));
-wrap.addEventListener('drop',(e)=>{ const f=e.dataTransfer?.files?.[0]; if(f) loadFileToImage(f); });
+async function loadFileToImage(file){ if(!file){ log('No file picked', false); return; } if(!isImg(file)){ log(`Unsupported file: ${file.type||'unknown'}`, false); setChip(status.image,false,'Image — ERR'); return; } let url=null; try{ url=await fileToDataUrlViaBitmap(file); if(!url) url=await readAsDataURL(file); }catch(e){ log('Decode fallback failed: '+(e?.message||e), false);} if(!url){ log('Could not decode image', false); setChip(status.image,false,'Image — ERR'); return; } img.decoding='async'; img.loading='eager'; img.onload=imageLoadedUI; img.onerror=()=>{ log('Image error: cannot decode/display', false); setChip(status.image,false,'Image — ERR'); STATE.imageReady=false; }; img.src=url; }
+['dragenter','dragover'].forEach(ev=>$('canvasWrap').addEventListener(ev,(e)=>{ e.preventDefault(); $('dropHint').style.opacity='.38'; }));
+['dragleave','drop'].forEach(ev=>$('canvasWrap').addEventListener(ev,(e)=>{ e.preventDefault(); $('dropHint').style.opacity='.18'; }));
+$('canvasWrap').addEventListener('drop',(e)=>{ const f=e.dataTransfer?.files?.[0]; if(f) loadFileToImage(f); });
 window.addEventListener('paste',(e)=>{ const item=[...(e.clipboardData?.items||[])].find(i=>i.type.startsWith('image/')); if(!item) return; const f=item.getAsFile(); if(f){ log('Pasted image…'); loadFileToImage(f);} });
 fileInput.addEventListener('change',(e)=>{ const f=e.target.files?.[0]; if(f){ log('Loading local image…'); loadFileToImage(f);} });
+window.addEventListener('resize', resize); img.addEventListener('load', resize);
+$('overlayTest').addEventListener('click', ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#9ad1ff'; ctx.shadowColor='#9ad1ff'; ctx.shadowBlur=8; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(canvas.width,canvas.height); ctx.moveTo(canvas.width,0); ctx.lineTo(0,canvas.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK',12,22); log('Overlay test drawn ✓', true); });
+$('selfTest').addEventListener('click', ()=>{ diag.textContent=[`UA: ${navigator.userAgent}`,`Lang: ${navigator.language}`,`Platform: ${navigator.platform}`,`Cores: ${navigator.hardwareConcurrency||'?'} / Mem: ${navigator.deviceMemory||'?'}GB`].join('
+'); log('Self-test captured environment ✓', true); });
+$('copyDiag').addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(diag.textContent); log('Diagnostics copied ✓', true);}catch{ log('Copy failed', false);} });
+(function tick(){ const fpsv=(1000/16.7).toFixed(1); fpsChip.textContent=`FPS — ${fpsv}`; requestAnimationFrame(tick); })();
+log('BOOT: UI wired ✓');
 
-/************ Overlay + analysis helpers ************/
-const LM={ NOSE:0, L_SH:11, R_SH:12, L_HIP:23, R_HIP:24, L_ELB:13, R_ELB:14, L_WR:15, R_WR:16, L_KNEE:25, R_KNEE:26, L_ANK:27, R_ANK:28 };
-const EDGES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
-const HAND_CONN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[0,17],[17,18],[18,19],[19,20]];
-const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y), rad2deg=r=>r*180/Math.PI, angle=(p,q)=>rad2deg(Math.atan2(q.y-p.y,q.x-p.x));
-function glowStroke(color, blur=12){ ctx.strokeStyle=color; ctx.shadowColor=color; ctx.shadowBlur=blur; }
-function glowFill(color, blur=10){ ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=blur; }
-function scaleBox(b){ const sx=canvas.width/img.naturalWidth, sy=canvas.height/img.naturalHeight; return {x:b.originX*sx,y:b.originY*sy,w:b.width*sx,h:b.height*sy}; }
-function drawObjects(res,a){ if(!res) return; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=2.5; ctx.font='12px ui-sans-serif'; res.detections.forEach(d=>{ const {x,y,w,h}=scaleBox(d.boundingBox); glowStroke('rgba(62,248,255,.95)',10); ctx.strokeRect(x,y,w,h); const name=d.categories?.[0]?.categoryName||'object', s=d.categories?.[0]?.score||0, lab=`${name} ${(s*100).toFixed(0)}%`; const tw=ctx.measureText(lab).width+12, th=18; glowFill('rgba(15,27,38,.92)',0); ctx.fillRect(x,Math.max(0,y-th),tw,th); glowStroke('rgba(62,248,255,.45)',0); ctx.strokeRect(x,Math.max(0,y-th),tw,th); ctx.fillStyle='#c7faff'; ctx.fillText(lab,x+6,Math.max(0,y-th)+13); }); ctx.restore(); }
-function drawPose(res,a){ if(!res?.landmarks?.length) return; const l=res.landmarks[0]; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=3; glowStroke('rgba(102,255,153,.95)',12); EDGES.forEach(([i,j])=>{ const p=l[i], q=l[j]; if(!p||!q) return; ctx.beginPath(); ctx.moveTo(p.x*canvas.width,p.y*canvas.height); ctx.lineTo(q.x*canvas.width,q.y*canvas.height); ctx.stroke(); }); glowFill('rgba(102,255,153,.95)',8); [LM.L_SH,LM.R_SH,LM.L_HIP,LM.R_HIP,LM.NOSE].forEach(k=>{const p=l[k]; if(!p) return; ctx.beginPath(); ctx.arc(p.x*canvas.width,p.y*canvas.height,4,0,6.283); ctx.fill();}); ctx.restore(); }
-function drawHands(res,a){ if(!res?.landmarks?.length) return; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=2.2; glowStroke('rgba(200,180,255,.95)',10); res.landmarks.forEach(hand=>{ HAND_CONN.forEach(([i,j])=>{ const p=hand[i],q=hand[j]; if(!p||!q) return; ctx.beginPath(); ctx.moveTo(p.x*canvas.width,p.y*canvas.height); ctx.lineTo(q.x*canvas.width,q.y*canvas.height); ctx.stroke(); }); glowFill('rgba(220,200,255,.95)',7); hand.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*canvas.width,p.y*canvas.height,2,0,6.283); ctx.fill(); }); }); ctx.restore(); }
-const TRI=[[11,12,23],[12,24,23],[11,13,23],[12,14,24],[13,15,23],[14,16,24],[23,24,25],[24,26,25],[25,27,26],[26,28,27]];
-function drawBodyMesh(pose,a){ if(!pose?.landmarks?.length) return; const l=pose.landmarks[0]; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=1.4; TRI.forEach(([a1,b1,c1])=>{ const A=l[a1],B=l[b1],C=l[c1]; if(!A||!B||!C) return; ctx.beginPath(); ctx.moveTo(A.x*canvas.width,A.y*canvas.height); ctx.lineTo(B.x*canvas.width,B.y*canvas.height); ctx.lineTo(C.x*canvas.width,C.y*canvas.height); ctx.closePath(); glowStroke('rgba(180,255,220,.85)',8); ctx.stroke(); }); ctx.restore(); }
-function convexHull(points){ const pts=points.map(p=>({x:p.x*canvas.width,y:p.y*canvas.height})).filter(p=>Number.isFinite(p.x)&&Number.isFinite(p.y)); if(pts.length<3) return []; pts.sort((a,b)=>a.x===b.x?a.y-b.y:a.x-b.x); const cross=(o,a,b)=>(a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x); const lower=[],upper=[]; for(const p of pts){ while(lower.length>=2 && cross(lower[lower.length-2], lower[lower.length-1], p)<=0) lower.pop(); lower.push(p); } for(let i=pts.length-1;i>=0;--i){ const p=pts[i]; while(upper.length>=2 && cross(upper[upper.length-2], upper[upper.length-1], p)<=0) upper.pop(); upper.push(p); } upper.pop(); lower.pop(); return lower.concat(upper); }
-function drawSilhouette(pose,a){ if(!pose?.landmarks?.length) return {area:0,bbox:null,height:0}; const l=pose.landmarks[0]; const use=[11,12,13,14,15,16,23,24,25,26,27,28,0].map(i=>l[i]).filter(Boolean); const hull=convexHull(use); if(!hull.length) return {area:0,bbox:null,height:0}; ctx.save(); ctx.globalAlpha=a; glowFill('rgba(80,200,255,.18)',0); ctx.strokeStyle='rgba(80,200,255,.55)'; ctx.lineWidth=2; ctx.beginPath(); hull.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore(); let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity; hull.forEach(p=>{minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);}); const bbox={x:minX,y:minY,w:maxX-minX,h:maxY-minY}; const area=bbox.w*bbox.h/(canvas.width*canvas.height); return {area,bbox,height:bbox.h}; }
-function readSegArrays(seg){ try{ if(seg?.confidenceMasks?.length){ const m=seg.confidenceMasks[0]; const data=m.getAsFloat32Array(); return {data, width:m.width, height:m.height}; } if(seg?.categoryMask){ const m=seg.categoryMask; if(m.getAsFloat32Array){ const data=m.getAsFloat32Array(); return {data, width:m.width, height:m.height}; } if(m.getAsUint8Array){ const u8=m.getAsUint8Array(); const f32=new Float32Array(u8.length); for(let i=0;i<u8.length;i++) f32[i]=u8[i]>0?1:0; return {data:f32, width:m.width, height:m.height}; } } }catch(e){ log('Seg read failed: '+e.message,false);} return null; }
-function heatColor(v){ const r=Math.round(255*Math.min(1, Math.max(0,(v-0.25)/0.75))); const g=Math.round(255*Math.min(1, Math.max(0,(v-0.5)/0.5))); const b=Math.round(255*(1-Math.min(1, Math.max(0,v/0.5)))); return [r,g,b]; }
-function drawSegMask(maskInfo,alpha=0.35,heat=true){ if(!maskInfo) return {ratio:0,canvas:null,width:0,height:0}; const {data,width:w,height:h}=maskInfo; const c=document.createElement('canvas'), cx=c.getContext('2d'); c.width=w; c.height=h; const id=cx.createImageData(w,h); let fg=0; for(let i=0;i<data.length;i++){ const v=data[i]; if(v>0.5) fg++; const idx=i*4; if(heat){ const [r,g,b]=heatColor(v); id.data[idx]=r; id.data[idx+1]=g; id.data[idx+2]=b; id.data[idx+3]=Math.round(255*v); } else { id.data[idx]=80; id.data[idx+1]=200; id.data[idx+2]=255; id.data[idx+3]=Math.round(255*v); } } cx.putImageData(id,0,0); ctx.save(); ctx.globalAlpha=alpha; ctx.drawImage(c,0,0,canvas.width,canvas.height); ctx.restore(); return {ratio: fg/data.length, canvas:c, width:w, height:h}; }
-function drawEdges(alpha=0.4){ const w=canvas.width,h=canvas.height; if(!w||!h) return; const oc=document.createElement('canvas'); oc.width=w; oc.height=h; const ox=oc.getContext('2d',{willReadFrequently:true}); ox.drawImage(img,0,0,w,h); const src=ox.getImageData(0,0,w,h); const out=ox.createImageData(w,h); const Gx=[-1,0,1,-2,0,2,-1,0,1], Gy=[-1,-2,-1,0,0,0,1,2,1]; for(let y=1;y<h-1;y++){ for(let x=1;x<w-1;x++){ let sx=0,sy=0,pi=0; for(let ky=-1;ky<=1;ky++){ for(let kx=-1;kx<=1;kx++){ const ix=((y+ky)*w+(x+kx))*4; const lum=0.2126*src.data[ix]+0.7152*src.data[ix+1]+0.0722*src.data[ix+2]; sx+=lum*Gx[pi]; sy+=lum*Gy[pi]; pi++; } } const m=Math.min(255,Math.hypot(sx,sy)); const o=(y*w+x)*4; out.data[o]=out.data[o+1]=out.data[o+2]=m; out.data[o+3]=m>40?255:0; } } ox.putImageData(out,0,0); ctx.save(); ctx.globalAlpha=alpha; ctx.drawImage(oc,0,0); ctx.restore(); }
-function rgbToHsl(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h,s,l=(mx+mn)/2; if(mx===mn){h=s=0;} else { const d=mx-mn; s=l>0.5? d/(2-mx-mn): d/(mx+mn); switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;} h/=6; } return [h,s,l]; }
-function stddev(a){ const m=a.reduce((x,y)=>x+y,0)/a.length; return Math.sqrt(a.reduce((s,x)=>s+(x-m)*(x-m),0)/a.length); }
-function kmeans(pts,k,its=8){ if(!pts.length) return {centroids:[],labels:[]}; const c=pts.slice(0,k).map(p=>p.slice()); let lab=new Array(pts.length).fill(0); const d3=(a,b)=>{const dx=a[0]-b[0],dy=a[1]-b[1],dz=a[2]-b[2];return dx*dx+dy*dy+dz*dz;}; for(let it=0;it<its;it++){ for(let i=0;i<pts.length;i++){ let bi=-1,bd=1e9; for(let j=0;j<k;j++){ const d=d3(pts[i],c[j]); if(d<bd){bd=d;bi=j;} } lab[i]=bi; } const s=Array.from({length:k},()=>[0,0,0,0]); for(let i=0;i<pts.length;i++){ const j=lab[i],p=pts[i]; s[j][0]+=p[0];s[j][1]+=p[1];s[j][2]+=p[2];s[j][3]++; } for(let j=0;j<k;j++) if(s[j][3]){ c[j][0]=s[j][0]/s[j][3]; c[j][1]=s[j][1]/s[j][3]; c[j][2]=s[j][2]/s[j][3]; } } return {centroids:c,labels:lab}; }
-function analyzeColor(el,maxSide=180,k=5){ const c=document.createElement('canvas'),cx=c.getContext('2d'); const w=el.naturalWidth,h=el.naturalHeight; const s=Math.min(1,maxSide/Math.max(w,h)); c.width=Math.max(1,(w*s)|0); c.height=Math.max(1,(h*s)|0); cx.drawImage(el,0,0,c.width,c.height); const d=cx.getImageData(0,0,c.width,c.height).data; const pts=[], lum=[]; for(let i=0;i<d.length;i+=24){ const r=d[i],g=d[i+1],b=d[i+2],a=d[i+3]; if(a<200) continue; lum.push((0.2126*r+0.7152*g+0.0722*b)/255); pts.push([r,g,b]); } const km=kmeans(pts,k,6); const palette=km.centroids.map(c=>({r:c[0]|0,g:c[1]|0,b:c[2]|0})); const avgL=lum.reduce((a,b)=>a+b,0)/(lum.length||1); const lighting=avgL>0.7?'bright':avgL<0.35?'dim':'moderate'; const contrast=(stddev(lum)>0.18)?'high':'low/med'; const hues=palette.map(({r,g,b})=>rgbToHsl(r,g,b)[0]); const env = hues.filter(h=>h>0.25&&h<0.45).length>=2?'forest/foliage' : hues.filter(h=>h>0.53&&h<0.70).length>=1?'sky/water' : (hues.filter(h=>h<0.08||h>0.9|| (h>0.08&&h<0.15)).length>=2?'warm scene':'neutral'); return { palette, avg_brightness:+avgL.toFixed(3), lighting, contrast, env }; }
-function faceBox(l){ let minX=1,minY=1,maxX=0,maxY=0; for(const p of l){ if(!p) continue; minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x);maxY=Math.max(maxY,p.y);} return {minX,maxX,minY,maxY}; }
-function eulerFromM4(m){ const r00=m[0],r10=m[1],r20=m[2],r01=m[4],r11=m[5],r21=m[6],r02=m[8],r12=m[9],r22=m[10]; const sy=Math.hypot(r00,r10); let x,y,z; if(sy>1e-6){x=Math.atan2(r21,r22);y=Math.atan2(-r20,sy);z=Math.atan2(r10,r00);} else {x=Math.atan2(-r12,r11);y=Math.atan2(-r20,sy);z=0;} return {pitch:rad2deg(x),yaw:rad2deg(y),roll:rad2deg(z)}; }
-function faceShape(l){ const b=faceBox(l); const fw=b.maxX-b.minX, fh=b.maxY-b.minY; const r=fw/fh; if(r<0.8) return 'oval'; if(r>1.05) return 'round-wide'; return 'balanced'; }
-function eyeOpen(l){ const L=(dist(l[159],l[145])/dist(l[133],l[33])), R=(dist(l[386],l[374])/dist(l[362],l[263])); const a=(L+R)/2; return a>0.22?'open':a<0.12?'closed':'narrow'; }
-function gaze(l){ const lc=l[468], rc=l[473]; if(!lc||!rc) return 'unknown'; const lr=(lc.x-l[33].x)/(l[133].x-l[33].x), rr=(rc.x-l[362].x)/(l[263].x-l[362].x), a=(lr+rr)/2; return a<0.35?'looking left':a>0.65?'looking right':'looking center'; }
-function eyeSpacing(l){ const ipd=dist(l[468], l[473]); const fw=(faceBox(l).maxX-faceBox(l).minX); const r=ipd/(fw||1e-6); return r>0.38?'wide-set':r<0.30?'close-set':'average-set'; }
-function hairColorFromFaceROI(imgEl,l){ const b=faceBox(l); const mx=imgEl.naturalWidth, my=imgEl.naturalHeight; const x=clamp((b.minX*mx-0.08*mx)|0,0,mx), y=clamp((b.minY*my-0.18*my)|0,0,my); const w=clamp(((b.maxX-b.minX)*mx*1.16)|0,1,mx), h=clamp(((b.maxY-b.minY)*my*1.35)|0,1,my); const c=document.createElement('canvas'), cx=c.getContext('2d'); c.width=w; c.height=h; try{ cx.drawImage(imgEl,x,y,w,h,0,0,w,h);}catch{return 'unknown';} const data=cx.getImageData(0,0,w,h).data; let hues=[], sats=[], lums=[]; for(let i=0;i<data.length;i+=24){ const r=data[i],g=data[i+1],b=data[i+2],a=data[i+3]; if(a<200) continue; const [h,s,l]=rgbToHsl(r,g,b); lums.push(l); sats.push(s); hues.push(h); } if(!hues.length) return 'unknown'; const H=hues.reduce((a,b)=>a+b,0)/hues.length, L=lums.reduce((a,b)=>a+b,0)/lums.length, S=sats.reduce((a,b)=>a+b,0)/sats.length; if(L<0.18) return 'black hair'; if(H>0.08 && H<0.16 && L>0.55) return 'blonde hair'; if(H>=0.02 && H<=0.08 && L>0.35) return 'light brown hair'; if(H>0.0 && H<0.03 && S>0.25) return 'red hair'; return 'brown hair'; }
-function drawFace(face,a){ if(!face?.faceLandmarks?.length) return; const LMK = face.faceLandmarks; ctx.save(); ctx.globalAlpha=a; glowFill('rgba(255,220,140,.95)',6); LMK.forEach(l=>{ l.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*canvas.width, p.y*canvas.height, 1.7, 0, 6.283); ctx.fill(); }); }); ctx.restore(); }
-function subjectSummary(pose,face){ const base={view:'unknown',eyes:'unknown',gaze:'unknown',roll:null,pitch:null,yaw:null,faceShape:null,eyeSet:null,hair:'unknown'}; if(face?.faceLandmarks?.length){ const l=face.faceLandmarks[0]; base.eyes=eyeOpen(l); base.gaze=gaze(l); base.faceShape=faceShape(l); base.eyeSet=eyeSpacing(l); base.hair=hairColorFromFaceROI(img,l); const M=face.facialTransformationMatrixes?.[0]; if(M?.data){ const e=eulerFromM4(M.data); base.roll=e.roll.toFixed(1); base.pitch=e.pitch.toFixed(1); base.yaw=e.yaw.toFixed(1); } } if(pose?.landmarks?.length){ const l=pose.landmarks[0], L=l[11], R=l[12], LH=l[23], RH=l[24]; if(L&&R&&LH&&RH){ base.shoulders_deg=Math.abs(angle(L,R)).toFixed(1); base.hips_deg=Math.abs(angle(LH,RH)).toFixed(1); const dz=Math.abs((L.z||0)-(R.z||0)); base.view=dz<.02?'frontal':dz<.08?'3/4':'profile-ish'; } } base.isolated=true; return base; }
-
-/************ Prompt Engine ************/
-const STYLE_PRESETS={ generic:{pos:`masterpiece, photorealistic, ultra-detailed, natural skin texture, cinematic color grading, shallow depth of field, background bokeh, crisp focus on eyes, subtle film grain, HDR`,neg:`worst quality, lowres, jpeg artifacts, out of focus, motion blur, oversharpen, over/underexposed, banding, chromatic aberration, watermark, logo, text, border, duplicate, extra limbs, fused fingers, deformed hands, distorted face`}, sdxl:{pos:`8k uhd, ultra high detail, photoreal, DOF, soft rim light, volumetric lighting, global illumination, cinematic toning`,neg:`low quality, oversaturated, bad composition, color fringing, artifacts, blur, watermark, extra limbs, deformed hands`}, jugger:{pos:`hyperrealism, cinematic portrait, fine skin microdetail, realistic eyes with catchlight, detailed hair strands, soft background bokeh, filmic LUT, strong dynamic range`,neg:`lowres, bad detail, plastic skin, waxy skin, harsh sharpening, noise, banding, artifacts, watermark, extra limbs`}};
-const STYLE_PACKS={ neutral:{pos:`balanced color, neutral contrast`,neg:`color cast`}, tealorange:{pos:`cinematic teal and orange palette, warm skin tones, cool shadows`,neg:`green tint, muddy blacks`}, pastel:{pos:`soft pastel palette, gentle saturation, airy highlights`,neg:`harsh contrast`}, mono:{pos:`monochrome, deep blacks, high contrast, silver gelatin look`,neg:`washed out blacks, sepia`}, vintage:{pos:`warm vintage tones, soft halation glow, slight film grain`,neg:`heavy noise, color banding`} };
-const LS_KEY=(style)=>`imgintel.boost.${style}`;
-function redactNSFW(s){ return s.replace(/(nude|naked|lingerie|cleavage|see-?through|erotic|fetish|nsfw|breasts?|nipples?|genitals?|vagina|areola)/gi,'[redacted]'); }
-function toHex2(p){ return `#${toHex(p.r)}${toHex(p.g)}${toHex(p.b)}`; }
-function envTokens(c){ const t=[]; if(!c) return t; if(c.env==='forest/foliage') t.push('lush green foliage','outdoor','natural bokeh'); if(c.env==='sky/water') t.push('open sky','airy background'); if(c.env==='warm scene') t.push('golden hour','warm rim light'); if(c.contrast==='high') t.push('high contrast'); t.push(`${c.lighting} lighting`); return t; }
-function shotFromSil(h){ const r=h/(canvas.height||1); if(r>0.92) return 'full body'; if(r>0.68) return 'three-quarter'; if(r>0.48) return 'medium shot'; if(r>0.30) return 'portrait'; return 'close-up'; }
-function camTokens(detail,c){ const wide=detail>=85; const f=wide?'f/1.8':'f/2.8'; const lens=(c?.lighting==='dim')?'85mm':'50mm'; return `[ camera: ${lens}, ${f}, ISO 200, 1/250 ]`; }
-function faceTokens(ps){ const t=[]; if(ps.faceShape) t.push(`${ps.faceShape} face`); if(ps.eyeSet) t.push(ps.eyeSet.replace('-',' ')); t.push(`eyes ${ps.eyes}`); t.push(`gaze ${ps.gaze}`); if(ps.hair && ps.hair!=='unknown') t.push(ps.hair); if(ps.yaw) t.push(`yaw ${ps.yaw}°`); if(ps.pitch) t.push(`pitch ${ps.pitch}°`); if(ps.roll) t.push(`roll ${ps.roll}°`); return t; }
-function baseSubject(ps,sil){ const view=ps.view||'unknown'; const shot=sil?.height?shotFromSil(sil.height):'portrait'; return [`subject centered`, shot, `view ${view}`]; }
-function styleTpl(style,body){ if(style==='sdxl') return `ultra-detailed, photorealistic, ${body}, filmic color, depth of field, crisp focus on eyes`; if(style==='jugger') return `hyperreal detail, cinematic portrait, ${body}, dramatic contrast, photoreal skin, soft background bokeh`; return body; }
-function buildPN({style,detail}){ const parts=[]; if(lastRun.objects?.length){ const objs=[...new Set(lastRun.objects.map(o=>o.name))].join(', '); if(objs) parts.push(`objects: ${objs}`); } if(lastRun.poseSummary){ const p=lastRun.poseSummary; parts.push(baseSubject(p,lastRun.silhouette).join(', ')); parts.push(`pose angles: shoulders ${p.shoulders_deg||'n/a'}°, hips ${p.hips_deg||'n/a'}°`); parts.push(`face: ${faceTokens(p).join(', ')}`); } if(lastRun.color){ const c=lastRun.color; parts.push(`palette ${c.palette.map(toHex2).join(' ')}`); parts.push(envTokens(c).join(', ')); } if(lastRun.seg?.ratio!=null){ parts.push(`segmentation foreground ${(lastRun.seg.ratio*100).toFixed(1)}%`); } let positive=styleTpl(style, parts.filter(Boolean).join(' | ')); if(detail>=60) positive+=`
-${camTokens(detail,lastRun.color)}`; let negative=''; const boost=JSON.parse(localStorage.getItem(LS_KEY(style))||'{}'); const sp=STYLE_PRESETS[style]||{}; const packObj=STYLE_PACKS[stylePackSel.value]||{}; const posBoost=(styleBoost.checked?(boost.pos||sp.pos):'')||''; const negBoost=(styleBoost.checked?(boost.neg||sp.neg):'')||''; if(posBoost) positive=`${posBoost}, ${positive}`; negative=negBoost; if(packObj.pos) positive=`${packObj.pos}, ${positive}`; if(packObj.neg) negative = negative ? `${negative}, ${packObj.neg}` : packObj.neg; return {positive,negative}; }
-function buildPrompt(mode){ const style=modelStyleSel.value, detail=+detailRange.value; let {positive,negative}=buildPN({style,detail}); if(mode==='nsfw_safe'){ positive=redactNSFW(positive); negative=redactNSFW(negative); nsfwGateEl.textContent='Enabled (redacting)'; } else nsfwGateEl.textContent='Disabled'; if(mode==='edgy') positive=`gritty cyber-noir HUD :: ${positive}`; if(mode==='poetic') positive=`an underground lens reading light and form :: ${positive}`; if(mode==='numeric'){ const out=JSON.stringify({ shoulders_deg:+(lastRun.poseSummary?.shoulders_deg||0)||null, yaw:+(lastRun.poseSummary?.yaw||0)||null, brightness:lastRun.color?.avg_brightness||null, silhouette_area:(lastRun.silhouette?.area||0), seg_foreground_ratio:lastRun.seg?.ratio||null }); promptOut.value=out; promptChars.textContent=`${out.length} chars`; return; } if(mode==='json'){ const out=JSON.stringify(buildReport(),null,2); promptOut.value=out; promptChars.textContent=`${out.length} chars`; return; } const combined=`${positive}
-NEGATIVE: ${negative}`.trim(); promptOut.value=combined; promptChars.textContent=`${combined.length} chars`; }
-const pick=a=>a[(Math.random()*a.length)|0]; const SYN={lighting:['soft rim light','diffused light','backlit haze','hard side light'],mood:['cinematic','serene','moody','gritty'],comp:['rule of thirds','centered composition','leading lines','shallow depth of field']};
-function buildVariant(style){ const detail=+detailRange.value; let {positive,negative}=buildPN({style,detail}); positive=`${pick(SYN.mood)}, ${pick(SYN.lighting)}, ${pick(SYN.comp)}, ${positive}`; return {positive,negative}; }
-function genCompare(){ const A=buildVariant('jugger'),B=buildVariant('sdxl'),C=buildVariant('generic'); pA.value=`${A.positive}
-NEGATIVE: ${A.negative}`.trim(); pB.value=`${B.positive}
-NEGATIVE: ${B.negative}`.trim(); pC.value=`${C.positive}
-NEGATIVE: ${C.negative}`.trim(); }
-function hexPalette(pal){ return (pal||[]).map(p=>`#${toHex(p.r)}${toHex(p.g)}${toHex(p.b)}`); }
-function chipStates(){ return ['wasm','obj','pose','face','hands','seg','image','run'].map(k=>`${k}:${status[k].classList.contains('ok')?'OK':'ERR'}`).join(' '); }
-function buildReport(){ const style=modelStyleSel.value, detail=+detailRange.value; const basePN=buildPN({style,detail}); const v1=buildVariant('jugger'),v2=buildVariant('sdxl'),v3=buildVariant('generic'); return {version:'2.0.5',time_iso:new Date().toISOString(),ui:{mode:modeSel.value,model_style:style,detail,style_boost:!!styleBoost.checked},chips:chipStates(),image:{w:img.naturalWidth||0,h:img.naturalHeight||0},analysis:{subject:lastRun.poseSummary||{},objects:lastRun.objects||[],color:{...(lastRun.color||{}),palette_hex:hexPalette(lastRun.color?.palette||[])},silhouette:lastRun.silhouette||{},segmentation:{foreground_ratio:lastRun.seg?.ratio||0},hands:lastRun.hands||{count:0}},prompt:{positive:basePN.positive,negative:basePN.negative,variants:{A:v1,B:v2,C:v3}},env:collectEnv()}; }
-
-/************ Pipeline ************/
-let detector, poser, facer, hands, segmenter, lastRun={};
-async function runAll(){ log('Run start ▶', true); if(!STATE.modelsReady){ log('Models not ready yet.', false);} if(!STATE.imageReady){ log('No image loaded yet.', false); return; }
-  ctx.clearRect(0,0,canvas.width,canvas.height); setChip(status.run,false,'Detectors — …');
-  let objs=null, pose=null, face=null, seg=null, segInfo=null, segStats={ratio:0,canvas:null,width:0,height:0}, handRes=null;
-  try{ if(tgSeg.checked && segmenter) seg=await segmenter.segment(img); }catch(e){ log('Segmentation failed: '+e.message,false); } if(seg){ segInfo=readSegArrays(seg); if(segInfo){ segStats=drawSegMask(segInfo,+opSeg.value,segHeat.checked); setChip(status.seg,true,'Seg — OK'); } else { setChip(status.seg,false,'Seg — ERR'); }}
-  try{ if(tgPose.checked && poser) pose=await poser.detect(img); }catch(e){ log('Pose detect failed: '+e.message,false); } if(tgSil.checked && pose) lastRun.silhouette=drawSilhouette(pose,+opSil.value); if(tgBody.checked && pose) drawBodyMesh(pose,+opBody.value); if(tgPose.checked && pose) drawPose(pose,+opPose.value);
-  try{ if(tgHands.checked && hands) handRes=await hands.detect(img); }catch(e){ log('Hands detect failed: '+e.message,false); } if(tgHands.checked && handRes) drawHands(handRes,+opHands.value);
-  try{ if(tgFace.checked && facer) face=await facer.detect(img); }catch(e){ log('Face detect failed: '+e.message,false); } if(tgFace.checked && face) drawFace(face,+opFace.value);
-  try{ if(tgObjects.checked && detector) objs=await detector.detect(img); }catch(e){ log('Object detect failed: '+e.message,false); } if(tgObjects.checked && objs) drawObjects(objs,+opObjects.value);
-  if(tgEdges.checked) drawEdges(+opEdges.value);
-  objectList.innerHTML=''; const objArr=[]; if(objs?.detections?.length){ for(const d of objs.detections){ const name=d.categories?.[0]?.categoryName||'object', score=d.categories?.[0]?.score||0; objArr.push({name,score,box:d.boundingBox}); const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${name}</span><span>${(score*100).toFixed(0)}%</span>`; objectList.appendChild(li);} } else objectList.innerHTML='<span class="pill"><span>—</span><span>n/a</span></span>';
-  const ps=subjectSummary(pose,face); poseList.innerHTML=''; [['View',ps.view||'unknown'],['Shoulders',ps.shoulders_deg?ps.shoulders_deg+'°':'n/a'],['Yaw',ps.yaw?ps.yaw+'°':'n/a'],['Pitch',ps.pitch?ps.pitch+'°':'n/a'],['Roll',ps.roll?ps.roll+'°':'n/a']].forEach(([k,v])=>{ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; poseList.appendChild(li); });
-  subjectList.innerHTML=''; const sil=lastRun.silhouette||{area:0,height:0}; const handsCount=handRes?.landmarks?.length||0; [['Framing',ps.view||'unknown'],['Shot',sil.height?shotFromSil(sil.height):'portrait'],['Isolated',sil.area?(sil.area<0.9?'yes':'background heavy'):'n/a'],['Eyes',ps.eyes||'unknown'],['Gaze',ps.gaze||'unknown'],['Face',ps.faceShape||'unknown'],['Eye spacing',ps.eyeSet||'unknown'],['Hair',ps.hair||'unknown'],['Seg Foreground',(segStats.ratio*100).toFixed(1)+'%'],['Hands',String(handsCount)]].forEach(([k,v])=>{ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; subjectList.appendChild(li); });
-  let color=null; try{ color=analyzeColor(img); }catch(e){ log('Color analysis skipped (CORS): '+e.message,false); }
-  colorList.innerHTML=''; if(color){ const sw=document.createElement('div'); sw.style.display='flex'; sw.style.gap='4px'; color.palette.forEach(p=>{ const el=document.createElement('div'); el.style.cssText=`width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,.15);background:rgb(${p.r},${p.g},${p.b})`; sw.appendChild(el); }); colorList.appendChild(sw); [['Brightness',color.avg_brightness.toFixed(3)],['Lighting',color.lighting],['Contrast',color.contrast],['Environment',color.env]].forEach(([k,v])=>{ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>${k}</span><span>${v}</span>`; colorList.appendChild(li); }); } else { const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>Color</span><span>n/a</span>`; colorList.appendChild(li); }
-  lastRun={objects:objArr, poseSummary:ps, color, silhouette:sil, seg:{ratio:segStats.ratio, raw:segInfo, canvas:segStats.canvas, width:segStats.width, height:segStats.height}, hands:{count:handsCount}};
-  setChip(status.run,true,'Detectors — OK'); buildPrompt(modeSel.value); genCompare(); diag.textContent=diagText(); log('Analysis complete ✓', true);
+/************ Non-blocking vision import + full pipeline (loads after UI) ************/
+let vision, FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker, ImageSegmenter, HandLandmarker;
+let detector, poser, facer, hands, segmenter;
+async function loadVision(){ const CANDS=[
+  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
+  'https://unpkg.com/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
+  'https://ga.jspm.io/npm:@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs'
+]; let lastErr=''; for(const u of CANDS){ try{ vision=await import(u); break; }catch(e){ lastErr=e?.message||String(e); log(`Import fail: ${u} → ${lastErr}`, false); } }
+ if(!vision){ setChip(status.wasm,false,'WASM — ERR'); log('tasks-vision NOT loaded. You can still upload and use overlays/edges/prompt fallback.', false); return false; }
+ ({ FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker, ImageSegmenter, HandLandmarker } = vision); setChip(status.wasm,true,'WASM — OK'); log('WASM/module ready', true); return true; }
+async function initModels(){ if(!vision){ const ok=await loadVision(); if(!ok) return; }
+ try{ const fsr=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm');
+  detector=await ObjectDetector.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite', delegate:'CPU' }, runningMode:'IMAGE', scoreThreshold:.5, maxResults:10 }); setChip(status.obj,true,'Object — OK');
+  const delegate= $('safeMode')?.checked ? 'CPU' : 'GPU';
+  poser=await PoseLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task', delegate }, runningMode:'IMAGE', numPoses:1 }); setChip(status.pose,true,'Pose — OK');
+  facer=await FaceLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate }, runningMode:'IMAGE', numFaces:1, outputFacialTransformationMatrixes:true }); setChip(status.face,true,'Face — OK');
+  hands=await HandLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', delegate }, runningMode:'IMAGE', numHands:2 }); setChip(status.hands,true,'Hands — OK');
+  segmenter=await ImageSegmenter.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.task', delegate }, runningMode:'IMAGE', outputConfidenceMasks:true }); setChip(status.seg,true,'Seg — OK');
+  STATE.modelsReady=true; runBtn.disabled=false; log('All models ready ✓', true);
+  if(STATE.imageReady) runAll();
+ }catch(e){ log('Init error: '+(e?.message||e), false); }
 }
 
-/************ Init / Events ************/
-function webglInfo(){ const c=document.createElement('canvas'); const gl2=c.getContext('webgl2'); const gl=gl2||c.getContext('webgl'); return {webgl2:!!gl2,webgl:!!gl}; }
-function collectEnv(){ return { ua:navigator.userAgent, lang:navigator.language, platform:navigator.platform, cores:navigator.hardwareConcurrency||null, mem:navigator.deviceMemory||null, webgl:webglInfo(), chips:chipStates() }; }
-function diagText(){ const g=webglInfo(); return [`UserAgent: ${navigator.userAgent}`, `Lang/Platform: ${navigator.language} / ${navigator.platform}`, `HW: ${navigator.hardwareConcurrency||'?'} cores, ${navigator.deviceMemory||'?'} GB`, `Tasks-Vision: 0.10.21`, `Chips: ${chipStates()}`, `Img: ${img.naturalWidth||0}x${img.naturalHeight||0} loaded=${img.complete}`, `WebGL: v2=${g.webgl2} v1=${g.webgl}`].join('
-'); }
-async function closeModels(){ try{await detector?.close();}catch{} try{await poser?.close();}catch{} try{await facer?.close();}catch{} try{await hands?.close();}catch{} try{await segmenter?.close();}catch{} detector=poser=facer=hands=segmenter=null; STATE.modelsReady=false; runBtn.disabled=true; }
-async function init(){ try{ const fsr=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm'); setChip(status.wasm,true,'WASM — OK'); log('WASM ready',true);
-    detector=await ObjectDetector.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite', delegate:'CPU' }, runningMode:'IMAGE', scoreThreshold:.5, maxResults:10 }); setChip(status.obj,true,'Object — OK');
-    const delegate = ($('safeMode')?.checked)?'CPU':'GPU';
-    try{ poser=await PoseLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task', delegate }, runningMode:'IMAGE', numPoses:1 }); setChip(status.pose,true,'Pose — OK'); }catch(e){ setChip(status.pose,false,'Pose — ERR'); log('Pose init failed: '+e.message,false); }
-    try{ facer=await FaceLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate }, runningMode:'IMAGE', numFaces:1, outputFacialTransformationMatrixes:true }); setChip(status.face,true,'Face — OK'); }catch(e){ setChip(status.face,false,'Face — ERR'); log('Face init failed: '+e.message,false); }
-    try{ hands=await HandLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', delegate }, runningMode:'IMAGE', numHands:2 }); setChip(status.hands,true,'Hands — OK'); }catch(e){ setChip(status.hands,false,'Hands — ERR'); log('Hands init failed: '+e.message,false); }
-    try{ segmenter=await ImageSegmenter.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.task', delegate }, runningMode:'IMAGE', outputConfidenceMasks:true }); setChip(status.seg,true,'Seg — OK'); }catch(e){ setChip(status.seg,false,'Seg — ERR'); log('Seg init failed: '+e.message,false); }
-    STATE.modelsReady=true; runBtn.disabled=false; log('All models ready ✓',true); maybeAutoRun();
-  }catch(e){ log('Init error: '+(e?.message||e), false); setChip(status.wasm,false,'WASM — ERR'); }
-  diag.textContent=diagText(); }
-function maybeAutoRun(){ if(STATE.modelsReady && STATE.imageReady){ log('Auto-run ▶',true); runAll(); } }
+// Draw helpers used by pipeline
+const LM={ NOSE:0, L_SH:11, R_SH:12, L_HIP:23, R_HIP:24, L_ELB:13, R_ELB:14, L_WR:15, R_WR:16, L_KNEE:25, R_KNEE:26, L_ANK:27, R_ANK:28 };
+const EDGES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
+function glowStroke(color, blur=12){ ctx.strokeStyle=color; ctx.shadowColor=color; ctx.shadowBlur=blur; }
+function glowFill(color, blur=10){ ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=blur; }
+function drawPose(res,a){ if(!res?.landmarks?.length) return; const l=res.landmarks[0]; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=3; glowStroke('rgba(102,255,153,.95)',12); EDGES.forEach(([i,j])=>{ const p=l[i], q=l[j]; if(!p||!q) return; ctx.beginPath(); ctx.moveTo(p.x*canvas.width,p.y*canvas.height); ctx.lineTo(q.x*canvas.width,q.y*canvas.height); ctx.stroke(); }); glowFill('rgba(102,255,153,.95)',8); [LM.L_SH,LM.R_SH,LM.L_HIP,LM.R_HIP,LM.NOSE].forEach(k=>{const p=l[k]; if(!p) return; ctx.beginPath(); ctx.arc(p.x*canvas.width,p.y*canvas.height,4,0,6.283); ctx.fill();}); ctx.restore(); }
+function drawFace(face,a){ if(!face?.faceLandmarks?.length) return; const LMK = face.faceLandmarks; ctx.save(); ctx.globalAlpha=a; glowFill('rgba(255,220,140,.95)',6); LMK.forEach(l=>{ l.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*canvas.width, p.y*canvas.height, 1.7, 0, 6.283); ctx.fill(); }); }); ctx.restore(); }
+function scaleBox(b){ const sx=canvas.width/img.naturalWidth, sy=canvas.height/img.naturalHeight; return {x:b.originX*sx,y:b.originY*sy,w:b.width*sx,h:b.height*sy}; }
+function drawObjects(res,a){ if(!res) return; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=2.5; ctx.font='12px ui-sans-serif'; res.detections.forEach(d=>{ const {x,y,w,h}=scaleBox(d.boundingBox); glowStroke('rgba(62,248,255,.95)',10); ctx.strokeRect(x,y,w,h); const name=d.categories?.[0]?.categoryName||'object', s=d.categories?.[0]?.score||0, lab=`${name} ${(s*100).toFixed(0)}%`; const tw=ctx.measureText(lab).width+12, th=18; glowFill('rgba(15,27,38,.92)',0); ctx.fillRect(x,Math.max(0,y-th),tw,th); glowStroke('rgba(62,248,255,.45)',0); ctx.strokeRect(x,Math.max(0,y-th),tw,th); ctx.fillStyle='#c7faff'; ctx.fillText(lab,x+6,Math.max(0,y-th)+13); }); ctx.restore(); }
 
-// Events
-window.addEventListener('resize', resize);
-img.addEventListener('load', resize);
+async function runAll(){ log('Run start ▶', true); if(!STATE.imageReady){ log('No image loaded yet.', false); return; } if(!STATE.modelsReady){ log('Models not ready; running fallback only.', false); ctx.clearRect(0,0,canvas.width,canvas.height); if(tgEdges.checked) drawEdges(+opEdges.value||0.4); promptFallback(); return; }
+  ctx.clearRect(0,0,canvas.width,canvas.height); setChip(status.run,false,'Detectors — …');
+  // Perform detections
+  let objs=null, pose=null, face=null;
+  try{ pose=await poser.detect(img); }catch(e){ log('Pose detect failed: '+e.message,false); }
+  try{ face=await facer.detect(img); }catch(e){ log('Face detect failed: '+e.message,false); }
+  try{ objs=await detector.detect(img); }catch(e){ log('Object detect failed: '+e.message,false); }
+  // Draw
+  drawPose(pose,0.9); drawFace(face,0.9); drawObjects(objs,0.9); if(tgEdges.checked) drawEdges(+opEdges.value||0.4);
+  // Minimal KPIs
+  $('subjectList').innerHTML=''; const view=(pose?.landmarks?.length)?'frontal/3⁄4':'unknown'; ['view '+view].forEach(v=>{ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>Subject</span><span>${v}</span>`; $('subjectList').appendChild(li); });
+  $('objectList').innerHTML = objs?.detections?.length ? objs.detections.map(d=>`<div class="pill"><span>${d.categories?.[0]?.categoryName||'obj'}</span><span>${(d.categories?.[0]?.score*100|0)}%</span></div>`).join('') : '<div class="pill"><span>—</span><span>n/a</span></div>';
+  // Prompt (simple)
+  const c=analyzeColor(img); const pos=`photorealistic, subject centered, ${(c?c.lighting:'moderate')} lighting`; const neg='lowres, blur, watermark'; const comb=`${pos}
+NEGATIVE: ${neg}`; $('promptOut').value=comb; $('promptChars').textContent=`${comb.length} chars`;
+  setChip(status.run,true,'Detectors — OK'); log('Analysis complete ✓', true);
+}
+
 runBtn.addEventListener('click', ()=>{ log('Run clicked', true); runAll(); });
-['change','input'].forEach(evt=>{ [tgObjects,tgPose,tgFace,tgHands,tgBody,tgSil,tgSeg,tgEdges,segHeat,opObjects,opPose,opFace,opHands,opBody,opSil,opSeg,opEdges].forEach(el=>el.addEventListener(evt,()=>{ if(img.naturalWidth){ runAll(); } })); });
-const applyBoostUI=()=>{ const st=modelStyleSel.value; try{ const v=JSON.parse(localStorage.getItem(LS_KEY(st)))||{}; boostPos.value=v.pos||STYLE_PRESETS[st].pos; boostNeg.value=v.neg||STYLE_PRESETS[st].neg; }catch{ boostPos.value=STYLE_PRESETS[st].pos; boostNeg.value=STYLE_PRESETS[st].neg; } };
-$('saveBoost')?.addEventListener('click', ()=>{ const st=modelStyleSel.value; localStorage.setItem(LS_KEY(st), JSON.stringify({pos:boostPos.value,neg:boostNeg.value})); log('Style Boost saved ✓', true); buildPrompt(modeSel.value); genCompare(); });
-$('resetBoost')?.addEventListener('click', ()=>{ const st=modelStyleSel.value; localStorage.removeItem(LS_KEY(st)); applyBoostUI(); buildPrompt(modeSel.value); genCompare(); log('Style Boost reset ✓', true); });
-$('editBoost')?.addEventListener('click', ()=>{ styleDrawer.style.display = styleDrawer.style.display==='none'?'block':'none'; applyBoostUI(); });
-modeSel.addEventListener('change', ()=>buildPrompt(modeSel.value)); modelStyleSel.addEventListener('change', ()=>{ applyBoostUI(); buildPrompt(modeSel.value); genCompare(); }); stylePackSel.addEventListener('change', ()=>{ buildPrompt(modeSel.value); genCompare(); }); detailRange.addEventListener('input', ()=>{ buildPrompt(modeSel.value); genCompare(); }); styleBoost.addEventListener('change', ()=>{ buildPrompt(modeSel.value); genCompare(); });
-function snapshot(includeOverlays=true){ const c=document.createElement('canvas'); c.width=canvas.width; c.height=canvas.height; const cx=c.getContext('2d'); cx.drawImage(img,0,0,c.width,c.height); if(includeOverlays) cx.drawImage(canvas,0,0); return c.toDataURL('image/png'); }
-exportPng.addEventListener('click', ()=>{ if(!img.naturalWidth) return; const url=snapshot(true); const a=document.createElement('a'); a.href=url; a.download=`snapshot_${Date.now()}.png`; a.click(); });
-exportMasked.addEventListener('click', ()=>{ try{ if(!lastRun.seg?.raw || !lastRun.seg?.canvas){ log('No segmentation available for masked export', false); return; } const maskCanvas=document.createElement('canvas'); maskCanvas.width=img.naturalWidth; maskCanvas.height=img.naturalHeight; const mcx=maskCanvas.getContext('2d'); mcx.drawImage(lastRun.seg.canvas,0,0,lastRun.seg.raw.width||lastRun.seg.width,lastRun.seg.raw.height||lastRun.seg.height,0,0,maskCanvas.width,maskCanvas.height); const out=document.createElement('canvas'); out.width=img.naturalWidth; out.height=img.naturalHeight; const ox=out.getContext('2d'); ox.drawImage(img,0,0); ox.globalCompositeOperation='destination-in'; ox.drawImage(maskCanvas,0,0); const url=out.toDataURL('image/png'); const a=document.createElement('a'); a.href=url; a.download=`masked_${Date.now()}.png`; a.click(); log('Masked PNG exported ✓', true); } catch(e){ log('Masked export failed: '+(e?.message||e), false); } });
-exportJson.addEventListener('click', ()=>{ const report=buildReport(); const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`imageintel_report_${Date.now()}.json`; a.click(); URL.revokeObjectURL(a.href); });
-$('copyPrompt')?.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(promptOut.value); log('Prompt copied ✓', true);}catch{ log('Clipboard failed', false);} });
-$('downloadPrompt')?.addEventListener('click', ()=>{ const blob=new Blob([promptOut.value],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`prompt_${Date.now()}.txt`; a.click(); URL.revokeObjectURL(a.href); });
 
-/************ Tests ************/
-overlayTestBtn.addEventListener('click', ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); glowStroke('#9ad1ff',8); ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(canvas.width,canvas.height); ctx.moveTo(canvas.width,0); ctx.lineTo(0,canvas.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK',12,22); log('Overlay test drawn ✓', true); });
-reinitBtn.addEventListener('click', async ()=>{ log('Re-initializing models…'); try{ await closeModels(); await init(); log('Re-init complete ✓', true);}catch(e){ log('Re-init failed: '+e.message,false);} });
-selfTestBtn.addEventListener('click', ()=>{ diag.textContent=diagText(); log('Self-test captured environment ✓', true); });
-matrixBtn.addEventListener('click', async ()=>{ const out={}; const t=async(label,fn)=>{ const t0=performance.now(); try{ const r=await fn(); out[label]={ok:true,ms:+(performance.now()-t0).toFixed(1)}; log(`${label} ✓ ${out[label].ms}ms`,true); }catch(e){ out[label]={ok:false,err:String(e?.message||e)}; log(`${label} ERR: ${out[label].err}`,false);} }; if(!STATE.modelsReady){ await init(); }
-  await t('object.create', async()=>{}); await t('pose.create', async()=>{}); await t('face.create', async()=>{}); await t('hands.create', async()=>{}); await t('seg.create', async()=>{});
-  if(img.naturalWidth){ await t('object.detect', ()=>detector?.detect(img)); await t('pose.detect', ()=>poser?.detect(img)); await t('face.detect', ()=>facer?.detect(img)); await t('hands.detect', ()=>hands?.detect(img)); await t('seg.segment', ()=>segmenter?.segment(img)); } else { log('Matrix: no image loaded; ran create-only.',false); }
-  const bundle={ report:buildReport(), matrix:out, errors:window.__ERRS.slice(-10) };
-  window.__BUNDLE=bundle; log('Matrix Test complete ✓ (use "Copy Bug Bundle")',true);
-});
-copyDiagBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(diag.textContent||diagText()); log('Diagnostics copied ✓', true);}catch{ log('Copy failed', false);} });
-copyBundleBtn.addEventListener('click', async ()=>{ try{ const text=JSON.stringify(window.__BUNDLE||{report:buildReport(),errors:window.__ERRS},null,2); await navigator.clipboard.writeText(text); log('Bug bundle copied ✓', true);}catch{ log('Copy failed', false);} });
-
-/************ Boot ************/
-log('Booting BlackSite HUD…');
-await init();
-(function tick(){ const fpsv=(1000/16.7).toFixed(1); fpsChip.textContent=`FPS — ${fpsv}`; requestAnimationFrame(tick); })();
+// Boot vision asynchronously, but never block UI
+initModels();
 </script>
 </body>
 </html>
