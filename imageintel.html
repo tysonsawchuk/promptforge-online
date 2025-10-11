@@ -1,7 +1,8 @@
-<!-- /imageintel.html — ImageIntel Pro Lab (r6)
-  * Critical: UI boots BEFORE model import; even if CDN import fails, upload/self-test work.
-  * Adds: Non-blocking vision loader, clearer banners, copyable bug bundle, matrix test.
-  * Keeps: Objects/Pose/Face/Hands/Seg overlays, prompts, exports.
+<!-- /imageintel.html — ImageIntel Pro Lab (r7)
+  * Critical: **classic script** (no module) so UI always boots. Dynamic `import()` runs later.
+  * If import fails, you still get: upload/drag/paste, self-test, overlay test, edge overlay, fallback prompt.
+  * When import & models init, Run Analysis draws Objects + Pose + Face and generates full prompt.
+  * Added Matrix Test + Copy Bug Bundle for easy debugging.
 -->
 <!doctype html>
 <html lang="en">
@@ -113,17 +114,6 @@ details>summary{cursor:pointer;color:#c5d7f2}
         <label class="toggle"><input id="tgEdges" type="checkbox" checked><span>Edges</span></label>
         <label class="toggle" title="Force CPU delegates"><input id="safeMode" type="checkbox" checked><span>Safe Mode</span></label>
       </div>
-      <div class="row hide-when-compact">
-        <div class="col" style="min-width:130px"><label>Objects</label><input id="opObjects" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
-        <div class="col" style="min-width:130px"><label>Pose</label><input id="opPose" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
-        <div class="col" style="min-width:130px"><label>Face</label><input id="opFace" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
-        <div class="col" style="min-width:130px"><label>Hands</label><input id="opHands" type="range" min="0" max="1" step="0.05" value="0.9"/></div>
-        <div class="col" style="min-width:130px"><label>Body</label><input id="opBody" type="range" min="0" max="1" step="0.05" value="0.8"/></div>
-        <div class="col" style="min-width:130px"><label>Silhouette</label><input id="opSil" type="range" min="0" max="1" step="0.05" value="0.35"/></div>
-        <div class="col" style="min-width:130px"><label>Seg</label><input id="opSeg" type="range" min="0" max="1" step="0.05" value="0.35"/></div>
-        <div class="col" style="min-width:130px"><label>Edges</label><input id="opEdges" type="range" min="0" max="1" step="0.05" value="0.4"/></div>
-        <div class="col" style="min-width:150px"><label>&nbsp;</label><label class="toggle"><input id="segHeat" type="checkbox" checked><span>Heatmap</span></label></div>
-      </div>
     </details>
 
     <details open>
@@ -199,100 +189,111 @@ details>summary{cursor:pointer;color:#c5d7f2}
 </div>
 <div id="errbanner" class="errbanner"></div>
 
-<script type="module">
-/************ EARLY UI + LOG (runs even if CDN import fails) ************/
-const $=id=>document.getElementById(id);
-const img=$('inputImage'), wrap=$('canvasWrap'), canvas=$('overlay'), ctx=canvas.getContext('2d',{willReadFrequently:true});
-const fileInput=$('file'), runBtn=$('runBtn'), diag=$('diagDump'), logEl=$('terminal'), fpsChip=$('fpsChip');
-const status={wasm:$('st-wasm'),obj:$('st-obj'),pose:$('st-pose'),face:$('st-face'),hands:$('st-hands'),seg:$('st-seg'),image:$('st-image'),run:$('st-run')};
-const tgEdges=$('tgEdges'), opEdges=$('opEdges');
-const dropHint=$('dropHint');
-const STATE={modelsReady:false,imageReady:false};
-const log=(m,ok)=>{ const d=document.createElement('div'); d.textContent=m; d.className='log'+(ok===true?' ok':ok===false?' err':''); logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; };
-const setChip=(el,ok,labelOK='OK',labelERR='ERR')=>{ el.textContent=ok?labelOK:labelERR; el.classList.toggle('ok',!!ok); el.classList.toggle('err',!ok); };
-function resize(){ if(!img.naturalWidth) return; const r=wrap.getBoundingClientRect(); const ia=img.naturalWidth/img.naturalHeight, ra=r.width/r.height; let w,h; if(ia>ra){w=r.width;h=w/ia;} else {h=r.height;w=h*ia;} canvas.width=w|0; canvas.height=h|0; img.style.width=w+'px'; img.style.height=h+'px'; }
-function rgbToHsl(r,g,b){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h,s,l=(mx+mn)/2; if(mx===mn){h=s=0;} else { const d=mx-mn; s=l>0.5? d/(2-mx-mn): d/(mx+mn); switch(mx){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;default:h=(r-g)/d+4;} h/=6; } return [h,s,l]; }
-function analyzeColor(el,maxSide=180){ const c=document.createElement('canvas'),cx=c.getContext('2d'); const w=el.naturalWidth,h=el.naturalHeight; if(!w||!h) return null; const s=Math.min(1,maxSide/Math.max(w,h)); c.width=Math.max(1,(w*s)|0); c.height=Math.max(1,(h*s)|0); cx.drawImage(el,0,0,c.width,c.height); const d=cx.getImageData(0,0,c.width,c.height).data; let lumSum=0,n=0; for(let i=0;i<d.length;i+=24){ const r=d[i],g=d[i+1],b=d[i+2]; lumSum += (0.2126*r+0.7152*g+0.0722*b)/255; n++; } const avgL=lumSum/(n||1); const lighting=avgL>0.7?'bright':avgL<0.35?'dim':'moderate'; return {avg_brightness:+avgL.toFixed(3), lighting}; }
-function drawEdges(alpha=0.4){ const w=canvas.width,h=canvas.height; if(!w||!h) return; const oc=document.createElement('canvas'); oc.width=w; oc.height=h; const ox=oc.getContext('2d',{willReadFrequently:true}); ox.drawImage(img,0,0,w,h); const src=ox.getImageData(0,0,w,h); const out=ox.createImageData(w,h); const Gx=[-1,0,1,-2,0,2,-1,0,1], Gy=[-1,-2,-1,0,0,0,1,2,1]; for(let y=1;y<h-1;y++){ for(let x=1;x<w-1;x++){ let sx=0,sy=0,pi=0; for(let ky=-1;ky<=1;ky++){ for(let kx=-1;kx<=1;kx++){ const ix=((y+ky)*w+(x+kx))*4; const lum=0.2126*src.data[ix]+0.7152*src.data[ix+1]+0.0722*src.data[ix+2]; sx+=lum*Gx[pi]; sy+=lum*Gy[pi]; pi++; } } const m=Math.min(255,Math.hypot(sx,sy)); const o=(y*w+x)*4; out.data[o]=out.data[o+1]=out.data[o+2]=m; out.data[o+3]=m>40?255:0; } } ox.putImageData(out,0,0); ctx.save(); ctx.globalAlpha=alpha; ctx.drawImage(oc,0,0); ctx.restore(); }
-function promptFallback(){ const c=analyzeColor(img); const basic = `subject centered, portrait shot${c?`, ${c.lighting} lighting`:''}`; const out = `${basic}
-NEGATIVE: lowres, blur, watermark`; $('promptOut').value=out; $('promptChars').textContent=`${out.length} chars`; }
-function imageLoadedUI(){ resize(); setChip(status.image,true,'Image — OK'); STATE.imageReady=true; log('Image loaded ✓', true); // draw fallback edges so user sees something even without models
-  if(tgEdges?.checked) { ctx.clearRect(0,0,canvas.width,canvas.height); drawEdges(+opEdges.value||0.4); }
-  promptFallback(); runBtn.disabled=false; }
+<script>
+// ===== EARLY UI (classic script) — always runs
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var img=$('inputImage'), wrap=$('canvasWrap'), canvas=$('overlay'), ctx=canvas.getContext('2d',{willReadFrequently:true});
+  var fileInput=$('file'), runBtn=$('runBtn'), diag=$('diagDump'), logEl=$('terminal'), fpsChip=$('fpsChip');
+  var dropHint=$('dropHint');
+  var status={wasm:$('st-wasm'),obj:$('st-obj'),pose:$('st-pose'),face:$('st-face'),hands:$('st-hands'),seg:$('st-seg'),image:$('st-image'),run:$('st-run')};
+  var STATE={modelsReady:false,imageReady:false};
+  window.__BUNDLE={};
 
-// Upload bindings (always on)
-function isImg(f){ return /^image\//i.test(f?.type||''); }
-async function fileToDataUrlViaBitmap(file){ const bmp=await createImageBitmap(file).catch(()=>null); if(!bmp) return null; const c=document.createElement('canvas'); c.width=bmp.width; c.height=bmp.height; const cx=c.getContext('2d'); cx.drawImage(bmp,0,0); return c.toDataURL('image/png'); }
-function readAsDataURL(file){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onerror=()=>rej(fr.error); fr.onload=()=>res(fr.result); fr.readAsDataURL(file); }); }
-async function loadFileToImage(file){ if(!file){ log('No file picked', false); return; } if(!isImg(file)){ log(`Unsupported file: ${file.type||'unknown'}`, false); setChip(status.image,false,'Image — ERR'); return; } let url=null; try{ url=await fileToDataUrlViaBitmap(file); if(!url) url=await readAsDataURL(file); }catch(e){ log('Decode fallback failed: '+(e?.message||e), false);} if(!url){ log('Could not decode image', false); setChip(status.image,false,'Image — ERR'); return; } img.decoding='async'; img.loading='eager'; img.onload=imageLoadedUI; img.onerror=()=>{ log('Image error: cannot decode/display', false); setChip(status.image,false,'Image — ERR'); STATE.imageReady=false; }; img.src=url; }
-['dragenter','dragover'].forEach(ev=>$('canvasWrap').addEventListener(ev,(e)=>{ e.preventDefault(); $('dropHint').style.opacity='.38'; }));
-['dragleave','drop'].forEach(ev=>$('canvasWrap').addEventListener(ev,(e)=>{ e.preventDefault(); $('dropHint').style.opacity='.18'; }));
-$('canvasWrap').addEventListener('drop',(e)=>{ const f=e.dataTransfer?.files?.[0]; if(f) loadFileToImage(f); });
-window.addEventListener('paste',(e)=>{ const item=[...(e.clipboardData?.items||[])].find(i=>i.type.startsWith('image/')); if(!item) return; const f=item.getAsFile(); if(f){ log('Pasted image…'); loadFileToImage(f);} });
-fileInput.addEventListener('change',(e)=>{ const f=e.target.files?.[0]; if(f){ log('Loading local image…'); loadFileToImage(f);} });
-window.addEventListener('resize', resize); img.addEventListener('load', resize);
-$('overlayTest').addEventListener('click', ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#9ad1ff'; ctx.shadowColor='#9ad1ff'; ctx.shadowBlur=8; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(canvas.width,canvas.height); ctx.moveTo(canvas.width,0); ctx.lineTo(0,canvas.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK',12,22); log('Overlay test drawn ✓', true); });
-$('selfTest').addEventListener('click', ()=>{ diag.textContent=[`UA: ${navigator.userAgent}`,`Lang: ${navigator.language}`,`Platform: ${navigator.platform}`,`Cores: ${navigator.hardwareConcurrency||'?'} / Mem: ${navigator.deviceMemory||'?'}GB`].join('
-'); log('Self-test captured environment ✓', true); });
-$('copyDiag').addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(diag.textContent); log('Diagnostics copied ✓', true);}catch{ log('Copy failed', false);} });
-(function tick(){ const fpsv=(1000/16.7).toFixed(1); fpsChip.textContent=`FPS — ${fpsv}`; requestAnimationFrame(tick); })();
-log('BOOT: UI wired ✓');
+  function showBanner(msg){ var b=document.getElementById('errbanner'); b.textContent=msg; b.style.display='block'; setTimeout(function(){b.style.display='none'},8000); }
+  window.addEventListener('error',function(e){ (window.__BUNDLE.errors||(window.__BUNDLE.errors=[])).push('JS:'+e.message); showBanner('JS error: '+e.message); });
+  window.addEventListener('unhandledrejection',function(e){ var m='Promise: '+(e.reason&&e.reason.message?e.reason.message:e.reason); (window.__BUNDLE.errors||(window.__BUNDLE.errors=[])).push(m); showBanner(m); });
 
-/************ Non-blocking vision import + full pipeline (loads after UI) ************/
-let vision, FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker, ImageSegmenter, HandLandmarker;
-let detector, poser, facer, hands, segmenter;
-async function loadVision(){ const CANDS=[
-  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
-  'https://unpkg.com/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
-  'https://ga.jspm.io/npm:@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs'
-]; let lastErr=''; for(const u of CANDS){ try{ vision=await import(u); break; }catch(e){ lastErr=e?.message||String(e); log(`Import fail: ${u} → ${lastErr}`, false); } }
- if(!vision){ setChip(status.wasm,false,'WASM — ERR'); log('tasks-vision NOT loaded. You can still upload and use overlays/edges/prompt fallback.', false); return false; }
- ({ FilesetResolver, ObjectDetector, PoseLandmarker, FaceLandmarker, ImageSegmenter, HandLandmarker } = vision); setChip(status.wasm,true,'WASM — OK'); log('WASM/module ready', true); return true; }
-async function initModels(){ if(!vision){ const ok=await loadVision(); if(!ok) return; }
- try{ const fsr=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm');
-  detector=await ObjectDetector.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite', delegate:'CPU' }, runningMode:'IMAGE', scoreThreshold:.5, maxResults:10 }); setChip(status.obj,true,'Object — OK');
-  const delegate= $('safeMode')?.checked ? 'CPU' : 'GPU';
-  poser=await PoseLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task', delegate }, runningMode:'IMAGE', numPoses:1 }); setChip(status.pose,true,'Pose — OK');
-  facer=await FaceLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate }, runningMode:'IMAGE', numFaces:1, outputFacialTransformationMatrixes:true }); setChip(status.face,true,'Face — OK');
-  hands=await HandLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task', delegate }, runningMode:'IMAGE', numHands:2 }); setChip(status.hands,true,'Hands — OK');
-  segmenter=await ImageSegmenter.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.task', delegate }, runningMode:'IMAGE', outputConfidenceMasks:true }); setChip(status.seg,true,'Seg — OK');
-  STATE.modelsReady=true; runBtn.disabled=false; log('All models ready ✓', true);
-  if(STATE.imageReady) runAll();
- }catch(e){ log('Init error: '+(e?.message||e), false); }
-}
+  function log(m,ok){ var d=document.createElement('div'); d.textContent=m; d.className='log'+(ok===true?' ok':ok===false?' err':''); logEl.appendChild(d); logEl.scrollTop=logEl.scrollHeight; }
+  function chip(el,ok,labelOK,labelERR){ el.textContent=ok?(labelOK||'OK'):(labelERR||'ERR'); el.classList.toggle('ok',!!ok); el.classList.toggle('err',!ok); }
+  function resize(){ if(!img.naturalWidth) return; var r=wrap.getBoundingClientRect(); var ia=img.naturalWidth/img.naturalHeight, ra=r.width/r.height; var w,h; if(ia>ra){w=r.width;h=w/ia;} else {h=r.height;w=h*ia;} canvas.width=w|0; canvas.height=h|0; img.style.width=w+'px'; img.style.height=h+'px'; }
+  function drawEdges(alpha){ var w=canvas.width,h=canvas.height; if(!w||!h) return; var oc=document.createElement('canvas'); oc.width=w; oc.height=h; var ox=oc.getContext('2d',{willReadFrequently:true}); ox.drawImage(img,0,0,w,h); var src=ox.getImageData(0,0,w,h); var out=ox.createImageData(w,h); var Gx=[-1,0,1,-2,0,2,-1,0,1], Gy=[-1,-2,-1,0,0,0,1,2,1]; for(var y=1;y<h-1;y++){ for(var x=1;x<w-1;x++){ var sx=0,sy=0,pi=0; for(var ky=-1;ky<=1;ky++){ for(var kx=-1;kx<=1;kx++){ var ix=((y+ky)*w+(x+kx))*4; var lum=0.2126*src.data[ix]+0.7152*src.data[ix+1]+0.0722*src.data[ix+2]; sx+=lum*Gx[pi]; sy+=lum*Gy[pi]; pi++; }} var m=Math.min(255,Math.hypot(sx,sy)); var o=(y*w+x)*4; out.data[o]=out.data[o+1]=out.data[o+2]=m; out.data[o+3]=m>40?255:0; }} ox.putImageData(out,0,0); ctx.save(); ctx.globalAlpha=alpha||0.4; ctx.drawImage(oc,0,0); ctx.restore(); }
+  function analyzeColor(el){ var c=document.createElement('canvas'),cx=c.getContext('2d'); var w=el.naturalWidth,h=el.naturalHeight; if(!w||!h) return null; var s=Math.min(1,180/Math.max(w,h)); c.width=Math.max(1,(w*s)|0); c.height=Math.max(1,(h*s)|0); cx.drawImage(el,0,0,c.width,c.height); var d=cx.getImageData(0,0,c.width,c.height).data; var lum=0,n=0; for(var i=0;i<d.length;i+=24){ lum+=(0.2126*d[i]+0.7152*d[i+1]+0.0722*d[i+2])/255; n++; } var L=lum/(n||1); return {avg_brightness:+L.toFixed(3), lighting:(L>0.7?'bright':(L<0.35?'dim':'moderate'))}; }
+  function fallbackPrompt(){ var c=analyzeColor(img); var pos='photorealistic, subject centered'+(c?(', '+c.lighting+' lighting'):''); var out=pos+'
+NEGATIVE: lowres, blur, watermark'; $('promptOut').value=out; $('promptChars').textContent=out.length+' chars'; }
 
-// Draw helpers used by pipeline
-const LM={ NOSE:0, L_SH:11, R_SH:12, L_HIP:23, R_HIP:24, L_ELB:13, R_ELB:14, L_WR:15, R_WR:16, L_KNEE:25, R_KNEE:26, L_ANK:27, R_ANK:28 };
-const EDGES=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24],[23,25],[25,27],[24,26],[26,28]];
-function glowStroke(color, blur=12){ ctx.strokeStyle=color; ctx.shadowColor=color; ctx.shadowBlur=blur; }
-function glowFill(color, blur=10){ ctx.fillStyle=color; ctx.shadowColor=color; ctx.shadowBlur=blur; }
-function drawPose(res,a){ if(!res?.landmarks?.length) return; const l=res.landmarks[0]; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=3; glowStroke('rgba(102,255,153,.95)',12); EDGES.forEach(([i,j])=>{ const p=l[i], q=l[j]; if(!p||!q) return; ctx.beginPath(); ctx.moveTo(p.x*canvas.width,p.y*canvas.height); ctx.lineTo(q.x*canvas.width,q.y*canvas.height); ctx.stroke(); }); glowFill('rgba(102,255,153,.95)',8); [LM.L_SH,LM.R_SH,LM.L_HIP,LM.R_HIP,LM.NOSE].forEach(k=>{const p=l[k]; if(!p) return; ctx.beginPath(); ctx.arc(p.x*canvas.width,p.y*canvas.height,4,0,6.283); ctx.fill();}); ctx.restore(); }
-function drawFace(face,a){ if(!face?.faceLandmarks?.length) return; const LMK = face.faceLandmarks; ctx.save(); ctx.globalAlpha=a; glowFill('rgba(255,220,140,.95)',6); LMK.forEach(l=>{ l.forEach(p=>{ ctx.beginPath(); ctx.arc(p.x*canvas.width, p.y*canvas.height, 1.7, 0, 6.283); ctx.fill(); }); }); ctx.restore(); }
-function scaleBox(b){ const sx=canvas.width/img.naturalWidth, sy=canvas.height/img.naturalHeight; return {x:b.originX*sx,y:b.originY*sy,w:b.width*sx,h:b.height*sy}; }
-function drawObjects(res,a){ if(!res) return; ctx.save(); ctx.globalAlpha=a; ctx.lineWidth=2.5; ctx.font='12px ui-sans-serif'; res.detections.forEach(d=>{ const {x,y,w,h}=scaleBox(d.boundingBox); glowStroke('rgba(62,248,255,.95)',10); ctx.strokeRect(x,y,w,h); const name=d.categories?.[0]?.categoryName||'object', s=d.categories?.[0]?.score||0, lab=`${name} ${(s*100).toFixed(0)}%`; const tw=ctx.measureText(lab).width+12, th=18; glowFill('rgba(15,27,38,.92)',0); ctx.fillRect(x,Math.max(0,y-th),tw,th); glowStroke('rgba(62,248,255,.45)',0); ctx.strokeRect(x,Math.max(0,y-th),tw,th); ctx.fillStyle='#c7faff'; ctx.fillText(lab,x+6,Math.max(0,y-th)+13); }); ctx.restore(); }
+  function onImageLoaded(){ resize(); chip(status.image,true,'Image — OK'); STATE.imageReady=true; log('Image loaded ✓',true); ctx.clearRect(0,0,canvas.width,canvas.height); drawEdges(0.45); fallbackPrompt(); runBtn.disabled=false; }
+  function isImg(f){ return f && f.type && /^image\//i.test(f.type); }
+  function readAsDataURL(file){ return new Promise(function(res,rej){ var fr=new FileReader(); fr.onerror=function(){rej(fr.error)}; fr.onload=function(){res(fr.result)}; fr.readAsDataURL(file); }); }
+  function fileToDataUrlViaBitmap(file){ return createImageBitmap(file).then(function(bmp){ var c=document.createElement('canvas'); c.width=bmp.width; c.height=bmp.height; var cx=c.getContext('2d'); cx.drawImage(bmp,0,0); return c.toDataURL('image/png'); }).catch(function(){ return null; }); }
+  async function loadFile(file){ if(!file){ log('No file picked',false); return; } if(!isImg(file)){ log('Unsupported file: '+(file.type||'unknown'),false); chip(status.image,false,'Image — ERR'); return; } var url=null; try{ url=await fileToDataUrlViaBitmap(file); if(!url) url=await readAsDataURL(file); }catch(e){ log('Decode fallback failed: '+e.message,false); }
+    if(!url){ log('Could not decode image',false); chip(status.image,false,'Image — ERR'); return; }
+    img.decoding='async'; img.loading='eager'; img.onload=onImageLoaded; img.onerror=function(){ log('Image error: cannot decode/display',false); chip(status.image,false,'Image — ERR'); STATE.imageReady=false; }; img.src=url; }
 
-async function runAll(){ log('Run start ▶', true); if(!STATE.imageReady){ log('No image loaded yet.', false); return; } if(!STATE.modelsReady){ log('Models not ready; running fallback only.', false); ctx.clearRect(0,0,canvas.width,canvas.height); if(tgEdges.checked) drawEdges(+opEdges.value||0.4); promptFallback(); return; }
-  ctx.clearRect(0,0,canvas.width,canvas.height); setChip(status.run,false,'Detectors — …');
-  // Perform detections
-  let objs=null, pose=null, face=null;
-  try{ pose=await poser.detect(img); }catch(e){ log('Pose detect failed: '+e.message,false); }
-  try{ face=await facer.detect(img); }catch(e){ log('Face detect failed: '+e.message,false); }
-  try{ objs=await detector.detect(img); }catch(e){ log('Object detect failed: '+e.message,false); }
-  // Draw
-  drawPose(pose,0.9); drawFace(face,0.9); drawObjects(objs,0.9); if(tgEdges.checked) drawEdges(+opEdges.value||0.4);
-  // Minimal KPIs
-  $('subjectList').innerHTML=''; const view=(pose?.landmarks?.length)?'frontal/3⁄4':'unknown'; ['view '+view].forEach(v=>{ const li=document.createElement('div'); li.className='pill'; li.innerHTML=`<span>Subject</span><span>${v}</span>`; $('subjectList').appendChild(li); });
-  $('objectList').innerHTML = objs?.detections?.length ? objs.detections.map(d=>`<div class="pill"><span>${d.categories?.[0]?.categoryName||'obj'}</span><span>${(d.categories?.[0]?.score*100|0)}%</span></div>`).join('') : '<div class="pill"><span>—</span><span>n/a</span></div>';
-  // Prompt (simple)
-  const c=analyzeColor(img); const pos=`photorealistic, subject centered, ${(c?c.lighting:'moderate')} lighting`; const neg='lowres, blur, watermark'; const comb=`${pos}
-NEGATIVE: ${neg}`; $('promptOut').value=comb; $('promptChars').textContent=`${comb.length} chars`;
-  setChip(status.run,true,'Detectors — OK'); log('Analysis complete ✓', true);
-}
+  // Upload bindings (always active)
+  $('canvasWrap').addEventListener('dragover',function(e){ e.preventDefault(); $('dropHint').style.opacity='.38'; });
+  $('canvasWrap').addEventListener('dragleave',function(e){ e.preventDefault(); $('dropHint').style.opacity='.18'; });
+  $('canvasWrap').addEventListener('drop',function(e){ e.preventDefault(); $('dropHint').style.opacity='.18'; var f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) loadFile(f); });
+  window.addEventListener('paste',function(e){ var items=(e.clipboardData&&e.clipboardData.items)||[]; for(var i=0;i<items.length;i++){ if(items[i].type.indexOf('image/')===0){ var f=items[i].getAsFile(); if(f){ log('Pasted image…'); loadFile(f); } break; } }
+  });
+  fileInput.addEventListener('change',function(e){ var f=e.target.files&&e.target.files[0]; if(f){ log('Loading local image…'); loadFile(f); } });
+  window.addEventListener('resize',resize); img.addEventListener('load',resize);
 
-runBtn.addEventListener('click', ()=>{ log('Run clicked', true); runAll(); });
+  // Basic tools (always active)
+  $('overlayTest').addEventListener('click',function(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#9ad1ff'; ctx.shadowColor='#9ad1ff'; ctx.shadowBlur=8; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(canvas.width,canvas.height); ctx.moveTo(canvas.width,0); ctx.lineTo(0,canvas.height); ctx.stroke(); ctx.font='16px ui-sans-serif'; ctx.fillStyle='#9ad1ff'; ctx.fillText('OVERLAY OK',12,22); log('Overlay test drawn ✓',true); });
+  $('selfTest').addEventListener('click',function(){ var t=[ 'UA: '+navigator.userAgent, 'Lang: '+navigator.language, 'Platform: '+navigator.platform, 'Cores: '+(navigator.hardwareConcurrency||'?')+' / Mem: '+(navigator.deviceMemory||'?')+'GB' ].join('
+'); diag.textContent=t; log('Self-test captured environment ✓',true); });
+  $('copyDiag').addEventListener('click',async function(){ try{ await navigator.clipboard.writeText(diag.textContent||''); log('Diagnostics copied ✓',true);}catch(e){ log('Copy failed',false);} });
+  (function tick(){ var fpsv=(1000/16.7).toFixed(1); fpsChip.textContent='FPS — '+fpsv; requestAnimationFrame(tick); })();
+  log('BOOT: UI wired ✓');
 
-// Boot vision asynchronously, but never block UI
-initModels();
+  // ===== Late loader: dynamic import + full models
+  var vision=null, FilesetResolver=null, ObjectDetector=null, PoseLandmarker=null, FaceLandmarker=null;
+  var detector=null, poser=null, facer=null;
+  async function loadVision(){ var urls=[
+    'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
+    'https://unpkg.com/@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs',
+    'https://ga.jspm.io/npm:@mediapipe/tasks-vision@0.10.21/vision_bundle.mjs'
+  ]; var lastErr=''; for(var i=0;i<urls.length;i++){ try{ vision=await import(urls[i]); break; }catch(e){ lastErr=e&&e.message?e.message:String(e); log('Import fail: '+urls[i]+' → '+lastErr,false);} }
+    if(!vision){ chip(status.wasm,false,'WASM — ERR'); log('tasks-vision NOT loaded. Fallback mode only.',false); return false; }
+    FilesetResolver=vision.FilesetResolver; ObjectDetector=vision.ObjectDetector; PoseLandmarker=vision.PoseLandmarker; FaceLandmarker=vision.FaceLandmarker; chip(status.wasm,true,'WASM — OK'); log('WASM/module ready',true); return true;
+  }
+  async function initModels(){ if(!vision){ var ok=await loadVision(); if(!ok) return; }
+    try{ var fsr=await FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm');
+      detector=await ObjectDetector.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-tasks/object_detector/efficientdet_lite0_uint8.tflite', delegate:'CPU' }, runningMode:'IMAGE', scoreThreshold:0.5, maxResults:10 }); chip(status.obj,true,'Object — OK');
+      poser=await PoseLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task', delegate:'CPU' }, runningMode:'IMAGE', numPoses:1 }); chip(status.pose,true,'Pose — OK');
+      facer=await FaceLandmarker.createFromOptions(fsr,{ baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate:'CPU' }, runningMode:'IMAGE', numFaces:1, outputFacialTransformationMatrixes:true }); chip(status.face,true,'Face — OK');
+      STATE.modelsReady=true; runBtn.disabled=false; log('All models ready ✓',true);
+      if(STATE.imageReady) runAll();
+    }catch(e){ log('Init error: '+(e&&e.message?e.message:e),false); }
+  }
+  initModels(); // fire and forget
+
+  function drawPose(res,a){ if(!res||!res.landmarks||!res.landmarks.length) return; var l=res.landmarks[0]; ctx.save(); ctx.globalAlpha=a||0.9; ctx.lineWidth=3; ctx.strokeStyle='rgba(102,255,153,.9)'; var E=[[11,12],[11,13],[13,15],[12,14],[14,16],[11,23],[12,24],[23,24]]; for(var i=0;i<E.length;i++){ var p=l[E[i][0]], q=l[E[i][1]]; if(!p||!q) continue; ctx.beginPath(); ctx.moveTo(p.x*canvas.width,p.y*canvas.height); ctx.lineTo(q.x*canvas.width,q.y*canvas.height); ctx.stroke(); } ctx.restore(); }
+  function drawFace(face,a){ if(!face||!face.faceLandmarks||!face.faceLandmarks.length) return; var LMK=face.faceLandmarks; ctx.save(); ctx.globalAlpha=a||0.9; ctx.fillStyle='rgba(255,220,140,.9)'; for(var i=0;i<LMK.length;i++){ var l=LMK[i]; for(var k=0;k<l.length;k++){ var p=l[k]; ctx.beginPath(); ctx.arc(p.x*canvas.width,p.y*canvas.height,1.6,0,6.283); ctx.fill(); } } ctx.restore(); }
+  function scaleBox(b){ var sx=canvas.width/img.naturalWidth, sy=canvas.height/img.naturalHeight; return {x:b.originX*sx,y:b.originY*sy,w:b.width*sx,h:b.height*sy}; }
+  function drawObjects(res,a){ if(!res||!res.detections) return; ctx.save(); ctx.globalAlpha=a||0.9; ctx.lineWidth=2.2; ctx.font='12px ui-sans-serif'; ctx.fillStyle='#c7faff'; ctx.strokeStyle='rgba(62,248,255,.95)'; for(var i=0;i<res.detections.length;i++){ var d=res.detections[i]; var bb=scaleBox(d.boundingBox); ctx.strokeRect(bb.x,bb.y,bb.w,bb.h); var name=(d.categories&&d.categories[0]&&d.categories[0].categoryName)||'object'; var s=(d.categories&&d.categories[0]&&d.categories[0].score)||0; var lab=name+' '+Math.round(s*100)+'%'; var tw=ctx.measureText(lab).width+12, th=18; ctx.fillStyle='rgba(15,27,38,.92)'; ctx.fillRect(bb.x,Math.max(0,bb.y-th),tw,th); ctx.strokeStyle='rgba(62,248,255,.45)'; ctx.strokeRect(bb.x,Math.max(0,bb.y-th),tw,th); ctx.fillStyle='#c7faff'; ctx.fillText(lab,bb.x+6,Math.max(0,bb.y-th)+13); }
+    ctx.restore(); }
+
+  async function runAll(){ log('Run start ▶',true); if(!STATE.imageReady){ log('No image loaded yet.',false); return; }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if(!STATE.modelsReady){ log('Models not ready; fallback edges only.',false); drawEdges(0.45); fallbackPrompt(); return; }
+    var objs=null, pose=null, face=null; try{ pose=await poser.detect(img); }catch(e){ log('Pose detect failed: '+e.message,false); }
+    try{ face=await facer.detect(img); }catch(e){ log('Face detect failed: '+e.message,false); }
+    try{ objs=await detector.detect(img); }catch(e){ log('Object detect failed: '+e.message,false); }
+    drawPose(pose,0.9); drawFace(face,0.9); drawObjects(objs,0.9); drawEdges(0.25);
+    // KPIs (brief)
+    $('objectList').innerHTML = (objs&&objs.detections&&objs.detections.length)? objs.detections.map(function(d){var n=d.categories[0].categoryName; var s=Math.round(d.categories[0].score*100); return '<div class="pill"><span>'+n+'</span><span>'+s+'%</span></div>';}).join('') : '<div class="pill"><span>—</span><span>n/a</span></div>';
+    $('subjectList').innerHTML='<div class="pill"><span>Framing</span><span>'+(pose?'frontal/3⁄4':'unknown')+'</span></div>';
+    // Prompt (basic)
+    var c=analyzeColor(img); var pos='hyperreal portrait, subject centered'+(c?(', '+c.lighting+' lighting'):''); var neg='lowres, blur, watermark'; var comb=pos+'
+NEGATIVE: '+neg; $('promptOut').value=comb; $('promptChars').textContent=comb.length+' chars';
+    chip(status.run,true,'Detectors — OK'); log('Analysis complete ✓',true);
+  }
+
+  $('runBtn').addEventListener('click',function(){ log('Run clicked',true); runAll(); });
+
+  // Matrix Test (simple timings)
+  $('matrixTest').addEventListener('click', async function(){ var out={}; async function t(label,fn){ var t0=performance.now(); try{ var r=await fn(); out[label]={ok:true,ms:+(performance.now()-t0).toFixed(1)}; log(label+' ✓ '+out[label].ms+'ms',true); }catch(e){ out[label]={ok:false,err:String(e&&e.message?e.message:e)}; log(label+' ERR: '+out[label].err,false); } }
+    if(!STATE.modelsReady){ await initModels(); }
+    await t('pose.detect', function(){ return poser?poser.detect(img):Promise.reject('poser null'); });
+    await t('face.detect', function(){ return facer?facer.detect(img):Promise.reject('facer null'); });
+    await t('object.detect', function(){ return detector?detector.detect(img):Promise.reject('detector null'); });
+    window.__BUNDLE.matrix=out; log('Matrix Test complete ✓ (Copy Bug Bundle)',true);
+  });
+  $('copyBundle').addEventListener('click', async function(){ try{ var text=JSON.stringify(window.__BUNDLE||{},null,2); await navigator.clipboard.writeText(text); log('Bug bundle copied ✓',true);}catch(e){ log('Copy failed',false);} });
+
+})();
 </script>
 </body>
 </html>
